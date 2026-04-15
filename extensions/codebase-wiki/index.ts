@@ -4,6 +4,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { registerBootstrapFeatures } from "./bootstrap";
 
 const execFileAsync = promisify(execFile);
 const CONFIG_RELATIVE_PATH = ".docs/config.json";
@@ -81,6 +82,8 @@ interface WikiProject {
 }
 
 export default function codebaseWikiExtension(pi: ExtensionAPI) {
+  registerBootstrapFeatures(pi);
+
   pi.registerCommand(`${COMMAND_PREFIX}-rebuild`, {
     description: "Rebuild codebase wiki metadata, then show lint summary",
     handler: async (_args, ctx) => {

@@ -1,7 +1,7 @@
 {
   "name": "codebase-wiki",
   "version": "0.1.0",
-  "description": "Pi extensions for repo-local codebase wiki bootstrap, rebuild, lint, and drift audits.",
+  "description": "Pi extension and skill for repo-local codebase wiki bootstrap, rebuild, lint, and drift audits.",
   "keywords": [
     "pi-package",
     "pi-extension",
@@ -22,6 +22,7 @@
   "homepage": "https://github.com/NunoMoura/codebase-wiki#readme",
   "files": [
     "extensions",
+    "skills",
     "README.md",
     "LICENSE",
     "package.json"
@@ -32,8 +33,10 @@
   },
   "pi": {
     "extensions": [
-      "./extensions/codebase-wiki/index.ts",
-      "./extensions/codebase-wiki-bootstrap/index.ts"
+      "./extensions/codebase-wiki/index.ts"
+    ],
+    "skills": [
+      "./skills"
     ]
   }
 }
