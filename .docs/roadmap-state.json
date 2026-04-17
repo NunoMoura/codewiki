@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated_at": "2026-04-17T23:02:59Z",
+  "generated_at": "2026-04-17T23:24:10Z",
   "health": {
     "color": "green",
     "errors": 0,
@@ -8,15 +8,16 @@
     "total_issues": 0
   },
   "summary": {
-    "task_count": 11,
-    "open_count": 0,
+    "task_count": 14,
+    "open_count": 1,
     "status_counts": {
-      "done": 11
+      "done": 13,
+      "todo": 1
     },
     "priority_counts": {
       "critical": 2,
-      "high": 5,
-      "medium": 4
+      "high": 7,
+      "medium": 5
     }
   },
   "views": {
@@ -31,11 +32,18 @@
       "TASK-008",
       "TASK-009",
       "TASK-010",
-      "TASK-011"
+      "TASK-011",
+      "TASK-012",
+      "TASK-013",
+      "TASK-014"
     ],
-    "open_task_ids": [],
+    "open_task_ids": [
+      "TASK-014"
+    ],
     "in_progress_task_ids": [],
-    "todo_task_ids": [],
+    "todo_task_ids": [
+      "TASK-014"
+    ],
     "blocked_task_ids": [],
     "done_task_ids": [
       "TASK-001",
@@ -45,13 +53,18 @@
       "TASK-006",
       "TASK-010",
       "TASK-011",
+      "TASK-012",
       "TASK-004",
       "TASK-005",
       "TASK-007",
-      "TASK-009"
+      "TASK-009",
+      "TASK-013"
     ],
     "cancelled_task_ids": [],
     "recent_task_ids": [
+      "TASK-014",
+      "TASK-013",
+      "TASK-012",
       "TASK-011",
       "TASK-010",
       "TASK-009",
@@ -83,10 +96,10 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/templates.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "extensions/codewiki/index.ts",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "updated": "2026-04-16"
     },
@@ -106,8 +119,8 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
       "updated": "2026-04-17"
@@ -129,8 +142,8 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "skills/codebase-wiki/SKILL.md",
+        "extensions/codewiki/index.ts",
+        "skills/codewiki/SKILL.md",
         "scripts/smoke-test.mjs"
       ],
       "updated": "2026-04-16"
@@ -151,7 +164,7 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/templates.ts"
+        "extensions/codewiki/templates.ts"
       ],
       "updated": "2026-04-17"
     },
@@ -172,7 +185,7 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts"
+        "extensions/codewiki/index.ts"
       ],
       "updated": "2026-04-17"
     },
@@ -194,10 +207,10 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py",
-        "skills/codebase-wiki/SKILL.md",
+        "skills/codewiki/SKILL.md",
         "README.md"
       ],
       "updated": "2026-04-17"
@@ -241,12 +254,12 @@
         "docs/specs/system/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/project-root.ts",
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "updated": "2026-04-17"
     },
@@ -266,10 +279,10 @@
         "docs/specs/extension/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "updated": "2026-04-17"
     },
@@ -291,11 +304,11 @@
         "docs/specs/system/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "updated": "2026-04-17"
     },
@@ -318,12 +331,86 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py",
         "scripts/smoke-test.mjs",
         "README.md"
+      ],
+      "updated": "2026-04-17"
+    },
+    "TASK-012": {
+      "id": "TASK-012",
+      "title": "Rename package surface from codebase-wiki to codewiki",
+      "status": "done",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Rename package, extension, skill, tool, repo, and runtime identifiers from codebase-wiki/codebase_wiki to codewiki.",
+      "labels": [
+        "rename",
+        "package-surface",
+        "migration"
+      ],
+      "spec_paths": [
+        "docs/specs/package/overview.md",
+        "docs/specs/extension/overview.md",
+        "docs/specs/system/overview.md"
+      ],
+      "code_paths": [
+        "package.json",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "skills/codewiki/SKILL.md",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "updated": "2026-04-17"
+    },
+    "TASK-013": {
+      "id": "TASK-013",
+      "title": "Review codewiki skill and global AGENTS alignment",
+      "status": "done",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Review codewiki skill guidance and global AGENTS overlay against the Karpathy-style baseline and align naming around codewiki.",
+      "labels": [
+        "agents",
+        "skill",
+        "docs"
+      ],
+      "spec_paths": [
+        "docs/specs/shared/overview.md"
+      ],
+      "code_paths": [
+        "skills/codewiki/SKILL.md",
+        "README.md"
+      ],
+      "updated": "2026-04-17"
+    },
+    "TASK-014": {
+      "id": "TASK-014",
+      "title": "Support self-dogfood migration to wiki and .wiki",
+      "status": "todo",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.",
+      "labels": [
+        "dogfood",
+        "wiki-root",
+        "migration"
+      ],
+      "spec_paths": [
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md",
+        "docs/specs/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/smoke-test.mjs"
       ],
       "updated": "2026-04-17"
     }

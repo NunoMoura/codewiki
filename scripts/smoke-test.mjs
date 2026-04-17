@@ -93,14 +93,14 @@ async function main() {
 
   const { DefaultResourceLoader } = await import(pathToFileURL(resolve(piRoot, "dist", "index.js")).href);
 
-  assert.equal(packageJson.name, "codebase-wiki", "Unexpected package name");
+  assert.equal(packageJson.name, "codewiki", "Unexpected package name");
   assert.ok(Array.isArray(packageJson.pi?.extensions) && packageJson.pi.extensions.length === 1, "Expected one Pi extension in package.json");
   assert.ok(Array.isArray(packageJson.pi?.skills) && packageJson.pi.skills.length === 1, "Expected one Pi skill path in package.json");
   assert.equal(packageJson.peerDependencies?.["@mariozechner/pi-coding-agent"], "*", "Missing pi-coding-agent peer dependency");
   assert.equal(packageJson.peerDependencies?.["@sinclair/typebox"], "*", "Missing @sinclair/typebox peer dependency");
   console.log(`✓ package manifest looks correct (${packageJson.name}@${packageJson.version})`);
 
-  await withTempDir("codebase-wiki-loader-", async (projectDir) => {
+  await withTempDir("codewiki-loader-", async (projectDir) => {
     mkdirSync(resolve(projectDir, ".pi"), { recursive: true });
     writeFileSync(resolve(projectDir, ".pi", "settings.json"), JSON.stringify({ packages: [repoRoot] }, null, 2));
 
@@ -127,25 +127,25 @@ async function main() {
       assert.ok(!commandNames.includes(legacyCommand), `Legacy public command should not be registered: ${legacyCommand}`);
     }
     ensureIncludes([...extension.tools.keys()], [
-      "codebase_wiki_setup",
-      "codebase_wiki_bootstrap",
-      "codebase_wiki_rebuild",
-      "codebase_wiki_status",
-      "codebase_wiki_roadmap_append",
-      "codebase_wiki_roadmap_update",
-      "codebase_wiki_task_session_link",
+      "codewiki_setup",
+      "codewiki_bootstrap",
+      "codewiki_rebuild",
+      "codewiki_status",
+      "codewiki_roadmap_append",
+      "codewiki_roadmap_update",
+      "codewiki_task_session_link",
     ], "extension tools");
 
     const skillResult = loader.getSkills();
     assert.equal(skillResult.diagnostics.length, 0, `Unexpected skill diagnostics: ${skillResult.diagnostics.map((d) => d.message).join(" | ")}`);
     const skills = skillResult.skills.filter((skill) => skill.filePath.startsWith(repoRoot));
     assert.equal(skills.length, 1, `Expected exactly one package skill, found ${skills.length}`);
-    assert.equal(skills[0].name, "codebase-wiki", "Unexpected skill name");
+    assert.equal(skills[0].name, "codewiki", "Unexpected skill name");
     assert.equal(skills[0].sourceInfo.origin, "package", "Skill should load as a package resource");
   });
   console.log("✓ package loads through DefaultResourceLoader with one extension and one skill");
 
-  await withTempDir("codebase-wiki-bootstrap-", async (projectDir) => {
+  await withTempDir("codewiki-bootstrap-", async (projectDir) => {
     mkdirSync(resolve(projectDir, ".pi"), { recursive: true });
     writeFileSync(resolve(projectDir, ".pi", "settings.json"), JSON.stringify({ packages: [repoRoot] }, null, 2));
     mkdirSync(resolve(projectDir, ".git"), { recursive: true });
@@ -163,9 +163,9 @@ async function main() {
     const extension = loader.getExtensions().extensions.find((item) => item.path.startsWith(repoRoot));
     assert.ok(extension, "Expected package extension to load for bootstrap smoke test");
 
-    const setupTool = extension.tools.get("codebase_wiki_setup");
+    const setupTool = extension.tools.get("codewiki_setup");
     assert.ok(setupTool && typeof setupTool.definition?.execute === "function", "Setup tool missing execute function");
-    const bootstrapTool = extension.tools.get("codebase_wiki_bootstrap");
+    const bootstrapTool = extension.tools.get("codewiki_bootstrap");
     assert.ok(bootstrapTool && typeof bootstrapTool.definition?.execute === "function", "Bootstrap tool missing execute function");
 
     const firstResult = await setupTool.definition.execute(
@@ -203,7 +203,7 @@ async function main() {
         notify: () => {},
       },
     };
-    const roadmapAppendTool = extension.tools.get("codebase_wiki_roadmap_append");
+    const roadmapAppendTool = extension.tools.get("codewiki_roadmap_append");
     assert.ok(roadmapAppendTool && typeof roadmapAppendTool.definition?.execute === "function", "Roadmap append tool missing execute function");
     await roadmapAppendTool.definition.execute(
       "roadmap-append-smoke",
@@ -234,7 +234,7 @@ async function main() {
       : undefined;
     assert.ok(appendedTaskId, "Roadmap order missing appended task before update");
 
-    const roadmapUpdateTool = extension.tools.get("codebase_wiki_roadmap_update");
+    const roadmapUpdateTool = extension.tools.get("codewiki_roadmap_update");
     assert.ok(roadmapUpdateTool && typeof roadmapUpdateTool.definition?.execute === "function", "Roadmap update tool missing execute function");
     await roadmapUpdateTool.definition.execute(
       "roadmap-update-smoke",
@@ -253,7 +253,7 @@ async function main() {
       toolCtx,
     );
 
-    const taskSessionLinkTool = extension.tools.get("codebase_wiki_task_session_link");
+    const taskSessionLinkTool = extension.tools.get("codewiki_task_session_link");
     assert.ok(taskSessionLinkTool && typeof taskSessionLinkTool.definition?.execute === "function", "Task session link tool missing execute function");
     await taskSessionLinkTool.definition.execute(
       "task-link-smoke",
@@ -261,7 +261,7 @@ async function main() {
         taskId: "ROADMAP-001",
         action: "focus",
         summary: "Focused smoke session on starter task.",
-        filesTouched: ["extensions/codebase-wiki/index.ts"],
+        filesTouched: ["extensions/codewiki/index.ts"],
         spawnedTaskIds: [],
         setSessionName: true,
       },
@@ -271,13 +271,13 @@ async function main() {
     );
     sessionEntries.push({
       type: "custom",
-      customType: "codebase-wiki.task-link",
+      customType: "codewiki.task-link",
       timestamp: "2026-04-17T15:10:00Z",
       data: {
         taskId: "TASK-001",
         action: "focus",
         summary: "Focused smoke session on starter task.",
-        filesTouched: ["extensions/codebase-wiki/index.ts"],
+        filesTouched: ["extensions/codewiki/index.ts"],
         spawnedTaskIds: [],
       },
     });
@@ -287,7 +287,7 @@ async function main() {
     const reviewNotifications = [];
     const widgetState = { key: null, content: null, options: null };
     const renderWidget = () => {
-      assert.equal(widgetState.key, "codebase-wiki-roadmap", "Expected roadmap widget key");
+      assert.equal(widgetState.key, "codewiki-roadmap", "Expected roadmap widget key");
       assert.ok(typeof widgetState.content === "function", "Expected roadmap widget render callback");
       const instance = widgetState.content(
         { terminal: { columns: 120 }, requestRender: () => {} },
@@ -367,7 +367,7 @@ async function main() {
     assert.ok(registry.docs.some((doc) => doc.path === "docs/specs/backend/overview.md"), "Expected inferred backend spec in registry");
     assert.ok(registry.docs.some((doc) => doc.path === "docs/specs/packages/sdk/overview.md"), "Expected inferred nested package spec in registry");
     assert.deepEqual(config.lint.repo_markdown, ["README.md", "backend/**/README.md", "frontend/**/README.md", "packages/sdk/**/README.md"], "Expected inferred repo markdown scope");
-    assert.deepEqual(config.codebase_wiki.code_drift_scope.code, ["backend/**", "frontend/**", "packages/sdk/**"], "Expected inferred code drift scope");
+    assert.deepEqual(config.codewiki.code_drift_scope.code, ["backend/**", "frontend/**", "packages/sdk/**"], "Expected inferred code drift scope");
     assert.match(indexText, /^# Smoke Wiki Docs Index/m, "Generated index title mismatch");
     assert.match(systemText, /Inferred brownfield boundaries/, "System overview missing inferred boundary section");
     assert.match(systemText, /\[Frontend\]\(\.\.\/frontend\/overview\.md\)/, "System overview missing inferred frontend link");
@@ -405,7 +405,7 @@ async function main() {
   });
   console.log(`✓ bootstrap smoke test passed (Python: ${python.command}, PyYAML: ${python.yamlVersion})`);
 
-  console.log("All codebase-wiki smoke tests passed.");
+  console.log("All codewiki smoke tests passed.");
 }
 
 await main();

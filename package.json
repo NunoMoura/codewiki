@@ -1,5 +1,5 @@
 {
-  "name": "codebase-wiki",
+  "name": "codewiki",
   "version": "0.1.0",
   "description": "Pi extension and skill for repo-local codebase wiki bootstrap, rebuild, lint, and drift audits.",
   "keywords": [
@@ -20,12 +20,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NunoMoura/codebase-wiki.git"
+    "url": "git+https://github.com/NunoMoura/codewiki.git"
   },
   "bugs": {
-    "url": "https://github.com/NunoMoura/codebase-wiki/issues"
+    "url": "https://github.com/NunoMoura/codewiki/issues"
   },
-  "homepage": "https://github.com/NunoMoura/codebase-wiki#readme",
+  "homepage": "https://github.com/NunoMoura/codewiki#readme",
   "files": [
     "extensions",
     "skills",
@@ -42,7 +42,7 @@
   },
   "pi": {
     "extensions": [
-      "./extensions/codebase-wiki/index.ts"
+      "./extensions/codewiki/index.ts"
     ],
     "skills": [
       "./skills"

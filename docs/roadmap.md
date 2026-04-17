@@ -2,7 +2,7 @@
 id: roadmap.live
 title: Roadmap
 state: active
-summary: Numbered, trackable delta tasks for codebase-wiki.
+summary: Numbered, trackable delta tasks for codewiki.
 owners:
 - engineering
 updated: '2026-04-17'
@@ -10,7 +10,7 @@ updated: '2026-04-17'
 
 # Roadmap
 
-Generated: 2026-04-17T23:02:59Z
+Generated: 2026-04-17T23:24:10Z
 
 Canonical source: [roadmap.json](roadmap.json)
 
@@ -22,7 +22,26 @@ _None._
 
 ## Todo
 
-_None._
+### TASK-014 — Support self-dogfood migration to wiki and .wiki
+
+- Status: todo
+- Priority: high
+- Kind: migration
+- Summary: Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.
+- Specs:
+  - [docs/specs/shared/overview.md](specs/shared/overview.md)
+  - [docs/specs/templates/overview.md](specs/templates/overview.md)
+  - [docs/specs/extension/overview.md](specs/extension/overview.md)
+- Code:
+  - extensions/codewiki/project-root.ts
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/index.ts
+  - extensions/codewiki/templates.ts
+  - scripts/smoke-test.mjs
+- Labels: dogfood, wiki-root, migration
+- Desired: Codewiki can discover and operate repo-local wikis under wiki/.wiki so this package can dogfood its own agreed structure.
+- Current: Runtime and templates still hardcode docs/.docs defaults and `.docs/config.json` discovery.
+- Closure: Teach runtime/bootstrap/templates/tests to support wiki/.wiki for self-hosting, then migrate this repo and rebuild generated outputs.
 
 ## Blocked
 
@@ -41,10 +60,10 @@ _None._
   - [docs/specs/shared/overview.md](specs/shared/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/templates.ts
-  - extensions/codebase-wiki/index.ts
+  - extensions/codewiki/templates.ts
+  - extensions/codewiki/index.ts
   - README.md
-  - skills/codebase-wiki/SKILL.md
+  - skills/codewiki/SKILL.md
 - Research: RES-001, RES-002
 - Labels: refactor, v2
 - Desired: Package ships one clear model: research evidence, spec truth, roadmap delta.
@@ -61,8 +80,8 @@ _None._
   - [docs/specs/system/overview.md](specs/system/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/bootstrap.ts
-  - extensions/codebase-wiki/templates.ts
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/templates.ts
   - scripts/smoke-test.mjs
 - Research: RES-001, RES-002
 - Labels: brownfield, bootstrap
@@ -81,8 +100,8 @@ _None._
   - [docs/specs/shared/overview.md](specs/shared/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/index.ts
-  - skills/codebase-wiki/SKILL.md
+  - extensions/codewiki/index.ts
+  - skills/codewiki/SKILL.md
   - scripts/smoke-test.mjs
 - Research: RES-001
 - Labels: roadmap, automation
@@ -100,7 +119,7 @@ _None._
   - [docs/specs/shared/overview.md](specs/shared/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/templates.ts
+  - extensions/codewiki/templates.ts
 - Labels: history, archive
 - Desired: History stays cheap and accessible without reviving bulky archive docs.
 - Current: Package now explicitly documents git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutation history.
@@ -116,11 +135,11 @@ _None._
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/index.ts
+  - extensions/codewiki/index.ts
 - Labels: roadmap, automation, follow-up
 - Desired: Agents can append, update, and close roadmap tasks through package-native workflow.
-- Current: Runtime now supports append plus mutation of existing task ids through codebase_wiki_roadmap_update with automatic rebuilds.
-- Closure: Done via codebase_wiki_roadmap_update, mutation history/events logging, and smoke coverage for closing an appended task.
+- Current: Runtime now supports append plus mutation of existing task ids through codewiki_roadmap_update with automatic rebuilds.
+- Closure: Done via codewiki_roadmap_update, mutation history/events logging, and smoke coverage for closing an appended task.
 
 ### TASK-006 — Link Pi sessions to roadmap tasks
 
@@ -133,10 +152,10 @@ _None._
   - [docs/specs/shared/overview.md](specs/shared/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/index.ts
-  - extensions/codebase-wiki/templates.ts
+  - extensions/codewiki/index.ts
+  - extensions/codewiki/templates.ts
   - scripts/rebuild_docs_meta.py
-  - skills/codebase-wiki/SKILL.md
+  - skills/codewiki/SKILL.md
   - README.md
 - Labels: sessions, roadmap, pi
 - Desired: Task work can be resumed across Pi sessions without replacing Pi session JSONL format.
@@ -170,12 +189,12 @@ _None._
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
   - [docs/specs/system/overview.md](specs/system/overview.md)
 - Code:
-  - extensions/codebase-wiki/project-root.ts
-  - extensions/codebase-wiki/bootstrap.ts
-  - extensions/codebase-wiki/index.ts
+  - extensions/codewiki/project-root.ts
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/index.ts
   - scripts/smoke-test.mjs
   - README.md
-  - skills/codebase-wiki/SKILL.md
+  - skills/codewiki/SKILL.md
 - Labels: pi, install, discovery
 - Desired: One global package install should work across many repos while runtime state stays repo-local.
 - Current: Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.
@@ -190,10 +209,10 @@ _None._
 - Specs:
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
 - Code:
-  - extensions/codebase-wiki/index.ts
+  - extensions/codewiki/index.ts
   - scripts/smoke-test.mjs
   - README.md
-  - skills/codebase-wiki/SKILL.md
+  - skills/codewiki/SKILL.md
 - Labels: roadmap, tui, pi
 - Desired: Users should be able to inspect live roadmap/task state without leaving Pi or manually opening docs/roadmap.md in another tool.
 - Current: The roadmap browser work validated task inspection and task-detail rendering, and that groundwork now informs the simpler consolidated UX.
@@ -210,11 +229,11 @@ _None._
   - [docs/specs/package/overview.md](specs/package/overview.md)
   - [docs/specs/system/overview.md](specs/system/overview.md)
 - Code:
-  - extensions/codebase-wiki/bootstrap.ts
-  - extensions/codebase-wiki/index.ts
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/index.ts
   - scripts/smoke-test.mjs
   - README.md
-  - skills/codebase-wiki/SKILL.md
+  - skills/codewiki/SKILL.md
 - Labels: ux, commands, agent-workflow
 - Desired: Users should only need four strong commands, while Pi still uses internal roadmap/task/session primitives and tools behind the scenes.
 - Current: The extension now exposes a four-command public UX, /wiki-bootstrap queues intelligent onboarding, /wiki-status queues evidence-backed health review, /wiki-fix queues corrective work, and /wiki-review queues senior idea/architecture analysis.
@@ -232,9 +251,9 @@ _None._
   - [docs/specs/system/overview.md](specs/system/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
-  - extensions/codebase-wiki/index.ts
-  - extensions/codebase-wiki/bootstrap.ts
-  - extensions/codebase-wiki/templates.ts
+  - extensions/codewiki/index.ts
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/templates.ts
   - scripts/rebuild_docs_meta.py
   - scripts/smoke-test.mjs
   - README.md
@@ -242,6 +261,44 @@ _None._
 - Desired: Roadmap progress should be readable inside Pi through a compact working-set widget and a stable read-only UI state file that other extensions can consume.
 - Current: The extension now generates .docs/roadmap-state.json as roadmap/task UI state, overlays live current-session focus from Pi at runtime, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.
 - Closure: Done for the production roadmap TUI pass with runtime session overlay. Future work can add deeper drill-down interactions on top of the same read contract without changing canonical storage or the four-command public UX.
+
+### TASK-012 — Rename package surface from codebase-wiki to codewiki
+
+- Status: done
+- Priority: high
+- Kind: migration
+- Summary: Rename package, extension, skill, tool, repo, and runtime identifiers from codebase-wiki/codebase_wiki to codewiki.
+- Specs:
+  - [docs/specs/package/overview.md](specs/package/overview.md)
+  - [docs/specs/extension/overview.md](specs/extension/overview.md)
+  - [docs/specs/system/overview.md](specs/system/overview.md)
+- Code:
+  - package.json
+  - extensions/codewiki/index.ts
+  - extensions/codewiki/bootstrap.ts
+  - skills/codewiki/SKILL.md
+  - scripts/smoke-test.mjs
+  - README.md
+- Labels: rename, package-surface, migration
+- Desired: Public package surface uses one short canonical name: codewiki.
+- Current: Package, repo, tool, skill, and runtime identifiers now use codewiki consistently.
+- Closure: Done by renaming package metadata, extension/skill dirs, tool ids, widget keys, smoke tests, docs, and git remote references.
+
+### TASK-013 — Review codewiki skill and global AGENTS alignment
+
+- Status: done
+- Priority: medium
+- Kind: docs
+- Summary: Review codewiki skill guidance and global AGENTS overlay against the Karpathy-style baseline and align naming around codewiki.
+- Specs:
+  - [docs/specs/shared/overview.md](specs/shared/overview.md)
+- Code:
+  - skills/codewiki/SKILL.md
+  - README.md
+- Labels: agents, skill, docs
+- Desired: Skill and global agent overlay stay concise, consistent, and aligned with the renamed codewiki workflow.
+- Current: Repo skill now uses codewiki naming, while global AGENTS was reviewed against the Karpathy-inspired baseline and renamed from codebase-wiki references to codewiki.
+- Closure: Done for naming/alignment review; remaining `.wiki` migration work is tracked separately.
 
 ## Related docs
 

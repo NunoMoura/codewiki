@@ -22,8 +22,8 @@ const DEFAULT_ROADMAP_EVENTS_PATH = ".docs/roadmap-events.jsonl";
 const DEFAULT_META_ROOT = ".docs";
 const DEFAULT_REBUILD_SCRIPT = "scripts/rebuild_docs_meta.py";
 const GENERATED_METADATA_FILES = ["registry.json", "backlinks.json", "lint.json", "roadmap-state.json"] as const;
-const TASK_SESSION_LINK_CUSTOM_TYPE = "codebase-wiki.task-link";
-const ROADMAP_WIDGET_KEY = "codebase-wiki-roadmap";
+const TASK_SESSION_LINK_CUSTOM_TYPE = "codewiki.task-link";
+const ROADMAP_WIDGET_KEY = "codewiki-roadmap";
 const ROADMAP_WIDGET_MAX_VISIBLE_ITEMS = 4;
 const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;
 const ROADMAP_PRIORITY_VALUES = ["critical", "high", "medium", "low"] as const;
@@ -46,7 +46,7 @@ interface CodeDriftScopeConfig {
   code?: string[];
 }
 
-interface CodebaseWikiConfig {
+interface CodewikiConfig {
   name?: string;
   rebuild_command?: string[];
   self_drift_scope?: ScopeConfig;
@@ -63,7 +63,7 @@ interface DocsConfig {
   roadmap_doc_path?: string;
   roadmap_events_path?: string;
   meta_root?: string;
-  codebase_wiki?: CodebaseWikiConfig;
+  codewiki?: CodewikiConfig;
 }
 
 type RoadmapStatus = (typeof ROADMAP_STATUS_VALUES)[number];
@@ -298,7 +298,7 @@ const taskSessionLinkInputSchema = Type.Object({
   setSessionName: Type.Optional(Type.Boolean({ description: "When true, rename the current Pi session to this canonical task id + title." })),
 });
 
-export default function codebaseWikiExtension(pi: ExtensionAPI) {
+export default function codewikiExtension(pi: ExtensionAPI) {
   registerBootstrapFeatures(pi);
 
   pi.on("turn_start", async (_event, ctx) => {
@@ -315,7 +315,7 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
     const project = await maybeLoadProject(ctx.cwd);
     if (!project) {
-      ctx.ui.setStatus("codebase-wiki-task", undefined);
+      ctx.ui.setStatus("codewiki-task", undefined);
       clearRoadmapWidget(ctx);
       return;
     }
@@ -323,7 +323,7 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
     await withUiErrorHandling(ctx, async () => {
       const active = findLatestTaskSessionLink(ctx.sessionManager.getBranch());
       if (!active) {
-        ctx.ui.setStatus("codebase-wiki-task", undefined);
+        ctx.ui.setStatus("codewiki-task", undefined);
         await refreshRoadmapWidget(project, ctx);
         return;
       }
@@ -384,8 +384,8 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_rebuild",
-    label: "Codebase Wiki Rebuild",
+    name: "codewiki_rebuild",
+    label: "Codewiki Rebuild",
     description: "Rebuild the current project's codebase wiki metadata and return lint summary",
     promptSnippet: "Rebuild the current project's codebase wiki metadata and inspect deterministic lint results",
     promptGuidelines: [
@@ -404,8 +404,8 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_status",
-    label: "Codebase Wiki Status",
+    name: "codewiki_status",
+    label: "Codewiki Status",
     description: "Show the current project's codebase wiki inventory and lint status",
     promptSnippet: "Inspect the current project's codebase wiki inventory and lint status",
     parameters: Type.Object({}),
@@ -426,8 +426,8 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_roadmap_append",
-    label: "Codebase Wiki Roadmap Append",
+    name: "codewiki_roadmap_append",
+    label: "Codewiki Roadmap Append",
     description: "Append new roadmap tasks to docs/roadmap.json, update order, log history event, and rebuild generated roadmap/index outputs",
     promptSnippet: "Append new unresolved delta tasks to the current project's codebase wiki roadmap",
     promptGuidelines: [
@@ -450,8 +450,8 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_roadmap_update",
-    label: "Codebase Wiki Roadmap Update",
+    name: "codewiki_roadmap_update",
+    label: "Codewiki Roadmap Update",
     description: "Update or close an existing roadmap task in docs/roadmap.json, log history event, and rebuild generated roadmap/index outputs",
     promptSnippet: "Update or close an existing roadmap task in the current project's codebase wiki roadmap",
     promptGuidelines: [
@@ -472,8 +472,8 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_task_session_link",
-    label: "Codebase Wiki Task Session Link",
+    name: "codewiki_task_session_link",
+    label: "Codewiki Task Session Link",
     description: "Link current Pi session to an existing roadmap task, persist a Pi custom session entry, and refresh live roadmap focus without maintaining repo-owned session caches",
     promptSnippet: "Link the current Pi session to a roadmap task so future sessions can resume work cleanly",
     promptGuidelines: [
@@ -541,13 +541,13 @@ interface DriftContext {
 }
 
 function buildDriftContext(project: WikiProject, registry: RegistryFile | null): DriftContext {
-  const selfScope = project.config.codebase_wiki?.self_drift_scope ?? defaultSelfDriftScope(project);
+  const selfScope = project.config.codewiki?.self_drift_scope ?? defaultSelfDriftScope(project);
   const selfInclude = unique(selfScope.include ?? []);
   const selfExclude = unique(selfScope.exclude ?? []);
-  const docsScope = unique(project.config.codebase_wiki?.code_drift_scope?.docs ?? defaultCodeDriftDocsScope(project));
-  const docsExclude = unique(project.config.codebase_wiki?.self_drift_scope?.exclude ?? defaultSelfDriftScope(project).exclude ?? []);
-  const repoDocs = unique(project.config.codebase_wiki?.code_drift_scope?.repo_docs ?? ["README.md"]);
-  const configCode = unique(project.config.codebase_wiki?.code_drift_scope?.code ?? []);
+  const docsScope = unique(project.config.codewiki?.code_drift_scope?.docs ?? defaultCodeDriftDocsScope(project));
+  const docsExclude = unique(project.config.codewiki?.self_drift_scope?.exclude ?? defaultSelfDriftScope(project).exclude ?? []);
+  const repoDocs = unique(project.config.codewiki?.code_drift_scope?.repo_docs ?? ["README.md"]);
+  const configCode = unique(project.config.codewiki?.code_drift_scope?.code ?? []);
   const registryCode = unique(
     (registry?.docs ?? [])
       .flatMap((doc) => doc.code_paths ?? [])
@@ -854,8 +854,8 @@ function fixPrompt(project: WikiProject, registry: RegistryFile | null, report: 
     `- ${scopeRule}`,
     "- preserve the global-package plus repo-local-data architecture",
     "- preserve roadmap as container, tasks as atomic work units, and Pi sessions as native execution history",
-    "- if work maps to an existing task, use codebase_wiki_task_session_link",
-    "- if true unresolved delta remains, append a roadmap task with codebase_wiki_roadmap_append",
+    "- if work maps to an existing task, use codewiki_task_session_link",
+    "- if true unresolved delta remains, append a roadmap task with codewiki_roadmap_append",
     "- rebuild generated outputs before finishing",
     "- rerun deterministic status before summarizing",
     "Output format:",
@@ -1099,14 +1099,14 @@ async function runRebuild(project: WikiProject): Promise<void> {
 }
 
 async function runRebuildUnlocked(project: WikiProject): Promise<void> {
-  const configuredCommand = sanitizeCommand(project.config.codebase_wiki?.rebuild_command);
+  const configuredCommand = sanitizeCommand(project.config.codewiki?.rebuild_command);
   const commands = configuredCommand
     ? uniqueCommands([configuredCommand, ...pythonAliasFallback(configuredCommand)])
     : await detectRebuildCommands(project.root);
 
   if (commands.length === 0) {
     throw new Error(
-      `No rebuild command configured. Add codebase_wiki.rebuild_command to ${CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
+      `No rebuild command configured. Add codewiki.rebuild_command to ${CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
     );
   }
 
@@ -1174,7 +1174,7 @@ async function loadProject(startDir: string): Promise<WikiProject> {
   const roadmapDocPath = normalizeRelativePath(config.roadmap_doc_path ?? DEFAULT_ROADMAP_DOC_PATH);
   const roadmapEventsPath = normalizeRelativePath(config.roadmap_events_path ?? DEFAULT_ROADMAP_EVENTS_PATH);
   const metaRoot = normalizeRelativePath(config.meta_root ?? DEFAULT_META_ROOT);
-  const label = config.codebase_wiki?.name ?? config.project_name ?? basename(root);
+  const label = config.codewiki?.name ?? config.project_name ?? basename(root);
 
   return {
     root,
@@ -1494,7 +1494,7 @@ function findLatestTaskSessionLink(entries: unknown[]): TaskSessionLinkRecord | 
 }
 
 function setTaskSessionStatus(ctx: ExtensionContext, taskId: string, title: string, action: TaskSessionAction): void {
-  ctx.ui.setStatus("codebase-wiki-task", `${taskId} ${action} — ${title}`);
+  ctx.ui.setStatus("codewiki-task", `${taskId} ${action} — ${title}`);
 }
 
 async function appendRoadmapEvent(project: WikiProject, action: string, tasks: RoadmapTaskRecord[]): Promise<void> {

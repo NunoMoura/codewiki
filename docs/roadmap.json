@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-17T16:45:00Z",
+  "updated": "2026-04-17T23:55:00Z",
   "order": [
     "TASK-001",
     "TASK-002",
@@ -12,7 +12,10 @@
     "TASK-008",
     "TASK-009",
     "TASK-010",
-    "TASK-011"
+    "TASK-011",
+    "TASK-012",
+    "TASK-013",
+    "TASK-014"
   ],
   "tasks": {
     "TASK-001": {
@@ -28,10 +31,10 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/templates.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "extensions/codewiki/index.ts",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "research_ids": [
         "RES-001",
@@ -61,8 +64,8 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
       "research_ids": [
@@ -94,8 +97,8 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "skills/codebase-wiki/SKILL.md",
+        "extensions/codewiki/index.ts",
+        "skills/codewiki/SKILL.md",
         "scripts/smoke-test.mjs"
       ],
       "research_ids": [
@@ -125,7 +128,7 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/templates.ts"
+        "extensions/codewiki/templates.ts"
       ],
       "research_ids": [],
       "labels": [
@@ -152,7 +155,7 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts"
+        "extensions/codewiki/index.ts"
       ],
       "research_ids": [],
       "labels": [
@@ -162,8 +165,8 @@
       ],
       "delta": {
         "desired": "Agents can append, update, and close roadmap tasks through package-native workflow.",
-        "current": "Runtime now supports append plus mutation of existing task ids through codebase_wiki_roadmap_update with automatic rebuilds.",
-        "closure": "Done via codebase_wiki_roadmap_update, mutation history/events logging, and smoke coverage for closing an appended task."
+        "current": "Runtime now supports append plus mutation of existing task ids through codewiki_roadmap_update with automatic rebuilds.",
+        "closure": "Done via codewiki_roadmap_update, mutation history/events logging, and smoke coverage for closing an appended task."
       },
       "created": "2026-04-16",
       "updated": "2026-04-17"
@@ -181,10 +184,10 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py",
-        "skills/codebase-wiki/SKILL.md",
+        "skills/codewiki/SKILL.md",
         "README.md"
       ],
       "research_ids": [],
@@ -242,12 +245,12 @@
         "docs/specs/system/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/project-root.ts",
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "research_ids": [],
       "labels": [
@@ -274,10 +277,10 @@
         "docs/specs/extension/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "research_ids": [],
       "labels": [
@@ -306,11 +309,11 @@
         "docs/specs/system/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md",
-        "skills/codebase-wiki/SKILL.md"
+        "skills/codewiki/SKILL.md"
       ],
       "research_ids": [],
       "labels": [
@@ -340,9 +343,9 @@
         "docs/specs/templates/overview.md"
       ],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py",
         "scripts/smoke-test.mjs",
         "README.md"
@@ -357,6 +360,101 @@
         "desired": "Roadmap progress should be readable inside Pi through a compact working-set widget and a stable read-only UI state file that other extensions can consume.",
         "current": "The extension now generates .docs/roadmap-state.json as roadmap/task UI state, overlays live current-session focus from Pi at runtime, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.",
         "closure": "Done for the production roadmap TUI pass with runtime session overlay. Future work can add deeper drill-down interactions on top of the same read contract without changing canonical storage or the four-command public UX."
+      },
+      "created": "2026-04-17",
+      "updated": "2026-04-17"
+    },
+    "TASK-012": {
+      "id": "TASK-012",
+      "title": "Rename package surface from codebase-wiki to codewiki",
+      "status": "done",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Rename package, extension, skill, tool, repo, and runtime identifiers from codebase-wiki/codebase_wiki to codewiki.",
+      "spec_paths": [
+        "docs/specs/package/overview.md",
+        "docs/specs/extension/overview.md",
+        "docs/specs/system/overview.md"
+      ],
+      "code_paths": [
+        "package.json",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "skills/codewiki/SKILL.md",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "rename",
+        "package-surface",
+        "migration"
+      ],
+      "delta": {
+        "desired": "Public package surface uses one short canonical name: codewiki.",
+        "current": "Package, repo, tool, skill, and runtime identifiers now use codewiki consistently.",
+        "closure": "Done by renaming package metadata, extension/skill dirs, tool ids, widget keys, smoke tests, docs, and git remote references."
+      },
+      "created": "2026-04-17",
+      "updated": "2026-04-17"
+    },
+    "TASK-013": {
+      "id": "TASK-013",
+      "title": "Review codewiki skill and global AGENTS alignment",
+      "status": "done",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Review codewiki skill guidance and global AGENTS overlay against the Karpathy-style baseline and align naming around codewiki.",
+      "spec_paths": [
+        "docs/specs/shared/overview.md"
+      ],
+      "code_paths": [
+        "skills/codewiki/SKILL.md",
+        "README.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "agents",
+        "skill",
+        "docs"
+      ],
+      "delta": {
+        "desired": "Skill and global agent overlay stay concise, consistent, and aligned with the renamed codewiki workflow.",
+        "current": "Repo skill now uses codewiki naming, while global AGENTS was reviewed against the Karpathy-inspired baseline and renamed from codebase-wiki references to codewiki.",
+        "closure": "Done for naming/alignment review; remaining `.wiki` migration work is tracked separately."
+      },
+      "created": "2026-04-17",
+      "updated": "2026-04-17"
+    },
+    "TASK-014": {
+      "id": "TASK-014",
+      "title": "Support self-dogfood migration to wiki and .wiki",
+      "status": "todo",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.",
+      "spec_paths": [
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md",
+        "docs/specs/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/smoke-test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "dogfood",
+        "wiki-root",
+        "migration"
+      ],
+      "delta": {
+        "desired": "Codewiki can discover and operate repo-local wikis under wiki/.wiki so this package can dogfood its own agreed structure.",
+        "current": "Runtime and templates still hardcode docs/.docs defaults and `.docs/config.json` discovery.",
+        "closure": "Teach runtime/bootstrap/templates/tests to support wiki/.wiki for self-hosting, then migrate this repo and rebuild generated outputs."
       },
       "created": "2026-04-17",
       "updated": "2026-04-17"

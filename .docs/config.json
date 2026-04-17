@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "project_name": "codebase-wiki",
-  "index_title": "codebase-wiki Docs Index",
+  "project_name": "codewiki",
+  "index_title": "codewiki Docs Index",
   "docs_root": "docs",
   "specs_root": "docs/specs",
   "research_root": "docs/research",
@@ -35,8 +35,8 @@
       "docs/roadmap.md"
     ]
   },
-  "codebase_wiki": {
-    "name": "codebase-wiki package wiki",
+  "codewiki": {
+    "name": "codewiki package wiki",
     "rebuild_command": [
       "python",
       "scripts/rebuild_docs_meta.py"

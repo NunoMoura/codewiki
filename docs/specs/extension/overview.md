@@ -7,9 +7,9 @@ owners:
 - engineering
 updated: '2026-04-17'
 code_paths:
-- extensions/codebase-wiki/index.ts
-- extensions/codebase-wiki/bootstrap.ts
-- extensions/codebase-wiki/templates.ts
+- extensions/codewiki/index.ts
+- extensions/codewiki/bootstrap.ts
+- extensions/codewiki/templates.ts
 ---
 
 # Extension Runtime
@@ -25,13 +25,13 @@ Public commands should stay intentionally small:
 
 Internal agent tools may remain more granular:
 
-- `codebase_wiki_setup`
-- `codebase_wiki_bootstrap`
-- `codebase_wiki_rebuild`
-- `codebase_wiki_status`
-- `codebase_wiki_roadmap_append`
-- `codebase_wiki_roadmap_update`
-- `codebase_wiki_task_session_link`
+- `codewiki_setup`
+- `codewiki_bootstrap`
+- `codewiki_rebuild`
+- `codewiki_status`
+- `codewiki_roadmap_append`
+- `codewiki_roadmap_update`
+- `codewiki_task_session_link`
 
 ## Runtime responsibilities
 
@@ -51,7 +51,7 @@ Internal agent tools may remain more granular:
 
 ## Drift and fix expectation
 
-`/wiki-status` should classify wiki health as green, yellow, or red and list per-spec drift signals. `wiki-fix` should use repo evidence first, ask only high-value clarifying questions when needed, emit structured roadmap tasks through `codebase_wiki_roadmap_append` only when unresolved work is genuinely new, and use `codebase_wiki_roadmap_update` when an existing task already covers the delta but needs mutation.
+`/wiki-status` should classify wiki health as green, yellow, or red and list per-spec drift signals. `wiki-fix` should use repo evidence first, ask only high-value clarifying questions when needed, emit structured roadmap tasks through `codewiki_roadmap_append` only when unresolved work is genuinely new, and use `codewiki_roadmap_update` when an existing task already covers the delta but needs mutation.
 
 ## Session linkage expectation
 

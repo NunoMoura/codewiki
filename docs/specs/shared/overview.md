@@ -2,7 +2,7 @@
 id: spec.shared.overview
 title: Shared Rules
 state: active
-summary: Shared documentation contract for maintaining codebase-wiki itself with research, specs, and roadmap.
+summary: Shared documentation contract for maintaining codewiki itself with research, specs, and roadmap.
 owners:
 - docs
 updated: '2026-04-17'
@@ -36,7 +36,7 @@ Roadmap is the top-level container for numbered tasks that close the gap between
 
 ### Sessions
 
-Pi sessions record execution history. codebase-wiki should not replace Pi's session JSONL model. Instead it should append custom task-link entries and read current task context from Pi at runtime.
+Pi sessions record execution history. codewiki should not replace Pi's session JSONL model. Instead it should append custom task-link entries and read current task context from Pi at runtime.
 
 ## Local decisions
 

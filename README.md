@@ -1,4 +1,4 @@
-# codebase-wiki
+# codewiki
 
 Repo-local, docs-first wiki tooling for [Pi](https://github.com/mariozechner/pi-coding-agent).
 
@@ -6,8 +6,8 @@ Inspired by Karpathy's [LLM Wiki pattern](https://gist.github.com/karpathy/442a6
 
 This package now ships:
 
-- **one Pi extension**: `codebase-wiki`
-- **one Pi skill**: `codebase-wiki`
+- **one Pi extension**: `codewiki`
+- **one Pi skill**: `codewiki`
 
 That is the right shape for this package:
 
@@ -27,17 +27,17 @@ Public command surface is intentionally small:
 
 ### Internal agent tools
 
-- `codebase_wiki_setup`
-- `codebase_wiki_bootstrap`
-- `codebase_wiki_rebuild`
-- `codebase_wiki_status`
-- `codebase_wiki_roadmap_append`
-- `codebase_wiki_roadmap_update`
-- `codebase_wiki_task_session_link`
+- `codewiki_setup`
+- `codewiki_bootstrap`
+- `codewiki_rebuild`
+- `codewiki_status`
+- `codewiki_roadmap_append`
+- `codewiki_roadmap_update`
+- `codewiki_task_session_link`
 
 ### Skill
 
-- `/skill:codebase-wiki`
+- `/skill:codewiki`
 
 The skill tells Pi when to use the package for:
 
@@ -49,7 +49,7 @@ The skill tells Pi when to use the package for:
 
 ## Simplified model
 
-Codebase Wiki now centers on only three canonical artifact classes:
+Codewiki now centers on only three canonical artifact classes:
 
 - **research** — compact evidence capture in docs/research JSONL collections
 - **specs** — intended system truth in docs/specs markdown hierarchy
@@ -68,7 +68,7 @@ Generated navigation stays separate:
 Pi session linkage stays local and operational:
 
 - Pi session JSONL remains Pi-owned
-- codebase-wiki appends custom session entries linking tasks to sessions
+- codewiki appends custom session entries linking tasks to sessions
 - current task focus is read live from Pi session state at runtime
 - `.docs/roadmap-state.json` is the denormalized roadmap/task read model used by the built-in roadmap widget and any future third-party UI readers
 
@@ -102,19 +102,19 @@ Why:
 From git:
 
 ```bash
-pi install git:github.com/NunoMoura/codebase-wiki
+pi install git:github.com/NunoMoura/codewiki
 ```
 
 From npm:
 
 ```bash
-pi install npm:codebase-wiki
+pi install npm:codewiki
 ```
 
 From a local checkout:
 
 ```bash
-pi install /absolute/path/to/codebase-wiki
+pi install /absolute/path/to/codewiki
 ```
 
 ### Optional: project-local install
@@ -122,7 +122,7 @@ pi install /absolute/path/to/codebase-wiki
 If you want the package source pinned in one repo's `.pi/settings.json`, you can still use `-l`:
 
 ```bash
-pi install -l /absolute/path/to/codebase-wiki
+pi install -l /absolute/path/to/codewiki
 ```
 
 After install, run `/reload` if the session was already open.
@@ -188,7 +188,7 @@ Minimum expected contract:
   "roadmap_doc_path": "docs/roadmap.md",
   "roadmap_events_path": ".docs/roadmap-events.jsonl",
   "meta_root": ".docs",
-  "codebase_wiki": {
+  "codewiki": {
     "rebuild_command": ["python", "scripts/rebuild_docs_meta.py"]
   }
 }
@@ -204,7 +204,7 @@ The rebuild command should update at least:
 
 ## Recommended dogfooding workflow
 
-When maintaining `codebase-wiki` itself, use the package on its own repo.
+When maintaining `codewiki` itself, use the package on its own repo.
 
 Recommended loop:
 
@@ -272,7 +272,7 @@ Use `AGENTS.md` for project conventions. Use the packaged skill for package beha
 
 `/wiki-bootstrap` is the single public onboarding entrypoint. It safely adopts or scaffolds the repo-local wiki contract, reuses an existing ancestor wiki root when one is already present, and supports `--force` only when the user explicitly wants starter files overwritten.
 
-Internally, agent tools may still use `codebase_wiki_setup` as a safe non-overwriting adopt step and `codebase_wiki_bootstrap` for explicit starter scaffolding.
+Internally, agent tools may still use `codewiki_setup` as a safe non-overwriting adopt step and `codewiki_bootstrap` for explicit starter scaffolding.
 
 Starter bootstrap includes:
 
@@ -302,7 +302,7 @@ The extension also renders a compact roadmap widget above the editor. It reads `
 
 ### Runtime operations
 
-Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.json`, while packages can also be installed globally. codebase-wiki therefore binds runtime to repo-local wiki config, not to Pi install location.
+Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.json`, while packages can also be installed globally. codewiki therefore binds runtime to repo-local wiki config, not to Pi install location.
 
 Runtime rule:
 
@@ -341,13 +341,13 @@ This package assumes:
 
 ```text
 extensions/
-  codebase-wiki/
+  codewiki/
     bootstrap.ts
     index.ts
     project-root.ts
     templates.ts
 skills/
-  codebase-wiki/
+  codewiki/
     SKILL.md
 LICENSE
 README.md
@@ -359,13 +359,13 @@ package.json
 Install this repo globally while developing:
 
 ```bash
-pi install /absolute/path/to/codebase-wiki
+pi install /absolute/path/to/codewiki
 ```
 
 Or install it project-locally if you want this repo alone to pin the package source:
 
 ```bash
-pi install -l /absolute/path/to/codebase-wiki
+pi install -l /absolute/path/to/codewiki
 ```
 
 Smoke-test the package locally:

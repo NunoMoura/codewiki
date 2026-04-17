@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T23:02:59Z",
+  "generated_at": "2026-04-17T23:24:10Z",
   "docs": [
     {
       "id": "roadmap.live",
@@ -7,7 +7,7 @@
       "title": "Roadmap",
       "doc_type": "roadmap",
       "state": "active",
-      "summary": "Numbered, trackable delta tasks for codebase-wiki.",
+      "summary": "Numbered, trackable delta tasks for codewiki.",
       "owners": [
         "engineering"
       ],
@@ -37,9 +37,9 @@
       ],
       "tags": [],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/bootstrap.ts",
-        "extensions/codebase-wiki/templates.ts"
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts"
       ],
       "links_out": [
         "docs/roadmap.md",
@@ -56,14 +56,14 @@
       "title": "Roadmap State and TUI",
       "doc_type": "spec",
       "state": "active",
-      "summary": "Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codebase-wiki.",
+      "summary": "Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codewiki.",
       "owners": [
         "engineering"
       ],
       "tags": [],
       "code_paths": [
-        "extensions/codebase-wiki/index.ts",
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py"
       ],
       "links_out": [
@@ -80,7 +80,7 @@
       "title": "Package Surface",
       "doc_type": "spec",
       "state": "active",
-      "summary": "codebase-wiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.",
+      "summary": "codewiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.",
       "owners": [
         "architecture"
       ],
@@ -100,7 +100,7 @@
       "title": "Product",
       "doc_type": "spec",
       "state": "active",
-      "summary": "codebase-wiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.",
+      "summary": "codewiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.",
       "owners": [
         "product"
       ],
@@ -121,7 +121,7 @@
       "title": "Shared Rules",
       "doc_type": "spec",
       "state": "active",
-      "summary": "Shared documentation contract for maintaining codebase-wiki itself with research, specs, and roadmap.",
+      "summary": "Shared documentation contract for maintaining codewiki itself with research, specs, and roadmap.",
       "owners": [
         "docs"
       ],
@@ -142,7 +142,7 @@
       "title": "System Overview",
       "doc_type": "spec",
       "state": "active",
-      "summary": "codebase-wiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
+      "summary": "codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
       "owners": [
         "architecture"
       ],
@@ -169,7 +169,7 @@
       ],
       "tags": [],
       "code_paths": [
-        "extensions/codebase-wiki/templates.ts",
+        "extensions/codewiki/templates.ts",
         "scripts/rebuild_docs_meta.py"
       ],
       "links_out": [
@@ -188,9 +188,10 @@
     }
   ],
   "roadmap": {
-    "entry_count": 11,
+    "entry_count": 14,
     "counts": {
-      "done": 11
+      "done": 13,
+      "todo": 1
     }
   }
 }

@@ -2,7 +2,7 @@
 id: spec.system.overview
 title: System Overview
 state: active
-summary: codebase-wiki is organized around package surface, extension runtime, starter templates, and generated metadata.
+summary: codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.
 owners:
 - architecture
 updated: '2026-04-17'
@@ -21,8 +21,8 @@ updated: '2026-04-17'
 
 Current code maps into these owning areas:
 
-- `extensions/codebase-wiki/` owns runtime behavior and scaffolding helpers
-- `skills/codebase-wiki/` owns agent usage guidance
+- `extensions/codewiki/` owns runtime behavior and scaffolding helpers
+- `skills/codewiki/` owns agent usage guidance
 - `scripts/` owns smoke testing and generated rebuild helper in bootstrapped repos
 - `docs/` owns desired-state contract for this package itself
 

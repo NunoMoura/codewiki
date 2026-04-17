@@ -1,31 +1,31 @@
-# codebase-wiki Docs Index
+# codewiki Docs Index
 
-Generated: 2026-04-17T23:02:59Z
+Generated: 2026-04-17T23:24:10Z
 
 ## Roadmap
 
-- [Roadmap](roadmap.md) — 11 task(s); done=11
+- [Roadmap](roadmap.md) — 14 task(s); done=13, todo=1
 
 ## Specs — Root
 
-- [Product](specs/product.md) — codebase-wiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.
+- [Product](specs/product.md) — codewiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.
 
 ## Specs — Extension
 
 - [Extension Runtime](specs/extension/overview.md) — Extension owns intelligent bootstrap, status, fix, review, and internal roadmap/session operations for repo-local codebase wikis discovered from current cwd.
-- [Roadmap State and TUI](specs/extension/roadmap-ui.md) — Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codebase-wiki.
+- [Roadmap State and TUI](specs/extension/roadmap-ui.md) — Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codewiki.
 
 ## Specs — Package
 
-- [Package Surface](specs/package/overview.md) — codebase-wiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.
+- [Package Surface](specs/package/overview.md) — codewiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.
 
 ## Specs — Shared
 
-- [Shared Rules](specs/shared/overview.md) — Shared documentation contract for maintaining codebase-wiki itself with research, specs, and roadmap.
+- [Shared Rules](specs/shared/overview.md) — Shared documentation contract for maintaining codewiki itself with research, specs, and roadmap.
 
 ## Specs — System
 
-- [System Overview](specs/system/overview.md) — codebase-wiki is organized around package surface, extension runtime, starter templates, and generated metadata.
+- [System Overview](specs/system/overview.md) — codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.
 
 ## Specs — Templates
 

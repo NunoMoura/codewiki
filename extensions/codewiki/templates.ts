@@ -89,7 +89,7 @@ function configJson(projectName: string, brownfieldHints: StarterBrownfieldHints
         word_count_warn: 1600,
         word_count_exempt: ["docs/roadmap.md"],
       },
-      codebase_wiki: {
+      codewiki: {
         name: `${projectName} codebase wiki`,
         rebuild_command: ["python", "scripts/rebuild_docs_meta.py"],
         self_drift_scope: {

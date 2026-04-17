@@ -88,19 +88,19 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_setup",
-    label: "Codebase Wiki Setup",
-    description: "Configure codebase-wiki for the current project without overwriting existing starter files",
+    name: "codewiki_setup",
+    label: "Codewiki Setup",
+    description: "Configure codewiki for the current project without overwriting existing starter files",
     promptSnippet: "Adopt or initialize the codebase wiki contract for the current project",
     promptGuidelines: [
-      "Use this as the safe default when the repo should gain codebase-wiki support but you do not want to overwrite starter files.",
+      "Use this as the safe default when the repo should gain codewiki support but you do not want to overwrite starter files.",
       "This reuses an existing ancestor wiki root when present, otherwise it targets the enclosing git repo root when present, else the current working directory.",
     ],
     parameters: Type.Object({
       projectName: Type.Optional(Type.String({ description: "Project name to write into starter docs; defaults to current directory name." })),
     }),
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const result = await setupCodebaseWiki(ctx.cwd, {
+      const result = await setupCodewiki(ctx.cwd, {
         projectName: params.projectName,
       });
       return {
@@ -111,8 +111,8 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
   });
 
   pi.registerTool({
-    name: "codebase_wiki_bootstrap",
-    label: "Codebase Wiki Bootstrap",
+    name: "codewiki_bootstrap",
+    label: "Codewiki Bootstrap",
     description: "Scaffold a starter repo-local codebase wiki into the current project",
     promptSnippet: "Scaffold the starter codebase wiki contract into the current project",
     promptGuidelines: [
@@ -137,9 +137,9 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
   });
 }
 
-export async function setupCodebaseWiki(startDir: string, options: Omit<BootstrapOptions, "force"> = {}): Promise<BootstrapResult> {
+export async function setupCodewiki(startDir: string, options: Omit<BootstrapOptions, "force"> = {}): Promise<BootstrapResult> {
   const root = await resolveSetupRoot(startDir);
-  return bootstrapCodebaseWiki(root, {
+  return bootstrapCodewiki(root, {
     projectName: options.projectName,
     force: false,
   });
@@ -147,10 +147,10 @@ export async function setupCodebaseWiki(startDir: string, options: Omit<Bootstra
 
 export async function bootstrapFromCurrentProject(startDir: string, options: BootstrapOptions = {}): Promise<BootstrapResult> {
   const root = await resolveSetupRoot(startDir);
-  return bootstrapCodebaseWiki(root, options);
+  return bootstrapCodewiki(root, options);
 }
 
-export async function bootstrapCodebaseWiki(root: string, options: BootstrapOptions = {}): Promise<BootstrapResult> {
+export async function bootstrapCodewiki(root: string, options: BootstrapOptions = {}): Promise<BootstrapResult> {
   const projectName = (options.projectName?.trim() || basename(root)).trim();
   const date = new Date().toISOString().slice(0, 10);
   const brownfieldHints = await detectBrownfieldHints(root);

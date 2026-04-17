@@ -2,7 +2,7 @@
 id: spec.product
 title: Product
 state: active
-summary: codebase-wiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.
+summary: codewiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.
 owners:
 - product
 updated: '2026-04-17'
@@ -12,7 +12,7 @@ updated: '2026-04-17'
 
 ## Intent
 
-codebase-wiki turns project documentation into a maintained local wiki that agents and humans can bootstrap, review, repair, and compare against code through a deliberately small command surface.
+codewiki turns project documentation into a maintained local wiki that agents and humans can bootstrap, review, repair, and compare against code through a deliberately small command surface.
 
 ## Primary users
 

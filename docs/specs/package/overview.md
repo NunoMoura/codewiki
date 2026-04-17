@@ -2,7 +2,7 @@
 id: spec.package.overview
 title: Package Surface
 state: active
-summary: codebase-wiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.
+summary: codewiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.
 owners:
 - architecture
 updated: '2026-04-17'
@@ -14,8 +14,8 @@ updated: '2026-04-17'
 
 Package should expose:
 
-- one extension: `codebase-wiki`
-- one skill: `codebase-wiki`
+- one extension: `codewiki`
+- one skill: `codewiki`
 - no split install story across many tiny extensions
 - global install should work cleanly
 - project-local install remains optional when teams want pinned shared setup

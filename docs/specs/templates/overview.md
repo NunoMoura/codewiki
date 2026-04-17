@@ -7,7 +7,7 @@ owners:
 - engineering
 updated: '2026-04-17'
 code_paths:
-- extensions/codebase-wiki/templates.ts
+- extensions/codewiki/templates.ts
 - scripts/rebuild_docs_meta.py
 ---
 

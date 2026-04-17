@@ -2,13 +2,13 @@
 id: spec.extension.roadmap-ui
 title: Roadmap State and TUI
 state: active
-summary: Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codebase-wiki.
+summary: Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codewiki.
 owners:
 - engineering
 updated: '2026-04-17'
 code_paths:
-- extensions/codebase-wiki/index.ts
-- extensions/codebase-wiki/templates.ts
+- extensions/codewiki/index.ts
+- extensions/codewiki/templates.ts
 - scripts/rebuild_docs_meta.py
 ---
 
@@ -16,20 +16,20 @@ code_paths:
 
 ## Intent
 
-codebase-wiki should keep roadmap and task truth in `docs/roadmap.json`, but it should also expose a stable read model and a compact first-party TUI so users can track active work without leaving Pi or dumping the entire roadmap every turn.
+codewiki should keep roadmap and task truth in `docs/roadmap.json`, but it should also expose a stable read model and a compact first-party TUI so users can track active work without leaving Pi or dumping the entire roadmap every turn.
 
 ## Canonical truth vs read model
 
 Canonical write surfaces remain:
 
 - `docs/roadmap.json`
-- Pi session JSONL plus codebase-wiki custom task-link entries
+- Pi session JSONL plus codewiki custom task-link entries
 
 The extension should also generate a read-only UI model at `.docs/roadmap-state.json`.
 
 That file exists so:
 
-- the built-in codebase-wiki widget can render quickly
+- the built-in codewiki widget can render quickly
 - other UI extensions can consume roadmap state without mutating canonical files
 - roadmap/task data can be denormalized for display without changing the source model
 - current session focus can be overlaid live from Pi without writing extra repo-owned caches
@@ -47,7 +47,7 @@ Minimum expectations:
 - per-task denormalized display data including title, status, priority, kind, summary, labels, and spec/code links
 - no repo-owned session index is required; current-session focus comes from Pi runtime state
 
-Other extensions may read this file, but codebase-wiki remains the only writer.
+Other extensions may read this file, but codewiki remains the only writer.
 
 ## Widget behavior
 
