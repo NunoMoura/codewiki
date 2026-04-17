@@ -1,0 +1,4 @@
+{"ts":"2026-04-16T04:39:02Z","kind":"bootstrap","title":"Bootstrapped simplified codebase wiki","summary":"Created starter research/specs/roadmap contract for codebase-wiki."}
+{"ts":"2026-04-16T04:41:00Z","kind":"refactor","title":"Fed package repo with live simplified wiki docs","summary":"Added package self-docs, research notes from LLM Wiki inspiration, and roadmap items for ongoing refactor work."}
+{"ts":"2026-04-16T04:46:00Z","kind":"feature","title":"Added roadmap append workflow for drift audits","summary":"Drift prompts now emit roadmap-ready tasks and package tool appends new roadmap entries with automatic ids and rebuild."}
+{"ts":"2026-04-16T21:36:00Z","kind":"feature","title":"Linked Pi sessions to roadmap tasks","summary":"Added task-session link tool, Pi custom session entry integration, and derived .docs/task-session-index.json metadata for roadmap navigation."}

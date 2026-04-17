@@ -1,20 +1,29 @@
-import { access, readFile } from "node:fs/promises";
-import { basename, dirname, resolve } from "node:path";
+import { access, appendFile, readFile, writeFile } from "node:fs/promises";
+import { basename, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import { registerBootstrapFeatures } from "./bootstrap";
 import { withLockedPaths } from "./mutation-queue";
+import { requireWikiRoot } from "./project-root";
 
 const execFileAsync = promisify(execFile);
 const CONFIG_RELATIVE_PATH = ".docs/config.json";
 const DEFAULT_DOCS_ROOT = "docs";
-const DEFAULT_SCHEMA_PATH = "docs/schema.md";
+const DEFAULT_SPECS_ROOT = "docs/specs";
+const DEFAULT_RESEARCH_ROOT = "docs/research";
 const DEFAULT_INDEX_PATH = "docs/index.md";
+const DEFAULT_ROADMAP_PATH = "docs/roadmap.json";
+const DEFAULT_ROADMAP_DOC_PATH = "docs/roadmap.md";
+const DEFAULT_ROADMAP_EVENTS_PATH = ".docs/roadmap-events.jsonl";
 const DEFAULT_META_ROOT = ".docs";
 const DEFAULT_REBUILD_SCRIPT = "scripts/rebuild_docs_meta.py";
 const GENERATED_METADATA_FILES = ["registry.json", "backlinks.json", "lint.json"] as const;
+const TASK_SESSION_LINK_CUSTOM_TYPE = "codebase-wiki.task-link";
+const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;
+const ROADMAP_PRIORITY_VALUES = ["critical", "high", "medium", "low"] as const;
+const TASK_SESSION_ACTION_VALUES = ["focus", "progress", "blocked", "done", "spawn"] as const;
 const COMMAND_PREFIX = "wiki";
 
 interface ScopeConfig {
@@ -38,11 +47,19 @@ interface CodebaseWikiConfig {
 interface DocsConfig {
   project_name?: string;
   docs_root?: string;
-  schema_path?: string;
+  specs_root?: string;
+  research_root?: string;
   index_path?: string;
+  roadmap_path?: string;
+  roadmap_doc_path?: string;
+  roadmap_events_path?: string;
   meta_root?: string;
   codebase_wiki?: CodebaseWikiConfig;
 }
+
+type RoadmapStatus = (typeof ROADMAP_STATUS_VALUES)[number];
+type RoadmapPriority = (typeof ROADMAP_PRIORITY_VALUES)[number];
+type TaskSessionAction = (typeof TASK_SESSION_ACTION_VALUES)[number];
 
 interface LintIssue {
   severity: string;
@@ -64,9 +81,114 @@ interface RegistryDoc {
   code_paths?: string[];
 }
 
+interface RegistryResearchCollection {
+  path: string;
+  entry_count: number;
+}
+
+interface RegistryRoadmapSummary {
+  entry_count: number;
+  counts: Record<string, number>;
+}
+
 interface RegistryFile {
   generated_at: string;
   docs: RegistryDoc[];
+  research?: RegistryResearchCollection[];
+  roadmap?: RegistryRoadmapSummary;
+}
+
+interface RoadmapTaskDelta {
+  desired: string;
+  current: string;
+  closure: string;
+}
+
+interface RoadmapTaskInput {
+  title: string;
+  status?: RoadmapStatus;
+  priority: RoadmapPriority;
+  kind: string;
+  summary: string;
+  spec_paths?: string[];
+  code_paths?: string[];
+  research_ids?: string[];
+  labels?: string[];
+  delta?: Partial<RoadmapTaskDelta>;
+}
+
+interface RoadmapTaskRecord {
+  id: string;
+  title: string;
+  status: RoadmapStatus;
+  priority: RoadmapPriority;
+  kind: string;
+  summary: string;
+  spec_paths: string[];
+  code_paths: string[];
+  research_ids: string[];
+  labels: string[];
+  delta: RoadmapTaskDelta;
+  created: string;
+  updated: string;
+}
+
+interface RoadmapFile {
+  version: number;
+  updated: string;
+  order: string[];
+  tasks: Record<string, RoadmapTaskRecord>;
+}
+
+interface TaskSessionLinkInput {
+  taskId: string;
+  action?: TaskSessionAction;
+  summary?: string;
+  filesTouched?: string[];
+  spawnedTaskIds?: string[];
+  setSessionName?: boolean;
+}
+
+interface TaskSessionLinkRecord {
+  taskId: string;
+  action: TaskSessionAction;
+  summary: string;
+  filesTouched: string[];
+  spawnedTaskIds: string[];
+  timestamp: string;
+}
+
+interface TaskSessionIndexTaskSummary {
+  session_ids: string[];
+  session_count: number;
+  last_session_id?: string;
+  last_session_name?: string;
+  last_action?: TaskSessionAction;
+  last_summary?: string;
+  last_timestamp?: string;
+}
+
+interface TaskSessionIndexSessionSummary {
+  id: string;
+  name?: string;
+  file_name?: string;
+  task_ids: string[];
+  last_action?: TaskSessionAction;
+  last_summary?: string;
+  last_timestamp?: string;
+}
+
+interface TaskSessionIndexFile {
+  version: number;
+  updated: string;
+  tasks: Record<string, TaskSessionIndexTaskSummary>;
+  sessions: Record<string, TaskSessionIndexSessionSummary>;
+}
+
+interface SessionMeta {
+  sessionId: string;
+  sessionName?: string;
+  sessionFileName?: string;
 }
 
 interface WikiProject {
@@ -74,17 +196,70 @@ interface WikiProject {
   label: string;
   config: DocsConfig;
   docsRoot: string;
-  schemaPath: string;
+  specsRoot: string;
+  researchRoot: string;
   indexPath: string;
+  roadmapPath: string;
+  roadmapDocPath: string;
   metaRoot: string;
   configPath: string;
   lintPath: string;
   registryPath: string;
   eventsPath: string;
+  roadmapEventsPath: string;
+  taskSessionIndexPath: string;
 }
+
+const roadmapStatusSchema = Type.Union(ROADMAP_STATUS_VALUES.map((value) => Type.Literal(value)));
+const roadmapPrioritySchema = Type.Union(ROADMAP_PRIORITY_VALUES.map((value) => Type.Literal(value)));
+const taskSessionActionSchema = Type.Union(TASK_SESSION_ACTION_VALUES.map((value) => Type.Literal(value)));
+const roadmapTaskInputSchema = Type.Object({
+  title: Type.String({ minLength: 1, description: "Short task title." }),
+  status: Type.Optional(roadmapStatusSchema),
+  priority: roadmapPrioritySchema,
+  kind: Type.String({ minLength: 1, description: "Task kind like architecture, bug, migration, testing, docs, or agent-workflow." }),
+  summary: Type.String({ minLength: 1, description: "One-sentence task summary." }),
+  spec_paths: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  code_paths: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  research_ids: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  labels: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  delta: Type.Optional(Type.Object({
+    desired: Type.Optional(Type.String()),
+    current: Type.Optional(Type.String()),
+    closure: Type.Optional(Type.String()),
+  })),
+});
+const taskSessionLinkInputSchema = Type.Object({
+  taskId: Type.String({ minLength: 1, description: "Existing roadmap task id to link to current Pi session." }),
+  action: Type.Optional(taskSessionActionSchema),
+  summary: Type.Optional(Type.String({ description: "Short note about what happened in this session for the task." })),
+  filesTouched: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  spawnedTaskIds: Type.Optional(Type.Array(Type.String(), { default: [] })),
+  setSessionName: Type.Optional(Type.Boolean({ description: "When true, rename the current Pi session to this task id + title." })),
+});
 
 export default function codebaseWikiExtension(pi: ExtensionAPI) {
   registerBootstrapFeatures(pi);
+
+  pi.on("session_start", async (_event, ctx) => {
+    const project = await maybeLoadProject(ctx.cwd);
+    if (!project) {
+      ctx.ui.setStatus("codebase-wiki-task", undefined);
+      return;
+    }
+
+    await withUiErrorHandling(ctx, async () => {
+      const synced = await syncCurrentSessionTaskLinks(project, ctx);
+      if (synced) await runRebuild(project);
+      const active = findLatestTaskSessionLink(ctx.sessionManager.getBranch());
+      if (!active) {
+        ctx.ui.setStatus("codebase-wiki-task", undefined);
+        return;
+      }
+      const task = await readRoadmapTask(project, active.taskId);
+      if (task) setTaskSessionStatus(ctx, task.id, task.title, active.action);
+    });
+  });
 
   pi.registerCommand(`${COMMAND_PREFIX}-rebuild`, {
     description: "Rebuild codebase wiki metadata, then show lint summary",
@@ -122,6 +297,27 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
     handler: async (_args, ctx) => {
       await withUiErrorHandling(ctx, async () => {
         ctx.ui.notify(await readStatus(ctx.cwd), "info");
+      });
+    },
+  });
+
+  pi.registerCommand(`${COMMAND_PREFIX}-task`, {
+    description: "Link current Pi session to a roadmap task. Usage: /wiki-task <task-id> [focus|progress|blocked|done|spawn]",
+    handler: async (args, ctx) => {
+      await withUiErrorHandling(ctx, async () => {
+        const [taskId, actionRaw] = args.trim().split(/\s+/, 2);
+        if (!taskId) {
+          const active = findLatestTaskSessionLink(ctx.sessionManager.getBranch());
+          ctx.ui.notify(active ? `Current linked task: ${active.taskId} (${active.action})` : "No task linked to current session branch yet.", "info");
+          return;
+        }
+        const project = await loadProject(ctx.cwd);
+        const result = await linkTaskSession(pi, project, ctx, {
+          taskId,
+          action: normalizeTaskSessionAction(actionRaw),
+          setSessionName: actionRaw ? actionRaw === "focus" : true,
+        });
+        ctx.ui.notify(formatTaskSessionLinkSummary(result), "success");
       });
     },
   });
@@ -181,6 +377,50 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
       };
     },
   });
+
+  pi.registerTool({
+    name: "codebase_wiki_roadmap_append",
+    label: "Codebase Wiki Roadmap Append",
+    description: "Append new roadmap tasks to docs/roadmap.json, update order, log history event, and rebuild generated roadmap/index outputs",
+    promptSnippet: "Append new unresolved delta tasks to the current project's codebase wiki roadmap",
+    promptGuidelines: [
+      "Use this after self-drift or code-drift review when you found real unresolved delta that belongs in docs/roadmap.json.",
+      "Do not use this for issues already covered by an existing roadmap item unless you first explain why duplication is needed.",
+      "The tool assigns ROADMAP-### ids automatically, appends them to roadmap order, logs history, and rebuilds generated outputs.",
+    ],
+    parameters: Type.Object({
+      tasks: Type.Array(roadmapTaskInputSchema, { minItems: 1 }),
+    }),
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      const project = await loadProject(ctx.cwd);
+      const result = await appendRoadmapTasks(pi, project, ctx, params.tasks);
+      return {
+        content: [{ type: "text", text: formatRoadmapAppendSummary(project, result.created) }],
+        details: result,
+      };
+    },
+  });
+
+  pi.registerTool({
+    name: "codebase_wiki_task_session_link",
+    label: "Codebase Wiki Task Session Link",
+    description: "Link current Pi session to an existing roadmap task, persist a Pi custom session entry, update task-session index, and rebuild generated roadmap outputs",
+    promptSnippet: "Link the current Pi session to a roadmap task so future sessions can resume work cleanly",
+    promptGuidelines: [
+      "Use this when starting, progressing, blocking, or finishing work on an existing roadmap task.",
+      "Prefer action='focus' when the session is now centered on one task.",
+      "Use action='spawn' only when the current session created follow-up tasks and you need a trace from session to those tasks.",
+    ],
+    parameters: taskSessionLinkInputSchema,
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      const project = await loadProject(ctx.cwd);
+      const result = await linkTaskSession(pi, project, ctx, params);
+      return {
+        content: [{ type: "text", text: formatTaskSessionLinkSummary(result) }],
+        details: result,
+      };
+    },
+  });
 }
 
 async function withUiErrorHandling(ctx: ExtensionContext, action: () => Promise<void>): Promise<void> {
@@ -204,31 +444,46 @@ function selfDriftPrompt(project: WikiProject): string {
   const include = unique(scope.include ?? []);
   const exclude = unique(scope.exclude ?? []);
   return [
-    `Audit the live codebase wiki for internal drift in ${project.label}.`,
+    `Audit live codebase wiki for internal drift in ${project.label}.`,
     "Scope:",
     ...renderScope("Include", include),
     ...renderScope("Exclude", exclude),
     "Context files:",
     `- ${project.configPath}`,
     `- ${project.indexPath}`,
-    `- ${project.schemaPath}`,
+    `- ${project.roadmapPath}`,
+    `- ${project.roadmapDocPath}`,
     `- ${project.registryPath.replace(`${project.root}/`, "")}`,
     `- ${project.lintPath.replace(`${project.root}/`, "")}`,
     "Tasks:",
-    "1. Find contradictions, overlaps, stale claims, duplicated rules, and docs that should merge, split, or be deleted.",
-    "2. Check that plans, specs, decisions, analyses, and the schema still agree.",
-    "3. Treat the generated index as navigation, not source of truth.",
+    "1. Find contradictions, stale claims, duplicated specs, weak research links, and roadmap items that no longer reflect current delta.",
+    "2. Check that research, specs, roadmap, and generated navigation still agree on current intended state.",
+    "3. Compare candidate roadmap work against existing docs/roadmap.json tasks. Avoid duplicates.",
+    "4. If you find true unresolved delta not already tracked, call codebase_wiki_roadmap_append with task objects. Tool assigns ROADMAP ids automatically and appends them to roadmap order.",
+    "Roadmap task object shape:",
+    "- title",
+    "- priority: critical|high|medium|low",
+    "- kind",
+    "- summary",
+    "- spec_paths[]",
+    "- code_paths[]",
+    "- research_ids[]",
+    "- labels[]",
+    "- delta.desired",
+    "- delta.current",
+    "- delta.closure",
     "Output format:",
     "- Findings by severity",
-    "- Docs to merge, cut, archive, or split",
+    "- Specs to merge, cut, split, or move",
+    "- Existing roadmap items to close or rewrite",
+    "- New roadmap ids appended this pass",
     "- Exact files to edit next",
-    "- Short proposed edits",
-    "Do not edit files yet.",
+    "Do not edit specs or code yet. Only append roadmap tasks when needed.",
   ].join("\n");
 }
 
 function codeDriftPrompt(project: WikiProject, registry: RegistryFile | null): string {
-  const docsScope = unique(project.config.codebase_wiki?.code_drift_scope?.docs ?? defaultSelfDriftScope(project).include ?? []);
+  const docsScope = unique(project.config.codebase_wiki?.code_drift_scope?.docs ?? defaultCodeDriftDocsScope(project));
   const docsExclude = unique(project.config.codebase_wiki?.self_drift_scope?.exclude ?? defaultSelfDriftScope(project).exclude ?? []);
   const repoDocs = unique(project.config.codebase_wiki?.code_drift_scope?.repo_docs ?? ["README.md"]);
   const configCode = unique(project.config.codebase_wiki?.code_drift_scope?.code ?? []);
@@ -240,29 +495,45 @@ function codeDriftPrompt(project: WikiProject, registry: RegistryFile | null): s
   const codeScope = unique([...configCode, ...registryCode]);
 
   return [
-    `Audit drift between the live codebase wiki and implementation for ${project.label}.`,
+    `Audit drift between live codebase wiki and implementation for ${project.label}.`,
     "Docs scope:",
     ...renderScope("Include", docsScope),
     ...renderScope("Exclude", docsExclude),
     "Additional repository docs:",
     ...renderList(repoDocs),
     "Implementation scope:",
-    ...renderList(codeScope.length > 0 ? codeScope : ["Use code paths referenced by the live docs; no explicit code scope configured."]),
+    ...renderList(codeScope.length > 0 ? codeScope : ["Use code paths referenced by live specs; no explicit code scope configured."]),
     "Context files:",
     `- ${project.configPath}`,
+    `- ${project.roadmapPath}`,
     `- ${project.registryPath.replace(`${project.root}/`, "")}`,
     `- ${project.lintPath.replace(`${project.root}/`, "")}`,
     "Tasks:",
-    "1. Find where docs overclaim, underclaim, or point to stale structure.",
-    "2. Distinguish: docs wrong vs code behind docs vs true unresolved drift.",
-    "3. Prefer concrete evidence from current files and route/package wiring.",
+    "1. Find where specs overclaim, underclaim, or miss real structure.",
+    "2. Distinguish: specs wrong vs code behind specs vs true unresolved delta.",
+    "3. Prefer concrete evidence from current files and package wiring.",
+    "4. Compare candidate roadmap work against existing docs/roadmap.json tasks. Avoid duplicates.",
+    "5. If you find true unresolved delta not already tracked, call codebase_wiki_roadmap_append with task objects. Tool assigns ROADMAP ids automatically and appends them to roadmap order.",
+    "Roadmap task object shape:",
+    "- title",
+    "- priority: critical|high|medium|low",
+    "- kind",
+    "- summary",
+    "- spec_paths[]",
+    "- code_paths[]",
+    "- research_ids[]",
+    "- labels[]",
+    "- delta.desired",
+    "- delta.current",
+    "- delta.closure",
     "Output format:",
     "- Findings by severity",
-    "- Docs wrong",
-    "- Code behind docs",
-    "- True drift to track in docs/drift",
+    "- Specs wrong",
+    "- Code behind specs",
+    "- Existing roadmap items to close or rewrite",
+    "- New roadmap ids appended this pass",
     "- Exact files to edit next",
-    "Do not edit files yet.",
+    "Do not edit specs or code yet. Only append roadmap tasks when needed.",
   ].join("\n");
 }
 
@@ -295,11 +566,22 @@ async function readStatus(cwd: string): Promise<string> {
     return lines.join("\n");
   }
 
-  const live = registry.docs.filter((doc) => !doc.path.startsWith(`${project.docsRoot}/archive/`) && doc.path !== project.indexPath);
+  const live = registry.docs.filter((doc) => doc.path !== project.indexPath);
   const byType = countBy(live.map((doc) => doc.doc_type));
+  const researchFiles = registry.research ?? [];
+  const researchEntries = researchFiles.reduce((sum, item) => sum + item.entry_count, 0);
+  const roadmap = registry.roadmap;
+  const taskSessionIndex = await maybeReadJson<TaskSessionIndexFile>(project.taskSessionIndexPath);
   lines.push(`Docs generated: ${registry.generated_at}`);
   lines.push(`Live docs: ${live.length}`);
   lines.push(`Types: ${Object.entries(byType).map(([key, value]) => `${key}=${value}`).join(" ") || "none"}`);
+  lines.push(`Research: files=${researchFiles.length} entries=${researchEntries}`);
+  if (roadmap) {
+    lines.push(`Roadmap: items=${roadmap.entry_count} ${Object.entries(roadmap.counts).map(([key, value]) => `${key}=${value}`).join(" ")}`.trim());
+  }
+  if (taskSessionIndex) {
+    lines.push(`Task sessions: tasks=${Object.keys(taskSessionIndex.tasks).length} sessions=${Object.keys(taskSessionIndex.sessions).length}`);
+  }
   lines.push(`Lint issues: ${report.issues.length}`);
 
   const lastEvent = await readLastEventLine(project.eventsPath);
@@ -309,37 +591,55 @@ async function readStatus(cwd: string): Promise<string> {
 
 async function runRebuild(project: WikiProject): Promise<void> {
   return withLockedPaths(rebuildTargetPaths(project), async () => {
-    const configuredCommand = sanitizeCommand(project.config.codebase_wiki?.rebuild_command);
-    const commands = configuredCommand
-      ? uniqueCommands([configuredCommand, ...pythonAliasFallback(configuredCommand)])
-      : await detectRebuildCommands(project.root);
-
-    if (commands.length === 0) {
-      throw new Error(
-        `No rebuild command configured. Add codebase_wiki.rebuild_command to ${CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
-      );
-    }
-
-    let lastError: unknown;
-    for (const command of commands) {
-      try {
-        await execFileAsync(command[0], command.slice(1), { cwd: project.root, timeout: 120_000 });
-        return;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    throw new Error(`Rebuild failed: ${formatError(lastError)}`);
+    await runRebuildUnlocked(project);
   });
+}
+
+async function runRebuildUnlocked(project: WikiProject): Promise<void> {
+  const configuredCommand = sanitizeCommand(project.config.codebase_wiki?.rebuild_command);
+  const commands = configuredCommand
+    ? uniqueCommands([configuredCommand, ...pythonAliasFallback(configuredCommand)])
+    : await detectRebuildCommands(project.root);
+
+  if (commands.length === 0) {
+    throw new Error(
+      `No rebuild command configured. Add codebase_wiki.rebuild_command to ${CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
+    );
+  }
+
+  let lastError: unknown;
+  for (const command of commands) {
+    try {
+      await execFileAsync(command[0], command.slice(1), { cwd: project.root, timeout: 120_000 });
+      return;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw new Error(`Rebuild failed: ${formatError(lastError)}`);
 }
 
 function rebuildTargetPaths(project: WikiProject): string[] {
   return [
     resolve(project.root, project.indexPath),
+    resolve(project.root, project.roadmapDocPath),
     resolve(project.root, project.eventsPath),
+    resolve(project.root, project.taskSessionIndexPath),
     ...GENERATED_METADATA_FILES.map((fileName) => resolve(project.root, project.metaRoot, fileName)),
   ];
+}
+
+function roadmapMutationTargetPaths(project: WikiProject): string[] {
+  return [
+    resolve(project.root, project.roadmapPath),
+    resolve(project.root, project.roadmapEventsPath),
+    ...rebuildTargetPaths(project),
+  ];
+}
+
+function taskSessionMutationTargetPaths(project: WikiProject): string[] {
+  return [resolve(project.root, project.taskSessionIndexPath), ...rebuildTargetPaths(project)];
 }
 
 async function detectRebuildCommands(root: string): Promise<string[][]> {
@@ -351,16 +651,29 @@ async function detectRebuildCommands(root: string): Promise<string[][]> {
   ];
 }
 
+async function maybeLoadProject(startDir: string): Promise<WikiProject | null> {
+  try {
+    return await loadProject(startDir);
+  } catch {
+    return null;
+  }
+}
+
 async function loadProject(startDir: string): Promise<WikiProject> {
-  const root = await findWikiRoot(startDir);
-  if (!root) {
-    throw new Error(`No ${CONFIG_RELATIVE_PATH} found from ${startDir} upward.`);
+  const root = await requireWikiRoot(startDir);
+  const configPath = resolve(root, CONFIG_RELATIVE_PATH);
+  if (!(await pathExists(configPath))) {
+    throw new Error(`No ${CONFIG_RELATIVE_PATH} found at wiki root ${root}. Run /wiki-setup or /wiki-bootstrap first.`);
   }
 
-  const config = await readJson<DocsConfig>(resolve(root, CONFIG_RELATIVE_PATH));
+  const config = await readJson<DocsConfig>(configPath);
   const docsRoot = normalizeRelativePath(config.docs_root ?? DEFAULT_DOCS_ROOT);
-  const schemaPath = normalizeRelativePath(config.schema_path ?? DEFAULT_SCHEMA_PATH);
+  const specsRoot = normalizeRelativePath(config.specs_root ?? DEFAULT_SPECS_ROOT);
+  const researchRoot = normalizeRelativePath(config.research_root ?? DEFAULT_RESEARCH_ROOT);
   const indexPath = normalizeRelativePath(config.index_path ?? DEFAULT_INDEX_PATH);
+  const roadmapPath = normalizeRelativePath(config.roadmap_path ?? DEFAULT_ROADMAP_PATH);
+  const roadmapDocPath = normalizeRelativePath(config.roadmap_doc_path ?? DEFAULT_ROADMAP_DOC_PATH);
+  const roadmapEventsPath = normalizeRelativePath(config.roadmap_events_path ?? DEFAULT_ROADMAP_EVENTS_PATH);
   const metaRoot = normalizeRelativePath(config.meta_root ?? DEFAULT_META_ROOT);
   const label = config.codebase_wiki?.name ?? config.project_name ?? basename(root);
 
@@ -369,25 +682,401 @@ async function loadProject(startDir: string): Promise<WikiProject> {
     label,
     config,
     docsRoot,
-    schemaPath,
+    specsRoot,
+    researchRoot,
     indexPath,
+    roadmapPath,
+    roadmapDocPath,
     metaRoot,
-    configPath: resolve(root, CONFIG_RELATIVE_PATH),
+    configPath,
     lintPath: resolve(root, metaRoot, "lint.json"),
     registryPath: resolve(root, metaRoot, "registry.json"),
     eventsPath: resolve(root, metaRoot, "events.jsonl"),
+    roadmapEventsPath,
+    taskSessionIndexPath: resolve(root, metaRoot, "task-session-index.json"),
   };
 }
 
-async function findWikiRoot(startDir: string): Promise<string | null> {
-  let current = resolve(startDir);
-  while (true) {
-    const candidate = resolve(current, CONFIG_RELATIVE_PATH);
-    if (await pathExists(candidate)) return current;
-    const parent = dirname(current);
-    if (parent === current) return null;
-    current = parent;
+async function appendRoadmapTasks(pi: ExtensionAPI, project: WikiProject, ctx: ExtensionContext, tasks: RoadmapTaskInput[]): Promise<{ created: RoadmapTaskRecord[] }> {
+  if (tasks.length === 0) throw new Error("No roadmap tasks provided.");
+
+  return withLockedPaths(roadmapMutationTargetPaths(project), async () => {
+    const roadmapPath = resolve(project.root, project.roadmapPath);
+    const roadmap = await readRoadmapFile(roadmapPath);
+    const createdAt = todayIso();
+    const nextId = createRoadmapIdAllocator(Object.keys(roadmap.tasks));
+    const created = tasks.map((task) => normalizeRoadmapTask(task, nextId, createdAt));
+
+    for (const task of created) {
+      roadmap.tasks[task.id] = task;
+      roadmap.order.push(task.id);
+    }
+    roadmap.updated = nowIso();
+
+    await writeJsonFile(roadmapPath, roadmap);
+    await appendRoadmapHistoryEvent(project, "append", created);
+    await appendRoadmapEvent(project, created);
+    for (const task of created) {
+      await recordTaskSessionLinkUnlocked(pi, project, ctx, task, {
+        taskId: task.id,
+        action: "spawn",
+        summary: `Spawned task ${task.id} in current Pi session.`,
+        setSessionName: false,
+      });
+    }
+    await runRebuildUnlocked(project);
+    return { created };
+  });
+}
+
+function normalizeRoadmapTask(task: RoadmapTaskInput, nextId: () => string, today: string): RoadmapTaskRecord {
+  const title = task.title.trim();
+  const kind = task.kind.trim();
+  const summary = task.summary.trim();
+  if (!title) throw new Error("Roadmap task title is required.");
+  if (!kind) throw new Error(`Roadmap task '${title}' is missing kind.`);
+  if (!summary) throw new Error(`Roadmap task '${title}' is missing summary.`);
+
+  return {
+    id: nextId(),
+    title,
+    status: normalizeRoadmapStatus(task.status),
+    priority: normalizeRoadmapPriority(task.priority),
+    kind,
+    summary,
+    spec_paths: unique(task.spec_paths ?? []),
+    code_paths: unique(task.code_paths ?? []),
+    research_ids: unique(task.research_ids ?? []),
+    labels: unique(task.labels ?? []),
+    delta: {
+      desired: task.delta?.desired?.trim() ?? "",
+      current: task.delta?.current?.trim() ?? "",
+      closure: task.delta?.closure?.trim() ?? "",
+    },
+    created: today,
+    updated: today,
+  };
+}
+
+function normalizeRoadmapStatus(status: string | undefined): RoadmapStatus {
+  if (!status) return "todo";
+  if ((ROADMAP_STATUS_VALUES as readonly string[]).includes(status)) return status as RoadmapStatus;
+  throw new Error(`Invalid roadmap status: ${status}`);
+}
+
+function normalizeRoadmapPriority(priority: string): RoadmapPriority {
+  if ((ROADMAP_PRIORITY_VALUES as readonly string[]).includes(priority)) return priority as RoadmapPriority;
+  throw new Error(`Invalid roadmap priority: ${priority}`);
+}
+
+function createRoadmapIdAllocator(existingIds: string[]): () => string {
+  let counter = existingIds
+    .map((id) => /^ROADMAP-(\d+)$/.exec(id)?.[1])
+    .map((value) => (value ? Number.parseInt(value, 10) : 0))
+    .reduce((max, value) => Math.max(max, value), 0);
+
+  return () => {
+    counter += 1;
+    return `ROADMAP-${String(counter).padStart(3, "0")}`;
+  };
+}
+
+async function linkTaskSession(
+  pi: ExtensionAPI,
+  project: WikiProject,
+  ctx: ExtensionContext,
+  input: TaskSessionLinkInput,
+): Promise<{ taskId: string; title: string; action: TaskSessionAction }> {
+  return withLockedPaths(taskSessionMutationTargetPaths(project), async () => {
+    const task = await readRoadmapTask(project, input.taskId);
+    if (!task) throw new Error(`Roadmap task not found: ${input.taskId}`);
+    await recordTaskSessionLinkUnlocked(pi, project, ctx, task, input);
+    await runRebuildUnlocked(project);
+    return { taskId: task.id, title: task.title, action: normalizeTaskSessionAction(input.action) };
+  });
+}
+
+async function recordTaskSessionLinkUnlocked(
+  pi: ExtensionAPI,
+  project: WikiProject,
+  ctx: ExtensionContext,
+  task: RoadmapTaskRecord,
+  input: TaskSessionLinkInput,
+): Promise<void> {
+  if (!hasSessionManager(ctx)) return;
+
+  const link = normalizeTaskSessionLinkInput(input);
+  const shouldSetSessionName = input.setSessionName ?? link.action === "focus";
+  if (shouldSetSessionName) {
+    try {
+      pi.setSessionName(`${task.id} ${task.title}`);
+    } catch {
+      // Ignore in tests or non-standard execution contexts.
+    }
   }
+  try {
+    pi.appendEntry(TASK_SESSION_LINK_CUSTOM_TYPE, {
+      taskId: task.id,
+      action: link.action,
+      summary: link.summary,
+      filesTouched: link.filesTouched,
+      spawnedTaskIds: link.spawnedTaskIds,
+    });
+  } catch {
+    // Ignore in tests or non-standard execution contexts.
+  }
+
+  const index = await readTaskSessionIndex(project.taskSessionIndexPath);
+  const sessionMeta = getSessionMeta(ctx, shouldSetSessionName ? `${task.id} ${task.title}` : undefined);
+  if (!sessionMeta) return;
+  const changed = applyTaskSessionLink(index, sessionMeta, { ...link, taskId: task.id });
+  if (changed) await writeJsonFile(project.taskSessionIndexPath, index);
+  setTaskSessionStatus(ctx, task.id, task.title, link.action);
+}
+
+function normalizeTaskSessionLinkInput(input: TaskSessionLinkInput): TaskSessionLinkRecord {
+  return {
+    taskId: input.taskId.trim(),
+    action: normalizeTaskSessionAction(input.action),
+    summary: input.summary?.trim() ?? "",
+    filesTouched: unique(input.filesTouched ?? []),
+    spawnedTaskIds: unique(input.spawnedTaskIds ?? []),
+    timestamp: nowIso(),
+  };
+}
+
+function normalizeTaskSessionAction(action: string | undefined): TaskSessionAction {
+  if (!action) return "focus";
+  if ((TASK_SESSION_ACTION_VALUES as readonly string[]).includes(action)) return action as TaskSessionAction;
+  throw new Error(`Invalid task session action: ${action}`);
+}
+
+function formatTaskSessionLinkSummary(result: { taskId: string; title: string; action: TaskSessionAction }): string {
+  return `Linked current Pi session to ${result.taskId} (${result.action}) — ${result.title}`;
+}
+
+async function readRoadmapTask(project: WikiProject, taskId: string): Promise<RoadmapTaskRecord | null> {
+  const roadmap = await readRoadmapFile(resolve(project.root, project.roadmapPath));
+  return roadmap.tasks[taskId] ?? null;
+}
+
+function hasSessionManager(ctx: ExtensionContext): boolean {
+  const manager = ctx.sessionManager as unknown as { getSessionId?: () => string } | undefined;
+  return typeof manager?.getSessionId === "function";
+}
+
+function getSessionMeta(ctx: ExtensionContext, sessionNameOverride?: string): SessionMeta | null {
+  if (!hasSessionManager(ctx)) return null;
+  const manager = ctx.sessionManager as unknown as {
+    getSessionId: () => string;
+    getSessionName?: () => string | undefined;
+    getSessionFile?: () => string | undefined;
+  };
+  const sessionId = manager.getSessionId();
+  if (!sessionId) return null;
+  const sessionFile = typeof manager.getSessionFile === "function" ? manager.getSessionFile() : undefined;
+  return {
+    sessionId,
+    sessionName: sessionNameOverride ?? (typeof manager.getSessionName === "function" ? manager.getSessionName() : undefined),
+    sessionFileName: sessionFile ? basename(sessionFile) : undefined,
+  };
+}
+
+async function readTaskSessionIndex(path: string): Promise<TaskSessionIndexFile> {
+  if (!(await pathExists(path))) return emptyTaskSessionIndex();
+  const data = await readJson<TaskSessionIndexFile>(path);
+  return {
+    version: data.version ?? 1,
+    updated: data.updated ?? nowIso(),
+    tasks: typeof data.tasks === "object" && data.tasks ? data.tasks : {},
+    sessions: typeof data.sessions === "object" && data.sessions ? data.sessions : {},
+  };
+}
+
+function emptyTaskSessionIndex(): TaskSessionIndexFile {
+  return {
+    version: 1,
+    updated: nowIso(),
+    tasks: {},
+    sessions: {},
+  };
+}
+
+function applyTaskSessionLink(index: TaskSessionIndexFile, session: SessionMeta, link: TaskSessionLinkRecord): boolean {
+  let changed = false;
+  const taskSummary = index.tasks[link.taskId] ?? {
+    session_ids: [],
+    session_count: 0,
+  };
+  if (!taskSummary.session_ids.includes(session.sessionId)) {
+    taskSummary.session_ids.push(session.sessionId);
+    changed = true;
+  }
+  const nextSessionCount = taskSummary.session_ids.length;
+  if (taskSummary.session_count !== nextSessionCount) {
+    taskSummary.session_count = nextSessionCount;
+    changed = true;
+  }
+  if (!taskSummary.last_timestamp || link.timestamp >= taskSummary.last_timestamp) {
+    if (taskSummary.last_session_id !== session.sessionId || taskSummary.last_session_name !== session.sessionName || taskSummary.last_action !== link.action || taskSummary.last_summary !== (link.summary || undefined) || taskSummary.last_timestamp !== link.timestamp) {
+      changed = true;
+    }
+    taskSummary.last_session_id = session.sessionId;
+    taskSummary.last_session_name = session.sessionName;
+    taskSummary.last_action = link.action;
+    taskSummary.last_summary = link.summary || undefined;
+    taskSummary.last_timestamp = link.timestamp;
+  }
+  index.tasks[link.taskId] = taskSummary;
+
+  const sessionSummary = index.sessions[session.sessionId] ?? {
+    id: session.sessionId,
+    task_ids: [],
+  };
+  if (!sessionSummary.task_ids.includes(link.taskId)) {
+    sessionSummary.task_ids.push(link.taskId);
+    changed = true;
+  }
+  if (session.sessionName && sessionSummary.name !== session.sessionName) {
+    sessionSummary.name = session.sessionName;
+    changed = true;
+  }
+  if (session.sessionFileName && sessionSummary.file_name !== session.sessionFileName) {
+    sessionSummary.file_name = session.sessionFileName;
+    changed = true;
+  }
+  if (!sessionSummary.last_timestamp || link.timestamp >= sessionSummary.last_timestamp) {
+    if (sessionSummary.last_action !== link.action || sessionSummary.last_summary !== (link.summary || undefined) || sessionSummary.last_timestamp !== link.timestamp) {
+      changed = true;
+    }
+    sessionSummary.last_action = link.action;
+    sessionSummary.last_summary = link.summary || undefined;
+    sessionSummary.last_timestamp = link.timestamp;
+  }
+  index.sessions[session.sessionId] = sessionSummary;
+  if (changed) index.updated = nowIso();
+  return changed;
+}
+
+async function syncCurrentSessionTaskLinks(project: WikiProject, ctx: ExtensionContext): Promise<boolean> {
+  if (!hasSessionManager(ctx)) return false;
+  const session = getSessionMeta(ctx);
+  if (!session) return false;
+  const entries = ctx.sessionManager.getEntries();
+  const links = entries.flatMap((entry) => {
+    const link = parseTaskSessionLinkEntry(entry);
+    return link ? [link] : [];
+  });
+  const index = await readTaskSessionIndex(project.taskSessionIndexPath);
+  let changed = false;
+  for (const link of links) {
+    changed = applyTaskSessionLink(index, session, link) || changed;
+  }
+  if (!changed) return false;
+  await writeJsonFile(project.taskSessionIndexPath, index);
+  return true;
+}
+
+function parseTaskSessionLinkEntry(entry: unknown): TaskSessionLinkRecord | null {
+  const value = entry as {
+    type?: string;
+    customType?: string;
+    timestamp?: string;
+    data?: {
+      taskId?: string;
+      action?: string;
+      summary?: string;
+      filesTouched?: string[];
+      spawnedTaskIds?: string[];
+    };
+  };
+  if (value?.type !== "custom" || value.customType !== TASK_SESSION_LINK_CUSTOM_TYPE || !value.data?.taskId) return null;
+  try {
+    return {
+      taskId: String(value.data.taskId),
+      action: normalizeTaskSessionAction(value.data.action),
+      summary: typeof value.data.summary === "string" ? value.data.summary : "",
+      filesTouched: Array.isArray(value.data.filesTouched) ? unique(value.data.filesTouched) : [],
+      spawnedTaskIds: Array.isArray(value.data.spawnedTaskIds) ? unique(value.data.spawnedTaskIds) : [],
+      timestamp: typeof value.timestamp === "string" ? value.timestamp : nowIso(),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function findLatestTaskSessionLink(entries: unknown[]): TaskSessionLinkRecord | null {
+  for (let index = entries.length - 1; index >= 0; index -= 1) {
+    const parsed = parseTaskSessionLinkEntry(entries[index]);
+    if (parsed) return parsed;
+  }
+  return null;
+}
+
+function setTaskSessionStatus(ctx: ExtensionContext, taskId: string, title: string, action: TaskSessionAction): void {
+  ctx.ui.setStatus("codebase-wiki-task", `${taskId} ${action} — ${title}`);
+}
+
+async function appendRoadmapEvent(project: WikiProject, tasks: RoadmapTaskRecord[]): Promise<void> {
+  const eventPath = resolve(project.root, project.eventsPath);
+  const prefix = await jsonlAppendPrefix(eventPath);
+  const titles = tasks.map((task) => `${task.id} ${task.title}`).join("; ");
+  const event = JSON.stringify({
+    ts: nowIso(),
+    kind: "roadmap_append",
+    title: `Appended ${tasks.length} roadmap task(s)`,
+    summary: titles,
+  });
+  await appendFile(eventPath, `${prefix}${event}\n`, "utf8");
+}
+
+async function appendRoadmapHistoryEvent(project: WikiProject, action: string, tasks: RoadmapTaskRecord[]): Promise<void> {
+  const historyPath = resolve(project.root, project.roadmapEventsPath);
+  const prefix = await jsonlAppendPrefix(historyPath);
+  const lines = tasks.map((task) => JSON.stringify({
+    ts: nowIso(),
+    action,
+    id: task.id,
+    title: task.title,
+    status: task.status,
+    priority: task.priority,
+  }));
+  await appendFile(historyPath, `${prefix}${lines.join("\n")}\n`, "utf8");
+}
+
+async function jsonlAppendPrefix(path: string): Promise<string> {
+  if (!(await pathExists(path))) return "";
+  const raw = await readFile(path, "utf8");
+  return raw.length > 0 && !raw.endsWith("\n") ? "\n" : "";
+}
+
+function formatRoadmapAppendSummary(project: WikiProject, tasks: RoadmapTaskRecord[]): string {
+  return `${project.label}: appended ${tasks.length} roadmap task(s) to ${project.roadmapPath} — ${tasks.map((task) => task.id).join(", ")}`;
+}
+
+function nowIso(): string {
+  return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+function todayIso(): string {
+  return nowIso().slice(0, 10);
+}
+
+async function readRoadmapFile(path: string): Promise<RoadmapFile> {
+  if (!(await pathExists(path))) {
+    return { version: 1, updated: nowIso(), order: [], tasks: {} };
+  }
+  const data = await readJson<RoadmapFile>(path);
+  return {
+    version: data.version ?? 1,
+    updated: data.updated ?? nowIso(),
+    order: Array.isArray(data.order) ? data.order.filter(Boolean) : [],
+    tasks: typeof data.tasks === "object" && data.tasks ? data.tasks : {},
+  };
+}
+
+async function writeJsonFile(path: string, data: unknown): Promise<void> {
+  await writeFile(path, `${JSON.stringify(data, null, 2)}\n`, "utf8");
 }
 
 async function pathExists(path: string): Promise<boolean> {
@@ -423,9 +1112,19 @@ async function readLastEventLine(path: string): Promise<string | null> {
 
 function defaultSelfDriftScope(project: WikiProject): ScopeConfig {
   return {
-    include: unique([project.indexPath, project.schemaPath, `${project.docsRoot}/**/*.md`]),
-    exclude: unique([`${project.docsRoot}/archive/**`, `${project.docsRoot}/_templates/**`]),
+    include: unique([
+      project.indexPath,
+      project.roadmapPath,
+      project.roadmapDocPath,
+      `${project.specsRoot}/**/*.md`,
+      `${project.researchRoot}/**/*.jsonl`,
+    ]),
+    exclude: unique([`${project.docsRoot}/_templates/**`]),
   };
+}
+
+function defaultCodeDriftDocsScope(project: WikiProject): string[] {
+  return unique([project.roadmapDocPath, `${project.specsRoot}/**/*.md`]);
 }
 
 function renderScope(label: string, items: string[]): string[] {

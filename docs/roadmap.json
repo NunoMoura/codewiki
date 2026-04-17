@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "updated": "2026-04-17T07:05:00Z",
+  "order": [
+    "ROADMAP-001",
+    "ROADMAP-002",
+    "ROADMAP-003",
+    "ROADMAP-004",
+    "ROADMAP-005",
+    "ROADMAP-006",
+    "ROADMAP-007",
+    "ROADMAP-008"
+  ],
+  "tasks": {
+    "ROADMAP-001": {
+      "id": "ROADMAP-001",
+      "title": "Finish simplified research/specs/roadmap refactor",
+      "status": "done",
+      "priority": "critical",
+      "kind": "architecture",
+      "summary": "Replace legacy top-level taxonomy with simplified contract across templates, runtime prompts, README, and package docs.",
+      "spec_paths": [
+        "docs/specs/product.md",
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/templates.ts",
+        "extensions/codebase-wiki/index.ts",
+        "README.md",
+        "skills/codebase-wiki/SKILL.md"
+      ],
+      "research_ids": [
+        "RES-001",
+        "RES-002"
+      ],
+      "labels": [
+        "refactor",
+        "v2"
+      ],
+      "delta": {
+        "desired": "Package ships one clear model: research evidence, spec truth, roadmap delta.",
+        "current": "Starter templates, runtime prompts, package docs, and self-wiki now use research/specs/roadmap as canonical model.",
+        "closure": "Done for current package contract. Future roadmap work continues on automation, brownfield mapping, and history strategy."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-16"
+    },
+    "ROADMAP-002": {
+      "id": "ROADMAP-002",
+      "title": "Generate brownfield spec hierarchy from repo structure",
+      "status": "done",
+      "priority": "high",
+      "kind": "bootstrap",
+      "summary": "Setup/bootstrap now infer first-pass boundary specs from meaningful repo structure so brownfield repos start closer to real ownership seams.",
+      "spec_paths": [
+        "docs/specs/system/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/bootstrap.ts",
+        "extensions/codebase-wiki/templates.ts",
+        "scripts/smoke-test.mjs"
+      ],
+      "research_ids": [
+        "RES-001",
+        "RES-002"
+      ],
+      "labels": [
+        "brownfield",
+        "bootstrap"
+      ],
+      "delta": {
+        "desired": "Existing repos get useful boundary-shaped specs on first pass.",
+        "current": "Setup/bootstrap now infer first-pass boundary specs and brownfield drift scopes from repo structure before humans refine the docs.",
+        "closure": "Done for first-pass ownership inference. Future work can improve deeper heuristics for repos whose real seams only appear below top-level boundaries."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-17"
+    },
+    "ROADMAP-003": {
+      "id": "ROADMAP-003",
+      "title": "Emit roadmap-ready tasks from drift audits",
+      "status": "done",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Self-drift and code-drift flows should output task-shaped roadmap items so unresolved deltas can be promoted with minimal manual rewriting.",
+      "spec_paths": [
+        "docs/specs/extension/overview.md",
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/index.ts",
+        "skills/codebase-wiki/SKILL.md",
+        "scripts/smoke-test.mjs"
+      ],
+      "research_ids": [
+        "RES-001"
+      ],
+      "labels": [
+        "roadmap",
+        "automation"
+      ],
+      "delta": {
+        "desired": "Audit output converts directly into `docs/roadmap.json` task entries.",
+        "current": "Drift prompts now instruct task-shaped emission and package tool appends structured tasks with automatic ids and rebuild.",
+        "closure": "Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap items."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-16"
+    },
+    "ROADMAP-004": {
+      "id": "ROADMAP-004",
+      "title": "Decide compact history strategy after archive deprecation",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "process",
+      "summary": "Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.",
+      "spec_paths": [
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/templates.ts"
+      ],
+      "research_ids": [],
+      "labels": [
+        "history",
+        "archive"
+      ],
+      "delta": {
+        "desired": "History stays cheap and accessible without reviving bulky archive docs.",
+        "current": "Current stance prefers git plus `.docs/events.jsonl`, but package does not yet document compact history patterns deeply.",
+        "closure": "Choose and document whether events-only is enough or if compact history JSONL should be generated."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-16"
+    },
+    "ROADMAP-005": {
+      "id": "ROADMAP-005",
+      "title": "Support roadmap update and close mutations",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "agent-workflow",
+      "summary": "After append flow, package should let agents update or close existing roadmap items without manual roadmap JSON editing.",
+      "spec_paths": [
+        "docs/specs/extension/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/index.ts"
+      ],
+      "research_ids": [],
+      "labels": [
+        "roadmap",
+        "automation",
+        "follow-up"
+      ],
+      "delta": {
+        "desired": "Agents can append, update, and close roadmap items through package-native workflow.",
+        "current": "Current implementation appends new tasks only; existing items still need manual edits for closure or rewrite.",
+        "closure": "Add safe mutation tool for targeting existing roadmap ids and rebuilding generated outputs after edit."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-16"
+    },
+    "ROADMAP-006": {
+      "id": "ROADMAP-006",
+      "title": "Link Pi sessions to roadmap tasks",
+      "status": "done",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Keep Pi session JSONL native, append custom task-link entries, and derive local task-session metadata for roadmap navigation.",
+      "spec_paths": [
+        "docs/specs/extension/overview.md",
+        "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/index.ts",
+        "extensions/codebase-wiki/templates.ts",
+        "scripts/rebuild_docs_meta.py",
+        "skills/codebase-wiki/SKILL.md",
+        "README.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "sessions",
+        "roadmap",
+        "pi"
+      ],
+      "delta": {
+        "desired": "Task work can be resumed across Pi sessions without replacing Pi session JSONL format.",
+        "current": "Extension now appends Pi custom task-link entries, maintains `.docs/task-session-index.json`, and surfaces session continuity in generated roadmap view.",
+        "closure": "Done for link and derive flow. Future work can add richer session analytics or task-aware resume helpers."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-16"
+    },
+    "ROADMAP-007": {
+      "id": "ROADMAP-007",
+      "title": "Expand smoke coverage for full public command surface",
+      "status": "done",
+      "priority": "medium",
+      "kind": "testing",
+      "summary": "Smoke tests should fail if any documented public command disappears from the packaged extension.",
+      "spec_paths": [
+        "docs/specs/extension/overview.md",
+        "docs/specs/package/overview.md"
+      ],
+      "code_paths": [
+        "scripts/smoke-test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "testing",
+        "dogfood",
+        "public-surface"
+      ],
+      "delta": {
+        "desired": "Packaged smoke checks cover the documented command surface closely enough to catch accidental public API drift.",
+        "current": "Smoke tests now assert every documented command and tool name, and they exercise setup/bootstrap, roadmap append, session-link, and inferred brownfield starter behavior.",
+        "closure": "Done for current public surface. Extend the assertions whenever new commands or tools are added."
+      },
+      "created": "2026-04-16",
+      "updated": "2026-04-17"
+    },
+    "ROADMAP-008": {
+      "id": "ROADMAP-008",
+      "title": "Support global install with cwd-based wiki discovery",
+      "status": "done",
+      "priority": "critical",
+      "kind": "architecture",
+      "summary": "Extension runtime should load from a global Pi package install while discovering the active repo-local wiki from current cwd.",
+      "spec_paths": [
+        "docs/specs/package/overview.md",
+        "docs/specs/extension/overview.md",
+        "docs/specs/system/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/project-root.ts",
+        "extensions/codebase-wiki/bootstrap.ts",
+        "extensions/codebase-wiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "README.md",
+        "skills/codebase-wiki/SKILL.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "pi",
+        "install",
+        "discovery"
+      ],
+      "delta": {
+        "desired": "One global package install should work across many repos while runtime state stays repo-local.",
+        "current": "Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.",
+        "closure": "Done for the global-install plus repo-local discovery architecture adopted in this package."
+      },
+      "created": "2026-04-17",
+      "updated": "2026-04-17"
+    }
+  }
+}

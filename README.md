@@ -2,6 +2,8 @@
 
 Repo-local, docs-first wiki tooling for [Pi](https://github.com/mariozechner/pi-coding-agent).
 
+Inspired by Karpathy's [LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) and adapted for development-project documentation instead of general personal knowledge bases.
+
 This package now ships:
 
 - **one Pi extension**: `codebase-wiki`
@@ -16,6 +18,7 @@ That is the right shape for this package:
 
 ### Commands
 
+- `/wiki-setup [project name]`
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-rebuild`
 - `/wiki-lint`
@@ -23,12 +26,16 @@ That is the right shape for this package:
 - `/wiki-status`
 - `/wiki-self-drift`
 - `/wiki-code-drift`
+- `/wiki-task <task-id> [focus|progress|blocked|done|spawn]`
 
 ### Tools
 
+- `codebase_wiki_setup`
 - `codebase_wiki_bootstrap`
 - `codebase_wiki_rebuild`
 - `codebase_wiki_status`
+- `codebase_wiki_roadmap_append`
+- `codebase_wiki_task_session_link`
 
 ### Skill
 
@@ -36,50 +43,80 @@ That is the right shape for this package:
 
 The skill tells Pi when to use the package for:
 
-- bootstrapping a repo-local wiki
+- setting up or bootstrapping a repo-local wiki
 - rebuilding generated docs metadata
 - deterministic docs linting
 - docs-vs-docs drift review
 - docs-vs-code drift review
+- appending roadmap-ready tasks after drift audits
+- linking current Pi session to roadmap tasks
+
+## Simplified model
+
+Codebase Wiki now centers on only three canonical artifact classes:
+
+- **research** — compact evidence capture in docs/research JSONL collections
+- **specs** — intended system truth in docs/specs markdown hierarchy
+- **roadmap** — numbered delta tracker in `docs/roadmap.json`
+
+Generated navigation stays separate:
+
+- `docs/index.md`
+- `docs/roadmap.md`
+- `.docs/registry.json`
+- `.docs/backlinks.json`
+- `.docs/lint.json`
+- `.docs/task-session-index.json`
+
+Pi session linkage stays local and operational:
+
+- Pi session JSONL remains Pi-owned
+- codebase-wiki appends custom session entries linking tasks to sessions
+- `.docs/task-session-index.json` is derived metadata for navigation and resume flow
+
+Working rule:
+
+- research = evidence
+- specs = desired state
+- roadmap = trackable delta from desired state to current reality
 
 ## Install
 
-### From git
+This package is designed to work well as a **global Pi package**.
+
+Why:
+
+- Pi packages can be installed globally via `~/.pi/agent/settings.json`
+- Pi project settings are cwd-scoped, so repo binding should live in repo-local wiki config, not package install location
+- runtime operations can discover the nearest ancestor containing `.docs/config.json`
+- one global install can operate across many repos
+
+### Recommended: global install
+
+From git:
 
 ```bash
 pi install git:github.com/NunoMoura/codebase-wiki
 ```
 
-Project-local install:
-
-```bash
-pi install -l git:github.com/NunoMoura/codebase-wiki
-```
-
-### From npm
-
-After this package is published to npm, install it with:
+From npm:
 
 ```bash
 pi install npm:codebase-wiki
 ```
 
-Project-local install:
-
-```bash
-pi install -l npm:codebase-wiki
-```
-
-### From a local checkout
+From a local checkout:
 
 ```bash
 pi install /absolute/path/to/codebase-wiki
 ```
 
-Or try it for one run:
+### Optional: project-local install
+
+If you want the package source pinned in one repo's `.pi/settings.json`, you can still use `-l`:
 
 ```bash
-pi -e /absolute/path/to/codebase-wiki
+pi install -l /absolute/path/to/codebase-wiki
 ```
 
 After install, run `/reload` if the session was already open.
@@ -103,17 +140,23 @@ python3 -m pip install pyyaml
 
 ### New repo
 
-1. Install the package.
-2. Open Pi in the target repo.
-3. Run:
+1. Install the package once with `pi install <package-source>`.
+2. Open Pi in the repo root, or in a subdirectory if you want setup to target the enclosing git repo.
+3. Run either:
+
+```text
+/wiki-setup My Project
+```
+
+for the safe default, or:
 
 ```text
 /wiki-bootstrap My Project
 ```
 
-Or ask the agent to do it if tool use is appropriate.
+if you want the explicit bootstrap command.
 
-4. Replace the starter docs with real project content.
+4. Replace the starter docs with real project content. On brownfield repos, setup/bootstrap may infer first-pass boundary specs from repo structure; refine or collapse them until they match real ownership seams.
 5. Use:
 
 ```text
@@ -125,15 +168,27 @@ Or ask the agent to do it if tool use is appropriate.
 
 ### Existing repo
 
-If the repo already has a compatible wiki contract, skip bootstrapping and use the operational commands.
+If the repo already has a compatible wiki contract, open Pi anywhere inside that wiki tree and use the operational commands.
+
+If the repo needs the contract created first, run:
+
+```text
+/wiki-setup
+```
+
+from the repo root, or from a subdirectory if you want setup to target the enclosing git repo.
 
 Minimum expected contract:
 
 ```json
 {
   "docs_root": "docs",
-  "schema_path": "docs/schema.md",
+  "specs_root": "docs/specs",
+  "research_root": "docs/research",
   "index_path": "docs/index.md",
+  "roadmap_path": "docs/roadmap.json",
+  "roadmap_doc_path": "docs/roadmap.md",
+  "roadmap_events_path": ".docs/roadmap-events.jsonl",
   "meta_root": ".docs",
   "codebase_wiki": {
     "rebuild_command": ["python", "scripts/rebuild_docs_meta.py"]
@@ -144,8 +199,46 @@ Minimum expected contract:
 The rebuild command should update at least:
 
 - `docs/index.md`
+- `docs/roadmap.md`
 - `.docs/registry.json`
 - `.docs/lint.json`
+- `.docs/task-session-index.json` (empty or populated)
+
+## Recommended dogfooding workflow
+
+When maintaining `codebase-wiki` itself, use the package on its own repo.
+
+Recommended loop:
+
+1. Edit live docs or runtime code.
+2. Run:
+
+```text
+/wiki-rebuild
+/wiki-lint
+/wiki-status
+```
+
+3. If work maps to an existing roadmap item, link the session:
+
+```text
+/wiki-task ROADMAP-005 focus
+```
+
+4. If you want the agent to review the docs contract before editing, run:
+
+```text
+/wiki-self-drift
+/wiki-code-drift
+```
+
+5. If drift review finds real new delta, append a structured roadmap task with `codebase_wiki_roadmap_append` instead of hand-editing generated docs.
+
+Working rule for this repo:
+
+- edit canonical sources (`README.md`, spec docs under `docs/specs/`, `docs/roadmap.json`, runtime code)
+- rebuild generated outputs after changes
+- do not hand-edit generated outputs under `docs/index.md`, `docs/roadmap.md`, or `.docs/*.json`
 
 ## Why one extension and one skill
 
@@ -179,43 +272,59 @@ Use `AGENTS.md` for project conventions. Use the packaged skill for package beha
 
 ## How it works
 
-### Bootstrap
+### Setup and bootstrap
 
-`/wiki-bootstrap` or `codebase_wiki_bootstrap` scaffolds a starter wiki into the current repo, including:
+`/wiki-setup` and `codebase_wiki_setup` are the safe default. They configure the current project for codebase-wiki without overwriting existing starter files, and reuse an existing ancestor wiki root when one is already present.
+
+`/wiki-bootstrap` or `codebase_wiki_bootstrap` use the same starter contract, but support `--force` when the user explicitly wants starter files overwritten.
+
+Starter setup includes:
 
 - `.docs/config.json`
 - `.docs/events.jsonl`
 - `.docs/sources/`
 - `scripts/rebuild_docs_meta.py`
-- `docs/schema.md`
-- `docs/specs/product/prd.md`
-- `docs/specs/architecture/system-overview.md`
-- `docs/decisions/ADR-001-documentation-wiki-model.md`
-- `docs/plans/roadmap.md`
-- `docs/archive/README.md`
-- generated outputs like `docs/index.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`
+- `docs/specs/product.md`
+- `docs/specs/system/overview.md`
+- `docs/specs/shared/overview.md`
+- inferred first-pass boundary `overview.md` files under `docs/specs/` when brownfield structure is detected
+- `docs/research/inspiration.jsonl`
+- `docs/roadmap.json`
+- generated outputs like `docs/index.md`, `docs/roadmap.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`, `.docs/task-session-index.json`
 
 ### Runtime operations
 
-The extension walks upward from the current working directory looking for `.docs/config.json`.
+Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.json`, while packages can also be installed globally. codebase-wiki therefore binds runtime to repo-local wiki config, not to Pi install location.
 
-It then uses the repo config to:
+Runtime rule:
 
-- find docs root and schema/index paths
+- resolve the nearest ancestor containing `.docs/config.json` from current cwd
+- if no wiki exists yet, `/wiki-setup` and `/wiki-bootstrap` target the enclosing git repo root when present, else the current working directory
+
+It then uses that repo config to:
+
+- find docs, specs, research, index, and roadmap paths
 - run the configured rebuild command
 - read `.docs/registry.json`, `.docs/lint.json`, `.docs/events.jsonl`
 - build semantic audit scopes from `.docs/config.json`
+- append structured roadmap tasks to `docs/roadmap.json` when audits uncover real unresolved delta
+- append Pi custom session entries that link current session to roadmap tasks
+- maintain `.docs/task-session-index.json` so generated roadmap view can show session continuity
+
+That means one global package install can operate across many repos, while each repo keeps its own `docs/`, `.docs/`, and rebuild contract.
 
 ## Philosophy
 
 This package assumes:
 
-- docs are source of truth for intended design
+- specs are source of truth for intended design
+- research is compact evidence, not longform archive by default
+- roadmap is freshest delta tracker between specs and code
+- Pi sessions are execution history, not canonical roadmap truth
 - code is implementation evidence
 - there is one generated live index
 - machine metadata stays hidden under `.docs/`
-- archive docs exist but do not drive live design
-- drift should be visible instead of implicit
+- plans and drift are better modeled as roadmap items than as separate top-level doc buckets
 
 ## Repo layout
 
@@ -224,6 +333,7 @@ extensions/
   codebase-wiki/
     bootstrap.ts
     index.ts
+    project-root.ts
     templates.ts
 skills/
   codebase-wiki/
@@ -235,16 +345,16 @@ package.json
 
 ## Development
 
-Load this repo directly in Pi while developing:
-
-```bash
-pi -e /absolute/path/to/codebase-wiki
-```
-
-Or install it from the local path:
+Install this repo globally while developing:
 
 ```bash
 pi install /absolute/path/to/codebase-wiki
+```
+
+Or install it project-locally if you want this repo alone to pin the package source:
+
+```bash
+pi install -l /absolute/path/to/codebase-wiki
 ```
 
 Smoke-test the package locally:
