@@ -116,7 +116,7 @@
     "TASK-004": {
       "id": "TASK-004",
       "title": "Decide compact history strategy after archive deprecation",
-      "status": "todo",
+      "status": "done",
       "priority": "medium",
       "kind": "process",
       "summary": "Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.",
@@ -134,11 +134,11 @@
       ],
       "delta": {
         "desired": "History stays cheap and accessible without reviving bulky archive docs.",
-        "current": "Current stance prefers git plus `.docs/events.jsonl`, but package does not yet document compact history patterns deeply.",
-        "closure": "Choose and document whether events-only is enough or if compact history JSONL should be generated."
+        "current": "Package now explicitly documents git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutation history.",
+        "closure": "Done by deciding against a separate compact-history artifact by default and documenting lightweight history expectations in shared/template/package docs."
       },
       "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-17"
     },
     "TASK-005": {
       "id": "TASK-005",

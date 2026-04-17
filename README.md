@@ -331,6 +331,7 @@ This package assumes:
 - research is compact evidence, not longform archive by default
 - roadmap is freshest delta tracker between specs and code
 - Pi sessions are execution history, not canonical roadmap truth
+- history defaults to git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutations; package does not generate a separate compact-history file by default
 - code is implementation evidence
 - there is one generated live index
 - machine metadata stays hidden under `.docs/`

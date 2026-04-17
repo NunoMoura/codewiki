@@ -10,7 +10,7 @@ updated: '2026-04-17'
 
 # Roadmap
 
-Generated: 2026-04-17T22:56:59Z
+Generated: 2026-04-17T23:02:59Z
 
 Canonical source: [roadmap.json](roadmap.json)
 
@@ -22,21 +22,7 @@ _None._
 
 ## Todo
 
-### TASK-004 — Decide compact history strategy after archive deprecation
-
-- Status: todo
-- Priority: medium
-- Kind: process
-- Summary: Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.
-- Specs:
-  - [docs/specs/shared/overview.md](specs/shared/overview.md)
-  - [docs/specs/templates/overview.md](specs/templates/overview.md)
-- Code:
-  - extensions/codebase-wiki/templates.ts
-- Labels: history, archive
-- Desired: History stays cheap and accessible without reviving bulky archive docs.
-- Current: Current stance prefers git plus `.docs/events.jsonl`, but package does not yet document compact history patterns deeply.
-- Closure: Choose and document whether events-only is enough or if compact history JSONL should be generated.
+_None._
 
 ## Blocked
 
@@ -103,6 +89,22 @@ _None._
 - Desired: Audit output converts directly into `docs/roadmap.json` task entries.
 - Current: Drift prompts now instruct roadmap task-object emission and package tool appends structured tasks with automatic TASK ids and rebuild.
 - Closure: Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap tasks.
+
+### TASK-004 — Decide compact history strategy after archive deprecation
+
+- Status: done
+- Priority: medium
+- Kind: process
+- Summary: Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.
+- Specs:
+  - [docs/specs/shared/overview.md](specs/shared/overview.md)
+  - [docs/specs/templates/overview.md](specs/templates/overview.md)
+- Code:
+  - extensions/codebase-wiki/templates.ts
+- Labels: history, archive
+- Desired: History stays cheap and accessible without reviving bulky archive docs.
+- Current: Package now explicitly documents git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutation history.
+- Closure: Done by deciding against a separate compact-history artifact by default and documenting lightweight history expectations in shared/template/package docs.
 
 ### TASK-005 — Support roadmap update and close mutations
 

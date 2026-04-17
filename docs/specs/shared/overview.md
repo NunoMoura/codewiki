@@ -44,7 +44,9 @@ Cross-cutting or local decisions should live in owning specs. No global ADR buck
 
 ## Archive stance
 
-Archive is deprecated by default. Prefer git history, `.docs/events.jsonl`, and compact roadmap/research updates over large historical doc buckets.
+Archive is deprecated by default. Prefer git history for full diffs, `.docs/events.jsonl` for compact lifecycle events, `.docs/roadmap-events.jsonl` for roadmap mutation history, and compact roadmap/research updates over large historical doc buckets.
+
+By default the package should not generate a separate compact-history artifact. If a repo later needs richer historical analytics, that should be introduced as explicit follow-up scope rather than quietly reviving archive docs.
 
 ## Related docs
 

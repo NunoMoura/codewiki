@@ -37,6 +37,10 @@ Rebuild should deterministically produce:
 - `.docs/lint.json`
 - `.docs/roadmap-state.json` as a generated read-only roadmap/task UI model
 
+## History strategy
+
+Bootstrap should seed `.docs/events.jsonl`, and rebuild should preserve `.docs/events.jsonl` plus `.docs/roadmap-events.jsonl` as lightweight machine-readable history streams. The package should not generate a separate compact-history file by default; repos should rely on git for full diffs and these JSONL logs for concise event trails.
+
 ## Roadmap mutation support
 
 Runtime should be able to append new roadmap tasks, update existing tasks, close existing tasks, preserve explicit task order, log event metadata, and rebuild generated outputs in one safe step. Starter roadmap seeds should use canonical `TASK-###` ids for task records.
