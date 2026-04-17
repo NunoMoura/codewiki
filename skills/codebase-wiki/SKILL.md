@@ -14,6 +14,7 @@ Use this skill when the task is about setting up or operating the repo-local cod
 - `/wiki-rebuild`
 - `/wiki-lint [show]`
 - `/wiki-status`
+- `/wiki-roadmap [ROADMAP-###]`
 - `/wiki-self-drift`
 - `/wiki-code-drift`
 - `/wiki-task <task-id> [focus|progress|blocked|done|spawn]`
@@ -39,6 +40,7 @@ Use this skill when the task is about setting up or operating the repo-local cod
    - Prefer the `codebase_wiki_rebuild` tool when available.
    - Or tell the user to run `/wiki-rebuild`.
 4. Inspect `.docs/lint.json`, `.docs/registry.json`, `docs/index.md`, and `docs/roadmap.md`.
+   - When the user wants to browse roadmap tasks in the terminal, tell them to run `/wiki-roadmap`.
 5. For semantic review, use the scopes configured in `.docs/config.json` under `codebase_wiki`.
 6. When drift review finds real unresolved delta not already tracked, prefer `codebase_wiki_roadmap_append` to append structured roadmap tasks.
 7. When starting or continuing work on a task, prefer `codebase_wiki_task_session_link` so Pi session history links back to roadmap tasks.

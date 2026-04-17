@@ -2,7 +2,7 @@
 id: spec.extension.overview
 title: Extension Runtime
 state: active
-summary: Extension owns setup, bootstrap, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.
+summary: Extension owns setup, bootstrap, roadmap browsing, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.
 owners:
 - engineering
 updated: '2026-04-17'
@@ -23,6 +23,7 @@ Extension should provide:
 - `/wiki-rebuild`
 - `/wiki-lint`
 - `/wiki-status`
+- `/wiki-roadmap`
 - `/wiki-self-drift`
 - `/wiki-code-drift`
 - `/wiki-task`
@@ -41,6 +42,7 @@ Extension should provide:
 - load `.docs/config.json`
 - run configured rebuild command
 - read generated registry and lint outputs
+- browse roadmap tasks and task details in a terminal UI
 - compose semantic audit prompts from configured scopes
 - append Pi custom session entries that link task work to current session
 - maintain derived `.docs/task-session-index.json` metadata

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-17T07:05:00Z",
+  "updated": "2026-04-17T09:00:00Z",
   "order": [
     "ROADMAP-001",
     "ROADMAP-002",
@@ -9,7 +9,8 @@
     "ROADMAP-005",
     "ROADMAP-006",
     "ROADMAP-007",
-    "ROADMAP-008"
+    "ROADMAP-008",
+    "ROADMAP-009"
   ],
   "tasks": {
     "ROADMAP-001": {
@@ -256,6 +257,36 @@
         "desired": "One global package install should work across many repos while runtime state stays repo-local.",
         "current": "Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.",
         "closure": "Done for the global-install plus repo-local discovery architecture adopted in this package."
+      },
+      "created": "2026-04-17",
+      "updated": "2026-04-17"
+    },
+    "ROADMAP-009": {
+      "id": "ROADMAP-009",
+      "title": "Browse roadmap tasks in terminal UI",
+      "status": "done",
+      "priority": "medium",
+      "kind": "agent-workflow",
+      "summary": "Extension now exposes /wiki-roadmap so users can inspect roadmap tasks and task details directly inside Pi's terminal UI.",
+      "spec_paths": [
+        "docs/specs/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codebase-wiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "README.md",
+        "skills/codebase-wiki/SKILL.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "roadmap",
+        "tui",
+        "pi"
+      ],
+      "delta": {
+        "desired": "Users should be able to inspect the live roadmap without leaving Pi or manually opening docs/roadmap.md in another tool.",
+        "current": "The extension now provides a terminal roadmap browser with searchable task selection and per-task detail views, plus smoke coverage for the public command surface.",
+        "closure": "Done for the first terminal roadmap browser. Future work can add inline mutations or richer task navigation if needed."
       },
       "created": "2026-04-17",
       "updated": "2026-04-17"

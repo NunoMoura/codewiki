@@ -2,7 +2,9 @@ import { access, appendFile, readFile, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import { DynamicBorder, getMarkdownTheme } from "@mariozechner/pi-coding-agent";
+import { Container, Markdown, matchesKey, type SelectItem, SelectList, Text } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
 import { registerBootstrapFeatures } from "./bootstrap";
 import { withLockedPaths } from "./mutation-queue";
@@ -301,6 +303,24 @@ export default function codebaseWikiExtension(pi: ExtensionAPI) {
     },
   });
 
+  pi.registerCommand(`${COMMAND_PREFIX}-roadmap`, {
+    description: "Browse roadmap tasks and task details in a terminal UI. Usage: /wiki-roadmap [ROADMAP-###]",
+    handler: async (args, ctx) => {
+      await withUiErrorHandling(ctx, async () => {
+        const project = await loadProject(ctx.cwd);
+        const roadmap = await readRoadmapFile(resolve(project.root, project.roadmapPath));
+        const taskId = args.trim();
+        if (taskId) {
+          const task = roadmap.tasks[taskId];
+          if (!task) throw new Error(`Roadmap task not found: ${taskId}`);
+          await showRoadmapTask(project, roadmap, task, ctx);
+          return;
+        }
+        await browseRoadmap(project, roadmap, ctx);
+      });
+    },
+  });
+
   pi.registerCommand(`${COMMAND_PREFIX}-task`, {
     description: "Link current Pi session to a roadmap task. Usage: /wiki-task <task-id> [focus|progress|blocked|done|spawn]",
     handler: async (args, ctx) => {
@@ -586,6 +606,174 @@ async function readStatus(cwd: string): Promise<string> {
 
   const lastEvent = await readLastEventLine(project.eventsPath);
   if (lastEvent) lines.push(`Last event: ${lastEvent}`);
+  return lines.join("\n");
+}
+
+async function browseRoadmap(project: WikiProject, roadmap: RoadmapFile, ctx: ExtensionCommandContext): Promise<void> {
+  if (!ctx.hasUI) {
+    ctx.ui.notify(formatRoadmapSnapshot(project, roadmap), "info");
+    return;
+  }
+
+  while (true) {
+    const selectedTaskId = await selectRoadmapTask(project, roadmap, ctx);
+    if (!selectedTaskId) return;
+    const task = roadmap.tasks[selectedTaskId];
+    if (!task) continue;
+    await showRoadmapTask(project, roadmap, task, ctx);
+  }
+}
+
+async function selectRoadmapTask(project: WikiProject, roadmap: RoadmapFile, ctx: ExtensionCommandContext): Promise<string | null> {
+  const items = buildRoadmapSelectItems(roadmap);
+  if (items.length === 0) {
+    ctx.ui.notify(`${project.label}: no roadmap tasks found in ${project.roadmapPath}`, "warning");
+    return null;
+  }
+  const counts = formatRoadmapCounts(roadmap);
+
+  return ctx.ui.custom<string | null>((tui, theme, _kb, done) => {
+    const container = new Container();
+    const border = new DynamicBorder((s: string) => theme.fg("accent", s));
+
+    container.addChild(border);
+    container.addChild(new Text(theme.fg("accent", theme.bold(`Roadmap — ${project.label}`)), 1, 0));
+    container.addChild(new Text(theme.fg("muted", `${items.length} item(s) • ${counts}`), 1, 0));
+
+    const selectList = new SelectList(items, Math.min(Math.max(items.length, 6), 14), {
+      selectedPrefix: (text) => theme.fg("accent", text),
+      selectedText: (text) => theme.fg("accent", text),
+      description: (text) => theme.fg("muted", text),
+      scrollInfo: (text) => theme.fg("dim", text),
+      noMatch: (text) => theme.fg("warning", text),
+    });
+    selectList.onSelect = (item) => done(item.value);
+    selectList.onCancel = () => done(null);
+    container.addChild(selectList);
+
+    container.addChild(new Text(theme.fg("dim", "Type to filter • ↑↓ navigate • Enter inspect • Esc close"), 1, 0));
+    container.addChild(border);
+
+    return {
+      render: (width: number) => container.render(width),
+      invalidate: () => container.invalidate(),
+      handleInput: (data: string) => {
+        selectList.handleInput(data);
+        tui.requestRender();
+      },
+    };
+  }, {
+    overlay: true,
+    overlayOptions: {
+      anchor: "center",
+      width: "88%",
+      maxHeight: "78%",
+      margin: 1,
+    },
+  });
+}
+
+async function showRoadmapTask(project: WikiProject, roadmap: RoadmapFile, task: RoadmapTaskRecord, ctx: ExtensionCommandContext): Promise<void> {
+  const text = formatRoadmapTaskText(project, roadmap, task);
+  if (!ctx.hasUI) {
+    ctx.ui.notify(text, "info");
+    return;
+  }
+
+  await ctx.ui.custom<void>((_tui, theme, _kb, done) => {
+    const container = new Container();
+    const border = new DynamicBorder((s: string) => theme.fg("accent", s));
+    const mdTheme = getMarkdownTheme();
+
+    container.addChild(border);
+    container.addChild(new Text(theme.fg("accent", theme.bold(`${task.id} — ${task.title}`)), 1, 0));
+    container.addChild(new Markdown(text, 1, 1, mdTheme));
+    container.addChild(new Text(theme.fg("dim", "Press Enter or Esc to return to the roadmap"), 1, 0));
+    container.addChild(border);
+
+    return {
+      render: (width: number) => container.render(width),
+      invalidate: () => container.invalidate(),
+      handleInput: (data: string) => {
+        if (matchesKey(data, "enter") || matchesKey(data, "escape")) done();
+      },
+    };
+  }, {
+    overlay: true,
+    overlayOptions: {
+      anchor: "center",
+      width: "88%",
+      maxHeight: "82%",
+      margin: 1,
+    },
+  });
+}
+
+function buildRoadmapSelectItems(roadmap: RoadmapFile): SelectItem[] {
+  return roadmap.order
+    .map((taskId) => roadmap.tasks[taskId])
+    .filter((task): task is RoadmapTaskRecord => Boolean(task))
+    .map((task) => ({
+      value: task.id,
+      label: `${task.id} [${task.status}] ${task.title}`,
+      description: `${task.priority} • ${task.kind} • ${task.summary}`,
+    }));
+}
+
+function formatRoadmapCounts(roadmap: RoadmapFile): string {
+  const ordered = roadmap.order
+    .map((taskId) => roadmap.tasks[taskId])
+    .filter((task): task is RoadmapTaskRecord => Boolean(task));
+  const counts = countBy(ordered.map((task) => task.status));
+  return Object.entries(counts).map(([key, value]) => `${key}=${value}`).join(" ") || "no tasks";
+}
+
+function formatRoadmapSnapshot(project: WikiProject, roadmap: RoadmapFile): string {
+  const ordered = roadmap.order
+    .map((taskId) => roadmap.tasks[taskId])
+    .filter((task): task is RoadmapTaskRecord => Boolean(task));
+  const lines = [
+    `Roadmap: ${project.label}`,
+    `Path: ${project.roadmapPath}`,
+    `Items: ${ordered.length} (${formatRoadmapCounts(roadmap)})`,
+    "",
+  ];
+  for (const task of ordered.slice(0, 10)) {
+    lines.push(`${task.id} [${task.status}] ${task.title}`);
+  }
+  if (ordered.length > 10) lines.push(`... ${ordered.length - 10} more`);
+  return lines.join("\n");
+}
+
+function formatRoadmapTaskText(project: WikiProject, roadmap: RoadmapFile, task: RoadmapTaskRecord): string {
+  const position = roadmap.order.indexOf(task.id);
+  const lines = [
+    `# ${task.id} — ${task.title}`,
+    "",
+    `- Wiki: ${project.label}`,
+    `- Status: \`${task.status}\``,
+    `- Priority: \`${task.priority}\``,
+    `- Kind: \`${task.kind}\``,
+    `- Position: ${position >= 0 ? `${position + 1}/${roadmap.order.length}` : "untracked"}`,
+  ];
+
+  if (task.labels.length > 0) lines.push(`- Labels: ${task.labels.map((label) => `\`${label}\``).join(", ")}`);
+  lines.push("", "## Summary", "", task.summary, "", "## Delta", "");
+  lines.push(`- Desired: ${task.delta.desired}`);
+  lines.push(`- Current: ${task.delta.current}`);
+  lines.push(`- Closure: ${task.delta.closure}`);
+
+  if (task.spec_paths.length > 0) {
+    lines.push("", "## Spec paths", "", ...task.spec_paths.map((path) => `- \`${path}\``));
+  }
+  if (task.code_paths.length > 0) {
+    lines.push("", "## Code paths", "", ...task.code_paths.map((path) => `- \`${path}\``));
+  }
+  if (task.research_ids.length > 0) {
+    lines.push("", "## Research ids", "", ...task.research_ids.map((researchId) => `- \`${researchId}\``));
+  }
+
+  lines.push("", "## Next step", "", `Use \`/wiki-task ${task.id} focus\` when the current Pi session is centered on this task.`);
   return lines.join("\n");
 }
 

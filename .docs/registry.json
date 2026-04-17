@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T06:45:04Z",
+  "generated_at": "2026-04-17T08:55:31Z",
   "docs": [
     {
       "id": "roadmap.live",
@@ -30,7 +30,7 @@
       "title": "Extension Runtime",
       "doc_type": "spec",
       "state": "active",
-      "summary": "Extension owns setup, bootstrap, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.",
+      "summary": "Extension owns setup, bootstrap, roadmap browsing, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.",
       "owners": [
         "engineering"
       ],
@@ -162,9 +162,9 @@
     }
   ],
   "roadmap": {
-    "entry_count": 8,
+    "entry_count": 9,
     "counts": {
-      "done": 6,
+      "done": 7,
       "todo": 2
     }
   }

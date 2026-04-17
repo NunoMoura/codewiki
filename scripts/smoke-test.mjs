@@ -121,6 +121,7 @@ async function main() {
       "wiki-rebuild",
       "wiki-lint",
       "wiki-status",
+      "wiki-roadmap",
       "wiki-self-drift",
       "wiki-code-drift",
       "wiki-task",
@@ -242,6 +243,24 @@ async function main() {
       toolCtx,
     );
 
+    const roadmapNotifications = [];
+    const roadmapCommand = extension.commands.get("wiki-roadmap");
+    assert.ok(roadmapCommand && typeof roadmapCommand.handler === "function", "wiki-roadmap command missing handler");
+    await roadmapCommand.handler("", {
+      cwd: nestedDir,
+      hasUI: false,
+      ui: {
+        notify: (message, level) => roadmapNotifications.push({ message, level }),
+      },
+    });
+    await roadmapCommand.handler("ROADMAP-001", {
+      cwd: nestedDir,
+      hasUI: false,
+      ui: {
+        notify: (message, level) => roadmapNotifications.push({ message, level }),
+      },
+    });
+
     const lint = JSON.parse(readFileSync(resolve(projectDir, ".docs", "lint.json"), "utf8"));
     const registry = JSON.parse(readFileSync(resolve(projectDir, ".docs", "registry.json"), "utf8"));
     const config = JSON.parse(readFileSync(resolve(projectDir, ".docs", "config.json"), "utf8"));
@@ -282,6 +301,8 @@ async function main() {
     assert.ok(taskSessionIndex.tasks["ROADMAP-001"], "Task session index missing linked task");
     assert.equal(taskSessionIndex.tasks["ROADMAP-001"].last_session_id, "session-smoke-1", "Task session index missing current session id");
     assert.match(roadmapText, /Session links:/, "Generated roadmap view missing session linkage metadata");
+    assert.match(roadmapNotifications[0]?.message ?? "", /ROADMAP-001/, "Roadmap snapshot should mention the first task");
+    assert.match(roadmapNotifications[1]?.message ?? "", /^# ROADMAP-001/m, "Roadmap task view should render markdown detail for requested task");
   });
   console.log(`✓ bootstrap smoke test passed (Python: ${python.command}, PyYAML: ${python.yamlVersion})`);
 

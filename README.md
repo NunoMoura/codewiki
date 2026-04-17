@@ -24,6 +24,7 @@ That is the right shape for this package:
 - `/wiki-lint`
 - `/wiki-lint show`
 - `/wiki-status`
+- `/wiki-roadmap [ROADMAP-###]`
 - `/wiki-self-drift`
 - `/wiki-code-drift`
 - `/wiki-task <task-id> [focus|progress|blocked|done|spawn]`
@@ -48,6 +49,7 @@ The skill tells Pi when to use the package for:
 - deterministic docs linting
 - docs-vs-docs drift review
 - docs-vs-code drift review
+- browsing roadmap tasks in a terminal UI
 - appending roadmap-ready tasks after drift audits
 - linking current Pi session to roadmap tasks
 
@@ -162,6 +164,8 @@ if you want the explicit bootstrap command.
 ```text
 /wiki-rebuild
 /wiki-lint
+/wiki-status
+/wiki-roadmap
 /wiki-self-drift
 /wiki-code-drift
 ```
@@ -217,6 +221,7 @@ Recommended loop:
 /wiki-rebuild
 /wiki-lint
 /wiki-status
+/wiki-roadmap
 ```
 
 3. If work maps to an existing roadmap item, link the session:
@@ -291,6 +296,14 @@ Starter setup includes:
 - `docs/research/inspiration.jsonl`
 - `docs/roadmap.json`
 - generated outputs like `docs/index.md`, `docs/roadmap.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`, `.docs/task-session-index.json`
+
+### Roadmap browser
+
+`/wiki-roadmap` opens a terminal-friendly roadmap browser.
+
+- without arguments, it shows the ordered roadmap task list in a searchable TUI selector
+- with a task id like `/wiki-roadmap ROADMAP-008`, it opens that task's details directly
+- from inside the browser, inspect a task and then use `/wiki-task <id> focus` when the current Pi session should link back to that roadmap item
 
 ### Runtime operations
 

@@ -10,7 +10,7 @@ updated: '2026-04-17'
 
 # Roadmap
 
-Generated: 2026-04-17T06:45:04Z
+Generated: 2026-04-17T08:55:31Z
 
 Canonical source: [roadmap.json](roadmap.json)
 
@@ -178,6 +178,24 @@ _None._
 - Desired: One global package install should work across many repos while runtime state stays repo-local.
 - Current: Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.
 - Closure: Done for the global-install plus repo-local discovery architecture adopted in this package.
+
+### ROADMAP-009 — Browse roadmap tasks in terminal UI
+
+- Status: done
+- Priority: medium
+- Kind: agent-workflow
+- Summary: Extension now exposes /wiki-roadmap so users can inspect roadmap tasks and task details directly inside Pi's terminal UI.
+- Specs:
+  - [docs/specs/extension/overview.md](specs/extension/overview.md)
+- Code:
+  - extensions/codebase-wiki/index.ts
+  - scripts/smoke-test.mjs
+  - README.md
+  - skills/codebase-wiki/SKILL.md
+- Labels: roadmap, tui, pi
+- Desired: Users should be able to inspect the live roadmap without leaving Pi or manually opening docs/roadmap.md in another tool.
+- Current: The extension now provides a terminal roadmap browser with searchable task selection and per-task detail views, plus smoke coverage for the public command surface.
+- Closure: Done for the first terminal roadmap browser. Future work can add inline mutations or richer task navigation if needed.
 
 ## Related docs
 
