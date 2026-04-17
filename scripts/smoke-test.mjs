@@ -115,17 +115,17 @@ async function main() {
     const extension = extensions[0];
     assert.equal(extension.sourceInfo.origin, "package", "Extension should load as a package resource");
     assert.equal(extension.sourceInfo.scope, "project", "Extension should load from project package settings");
-    ensureIncludes([...extension.commands.keys()], [
-      "wiki-setup",
+    const commandNames = [...extension.commands.keys()];
+    ensureIncludes(commandNames, [
       "wiki-bootstrap",
-      "wiki-rebuild",
-      "wiki-lint",
       "wiki-status",
-      "wiki-roadmap",
-      "wiki-self-drift",
-      "wiki-code-drift",
-      "wiki-task",
+      "wiki-fix",
+      "wiki-review",
     ], "extension commands");
+    assert.equal(commandNames.length, 4, `Expected exactly 4 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`);
+    for (const legacyCommand of ["wiki-setup", "wiki-rebuild", "wiki-lint", "wiki-roadmap", "wiki-self-drift", "wiki-code-drift", "wiki-task"]) {
+      assert.ok(!commandNames.includes(legacyCommand), `Legacy public command should not be registered: ${legacyCommand}`);
+    }
     ensureIncludes([...extension.tools.keys()], [
       "codebase_wiki_setup",
       "codebase_wiki_bootstrap",
@@ -186,17 +186,19 @@ async function main() {
     const second = secondResult.details;
     assert.equal(first.root, projectDir, "Setup from nested cwd should target repo root when no wiki exists yet");
     assert.equal(second.root, projectDir, "Bootstrap from nested cwd should reuse the existing wiki root");
+    const sessionEntries = [];
     const toolCtx = {
       cwd: nestedDir,
       sessionManager: {
         getSessionId: () => "session-smoke-1",
         getSessionFile: () => resolve(projectDir, ".pi", "sessions", "session-smoke-1.jsonl"),
         getSessionName: () => "Smoke session",
-        getEntries: () => [],
-        getBranch: () => [],
+        getEntries: () => sessionEntries,
+        getBranch: () => sessionEntries,
       },
       ui: {
         setStatus: () => {},
+        setWidget: () => {},
         notify: () => {},
       },
     };
@@ -242,22 +244,75 @@ async function main() {
       undefined,
       toolCtx,
     );
-
-    const roadmapNotifications = [];
-    const roadmapCommand = extension.commands.get("wiki-roadmap");
-    assert.ok(roadmapCommand && typeof roadmapCommand.handler === "function", "wiki-roadmap command missing handler");
-    await roadmapCommand.handler("", {
-      cwd: nestedDir,
-      hasUI: false,
-      ui: {
-        notify: (message, level) => roadmapNotifications.push({ message, level }),
+    sessionEntries.push({
+      type: "custom",
+      customType: "codebase-wiki.task-link",
+      timestamp: "2026-04-17T15:10:00Z",
+      data: {
+        taskId: "TASK-001",
+        action: "focus",
+        summary: "Focused smoke session on starter task.",
+        filesTouched: ["extensions/codebase-wiki/index.ts"],
+        spawnedTaskIds: [],
       },
     });
-    await roadmapCommand.handler("ROADMAP-001", {
+
+    const statusNotifications = [];
+    const fixNotifications = [];
+    const reviewNotifications = [];
+    const widgetState = { key: null, content: null, options: null };
+    const renderWidget = () => {
+      assert.equal(widgetState.key, "codebase-wiki-roadmap", "Expected roadmap widget key");
+      assert.ok(typeof widgetState.content === "function", "Expected roadmap widget render callback");
+      const instance = widgetState.content(
+        { terminal: { columns: 120 }, requestRender: () => {} },
+        { fg: (_color, text) => text, bold: (text) => text },
+      );
+      return instance.render();
+    };
+    const statusCommand = extension.commands.get("wiki-status");
+    assert.ok(statusCommand && typeof statusCommand.handler === "function", "wiki-status command missing handler");
+    await statusCommand.handler("both", {
       cwd: nestedDir,
-      hasUI: false,
+      isIdle: () => true,
+      sessionManager: toolCtx.sessionManager,
       ui: {
-        notify: (message, level) => roadmapNotifications.push({ message, level }),
+        notify: (message, level) => statusNotifications.push({ message, level }),
+        setWidget: (key, content, options) => {
+          widgetState.key = key;
+          widgetState.content = content;
+          widgetState.options = options;
+        },
+      },
+    });
+    const fixCommand = extension.commands.get("wiki-fix");
+    assert.ok(fixCommand && typeof fixCommand.handler === "function", "wiki-fix command missing handler");
+    await fixCommand.handler("docs", {
+      cwd: nestedDir,
+      isIdle: () => true,
+      sessionManager: toolCtx.sessionManager,
+      ui: {
+        notify: (message, level) => fixNotifications.push({ message, level }),
+        setWidget: (key, content, options) => {
+          widgetState.key = key;
+          widgetState.content = content;
+          widgetState.options = options;
+        },
+      },
+    });
+    const reviewCommand = extension.commands.get("wiki-review");
+    assert.ok(reviewCommand && typeof reviewCommand.handler === "function", "wiki-review command missing handler");
+    await reviewCommand.handler("architecture", {
+      cwd: nestedDir,
+      isIdle: () => true,
+      sessionManager: toolCtx.sessionManager,
+      ui: {
+        notify: (message, level) => reviewNotifications.push({ message, level }),
+        setWidget: (key, content, options) => {
+          widgetState.key = key;
+          widgetState.content = content;
+          widgetState.options = options;
+        },
       },
     });
 
@@ -271,6 +326,8 @@ async function main() {
     const roadmapJson = JSON.parse(readFileSync(resolve(projectDir, "docs", "roadmap.json"), "utf8"));
     const roadmapEvents = readFileSync(resolve(projectDir, ".docs", "roadmap-events.jsonl"), "utf8");
     const taskSessionIndex = JSON.parse(readFileSync(resolve(projectDir, ".docs", "task-session-index.json"), "utf8"));
+    const roadmapState = JSON.parse(readFileSync(resolve(projectDir, ".docs", "roadmap-state.json"), "utf8"));
+    const widgetLines = renderWidget();
     assert.ok(!existsSync(resolve(nestedDir, "docs")), "Bootstrap should anchor docs at the existing wiki root, not nested cwd");
 
     assert.equal(first.created.length, 12, `Expected 12 created starter files including inferred boundary specs, got ${first.created.length}`);
@@ -293,16 +350,30 @@ async function main() {
     assert.match(frontendSpecText, /^# Frontend/m, "Generated frontend boundary title mismatch");
     assert.match(frontendSpecText, /`frontend`/, "Generated frontend boundary spec missing code path");
     assert.match(roadmapText, /^# Roadmap/m, "Generated roadmap title mismatch");
-    assert.ok(roadmapJson.tasks["ROADMAP-001"], "Structured roadmap seed missing");
+    assert.ok(roadmapJson.tasks["TASK-001"], "Structured roadmap seed missing");
+    assert.ok(!roadmapJson.tasks["ROADMAP-001"], "Canonical roadmap seed should no longer use ROADMAP ids");
     assert.ok(Object.values(roadmapJson.tasks).some((task) => task.title === "Smoke audit task"), "Roadmap append tool did not persist appended task");
-    assert.ok(Array.isArray(roadmapJson.order) && roadmapJson.order.some((id) => roadmapJson.tasks[id]?.title === "Smoke audit task"), "Roadmap order missing appended task");
+    const appendedTaskId = Array.isArray(roadmapJson.order) ? roadmapJson.order.find((id) => roadmapJson.tasks[id]?.title === "Smoke audit task") : undefined;
+    assert.ok(appendedTaskId, "Roadmap order missing appended task");
+    assert.match(appendedTaskId ?? "", /^TASK-\d+$/, "Appended roadmap task should use canonical TASK ids");
     assert.match(roadmapText, /Smoke audit task/, "Generated roadmap view missing appended task");
     assert.match(roadmapEvents, /Smoke audit task/, "Roadmap history missing appended task");
-    assert.ok(taskSessionIndex.tasks["ROADMAP-001"], "Task session index missing linked task");
-    assert.equal(taskSessionIndex.tasks["ROADMAP-001"].last_session_id, "session-smoke-1", "Task session index missing current session id");
+    assert.ok(taskSessionIndex.tasks["TASK-001"], "Task session index missing linked task");
+    assert.equal(roadmapState.version, 1, "Roadmap state should be versioned");
+    assert.equal(roadmapState.health.color, "green", "Roadmap state should embed deterministic lint health");
+    assert.ok(Array.isArray(roadmapState.views.open_task_ids) && roadmapState.views.open_task_ids.length >= 1, "Roadmap state should expose open task ids");
+    assert.equal(roadmapState.tasks["TASK-001"].last_session_id, "session-smoke-1", "Roadmap state should carry last session metadata");
+    assert.ok(!taskSessionIndex.tasks["ROADMAP-001"], "Legacy ROADMAP alias should resolve to canonical TASK id in task session index");
+    assert.equal(taskSessionIndex.tasks["TASK-001"].last_session_id, "session-smoke-1", "Task session index missing current session id");
     assert.match(roadmapText, /Session links:/, "Generated roadmap view missing session linkage metadata");
-    assert.match(roadmapNotifications[0]?.message ?? "", /ROADMAP-001/, "Roadmap snapshot should mention the first task");
-    assert.match(roadmapNotifications[1]?.message ?? "", /^# ROADMAP-001/m, "Roadmap task view should render markdown detail for requested task");
+    assert.match(statusNotifications[0]?.message ?? "", /Scope: both/, "wiki-status should report the requested scope");
+    assert.match(statusNotifications[0]?.message ?? "", /Roadmap working set:/, "wiki-status should include the compact roadmap working set");
+    assert.match(statusNotifications[0]?.message ?? "", /Specs and mapped drift signals:/, "wiki-status should list spec drift mapping");
+    assert.equal(widgetState.options?.placement, "aboveEditor", "Roadmap widget should render above the editor");
+    assert.match(widgetLines[0] ?? "", /Wiki green .* open .* in progress .* blocked/i, "Roadmap widget header should summarize health and counts");
+    assert.match(widgetLines.join("\n"), /TASK-001/, "Roadmap widget should surface roadmap tasks");
+    assert.match(fixNotifications[0]?.message ?? "", /queued docs wiki-fix flow/i, "wiki-fix should queue the requested fix scope");
+    assert.match(reviewNotifications[0]?.message ?? "", /queued architecture review/i, "wiki-review should queue the requested review mode");
   });
   console.log(`✓ bootstrap smoke test passed (Python: ${python.command}, PyYAML: ${python.yamlVersion})`);
 

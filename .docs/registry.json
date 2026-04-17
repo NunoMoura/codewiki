@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T08:55:31Z",
+  "generated_at": "2026-04-17T12:10:58Z",
   "docs": [
     {
       "id": "roadmap.live",
@@ -17,6 +17,7 @@
         "docs/index.md",
         "docs/roadmap.json",
         "docs/specs/extension/overview.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -30,7 +31,7 @@
       "title": "Extension Runtime",
       "doc_type": "spec",
       "state": "active",
-      "summary": "Extension owns setup, bootstrap, roadmap browsing, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.",
+      "summary": "Extension owns intelligent bootstrap, status, fix, review, and internal roadmap/session operations for repo-local codebase wikis discovered from current cwd.",
       "owners": [
         "engineering"
       ],
@@ -42,9 +43,34 @@
       ],
       "links_out": [
         "docs/roadmap.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ]
+    },
+    {
+      "id": "spec.extension.roadmap-ui",
+      "path": "docs/specs/extension/roadmap-ui.md",
+      "title": "Roadmap State and TUI",
+      "doc_type": "spec",
+      "state": "active",
+      "summary": "Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codebase-wiki.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": [],
+      "code_paths": [
+        "extensions/codebase-wiki/index.ts",
+        "extensions/codebase-wiki/templates.ts",
+        "scripts/rebuild_docs_meta.py"
+      ],
+      "links_out": [
+        "docs/roadmap.md",
+        "docs/specs/extension/overview.md",
+        "docs/specs/product.md",
+        "docs/specs/system/overview.md",
         "docs/specs/templates/overview.md"
       ]
     },
@@ -162,9 +188,9 @@
     }
   ],
   "roadmap": {
-    "entry_count": 9,
+    "entry_count": 11,
     "counts": {
-      "done": 7,
+      "done": 9,
       "todo": 2
     }
   }

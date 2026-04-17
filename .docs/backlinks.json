@@ -1,9 +1,10 @@
 {
-  "generated_at": "2026-04-17T08:55:31Z",
+  "generated_at": "2026-04-17T12:10:58Z",
   "by_path": {
     "docs/specs/extension/overview.md": {
       "inbound": [
         "docs/roadmap.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -12,9 +13,23 @@
       ],
       "outbound": [
         "docs/roadmap.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
+        "docs/specs/templates/overview.md"
+      ]
+    },
+    "docs/specs/extension/roadmap-ui.md": {
+      "inbound": [
+        "docs/roadmap.md",
+        "docs/specs/extension/overview.md"
+      ],
+      "outbound": [
+        "docs/roadmap.md",
+        "docs/specs/extension/overview.md",
+        "docs/specs/product.md",
+        "docs/specs/system/overview.md",
         "docs/specs/templates/overview.md"
       ]
     },
@@ -38,6 +53,7 @@
       "inbound": [
         "docs/roadmap.md",
         "docs/specs/extension/overview.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/shared/overview.md",
         "docs/specs/system/overview.md",
@@ -72,6 +88,7 @@
     "docs/specs/system/overview.md": {
       "inbound": [
         "docs/roadmap.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -90,6 +107,7 @@
       "inbound": [
         "docs/roadmap.md",
         "docs/specs/extension/overview.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -106,6 +124,7 @@
     "docs/roadmap.md": {
       "inbound": [
         "docs/specs/extension/overview.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -114,6 +133,7 @@
       ],
       "outbound": [
         "docs/specs/extension/overview.md",
+        "docs/specs/extension/roadmap-ui.md",
         "docs/specs/package/overview.md",
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",

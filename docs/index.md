@@ -1,10 +1,10 @@
 # codebase-wiki Docs Index
 
-Generated: 2026-04-17T08:55:31Z
+Generated: 2026-04-17T12:10:58Z
 
 ## Roadmap
 
-- [Roadmap](roadmap.md) — 9 item(s); done=7, todo=2
+- [Roadmap](roadmap.md) — 11 task(s); done=9, todo=2
 
 ## Specs — Root
 
@@ -12,7 +12,8 @@ Generated: 2026-04-17T08:55:31Z
 
 ## Specs — Extension
 
-- [Extension Runtime](specs/extension/overview.md) — Extension owns setup, bootstrap, roadmap browsing, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.
+- [Extension Runtime](specs/extension/overview.md) — Extension owns intelligent bootstrap, status, fix, review, and internal roadmap/session operations for repo-local codebase wikis discovered from current cwd.
+- [Roadmap State and TUI](specs/extension/roadmap-ui.md) — Derived roadmap-state metadata and first-party Pi widget rules for compact roadmap and task visibility inside codebase-wiki.
 
 ## Specs — Package
 

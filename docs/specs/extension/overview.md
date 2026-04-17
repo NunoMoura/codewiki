@@ -2,7 +2,7 @@
 id: spec.extension.overview
 title: Extension Runtime
 state: active
-summary: Extension owns setup, bootstrap, roadmap browsing, rebuild, lint, status, and semantic audit prompting for repo-local codebase wikis discovered from current cwd.
+summary: Extension owns intelligent bootstrap, status, fix, review, and internal roadmap/session operations for repo-local codebase wikis discovered from current cwd.
 owners:
 - engineering
 updated: '2026-04-17'
@@ -16,17 +16,15 @@ code_paths:
 
 ## Commands and tools
 
-Extension should provide:
+Public commands should stay intentionally small:
 
-- `/wiki-setup`
 - `/wiki-bootstrap`
-- `/wiki-rebuild`
-- `/wiki-lint`
 - `/wiki-status`
-- `/wiki-roadmap`
-- `/wiki-self-drift`
-- `/wiki-code-drift`
-- `/wiki-task`
+- `/wiki-fix`
+- `/wiki-review`
+
+Internal agent tools may remain more granular:
+
 - `codebase_wiki_setup`
 - `codebase_wiki_bootstrap`
 - `codebase_wiki_rebuild`
@@ -37,19 +35,22 @@ Extension should provide:
 ## Runtime responsibilities
 
 - resolve wiki root from the nearest ancestor containing `.docs/config.json`
-- target enclosing git repo root for setup/bootstrap when no wiki exists yet, else current working directory
-- infer first-pass brownfield boundary specs from repo structure during setup/bootstrap
+- target enclosing git repo root for bootstrap when no wiki exists yet, else current working directory
+- infer first-pass brownfield boundary specs and project shape from repo structure during bootstrap
 - load `.docs/config.json`
 - run configured rebuild command
 - read generated registry and lint outputs
-- browse roadmap tasks and task details in a terminal UI
-- compose semantic audit prompts from configured scopes
+- compose intelligent status, fix, and review prompts from configured scopes and live metadata
+- treat roadmap as the top-level container and tasks as atomic work units
 - append Pi custom session entries that link task work to current session
 - maintain derived `.docs/task-session-index.json` metadata
+- generate derived `.docs/roadmap-state.json` metadata for first-party and third-party UIs
+- render a compact first-party roadmap widget from the derived roadmap state without expanding the public command surface
+- generate new task ids as `TASK-###` while accepting legacy `ROADMAP-###` lookups during migration
 
-## Drift audit expectation
+## Drift and fix expectation
 
-Audit commands should treat roadmap as current delta tracker. Findings that represent real unresolved work should be emitted as structured task objects and appended through `codebase_wiki_roadmap_append` when they are genuinely new.
+`/wiki-status` should classify wiki health as green, yellow, or red and list per-spec drift signals. `wiki-fix` should use repo evidence first, ask only high-value clarifying questions when needed, and emit structured roadmap tasks through `codebase_wiki_roadmap_append` only when unresolved work is genuinely new.
 
 ## Session linkage expectation
 
@@ -59,6 +60,7 @@ When a Pi session starts, focuses, progresses, blocks, or completes task work, t
 
 - [Product](../product.md)
 - [Package Surface](../package/overview.md)
+- [Roadmap State and TUI](roadmap-ui.md)
 - [Templates and Rebuild](../templates/overview.md)
 - [Shared Rules](../shared/overview.md)
 - [Roadmap](../../roadmap.md)

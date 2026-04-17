@@ -1,19 +1,77 @@
 {
   "version": 1,
-  "updated": "2026-04-17T15:10:00Z",
-  "order": [
-    "TASK-001",
-    "TASK-002",
-    "TASK-003",
-    "TASK-004",
-    "TASK-005",
-    "TASK-006",
-    "TASK-007",
-    "TASK-008",
-    "TASK-009",
-    "TASK-010",
-    "TASK-011"
-  ],
+  "generated_at": "2026-04-17T12:10:58Z",
+  "health": {
+    "color": "green",
+    "errors": 0,
+    "warnings": 0,
+    "total_issues": 0
+  },
+  "summary": {
+    "task_count": 11,
+    "open_count": 2,
+    "status_counts": {
+      "done": 9,
+      "todo": 2
+    },
+    "priority_counts": {
+      "critical": 2,
+      "high": 5,
+      "medium": 4
+    },
+    "linked_task_count": 0,
+    "linked_session_count": 0
+  },
+  "views": {
+    "ordered_task_ids": [
+      "TASK-001",
+      "TASK-002",
+      "TASK-003",
+      "TASK-004",
+      "TASK-005",
+      "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
+      "TASK-010",
+      "TASK-011"
+    ],
+    "open_task_ids": [
+      "TASK-004",
+      "TASK-005"
+    ],
+    "in_progress_task_ids": [],
+    "todo_task_ids": [
+      "TASK-004",
+      "TASK-005"
+    ],
+    "blocked_task_ids": [],
+    "done_task_ids": [
+      "TASK-001",
+      "TASK-008",
+      "TASK-002",
+      "TASK-003",
+      "TASK-006",
+      "TASK-010",
+      "TASK-011",
+      "TASK-007",
+      "TASK-009"
+    ],
+    "cancelled_task_ids": [],
+    "recent_task_ids": [
+      "TASK-011",
+      "TASK-010",
+      "TASK-009",
+      "TASK-008",
+      "TASK-007",
+      "TASK-002",
+      "TASK-006",
+      "TASK-005",
+      "TASK-004",
+      "TASK-003",
+      "TASK-001"
+    ]
+  },
   "tasks": {
     "TASK-001": {
       "id": "TASK-001",
@@ -22,6 +80,10 @@
       "priority": "critical",
       "kind": "architecture",
       "summary": "Replace legacy top-level taxonomy with simplified contract across templates, runtime prompts, README, and package docs.",
+      "labels": [
+        "refactor",
+        "v2"
+      ],
       "spec_paths": [
         "docs/specs/product.md",
         "docs/specs/shared/overview.md",
@@ -33,21 +95,13 @@
         "README.md",
         "skills/codebase-wiki/SKILL.md"
       ],
-      "research_ids": [
-        "RES-001",
-        "RES-002"
-      ],
-      "labels": [
-        "refactor",
-        "v2"
-      ],
-      "delta": {
-        "desired": "Package ships one clear model: research evidence, spec truth, roadmap delta.",
-        "current": "Starter templates, runtime prompts, package docs, and self-wiki now use research/specs/roadmap as canonical model.",
-        "closure": "Done for current package contract. Future roadmap work continues on automation, brownfield mapping, and history strategy."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-002": {
       "id": "TASK-002",
@@ -56,6 +110,10 @@
       "priority": "high",
       "kind": "bootstrap",
       "summary": "Setup/bootstrap now infer first-pass boundary specs from meaningful repo structure so brownfield repos start closer to real ownership seams.",
+      "labels": [
+        "brownfield",
+        "bootstrap"
+      ],
       "spec_paths": [
         "docs/specs/system/overview.md",
         "docs/specs/templates/overview.md"
@@ -65,21 +123,13 @@
         "extensions/codebase-wiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
-      "research_ids": [
-        "RES-001",
-        "RES-002"
-      ],
-      "labels": [
-        "brownfield",
-        "bootstrap"
-      ],
-      "delta": {
-        "desired": "Existing repos get useful boundary-shaped specs on first pass.",
-        "current": "Setup/bootstrap now infer first-pass boundary specs and brownfield drift scopes from repo structure before humans refine the docs.",
-        "closure": "Done for first-pass ownership inference. Future work can improve deeper heuristics for repos whose real seams only appear below top-level boundaries."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-003": {
       "id": "TASK-003",
@@ -88,6 +138,10 @@
       "priority": "high",
       "kind": "agent-workflow",
       "summary": "Self-drift and code-drift flows should output roadmap task objects so unresolved deltas can be promoted with minimal manual rewriting.",
+      "labels": [
+        "roadmap",
+        "automation"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/shared/overview.md",
@@ -98,20 +152,13 @@
         "skills/codebase-wiki/SKILL.md",
         "scripts/smoke-test.mjs"
       ],
-      "research_ids": [
-        "RES-001"
-      ],
-      "labels": [
-        "roadmap",
-        "automation"
-      ],
-      "delta": {
-        "desired": "Audit output converts directly into `docs/roadmap.json` task entries.",
-        "current": "Drift prompts now instruct roadmap task-object emission and package tool appends structured tasks with automatic TASK ids and rebuild.",
-        "closure": "Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap tasks."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-004": {
       "id": "TASK-004",
@@ -120,6 +167,10 @@
       "priority": "medium",
       "kind": "process",
       "summary": "Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.",
+      "labels": [
+        "history",
+        "archive"
+      ],
       "spec_paths": [
         "docs/specs/shared/overview.md",
         "docs/specs/templates/overview.md"
@@ -127,18 +178,13 @@
       "code_paths": [
         "extensions/codebase-wiki/templates.ts"
       ],
-      "research_ids": [],
-      "labels": [
-        "history",
-        "archive"
-      ],
-      "delta": {
-        "desired": "History stays cheap and accessible without reviving bulky archive docs.",
-        "current": "Current stance prefers git plus `.docs/events.jsonl`, but package does not yet document compact history patterns deeply.",
-        "closure": "Choose and document whether events-only is enough or if compact history JSONL should be generated."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-005": {
       "id": "TASK-005",
@@ -147,6 +193,11 @@
       "priority": "medium",
       "kind": "agent-workflow",
       "summary": "After append flow, package should let agents update or close existing roadmap tasks without manual roadmap JSON editing.",
+      "labels": [
+        "roadmap",
+        "automation",
+        "follow-up"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/templates/overview.md"
@@ -154,19 +205,13 @@
       "code_paths": [
         "extensions/codebase-wiki/index.ts"
       ],
-      "research_ids": [],
-      "labels": [
-        "roadmap",
-        "automation",
-        "follow-up"
-      ],
-      "delta": {
-        "desired": "Agents can append, update, and close roadmap tasks through package-native workflow.",
-        "current": "Current implementation appends new tasks only; existing tasks still need manual edits for closure or rewrite.",
-        "closure": "Add safe mutation tool for targeting existing task ids and rebuilding generated outputs after edit."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-006": {
       "id": "TASK-006",
@@ -175,6 +220,11 @@
       "priority": "high",
       "kind": "agent-workflow",
       "summary": "Keep Pi session JSONL native, append custom task-link entries, and derive local task-session metadata for roadmap navigation.",
+      "labels": [
+        "sessions",
+        "roadmap",
+        "pi"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/shared/overview.md",
@@ -187,19 +237,13 @@
         "skills/codebase-wiki/SKILL.md",
         "README.md"
       ],
-      "research_ids": [],
-      "labels": [
-        "sessions",
-        "roadmap",
-        "pi"
-      ],
-      "delta": {
-        "desired": "Task work can be resumed across Pi sessions without replacing Pi session JSONL format.",
-        "current": "Extension now appends Pi custom task-link entries, maintains `.docs/task-session-index.json`, and surfaces session continuity in generated roadmap view.",
-        "closure": "Done for link and derive flow. Future work can add richer session analytics or task-aware resume helpers."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-007": {
       "id": "TASK-007",
@@ -208,6 +252,11 @@
       "priority": "medium",
       "kind": "testing",
       "summary": "Smoke tests should fail if any documented public command disappears from the packaged extension.",
+      "labels": [
+        "testing",
+        "dogfood",
+        "public-surface"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/package/overview.md"
@@ -215,19 +264,13 @@
       "code_paths": [
         "scripts/smoke-test.mjs"
       ],
-      "research_ids": [],
-      "labels": [
-        "testing",
-        "dogfood",
-        "public-surface"
-      ],
-      "delta": {
-        "desired": "Packaged smoke checks cover the documented command surface closely enough to catch accidental public API drift.",
-        "current": "Smoke tests now assert every documented command and tool name, and they exercise setup/bootstrap, roadmap append, session-link, and inferred brownfield starter behavior.",
-        "closure": "Done for current public surface. Extend the assertions whenever new commands or tools are added."
-      },
-      "created": "2026-04-16",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-008": {
       "id": "TASK-008",
@@ -236,6 +279,11 @@
       "priority": "critical",
       "kind": "architecture",
       "summary": "Extension runtime should load from a global Pi package install while discovering the active repo-local wiki from current cwd.",
+      "labels": [
+        "pi",
+        "install",
+        "discovery"
+      ],
       "spec_paths": [
         "docs/specs/package/overview.md",
         "docs/specs/extension/overview.md",
@@ -249,19 +297,13 @@
         "README.md",
         "skills/codebase-wiki/SKILL.md"
       ],
-      "research_ids": [],
-      "labels": [
-        "pi",
-        "install",
-        "discovery"
-      ],
-      "delta": {
-        "desired": "One global package install should work across many repos while runtime state stays repo-local.",
-        "current": "Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.",
-        "closure": "Done for the global-install plus repo-local discovery architecture adopted in this package."
-      },
-      "created": "2026-04-17",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-009": {
       "id": "TASK-009",
@@ -270,6 +312,11 @@
       "priority": "medium",
       "kind": "agent-workflow",
       "summary": "Extension delivered roadmap-browsing groundwork that validated task inspection flows before the public UX was later consolidated into fewer commands.",
+      "labels": [
+        "roadmap",
+        "tui",
+        "pi"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md"
       ],
@@ -279,19 +326,13 @@
         "README.md",
         "skills/codebase-wiki/SKILL.md"
       ],
-      "research_ids": [],
-      "labels": [
-        "roadmap",
-        "tui",
-        "pi"
-      ],
-      "delta": {
-        "desired": "Users should be able to inspect live roadmap/task state without leaving Pi or manually opening docs/roadmap.md in another tool.",
-        "current": "The roadmap browser work validated task inspection and task-detail rendering, and that groundwork now informs the simpler consolidated UX.",
-        "closure": "Done for the initial browsing prototype. Future work can surface roadmap/task navigation again if it materially improves the simpler command model."
-      },
-      "created": "2026-04-17",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-010": {
       "id": "TASK-010",
@@ -300,6 +341,11 @@
       "priority": "high",
       "kind": "agent-workflow",
       "summary": "Refactor the public command surface down to /wiki-bootstrap, /wiki-status, /wiki-fix, and /wiki-review while keeping roadmap/task/session internals and granular tools behind the scenes.",
+      "labels": [
+        "ux",
+        "commands",
+        "agent-workflow"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/package/overview.md",
@@ -312,19 +358,13 @@
         "README.md",
         "skills/codebase-wiki/SKILL.md"
       ],
-      "research_ids": [],
-      "labels": [
-        "ux",
-        "commands",
-        "agent-workflow"
-      ],
-      "delta": {
-        "desired": "Users should only need four strong commands, while Pi still uses internal roadmap/task/session primitives and tools behind the scenes.",
-        "current": "The extension now exposes a four-command public UX, /wiki-bootstrap queues intelligent onboarding, /wiki-status queues evidence-backed health review, /wiki-fix queues corrective work, and /wiki-review queues senior idea/architecture analysis.",
-        "closure": "Done for the first simplified public UX pass. Future work can refine prompts, heuristics, and TUI presentation without re-expanding the command surface."
-      },
-      "created": "2026-04-17",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     },
     "TASK-011": {
       "id": "TASK-011",
@@ -333,6 +373,11 @@
       "priority": "high",
       "kind": "agent-workflow",
       "summary": "Generate a read-only roadmap-state UI model and render a compact first-party roadmap widget so users can track focused, in-progress, and next tasks inside Pi without expanding the public command surface.",
+      "labels": [
+        "roadmap",
+        "tui",
+        "ux"
+      ],
       "spec_paths": [
         "docs/specs/extension/overview.md",
         "docs/specs/extension/roadmap-ui.md",
@@ -347,19 +392,13 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "research_ids": [],
-      "labels": [
-        "roadmap",
-        "tui",
-        "ux"
-      ],
-      "delta": {
-        "desired": "Roadmap progress should be readable inside Pi through a compact working-set widget and a stable read-only UI state file that other extensions can consume.",
-        "current": "The extension now generates .docs/roadmap-state.json, refreshes a first-party roadmap widget from that read model, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.",
-        "closure": "Done for the first production-ready roadmap TUI pass. Future work can add deeper drill-down interactions on top of the same read contract without changing canonical storage or the four-command public UX."
-      },
-      "created": "2026-04-17",
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "session_count": 0,
+      "last_session_id": "",
+      "last_session_name": "",
+      "last_action": "",
+      "last_summary": "",
+      "last_timestamp": ""
     }
   }
 }

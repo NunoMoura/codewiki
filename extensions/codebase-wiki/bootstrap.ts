@@ -16,6 +16,7 @@ const GENERATED_OUTPUTS = [
   ".docs/backlinks.json",
   ".docs/lint.json",
   ".docs/task-session-index.json",
+  ".docs/roadmap-state.json",
 ] as const;
 const CONTAINER_DIR_NAMES = new Set(["apps", "components", "domains", "extensions", "libs", "modules", "packages", "services", "skills", "surfaces"]);
 const EXCLUDED_DIR_NAMES = new Set([
@@ -64,23 +65,13 @@ export interface BootstrapResult {
   created: string[];
   updated: string[];
   skipped: string[];
+  inferredProjectState: "greenfield" | "brownfield";
+  inferredBoundaries: string[];
 }
 
 export function registerBootstrapFeatures(pi: ExtensionAPI): void {
-  pi.registerCommand("wiki-setup", {
-    description: "Configure codebase-wiki for the current project without overwriting existing starter files",
-    handler: async (args, ctx) => {
-      try {
-        const result = await setupCodebaseWiki(ctx.cwd, parseArgs(args, { allowForce: false }));
-        ctx.ui.notify(formatSummary("Configured", result), result.updated.length + result.created.length > 0 ? "success" : "info");
-      } catch (error) {
-        ctx.ui.notify(formatError(error), "error");
-      }
-    },
-  });
-
   pi.registerCommand("wiki-bootstrap", {
-    description: "Scaffold a starter repo-local codebase wiki into the current project",
+    description: "Adopt or scaffold a repo-local codebase wiki, then start intelligent onboarding. Usage: /wiki-bootstrap [project name] [--force]",
     getArgumentCompletions: (prefix) => {
       const options = ["--force"];
       const items = options.filter((item) => item.startsWith(prefix));
@@ -90,6 +81,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
       try {
         const result = await bootstrapFromCurrentProject(ctx.cwd, parseArgs(args, { allowForce: true }));
         ctx.ui.notify(formatSummary("Bootstrapped", result), result.updated.length + result.created.length > 0 ? "success" : "info");
+        queueOnboardingPrompt(pi, ctx, result);
       } catch (error) {
         ctx.ui.notify(formatError(error), "error");
       }
@@ -163,10 +155,19 @@ export async function bootstrapCodebaseWiki(root: string, options: BootstrapOpti
   const projectName = (options.projectName?.trim() || basename(root)).trim();
   const date = new Date().toISOString().slice(0, 10);
   const brownfieldHints = await detectBrownfieldHints(root);
+  const inferredProjectState = (brownfieldHints.boundaries.length > 0 || await looksLikeBoundary(root, 0)) ? "brownfield" : "greenfield";
   const files = starterFiles({ projectName, date, brownfieldHints });
 
   return withLockedPaths(bootstrapTargetPaths(root, files), async () => {
-    const result: BootstrapResult = { root, projectName, created: [], updated: [], skipped: [] };
+    const result: BootstrapResult = {
+      root,
+      projectName,
+      created: [],
+      updated: [],
+      skipped: [],
+      inferredProjectState,
+      inferredBoundaries: brownfieldHints.boundaries.map((boundary) => boundary.codePath),
+    };
 
     for (const relativeDir of starterDirectories()) {
       await mkdir(resolve(root, relativeDir), { recursive: true });
@@ -227,8 +228,42 @@ function formatSummary(action: "Configured" | "Bootstrapped", result: BootstrapR
     `created=${result.created.length}`,
     `updated=${result.updated.length}`,
     `skipped=${result.skipped.length}`,
+    `shape=${result.inferredProjectState}`,
+    `boundaries=${result.inferredBoundaries.length}`,
   ];
   return parts.join(" ");
+}
+
+function queueOnboardingPrompt(
+  pi: ExtensionAPI,
+  ctx: { isIdle?: () => boolean },
+  result: BootstrapResult,
+): void {
+  const prompt = [
+    `Intelligently onboard the project after /wiki-bootstrap completed for ${result.projectName}.`,
+    `Wiki root: ${result.root}`,
+    `Inferred project state: ${result.inferredProjectState}`,
+    `Inferred boundaries: ${result.inferredBoundaries.length > 0 ? result.inferredBoundaries.map((path) => `\`${path}\``).join(", ") : "none detected yet"}`,
+    "Tasks:",
+    "1. Inspect the repo and current wiki/spec structure.",
+    "2. Confirm or refine inferred project shape: greenfield vs brownfield, app vs library vs service vs monorepo, and major ownership seams.",
+    "3. Infer what can be learned confidently from the codebase before asking the user anything.",
+    "4. Ask at most 4 high-value questions only when answers materially reduce ambiguity or edit scope.",
+    "5. Use roadmap as the top-level container, tasks as atomic work units, and Pi sessions as native execution history.",
+    "Output format:",
+    "- Inferred project shape",
+    "- Confident assumptions",
+    "- Questions for the user (only if truly needed)",
+    "- Suggested next step using /wiki-status, /wiki-fix, or /wiki-review",
+    "Do not dump large file listings. Be concise and evidence-backed.",
+  ].join("\n");
+
+  try {
+    if (typeof ctx.isIdle === "function" && ctx.isIdle()) pi.sendUserMessage(prompt);
+    else pi.sendUserMessage(prompt, { deliverAs: "followUp" });
+  } catch {
+    // Ignore in smoke tests or non-standard execution contexts.
+  }
 }
 
 async function detectBrownfieldHints(root: string): Promise<StarterBrownfieldHints> {

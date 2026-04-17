@@ -10,7 +10,7 @@ updated: '2026-04-17'
 
 # Roadmap
 
-Generated: 2026-04-17T08:55:31Z
+Generated: 2026-04-17T12:10:58Z
 
 Canonical source: [roadmap.json](roadmap.json)
 
@@ -22,7 +22,7 @@ _None._
 
 ## Todo
 
-### ROADMAP-004 — Decide compact history strategy after archive deprecation
+### TASK-004 — Decide compact history strategy after archive deprecation
 
 - Status: todo
 - Priority: medium
@@ -38,21 +38,21 @@ _None._
 - Current: Current stance prefers git plus `.docs/events.jsonl`, but package does not yet document compact history patterns deeply.
 - Closure: Choose and document whether events-only is enough or if compact history JSONL should be generated.
 
-### ROADMAP-005 — Support roadmap update and close mutations
+### TASK-005 — Support roadmap update and close mutations
 
 - Status: todo
 - Priority: medium
 - Kind: agent-workflow
-- Summary: After append flow, package should let agents update or close existing roadmap items without manual roadmap JSON editing.
+- Summary: After append flow, package should let agents update or close existing roadmap tasks without manual roadmap JSON editing.
 - Specs:
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
   - [docs/specs/templates/overview.md](specs/templates/overview.md)
 - Code:
   - extensions/codebase-wiki/index.ts
 - Labels: roadmap, automation, follow-up
-- Desired: Agents can append, update, and close roadmap items through package-native workflow.
-- Current: Current implementation appends new tasks only; existing items still need manual edits for closure or rewrite.
-- Closure: Add safe mutation tool for targeting existing roadmap ids and rebuilding generated outputs after edit.
+- Desired: Agents can append, update, and close roadmap tasks through package-native workflow.
+- Current: Current implementation appends new tasks only; existing tasks still need manual edits for closure or rewrite.
+- Closure: Add safe mutation tool for targeting existing task ids and rebuilding generated outputs after edit.
 
 ## Blocked
 
@@ -60,7 +60,7 @@ _None._
 
 ## Done
 
-### ROADMAP-001 — Finish simplified research/specs/roadmap refactor
+### TASK-001 — Finish simplified research/specs/roadmap refactor
 
 - Status: done
 - Priority: critical
@@ -81,7 +81,7 @@ _None._
 - Current: Starter templates, runtime prompts, package docs, and self-wiki now use research/specs/roadmap as canonical model.
 - Closure: Done for current package contract. Future roadmap work continues on automation, brownfield mapping, and history strategy.
 
-### ROADMAP-002 — Generate brownfield spec hierarchy from repo structure
+### TASK-002 — Generate brownfield spec hierarchy from repo structure
 
 - Status: done
 - Priority: high
@@ -100,12 +100,12 @@ _None._
 - Current: Setup/bootstrap now infer first-pass boundary specs and brownfield drift scopes from repo structure before humans refine the docs.
 - Closure: Done for first-pass ownership inference. Future work can improve deeper heuristics for repos whose real seams only appear below top-level boundaries.
 
-### ROADMAP-003 — Emit roadmap-ready tasks from drift audits
+### TASK-003 — Emit roadmap-ready tasks from drift audits
 
 - Status: done
 - Priority: high
 - Kind: agent-workflow
-- Summary: Self-drift and code-drift flows should output task-shaped roadmap items so unresolved deltas can be promoted with minimal manual rewriting.
+- Summary: Self-drift and code-drift flows should output roadmap task objects so unresolved deltas can be promoted with minimal manual rewriting.
 - Specs:
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
   - [docs/specs/shared/overview.md](specs/shared/overview.md)
@@ -117,10 +117,10 @@ _None._
 - Research: RES-001
 - Labels: roadmap, automation
 - Desired: Audit output converts directly into `docs/roadmap.json` task entries.
-- Current: Drift prompts now instruct task-shaped emission and package tool appends structured tasks with automatic ids and rebuild.
-- Closure: Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap items.
+- Current: Drift prompts now instruct roadmap task-object emission and package tool appends structured tasks with automatic TASK ids and rebuild.
+- Closure: Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap tasks.
 
-### ROADMAP-006 — Link Pi sessions to roadmap tasks
+### TASK-006 — Link Pi sessions to roadmap tasks
 
 - Status: done
 - Priority: high
@@ -141,7 +141,7 @@ _None._
 - Current: Extension now appends Pi custom task-link entries, maintains `.docs/task-session-index.json`, and surfaces session continuity in generated roadmap view.
 - Closure: Done for link and derive flow. Future work can add richer session analytics or task-aware resume helpers.
 
-### ROADMAP-007 — Expand smoke coverage for full public command surface
+### TASK-007 — Expand smoke coverage for full public command surface
 
 - Status: done
 - Priority: medium
@@ -157,7 +157,7 @@ _None._
 - Current: Smoke tests now assert every documented command and tool name, and they exercise setup/bootstrap, roadmap append, session-link, and inferred brownfield starter behavior.
 - Closure: Done for current public surface. Extend the assertions whenever new commands or tools are added.
 
-### ROADMAP-008 — Support global install with cwd-based wiki discovery
+### TASK-008 — Support global install with cwd-based wiki discovery
 
 - Status: done
 - Priority: critical
@@ -179,12 +179,12 @@ _None._
 - Current: Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.
 - Closure: Done for the global-install plus repo-local discovery architecture adopted in this package.
 
-### ROADMAP-009 — Browse roadmap tasks in terminal UI
+### TASK-009 — Prototype roadmap browsing interactions for Pi
 
 - Status: done
 - Priority: medium
 - Kind: agent-workflow
-- Summary: Extension now exposes /wiki-roadmap so users can inspect roadmap tasks and task details directly inside Pi's terminal UI.
+- Summary: Extension delivered roadmap-browsing groundwork that validated task inspection flows before the public UX was later consolidated into fewer commands.
 - Specs:
   - [docs/specs/extension/overview.md](specs/extension/overview.md)
 - Code:
@@ -193,9 +193,53 @@ _None._
   - README.md
   - skills/codebase-wiki/SKILL.md
 - Labels: roadmap, tui, pi
-- Desired: Users should be able to inspect the live roadmap without leaving Pi or manually opening docs/roadmap.md in another tool.
-- Current: The extension now provides a terminal roadmap browser with searchable task selection and per-task detail views, plus smoke coverage for the public command surface.
-- Closure: Done for the first terminal roadmap browser. Future work can add inline mutations or richer task navigation if needed.
+- Desired: Users should be able to inspect live roadmap/task state without leaving Pi or manually opening docs/roadmap.md in another tool.
+- Current: The roadmap browser work validated task inspection and task-detail rendering, and that groundwork now informs the simpler consolidated UX.
+- Closure: Done for the initial browsing prototype. Future work can surface roadmap/task navigation again if it materially improves the simpler command model.
+
+### TASK-010 — Consolidate public UX into four intelligent wiki commands
+
+- Status: done
+- Priority: high
+- Kind: agent-workflow
+- Summary: Refactor the public command surface down to /wiki-bootstrap, /wiki-status, /wiki-fix, and /wiki-review while keeping roadmap/task/session internals and granular tools behind the scenes.
+- Specs:
+  - [docs/specs/extension/overview.md](specs/extension/overview.md)
+  - [docs/specs/package/overview.md](specs/package/overview.md)
+  - [docs/specs/system/overview.md](specs/system/overview.md)
+- Code:
+  - extensions/codebase-wiki/bootstrap.ts
+  - extensions/codebase-wiki/index.ts
+  - scripts/smoke-test.mjs
+  - README.md
+  - skills/codebase-wiki/SKILL.md
+- Labels: ux, commands, agent-workflow
+- Desired: Users should only need four strong commands, while Pi still uses internal roadmap/task/session primitives and tools behind the scenes.
+- Current: The extension now exposes a four-command public UX, /wiki-bootstrap queues intelligent onboarding, /wiki-status queues evidence-backed health review, /wiki-fix queues corrective work, and /wiki-review queues senior idea/architecture analysis.
+- Closure: Done for the first simplified public UX pass. Future work can refine prompts, heuristics, and TUI presentation without re-expanding the command surface.
+
+### TASK-011 — Add roadmap-state read model and first-party roadmap widget
+
+- Status: done
+- Priority: high
+- Kind: agent-workflow
+- Summary: Generate a read-only roadmap-state UI model and render a compact first-party roadmap widget so users can track focused, in-progress, and next tasks inside Pi without expanding the public command surface.
+- Specs:
+  - [docs/specs/extension/overview.md](specs/extension/overview.md)
+  - [docs/specs/extension/roadmap-ui.md](specs/extension/roadmap-ui.md)
+  - [docs/specs/system/overview.md](specs/system/overview.md)
+  - [docs/specs/templates/overview.md](specs/templates/overview.md)
+- Code:
+  - extensions/codebase-wiki/index.ts
+  - extensions/codebase-wiki/bootstrap.ts
+  - extensions/codebase-wiki/templates.ts
+  - scripts/rebuild_docs_meta.py
+  - scripts/smoke-test.mjs
+  - README.md
+- Labels: roadmap, tui, ux
+- Desired: Roadmap progress should be readable inside Pi through a compact working-set widget and a stable read-only UI state file that other extensions can consume.
+- Current: The extension now generates .docs/roadmap-state.json, refreshes a first-party roadmap widget from that read model, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.
+- Closure: Done for the first production-ready roadmap TUI pass. Future work can add deeper drill-down interactions on top of the same read contract without changing canonical storage or the four-command public UX.
 
 ## Related docs
 

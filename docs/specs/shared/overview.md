@@ -5,7 +5,7 @@ state: active
 summary: Shared documentation contract for maintaining codebase-wiki itself with research, specs, and roadmap.
 owners:
 - docs
-updated: '2026-04-16'
+updated: '2026-04-17'
 ---
 
 # Shared Rules
@@ -18,6 +18,7 @@ updated: '2026-04-16'
 - `docs/index.md`: generated navigation surface
 - `docs/roadmap.md`: generated roadmap view
 - `.docs/task-session-index.json`: derived task-to-session metadata
+- `.docs/roadmap-state.json`: derived roadmap/task/session UI read model
 - `.docs/`: generated metadata and event log
 
 ## Responsibility split
@@ -32,7 +33,7 @@ Specs describe desired state. They should mirror meaningful ownership boundaries
 
 ### Roadmap
 
-Roadmap tracks numbered tasks that close the gap between specs and implementation reality. Plans and drift should default to roadmap items instead of separate top-level doc classes. Audit workflows should be able to append new roadmap items without manual prose translation.
+Roadmap is the top-level container for numbered tasks that close the gap between specs and implementation reality. Tasks are the atomic work units and canonically use `TASK-###` ids. Plans and drift should default to roadmap tasks instead of separate top-level doc classes. Audit workflows should be able to append new roadmap tasks without manual prose translation.
 
 ### Sessions
 

@@ -17,7 +17,8 @@
     ".docs/registry.json",
     ".docs/backlinks.json",
     ".docs/lint.json",
-    ".docs/task-session-index.json"
+    ".docs/task-session-index.json",
+    ".docs/roadmap-state.json"
   ],
   "lint": {
     "repo_markdown": [

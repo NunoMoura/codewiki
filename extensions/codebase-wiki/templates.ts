@@ -76,6 +76,7 @@ function configJson(projectName: string, brownfieldHints: StarterBrownfieldHints
         ".docs/backlinks.json",
         ".docs/lint.json",
         ".docs/task-session-index.json",
+        ".docs/roadmap-state.json",
       ],
       lint: {
         repo_markdown: repoMarkdown,
@@ -302,6 +303,7 @@ function sharedSpecDoc(projectName: string, date: string): string {
     "- `docs/roadmap.md`: generated human roadmap view",
     "- `docs/index.md`: generated navigation surface",
     "- `.docs/task-session-index.json`: derived task-to-session metadata",
+    "- `.docs/roadmap-state.json`: derived roadmap/task/session UI read model",
     "- `.docs/`: generated metadata and events",
     "",
     "## Responsibilities",
@@ -316,7 +318,7 @@ function sharedSpecDoc(projectName: string, date: string): string {
     "",
     "### Roadmap",
     "",
-    "Roadmap tracks numbered tasks that close the delta between desired state and current implementation reality.",
+    "Roadmap is the top-level container for numbered tasks that close the delta between desired state and current implementation reality. Tasks are the atomic work units.",
     "",
     "### Sessions",
     "",
@@ -326,7 +328,7 @@ function sharedSpecDoc(projectName: string, date: string): string {
     "",
     "- prefer edits to canonical specs over new overlapping docs",
     "- keep research structured and terse",
-    "- keep roadmap items actionable, scoped, and fresh",
+    "- keep roadmap tasks actionable, scoped, and fresh",
     "- treat generated docs as navigation, not source of truth",
     "",
     "## Related docs",
@@ -358,10 +360,10 @@ function roadmapJson(projectName: string, date: string): string {
     {
       version: 1,
       updated: date,
-      order: ["ROADMAP-001", "ROADMAP-002", "ROADMAP-003"],
+      order: ["TASK-001", "TASK-002", "TASK-003"],
       tasks: {
-        "ROADMAP-001": {
-          id: "ROADMAP-001",
+        "TASK-001": {
+          id: "TASK-001",
           title: "Lock product intent in specs",
           status: "todo",
           priority: "high",
@@ -379,8 +381,8 @@ function roadmapJson(projectName: string, date: string): string {
           created: date,
           updated: date,
         },
-        "ROADMAP-002": {
-          id: "ROADMAP-002",
+        "TASK-002": {
+          id: "TASK-002",
           title: "Map code ownership into spec hierarchy",
           status: "todo",
           priority: "high",
@@ -398,13 +400,13 @@ function roadmapJson(projectName: string, date: string): string {
           created: date,
           updated: date,
         },
-        "ROADMAP-003": {
-          id: "ROADMAP-003",
+        "TASK-003": {
+          id: "TASK-003",
           title: "Keep roadmap as freshest delta log",
           status: "todo",
           priority: "medium",
           kind: "process",
-          summary: "Move drift and plan tracking into structured roadmap items instead of separate prose buckets.",
+          summary: "Move drift and plan tracking into structured roadmap tasks instead of separate prose buckets.",
           spec_paths: ["docs/specs/shared/overview.md"],
           code_paths: [],
           research_ids: [],
@@ -412,7 +414,7 @@ function roadmapJson(projectName: string, date: string): string {
           delta: {
             desired: "Roadmap is single current queue for closing docs-to-code gaps.",
             current: "Teams often spread gaps across plans, drift notes, and chat.",
-            closure: "Convert each active mismatch or sequence into a scoped roadmap item.",
+            closure: "Convert each active mismatch or sequence into a scoped roadmap task.",
           },
           created: date,
           updated: date,
@@ -492,6 +494,7 @@ ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "docs/roadmap.md"))
 ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".docs/roadmap-events.jsonl"))
 META_ROOT = ROOT / str(CONFIG.get("meta_root", ".docs"))
 TASK_SESSION_INDEX_PATH = META_ROOT / "task-session-index.json"
+ROADMAP_STATE_PATH = META_ROOT / "roadmap-state.json"
 INDEX_PATH = ROOT / str(CONFIG.get("index_path", "docs/index.md"))
 INDEX_TITLE = str(CONFIG.get("index_title", f"{PROJECT_NAME} Docs Index"))
 FORBIDDEN_HEADINGS = set(maybe_str_list(LINT_CONFIG.get("forbidden_headings")) or sorted(DEFAULT_FORBIDDEN_HEADINGS))
@@ -840,10 +843,10 @@ def lint_roadmap_entries(entries: list[dict[str, Any]], research_collections: li
     for index, entry in enumerate(entries, start=1):
         entry_id = str(entry.get("id", "")).strip()
         if not entry_id:
-            issues.append(issue("error", "roadmap-missing-id", source_path, f"Entry {index} missing id"))
+            issues.append(issue("error", "roadmap-missing-id", source_path, f"Entry {index} missing task id"))
             continue
         if entry_id in seen_ids:
-            issues.append(issue("error", "roadmap-duplicate-id", source_path, f"Duplicate roadmap id: {entry_id}"))
+            issues.append(issue("error", "roadmap-duplicate-id", source_path, f"Duplicate roadmap task id: {entry_id}"))
         seen_ids.add(entry_id)
 
         for field in ["title", "status", "priority", "kind", "summary", "created", "updated"]:
@@ -927,6 +930,82 @@ def lint(docs: list[dict[str, Any]], roadmap_entries: list[dict[str, Any]], rese
     }
 
 
+def lint_health(lint_report: dict[str, Any]) -> dict[str, Any]:
+    issues = lint_report.get("issues") if isinstance(lint_report.get("issues"), list) else []
+    errors = sum(1 for item in issues if str(item.get("severity", "")) == "error")
+    warnings = sum(1 for item in issues if str(item.get("severity", "")) == "warning")
+    color = "red" if errors > 0 else "yellow" if warnings > 0 else "green"
+    return {
+        "color": color,
+        "errors": errors,
+        "warnings": warnings,
+        "total_issues": len(issues),
+    }
+
+
+def build_roadmap_state(entries: list[dict[str, Any]], task_session_index: dict[str, Any], lint_report: dict[str, Any]) -> dict[str, Any]:
+    ordered = [str(item.get("id", "")).strip() for item in entries if str(item.get("id", "")).strip()]
+    task_sessions = task_session_index.get("tasks") if isinstance(task_session_index.get("tasks"), dict) else {}
+    session_summaries = task_session_index.get("sessions") if isinstance(task_session_index.get("sessions"), dict) else {}
+    status_counts = Counter(str(item.get("status", "todo")) for item in entries)
+    priority_counts = Counter(str(item.get("priority", "medium")) for item in entries)
+    tasks: dict[str, Any] = {}
+    linked_task_count = 0
+
+    for item in entries:
+        task_id = str(item.get("id", "")).strip()
+        if not task_id:
+            continue
+        session_meta = task_session_summary(task_sessions, task_id)
+        if session_meta:
+            linked_task_count += 1
+        tasks[task_id] = {
+            "id": task_id,
+            "title": str(item.get("title", task_id)).strip(),
+            "status": str(item.get("status", "todo")),
+            "priority": str(item.get("priority", "medium")),
+            "kind": str(item.get("kind", "task")).strip(),
+            "summary": str(item.get("summary", "")).strip(),
+            "labels": [str(value) for value in item.get("labels", []) if str(value).strip()],
+            "spec_paths": [str(value) for value in item.get("spec_paths", []) if str(value).strip()],
+            "code_paths": [str(value) for value in item.get("code_paths", []) if str(value).strip()],
+            "updated": str(item.get("updated", "")).strip(),
+            "session_count": int(session_meta.get("session_count", len(session_meta.get("session_ids", [])))) if session_meta else 0,
+            "last_session_id": str(session_meta.get("last_session_id", "")).strip() if session_meta else "",
+            "last_session_name": str(session_meta.get("last_session_name", "")).strip() if session_meta else "",
+            "last_action": str(session_meta.get("last_action", "")).strip() if session_meta else "",
+            "last_summary": str(session_meta.get("last_summary", "")).strip() if session_meta else "",
+            "last_timestamp": str(session_meta.get("last_timestamp", "")).strip() if session_meta else "",
+        }
+
+    sorted_entries = sorted(entries, key=roadmap_sort_key)
+    recent_entries = sorted(entries, key=lambda item: (str(item.get("updated", "")), str(item.get("id", ""))), reverse=True)
+    return {
+        "version": 1,
+        "generated_at": now_iso(),
+        "health": lint_health(lint_report),
+        "summary": {
+            "task_count": len(entries),
+            "open_count": int(status_counts.get("todo", 0) + status_counts.get("in_progress", 0) + status_counts.get("blocked", 0)),
+            "status_counts": dict(status_counts),
+            "priority_counts": dict(priority_counts),
+            "linked_task_count": linked_task_count,
+            "linked_session_count": len(session_summaries),
+        },
+        "views": {
+            "ordered_task_ids": ordered,
+            "open_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) in {"todo", "in_progress", "blocked"} and str(item.get("id", "")).strip()],
+            "in_progress_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) == "in_progress" and str(item.get("id", "")).strip()],
+            "todo_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) == "todo" and str(item.get("id", "")).strip()],
+            "blocked_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) == "blocked" and str(item.get("id", "")).strip()],
+            "done_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) == "done" and str(item.get("id", "")).strip()],
+            "cancelled_task_ids": [str(item.get("id", "")).strip() for item in sorted_entries if str(item.get("status", "todo")) == "cancelled" and str(item.get("id", "")).strip()],
+            "recent_task_ids": [str(item.get("id", "")).strip() for item in recent_entries if str(item.get("id", "")).strip()],
+        },
+        "tasks": tasks,
+    }
+
+
 def docs_relative_link(root_relative_path: str) -> str:
     abs_path = ROOT / root_relative_path
     try:
@@ -941,6 +1020,27 @@ def roadmap_sort_key(item: dict[str, Any]) -> tuple[int, int, str]:
     status = str(item.get("status", "todo"))
     priority = str(item.get("priority", "medium"))
     return (status_order.get(status, 99), priority_order.get(priority, 99), str(item.get("id", "")))
+
+
+def task_id_aliases(task_id: str) -> list[str]:
+    stripped = str(task_id).strip()
+    if not stripped:
+        return []
+    upper = stripped.upper()
+    match = re.fullmatch(r"(TASK|ROADMAP)-(\d+)", upper)
+    if not match:
+        return list(dict.fromkeys([stripped, upper]))
+    number = int(match.group(2))
+    padded = f"{number:03d}"
+    return list(dict.fromkeys([stripped, upper, f"TASK-{padded}", f"ROADMAP-{padded}"]))
+
+
+def task_session_summary(task_sessions: dict[str, Any], task_id: str) -> dict[str, Any] | None:
+    for candidate in task_id_aliases(task_id):
+        value = task_sessions.get(candidate)
+        if isinstance(value, dict):
+            return value
+    return None
 
 
 def render_roadmap(entries: list[dict[str, Any]], task_session_index: dict[str, Any]) -> str:
@@ -1011,7 +1111,7 @@ def render_roadmap(entries: list[dict[str, Any]], task_session_index: dict[str, 
                 lines.append(f"- Research: {', '.join(research_ids)}")
             if labels:
                 lines.append(f"- Labels: {', '.join(labels)}")
-            session_meta = task_sessions.get(task_id) if isinstance(task_sessions.get(task_id), dict) else None
+            session_meta = task_session_summary(task_sessions, task_id)
             if session_meta:
                 session_count = int(session_meta.get("session_count", len(session_meta.get("session_ids", []))))
                 lines.append(f"- Session links: {session_count}")
@@ -1078,7 +1178,7 @@ def render_index(registry: dict[str, Any], research_collections: list[dict[str, 
         "",
         "## Roadmap",
         "",
-        f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — {len(roadmap_entries)} item(s); " + ", ".join(f"{key}={value}" for key, value in sorted(roadmap_counts.items())) if roadmap_entries else f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — 0 items",
+        f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — {len(roadmap_entries)} task(s); " + ", ".join(f"{key}={value}" for key, value in sorted(roadmap_counts.items())) if roadmap_entries else f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — 0 tasks",
         "",
         "## Specs — Root",
         "",
@@ -1143,6 +1243,7 @@ def main() -> None:
     INDEX_PATH.write_text(index_text, encoding="utf-8")
     lint_report = lint(docs, roadmap_items, research_collections)
     write_json(META_ROOT / "lint.json", lint_report)
+    write_json(ROADMAP_STATE_PATH, build_roadmap_state(roadmap_items, task_session_index, lint_report))
 
 
 if __name__ == "__main__":

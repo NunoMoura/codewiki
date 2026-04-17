@@ -18,18 +18,14 @@ That is the right shape for this package:
 
 ### Commands
 
-- `/wiki-setup [project name]`
-- `/wiki-bootstrap [project name] [--force]`
-- `/wiki-rebuild`
-- `/wiki-lint`
-- `/wiki-lint show`
-- `/wiki-status`
-- `/wiki-roadmap [ROADMAP-###]`
-- `/wiki-self-drift`
-- `/wiki-code-drift`
-- `/wiki-task <task-id> [focus|progress|blocked|done|spawn]`
+Public command surface is intentionally small:
 
-### Tools
+- `/wiki-bootstrap [project name] [--force]`
+- `/wiki-status [docs|code|both]`
+- `/wiki-fix [docs|code|both]`
+- `/wiki-review [idea|architecture]`
+
+### Internal agent tools
 
 - `codebase_wiki_setup`
 - `codebase_wiki_bootstrap`
@@ -44,14 +40,11 @@ That is the right shape for this package:
 
 The skill tells Pi when to use the package for:
 
-- setting up or bootstrapping a repo-local wiki
-- rebuilding generated docs metadata
-- deterministic docs linting
-- docs-vs-docs drift review
-- docs-vs-code drift review
-- browsing roadmap tasks in a terminal UI
-- appending roadmap-ready tasks after drift audits
-- linking current Pi session to roadmap tasks
+- intelligent bootstrap/onboarding of a repo-local wiki
+- wiki health/status review across docs, code, or both
+- drift correction across docs, code, or both
+- senior review from idea or architecture perspectives
+- internal roadmap/task/session operations behind the simplified UX
 
 ## Simplified model
 
@@ -59,7 +52,8 @@ Codebase Wiki now centers on only three canonical artifact classes:
 
 - **research** — compact evidence capture in docs/research JSONL collections
 - **specs** — intended system truth in docs/specs markdown hierarchy
-- **roadmap** — numbered delta tracker in `docs/roadmap.json`
+- **roadmap** — top-level container for tracked delta work in `docs/roadmap.json`
+- **task** — atomic work unit inside roadmap, canonically named `TASK-###`
 
 Generated navigation stays separate:
 
@@ -69,18 +63,28 @@ Generated navigation stays separate:
 - `.docs/backlinks.json`
 - `.docs/lint.json`
 - `.docs/task-session-index.json`
+- `.docs/roadmap-state.json`
 
 Pi session linkage stays local and operational:
 
 - Pi session JSONL remains Pi-owned
 - codebase-wiki appends custom session entries linking tasks to sessions
 - `.docs/task-session-index.json` is derived metadata for navigation and resume flow
+- `.docs/roadmap-state.json` is the denormalized read model used by the built-in roadmap widget and any future third-party UI readers
+
+Task identity and compatibility:
+
+- canonical task ids use `TASK-###`
+- new appended tasks always use `TASK-###`
+- runtime still accepts legacy `ROADMAP-###` lookups for task browsing, linking, and session-derived roadmap views during migration
 
 Working rule:
 
 - research = evidence
 - specs = desired state
-- roadmap = trackable delta from desired state to current reality
+- roadmap = container for trackable delta from desired state to current reality
+- task = atomic work unit inside roadmap
+- Pi session = native execution history linked to tasks
 
 ## Install
 
@@ -143,31 +147,21 @@ python3 -m pip install pyyaml
 ### New repo
 
 1. Install the package once with `pi install <package-source>`.
-2. Open Pi in the repo root, or in a subdirectory if you want setup to target the enclosing git repo.
-3. Run either:
-
-```text
-/wiki-setup My Project
-```
-
-for the safe default, or:
+2. Open Pi in the repo root, or in a subdirectory if you want bootstrap to target the enclosing git repo.
+3. Run:
 
 ```text
 /wiki-bootstrap My Project
 ```
 
-if you want the explicit bootstrap command.
-
-4. Replace the starter docs with real project content. On brownfield repos, setup/bootstrap may infer first-pass boundary specs from repo structure; refine or collapse them until they match real ownership seams.
-5. Use:
+4. Let the intelligent onboarding follow-up inspect repo shape, infer greenfield vs brownfield signals, and ask only a few high-value questions when needed.
+5. Refine the starter docs until they match real ownership seams.
+6. Use:
 
 ```text
-/wiki-rebuild
-/wiki-lint
-/wiki-status
-/wiki-roadmap
-/wiki-self-drift
-/wiki-code-drift
+/wiki-status both
+/wiki-fix docs
+/wiki-review architecture
 ```
 
 ### Existing repo
@@ -177,10 +171,10 @@ If the repo already has a compatible wiki contract, open Pi anywhere inside that
 If the repo needs the contract created first, run:
 
 ```text
-/wiki-setup
+/wiki-bootstrap
 ```
 
-from the repo root, or from a subdirectory if you want setup to target the enclosing git repo.
+from the repo root, or from a subdirectory if you want bootstrap to target the enclosing git repo.
 
 Minimum expected contract:
 
@@ -207,6 +201,7 @@ The rebuild command should update at least:
 - `.docs/registry.json`
 - `.docs/lint.json`
 - `.docs/task-session-index.json` (empty or populated)
+- `.docs/roadmap-state.json`
 
 ## Recommended dogfooding workflow
 
@@ -218,26 +213,23 @@ Recommended loop:
 2. Run:
 
 ```text
-/wiki-rebuild
-/wiki-lint
-/wiki-status
-/wiki-roadmap
+/wiki-status both
 ```
 
-3. If work maps to an existing roadmap item, link the session:
+3. If status comes back yellow or red, run:
 
 ```text
-/wiki-task ROADMAP-005 focus
+/wiki-fix both
 ```
 
-4. If you want the agent to review the docs contract before editing, run:
+4. When you want a higher-level assessment, run:
 
 ```text
-/wiki-self-drift
-/wiki-code-drift
+/wiki-review architecture
+/wiki-review idea
 ```
 
-5. If drift review finds real new delta, append a structured roadmap task with `codebase_wiki_roadmap_append` instead of hand-editing generated docs.
+5. Let the agent use internal roadmap/task tools when work maps to existing tasks or when unresolved delta should become a new task.
 
 Working rule for this repo:
 
@@ -277,13 +269,13 @@ Use `AGENTS.md` for project conventions. Use the packaged skill for package beha
 
 ## How it works
 
-### Setup and bootstrap
+### Bootstrap and onboarding
 
-`/wiki-setup` and `codebase_wiki_setup` are the safe default. They configure the current project for codebase-wiki without overwriting existing starter files, and reuse an existing ancestor wiki root when one is already present.
+`/wiki-bootstrap` is the single public onboarding entrypoint. It safely adopts or scaffolds the repo-local wiki contract, reuses an existing ancestor wiki root when one is already present, and supports `--force` only when the user explicitly wants starter files overwritten.
 
-`/wiki-bootstrap` or `codebase_wiki_bootstrap` use the same starter contract, but support `--force` when the user explicitly wants starter files overwritten.
+Internally, agent tools may still use `codebase_wiki_setup` as a safe non-overwriting adopt step and `codebase_wiki_bootstrap` for explicit starter scaffolding.
 
-Starter setup includes:
+Starter bootstrap includes:
 
 - `.docs/config.json`
 - `.docs/events.jsonl`
@@ -295,15 +287,19 @@ Starter setup includes:
 - inferred first-pass boundary `overview.md` files under `docs/specs/` when brownfield structure is detected
 - `docs/research/inspiration.jsonl`
 - `docs/roadmap.json`
-- generated outputs like `docs/index.md`, `docs/roadmap.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`, `.docs/task-session-index.json`
+- generated outputs like `docs/index.md`, `docs/roadmap.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`, `.docs/task-session-index.json`, `.docs/roadmap-state.json`
 
-### Roadmap browser
+### Status, fix, and review
 
-`/wiki-roadmap` opens a terminal-friendly roadmap browser.
+`/wiki-status` is the main health command. It rebuilds metadata, reports deterministic preflight state, lists specs with mapped code paths and drift signals, includes a compact roadmap working set, and queues a semantic review for `docs`, `code`, or `both`.
 
-- without arguments, it shows the ordered roadmap task list in a searchable TUI selector
-- with a task id like `/wiki-roadmap ROADMAP-008`, it opens that task's details directly
-- from inside the browser, inspect a task and then use `/wiki-task <id> focus` when the current Pi session should link back to that roadmap item
+`/wiki-fix` is the corrective command. It uses repo evidence first, asks only high-value clarifying questions when needed, then fixes drift in `docs`, `code`, or `both`.
+
+`/wiki-review` is the senior analysis command. Use `idea` for business value and product coherence review, or `architecture` for technical execution and design review.
+
+### Roadmap TUI
+
+The extension also renders a compact roadmap widget above the editor. It reads `.docs/roadmap-state.json`, shows health and counts, prefers the current session's focused task when known, then shows in-progress and next todo work instead of dumping the entire roadmap by default.
 
 ### Runtime operations
 
@@ -312,7 +308,7 @@ Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.js
 Runtime rule:
 
 - resolve the nearest ancestor containing `.docs/config.json` from current cwd
-- if no wiki exists yet, `/wiki-setup` and `/wiki-bootstrap` target the enclosing git repo root when present, else the current working directory
+- if no wiki exists yet, `/wiki-bootstrap` targets the enclosing git repo root when present, else the current working directory
 
 It then uses that repo config to:
 
@@ -323,6 +319,7 @@ It then uses that repo config to:
 - append structured roadmap tasks to `docs/roadmap.json` when audits uncover real unresolved delta
 - append Pi custom session entries that link current session to roadmap tasks
 - maintain `.docs/task-session-index.json` so generated roadmap view can show session continuity
+- maintain `.docs/roadmap-state.json` so the first-party roadmap widget and any future third-party UI can read compact roadmap/task/session state without mutating canonical files
 
 That means one global package install can operate across many repos, while each repo keeps its own `docs/`, `.docs/`, and rebuild contract.
 
@@ -337,7 +334,7 @@ This package assumes:
 - code is implementation evidence
 - there is one generated live index
 - machine metadata stays hidden under `.docs/`
-- plans and drift are better modeled as roadmap items than as separate top-level doc buckets
+- plans and drift are better modeled as roadmap tasks than as separate top-level doc buckets
 
 ## Repo layout
 

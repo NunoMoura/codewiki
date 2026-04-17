@@ -34,11 +34,22 @@ Runtime should bind to repo-local `.docs/config.json`, not `.pi/settings.json`.
 Discovery rule:
 
 - resolve the nearest ancestor containing `.docs/config.json` from current cwd
-- if no wiki exists yet, `/wiki-setup` and `/wiki-bootstrap` target enclosing git repo root when present, else current working directory
+- if no wiki exists yet, `/wiki-bootstrap` targets enclosing git repo root when present, else current working directory
 
-## Brownfield setup goal
+## Brownfield bootstrap goal
 
-Setup should be able to infer first-pass `docs/specs/**` ownership docs from meaningful repo boundaries so existing repos start from something closer to real architecture than generic placeholders.
+Bootstrap should be able to infer first-pass `docs/specs/**` ownership docs from meaningful repo boundaries so existing repos start from something closer to real architecture than generic placeholders.
+
+## Public UX shape
+
+- public commands stay limited to `/wiki-bootstrap`, `/wiki-status`, `/wiki-fix`, and `/wiki-review`
+- deeper composability lives in internal tools and prompts
+
+## Model naming
+
+- roadmap stays the top-level container for delta/work
+- task is the atomic work unit and canonically uses `TASK-###`
+- Pi sessions stay native JSONL execution history linked to tasks through custom entries plus derived local metadata
 
 ## Compatibility goal
 
@@ -50,6 +61,7 @@ A repo using this package should only need:
 - `docs/specs/`
 - `docs/roadmap.json`
 - `.docs/task-session-index.json`
+- `.docs/roadmap-state.json`
 
 ## Related docs
 

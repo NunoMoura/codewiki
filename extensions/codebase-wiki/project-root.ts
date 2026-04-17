@@ -16,7 +16,7 @@ export async function requireWikiRoot(startDir: string): Promise<string> {
   const root = await findWikiRoot(startDir);
   if (root) return root;
   throw new Error(
-    `No ${WIKI_CONFIG_RELATIVE_PATH} found from ${startDir} upward. Run /wiki-setup or /wiki-bootstrap from the repo root (or folder) that should own docs/ and .docs/, then retry.`,
+    `No ${WIKI_CONFIG_RELATIVE_PATH} found from ${startDir} upward. Run /wiki-bootstrap from the repo root (or folder) that should own docs/ and .docs/, then retry.`,
   );
 }
 

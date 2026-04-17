@@ -21,7 +21,7 @@ Starter repos should receive:
 - `.docs/events.jsonl`
 - `.docs/sources/`
 - `docs/specs/**`
-- inferred first-pass boundary `overview.md` files when setup/bootstrap can recognize meaningful brownfield ownership seams
+- inferred first-pass boundary `overview.md` files when bootstrap can recognize meaningful brownfield ownership seams
 - `docs/research/*.jsonl`
 - `docs/roadmap.json`
 - `scripts/rebuild_docs_meta.py`
@@ -36,14 +36,15 @@ Rebuild should deterministically produce:
 - `.docs/backlinks.json`
 - `.docs/lint.json`
 - `.docs/task-session-index.json` when missing, and consume it when present
+- `.docs/roadmap-state.json` as a generated read-only roadmap/task/session UI model
 
 ## Roadmap mutation support
 
-Runtime should be able to mutate `docs/roadmap.json`, preserve explicit task order, log event metadata, and rebuild generated outputs in one safe step.
+Runtime should be able to mutate `docs/roadmap.json`, preserve explicit task order, log event metadata, and rebuild generated outputs in one safe step. Starter roadmap seeds should use canonical `TASK-###` ids for task records.
 
 ## Session link support
 
-Runtime should be able to append Pi custom session entries for task work, update `.docs/task-session-index.json`, and surface last-session metadata in generated roadmap views without changing Pi's native session JSONL schema.
+Runtime should be able to append Pi custom session entries for task work, update `.docs/task-session-index.json`, generate `.docs/roadmap-state.json`, and surface last-session metadata in generated roadmap views and widgets without changing Pi's native session JSONL schema. Generated roadmap views should tolerate legacy `ROADMAP-###` task-session keys while repos migrate to canonical `TASK-###` ids.
 
 ## Lint responsibilities
 
