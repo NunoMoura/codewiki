@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-04-17T23:46:37Z",
+  "generated_at": "2026-04-18T00:00:36Z",
   "docs": [
     {
       "id": "roadmap.live",
-      "path": "docs/roadmap.md",
+      "path": "wiki/roadmap.md",
       "title": "Roadmap",
       "doc_type": "roadmap",
       "state": "active",
@@ -14,20 +14,20 @@
       "tags": [],
       "code_paths": [],
       "links_out": [
-        "docs/index.md",
-        "docs/roadmap.json",
-        "docs/specs/extension/overview.md",
-        "docs/specs/extension/roadmap-ui.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/index.md",
+        "wiki/roadmap.json",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.extension.overview",
-      "path": "docs/specs/extension/overview.md",
+      "path": "wiki/specs/extension/overview.md",
       "title": "Extension Runtime",
       "doc_type": "spec",
       "state": "active",
@@ -42,17 +42,17 @@
         "extensions/codewiki/templates.ts"
       ],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/roadmap-ui.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.extension.roadmap-ui",
-      "path": "docs/specs/extension/roadmap-ui.md",
+      "path": "wiki/specs/extension/roadmap-ui.md",
       "title": "Roadmap State and TUI",
       "doc_type": "spec",
       "state": "active",
@@ -67,16 +67,16 @@
         "scripts/rebuild_docs_meta.py"
       ],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.package.overview",
-      "path": "docs/specs/package/overview.md",
+      "path": "wiki/specs/package/overview.md",
       "title": "Package Surface",
       "doc_type": "spec",
       "state": "active",
@@ -87,16 +87,16 @@
       "tags": [],
       "code_paths": [],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.product",
-      "path": "docs/specs/product.md",
+      "path": "wiki/specs/product.md",
       "title": "Product",
       "doc_type": "spec",
       "state": "active",
@@ -107,17 +107,17 @@
       "tags": [],
       "code_paths": [],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.shared.overview",
-      "path": "docs/specs/shared/overview.md",
+      "path": "wiki/specs/shared/overview.md",
       "title": "Shared Rules",
       "doc_type": "spec",
       "state": "active",
@@ -128,17 +128,17 @@
       "tags": [],
       "code_paths": [],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.system.overview",
-      "path": "docs/specs/system/overview.md",
+      "path": "wiki/specs/system/overview.md",
       "title": "System Overview",
       "doc_type": "spec",
       "state": "active",
@@ -149,17 +149,17 @@
       "tags": [],
       "code_paths": [],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ]
     },
     {
       "id": "spec.templates.overview",
-      "path": "docs/specs/templates/overview.md",
+      "path": "wiki/specs/templates/overview.md",
       "title": "Templates and Rebuild",
       "doc_type": "spec",
       "state": "active",
@@ -173,25 +173,24 @@
         "scripts/rebuild_docs_meta.py"
       ],
       "links_out": [
-        "docs/roadmap.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md"
       ]
     }
   ],
   "research": [
     {
-      "path": "docs/research/inspiration.jsonl",
+      "path": "wiki/research/inspiration.jsonl",
       "entry_count": 2
     }
   ],
   "roadmap": {
     "entry_count": 15,
     "counts": {
-      "done": 14,
-      "todo": 1
+      "done": 15
     }
   }
 }

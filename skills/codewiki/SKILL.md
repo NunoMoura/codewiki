@@ -1,6 +1,6 @@
 ---
 name: codewiki
-description: Bootstrap and operate a repo-local docs-first codebase wiki. Use when a repo needs intelligent wiki bootstrap, wiki status review, drift correction, idea/architecture review, or roadmap/task visibility improvements around `.docs/config.json`, `docs/specs/**`, `docs/research/*.jsonl`, `docs/roadmap.json`, and `.docs/roadmap-state.json`.
+description: Bootstrap and operate a repo-local docs-first codebase wiki. Use when a repo needs intelligent wiki bootstrap, wiki status review, drift correction, idea/architecture review, or roadmap/task visibility improvements around `.wiki/config.json`, `wiki/specs/**`, `wiki/research/*.jsonl`, `wiki/roadmap.json`, and `.wiki/roadmap-state.json`.
 ---
 
 # Codewiki
@@ -31,7 +31,7 @@ Internal agent tools:
 
 0. Package may be installed globally or project-locally.
    - If commands are missing after install, ask the user to run `/reload`.
-1. If the repo does not have `.docs/config.json`, start with `/wiki-bootstrap`.
+1. If the repo does not have `.wiki/config.json`, start with `/wiki-bootstrap`.
    - Prefer `codewiki_setup` or `codewiki_bootstrap` internally depending on whether overwrite was requested.
    - On brownfield repos, expect bootstrap to infer first-pass boundary specs from repo structure; then refine them to match real ownership seams.
 2. Use `/wiki-status [docs|code|both]` as the main health command.
@@ -43,7 +43,7 @@ Internal agent tools:
 6. When drift review finds real unresolved delta not already tracked, prefer `codewiki_roadmap_append` to append structured roadmap tasks.
 7. When an existing task needs rewrite, reprioritization, or closure, prefer `codewiki_roadmap_update` instead of manual roadmap JSON edits.
 8. When starting or continuing work on a task, prefer `codewiki_task_session_link` so Pi session history links back to roadmap tasks.
-9. Keep `.docs/` generated. Do not hand-edit generated outputs unless fixing the generator itself.
+9. Keep `.wiki/` generated. Do not hand-edit generated outputs unless fixing the generator itself.
 
 ## Wiki rules
 
@@ -54,7 +54,7 @@ Internal agent tools:
 - Pi sessions = execution history linked to tasks, not canonical roadmap truth
 - code = implementation evidence
 - one generated live index
-- hidden machine metadata under `.docs/`
+- hidden machine metadata under `.wiki/`
 - keep plans and drift inside roadmap instead of separate top-level doc buckets
 - keep decisions close to owning specs instead of one global ADR bucket by default
 
@@ -62,7 +62,7 @@ Internal agent tools:
 
 - Prefer package tools and commands over telling the user to edit `AGENTS.md`.
 - Use `AGENTS.md` only for repo-specific policy layered on top of this package.
-- Runtime should resolve the nearest ancestor containing `.docs/config.json` from current cwd.
+- Runtime should resolve the nearest ancestor containing `.wiki/config.json` from current cwd.
 - If no wiki exists yet, `/wiki-bootstrap` should target enclosing git repo root when present, else current working directory.
 - When bootstrapping into an existing repo, avoid overwriting files unless the user explicitly asks for `--force`.
 - Canonical task ids use `TASK-###`, but legacy `ROADMAP-###` task lookups remain accepted during migration.

@@ -24,12 +24,12 @@ Current code maps into these owning areas:
 - `extensions/codewiki/` owns runtime behavior and scaffolding helpers
 - `skills/codewiki/` owns agent usage guidance
 - `scripts/` owns smoke testing and generated rebuild helper in bootstrapped repos
-- `docs/` owns desired-state contract for this package itself
+- `wiki/` owns desired-state contract for this package itself
 
 ## Runtime binding rule
 
 - package may be installed globally or project-locally
-- runtime binds to the nearest ancestor containing `.docs/config.json`
+- runtime binds to the nearest ancestor containing `.wiki/config.json`
 - `/wiki-bootstrap` targets enclosing git repo root when no wiki exists yet, else current working directory
 
 ## Simplified wiki model
@@ -41,7 +41,7 @@ This package now optimizes for only three canonical artifact classes:
 - roadmap JSON as the top-level container for tracked delta/work
 - task records inside roadmap as atomic work units with canonical `TASK-###` ids
 - Pi sessions as native execution history linked to tasks through custom entries and live runtime reads
-- `.docs/roadmap-state.json` as a read-only denormalized UI model layered on top of canonical roadmap and lint data, with active session focus overlaid at runtime
+- `.wiki/roadmap-state.json` as a read-only denormalized UI model layered on top of canonical roadmap and lint data, with active session focus overlaid at runtime
 
 Legacy top-level buckets like plans, drift, decisions, and archive are intentionally collapsed or localized.
 

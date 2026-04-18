@@ -29,16 +29,16 @@ Package should expose:
 
 ## Install boundary
 
-Runtime should bind to repo-local `.docs/config.json`, not `.pi/settings.json`.
+Runtime should bind to repo-local `.wiki/config.json`, not `.pi/settings.json`.
 
 Discovery rule:
 
-- resolve the nearest ancestor containing `.docs/config.json` from current cwd
+- resolve the nearest ancestor containing `.wiki/config.json` from current cwd
 - if no wiki exists yet, `/wiki-bootstrap` targets enclosing git repo root when present, else current working directory
 
 ## Brownfield bootstrap goal
 
-Bootstrap should be able to infer first-pass `docs/specs/**` ownership docs from meaningful repo boundaries so existing repos start from something closer to real architecture than generic placeholders.
+Bootstrap should be able to infer first-pass `wiki/specs/**` ownership docs from meaningful repo boundaries so existing repos start from something closer to real architecture than generic placeholders.
 
 ## Public UX shape
 
@@ -55,12 +55,12 @@ Bootstrap should be able to infer first-pass `docs/specs/**` ownership docs from
 
 A repo using this package should only need:
 
-- `.docs/config.json`
+- `.wiki/config.json`
 - `scripts/rebuild_docs_meta.py`
-- `docs/research/`
-- `docs/specs/`
-- `docs/roadmap.json`
-- `.docs/roadmap-state.json`
+- `wiki/research/`
+- `wiki/specs/`
+- `wiki/roadmap.json`
+- `.wiki/roadmap-state.json`
 
 ## Related docs
 

@@ -12,13 +12,13 @@ updated: '2026-04-17'
 
 ## Canonical artifacts
 
-- `docs/research/*.jsonl`: compact evidence capture
-- `docs/specs/**.md`: intended system truth
-- `docs/roadmap.json`: canonical mutable roadmap state
-- `docs/index.md`: generated navigation surface
-- `docs/roadmap.md`: generated roadmap view
-- `.docs/roadmap-state.json`: derived roadmap/task UI read model
-- `.docs/`: generated metadata and event log
+- `wiki/research/*.jsonl`: compact evidence capture
+- `wiki/specs/**.md`: intended system truth
+- `wiki/roadmap.json`: canonical mutable roadmap state
+- `wiki/index.md`: generated navigation surface
+- `wiki/roadmap.md`: generated roadmap view
+- `.wiki/roadmap-state.json`: derived roadmap/task UI read model
+- `.wiki/`: generated metadata and event log
 
 ## Responsibility split
 
@@ -44,7 +44,7 @@ Cross-cutting or local decisions should live in owning specs. No global ADR buck
 
 ## Archive stance
 
-Archive is deprecated by default. Prefer git history for full diffs, `.docs/events.jsonl` for compact lifecycle events, `.docs/roadmap-events.jsonl` for roadmap mutation history, and compact roadmap/research updates over large historical doc buckets.
+Archive is deprecated by default. Prefer git history for full diffs, `.wiki/events.jsonl` for compact lifecycle events, `.wiki/roadmap-events.jsonl` for roadmap mutation history, and compact roadmap/research updates over large historical doc buckets.
 
 By default the package should not generate a separate compact-history artifact. If a repo later needs richer historical analytics, that should be introduced as explicit follow-up scope rather than quietly reviving archive docs.
 

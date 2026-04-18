@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated_at": "2026-04-17T23:46:37Z",
+  "generated_at": "2026-04-18T00:00:36Z",
   "health": {
     "color": "green",
     "errors": 0,
@@ -9,10 +9,9 @@
   },
   "summary": {
     "task_count": 15,
-    "open_count": 1,
+    "open_count": 0,
     "status_counts": {
-      "done": 14,
-      "todo": 1
+      "done": 15
     },
     "priority_counts": {
       "critical": 2,
@@ -38,13 +37,9 @@
       "TASK-014",
       "TASK-015"
     ],
-    "open_task_ids": [
-      "TASK-014"
-    ],
+    "open_task_ids": [],
     "in_progress_task_ids": [],
-    "todo_task_ids": [
-      "TASK-014"
-    ],
+    "todo_task_ids": [],
     "blocked_task_ids": [],
     "done_task_ids": [
       "TASK-001",
@@ -55,6 +50,7 @@
       "TASK-010",
       "TASK-011",
       "TASK-012",
+      "TASK-014",
       "TASK-004",
       "TASK-005",
       "TASK-007",
@@ -94,9 +90,9 @@
         "v2"
       ],
       "spec_paths": [
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts",
@@ -118,8 +114,8 @@
         "bootstrap"
       ],
       "spec_paths": [
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -140,9 +136,9 @@
         "automation"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -163,8 +159,8 @@
         "archive"
       ],
       "spec_paths": [
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts"
@@ -184,8 +180,8 @@
         "follow-up"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts"
@@ -205,9 +201,9 @@
         "pi"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -231,8 +227,8 @@
         "public-surface"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md"
       ],
       "code_paths": [
         "scripts/smoke-test.mjs"
@@ -252,9 +248,9 @@
         "discovery"
       ],
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -279,7 +275,7 @@
         "pi"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md"
+        "wiki/specs/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -302,9 +298,9 @@
         "agent-workflow"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -328,10 +324,10 @@
         "ux"
       ],
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/extension/roadmap-ui.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -356,9 +352,9 @@
         "migration"
       ],
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "package.json",
@@ -383,7 +379,7 @@
         "docs"
       ],
       "spec_paths": [
-        "docs/specs/shared/overview.md"
+        "wiki/specs/shared/overview.md"
       ],
       "code_paths": [
         "skills/codewiki/SKILL.md",
@@ -394,7 +390,7 @@
     "TASK-014": {
       "id": "TASK-014",
       "title": "Support self-dogfood migration to wiki and .wiki",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "kind": "migration",
       "summary": "Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.",
@@ -404,9 +400,9 @@
         "migration"
       ],
       "spec_paths": [
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md",
-        "docs/specs/extension/overview.md"
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md",
+        "wiki/specs/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -415,7 +411,7 @@
         "extensions/codewiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-18"
     },
     "TASK-015": {
       "id": "TASK-015",
@@ -430,9 +426,9 @@
         "implementation"
       ],
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/extension/roadmap-ui.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",

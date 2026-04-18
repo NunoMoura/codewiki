@@ -1,23 +1,23 @@
 {
   "version": 2,
   "project_name": "codewiki",
-  "index_title": "codewiki Docs Index",
-  "docs_root": "docs",
-  "specs_root": "docs/specs",
-  "research_root": "docs/research",
-  "index_path": "docs/index.md",
-  "roadmap_path": "docs/roadmap.json",
-  "roadmap_doc_path": "docs/roadmap.md",
-  "roadmap_events_path": ".docs/roadmap-events.jsonl",
-  "meta_root": ".docs",
-  "sources_root": ".docs/sources",
+  "index_title": "codewiki Index",
+  "docs_root": "wiki",
+  "specs_root": "wiki/specs",
+  "research_root": "wiki/research",
+  "index_path": "wiki/index.md",
+  "roadmap_path": "wiki/roadmap.json",
+  "roadmap_doc_path": "wiki/roadmap.md",
+  "roadmap_events_path": ".wiki/roadmap-events.jsonl",
+  "meta_root": ".wiki",
+  "sources_root": ".wiki/sources",
   "generated_files": [
-    "docs/index.md",
-    "docs/roadmap.md",
-    ".docs/registry.json",
-    ".docs/backlinks.json",
-    ".docs/lint.json",
-    ".docs/roadmap-state.json"
+    "wiki/index.md",
+    "wiki/roadmap.md",
+    ".wiki/registry.json",
+    ".wiki/backlinks.json",
+    ".wiki/lint.json",
+    ".wiki/roadmap-state.json"
   ],
   "lint": {
     "repo_markdown": [
@@ -32,7 +32,7 @@
     ],
     "word_count_warn": 1600,
     "word_count_exempt": [
-      "docs/roadmap.md"
+      "wiki/roadmap.md"
     ]
   },
   "codewiki": {
@@ -43,20 +43,20 @@
     ],
     "self_drift_scope": {
       "include": [
-        "docs/index.md",
-        "docs/roadmap.json",
-        "docs/roadmap.md",
-        "docs/specs/**",
-        "docs/research/**"
+        "wiki/index.md",
+        "wiki/roadmap.json",
+        "wiki/roadmap.md",
+        "wiki/specs/**",
+        "wiki/research/**"
       ],
       "exclude": [
-        "docs/_templates/**"
+        "wiki/_templates/**"
       ]
     },
     "code_drift_scope": {
       "docs": [
-        "docs/roadmap.md",
-        "docs/specs/**"
+        "wiki/roadmap.md",
+        "wiki/specs/**"
       ],
       "repo_docs": [
         "README.md"

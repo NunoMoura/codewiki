@@ -214,7 +214,7 @@ async function main() {
           priority: "high",
           kind: "agent-workflow",
           summary: "Track unresolved smoke-test delta.",
-          spec_paths: ["docs/specs/product.md"],
+          spec_paths: ["wiki/specs/product.md"],
           code_paths: ["scripts/rebuild_docs_meta.py"],
           research_ids: [],
           labels: ["smoke"],
@@ -229,7 +229,7 @@ async function main() {
       undefined,
       toolCtx,
     );
-    const appendedRoadmap = JSON.parse(readFileSync(resolve(projectDir, "docs", "roadmap.json"), "utf8"));
+    const appendedRoadmap = JSON.parse(readFileSync(resolve(projectDir, "wiki", "roadmap.json"), "utf8"));
     const appendedTaskId = Array.isArray(appendedRoadmap.order)
       ? appendedRoadmap.order.find((id) => appendedRoadmap.tasks[id]?.title === "Smoke audit task")
       : undefined;
@@ -360,18 +360,18 @@ async function main() {
       },
     });
 
-    const lint = JSON.parse(readFileSync(resolve(projectDir, ".docs", "lint.json"), "utf8"));
-    const registry = JSON.parse(readFileSync(resolve(projectDir, ".docs", "registry.json"), "utf8"));
-    const config = JSON.parse(readFileSync(resolve(projectDir, ".docs", "config.json"), "utf8"));
-    const indexText = readFileSync(resolve(projectDir, "docs", "index.md"), "utf8");
-    const systemText = readFileSync(resolve(projectDir, "docs", "specs", "system", "overview.md"), "utf8");
-    const frontendSpecText = readFileSync(resolve(projectDir, "docs", "specs", "frontend", "overview.md"), "utf8");
-    const roadmapText = readFileSync(resolve(projectDir, "docs", "roadmap.md"), "utf8");
-    const roadmapJson = JSON.parse(readFileSync(resolve(projectDir, "docs", "roadmap.json"), "utf8"));
-    const roadmapEvents = readFileSync(resolve(projectDir, ".docs", "roadmap-events.jsonl"), "utf8");
-    const roadmapState = JSON.parse(readFileSync(resolve(projectDir, ".docs", "roadmap-state.json"), "utf8"));
+    const lint = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "lint.json"), "utf8"));
+    const registry = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "registry.json"), "utf8"));
+    const config = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "config.json"), "utf8"));
+    const indexText = readFileSync(resolve(projectDir, "wiki", "index.md"), "utf8");
+    const systemText = readFileSync(resolve(projectDir, "wiki", "specs", "system", "overview.md"), "utf8");
+    const frontendSpecText = readFileSync(resolve(projectDir, "wiki", "specs", "frontend", "overview.md"), "utf8");
+    const roadmapText = readFileSync(resolve(projectDir, "wiki", "roadmap.md"), "utf8");
+    const roadmapJson = JSON.parse(readFileSync(resolve(projectDir, "wiki", "roadmap.json"), "utf8"));
+    const roadmapEvents = readFileSync(resolve(projectDir, ".wiki", "roadmap-events.jsonl"), "utf8");
+    const roadmapState = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "roadmap-state.json"), "utf8"));
     const widgetLines = renderWidget();
-    assert.ok(!existsSync(resolve(nestedDir, "docs")), "Bootstrap should anchor docs at the existing wiki root, not nested cwd");
+    assert.ok(!existsSync(resolve(nestedDir, "wiki")), "Bootstrap should anchor wiki at the existing wiki root, not nested cwd");
 
     assert.equal(first.created.length, 12, `Expected 12 created starter files including inferred boundary specs, got ${first.created.length}`);
     assert.equal(first.updated.length, 0, "Initial bootstrap should not update files");
@@ -381,13 +381,13 @@ async function main() {
     assert.equal(lint.issues.length, 0, `Expected zero lint issues, got ${lint.issues.length}`);
     assert.ok(Array.isArray(registry.docs) && registry.docs.length >= 7, "Expected generated registry docs including inferred boundary specs");
     assert.ok(Array.isArray(registry.research) && registry.research.length >= 1, "Expected generated research registry entries");
-    assert.ok(registry.docs.some((doc) => doc.path === "docs/roadmap.md"), "Expected roadmap.md in generated registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "docs/specs/frontend/overview.md"), "Expected inferred frontend spec in registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "docs/specs/backend/overview.md"), "Expected inferred backend spec in registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "docs/specs/packages/sdk/overview.md"), "Expected inferred nested package spec in registry");
+    assert.ok(registry.docs.some((doc) => doc.path === "wiki/roadmap.md"), "Expected roadmap.md in generated registry");
+    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/frontend/overview.md"), "Expected inferred frontend spec in registry");
+    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/backend/overview.md"), "Expected inferred backend spec in registry");
+    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/packages/sdk/overview.md"), "Expected inferred nested package spec in registry");
     assert.deepEqual(config.lint.repo_markdown, ["README.md", "backend/**/README.md", "frontend/**/README.md", "packages/sdk/**/README.md"], "Expected inferred repo markdown scope");
     assert.deepEqual(config.codewiki.code_drift_scope.code, ["backend/**", "frontend/**", "packages/sdk/**"], "Expected inferred code drift scope");
-    assert.match(indexText, /^# Smoke Wiki Docs Index/m, "Generated index title mismatch");
+    assert.match(indexText, /^# Smoke Wiki Index/m, "Generated index title mismatch");
     assert.match(systemText, /Inferred brownfield boundaries/, "System overview missing inferred boundary section");
     assert.match(systemText, /\[Frontend\]\(\.\.\/frontend\/overview\.md\)/, "System overview missing inferred frontend link");
     assert.match(frontendSpecText, /^# Frontend/m, "Generated frontend boundary title mismatch");
@@ -406,7 +406,7 @@ async function main() {
     assert.match(roadmapText, /Smoke audit task/, "Generated roadmap view missing appended task");
     assert.match(roadmapEvents, /"action":"append"/, "Roadmap history missing append mutation");
     assert.match(roadmapEvents, /"action":"close"/, "Roadmap history missing close mutation");
-    assert.ok(!existsSync(resolve(projectDir, ".docs", "task-session-index.json")), "Task session index cache should not be generated");
+    assert.ok(!existsSync(resolve(projectDir, ".wiki", "task-session-index.json")), "Task session index cache should not be generated");
     assert.equal(roadmapState.version, 2, "Roadmap state should use session-free v2 contract");
     assert.equal(roadmapState.health.color, "green", "Roadmap state should embed deterministic lint health");
     assert.ok(Array.isArray(roadmapState.views.open_task_ids) && roadmapState.views.open_task_ids.length >= 1, "Roadmap state should expose open task ids");

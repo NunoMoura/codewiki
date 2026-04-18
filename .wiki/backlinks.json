@@ -1,0 +1,145 @@
+{
+  "generated_at": "2026-04-18T00:00:36Z",
+  "by_path": {
+    "wiki/specs/extension/overview.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/extension/roadmap-ui.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/package/overview.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/product.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/shared/overview.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/system/overview.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    },
+    "wiki/specs/templates/overview.md": {
+      "inbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md"
+      ],
+      "outbound": [
+        "wiki/roadmap.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md"
+      ]
+    },
+    "wiki/roadmap.md": {
+      "inbound": [
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ],
+      "outbound": [
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
+      ]
+    }
+  }
+}

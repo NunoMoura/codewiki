@@ -11,7 +11,7 @@ from typing import Any
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG_PATH = ROOT / ".docs" / "config.json"
+CONFIG_PATH = ROOT / ".wiki" / "config.json"
 
 DEFAULT_FORBIDDEN_HEADINGS = {
     "## Purpose",
@@ -21,7 +21,7 @@ DEFAULT_FORBIDDEN_HEADINGS = {
     "## How To Use This Doc",
 }
 DEFAULT_WORD_COUNT_WARN = 1600
-DEFAULT_WORD_COUNT_EXEMPT = {"docs/roadmap.md"}
+DEFAULT_WORD_COUNT_EXEMPT = {"wiki/roadmap.md"}
 DEFAULT_REPO_MARKDOWN_PATTERNS = [
     "README.md",
     "src/**/README.md",
@@ -34,7 +34,7 @@ DEFAULT_STATE_BY_TYPE = {
 }
 LINK_RE = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
-BACKTICK_DOC_PATH_RE = re.compile(r"\`((?:\.\.?/)*docs/[^\`\s]+)\`")
+BACKTICK_DOC_PATH_RE = re.compile(r"\`((?:\.\.?/)*wiki/[^\`\s]+)\`")
 
 
 def load_config() -> dict[str, Any]:
@@ -57,16 +57,17 @@ def maybe_dict(value: Any) -> dict[str, Any] | None:
 CONFIG = load_config()
 LINT_CONFIG = maybe_dict(CONFIG.get("lint")) or {}
 PROJECT_NAME = str(CONFIG.get("project_name", ROOT.name))
-DOCS_ROOT = ROOT / str(CONFIG.get("docs_root", "docs"))
-SPECS_ROOT = ROOT / str(CONFIG.get("specs_root", "docs/specs"))
-RESEARCH_ROOT = ROOT / str(CONFIG.get("research_root", "docs/research"))
-ROADMAP_PATH = ROOT / str(CONFIG.get("roadmap_path", "docs/roadmap.json"))
-ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "docs/roadmap.md"))
-ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".docs/roadmap-events.jsonl"))
-META_ROOT = ROOT / str(CONFIG.get("meta_root", ".docs"))
+DOCS_ROOT = ROOT / str(CONFIG.get("docs_root", "wiki"))
+SPECS_ROOT = ROOT / str(CONFIG.get("specs_root", "wiki/specs"))
+RESEARCH_ROOT = ROOT / str(CONFIG.get("research_root", "wiki/research"))
+ROADMAP_PATH = ROOT / str(CONFIG.get("roadmap_path", "wiki/roadmap.json"))
+ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "wiki/roadmap.md"))
+ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".wiki/roadmap-events.jsonl"))
+META_ROOT = ROOT / str(CONFIG.get("meta_root", ".wiki"))
 ROADMAP_STATE_PATH = META_ROOT / "roadmap-state.json"
-INDEX_PATH = ROOT / str(CONFIG.get("index_path", "docs/index.md"))
-INDEX_TITLE = str(CONFIG.get("index_title", f"{PROJECT_NAME} Docs Index"))
+INDEX_PATH = ROOT / str(CONFIG.get("index_path", "wiki/index.md"))
+DEFAULT_INDEX_TITLE = f"{PROJECT_NAME} Index" if PROJECT_NAME.lower().endswith("wiki") else f"{PROJECT_NAME} Wiki Index"
+INDEX_TITLE = str(CONFIG.get("index_title", DEFAULT_INDEX_TITLE))
 FORBIDDEN_HEADINGS = set(maybe_str_list(LINT_CONFIG.get("forbidden_headings")) or sorted(DEFAULT_FORBIDDEN_HEADINGS))
 WORD_COUNT_WARN = int(LINT_CONFIG.get("word_count_warn", DEFAULT_WORD_COUNT_WARN))
 WORD_COUNT_EXEMPT = set(maybe_str_list(LINT_CONFIG.get("word_count_exempt")) or sorted(DEFAULT_WORD_COUNT_EXEMPT))
@@ -646,7 +647,7 @@ def render_roadmap(entries: list[dict[str, Any]]) -> str:
     lines.extend([
         "## Related docs",
         "",
-        "- [Docs Index](index.md)",
+        "- [Wiki Index](index.md)",
         "- [Product](specs/product.md)",
         "- [System Overview](specs/system/overview.md)",
         "- [Shared Rules](specs/shared/overview.md)",

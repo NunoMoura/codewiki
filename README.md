@@ -52,26 +52,26 @@ The skill tells Pi when to use the package for:
 
 Codewiki now centers on only three canonical artifact classes:
 
-- **research** — compact evidence capture in docs/research JSONL collections
-- **specs** — intended system truth in docs/specs markdown hierarchy
-- **roadmap** — top-level container for tracked delta work in `docs/roadmap.json`
+- **research** — compact evidence capture in wiki/research JSONL collections
+- **specs** — intended system truth in wiki/specs markdown hierarchy
+- **roadmap** — top-level container for tracked delta work in `wiki/roadmap.json`
 - **task** — atomic work unit inside roadmap, canonically named `TASK-###`
 
 Generated navigation stays separate:
 
-- `docs/index.md`
-- `docs/roadmap.md`
-- `.docs/registry.json`
-- `.docs/backlinks.json`
-- `.docs/lint.json`
-- `.docs/roadmap-state.json`
+- `wiki/index.md`
+- `wiki/roadmap.md`
+- `.wiki/registry.json`
+- `.wiki/backlinks.json`
+- `.wiki/lint.json`
+- `.wiki/roadmap-state.json`
 
 Pi session linkage stays local and operational:
 
 - Pi session JSONL remains Pi-owned
 - codewiki appends custom session entries linking tasks to sessions
 - current task focus is read live from Pi session state at runtime
-- `.docs/roadmap-state.json` is the denormalized roadmap/task read model used by the built-in roadmap widget and any future third-party UI readers
+- `.wiki/roadmap-state.json` is the denormalized roadmap/task read model used by the built-in roadmap widget and any future third-party UI readers
 
 Task identity and compatibility:
 
@@ -95,7 +95,7 @@ Why:
 
 - Pi packages can be installed globally via `~/.pi/agent/settings.json`
 - Pi project settings are cwd-scoped, so repo binding should live in repo-local wiki config, not package install location
-- runtime operations can discover the nearest ancestor containing `.docs/config.json`
+- runtime operations can discover the nearest ancestor containing `.wiki/config.json`
 - one global install can operate across many repos
 
 ### Recommended: global install
@@ -182,14 +182,14 @@ Minimum expected contract:
 
 ```json
 {
-  "docs_root": "docs",
-  "specs_root": "docs/specs",
-  "research_root": "docs/research",
-  "index_path": "docs/index.md",
-  "roadmap_path": "docs/roadmap.json",
-  "roadmap_doc_path": "docs/roadmap.md",
-  "roadmap_events_path": ".docs/roadmap-events.jsonl",
-  "meta_root": ".docs",
+  "docs_root": "wiki",
+  "specs_root": "wiki/specs",
+  "research_root": "wiki/research",
+  "index_path": "wiki/index.md",
+  "roadmap_path": "wiki/roadmap.json",
+  "roadmap_doc_path": "wiki/roadmap.md",
+  "roadmap_events_path": ".wiki/roadmap-events.jsonl",
+  "meta_root": ".wiki",
   "codewiki": {
     "rebuild_command": ["python", "scripts/rebuild_docs_meta.py"]
   }
@@ -198,11 +198,11 @@ Minimum expected contract:
 
 The rebuild command should update at least:
 
-- `docs/index.md`
-- `docs/roadmap.md`
-- `.docs/registry.json`
-- `.docs/lint.json`
-- `.docs/roadmap-state.json`
+- `wiki/index.md`
+- `wiki/roadmap.md`
+- `.wiki/registry.json`
+- `.wiki/lint.json`
+- `.wiki/roadmap-state.json`
 
 ## Recommended dogfooding workflow
 
@@ -234,9 +234,9 @@ Recommended loop:
 
 Working rule for this repo:
 
-- edit canonical sources (`README.md`, spec docs under `docs/specs/`, `docs/roadmap.json`, runtime code)
+- edit canonical sources (`README.md`, spec docs under `wiki/specs/`, `wiki/roadmap.json`, runtime code)
 - rebuild generated outputs after changes
-- do not hand-edit generated outputs under `docs/index.md`, `docs/roadmap.md`, or `.docs/*.json`
+- do not hand-edit generated outputs under `wiki/index.md`, `wiki/roadmap.md`, or `.wiki/*.json`
 
 ## Why one extension and one skill
 
@@ -278,17 +278,17 @@ Internally, agent tools may still use `codewiki_setup` as a safe non-overwriting
 
 Starter bootstrap includes:
 
-- `.docs/config.json`
-- `.docs/events.jsonl`
-- `.docs/sources/`
+- `.wiki/config.json`
+- `.wiki/events.jsonl`
+- `.wiki/sources/`
 - `scripts/rebuild_docs_meta.py`
-- `docs/specs/product.md`
-- `docs/specs/system/overview.md`
-- `docs/specs/shared/overview.md`
-- inferred first-pass boundary `overview.md` files under `docs/specs/` when brownfield structure is detected
-- `docs/research/inspiration.jsonl`
-- `docs/roadmap.json`
-- generated outputs like `docs/index.md`, `docs/roadmap.md`, `.docs/registry.json`, `.docs/backlinks.json`, `.docs/lint.json`, `.docs/roadmap-state.json`
+- `wiki/specs/product.md`
+- `wiki/specs/system/overview.md`
+- `wiki/specs/shared/overview.md`
+- inferred first-pass boundary `overview.md` files under `wiki/specs/` when brownfield structure is detected
+- `wiki/research/inspiration.jsonl`
+- `wiki/roadmap.json`
+- generated outputs like `wiki/index.md`, `wiki/roadmap.md`, `.wiki/registry.json`, `.wiki/backlinks.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`
 
 ### Status, fix, and review
 
@@ -302,7 +302,7 @@ Starter bootstrap includes:
 
 ### Roadmap TUI
 
-The extension also renders a compact roadmap widget above the editor. It reads `.docs/roadmap-state.json`, shows health and counts, prefers the current session's focused task when known, then shows in-progress and next todo work instead of dumping the entire roadmap by default.
+The extension also renders a compact roadmap widget above the editor. It reads `.wiki/roadmap-state.json`, shows health and counts, prefers the current session's focused task when known, then shows in-progress and next todo work instead of dumping the entire roadmap by default.
 
 ### Runtime operations
 
@@ -310,22 +310,22 @@ Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.js
 
 Runtime rule:
 
-- resolve the nearest ancestor containing `.docs/config.json` from current cwd
+- resolve the nearest ancestor containing `.wiki/config.json` from current cwd
 - if no wiki exists yet, `/wiki-bootstrap` targets the enclosing git repo root when present, else the current working directory
 
 It then uses that repo config to:
 
 - find docs, specs, research, index, and roadmap paths
 - run the configured rebuild command
-- read `.docs/registry.json`, `.docs/lint.json`, `.docs/events.jsonl`
-- build semantic audit scopes from `.docs/config.json`
-- append structured roadmap tasks to `docs/roadmap.json` when audits uncover real unresolved delta
+- read `.wiki/registry.json`, `.wiki/lint.json`, `.wiki/events.jsonl`
+- build semantic audit scopes from `.wiki/config.json`
+- append structured roadmap tasks to `wiki/roadmap.json` when audits uncover real unresolved delta
 - update or close existing roadmap tasks through package-native mutation tools instead of manual JSON edits
 - append Pi custom session entries that link current session to roadmap tasks
 - read active task context from Pi session state at runtime
-- maintain `.docs/roadmap-state.json` so the first-party roadmap widget and any future third-party UI can read compact roadmap/task state without mutating canonical files
+- maintain `.wiki/roadmap-state.json` so the first-party roadmap widget and any future third-party UI can read compact roadmap/task state without mutating canonical files
 
-That means one global package install can operate across many repos, while each repo keeps its own `docs/`, `.docs/`, and rebuild contract.
+That means one global package install can operate across many repos, while each repo keeps its own `wiki/`, `.wiki/`, and rebuild contract.
 
 ## Philosophy
 
@@ -335,10 +335,10 @@ This package assumes:
 - research is compact evidence, not longform archive by default
 - roadmap is freshest delta tracker between specs and code
 - Pi sessions are execution history, not canonical roadmap truth
-- history defaults to git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutations; package does not generate a separate compact-history file by default
+- history defaults to git for full diffs, `.wiki/events.jsonl` for compact lifecycle events, and `.wiki/roadmap-events.jsonl` for roadmap mutations; package does not generate a separate compact-history file by default
 - code is implementation evidence
 - there is one generated live index
-- machine metadata stays hidden under `.docs/`
+- machine metadata stays hidden under `.wiki/`
 - plans and drift are better modeled as roadmap tasks than as separate top-level doc buckets
 
 ## Repo layout

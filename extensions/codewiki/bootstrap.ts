@@ -10,17 +10,18 @@ import { starterDirectories, starterFiles, type StarterBrownfieldHints, type Sta
 
 const execFileAsync = promisify(execFile);
 const GENERATED_OUTPUTS = [
-  "docs/index.md",
-  "docs/roadmap.md",
-  ".docs/registry.json",
-  ".docs/backlinks.json",
-  ".docs/lint.json",
-  ".docs/roadmap-state.json",
+  "wiki/index.md",
+  "wiki/roadmap.md",
+  ".wiki/registry.json",
+  ".wiki/backlinks.json",
+  ".wiki/lint.json",
+  ".wiki/roadmap-state.json",
 ] as const;
 const CONTAINER_DIR_NAMES = new Set(["apps", "components", "domains", "extensions", "libs", "modules", "packages", "services", "skills", "surfaces"]);
 const EXCLUDED_DIR_NAMES = new Set([
   ".bandwagon",
   ".docs",
+  ".wiki",
   ".git",
   ".github",
   ".idea",
@@ -37,6 +38,7 @@ const EXCLUDED_DIR_NAMES = new Set([
   "coverage",
   "dist",
   "docs",
+  "wiki",
   "fixtures",
   "migrations",
   "node_modules",

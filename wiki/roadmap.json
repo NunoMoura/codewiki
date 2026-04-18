@@ -27,9 +27,9 @@
       "kind": "architecture",
       "summary": "Replace legacy top-level taxonomy with simplified contract across templates, runtime prompts, README, and package docs.",
       "spec_paths": [
-        "docs/specs/product.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/product.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts",
@@ -61,8 +61,8 @@
       "kind": "bootstrap",
       "summary": "Setup/bootstrap now infer first-pass boundary specs from meaningful repo structure so brownfield repos start closer to real ownership seams.",
       "spec_paths": [
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -93,9 +93,9 @@
       "kind": "agent-workflow",
       "summary": "Self-drift and code-drift flows should output roadmap task objects so unresolved deltas can be promoted with minimal manual rewriting.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -110,7 +110,7 @@
         "automation"
       ],
       "delta": {
-        "desired": "Audit output converts directly into `docs/roadmap.json` task entries.",
+        "desired": "Audit output converts directly into `wiki/roadmap.json` task entries.",
         "current": "Drift prompts now instruct roadmap task-object emission and package tool appends structured tasks with automatic TASK ids and rebuild.",
         "closure": "Done for append-new-task flow. Future work can add update/close mutation support for existing roadmap tasks."
       },
@@ -125,8 +125,8 @@
       "kind": "process",
       "summary": "Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.",
       "spec_paths": [
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts"
@@ -138,7 +138,7 @@
       ],
       "delta": {
         "desired": "History stays cheap and accessible without reviving bulky archive docs.",
-        "current": "Package now explicitly documents git for full diffs, `.docs/events.jsonl` for compact lifecycle events, and `.docs/roadmap-events.jsonl` for roadmap mutation history.",
+        "current": "Package now explicitly documents git for full diffs, `.wiki/events.jsonl` for compact lifecycle events, and `.wiki/roadmap-events.jsonl` for roadmap mutation history.",
         "closure": "Done by deciding against a separate compact-history artifact by default and documenting lightweight history expectations in shared/template/package docs."
       },
       "created": "2026-04-16",
@@ -152,8 +152,8 @@
       "kind": "agent-workflow",
       "summary": "After append flow, package should let agents update or close existing roadmap tasks without manual roadmap JSON editing.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts"
@@ -180,9 +180,9 @@
       "kind": "agent-workflow",
       "summary": "Keep Pi session JSONL native, append custom task-link entries, and read active task focus directly from Pi session state instead of maintaining repo-owned session caches.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -213,8 +213,8 @@
       "kind": "testing",
       "summary": "Smoke tests should fail if any documented public command disappears from the packaged extension.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md"
       ],
       "code_paths": [
         "scripts/smoke-test.mjs"
@@ -241,9 +241,9 @@
       "kind": "architecture",
       "summary": "Extension runtime should load from a global Pi package install while discovering the active repo-local wiki from current cwd.",
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -261,7 +261,7 @@
       ],
       "delta": {
         "desired": "One global package install should work across many repos while runtime state stays repo-local.",
-        "current": "Runtime now discovers the nearest ancestor with `.docs/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.",
+        "current": "Runtime now discovers the nearest ancestor with `.wiki/config.json`, setup/bootstrap fall back to enclosing git repo root when no wiki exists yet, and nested-cwd smoke coverage protects the model.",
         "closure": "Done for the global-install plus repo-local discovery architecture adopted in this package."
       },
       "created": "2026-04-17",
@@ -275,7 +275,7 @@
       "kind": "agent-workflow",
       "summary": "Extension delivered roadmap-browsing groundwork that validated task inspection flows before the public UX was later consolidated into fewer commands.",
       "spec_paths": [
-        "docs/specs/extension/overview.md"
+        "wiki/specs/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -290,7 +290,7 @@
         "pi"
       ],
       "delta": {
-        "desired": "Users should be able to inspect live roadmap/task state without leaving Pi or manually opening docs/roadmap.md in another tool.",
+        "desired": "Users should be able to inspect live roadmap/task state without leaving Pi or manually opening wiki/roadmap.md in another tool.",
         "current": "The roadmap browser work validated task inspection and task-detail rendering, and that groundwork now informs the simpler consolidated UX.",
         "closure": "Done for the initial browsing prototype. Future work can surface roadmap/task navigation again if it materially improves the simpler command model."
       },
@@ -305,9 +305,9 @@
       "kind": "agent-workflow",
       "summary": "Refactor the public command surface down to /wiki-bootstrap, /wiki-status, /wiki-fix, and /wiki-review while keeping roadmap/task/session internals and granular tools behind the scenes.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/package/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/package/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -338,10 +338,10 @@
       "kind": "agent-workflow",
       "summary": "Generate a read-only roadmap-state UI model and render a compact first-party roadmap widget so users can track focused, in-progress, and next tasks inside Pi without expanding the public command surface or persisting session caches.",
       "spec_paths": [
-        "docs/specs/extension/overview.md",
-        "docs/specs/extension/roadmap-ui.md",
-        "docs/specs/system/overview.md",
-        "docs/specs/templates/overview.md"
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md",
+        "wiki/specs/system/overview.md",
+        "wiki/specs/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -359,7 +359,7 @@
       ],
       "delta": {
         "desired": "Roadmap progress should be readable inside Pi through a compact working-set widget and a stable read-only UI state file that other extensions can consume.",
-        "current": "The extension now generates .docs/roadmap-state.json as roadmap/task UI state, overlays live current-session focus from Pi at runtime, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.",
+        "current": "The extension now generates .wiki/roadmap-state.json as roadmap/task UI state, overlays live current-session focus from Pi at runtime, and keeps default roadmap presentation focused on active, in-progress, and next tasks instead of dumping the full roadmap.",
         "closure": "Done for the production roadmap TUI pass with runtime session overlay. Future work can add deeper drill-down interactions on top of the same read contract without changing canonical storage or the four-command public UX."
       },
       "created": "2026-04-17",
@@ -373,9 +373,9 @@
       "kind": "migration",
       "summary": "Rename package, extension, skill, tool, repo, and runtime identifiers from codebase-wiki/codebase_wiki to codewiki.",
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/system/overview.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/system/overview.md"
       ],
       "code_paths": [
         "package.json",
@@ -407,7 +407,7 @@
       "kind": "docs",
       "summary": "Review codewiki skill guidance and global AGENTS overlay against the Karpathy-style baseline and align naming around codewiki.",
       "spec_paths": [
-        "docs/specs/shared/overview.md"
+        "wiki/specs/shared/overview.md"
       ],
       "code_paths": [
         "skills/codewiki/SKILL.md",
@@ -430,14 +430,14 @@
     "TASK-014": {
       "id": "TASK-014",
       "title": "Support self-dogfood migration to wiki and .wiki",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "kind": "migration",
       "summary": "Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.",
       "spec_paths": [
-        "docs/specs/shared/overview.md",
-        "docs/specs/templates/overview.md",
-        "docs/specs/extension/overview.md"
+        "wiki/specs/shared/overview.md",
+        "wiki/specs/templates/overview.md",
+        "wiki/specs/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -454,11 +454,11 @@
       ],
       "delta": {
         "desired": "Codewiki can discover and operate repo-local wikis under wiki/.wiki so this package can dogfood its own agreed structure.",
-        "current": "Runtime and templates still hardcode docs/.docs defaults and `.docs/config.json` discovery.",
-        "closure": "Teach runtime/bootstrap/templates/tests to support wiki/.wiki for self-hosting, then migrate this repo and rebuild generated outputs."
+        "current": "Runtime now discovers `.wiki/config.json` first with legacy `.docs/config.json` fallback, starter templates default to wiki/.wiki, and this repo itself now runs from wiki/.wiki.",
+        "closure": "Done by adding dual-path config discovery, switching starter defaults to wiki/.wiki, migrating this repo from docs/.docs to wiki/.wiki, and extending smoke coverage for the new structure."
       },
       "created": "2026-04-17",
-      "updated": "2026-04-17"
+      "updated": "2026-04-18"
     },
     "TASK-015": {
       "id": "TASK-015",
@@ -468,9 +468,9 @@
       "kind": "agent-workflow",
       "summary": "Expose a user-facing wiki-code command that resumes the focused roadmap task or picks the next open task and queues implementation work.",
       "spec_paths": [
-        "docs/specs/package/overview.md",
-        "docs/specs/extension/overview.md",
-        "docs/specs/extension/roadmap-ui.md"
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md",
+        "wiki/specs/extension/roadmap-ui.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",

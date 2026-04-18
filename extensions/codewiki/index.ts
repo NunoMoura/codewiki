@@ -8,18 +8,17 @@ import { Container, Markdown, matchesKey, type SelectItem, SelectList, Text, tru
 import { Type } from "@sinclair/typebox";
 import { registerBootstrapFeatures } from "./bootstrap";
 import { withLockedPaths } from "./mutation-queue";
-import { requireWikiRoot } from "./project-root";
+import { PREFERRED_WIKI_CONFIG_RELATIVE_PATH, requireWikiRoot, resolveWikiConfigPath } from "./project-root";
 
 const execFileAsync = promisify(execFile);
-const CONFIG_RELATIVE_PATH = ".docs/config.json";
-const DEFAULT_DOCS_ROOT = "docs";
-const DEFAULT_SPECS_ROOT = "docs/specs";
-const DEFAULT_RESEARCH_ROOT = "docs/research";
-const DEFAULT_INDEX_PATH = "docs/index.md";
-const DEFAULT_ROADMAP_PATH = "docs/roadmap.json";
-const DEFAULT_ROADMAP_DOC_PATH = "docs/roadmap.md";
-const DEFAULT_ROADMAP_EVENTS_PATH = ".docs/roadmap-events.jsonl";
-const DEFAULT_META_ROOT = ".docs";
+const DEFAULT_DOCS_ROOT = "wiki";
+const DEFAULT_SPECS_ROOT = "wiki/specs";
+const DEFAULT_RESEARCH_ROOT = "wiki/research";
+const DEFAULT_INDEX_PATH = "wiki/index.md";
+const DEFAULT_ROADMAP_PATH = "wiki/roadmap.json";
+const DEFAULT_ROADMAP_DOC_PATH = "wiki/roadmap.md";
+const DEFAULT_ROADMAP_EVENTS_PATH = ".wiki/roadmap-events.jsonl";
+const DEFAULT_META_ROOT = ".wiki";
 const DEFAULT_REBUILD_SCRIPT = "scripts/rebuild_docs_meta.py";
 const GENERATED_METADATA_FILES = ["registry.json", "backlinks.json", "lint.json", "roadmap-state.json"] as const;
 const TASK_SESSION_LINK_CUSTOM_TYPE = "codewiki.task-link";
@@ -469,10 +468,10 @@ export default function codewikiExtension(pi: ExtensionAPI) {
   pi.registerTool({
     name: "codewiki_roadmap_append",
     label: "Codewiki Roadmap Append",
-    description: "Append new roadmap tasks to docs/roadmap.json, update order, log history event, and rebuild generated roadmap/index outputs",
+    description: "Append new roadmap tasks to wiki/roadmap.json, update order, log history event, and rebuild generated roadmap/index outputs",
     promptSnippet: "Append new unresolved delta tasks to the current project's codebase wiki roadmap",
     promptGuidelines: [
-      "Use this after self-drift or code-drift review when you found real unresolved delta that belongs in docs/roadmap.json.",
+      "Use this after self-drift or code-drift review when you found real unresolved delta that belongs in wiki/roadmap.json.",
       "Do not use this for issues already covered by an existing roadmap task unless you first explain why duplication is needed.",
       "The tool assigns TASK-### ids automatically, appends them to roadmap order, logs history, and rebuilds generated outputs. Legacy ROADMAP-### lookups remain accepted during migration.",
     ],
@@ -493,7 +492,7 @@ export default function codewikiExtension(pi: ExtensionAPI) {
   pi.registerTool({
     name: "codewiki_roadmap_update",
     label: "Codewiki Roadmap Update",
-    description: "Update or close an existing roadmap task in docs/roadmap.json, log history event, and rebuild generated roadmap/index outputs",
+    description: "Update or close an existing roadmap task in wiki/roadmap.json, log history event, and rebuild generated roadmap/index outputs",
     promptSnippet: "Update or close an existing roadmap task in the current project's codebase wiki roadmap",
     promptGuidelines: [
       "Use this when an existing roadmap task needs status, summary, paths, labels, or delta changes instead of creating a duplicate task.",
@@ -823,8 +822,8 @@ function renderScopeForPrompt(scope: StatusScope, drift: DriftContext): string[]
   if (scope === "code") {
     return [
       "Docs scope:",
-      ...renderScope("Include", drift.docsScope),
-      ...renderScope("Exclude", drift.docsExclude),
+      ...renderScope("Include", drift.wikiScope),
+      ...renderScope("Exclude", drift.wikiExclude),
       "Additional repository docs:",
       ...renderList(drift.repoDocs),
       "Implementation scope:",
@@ -836,8 +835,8 @@ function renderScopeForPrompt(scope: StatusScope, drift: DriftContext): string[]
     ...renderScope("Include", drift.selfInclude),
     ...renderScope("Exclude", drift.selfExclude),
     "Code comparison scope:",
-    ...renderScope("Docs include", drift.docsScope),
-    ...renderScope("Docs exclude", drift.docsExclude),
+    ...renderScope("Docs include", drift.wikiScope),
+    ...renderScope("Docs exclude", drift.wikiExclude),
     "Additional repository docs:",
     ...renderList(drift.repoDocs),
     "Implementation scope:",
@@ -876,10 +875,10 @@ function statusPrompt(project: WikiProject, registry: RegistryFile | null, repor
 function fixPrompt(project: WikiProject, registry: RegistryFile | null, report: LintReport, scope: StatusScope): string {
   const drift = buildDriftContext(project, registry);
   const scopeRule = scope === "docs"
-    ? "Prefer canonical docs/spec edits. Do not change code unless a tiny supporting fix is required."
+    ? "Prefer canonical wiki/spec edits. Do not change code unless a tiny supporting fix is required."
     : scope === "code"
       ? "Prefer implementation fixes when specs are clear. If product intent or spec authority is ambiguous, ask before changing code."
-      : "Choose the smallest coherent combined docs/code fix that resolves the drift cleanly.";
+      : "Choose the smallest coherent combined wiki/code fix that resolves the drift cleanly.";
   return [
     `Fix wiki drift for ${project.label}.`,
     `Requested scope: ${scope}.`,
@@ -1265,13 +1264,13 @@ async function maybeLoadProject(startDir: string): Promise<WikiProject | null> {
 
 async function loadProject(startDir: string): Promise<WikiProject> {
   const root = await requireWikiRoot(startDir);
-  const configPath = resolve(root, CONFIG_RELATIVE_PATH);
-  if (!(await pathExists(configPath))) {
-    throw new Error(`No ${CONFIG_RELATIVE_PATH} found at wiki root ${root}. Run /wiki-bootstrap first.`);
+  const configPath = await resolveWikiConfigPath(root);
+  if (!configPath) {
+    throw new Error(`No ${PREFERRED_WIKI_CONFIG_RELATIVE_PATH} found at wiki root ${root}. Run /wiki-bootstrap first.`);
   }
 
   const config = await readJson<DocsConfig>(configPath);
-  const docsRoot = normalizeRelativePath(config.docs_root ?? DEFAULT_DOCS_ROOT);
+  const docsRoot = normalizeRelativePath(config.wiki_root ?? DEFAULT_DOCS_ROOT);
   const specsRoot = normalizeRelativePath(config.specs_root ?? DEFAULT_SPECS_ROOT);
   const researchRoot = normalizeRelativePath(config.research_root ?? DEFAULT_RESEARCH_ROOT);
   const indexPath = normalizeRelativePath(config.index_path ?? DEFAULT_INDEX_PATH);
@@ -1714,7 +1713,7 @@ function defaultSelfDriftScope(project: WikiProject): ScopeConfig {
       `${project.specsRoot}/**/*.md`,
       `${project.researchRoot}/**/*.jsonl`,
     ]),
-    exclude: unique([`${project.docsRoot}/_templates/**`]),
+    exclude: unique([`${project.wikiRoot}/_templates/**`]),
   };
 }
 

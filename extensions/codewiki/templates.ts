@@ -20,10 +20,10 @@ export interface StarterTemplateInput {
 
 export function starterDirectories(): string[] {
   return [
-    ".docs/sources",
-    "docs/specs/system",
-    "docs/specs/shared",
-    "docs/research",
+    ".wiki/sources",
+    "wiki/specs/system",
+    "wiki/specs/shared",
+    "wiki/research",
     "scripts",
   ];
 }
@@ -33,19 +33,19 @@ export function starterFiles(input: StarterTemplateInput): Record<string, string
   const date = input.date;
   const brownfieldHints = input.brownfieldHints ?? { boundaries: [], repoMarkdownGlobs: [], codeGlobs: [] };
   const files: Record<string, string> = {
-    ".docs/config.json": configJson(projectName, brownfieldHints),
-    ".docs/events.jsonl": bootstrapEvent(projectName),
-    ".docs/sources/.gitkeep": "",
+    ".wiki/config.json": configJson(projectName, brownfieldHints),
+    ".wiki/events.jsonl": bootstrapEvent(projectName),
+    ".wiki/sources/.gitkeep": "",
     "scripts/rebuild_docs_meta.py": rebuildScript(),
-    "docs/specs/product.md": productSpecDoc(projectName, date),
-    "docs/specs/system/overview.md": systemSpecDoc(projectName, date, brownfieldHints.boundaries),
-    "docs/specs/shared/overview.md": sharedSpecDoc(projectName, date),
-    "docs/research/inspiration.jsonl": researchJsonl(projectName, date),
-    "docs/roadmap.json": roadmapJson(projectName, date),
+    "wiki/specs/product.md": productSpecDoc(projectName, date),
+    "wiki/specs/system/overview.md": systemSpecDoc(projectName, date, brownfieldHints.boundaries),
+    "wiki/specs/shared/overview.md": sharedSpecDoc(projectName, date),
+    "wiki/research/inspiration.jsonl": researchJsonl(projectName, date),
+    "wiki/roadmap.json": roadmapJson(projectName, date),
   };
 
   for (const boundary of brownfieldHints.boundaries) {
-    files[`docs/specs/${boundary.slug}/overview.md`] = boundarySpecDoc(projectName, date, boundary);
+    files[`wiki/specs/${boundary.slug}/overview.md`] = boundarySpecDoc(projectName, date, boundary);
   }
 
   return files;
@@ -54,28 +54,29 @@ export function starterFiles(input: StarterTemplateInput): Record<string, string
 function configJson(projectName: string, brownfieldHints: StarterBrownfieldHints): string {
   const repoMarkdown = uniqueStrings(brownfieldHints.repoMarkdownGlobs.length ? brownfieldHints.repoMarkdownGlobs : ["README.md", "src/**/README.md", "backend/**/README.md"]);
   const codeGlobs = uniqueStrings(brownfieldHints.codeGlobs.length ? brownfieldHints.codeGlobs : ["src/**", "app/**", "backend/**", "server/**"]);
+  const indexTitle = projectName.toLowerCase().endsWith("wiki") ? `${projectName} Index` : `${projectName} Wiki Index`;
 
   return JSON.stringify(
     {
       version: 2,
       project_name: projectName,
-      index_title: `${projectName} Docs Index`,
-      docs_root: "docs",
-      specs_root: "docs/specs",
-      research_root: "docs/research",
-      index_path: "docs/index.md",
-      roadmap_path: "docs/roadmap.json",
-      roadmap_doc_path: "docs/roadmap.md",
-      roadmap_events_path: ".docs/roadmap-events.jsonl",
-      meta_root: ".docs",
-      sources_root: ".docs/sources",
+      index_title: indexTitle,
+      docs_root: "wiki",
+      specs_root: "wiki/specs",
+      research_root: "wiki/research",
+      index_path: "wiki/index.md",
+      roadmap_path: "wiki/roadmap.json",
+      roadmap_doc_path: "wiki/roadmap.md",
+      roadmap_events_path: ".wiki/roadmap-events.jsonl",
+      meta_root: ".wiki",
+      sources_root: ".wiki/sources",
       generated_files: [
-        "docs/index.md",
-        "docs/roadmap.md",
-        ".docs/registry.json",
-        ".docs/backlinks.json",
-        ".docs/lint.json",
-        ".docs/roadmap-state.json",
+        "wiki/index.md",
+        "wiki/roadmap.md",
+        ".wiki/registry.json",
+        ".wiki/backlinks.json",
+        ".wiki/lint.json",
+        ".wiki/roadmap-state.json",
       ],
       lint: {
         repo_markdown: repoMarkdown,
@@ -87,25 +88,25 @@ function configJson(projectName: string, brownfieldHints: StarterBrownfieldHints
           "## How To Use This Doc",
         ],
         word_count_warn: 1600,
-        word_count_exempt: ["docs/roadmap.md"],
+        word_count_exempt: ["wiki/roadmap.md"],
       },
       codewiki: {
         name: `${projectName} codebase wiki`,
         rebuild_command: ["python", "scripts/rebuild_docs_meta.py"],
         self_drift_scope: {
           include: [
-            "docs/index.md",
-            "docs/roadmap.json",
-            "docs/roadmap.md",
-            "docs/specs/**",
-            "docs/research/**",
+            "wiki/index.md",
+            "wiki/roadmap.json",
+            "wiki/roadmap.md",
+            "wiki/specs/**",
+            "wiki/research/**",
           ],
-          exclude: ["docs/_templates/**"],
+          exclude: ["wiki/_templates/**"],
         },
         code_drift_scope: {
           docs: [
-            "docs/roadmap.md",
-            "docs/specs/**",
+            "wiki/roadmap.md",
+            "wiki/specs/**",
           ],
           repo_docs: repoMarkdown,
           code: codeGlobs,
@@ -205,8 +206,8 @@ function systemSpecDoc(projectName: string, date: string, boundaries: StarterBou
   if (boundaries.length) {
     lines.push("## Inferred brownfield boundaries", "", "Setup detected these candidate ownership seams from repo structure. Refine, collapse, or rename them if the codebase uses different stable boundaries.", "");
     for (const boundary of boundaries) {
-      const target = `docs/specs/${boundary.slug}/overview.md`;
-      lines.push(`- [${boundary.title}](${posix.relative("docs/specs/system", target)}) — owns \`${boundary.codePath}\``);
+      const target = `wiki/specs/${boundary.slug}/overview.md`;
+      lines.push(`- [${boundary.title}](${posix.relative("wiki/specs/system", target)}) — owns \`${boundary.codePath}\``);
     }
     lines.push("");
   }
@@ -236,12 +237,12 @@ function systemSpecDoc(projectName: string, date: string, boundaries: StarterBou
 }
 
 function boundarySpecDoc(projectName: string, date: string, boundary: StarterBoundary): string {
-  const docPath = `docs/specs/${boundary.slug}/overview.md`;
+  const docPath = `wiki/specs/${boundary.slug}/overview.md`;
   const docDir = posix.dirname(docPath);
-  const productLink = posix.relative(docDir, "docs/specs/product.md");
-  const systemLink = posix.relative(docDir, "docs/specs/system/overview.md");
-  const sharedLink = posix.relative(docDir, "docs/specs/shared/overview.md");
-  const roadmapLink = posix.relative(docDir, "docs/roadmap.md");
+  const productLink = posix.relative(docDir, "wiki/specs/product.md");
+  const systemLink = posix.relative(docDir, "wiki/specs/system/overview.md");
+  const sharedLink = posix.relative(docDir, "wiki/specs/shared/overview.md");
+  const roadmapLink = posix.relative(docDir, "wiki/roadmap.md");
   const boundaryId = boundary.slug.split("/").join(".");
 
   return [
@@ -296,13 +297,13 @@ function sharedSpecDoc(projectName: string, date: string): string {
     "",
     "## Canonical artifacts",
     "",
-    "- `docs/specs/**.md`: intended system truth",
-    "- `docs/research/*.jsonl`: compact evidence capture",
-    "- `docs/roadmap.json`: canonical mutable roadmap state",
-    "- `docs/roadmap.md`: generated human roadmap view",
-    "- `docs/index.md`: generated navigation surface",
-    "- `.docs/roadmap-state.json`: derived roadmap/task UI read model",
-    "- `.docs/`: generated metadata and events",
+    "- `wiki/specs/**.md`: intended system truth",
+    "- `wiki/research/*.jsonl`: compact evidence capture",
+    "- `wiki/roadmap.json`: canonical mutable roadmap state",
+    "- `wiki/roadmap.md`: generated human roadmap view",
+    "- `wiki/index.md`: generated navigation surface",
+    "- `.wiki/roadmap-state.json`: derived roadmap/task UI read model",
+    "- `.wiki/`: generated metadata and events",
     "",
     "## Responsibilities",
     "",
@@ -367,7 +368,7 @@ function roadmapJson(projectName: string, date: string): string {
           priority: "high",
           kind: "docs",
           summary: `Turn ${projectName} intent into explicit product and boundary specs.`,
-          spec_paths: ["docs/specs/product.md", "docs/specs/system/overview.md"],
+          spec_paths: ["wiki/specs/product.md", "wiki/specs/system/overview.md"],
           code_paths: [],
           research_ids: [],
           labels: ["foundation", "specs"],
@@ -385,8 +386,8 @@ function roadmapJson(projectName: string, date: string): string {
           status: "todo",
           priority: "high",
           kind: "architecture",
-          summary: "Refine the inferred boundary specs until docs/specs mirrors the repo's real ownership seams without creating doc sprawl.",
-          spec_paths: ["docs/specs/system/overview.md"],
+          summary: "Refine the inferred boundary specs until wiki/specs mirrors the repo's real ownership seams without creating doc sprawl.",
+          spec_paths: ["wiki/specs/system/overview.md"],
           code_paths: [],
           research_ids: [],
           labels: ["brownfield", "mapping"],
@@ -405,7 +406,7 @@ function roadmapJson(projectName: string, date: string): string {
           priority: "medium",
           kind: "process",
           summary: "Move drift and plan tracking into structured roadmap tasks instead of separate prose buckets.",
-          spec_paths: ["docs/specs/shared/overview.md"],
+          spec_paths: ["wiki/specs/shared/overview.md"],
           code_paths: [],
           research_ids: [],
           labels: ["roadmap", "process"],
@@ -438,7 +439,7 @@ from typing import Any
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG_PATH = ROOT / ".docs" / "config.json"
+CONFIG_PATH = ROOT / ".wiki" / "config.json"
 
 DEFAULT_FORBIDDEN_HEADINGS = {
     "## Purpose",
@@ -448,7 +449,7 @@ DEFAULT_FORBIDDEN_HEADINGS = {
     "## How To Use This Doc",
 }
 DEFAULT_WORD_COUNT_WARN = 1600
-DEFAULT_WORD_COUNT_EXEMPT = {"docs/roadmap.md"}
+DEFAULT_WORD_COUNT_EXEMPT = {"wiki/roadmap.md"}
 DEFAULT_REPO_MARKDOWN_PATTERNS = [
     "README.md",
     "src/**/README.md",
@@ -461,7 +462,7 @@ DEFAULT_STATE_BY_TYPE = {
 }
 LINK_RE = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 H1_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
-BACKTICK_DOC_PATH_RE = re.compile(r"\`((?:\.\.?/)*docs/[^\`\s]+)\`")
+BACKTICK_DOC_PATH_RE = re.compile(r"\`((?:\.\.?/)*wiki/[^\`\s]+)\`")
 
 
 def load_config() -> dict[str, Any]:
@@ -484,16 +485,17 @@ def maybe_dict(value: Any) -> dict[str, Any] | None:
 CONFIG = load_config()
 LINT_CONFIG = maybe_dict(CONFIG.get("lint")) or {}
 PROJECT_NAME = str(CONFIG.get("project_name", ROOT.name))
-DOCS_ROOT = ROOT / str(CONFIG.get("docs_root", "docs"))
-SPECS_ROOT = ROOT / str(CONFIG.get("specs_root", "docs/specs"))
-RESEARCH_ROOT = ROOT / str(CONFIG.get("research_root", "docs/research"))
-ROADMAP_PATH = ROOT / str(CONFIG.get("roadmap_path", "docs/roadmap.json"))
-ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "docs/roadmap.md"))
-ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".docs/roadmap-events.jsonl"))
-META_ROOT = ROOT / str(CONFIG.get("meta_root", ".docs"))
+DOCS_ROOT = ROOT / str(CONFIG.get("docs_root", "wiki"))
+SPECS_ROOT = ROOT / str(CONFIG.get("specs_root", "wiki/specs"))
+RESEARCH_ROOT = ROOT / str(CONFIG.get("research_root", "wiki/research"))
+ROADMAP_PATH = ROOT / str(CONFIG.get("roadmap_path", "wiki/roadmap.json"))
+ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "wiki/roadmap.md"))
+ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".wiki/roadmap-events.jsonl"))
+META_ROOT = ROOT / str(CONFIG.get("meta_root", ".wiki"))
 ROADMAP_STATE_PATH = META_ROOT / "roadmap-state.json"
-INDEX_PATH = ROOT / str(CONFIG.get("index_path", "docs/index.md"))
-INDEX_TITLE = str(CONFIG.get("index_title", f"{PROJECT_NAME} Docs Index"))
+INDEX_PATH = ROOT / str(CONFIG.get("index_path", "wiki/index.md"))
+DEFAULT_INDEX_TITLE = f"{PROJECT_NAME} Index" if PROJECT_NAME.lower().endswith("wiki") else f"{PROJECT_NAME} Wiki Index"
+INDEX_TITLE = str(CONFIG.get("index_title", DEFAULT_INDEX_TITLE))
 FORBIDDEN_HEADINGS = set(maybe_str_list(LINT_CONFIG.get("forbidden_headings")) or sorted(DEFAULT_FORBIDDEN_HEADINGS))
 WORD_COUNT_WARN = int(LINT_CONFIG.get("word_count_warn", DEFAULT_WORD_COUNT_WARN))
 WORD_COUNT_EXEMPT = set(maybe_str_list(LINT_CONFIG.get("word_count_exempt")) or sorted(DEFAULT_WORD_COUNT_EXEMPT))
@@ -1073,7 +1075,7 @@ def render_roadmap(entries: list[dict[str, Any]]) -> str:
     lines.extend([
         "## Related docs",
         "",
-        "- [Docs Index](index.md)",
+        "- [Wiki Index](index.md)",
         "- [Product](specs/product.md)",
         "- [System Overview](specs/system/overview.md)",
         "- [Shared Rules](specs/shared/overview.md)",

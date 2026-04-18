@@ -16,16 +16,16 @@ code_paths:
 
 ## Intent
 
-codewiki should keep roadmap and task truth in `docs/roadmap.json`, but it should also expose a stable read model and a compact first-party TUI so users can track active work without leaving Pi or dumping the entire roadmap every turn.
+codewiki should keep roadmap and task truth in `wiki/roadmap.json`, but it should also expose a stable read model and a compact first-party TUI so users can track active work without leaving Pi or dumping the entire roadmap every turn.
 
 ## Canonical truth vs read model
 
 Canonical write surfaces remain:
 
-- `docs/roadmap.json`
+- `wiki/roadmap.json`
 - Pi session JSONL plus codewiki custom task-link entries
 
-The extension should also generate a read-only UI model at `.docs/roadmap-state.json`.
+The extension should also generate a read-only UI model at `.wiki/roadmap-state.json`.
 
 That file exists so:
 
@@ -34,7 +34,7 @@ That file exists so:
 - roadmap/task data can be denormalized for display without changing the source model
 - current session focus can be overlaid live from Pi without writing extra repo-owned caches
 
-## `.docs/roadmap-state.json` contract
+## `.wiki/roadmap-state.json` contract
 
 The derived state should be versioned and include enough denormalized data for UI consumers to render roadmap summaries without reparsing multiple canonical files.
 
@@ -82,7 +82,7 @@ The public command surface stays:
 - `/wiki-review`
 - `/wiki-code`
 
-Roadmap/task TUI improvements should not require additional public commands beyond this core workflow. Richer UI affordances may be added later, but they should consume the same canonical roadmap/task model, plus live Pi session focus, and the same derived `.docs/roadmap-state.json` read contract.
+Roadmap/task TUI improvements should not require additional public commands beyond this core workflow. Richer UI affordances may be added later, but they should consume the same canonical roadmap/task model, plus live Pi session focus, and the same derived `.wiki/roadmap-state.json` read contract.
 
 ## Related docs
 
