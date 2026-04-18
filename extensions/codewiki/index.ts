@@ -296,6 +296,19 @@ const taskSessionLinkInputSchema = Type.Object({
   spawnedTaskIds: Type.Optional(Type.Array(Type.String(), { default: [] })),
   setSessionName: Type.Optional(Type.Boolean({ description: "When true, rename the current Pi session to this canonical task id + title." })),
 });
+const repoPathToolField = Type.Optional(Type.String({ description: "Optional repo root, or any path inside the target repo, when the current cwd is outside that repo." }));
+const roadmapAppendToolInputSchema = Type.Object({
+  tasks: Type.Array(roadmapTaskInputSchema, { minItems: 1 }),
+  repoPath: repoPathToolField,
+});
+const roadmapTaskUpdateToolInputSchema = Type.Object({
+  ...roadmapTaskUpdateInputSchema.properties,
+  repoPath: repoPathToolField,
+});
+const taskSessionLinkToolInputSchema = Type.Object({
+  ...taskSessionLinkInputSchema.properties,
+  repoPath: repoPathToolField,
+});
 
 export default function codewikiExtension(pi: ExtensionAPI) {
   registerBootstrapFeatures(pi);
@@ -431,10 +444,12 @@ export default function codewikiExtension(pi: ExtensionAPI) {
     promptGuidelines: [
       "Use this after editing wiki docs or before a semantic wiki audit when you need fresh registry and lint outputs.",
     ],
-    parameters: Type.Object({}),
-    async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
-      const summary = await rebuildAndSummarize(ctx.cwd);
-      const project = await loadProject(ctx.cwd);
+    parameters: Type.Object({
+      repoPath: repoPathToolField,
+    }),
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_rebuild");
+      const summary = await rebuildAndSummarize(project);
       await refreshRoadmapWidget(project, ctx, currentTaskLink(ctx));
       return {
         content: [{ type: "text", text: summary.text }],
@@ -448,15 +463,17 @@ export default function codewikiExtension(pi: ExtensionAPI) {
     label: "Codewiki Status",
     description: "Show the current project's codebase wiki inventory and lint status",
     promptSnippet: "Inspect the current project's codebase wiki inventory and lint status",
-    parameters: Type.Object({}),
-    async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
-      const project = await loadProject(ctx.cwd);
+    parameters: Type.Object({
+      repoPath: repoPathToolField,
+    }),
+    async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
+      const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_status");
       const roadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
       const report = await maybeReadJson<LintReport>(project.lintPath);
       const registry = await maybeReadJson<RegistryFile>(project.registryPath);
       const text = report
         ? buildStatusText(project, registry, report, "both", roadmapState, currentTaskLink(ctx))
-        : await readStatus(ctx.cwd);
+        : await readStatus(project);
       await refreshRoadmapWidget(project, ctx, currentTaskLink(ctx));
       return {
         content: [{ type: "text", text }],
@@ -475,11 +492,9 @@ export default function codewikiExtension(pi: ExtensionAPI) {
       "Do not use this for issues already covered by an existing roadmap task unless you first explain why duplication is needed.",
       "The tool assigns TASK-### ids automatically, appends them to roadmap order, logs history, and rebuilds generated outputs. Legacy ROADMAP-### lookups remain accepted during migration.",
     ],
-    parameters: Type.Object({
-      tasks: Type.Array(roadmapTaskInputSchema, { minItems: 1 }),
-    }),
+    parameters: roadmapAppendToolInputSchema,
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const project = await loadProject(ctx.cwd);
+      const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_roadmap_append");
       const result = await appendRoadmapTasks(pi, project, ctx, params.tasks);
       await refreshRoadmapWidget(project, ctx, currentTaskLink(ctx));
       return {
@@ -499,10 +514,11 @@ export default function codewikiExtension(pi: ExtensionAPI) {
       "Set status='done' or status='cancelled' to close an existing task through the package workflow.",
       "Tool preserves task order, accepts legacy ROADMAP-### lookup during migration, logs mutation history, and rebuilds generated outputs.",
     ],
-    parameters: roadmapTaskUpdateInputSchema,
+    parameters: roadmapTaskUpdateToolInputSchema,
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const project = await loadProject(ctx.cwd);
-      const result = await updateRoadmapTask(project, params);
+      const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_roadmap_update");
+      const { repoPath: _repoPath, ...updateParams } = params;
+      const result = await updateRoadmapTask(project, updateParams);
       await refreshRoadmapWidget(project, ctx, currentTaskLink(ctx));
       return {
         content: [{ type: "text", text: formatRoadmapUpdateSummary(project, result.task, result.action) }],
@@ -521,10 +537,11 @@ export default function codewikiExtension(pi: ExtensionAPI) {
       "Prefer action='focus' when the session is now centered on one task.",
       "Use action='spawn' only when the current session created follow-up tasks and you need a trace from session to those tasks.",
     ],
-    parameters: taskSessionLinkInputSchema,
+    parameters: taskSessionLinkToolInputSchema,
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const project = await loadProject(ctx.cwd);
-      const result = await linkTaskSession(pi, project, ctx, params);
+      const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_task_session_link");
+      const { repoPath: _repoPath, ...linkParams } = params;
+      const result = await linkTaskSession(pi, project, ctx, linkParams);
       await refreshRoadmapWidget(project, ctx, { taskId: result.taskId, action: result.action, summary: "", filesTouched: [], spawnedTaskIds: [], timestamp: nowIso() });
       return {
         content: [{ type: "text", text: formatTaskSessionLinkSummary(result) }],
@@ -976,6 +993,29 @@ function codePrompt(project: WikiProject, registry: RegistryFile | null, report:
     "- Wiki updates made automatically, if any",
     "- Remaining risks or follow-ups",
   ].join("\n");
+}
+
+async function resolveToolProject(startDir: string, repoPath: string | undefined, toolName: string): Promise<WikiProject> {
+  if (repoPath) {
+    const requestedPath = resolve(startDir, repoPath);
+    try {
+      return await loadProject(requestedPath);
+    } catch (error) {
+      throw new Error(`${toolName}: could not resolve repoPath ${requestedPath}. ${formatError(error)}`);
+    }
+  }
+
+  try {
+    return await loadProject(startDir);
+  } catch {
+    throw new Error(
+      [
+        `${toolName}: no repo-local wiki found from ${startDir}.`,
+        "codewiki tools are available globally, but each run mutates one repo-local wiki.",
+        `Retry with repoPath set to the target repo root, or any path inside that repo.`,
+      ].join(" "),
+    );
+  }
 }
 
 async function resolveCommandProject(ctx: ExtensionCommandContext, pathArg: string | null, commandName: string): Promise<WikiProject> {

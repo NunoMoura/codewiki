@@ -10,7 +10,7 @@ updated: '2026-04-18'
 
 # Roadmap
 
-Generated: 2026-04-18T00:21:07Z
+Generated: 2026-04-18T05:12:57Z
 
 Canonical source: [roadmap.json](roadmap.json)
 
@@ -341,6 +341,25 @@ _None._
 - Desired: Wiki commands stay globally available in Pi while safely targeting either nearest repo-local wiki from cwd or an explicitly chosen repo.
 - Current: Status, fix, review, and code commands now accept explicit repo paths, discover candidate repos below current cwd for UI picker fallback, and report clearer global-vs-local targeting guidance when no wiki is found.
 - Closure: Done by adding explicit path parsing for public commands, repo discovery + picker fallback, clearer missing-target errors, smoke coverage for path/picker/error behavior, and matching docs/spec updates.
+
+### TASK-017 — Add explicit repo targeting to internal codewiki tools
+
+- Status: done
+- Priority: high
+- Kind: agent-workflow
+- Summary: Let internal codewiki tools accept explicit repo paths so global installs work cleanly for tool-driven mutations outside repo cwd.
+- Specs:
+  - [wiki/specs/package/overview.md](specs/package/overview.md)
+  - [wiki/specs/extension/overview.md](specs/extension/overview.md)
+- Code:
+  - extensions/codewiki/bootstrap.ts
+  - extensions/codewiki/index.ts
+  - scripts/smoke-test.mjs
+  - README.md
+- Labels: global-install, tools, targeting
+- Desired: Internal codewiki tools can target the intended repo explicitly even when Pi is running from outside that repo.
+- Current: Setup, bootstrap, rebuild, status, roadmap append/update, and task-session link now accept optional repoPath and smoke coverage verifies explicit cross-cwd targeting.
+- Closure: Done by adding optional repoPath fields to internal tool schemas, resolving target repos from repoPath when provided, documenting the behavior, and extending smoke tests across explicit tool targeting flows.
 
 ## Related docs
 

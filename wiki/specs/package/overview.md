@@ -46,6 +46,7 @@ Bootstrap should be able to infer first-pass `wiki/specs/**` ownership docs from
 
 - public commands stay limited to `/wiki-bootstrap`, `/wiki-status`, `/wiki-fix`, `/wiki-review`, and `/wiki-code`
 - deeper composability lives in internal tools and prompts, rather than exposing separate user-facing wiki mutation commands
+- internal `codewiki_*` tools may accept an explicit `repoPath` so global installs can still target the intended repo safely when cwd is elsewhere
 
 ## Model naming
 

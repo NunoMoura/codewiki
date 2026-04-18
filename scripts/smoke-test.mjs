@@ -186,11 +186,29 @@ async function main() {
       undefined,
       { cwd: nestedDir },
     );
+    const thirdResult = await setupTool.definition.execute(
+      "setup-smoke-3",
+      { projectName: "Smoke Wiki", repoPath: projectDir },
+      undefined,
+      undefined,
+      { cwd: outsideDir },
+    );
+    const fourthResult = await bootstrapTool.definition.execute(
+      "bootstrap-smoke-4",
+      { projectName: "Smoke Wiki", force: false, repoPath: projectDir },
+      undefined,
+      undefined,
+      { cwd: outsideDir },
+    );
 
     const first = firstResult.details;
     const second = secondResult.details;
+    const third = thirdResult.details;
+    const fourth = fourthResult.details;
     assert.equal(first.root, projectDir, "Setup from nested cwd should target repo root when no wiki exists yet");
     assert.equal(second.root, projectDir, "Bootstrap from nested cwd should reuse the existing wiki root");
+    assert.equal(third.root, projectDir, "Setup tool should accept explicit repoPath from outside cwd");
+    assert.equal(fourth.root, projectDir, "Bootstrap tool should accept explicit repoPath from outside cwd");
     const sessionEntries = [];
     const toolCtx = {
       cwd: nestedDir,
@@ -207,11 +225,38 @@ async function main() {
         notify: () => {},
       },
     };
+    const outsideToolCtx = {
+      ...toolCtx,
+      cwd: outsideDir,
+    };
+    const rebuildTool = extension.tools.get("codewiki_rebuild");
+    assert.ok(rebuildTool && typeof rebuildTool.definition?.execute === "function", "Rebuild tool missing execute function");
+    const rebuildResult = await rebuildTool.definition.execute(
+      "rebuild-smoke",
+      { repoPath: projectDir },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.match(rebuildResult.content[0]?.text ?? "", /Smoke Wiki .* rebuild ok/i, "Rebuild tool should accept explicit repoPath from outside cwd");
+
+    const statusTool = extension.tools.get("codewiki_status");
+    assert.ok(statusTool && typeof statusTool.definition?.execute === "function", "Status tool missing execute function");
+    const statusResult = await statusTool.definition.execute(
+      "status-tool-smoke",
+      { repoPath: projectDir },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.match(statusResult.content[0]?.text ?? "", /Wiki: Smoke Wiki/, "Status tool should accept explicit repoPath from outside cwd");
+
     const roadmapAppendTool = extension.tools.get("codewiki_roadmap_append");
     assert.ok(roadmapAppendTool && typeof roadmapAppendTool.definition?.execute === "function", "Roadmap append tool missing execute function");
     await roadmapAppendTool.definition.execute(
       "roadmap-append-smoke",
       {
+        repoPath: projectDir,
         tasks: [{
           title: "Smoke audit task",
           priority: "high",
@@ -230,7 +275,7 @@ async function main() {
       },
       undefined,
       undefined,
-      toolCtx,
+      outsideToolCtx,
     );
     const appendedRoadmap = JSON.parse(readFileSync(resolve(projectDir, "wiki", "roadmap.json"), "utf8"));
     const appendedTaskId = Array.isArray(appendedRoadmap.order)
@@ -243,6 +288,7 @@ async function main() {
     await roadmapUpdateTool.definition.execute(
       "roadmap-update-smoke",
       {
+        repoPath: projectDir,
         taskId: appendedTaskId,
         status: "done",
         summary: "Close smoke-test delta through existing roadmap task mutation.",
@@ -254,7 +300,7 @@ async function main() {
       },
       undefined,
       undefined,
-      toolCtx,
+      outsideToolCtx,
     );
 
     const taskSessionLinkTool = extension.tools.get("codewiki_task_session_link");
@@ -262,6 +308,7 @@ async function main() {
     await taskSessionLinkTool.definition.execute(
       "task-link-smoke",
       {
+        repoPath: projectDir,
         taskId: "ROADMAP-001",
         action: "focus",
         summary: "Focused smoke session on starter task.",
@@ -271,7 +318,7 @@ async function main() {
       },
       undefined,
       undefined,
-      toolCtx,
+      outsideToolCtx,
     );
     sessionEntries.push({
       type: "custom",

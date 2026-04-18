@@ -34,6 +34,8 @@ Internal agent tools may remain more granular:
 - `codewiki_roadmap_update`
 - `codewiki_task_session_link`
 
+Those internal tools may also accept explicit `repoPath` targeting so global package installs can mutate the intended repo without relying on current cwd alone.
+
 ## Runtime responsibilities
 
 - resolve wiki root from the nearest ancestor containing `.wiki/config.json`

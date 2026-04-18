@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-04-18T01:10:00Z",
+  "updated": "2026-04-18T05:20:00Z",
   "order": [
     "TASK-001",
     "TASK-002",
@@ -17,7 +17,8 @@
     "TASK-013",
     "TASK-014",
     "TASK-015",
-    "TASK-016"
+    "TASK-016",
+    "TASK-017"
   ],
   "tasks": {
     "TASK-001": {
@@ -521,6 +522,37 @@
         "desired": "Wiki commands stay globally available in Pi while safely targeting either nearest repo-local wiki from cwd or an explicitly chosen repo.",
         "current": "Status, fix, review, and code commands now accept explicit repo paths, discover candidate repos below current cwd for UI picker fallback, and report clearer global-vs-local targeting guidance when no wiki is found.",
         "closure": "Done by adding explicit path parsing for public commands, repo discovery + picker fallback, clearer missing-target errors, smoke coverage for path/picker/error behavior, and matching docs/spec updates."
+      },
+      "created": "2026-04-18",
+      "updated": "2026-04-18"
+    },
+    "TASK-017": {
+      "id": "TASK-017",
+      "title": "Add explicit repo targeting to internal codewiki tools",
+      "status": "done",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Let internal codewiki tools accept explicit repo paths so global installs work cleanly for tool-driven mutations outside repo cwd.",
+      "spec_paths": [
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "global-install",
+        "tools",
+        "targeting"
+      ],
+      "delta": {
+        "desired": "Internal codewiki tools can target the intended repo explicitly even when Pi is running from outside that repo.",
+        "current": "Setup, bootstrap, rebuild, status, roadmap append/update, and task-session link now accept optional repoPath and smoke coverage verifies explicit cross-cwd targeting.",
+        "closure": "Done by adding optional repoPath fields to internal tool schemas, resolving target repos from repoPath when provided, documenting the behavior, and extending smoke tests across explicit tool targeting flows."
       },
       "created": "2026-04-18",
       "updated": "2026-04-18"

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generated_at": "2026-04-18T00:21:07Z",
+  "generated_at": "2026-04-18T05:12:57Z",
   "health": {
     "color": "green",
     "errors": 0,
@@ -8,14 +8,14 @@
     "total_issues": 0
   },
   "summary": {
-    "task_count": 16,
+    "task_count": 17,
     "open_count": 0,
     "status_counts": {
-      "done": 16
+      "done": 17
     },
     "priority_counts": {
       "critical": 2,
-      "high": 8,
+      "high": 9,
       "medium": 6
     }
   },
@@ -36,7 +36,8 @@
       "TASK-013",
       "TASK-014",
       "TASK-015",
-      "TASK-016"
+      "TASK-016",
+      "TASK-017"
     ],
     "open_task_ids": [],
     "in_progress_task_ids": [],
@@ -53,6 +54,7 @@
       "TASK-012",
       "TASK-014",
       "TASK-016",
+      "TASK-017",
       "TASK-004",
       "TASK-005",
       "TASK-007",
@@ -62,6 +64,7 @@
     ],
     "cancelled_task_ids": [],
     "recent_task_ids": [
+      "TASK-017",
       "TASK-016",
       "TASK-015",
       "TASK-014",
@@ -460,6 +463,30 @@
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "updated": "2026-04-18"
+    },
+    "TASK-017": {
+      "id": "TASK-017",
+      "title": "Add explicit repo targeting to internal codewiki tools",
+      "status": "done",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Let internal codewiki tools accept explicit repo paths so global installs work cleanly for tool-driven mutations outside repo cwd.",
+      "labels": [
+        "global-install",
+        "tools",
+        "targeting"
+      ],
+      "spec_paths": [
+        "wiki/specs/package/overview.md",
+        "wiki/specs/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/bootstrap.ts",
         "extensions/codewiki/index.ts",
         "scripts/smoke-test.mjs",
         "README.md"

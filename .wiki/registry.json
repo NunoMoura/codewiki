@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T00:21:07Z",
+  "generated_at": "2026-04-18T05:12:57Z",
   "docs": [
     {
       "id": "roadmap.live",
@@ -188,9 +188,9 @@
     }
   ],
   "roadmap": {
-    "entry_count": 16,
+    "entry_count": 17,
     "counts": {
-      "done": 16
+      "done": 17
     }
   }
 }

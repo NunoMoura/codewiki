@@ -70,6 +70,8 @@ export interface BootstrapResult {
   inferredBoundaries: string[];
 }
 
+const repoPathToolField = Type.Optional(Type.String({ description: "Optional repo root, or any path inside the target repo, when the current cwd is outside that repo." }));
+
 export function registerBootstrapFeatures(pi: ExtensionAPI): void {
   pi.registerCommand("wiki-bootstrap", {
     description: "Adopt or scaffold a repo-local codebase wiki, then start intelligent onboarding. Usage: /wiki-bootstrap [project name] [--force]",
@@ -100,9 +102,10 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
     ],
     parameters: Type.Object({
       projectName: Type.Optional(Type.String({ description: "Project name to write into starter docs; defaults to current directory name." })),
+      repoPath: repoPathToolField,
     }),
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const result = await setupCodewiki(ctx.cwd, {
+      const result = await setupCodewiki(resolveToolStartDir(ctx.cwd, params.repoPath), {
         projectName: params.projectName,
       });
       return {
@@ -125,9 +128,10 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
     parameters: Type.Object({
       projectName: Type.Optional(Type.String({ description: "Project name to write into starter docs; defaults to current directory name." })),
       force: Type.Optional(Type.Boolean({ description: "Overwrite existing starter files if true." })),
+      repoPath: repoPathToolField,
     }),
     async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-      const result = await bootstrapFromCurrentProject(ctx.cwd, {
+      const result = await bootstrapFromCurrentProject(resolveToolStartDir(ctx.cwd, params.repoPath), {
         projectName: params.projectName,
         force: params.force ?? false,
       });
@@ -233,6 +237,10 @@ function formatSummary(action: "Configured" | "Bootstrapped", result: BootstrapR
     `boundaries=${result.inferredBoundaries.length}`,
   ];
   return parts.join(" ");
+}
+
+function resolveToolStartDir(cwd: string, repoPath?: string): string {
+  return repoPath ? resolve(cwd, repoPath) : cwd;
 }
 
 function queueOnboardingPrompt(

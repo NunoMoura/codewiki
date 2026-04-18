@@ -36,6 +36,8 @@ Public command surface is intentionally small:
 - `codewiki_roadmap_update`
 - `codewiki_task_session_link`
 
+All internal `codewiki_*` tools also accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo.
+
 ### Skill
 
 - `/skill:codewiki`
