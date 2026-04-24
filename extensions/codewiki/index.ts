@@ -29,8 +29,70 @@ import {
 	truncateToWidth,
 	visibleWidth,
 } from "@mariozechner/pi-tui";
-import { Type } from "@sinclair/typebox";
 import { registerBootstrapFeatures } from "./bootstrap";
+import {
+	type ActiveConfigPanel,
+	type ActiveStatusPanel,
+	CODEWIKI_STATE_SECTION_VALUES,
+	type CodeDriftScopeConfig,
+	type CodewikiSessionToolInput,
+	type CodewikiStateSection,
+	type CodewikiStateToolInput,
+	type CodewikiTaskEvidenceInput,
+	type CodewikiTaskPatchInput,
+	type CodewikiTaskToolInput,
+	type ConfigPanelSection,
+	codewikiSessionToolInputSchema,
+	codewikiStateToolInputSchema,
+	codewikiTaskToolInputSchema,
+	type DocsConfig,
+	type GraphFile,
+	type LintReport,
+	type ResolvedStatusDockProject,
+	ROADMAP_PRIORITY_VALUES,
+	ROADMAP_STATUS_VALUES,
+	type RoadmapFile,
+	type RoadmapPriority,
+	type RoadmapStateFile,
+	type RoadmapStateHealth,
+	type RoadmapStateTaskSummary,
+	type RoadmapStatus,
+	type RoadmapTaskGoal,
+	type RoadmapTaskInput,
+	type RoadmapTaskRecord,
+	type RoadmapTaskUpdateInput,
+	type ScopeConfig,
+	STATUS_DOCK_DENSITY_VALUES,
+	STATUS_DOCK_MODE_VALUES,
+	STATUS_SCOPE_VALUES,
+	type StatusDockDensity,
+	type StatusDockMode,
+	type StatusDockPrefs,
+	type StatusPanelDetail,
+	type StatusPanelSection,
+	type StatusScope,
+	type StatusStateAgentRow,
+	type StatusStateBar,
+	type StatusStateChannelRow,
+	type StatusStateFile,
+	type StatusStateHeartbeatLane,
+	type StatusStateParallelSession,
+	type StatusStateRoadmapColumn,
+	type StatusStateSpecRow,
+	type StatusStateWikiSection,
+	TASK_EVIDENCE_RESULT_VALUES,
+	TASK_PHASE_VALUES,
+	TASK_SESSION_ACTION_VALUES,
+	type TaskEvidenceResult,
+	type TaskLoopUpdateInput,
+	type TaskPhase,
+	type TaskSessionAction,
+	type TaskSessionLinkInput,
+	type TaskSessionLinkRecord,
+	TOOL_TASK_STATUS_VALUES,
+	type ToolTaskStatus,
+	type WikiProject,
+} from "./contracts";
 import { withLockedPaths } from "./mutation-queue";
 import {
 	findWikiRootsBelow,
@@ -65,52 +127,6 @@ const STATUS_DOCK_PREFS_ENV = "PI_CODEWIKI_STATUS_PREFS_PATH";
 let activeStatusPanelGlobal: ActiveStatusPanel | null = null;
 let activeStatusPanelInputUnsubscribe: (() => void) | null = null;
 let activeConfigPanelClose: (() => void) | null = null;
-const ROADMAP_STATUS_VALUES = [
-	"todo",
-	"research",
-	"implement",
-	"verify",
-	"done",
-	"cancelled",
-	"in_progress",
-	"blocked",
-] as const;
-const TASK_PHASE_VALUES = ["research", "implement", "verify"] as const;
-const ROADMAP_PRIORITY_VALUES = ["critical", "high", "medium", "low"] as const;
-const TASK_SESSION_ACTION_VALUES = [
-	"focus",
-	"progress",
-	"blocked",
-	"done",
-	"spawn",
-	"note",
-	"clear",
-] as const;
-const TOOL_TASK_STATUS_VALUES = [
-	"todo",
-	"in_progress",
-	"blocked",
-	"done",
-	"cancelled",
-] as const;
-const TASK_EVIDENCE_RESULT_VALUES = [
-	"progress",
-	"pass",
-	"fail",
-	"block",
-	"done_candidate",
-] as const;
-const CODEWIKI_STATE_SECTION_VALUES = [
-	"summary",
-	"roadmap",
-	"graph",
-	"drift",
-	"session",
-	"task",
-] as const;
-const STATUS_SCOPE_VALUES = ["docs", "code", "both"] as const;
-const STATUS_DOCK_MODE_VALUES = ["auto", "pin", "off"] as const;
-const STATUS_DOCK_DENSITY_VALUES = ["minimal", "standard", "full"] as const;
 const AGENT_NAME_POOL = [
 	"Otter",
 	"Kestrel",
@@ -149,719 +165,6 @@ const COMMAND_PREFIX = "wiki";
 const CANONICAL_TASK_ID_PREFIX = "TASK";
 const LEGACY_TASK_ID_PREFIX = "ROADMAP";
 const TASK_ID_PATTERN = /^(TASK|ROADMAP)-(\d+)$/;
-
-interface ScopeConfig {
-	include?: string[];
-	exclude?: string[];
-}
-
-interface CodeDriftScopeConfig {
-	docs?: string[];
-	repo_docs?: string[];
-	code?: string[];
-}
-
-interface CodewikiConfig {
-	name?: string;
-	rebuild_command?: string[];
-	self_drift_scope?: ScopeConfig;
-	code_drift_scope?: CodeDriftScopeConfig;
-}
-
-interface DocsConfig {
-	project_name?: string;
-	docs_root?: string;
-	specs_root?: string;
-	evidence_root?: string;
-	research_root?: string;
-	index_path?: string;
-	roadmap_path?: string;
-	roadmap_doc_path?: string;
-	roadmap_events_path?: string;
-	meta_root?: string;
-	codewiki?: CodewikiConfig;
-}
-
-type RoadmapStatus = (typeof ROADMAP_STATUS_VALUES)[number];
-type TaskPhase = (typeof TASK_PHASE_VALUES)[number];
-type RoadmapPriority = (typeof ROADMAP_PRIORITY_VALUES)[number];
-type TaskSessionAction = (typeof TASK_SESSION_ACTION_VALUES)[number];
-type ToolTaskStatus = (typeof TOOL_TASK_STATUS_VALUES)[number];
-type TaskEvidenceResult = (typeof TASK_EVIDENCE_RESULT_VALUES)[number];
-type CodewikiStateSection = (typeof CODEWIKI_STATE_SECTION_VALUES)[number];
-type StatusScope = (typeof STATUS_SCOPE_VALUES)[number];
-
-interface LintIssue {
-	severity: string;
-	kind: string;
-	path: string;
-	message: string;
-}
-
-interface LintReport {
-	generated_at: string;
-	counts: Record<string, number>;
-	issues: LintIssue[];
-}
-
-interface GraphNode {
-	id: string;
-	kind: string;
-	path?: string;
-	title?: string;
-	doc_type?: string;
-	group?: string;
-}
-
-interface GraphEdge {
-	kind: string;
-	from: string;
-	to: string;
-}
-
-interface GraphViews {
-	docs?: {
-		all_paths?: string[];
-		spec_paths?: string[];
-		by_group?: Record<string, string[]>;
-	};
-	roadmap?: {
-		task_ids?: string[];
-		status_counts?: Record<string, number>;
-	};
-	research?: {
-		collection_paths?: string[];
-		entry_ids?: string[];
-	};
-	code?: {
-		paths?: string[];
-	};
-}
-
-interface GraphFile {
-	version: number;
-	generated_at: string;
-	nodes: GraphNode[];
-	edges: GraphEdge[];
-	views?: GraphViews;
-}
-
-interface RoadmapTaskDelta {
-	desired: string;
-	current: string;
-	closure: string;
-}
-
-interface RoadmapTaskGoal {
-	outcome: string;
-	acceptance: string[];
-	non_goals: string[];
-	verification: string[];
-}
-
-interface RoadmapTaskInput {
-	title: string;
-	status?: RoadmapStatus;
-	priority: RoadmapPriority;
-	kind: string;
-	summary: string;
-	spec_paths?: string[];
-	code_paths?: string[];
-	research_ids?: string[];
-	labels?: string[];
-	goal?: Partial<RoadmapTaskGoal>;
-	delta?: Partial<RoadmapTaskDelta>;
-}
-
-interface RoadmapTaskUpdateInput {
-	taskId: string;
-	title?: string;
-	status?: RoadmapStatus;
-	priority?: RoadmapPriority;
-	kind?: string;
-	summary?: string;
-	spec_paths?: string[];
-	code_paths?: string[];
-	research_ids?: string[];
-	labels?: string[];
-	goal?: Partial<RoadmapTaskGoal>;
-	delta?: Partial<RoadmapTaskDelta>;
-}
-
-interface RoadmapTaskRecord {
-	id: string;
-	title: string;
-	status: RoadmapStatus;
-	priority: RoadmapPriority;
-	kind: string;
-	summary: string;
-	spec_paths: string[];
-	code_paths: string[];
-	research_ids: string[];
-	labels: string[];
-	goal: RoadmapTaskGoal;
-	delta: RoadmapTaskDelta;
-	created: string;
-	updated: string;
-}
-
-interface RoadmapFile {
-	version: number;
-	updated: string;
-	order: string[];
-	tasks: Record<string, RoadmapTaskRecord>;
-}
-
-interface TaskSessionLinkInput {
-	taskId: string;
-	action?: TaskSessionAction;
-	summary?: string;
-	filesTouched?: string[];
-	spawnedTaskIds?: string[];
-	setSessionName?: boolean;
-}
-
-interface TaskSessionLinkRecord {
-	taskId: string;
-	action: TaskSessionAction;
-	summary: string;
-	filesTouched: string[];
-	spawnedTaskIds: string[];
-	timestamp: string;
-}
-
-interface TaskLoopUpdateInput {
-	taskId: string;
-	action: "pass" | "fail" | "block";
-	phase?: TaskPhase;
-	summary?: string;
-	checks_run?: string[];
-	files_touched?: string[];
-	issues?: string[];
-}
-
-interface CodewikiTaskPatchInput {
-	title?: string;
-	priority?: RoadmapPriority;
-	kind?: string;
-	summary?: string;
-	status?: ToolTaskStatus;
-	phase?: TaskPhase | null;
-	spec_paths?: string[];
-	code_paths?: string[];
-	research_ids?: string[];
-	labels?: string[];
-	goal?: Partial<RoadmapTaskGoal>;
-	delta?: Partial<RoadmapTaskDelta>;
-}
-
-interface CodewikiTaskEvidenceInput {
-	summary: string;
-	result?: TaskEvidenceResult;
-	checks_run?: string[];
-	files_touched?: string[];
-	issues?: string[];
-}
-
-interface CodewikiStateToolInput {
-	repoPath?: string;
-	refresh?: boolean;
-	include?: CodewikiStateSection[];
-	taskId?: string;
-}
-
-interface CodewikiTaskToolInput {
-	repoPath?: string;
-	action: "create" | "update" | "close" | "cancel";
-	refresh?: boolean;
-	taskId?: string;
-	tasks?: RoadmapTaskInput[];
-	patch?: CodewikiTaskPatchInput;
-	evidence?: CodewikiTaskEvidenceInput;
-	summary?: string;
-}
-
-interface CodewikiSessionToolInput {
-	repoPath?: string;
-	action: "focus" | "note" | "clear";
-	taskId?: string;
-	summary?: string;
-	checks_run?: string[];
-	files_touched?: string[];
-	issues?: string[];
-	setSessionName?: boolean;
-}
-
-interface RoadmapStateHealth {
-	color: "green" | "yellow" | "red";
-	errors: number;
-	warnings: number;
-	total_issues: number;
-}
-
-interface RoadmapStateSummary {
-	task_count: number;
-	open_count: number;
-	status_counts: Record<string, number>;
-	priority_counts: Record<string, number>;
-}
-
-interface RoadmapStateViews {
-	ordered_task_ids: string[];
-	open_task_ids: string[];
-	in_progress_task_ids: string[];
-	todo_task_ids: string[];
-	blocked_task_ids: string[];
-	done_task_ids: string[];
-	cancelled_task_ids: string[];
-	recent_task_ids: string[];
-}
-
-interface RoadmapStateTaskEvidenceSummary {
-	verdict: "pass" | "fail" | "blocked" | "waived" | string;
-	summary: string;
-	checks_run: string[];
-	files_touched: string[];
-	issues: string[];
-	updated_at: string;
-}
-
-interface RoadmapStateTaskLoop {
-	phase: "todo" | TaskPhase | "done" | string;
-	updated_at: string;
-	evidence: RoadmapStateTaskEvidenceSummary | null;
-}
-
-interface RoadmapStateTaskSummary {
-	id: string;
-	title: string;
-	status: RoadmapStatus;
-	priority: RoadmapPriority;
-	kind: string;
-	summary: string;
-	labels: string[];
-	goal: RoadmapTaskGoal;
-	spec_paths: string[];
-	code_paths: string[];
-	updated: string;
-	loop?: RoadmapStateTaskLoop;
-}
-
-interface RoadmapStateFile {
-	version: number;
-	generated_at: string;
-	health: RoadmapStateHealth;
-	summary: RoadmapStateSummary;
-	views: RoadmapStateViews;
-	tasks: Record<string, RoadmapStateTaskSummary>;
-}
-
-interface StatusStateBar {
-	label: string;
-	value: number;
-	total: number;
-	percent: number;
-}
-
-interface StatusStateSpecRow {
-	path: string;
-	title: string;
-	summary: string;
-	drift_status: "aligned" | "tracked" | "untracked" | "blocked" | "unmapped";
-	code_paths: string[];
-	code_area: string;
-	issue_counts: { errors: number; warnings: number; total: number };
-	related_task_ids: string[];
-	primary_task: { id: string; status: string; title: string } | null;
-	note: string;
-}
-
-interface StatusStateHeartbeatLane {
-	id: string;
-	title: string;
-	cadence: "high" | "medium" | "low" | string;
-	freshness_basis?: "work-first" | string;
-	fallback_max_age_hours?: number;
-	interval_hours: number;
-	triggers?: string[];
-	checked_at: string;
-	spec_paths: string[];
-	code_paths: string[];
-	code_area: string;
-	open_task_ids: string[];
-	risky_spec_paths: string[];
-	stats: {
-		total_specs: number;
-		aligned_specs: number;
-		tracked_specs: number;
-		untracked_specs: number;
-		blocked_specs: number;
-		unmapped_specs: number;
-	};
-	recommendation: { kind: string; command: string; reason: string };
-}
-
-interface StatusStateParallelSession {
-	session_id: string;
-	task_id: string;
-	action: string;
-	timestamp: string;
-	title: string;
-	summary: string;
-}
-
-interface StatusStateWikiSection {
-	id: string;
-	label: string;
-	rows: StatusStateSpecRow[];
-}
-
-interface StatusStateRoadmapColumn {
-	id: string;
-	label: string;
-	task_ids: string[];
-}
-
-interface StatusStateAgentRow {
-	id: string;
-	label: string;
-	name?: string;
-	task_id: string;
-	task_title: string;
-	mode: "manual" | "autonomous" | "policy_driven" | string;
-	status: "active" | "idle" | "blocked" | "waiting" | "done" | string;
-	last_action: string;
-	constraint: string;
-	session_id?: string;
-}
-
-interface StatusStateChannelRow {
-	id: string;
-	label: string;
-	kind: string;
-	target: string;
-	status: string;
-	scope: "repo" | "user" | string;
-	description?: string;
-	last_delivery_at?: string;
-	error?: string;
-}
-
-interface StatusStateFile {
-	version: number;
-	generated_at: string;
-	project: { name: string; docs_root: string; roadmap_path: string };
-	health: RoadmapStateHealth;
-	summary: {
-		total_specs: number;
-		mapped_specs: number;
-		aligned_specs: number;
-		tracked_specs: number;
-		untracked_specs: number;
-		blocked_specs: number;
-		unmapped_specs: number;
-		task_count: number;
-		open_task_count: number;
-		done_task_count: number;
-	};
-	bars: {
-		tracked_drift: StatusStateBar;
-		roadmap_done: StatusStateBar;
-		spec_mapping: StatusStateBar;
-	};
-	views: {
-		risky_spec_paths: string[];
-		top_risky_spec_paths: string[];
-		open_task_ids: string[];
-	};
-	heartbeat?: {
-		generated_at: string;
-		summary: {
-			lane_count: number;
-			freshness_basis?: "work-first" | string;
-			high_cadence_lane_ids: string[];
-			medium_cadence_lane_ids: string[];
-			low_cadence_lane_ids: string[];
-		};
-		lanes: StatusStateHeartbeatLane[];
-	};
-	parallel?: {
-		generated_at: string;
-		active_session_count: number;
-		collision_task_ids: string[];
-		sessions: StatusStateParallelSession[];
-	};
-	resume?: {
-		source: "task" | "heartbeat" | "next_step" | string;
-		task_id: string;
-		lane_id: string;
-		heading: string;
-		command: string;
-		reason: string;
-		phase?: string;
-		verification: string;
-		evidence?: string;
-		heartbeat: string;
-	};
-	specs: StatusStateSpecRow[];
-	wiki?: {
-		rows: StatusStateSpecRow[];
-		sections?: StatusStateWikiSection[];
-	};
-	roadmap?: {
-		focused_task_id: string;
-		blocked_task_ids: string[];
-		in_progress_task_ids: string[];
-		next_task_id: string;
-		columns?: StatusStateRoadmapColumn[];
-	};
-	agents?: { rows: StatusStateAgentRow[] };
-	channels?: { add_label?: string; rows: StatusStateChannelRow[] };
-	next_step: { kind: string; command: string; reason: string };
-	direction: string[];
-}
-
-type StatusDockMode = (typeof STATUS_DOCK_MODE_VALUES)[number];
-type StatusDockDensity = (typeof STATUS_DOCK_DENSITY_VALUES)[number];
-
-interface StatusDockPrefs {
-	version: number;
-	mode: StatusDockMode;
-	density: StatusDockDensity;
-	pinnedRepoPath?: string;
-	lastRepoPath?: string;
-}
-
-type StatusPanelSection = "wiki" | "roadmap" | "agents" | "channels";
-
-interface StatusPanelDetail {
-	kind: "wiki" | "roadmap" | "agent" | "channel-add" | "channel-edit";
-	title: string;
-	lines: string[];
-	channelId?: string;
-	taskId?: string;
-	actions?: Array<{ id: string; label: string }>;
-	selectedActionIndex?: number;
-}
-
-interface ActiveStatusPanel {
-	project: WikiProject;
-	source: "cwd" | "pinned";
-	scope: StatusScope;
-	density: StatusDockDensity;
-	section: StatusPanelSection;
-	activeLink: TaskSessionLinkRecord | null;
-	sessionId: string | null;
-	wikiColumnIndex: number;
-	wikiRowIndex: number;
-	roadmapColumnIndex: number;
-	roadmapRowIndex: number;
-	agentRowIndex: number;
-	channelRowIndex: number;
-	detail: StatusPanelDetail | null;
-	animationTick: number;
-	animationTimer?: ReturnType<typeof setInterval> | null;
-	requestRender?: () => void;
-	close?: () => void;
-}
-
-type ConfigPanelSection = "summary" | "pinning";
-
-interface ActiveConfigPanel {
-	section: ConfigPanelSection;
-	pinActionIndex: number;
-	requestRender?: () => void;
-	close?: () => void;
-}
-
-interface ResolvedStatusDockProject {
-	project: WikiProject;
-	statusState: StatusStateFile | null;
-	source: "cwd" | "pinned";
-}
-
-interface WikiProject {
-	root: string;
-	label: string;
-	config: DocsConfig;
-	docsRoot: string;
-	specsRoot: string;
-	researchRoot: string;
-	indexPath: string;
-	roadmapPath: string;
-	roadmapDocPath: string;
-	metaRoot: string;
-	configPath: string;
-	lintPath: string;
-	graphPath: string;
-	eventsPath: string;
-	roadmapEventsPath: string;
-	roadmapStatePath: string;
-	statusStatePath: string;
-}
-
-const roadmapPrioritySchema = Type.Union(
-	ROADMAP_PRIORITY_VALUES.map((value) => Type.Literal(value)),
-);
-const roadmapTaskGoalSchema = Type.Object({
-	outcome: Type.Optional(
-		Type.String({ description: "Clear outcome this task should achieve." }),
-	),
-	acceptance: Type.Optional(
-		Type.Array(Type.String(), {
-			description: "Concrete success signals proving the outcome was achieved.",
-		}),
-	),
-	non_goals: Type.Optional(
-		Type.Array(Type.String(), {
-			description: "Explicitly out-of-scope work for this task.",
-		}),
-	),
-	verification: Type.Optional(
-		Type.Array(Type.String(), {
-			description:
-				"Checks, tests, or review steps required before closing the task.",
-		}),
-	),
-});
-const codewikiTaskCreateSchema = Type.Object({
-	title: Type.String({ minLength: 1, description: "Short task title." }),
-	priority: roadmapPrioritySchema,
-	kind: Type.String({
-		minLength: 1,
-		description:
-			"Task kind like architecture, bug, migration, testing, docs, or agent-workflow.",
-	}),
-	summary: Type.String({
-		minLength: 1,
-		description: "One-sentence task summary.",
-	}),
-	spec_paths: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	code_paths: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	research_ids: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	labels: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	goal: Type.Optional(roadmapTaskGoalSchema),
-	delta: Type.Optional(
-		Type.Object({
-			desired: Type.Optional(Type.String()),
-			current: Type.Optional(Type.String()),
-			closure: Type.Optional(Type.String()),
-		}),
-	),
-});
-const taskLoopPhaseSchema = Type.Union([
-	Type.Literal("research"),
-	Type.Literal("implement"),
-	Type.Literal("verify"),
-]);
-const toolTaskStatusSchema = Type.Union(
-	TOOL_TASK_STATUS_VALUES.map((value) => Type.Literal(value)),
-);
-const taskEvidenceResultSchema = Type.Union(
-	TASK_EVIDENCE_RESULT_VALUES.map((value) => Type.Literal(value)),
-);
-const codewikiStateSectionSchema = Type.Union(
-	CODEWIKI_STATE_SECTION_VALUES.map((value) => Type.Literal(value)),
-);
-const repoPathToolField = Type.Optional(
-	Type.String({
-		description:
-			"Optional repo root, or any path inside the target repo, when the current cwd is outside that repo.",
-	}),
-);
-const toolTaskIdField = Type.String({
-	minLength: 1,
-	description:
-		"Existing task id. Canonical ids use TASK-###; legacy ROADMAP-### is still accepted during migration.",
-});
-const codewikiTaskPatchSchema = Type.Object({
-	title: Type.Optional(Type.String({ minLength: 1 })),
-	priority: Type.Optional(roadmapPrioritySchema),
-	kind: Type.Optional(Type.String({ minLength: 1 })),
-	summary: Type.Optional(Type.String({ minLength: 1 })),
-	status: Type.Optional(toolTaskStatusSchema),
-	phase: Type.Optional(Type.Union([taskLoopPhaseSchema, Type.Null()])),
-	spec_paths: Type.Optional(Type.Array(Type.String())),
-	code_paths: Type.Optional(Type.Array(Type.String())),
-	research_ids: Type.Optional(Type.Array(Type.String())),
-	labels: Type.Optional(Type.Array(Type.String())),
-	goal: Type.Optional(roadmapTaskGoalSchema),
-	delta: Type.Optional(
-		Type.Object({
-			desired: Type.Optional(Type.String()),
-			current: Type.Optional(Type.String()),
-			closure: Type.Optional(Type.String()),
-		}),
-	),
-});
-const codewikiTaskEvidenceSchema = Type.Object({
-	summary: Type.String({
-		minLength: 1,
-		description: "Short evidence summary to append to task history.",
-	}),
-	result: Type.Optional(taskEvidenceResultSchema),
-	checks_run: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	files_touched: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	issues: Type.Optional(Type.Array(Type.String(), { default: [] })),
-});
-const codewikiStateToolInputSchema = Type.Object({
-	repoPath: repoPathToolField,
-	refresh: Type.Optional(
-		Type.Boolean({
-			default: false,
-			description:
-				"When true, rebuild derived graph/state files before reading.",
-		}),
-	),
-	include: Type.Optional(
-		Type.Array(codewikiStateSectionSchema, {
-			uniqueItems: true,
-			description:
-				"Sections to include. Default: ['summary', 'roadmap', 'session'].",
-		}),
-	),
-	taskId: Type.Optional(toolTaskIdField),
-});
-const codewikiTaskToolInputSchema = Type.Object({
-	repoPath: repoPathToolField,
-	action: Type.Union([
-		Type.Literal("create"),
-		Type.Literal("update"),
-		Type.Literal("close"),
-		Type.Literal("cancel"),
-	]),
-	refresh: Type.Optional(
-		Type.Boolean({
-			default: true,
-			description: "Refresh derived state after mutation.",
-		}),
-	),
-	taskId: Type.Optional(toolTaskIdField),
-	tasks: Type.Optional(Type.Array(codewikiTaskCreateSchema, { minItems: 1 })),
-	patch: Type.Optional(codewikiTaskPatchSchema),
-	evidence: Type.Optional(codewikiTaskEvidenceSchema),
-	summary: Type.Optional(Type.String({ minLength: 1 })),
-});
-const codewikiSessionToolInputSchema = Type.Object({
-	repoPath: repoPathToolField,
-	action: Type.Union([
-		Type.Literal("focus"),
-		Type.Literal("note"),
-		Type.Literal("clear"),
-	]),
-	taskId: Type.Optional(toolTaskIdField),
-	summary: Type.Optional(Type.String({ minLength: 1 })),
-	checks_run: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	files_touched: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	issues: Type.Optional(Type.Array(Type.String(), { default: [] })),
-	setSessionName: Type.Optional(
-		Type.Boolean({
-			default: false,
-			description: "Rename current Pi session to TASK-### + title.",
-		}),
-	),
-});
-
 export default function codewikiExtension(pi: ExtensionAPI) {
 	registerBootstrapFeatures(pi);
 	let activeStatusPanel: ActiveStatusPanel | null = activeStatusPanelGlobal;
