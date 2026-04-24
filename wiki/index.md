@@ -1,39 +1,35 @@
 # codewiki Index
 
-Generated: 2026-04-18T08:12:15Z
+Generated: 2026-04-24T03:05:08Z
 
 ## Roadmap
 
-- [Roadmap](roadmap.md) — 18 task(s); done=18
+- [Roadmap](roadmap.md) — 31 task(s); done=24, in_progress=3, todo=4
 
-## Specs — Root
+## Docs — Root
 
-- [Product](specs/product.md) — codewiki gives Pi a repo-local, docs-first navigation and drift contract for development projects.
+_None._
 
-## Specs — Extension
+## Clients
 
-- [Extension Runtime](specs/extension/overview.md) — Extension owns intelligent bootstrap, fix, review, status-dock rendering, and internal roadmap/session operations for repo-local codebase wikis discovered from current cwd or targeted explicitly by repo path/picker.
-- [Roadmap State and TUI](specs/extension/roadmap-ui.md) — Derived status and roadmap read models plus first-party Pi status-dock rules for compact drift and task visibility inside codewiki.
-- [Status Dock v1](specs/extension/status-dock.md) — Unified status dock and expanded inspector rules for showing spec drift, roadmap coverage, and next action from one status read model.
+- [Clients Overview](../.wiki/knowledge/clients/overview.md) — codewiki keeps user attention on hidden knowledge while Pi surfaces a four-tab status control room with Product/System/Clients grouping, kanban roadmap progress, named execution ownership, and resume-first workflow through a TUI-first model.
+- [Roadmap State and TUI](../.wiki/knowledge/clients/surfaces/roadmap.md) — Derived roadmap and status read models plus first-party Pi panel rules for a kanban-style roadmap surface with blockers, evidence, agent ownership, and resume visibility inside codewiki.
+- [Status Surfaces v4](../.wiki/knowledge/clients/surfaces/status-panel.md) — `/wiki-status` and `Alt+W` open one live panel organized as Wiki | Roadmap | Agents | Channels, with a repo-plus-traffic-light header, an optional one-line footer summary, and separate `/wiki-config` configuration.
 
-## Specs — Package
+## Product
 
-- [Package Surface](specs/package/overview.md) — codewiki ships one extension and one skill as globally installable Pi package surface with repo-local wiki data.
+- [Product](../.wiki/knowledge/product/overview.md) — codewiki gives Pi a repo-local, docs-first navigation and execution contract for development projects.
 
-## Specs — Shared
+## System
 
-- [Shared Rules](specs/shared/overview.md) — Shared documentation contract for maintaining codewiki itself with research, specs, and roadmap.
+- [Extension Runtime](../.wiki/knowledge/system/extension/overview.md) — Extension owns bootstrap, four-tab status rendering, resume execution, and internal roadmap and session operations for repo-local wikis discovered from current cwd or targeted explicitly by repo path or picker.
+- [System Overview](../.wiki/knowledge/system/overview.md) — codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.
+- [Package Surface](../.wiki/knowledge/system/package/overview.md) — codewiki ships one extension and one skill as a globally installable Pi package surface with a small public workflow centered on bootstrap, status, resume, and separate configuration.
+- [System Rules](../.wiki/knowledge/system/rules/overview.md) — System-level documentation contract for maintaining codewiki itself with hidden knowledge, machine evidence, roadmap state, and status read models.
+- [Templates and Rebuild](../.wiki/knowledge/system/templates/overview.md) — Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.
 
-## Specs — System
+## Evidence
 
-- [System Overview](specs/system/overview.md) — codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.
-
-## Specs — Templates
-
-- [Templates and Rebuild](specs/templates/overview.md) — Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.
-
-## Research
-
-- [inspiration.jsonl](research/inspiration.jsonl) — 2 entries
+- [inspiration.jsonl](../.wiki/evidence/inspiration.jsonl) — 2 entries
   - RES-001 — Karpathy LLM Wiki pattern — Persistent compiled wiki sits between raw sources and query-time reasoning; index and chronological log matter because knowledge should compound instead of being re-derived every query.
   - RES-002 — lucasastorian/llmwiki implementation — Production implementation shows useful navigation ideas: path-based wiki tree, overview hub, log chronology, search/read/write MCP tools, citation rendering, and batch reads for broad navigation across many docs.

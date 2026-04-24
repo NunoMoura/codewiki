@@ -1,22 +1,28 @@
 {
   "version": 2,
-  "generated_at": "2026-04-18T08:12:15Z",
+  "generated_at": "2026-04-24T03:05:08Z",
   "health": {
-    "color": "green",
+    "color": "yellow",
     "errors": 0,
-    "warnings": 0,
-    "total_issues": 0
+    "warnings": 46,
+    "total_issues": 46
+  },
+  "source": {
+    "graph_version": 1,
+    "graph_generated_at": "2026-04-24T03:05:08Z"
   },
   "summary": {
-    "task_count": 18,
-    "open_count": 0,
+    "task_count": 31,
+    "open_count": 7,
     "status_counts": {
-      "done": 18
+      "done": 24,
+      "in_progress": 3,
+      "todo": 4
     },
     "priority_counts": {
-      "critical": 3,
-      "high": 9,
-      "medium": 6
+      "critical": 6,
+      "high": 17,
+      "medium": 8
     }
   },
   "views": {
@@ -38,34 +44,83 @@
       "TASK-015",
       "TASK-016",
       "TASK-017",
-      "TASK-018"
+      "TASK-018",
+      "TASK-019",
+      "TASK-020",
+      "TASK-021",
+      "TASK-022",
+      "TASK-023",
+      "TASK-024",
+      "TASK-025",
+      "TASK-026",
+      "TASK-027",
+      "TASK-028",
+      "TASK-029",
+      "TASK-030",
+      "TASK-031"
     ],
-    "open_task_ids": [],
-    "in_progress_task_ids": [],
-    "todo_task_ids": [],
+    "open_task_ids": [
+      "TASK-020",
+      "TASK-025",
+      "TASK-026",
+      "TASK-028",
+      "TASK-029",
+      "TASK-030",
+      "TASK-031"
+    ],
+    "in_progress_task_ids": [
+      "TASK-020",
+      "TASK-025",
+      "TASK-026"
+    ],
+    "todo_task_ids": [
+      "TASK-028",
+      "TASK-029",
+      "TASK-030",
+      "TASK-031"
+    ],
     "blocked_task_ids": [],
     "done_task_ids": [
       "TASK-001",
-      "TASK-008",
-      "TASK-018",
       "TASK-002",
       "TASK-003",
+      "TASK-004",
+      "TASK-005",
       "TASK-006",
+      "TASK-007",
+      "TASK-008",
+      "TASK-009",
       "TASK-010",
       "TASK-011",
       "TASK-012",
+      "TASK-013",
       "TASK-014",
+      "TASK-015",
       "TASK-016",
       "TASK-017",
-      "TASK-004",
-      "TASK-005",
-      "TASK-007",
-      "TASK-009",
-      "TASK-013",
-      "TASK-015"
+      "TASK-018",
+      "TASK-019",
+      "TASK-021",
+      "TASK-022",
+      "TASK-023",
+      "TASK-024",
+      "TASK-027"
     ],
     "cancelled_task_ids": [],
     "recent_task_ids": [
+      "TASK-027",
+      "TASK-021",
+      "TASK-025",
+      "TASK-031",
+      "TASK-030",
+      "TASK-029",
+      "TASK-026",
+      "TASK-020",
+      "TASK-028",
+      "TASK-024",
+      "TASK-023",
+      "TASK-022",
+      "TASK-019",
       "TASK-018",
       "TASK-017",
       "TASK-016",
@@ -98,10 +153,16 @@
         "refactor",
         "v2"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/product.md",
-        "wiki/specs/shared/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts",
@@ -109,7 +170,12 @@
         "README.md",
         "skills/codewiki/SKILL.md"
       ],
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-002": {
       "id": "TASK-002",
@@ -122,16 +188,27 @@
         "brownfield",
         "bootstrap"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/system/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
         "extensions/codewiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-003": {
       "id": "TASK-003",
@@ -144,17 +221,28 @@
         "roadmap",
         "automation"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/shared/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
         "skills/codewiki/SKILL.md",
         "scripts/smoke-test.mjs"
       ],
-      "updated": "2026-04-16"
+      "updated": "2026-04-16",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-004": {
       "id": "TASK-004",
@@ -167,14 +255,25 @@
         "history",
         "archive"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/shared/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/templates.ts"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-005": {
       "id": "TASK-005",
@@ -188,14 +287,25 @@
         "automation",
         "follow-up"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-006": {
       "id": "TASK-006",
@@ -209,10 +319,16 @@
         "roadmap",
         "pi"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/shared/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -221,7 +337,12 @@
         "skills/codewiki/SKILL.md",
         "README.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-007": {
       "id": "TASK-007",
@@ -235,14 +356,25 @@
         "dogfood",
         "public-surface"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/package/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/package/overview.md"
       ],
       "code_paths": [
         "scripts/smoke-test.mjs"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-008": {
       "id": "TASK-008",
@@ -256,10 +388,16 @@
         "install",
         "discovery"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/system/overview.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -269,7 +407,12 @@
         "README.md",
         "skills/codewiki/SKILL.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-009": {
       "id": "TASK-009",
@@ -283,8 +426,14 @@
         "tui",
         "pi"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md"
+        ".wiki/knowledge/system/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -292,7 +441,12 @@
         "README.md",
         "skills/codewiki/SKILL.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-010": {
       "id": "TASK-010",
@@ -306,10 +460,16 @@
         "commands",
         "agent-workflow"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/package/overview.md",
-        "wiki/specs/system/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -318,7 +478,12 @@
         "README.md",
         "skills/codewiki/SKILL.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-011": {
       "id": "TASK-011",
@@ -332,11 +497,17 @@
         "tui",
         "ux"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/extension/roadmap-ui.md",
-        "wiki/specs/system/overview.md",
-        "wiki/specs/templates/overview.md"
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -346,7 +517,12 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-012": {
       "id": "TASK-012",
@@ -360,10 +536,16 @@
         "package-surface",
         "migration"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/system/overview.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/overview.md"
       ],
       "code_paths": [
         "package.json",
@@ -373,7 +555,12 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-013": {
       "id": "TASK-013",
@@ -387,14 +574,25 @@
         "skill",
         "docs"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/shared/overview.md"
+        ".wiki/knowledge/system/rules/overview.md"
       ],
       "code_paths": [
         "skills/codewiki/SKILL.md",
         "README.md"
       ],
-      "updated": "2026-04-17"
+      "updated": "2026-04-17",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-014": {
       "id": "TASK-014",
@@ -408,10 +606,16 @@
         "wiki-root",
         "migration"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/shared/overview.md",
-        "wiki/specs/templates/overview.md",
-        "wiki/specs/extension/overview.md"
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md",
+        ".wiki/knowledge/system/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -420,7 +624,12 @@
         "extensions/codewiki/templates.ts",
         "scripts/smoke-test.mjs"
       ],
-      "updated": "2026-04-18"
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-015": {
       "id": "TASK-015",
@@ -434,10 +643,16 @@
         "roadmap",
         "implementation"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/extension/roadmap-ui.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -445,7 +660,12 @@
         "skills/codewiki/SKILL.md",
         "README.md"
       ],
-      "updated": "2026-04-18"
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-016": {
       "id": "TASK-016",
@@ -459,10 +679,16 @@
         "targeting",
         "ux"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/extension/roadmap-ui.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md"
       ],
       "code_paths": [
         "extensions/codewiki/project-root.ts",
@@ -470,7 +696,12 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "updated": "2026-04-18"
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-017": {
       "id": "TASK-017",
@@ -484,9 +715,15 @@
         "tools",
         "targeting"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/bootstrap.ts",
@@ -494,7 +731,12 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "updated": "2026-04-18"
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
     },
     "TASK-018": {
       "id": "TASK-018",
@@ -509,13 +751,19 @@
         "drift",
         "roadmap"
       ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
       "spec_paths": [
-        "wiki/specs/package/overview.md",
-        "wiki/specs/extension/overview.md",
-        "wiki/specs/extension/roadmap-ui.md",
-        "wiki/specs/extension/status-dock.md",
-        "wiki/specs/templates/overview.md",
-        "wiki/specs/shared/overview.md"
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/system/templates/overview.md",
+        ".wiki/knowledge/system/rules/overview.md"
       ],
       "code_paths": [
         "extensions/codewiki/index.ts",
@@ -525,7 +773,680 @@
         "scripts/smoke-test.mjs",
         "README.md"
       ],
-      "updated": "2026-04-18"
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-019": {
+      "id": "TASK-019",
+      "title": "Keep status dock visible across new global sessions and replace wiki-status follow-up with roadmap next task",
+      "status": "done",
+      "priority": "high",
+      "kind": "ux",
+      "summary": "Keep the status dock visible across global/new-session fallback and make /wiki-status surface the next roadmap task directly in deterministic output.",
+      "labels": [
+        "status-dock",
+        "wiki-status",
+        "ux"
+      ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
+      "spec_paths": [
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/package/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "README.md"
+      ],
+      "updated": "2026-04-18",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-020": {
+      "id": "TASK-020",
+      "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Refactor the status panel into a minimal control room with circle-only health, a repo-only header, wiki grouped as Product/System/Clients, a kanban-style roadmap by phase gate, named agents, a minimal channels list, and footer-only ambient summary while keeping authored `wiki/ux` on disk for now.",
+      "labels": [
+        "status",
+        "wiki-status",
+        "panel-first",
+        "info-architecture",
+        "pi-tui"
+      ],
+      "goal": {
+        "outcome": "Status becomes one minimal-header control room where `/wiki-status` and `Alt+W` open the same panel, the header shows only repo and a circle health indicator, `Wiki` groups authored truth into Product, System, and Clients buckets, `Roadmap` renders a kanban board that uses the same task progression model users understand (`Todo`, `Research`, `Implement`, `Verify`, `Done`), `Agents` shows stable agent names with current tasks, `Channels` stays minimal, and the optional summary remains in the Pi footer only while `/wiki-config` stays separate.",
+        "acceptance": [
+          "The status panel header shows only repo name or switcher plus a circle health indicator; health words and colorized prose are not used in panel body text.",
+          "The `Wiki` tab groups rows into Product, System, and Clients sections, shows all relevant authored docs within each bucket, and uses circle indicators plus gray drift notes without spelling out color names.",
+          "The `Roadmap` tab renders a kanban-style board organized around `Todo`, `Research`, `Implement`, `Verify`, and `Done`, with task cards showing title, low-emphasis task id, assigned agent name when known, and blocker state via the traffic-light system only.",
+          "The `Agents` tab shows stable generated agent names with current task title and low-emphasis task id rather than raw session identifiers.",
+          "The `Channels` tab only shows an add-channel affordance plus the list of already added channels, while `/wiki-config` remains a separate command instead of panel-owned configuration."
+        ],
+        "non_goals": [
+          "Rename the authored `wiki/ux` folder in the same task.",
+          "Implement full third-party messaging integrations in the same task."
+        ],
+        "verification": [
+          "Run npm test after reshaping the status read model, panel rendering, command wiring, and footer summary behavior.",
+          "Dogfood `/wiki-status`, `Alt+W`, and `/wiki-config` in the package repo and confirm the kanban roadmap plus Product/System/Clients wiki grouping explain status more clearly than the previous list-based panel."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs"
+      ],
+      "updated": "2026-04-22",
+      "loop": {
+        "phase": "verify",
+        "updated_at": "2026-04-22T00:50:32Z",
+        "evidence": {
+          "verdict": "pass",
+          "summary": "Implemented the requested status-panel contract rewrite: specs now describe Product/System/Clients grouping with display-only `Clients` rename, the roadmap panel now renders kanban columns by phase gate, named agents appear with task title then low-emphasis task id, channels became add-plus-list only, `/wiki-config` remained separate, deterministic status-state now carries matching sections and columns, and the TUI footer summary now uses a traffic-light circle instead of health words.",
+          "checks_run": [
+            "npm test",
+            "codewiki_rebuild"
+          ],
+          "files_touched": [
+            "wiki/ux/surfaces/status-panel.md",
+            "wiki/ux/surfaces/roadmap.md",
+            "wiki/ux/overview.md",
+            "wiki/product/overview.md",
+            "wiki/system/package/overview.md",
+            "wiki/system/extension/overview.md",
+            "wiki/shared/overview.md",
+            "extensions/codewiki/index.ts",
+            "scripts/rebuild_docs_meta.py",
+            "extensions/codewiki/templates.ts",
+            "scripts/smoke-test.mjs",
+            ".wiki/roadmap.json"
+          ],
+          "issues": [],
+          "updated_at": "2026-04-22T00:50:32Z"
+        }
+      }
+    },
+    "TASK-021": {
+      "id": "TASK-021",
+      "title": "Migrate codewiki to a .wiki-only knowledge contract",
+      "status": "done",
+      "priority": "critical",
+      "kind": "migration",
+      "summary": "Complete the .wiki-only migration closure by removing remaining registry/backlinks compatibility artifacts, cleaning stale generated outputs, and verifying the live repo runs cleanly on the graph-first derived contract.",
+      "labels": [
+        "migration",
+        "dogfood",
+        ".wiki-only",
+        "graph",
+        "cleanup"
+      ],
+      "goal": {
+        "outcome": "codewiki dogfoods a .wiki-only canonical knowledge base with hidden markdown knowledge nodes, a goal-first roadmap, portable events, and derived UI views, while stale public wiki outputs and deprecated compatibility code are removed once migration is complete.",
+        "acceptance": [
+          "Canonical repo truth lives under .wiki/knowledge, .wiki/sources, .wiki/evidence, .wiki/roadmap.json, and .wiki/events.jsonl.",
+          "Rebuild/runtime can read the new contract, produce derived graph/views, and drive the TUI without requiring wiki/index.md or wiki/roadmap.md as canonical inputs.",
+          "codewiki repo content is migrated to the new contract and dogfoods it successfully.",
+          "README, starter templates, and skill guidance teach the new .wiki-only model and read-open/write-gated agent workflow.",
+          "Migration cleanup removes stale or deprecated code paths, config fields, docs, and generated artifacts that only served the old wiki/** contract."
+        ],
+        "non_goals": [
+          "Designing every future third-party export format in this task.",
+          "Building a heavy visual graph UI before the new contract is stable."
+        ],
+        "verification": [
+          "Run npm test after runtime/template/rebuild migration.",
+          "Dogfood status/startup/resume behavior against the migrated codewiki repo and confirm the TUI reads from derived .wiki views.",
+          "Audit repo for leftover wiki/**-canonical assumptions and remove or downgrade them only if still needed for temporary migration compatibility."
+        ]
+      },
+      "spec_paths": [
+        "README.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs",
+        "skills/codewiki/SKILL.md",
+        ".wiki"
+      ],
+      "updated": "2026-04-24",
+      "loop": {
+        "phase": "done",
+        "updated_at": "2026-04-24T01:40:24Z",
+        "evidence": {
+          "verdict": "pass",
+          "summary": "Finished remaining .wiki-only migration debt. Removed registry/backlinks from starter config, bootstrap expected outputs, generated rebuild template, live repo config, and package docs; deleted stale derived files; rebuild no longer emits a compatibility registry layer; npm test still passes. Remaining old wiki/product|ux path checks are narrowly isolated read-compat for legacy repo classification, not canonical storage truth.",
+          "checks_run": [
+            "cd /home/nunoc/projects/codewiki && python3 scripts/rebuild_docs_meta.py && npm test",
+            "grep registry\\.json|backlinks\\.json across runtime/docs/templates/config"
+          ],
+          "files_touched": [
+            "extensions/codewiki/bootstrap.ts",
+            "extensions/codewiki/templates.ts",
+            "scripts/smoke-test.mjs",
+            "README.md",
+            ".wiki/config.json",
+            ".wiki/knowledge/system/templates/overview.md",
+            ".wiki/knowledge/clients/surfaces/status-panel.md",
+            ".wiki/knowledge/system/overview.md"
+          ],
+          "issues": [],
+          "updated_at": "2026-04-24T01:40:24Z"
+        }
+      }
+    },
+    "TASK-022": {
+      "id": "TASK-022",
+      "title": "Make goal quality first-class across foundational docs and task metadata",
+      "status": "done",
+      "priority": "critical",
+      "kind": "architecture",
+      "summary": "Made goal quality first-class across foundational docs, starter templates, roadmap task metadata, generated views, and smoke coverage.",
+      "labels": [
+        "goals",
+        "intent",
+        "verification",
+        "foundations"
+      ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
+      "spec_paths": [
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/templates.ts",
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "README.md"
+      ],
+      "updated": "2026-04-20",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-023": {
+      "id": "TASK-023",
+      "title": "Add multi-cadence heartbeat drift analysis across product, system, UX, and code",
+      "status": "done",
+      "priority": "critical",
+      "kind": "architecture",
+      "summary": "Refined heartbeat lanes so freshness is modeled as work-first: each lane now advertises causal work triggers, fallback max-age protection, and work-based stale reasons surfaced in generated status state and runtime status views.",
+      "labels": [
+        "heartbeat",
+        "drift",
+        "automation",
+        "cadence"
+      ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
+      "spec_paths": [
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs"
+      ],
+      "updated": "2026-04-20",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-024": {
+      "id": "TASK-024",
+      "title": "Turn status surfaces into a resume-first startup control room",
+      "status": "done",
+      "priority": "high",
+      "kind": "ux",
+      "summary": "Turned status surfaces into a resume-first startup control room by adding a deterministic generated resume view to status-state and making runtime summary, dock, panel, and text output prioritize focused work, verification cues, and heartbeat context over passive health-only reporting.",
+      "labels": [
+        "status",
+        "resume",
+        "startup",
+        "tui"
+      ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
+      "spec_paths": [
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs"
+      ],
+      "updated": "2026-04-20",
+      "loop": {
+        "phase": "done",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-025": {
+      "id": "TASK-025",
+      "title": "Add proposal-to-roadmap promotion and causality-preserving dedupe",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Add proposal-to-roadmap promotion and causality-preserving dedupe so same-user parallel Pi sessions can work in one repo without duplicate tasks, visible collisions, or any user-facing need to manage internal roadmap mutation tools.",
+      "labels": [
+        "roadmap",
+        "dedupe",
+        "causality",
+        "automation"
+      ],
+      "goal": {
+        "outcome": "Users can open multiple Pi sessions on one repo and rely on the agent to coordinate roadmap/task intent automatically without being told to use internal tools.",
+        "acceptance": [
+          "When new work overlaps existing roadmap delta, agent-side mutation flow updates, reopens, links, or merges existing tasks automatically instead of asking the user to choose internal roadmap tools.",
+          "User-facing notifications and status surfaces describe coordinated outcome in plain workflow terms, not internal tool names.",
+          "Same-user parallel session signals help the agent avoid duplicate task creation and reduce silent task-focus collisions."
+        ],
+        "non_goals": [
+          "Expose internal codewiki roadmap tools as part of user workflow.",
+          "Require users to manually arbitrate duplicate roadmap tasks across their own sessions."
+        ],
+        "verification": [
+          "Run npm test after replacing duplicate-append rejection with agent-side coordination behavior.",
+          "Validate same-user parallel sessions can converge on one roadmap without user-visible internal-tool instructions."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/extension/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs"
+      ],
+      "updated": "2026-04-23",
+      "loop": {
+        "phase": "implement",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-026": {
+      "id": "TASK-026",
+      "title": "Build a task todo-research-implement-verify-done loop with evidence gates",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Strengthen task execution so roadmap tasks move through one parent-owned `todo -> research -> implement -> verify -> done` progression with structured evidence, low-friction phase drivers, and blocked state treated as a card signal rather than a separate board column.",
+      "labels": [
+        "tasks",
+        "review",
+        "testing",
+        "closure"
+      ],
+      "goal": {
+        "outcome": "Focused roadmap tasks use one clear progression model that humans and agents both understand: `todo`, `research`, `implement`, `verify`, and `done`, with `blocked` represented as task evidence or card state rather than a competing main phase.",
+        "acceptance": [
+          "A task can start at `todo`, move into `research`, then `implement`, then `verify`, and finally `done` without requiring a separate hidden review or close-candidate phase.",
+          "Runtime phase handling is compartmentalized enough that research, implement, and verify behavior can evolve independently without rewriting the whole loop.",
+          "Structured evidence still records what changed, which checks ran, and why verification passed, failed, or blocked.",
+          "Failure or blocked outcomes send the task back to the right actionable state without silently closing it or forcing users to reason about a second parallel status model."
+        ],
+        "non_goals": [
+          "Adopt external verification packages as a hard dependency in this task.",
+          "Build a generic multi-agent framework or expose worker roles as a new user-facing workflow.",
+          "Let child execution directly mutate roadmap truth or close tasks without parent coordination."
+        ],
+        "verification": [
+          "Run npm test after replacing the review/close-candidate loop with the unified todo-research-implement-verify-done progression.",
+          "Extend smoke coverage to exercise research start, implement pass, verify pass-to-done, and blocked verification evidence.",
+          "Dogfood one roadmap task through todo, research, implement, verify, and done with status or resume output showing the active state clearly."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/product/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "skills/codewiki/SKILL.md",
+        "README.md"
+      ],
+      "updated": "2026-04-22",
+      "loop": {
+        "phase": "verify",
+        "updated_at": "2026-04-22T01:54:48Z",
+        "evidence": {
+          "verdict": "pass",
+          "summary": "Replaced the old implement-review-verify-close-candidate loop with a unified todo-research-implement-verify-done model across roadmap specs, generated read models, runtime resume logic, kanban columns, and smoke coverage. The runtime now starts todo tasks in research, advances verify directly to done, keeps blocked as evidence/card state rather than a main column, and uses a compartmentalized phase-driver registry for research, implement, and verify transitions.",
+          "checks_run": [
+            "npm test",
+            "codewiki_rebuild"
+          ],
+          "files_touched": [
+            "extensions/codewiki/index.ts",
+            "scripts/rebuild_docs_meta.py",
+            "extensions/codewiki/templates.ts",
+            "scripts/smoke-test.mjs",
+            "wiki/ux/surfaces/status-panel.md",
+            "wiki/ux/surfaces/roadmap.md",
+            "wiki/ux/overview.md",
+            "wiki/system/extension/overview.md",
+            "wiki/shared/overview.md",
+            ".wiki/roadmap.json"
+          ],
+          "issues": [],
+          "updated_at": "2026-04-22T01:54:48Z"
+        }
+      }
+    },
+    "TASK-027": {
+      "id": "TASK-027",
+      "title": "Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config",
+      "status": "done",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Remove deprecated public commands so codewiki's visible workflow converges on bootstrap, status, resume, and config with Alt+W as the status shortcut.",
+      "labels": [
+        "commands",
+        "ux",
+        "status",
+        "resume",
+        "migration"
+      ],
+      "goal": {
+        "outcome": "Users can operate codewiki through four primary public entrypoints: `/wiki-bootstrap` for setup, `/wiki-status` for inspection, `/wiki-resume` for continuing roadmap execution, and `/wiki-config` for configuration.",
+        "acceptance": [
+          "`/wiki-status` and `Alt+W` expose the same status panel without requiring panel-owned configuration.",
+          "`/wiki-resume` replaces `/wiki-code` as the canonical roadmap resume command, with `/wiki-code` retained only as a compatibility alias while migration is active.",
+          "`/wiki-config` remains the clear configuration entrypoint even if some settings later become context-linked from status tabs.",
+          "`/wiki-review` and `/wiki-fix` are no longer required to use codewiki's core workflow; if kept temporarily, they route into the same underlying review or resume flows.",
+          "Bootstrap remains explicit and available when a repo has no wiki yet."
+        ],
+        "non_goals": [
+          "Remove compatibility aliases before their replacements are stable.",
+          "Introduce `/wiki-pause` as a public command before autonomous execution needs a real stop affordance."
+        ],
+        "verification": [
+          "Run npm test after updating command registration, help text, docs, and compatibility aliases.",
+          "Dogfood a fresh session with `/wiki-status` and `/wiki-resume` and confirm the simpler command model is sufficient for core workflow."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/smoke-test.mjs",
+        "README.md",
+        "skills/codewiki/SKILL.md"
+      ],
+      "updated": "2026-04-24",
+      "loop": {
+        "phase": "done",
+        "updated_at": "2026-04-24T02:46:34Z",
+        "evidence": {
+          "verdict": "pass",
+          "summary": "Verified the collapsed public command surface end to end. Runtime now exposes only /wiki-bootstrap, /wiki-status, /wiki-resume, /wiki-config, and Alt+W; deprecated public commands are gone; smoke coverage expects only four commands; generated status recommendations use wiki-status/wiki-resume; docs and knowledge specs match the new surface; rebuild and npm test pass.",
+          "checks_run": [
+            "cd /home/nunoc/projects/codewiki && python3 scripts/rebuild_docs_meta.py",
+            "cd /home/nunoc/projects/codewiki && npm test",
+            "grep wiki-fix|wiki-review|wiki-code across runtime/docs/tests/specs"
+          ],
+          "files_touched": [
+            "extensions/codewiki/index.ts",
+            "scripts/smoke-test.mjs",
+            "scripts/rebuild_docs_meta.py",
+            "extensions/codewiki/templates.ts",
+            "extensions/codewiki/bootstrap.ts",
+            "README.md",
+            "skills/codewiki/SKILL.md",
+            ".wiki/knowledge/system/package/overview.md",
+            ".wiki/knowledge/system/extension/overview.md",
+            ".wiki/knowledge/clients/surfaces/status-panel.md",
+            ".wiki/knowledge/clients/surfaces/roadmap.md",
+            ".wiki/status-state.json",
+            ".wiki/roadmap-state.json",
+            "wiki/roadmap.md"
+          ],
+          "issues": [],
+          "updated_at": "2026-04-24T02:46:34Z"
+        }
+      }
+    },
+    "TASK-028": {
+      "id": "TASK-028",
+      "title": "Add git-backed revision correlation and freshness tracking across wiki state",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Deepen codewiki integration with git by anchoring heartbeat, evidence, status, and task state to commits plus authored-spec digests so drift and resume logic can detect stale intent safely.",
+      "labels": [
+        "git",
+        "versioning",
+        "freshness",
+        "correlation",
+        "digests"
+      ],
+      "goal": {
+        "outcome": "",
+        "acceptance": [],
+        "non_goals": [],
+        "verification": []
+      },
+      "spec_paths": [
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "updated": "2026-04-20",
+      "loop": {
+        "phase": "research",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-029": {
+      "id": "TASK-029",
+      "title": "Add agent execution visibility to status read model and panel",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Expose who is doing what and when by deriving named agent execution rows with task ownership, mode, status, last action, and constraints into the status panel and roadmap cards.",
+      "labels": [
+        "agents",
+        "status",
+        "sessions",
+        "coordination"
+      ],
+      "goal": {
+        "outcome": "Users can open the `Agents` tab or the roadmap kanban and immediately understand which named agent owns which task, how that work is being executed, and what constraints or triggers are shaping it.",
+        "acceptance": [
+          "The status read model emits stable generated agent names instead of raw session ids as the primary label, while still retaining session linkage internally when needed.",
+          "The `Agents` tab shows rows like `Otter | Improve status panel - TASK-020`, with the task title emphasized more than the task id.",
+          "Roadmap task cards can show the assigned agent name when known without expanding into raw session metadata.",
+          "Users can tell whether work is active, blocked, idle, waiting for review, or complete without inspecting raw Pi session history."
+        ],
+        "non_goals": [
+          "Build a generic multi-agent framework detached from roadmap truth.",
+          "Expose raw Pi session JSON as the primary user-facing agents surface."
+        ],
+        "verification": [
+          "Run npm test after adding agent execution rows to generated status state and panel rendering.",
+          "Dogfood the `Agents` tab in the package repo with at least one active manual session and confirm ownership is legible."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs"
+      ],
+      "updated": "2026-04-22",
+      "loop": {
+        "phase": "research",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-030": {
+      "id": "TASK-030",
+      "title": "Define pluggable channel routing for agent communications",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "architecture",
+      "summary": "Define a pluggable channels contract while keeping the first `Channels` tab minimal: add-channel affordance plus the list of already added channels.",
+      "labels": [
+        "channels",
+        "status",
+        "communications",
+        "pluggable"
+      ],
+      "goal": {
+        "outcome": "Users can understand which channels already exist and add new ones later without mixing personal delivery secrets into repo-owned wiki state.",
+        "acceptance": [
+          "The first `Channels` tab only needs an add-channel affordance plus the list of already added channels.",
+          "Channel routing metadata distinguishes repo-owned status from user-owned targets, credentials, and personal delivery preferences.",
+          "The channel model remains pluggable so new transports can be added later without changing roadmap or task truth semantics."
+        ],
+        "non_goals": [
+          "Ship production integrations for every external transport in the first pass.",
+          "Store private channel credentials inside repo-owned wiki files."
+        ],
+        "verification": [
+          "Run npm test after introducing the channel read-model shape and panel rendering.",
+          "Dogfood the `Channels` tab with the built-in panel or footer channel plus at least one configurable placeholder transport."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/system/rules/overview.md"
+      ],
+      "code_paths": [
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/templates.ts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs",
+        "README.md"
+      ],
+      "updated": "2026-04-22",
+      "loop": {
+        "phase": "research",
+        "updated_at": "",
+        "evidence": null
+      }
+    },
+    "TASK-031": {
+      "id": "TASK-031",
+      "title": "Rename UX pillar to Clients in authored wiki taxonomy",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Track the deferred authored taxonomy rename so status surfaces can say Clients now while the on-disk authored pillar remains `wiki/ux` until a later migration.",
+      "labels": [
+        "clients-pillar"
+      ],
+      "goal": {
+        "outcome": "codewiki can eventually rename the authored `wiki/ux` pillar to `wiki/clients` with a deliberate migration path.",
+        "acceptance": [
+          "The future migration updates authored docs, templates, and package docs to `clients`.",
+          "Existing repos using `wiki/ux` have a compatibility or migration path.",
+          "Display-only translation from `UX` to `Clients` is no longer needed after the migration."
+        ],
+        "non_goals": [
+          "Perform the full authored-folder rename before the client taxonomy is settled."
+        ],
+        "verification": [
+          "Dogfood the migration in the package repo or a sandbox repo before closing the task."
+        ]
+      },
+      "spec_paths": [
+        ".wiki/knowledge/clients/overview.md"
+      ],
+      "code_paths": [],
+      "updated": "2026-04-22",
+      "loop": {
+        "phase": "research",
+        "updated_at": "",
+        "evidence": null
+      }
     }
   }
 }

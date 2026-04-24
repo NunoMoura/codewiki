@@ -1,0 +1,2466 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-24T03:05:08Z",
+  "nodes": [
+    {
+      "id": "doc:.wiki/knowledge/clients/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/clients/overview.md",
+      "title": "Clients Overview",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "clients",
+      "summary": "codewiki keeps user attention on hidden knowledge while Pi surfaces a four-tab status control room with Product/System/Clients grouping, kanban roadmap progress, named execution ownership, and resume-first workflow through a TUI-first model.",
+      "owners": [
+        "design"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
+      "title": "Roadmap State and TUI",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "clients",
+      "summary": "Derived roadmap and status read models plus first-party Pi panel rules for a kanban-style roadmap surface with blockers, evidence, agent ownership, and resume visibility inside codewiki.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
+      "title": "Status Surfaces v4",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "clients",
+      "summary": "`/wiki-status` and `Alt+W` open one live panel organized as Wiki | Roadmap | Agents | Channels, with a repo-plus-traffic-light header, an optional one-line footer summary, and separate `/wiki-config` configuration.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/product/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/product/overview.md",
+      "title": "Product",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "product",
+      "summary": "codewiki gives Pi a repo-local, docs-first navigation and execution contract for development projects.",
+      "owners": [
+        "product"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/system/extension/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/system/extension/overview.md",
+      "title": "Extension Runtime",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "system",
+      "summary": "Extension owns bootstrap, four-tab status rendering, resume execution, and internal roadmap and session operations for repo-local wikis discovered from current cwd or targeted explicitly by repo path or picker.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/system/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/system/overview.md",
+      "title": "System Overview",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "system",
+      "summary": "codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
+      "owners": [
+        "architecture"
+      ],
+      "tags": []
+    },
+    {
+      "id": "code:extensions/codewiki",
+      "kind": "code_path",
+      "path": "extensions/codewiki"
+    },
+    {
+      "id": "code:skills/codewiki",
+      "kind": "code_path",
+      "path": "skills/codewiki"
+    },
+    {
+      "id": "code:scripts",
+      "kind": "code_path",
+      "path": "scripts"
+    },
+    {
+      "id": "code:.wiki",
+      "kind": "code_path",
+      "path": ".wiki"
+    },
+    {
+      "id": "doc:.wiki/knowledge/system/package/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/system/package/overview.md",
+      "title": "Package Surface",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "system",
+      "summary": "codewiki ships one extension and one skill as a globally installable Pi package surface with a small public workflow centered on bootstrap, status, resume, and separate configuration.",
+      "owners": [
+        "architecture"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/system/rules/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/system/rules/overview.md",
+      "title": "System Rules",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "system",
+      "summary": "System-level documentation contract for maintaining codewiki itself with hidden knowledge, machine evidence, roadmap state, and status read models.",
+      "owners": [
+        "docs"
+      ],
+      "tags": []
+    },
+    {
+      "id": "doc:.wiki/knowledge/system/templates/overview.md",
+      "kind": "doc",
+      "path": ".wiki/knowledge/system/templates/overview.md",
+      "title": "Templates and Rebuild",
+      "doc_type": "spec",
+      "state": "active",
+      "group": "system",
+      "summary": "Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": []
+    },
+    {
+      "id": "code:extensions/codewiki/templates.ts",
+      "kind": "code_path",
+      "path": "extensions/codewiki/templates.ts"
+    },
+    {
+      "id": "code:scripts/rebuild_docs_meta.py",
+      "kind": "code_path",
+      "path": "scripts/rebuild_docs_meta.py"
+    },
+    {
+      "id": "doc:wiki/roadmap.md",
+      "kind": "doc",
+      "path": "wiki/roadmap.md",
+      "title": "Roadmap",
+      "doc_type": "roadmap",
+      "state": "active",
+      "group": "",
+      "summary": "Numbered, trackable delta tasks for codewiki.",
+      "owners": [
+        "engineering"
+      ],
+      "tags": []
+    },
+    {
+      "id": "research_collection:.wiki/evidence/inspiration.jsonl",
+      "kind": "research_collection",
+      "path": ".wiki/evidence/inspiration.jsonl",
+      "entry_count": 2
+    },
+    {
+      "id": "research_entry:RES-001",
+      "kind": "research_entry",
+      "research_id": "RES-001",
+      "title": "Karpathy LLM Wiki pattern",
+      "summary": "Persistent compiled wiki sits between raw sources and query-time reasoning; index and chronological log matter because knowledge should compound instead of being re-derived every query.",
+      "web_link": "https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f",
+      "updated": "2026-04-16",
+      "tags": [
+        "inspiration",
+        "navigation",
+        "wiki"
+      ]
+    },
+    {
+      "id": "research_entry:RES-002",
+      "kind": "research_entry",
+      "research_id": "RES-002",
+      "title": "lucasastorian/llmwiki implementation",
+      "summary": "Production implementation shows useful navigation ideas: path-based wiki tree, overview hub, log chronology, search/read/write MCP tools, citation rendering, and batch reads for broad navigation across many docs.",
+      "web_link": "https://github.com/lucasastorian/llmwiki",
+      "updated": "2026-04-16",
+      "tags": [
+        "inspiration",
+        "mcp",
+        "navigation"
+      ]
+    },
+    {
+      "id": "task:TASK-001",
+      "kind": "roadmap_task",
+      "task_id": "TASK-001",
+      "title": "Finish simplified research/specs/roadmap refactor",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "architecture",
+      "summary": "Replace legacy top-level taxonomy with simplified contract across templates, runtime prompts, README, and package docs.",
+      "updated": "2026-04-16",
+      "labels": [
+        "refactor",
+        "v2"
+      ]
+    },
+    {
+      "id": "code:extensions/codewiki/index.ts",
+      "kind": "code_path",
+      "path": "extensions/codewiki/index.ts"
+    },
+    {
+      "id": "code:README.md",
+      "kind": "code_path",
+      "path": "README.md"
+    },
+    {
+      "id": "code:skills/codewiki/SKILL.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/SKILL.md"
+    },
+    {
+      "id": "task:TASK-002",
+      "kind": "roadmap_task",
+      "task_id": "TASK-002",
+      "title": "Generate brownfield spec hierarchy from repo structure",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "bootstrap",
+      "summary": "Setup/bootstrap now infer first-pass boundary specs from meaningful repo structure so brownfield repos start closer to real ownership seams.",
+      "updated": "2026-04-17",
+      "labels": [
+        "brownfield",
+        "bootstrap"
+      ]
+    },
+    {
+      "id": "code:extensions/codewiki/bootstrap.ts",
+      "kind": "code_path",
+      "path": "extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "id": "code:scripts/smoke-test.mjs",
+      "kind": "code_path",
+      "path": "scripts/smoke-test.mjs"
+    },
+    {
+      "id": "task:TASK-003",
+      "kind": "roadmap_task",
+      "task_id": "TASK-003",
+      "title": "Emit roadmap-ready tasks from drift audits",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Self-drift and code-drift flows should output roadmap task objects so unresolved deltas can be promoted with minimal manual rewriting.",
+      "updated": "2026-04-16",
+      "labels": [
+        "roadmap",
+        "automation"
+      ]
+    },
+    {
+      "id": "task:TASK-004",
+      "kind": "roadmap_task",
+      "task_id": "TASK-004",
+      "title": "Decide compact history strategy after archive deprecation",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "process",
+      "summary": "Need explicit answer for how historical docs changes are preserved once archive is no longer default top-level bucket.",
+      "updated": "2026-04-17",
+      "labels": [
+        "history",
+        "archive"
+      ]
+    },
+    {
+      "id": "task:TASK-005",
+      "kind": "roadmap_task",
+      "task_id": "TASK-005",
+      "title": "Support roadmap update and close mutations",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "agent-workflow",
+      "summary": "After append flow, package should let agents update or close existing roadmap tasks without manual roadmap JSON editing.",
+      "updated": "2026-04-17",
+      "labels": [
+        "roadmap",
+        "automation",
+        "follow-up"
+      ]
+    },
+    {
+      "id": "task:TASK-006",
+      "kind": "roadmap_task",
+      "task_id": "TASK-006",
+      "title": "Link Pi sessions to roadmap tasks",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Keep Pi session JSONL native, append custom task-link entries, and read active task focus directly from Pi session state instead of maintaining repo-owned session caches.",
+      "updated": "2026-04-17",
+      "labels": [
+        "sessions",
+        "roadmap",
+        "pi"
+      ]
+    },
+    {
+      "id": "task:TASK-007",
+      "kind": "roadmap_task",
+      "task_id": "TASK-007",
+      "title": "Expand smoke coverage for full public command surface",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "testing",
+      "summary": "Smoke tests should fail if any documented public command disappears from the packaged extension.",
+      "updated": "2026-04-17",
+      "labels": [
+        "testing",
+        "dogfood",
+        "public-surface"
+      ]
+    },
+    {
+      "id": "task:TASK-008",
+      "kind": "roadmap_task",
+      "task_id": "TASK-008",
+      "title": "Support global install with cwd-based wiki discovery",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "architecture",
+      "summary": "Extension runtime should load from a global Pi package install while discovering the active repo-local wiki from current cwd.",
+      "updated": "2026-04-17",
+      "labels": [
+        "pi",
+        "install",
+        "discovery"
+      ]
+    },
+    {
+      "id": "code:extensions/codewiki/project-root.ts",
+      "kind": "code_path",
+      "path": "extensions/codewiki/project-root.ts"
+    },
+    {
+      "id": "task:TASK-009",
+      "kind": "roadmap_task",
+      "task_id": "TASK-009",
+      "title": "Prototype roadmap browsing interactions for Pi",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "agent-workflow",
+      "summary": "Extension delivered roadmap-browsing groundwork that validated task inspection flows before the public UX was later consolidated into fewer commands.",
+      "updated": "2026-04-17",
+      "labels": [
+        "roadmap",
+        "tui",
+        "pi"
+      ]
+    },
+    {
+      "id": "task:TASK-010",
+      "kind": "roadmap_task",
+      "task_id": "TASK-010",
+      "title": "Consolidate public UX into four intelligent wiki commands",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Refactor the public command surface down to /wiki-bootstrap, /wiki-status, /wiki-fix, and /wiki-review while keeping roadmap/task/session internals and granular tools behind the scenes.",
+      "updated": "2026-04-17",
+      "labels": [
+        "ux",
+        "commands",
+        "agent-workflow"
+      ]
+    },
+    {
+      "id": "task:TASK-011",
+      "kind": "roadmap_task",
+      "task_id": "TASK-011",
+      "title": "Add roadmap-state read model and first-party roadmap widget",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Generate a read-only roadmap-state UI model and render a compact first-party roadmap widget so users can track focused, in-progress, and next tasks inside Pi without expanding the public command surface or persisting session caches.",
+      "updated": "2026-04-17",
+      "labels": [
+        "roadmap",
+        "tui",
+        "ux"
+      ]
+    },
+    {
+      "id": "task:TASK-012",
+      "kind": "roadmap_task",
+      "task_id": "TASK-012",
+      "title": "Rename package surface from codebase-wiki to codewiki",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "migration",
+      "summary": "Rename package, extension, skill, tool, repo, and runtime identifiers from codebase-wiki/codebase_wiki to codewiki.",
+      "updated": "2026-04-17",
+      "labels": [
+        "rename",
+        "package-surface",
+        "migration"
+      ]
+    },
+    {
+      "id": "code:package.json",
+      "kind": "code_path",
+      "path": "package.json"
+    },
+    {
+      "id": "task:TASK-013",
+      "kind": "roadmap_task",
+      "task_id": "TASK-013",
+      "title": "Review codewiki skill and global AGENTS alignment",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "docs",
+      "summary": "Review codewiki skill guidance and global AGENTS overlay against the Karpathy-style baseline and align naming around codewiki.",
+      "updated": "2026-04-17",
+      "labels": [
+        "agents",
+        "skill",
+        "docs"
+      ]
+    },
+    {
+      "id": "task:TASK-014",
+      "kind": "roadmap_task",
+      "task_id": "TASK-014",
+      "title": "Support self-dogfood migration to wiki and .wiki",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "migration",
+      "summary": "Let codewiki discover and operate a self-hosted repo using wiki/.wiki so this repo can dogfood the agreed structure.",
+      "updated": "2026-04-18",
+      "labels": [
+        "dogfood",
+        "wiki-root",
+        "migration"
+      ]
+    },
+    {
+      "id": "task:TASK-015",
+      "kind": "roadmap_task",
+      "task_id": "TASK-015",
+      "title": "Add wiki-code implementation resume command",
+      "status": "done",
+      "priority": "medium",
+      "task_kind": "agent-workflow",
+      "summary": "Expose a user-facing wiki-code command that resumes the focused roadmap task or picks the next open task and queues implementation work.",
+      "updated": "2026-04-18",
+      "labels": [
+        "commands",
+        "roadmap",
+        "implementation"
+      ]
+    },
+    {
+      "id": "task:TASK-016",
+      "kind": "roadmap_task",
+      "task_id": "TASK-016",
+      "title": "Add explicit repo targeting and fallback project picker for wiki commands",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Let global wiki commands accept an explicit repo path, offer a project picker when cwd has no wiki, and explain global-vs-local targeting clearly in command errors.",
+      "updated": "2026-04-18",
+      "labels": [
+        "global-install",
+        "targeting",
+        "ux"
+      ]
+    },
+    {
+      "id": "task:TASK-017",
+      "kind": "roadmap_task",
+      "task_id": "TASK-017",
+      "title": "Add explicit repo targeting to internal codewiki tools",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Let internal codewiki tools accept explicit repo paths so global installs work cleanly for tool-driven mutations outside repo cwd.",
+      "updated": "2026-04-18",
+      "labels": [
+        "global-install",
+        "tools",
+        "targeting"
+      ]
+    },
+    {
+      "id": "task:TASK-018",
+      "kind": "roadmap_task",
+      "task_id": "TASK-018",
+      "title": "Design and implement status dock v1",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "agent-workflow",
+      "summary": "Replace the flat wiki-status experience with a status-state read model and a unified persistent dock that highlights spec drift, roadmap coverage, and next action at a glance.",
+      "updated": "2026-04-18",
+      "labels": [
+        "status-dock",
+        "ux",
+        "drift",
+        "roadmap"
+      ]
+    },
+    {
+      "id": "task:TASK-019",
+      "kind": "roadmap_task",
+      "task_id": "TASK-019",
+      "title": "Keep status dock visible across new global sessions and replace wiki-status follow-up with roadmap next task",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "ux",
+      "summary": "Keep the status dock visible across global/new-session fallback and make /wiki-status surface the next roadmap task directly in deterministic output.",
+      "updated": "2026-04-18",
+      "labels": [
+        "status-dock",
+        "wiki-status",
+        "ux"
+      ]
+    },
+    {
+      "id": "task:TASK-020",
+      "kind": "roadmap_task",
+      "task_id": "TASK-020",
+      "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
+      "status": "in_progress",
+      "priority": "high",
+      "task_kind": "architecture",
+      "summary": "Refactor the status panel into a minimal control room with circle-only health, a repo-only header, wiki grouped as Product/System/Clients, a kanban-style roadmap by phase gate, named agents, a minimal channels list, and footer-only ambient summary while keeping authored `wiki/ux` on disk for now.",
+      "updated": "2026-04-22",
+      "labels": [
+        "status",
+        "wiki-status",
+        "panel-first",
+        "info-architecture",
+        "pi-tui"
+      ]
+    },
+    {
+      "id": "task:TASK-021",
+      "kind": "roadmap_task",
+      "task_id": "TASK-021",
+      "title": "Migrate codewiki to a .wiki-only knowledge contract",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "migration",
+      "summary": "Complete the .wiki-only migration closure by removing remaining registry/backlinks compatibility artifacts, cleaning stale generated outputs, and verifying the live repo runs cleanly on the graph-first derived contract.",
+      "updated": "2026-04-24",
+      "labels": [
+        "migration",
+        "dogfood",
+        ".wiki-only",
+        "graph",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "task:TASK-022",
+      "kind": "roadmap_task",
+      "task_id": "TASK-022",
+      "title": "Make goal quality first-class across foundational docs and task metadata",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "architecture",
+      "summary": "Made goal quality first-class across foundational docs, starter templates, roadmap task metadata, generated views, and smoke coverage.",
+      "updated": "2026-04-20",
+      "labels": [
+        "goals",
+        "intent",
+        "verification",
+        "foundations"
+      ]
+    },
+    {
+      "id": "task:TASK-023",
+      "kind": "roadmap_task",
+      "task_id": "TASK-023",
+      "title": "Add multi-cadence heartbeat drift analysis across product, system, UX, and code",
+      "status": "done",
+      "priority": "critical",
+      "task_kind": "architecture",
+      "summary": "Refined heartbeat lanes so freshness is modeled as work-first: each lane now advertises causal work triggers, fallback max-age protection, and work-based stale reasons surfaced in generated status state and runtime status views.",
+      "updated": "2026-04-20",
+      "labels": [
+        "heartbeat",
+        "drift",
+        "automation",
+        "cadence"
+      ]
+    },
+    {
+      "id": "task:TASK-024",
+      "kind": "roadmap_task",
+      "task_id": "TASK-024",
+      "title": "Turn status surfaces into a resume-first startup control room",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "ux",
+      "summary": "Turned status surfaces into a resume-first startup control room by adding a deterministic generated resume view to status-state and making runtime summary, dock, panel, and text output prioritize focused work, verification cues, and heartbeat context over passive health-only reporting.",
+      "updated": "2026-04-20",
+      "labels": [
+        "status",
+        "resume",
+        "startup",
+        "tui"
+      ]
+    },
+    {
+      "id": "task:TASK-025",
+      "kind": "roadmap_task",
+      "task_id": "TASK-025",
+      "title": "Add proposal-to-roadmap promotion and causality-preserving dedupe",
+      "status": "in_progress",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Add proposal-to-roadmap promotion and causality-preserving dedupe so same-user parallel Pi sessions can work in one repo without duplicate tasks, visible collisions, or any user-facing need to manage internal roadmap mutation tools.",
+      "updated": "2026-04-23",
+      "labels": [
+        "roadmap",
+        "dedupe",
+        "causality",
+        "automation"
+      ]
+    },
+    {
+      "id": "task:TASK-026",
+      "kind": "roadmap_task",
+      "task_id": "TASK-026",
+      "title": "Build a task todo-research-implement-verify-done loop with evidence gates",
+      "status": "in_progress",
+      "priority": "high",
+      "task_kind": "agent-workflow",
+      "summary": "Strengthen task execution so roadmap tasks move through one parent-owned `todo -> research -> implement -> verify -> done` progression with structured evidence, low-friction phase drivers, and blocked state treated as a card signal rather than a separate board column.",
+      "updated": "2026-04-22",
+      "labels": [
+        "tasks",
+        "review",
+        "testing",
+        "closure"
+      ]
+    },
+    {
+      "id": "task:TASK-027",
+      "kind": "roadmap_task",
+      "task_id": "TASK-027",
+      "title": "Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config",
+      "status": "done",
+      "priority": "high",
+      "task_kind": "migration",
+      "summary": "Remove deprecated public commands so codewiki's visible workflow converges on bootstrap, status, resume, and config with Alt+W as the status shortcut.",
+      "updated": "2026-04-24",
+      "labels": [
+        "commands",
+        "ux",
+        "status",
+        "resume",
+        "migration"
+      ]
+    },
+    {
+      "id": "task:TASK-028",
+      "kind": "roadmap_task",
+      "task_id": "TASK-028",
+      "title": "Add git-backed revision correlation and freshness tracking across wiki state",
+      "status": "todo",
+      "priority": "high",
+      "task_kind": "architecture",
+      "summary": "Deepen codewiki integration with git by anchoring heartbeat, evidence, status, and task state to commits plus authored-spec digests so drift and resume logic can detect stale intent safely.",
+      "updated": "2026-04-20",
+      "labels": [
+        "git",
+        "versioning",
+        "freshness",
+        "correlation",
+        "digests"
+      ]
+    },
+    {
+      "id": "task:TASK-029",
+      "kind": "roadmap_task",
+      "task_id": "TASK-029",
+      "title": "Add agent execution visibility to status read model and panel",
+      "status": "todo",
+      "priority": "high",
+      "task_kind": "architecture",
+      "summary": "Expose who is doing what and when by deriving named agent execution rows with task ownership, mode, status, last action, and constraints into the status panel and roadmap cards.",
+      "updated": "2026-04-22",
+      "labels": [
+        "agents",
+        "status",
+        "sessions",
+        "coordination"
+      ]
+    },
+    {
+      "id": "task:TASK-030",
+      "kind": "roadmap_task",
+      "task_id": "TASK-030",
+      "title": "Define pluggable channel routing for agent communications",
+      "status": "todo",
+      "priority": "medium",
+      "task_kind": "architecture",
+      "summary": "Define a pluggable channels contract while keeping the first `Channels` tab minimal: add-channel affordance plus the list of already added channels.",
+      "updated": "2026-04-22",
+      "labels": [
+        "channels",
+        "status",
+        "communications",
+        "pluggable"
+      ]
+    },
+    {
+      "id": "task:TASK-031",
+      "kind": "roadmap_task",
+      "task_id": "TASK-031",
+      "title": "Rename UX pillar to Clients in authored wiki taxonomy",
+      "status": "todo",
+      "priority": "medium",
+      "task_kind": "migration",
+      "summary": "Track the deferred authored taxonomy rename so status surfaces can say Clients now while the on-disk authored pillar remains `wiki/ux` until a later migration.",
+      "updated": "2026-04-22",
+      "labels": [
+        "clients-pillar"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/roadmap.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/clients/surfaces/status-panel.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/product/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/extension/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "code:extensions/codewiki"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "code:skills/codewiki"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "code:scripts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/overview.md",
+      "to": "code:.wiki"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/package/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/rules/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "doc:wiki/roadmap.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.wiki/knowledge/system/templates/overview.md",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:.wiki/roadmap.json"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:README.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:wiki/roadmap.md",
+      "to": "doc:wiki/index.md"
+    },
+    {
+      "kind": "collection_contains_entry",
+      "from": "research_collection:.wiki/evidence/inspiration.jsonl",
+      "to": "research_entry:RES-001"
+    },
+    {
+      "kind": "collection_contains_entry",
+      "from": "research_collection:.wiki/evidence/inspiration.jsonl",
+      "to": "research_entry:RES-002"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-001",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-001",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-001",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-001",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-001",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-001",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-001",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-001",
+      "to": "research_entry:RES-001"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-001",
+      "to": "research_entry:RES-002"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-002",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-002",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-002",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-002",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-002",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-002",
+      "to": "research_entry:RES-001"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-002",
+      "to": "research_entry:RES-002"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-003",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-003",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-003",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-003",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-003",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-003",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-003",
+      "to": "research_entry:RES-001"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-004",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-004",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-004",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-005",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-005",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-005",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-006",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-006",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-006",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-006",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-006",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-006",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-006",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-006",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-007",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-007",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-007",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-008",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-008",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-008",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:extensions/codewiki/project-root.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-008",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-009",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-009",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-009",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-009",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-009",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-010",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-010",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-010",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-010",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-010",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-010",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-010",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-010",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-011",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-011",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-011",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-011",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-011",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-012",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-012",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-012",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:package.json"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-012",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-013",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-013",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-013",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-014",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-014",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-014",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-014",
+      "to": "code:extensions/codewiki/project-root.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-014",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-014",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-014",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-014",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-015",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-015",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-015",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-015",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-015",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-015",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-015",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-016",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-016",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-016",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-016",
+      "to": "code:extensions/codewiki/project-root.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-016",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-016",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-016",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-017",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-017",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-017",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-017",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-017",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-017",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/system/templates/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-018",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-018",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-019",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-019",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-019",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-019",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-019",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-019",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-019",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-020",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-020",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-020",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-020",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-020",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-021",
+      "to": "doc:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:extensions/codewiki/bootstrap.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-021",
+      "to": "code:.wiki"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-021",
+      "to": "research_entry:RES-001"
+    },
+    {
+      "kind": "task_research",
+      "from": "task:TASK-021",
+      "to": "research_entry:RES-002"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-022",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-022",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-022",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-022",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-022",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-022",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-022",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-022",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-023",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-023",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-023",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-023",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-023",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-023",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-023",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-024",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-024",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-024",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-024",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-024",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-024",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-024",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-025",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-025",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-025",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-025",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-025",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-025",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-025",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-026",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-026",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-026",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-026",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-026",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-026",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-026",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-027",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-027",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-027",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-027",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-027",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-028",
+      "to": "doc:.wiki/knowledge/system/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-028",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-028",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-028",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-028",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-028",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-028",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-028",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-028",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-029",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-029",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-029",
+      "to": "doc:.wiki/knowledge/clients/surfaces/roadmap.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-029",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-029",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-029",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-029",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-029",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-030",
+      "to": "doc:.wiki/knowledge/product/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-030",
+      "to": "doc:.wiki/knowledge/system/package/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-030",
+      "to": "doc:.wiki/knowledge/system/extension/overview.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-030",
+      "to": "doc:.wiki/knowledge/clients/surfaces/status-panel.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-030",
+      "to": "doc:.wiki/knowledge/system/rules/overview.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-030",
+      "to": "code:extensions/codewiki/index.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-030",
+      "to": "code:extensions/codewiki/templates.ts"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-030",
+      "to": "code:scripts/rebuild_docs_meta.py"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-030",
+      "to": "code:scripts/smoke-test.mjs"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-030",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "task_spec",
+      "from": "task:TASK-031",
+      "to": "doc:.wiki/knowledge/clients/overview.md"
+    }
+  ],
+  "views": {
+    "docs": {
+      "all_paths": [
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md",
+        "wiki/roadmap.md"
+      ],
+      "spec_paths": [
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/knowledge/clients/surfaces/roadmap.md",
+        ".wiki/knowledge/clients/surfaces/status-panel.md",
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/extension/overview.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/knowledge/system/package/overview.md",
+        ".wiki/knowledge/system/rules/overview.md",
+        ".wiki/knowledge/system/templates/overview.md"
+      ],
+      "by_group": {
+        "product": [
+          ".wiki/knowledge/product/overview.md"
+        ],
+        "system": [
+          ".wiki/knowledge/system/extension/overview.md",
+          ".wiki/knowledge/system/overview.md",
+          ".wiki/knowledge/system/package/overview.md",
+          ".wiki/knowledge/system/rules/overview.md",
+          ".wiki/knowledge/system/templates/overview.md"
+        ],
+        "clients": [
+          ".wiki/knowledge/clients/overview.md",
+          ".wiki/knowledge/clients/surfaces/roadmap.md",
+          ".wiki/knowledge/clients/surfaces/status-panel.md"
+        ]
+      },
+      "by_type": {
+        "spec": [
+          ".wiki/knowledge/clients/overview.md",
+          ".wiki/knowledge/clients/surfaces/roadmap.md",
+          ".wiki/knowledge/clients/surfaces/status-panel.md",
+          ".wiki/knowledge/product/overview.md",
+          ".wiki/knowledge/system/extension/overview.md",
+          ".wiki/knowledge/system/overview.md",
+          ".wiki/knowledge/system/package/overview.md",
+          ".wiki/knowledge/system/rules/overview.md",
+          ".wiki/knowledge/system/templates/overview.md"
+        ],
+        "roadmap": [
+          "wiki/roadmap.md"
+        ],
+        "doc": []
+      }
+    },
+    "roadmap": {
+      "task_ids": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "TASK-011",
+        "TASK-012",
+        "TASK-013",
+        "TASK-014",
+        "TASK-015",
+        "TASK-016",
+        "TASK-017",
+        "TASK-018",
+        "TASK-019",
+        "TASK-020",
+        "TASK-021",
+        "TASK-022",
+        "TASK-023",
+        "TASK-024",
+        "TASK-025",
+        "TASK-026",
+        "TASK-027",
+        "TASK-028",
+        "TASK-029",
+        "TASK-030",
+        "TASK-031"
+      ],
+      "open_task_ids": [
+        "TASK-020",
+        "TASK-025",
+        "TASK-026",
+        "TASK-028",
+        "TASK-029",
+        "TASK-030",
+        "TASK-031"
+      ],
+      "in_progress_task_ids": [
+        "TASK-020",
+        "TASK-025",
+        "TASK-026"
+      ],
+      "todo_task_ids": [
+        "TASK-028",
+        "TASK-029",
+        "TASK-030",
+        "TASK-031"
+      ],
+      "blocked_task_ids": [],
+      "done_task_ids": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "TASK-011",
+        "TASK-012",
+        "TASK-013",
+        "TASK-014",
+        "TASK-015",
+        "TASK-016",
+        "TASK-017",
+        "TASK-018",
+        "TASK-019",
+        "TASK-021",
+        "TASK-022",
+        "TASK-023",
+        "TASK-024",
+        "TASK-027"
+      ],
+      "cancelled_task_ids": [],
+      "recent_task_ids": [
+        "TASK-027",
+        "TASK-021",
+        "TASK-025",
+        "TASK-031",
+        "TASK-030",
+        "TASK-029",
+        "TASK-026",
+        "TASK-020",
+        "TASK-028",
+        "TASK-024",
+        "TASK-023",
+        "TASK-022",
+        "TASK-019",
+        "TASK-018",
+        "TASK-017",
+        "TASK-016",
+        "TASK-015",
+        "TASK-014",
+        "TASK-013",
+        "TASK-012",
+        "TASK-011",
+        "TASK-010",
+        "TASK-009",
+        "TASK-008",
+        "TASK-007",
+        "TASK-006",
+        "TASK-005",
+        "TASK-004",
+        "TASK-002",
+        "TASK-003",
+        "TASK-001"
+      ],
+      "status_counts": {
+        "done": 24,
+        "in_progress": 3,
+        "todo": 4
+      }
+    },
+    "research": {
+      "collection_paths": [
+        ".wiki/evidence/inspiration.jsonl"
+      ],
+      "entry_ids": [
+        "RES-001",
+        "RES-002"
+      ]
+    },
+    "code": {
+      "paths": [
+        ".wiki",
+        "README.md",
+        "extensions/codewiki",
+        "extensions/codewiki/bootstrap.ts",
+        "extensions/codewiki/index.ts",
+        "extensions/codewiki/project-root.ts",
+        "extensions/codewiki/templates.ts",
+        "package.json",
+        "scripts",
+        "scripts/rebuild_docs_meta.py",
+        "scripts/smoke-test.mjs",
+        "skills/codewiki",
+        "skills/codewiki/SKILL.md"
+      ]
+    }
+  }
+}

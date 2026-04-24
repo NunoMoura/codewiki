@@ -1,74 +1,57 @@
 {
-  "version": 2,
-  "project_name": "codewiki",
-  "index_title": "codewiki Index",
-  "docs_root": "wiki",
-  "specs_root": "wiki/specs",
-  "research_root": "wiki/research",
-  "index_path": "wiki/index.md",
-  "roadmap_path": "wiki/roadmap.json",
-  "roadmap_doc_path": "wiki/roadmap.md",
-  "roadmap_events_path": ".wiki/roadmap-events.jsonl",
-  "meta_root": ".wiki",
-  "sources_root": ".wiki/sources",
-  "generated_files": [
-    "wiki/index.md",
-    "wiki/roadmap.md",
-    ".wiki/registry.json",
-    ".wiki/backlinks.json",
-    ".wiki/lint.json",
-    ".wiki/roadmap-state.json",
-    ".wiki/status-state.json"
-  ],
-  "lint": {
-    "repo_markdown": [
-      "README.md"
-    ],
-    "forbidden_headings": [
-      "## Purpose",
-      "## When To Read",
-      "## Content",
-      "## Summary",
-      "## How To Use This Doc"
-    ],
-    "word_count_warn": 1600,
-    "word_count_exempt": [
-      "wiki/roadmap.md"
-    ]
-  },
-  "codewiki": {
-    "name": "codewiki package wiki",
-    "rebuild_command": [
-      "python",
-      "scripts/rebuild_docs_meta.py"
-    ],
-    "self_drift_scope": {
-      "include": [
-        "wiki/index.md",
-        "wiki/roadmap.json",
-        "wiki/roadmap.md",
-        "wiki/specs/**",
-        "wiki/research/**"
-      ],
-      "exclude": [
-        "wiki/_templates/**"
-      ]
-    },
-    "code_drift_scope": {
-      "docs": [
-        "wiki/roadmap.md",
-        "wiki/specs/**"
-      ],
-      "repo_docs": [
-        "README.md"
-      ],
-      "code": [
-        "extensions/**",
-        "skills/**",
-        "scripts/**",
-        "package.json",
-        "README.md"
-      ]
-    }
-  }
+	"version": 2,
+	"project_name": "codewiki",
+	"index_title": "codewiki Index",
+	"docs_root": ".wiki/knowledge",
+	"specs_root": ".wiki/knowledge",
+	"evidence_root": ".wiki/evidence",
+	"index_path": "wiki/index.md",
+	"roadmap_path": ".wiki/roadmap.json",
+	"roadmap_doc_path": "wiki/roadmap.md",
+	"roadmap_events_path": ".wiki/roadmap-events.jsonl",
+	"meta_root": ".wiki",
+	"sources_root": ".wiki/sources",
+	"generated_files": [
+		"wiki/index.md",
+		"wiki/roadmap.md",
+		".wiki/graph.json",
+		".wiki/lint.json",
+		".wiki/roadmap-state.json",
+		".wiki/status-state.json"
+	],
+	"lint": {
+		"repo_markdown": ["README.md"],
+		"forbidden_headings": [
+			"## Purpose",
+			"## When To Read",
+			"## Content",
+			"## Summary",
+			"## How To Use This Doc"
+		],
+		"word_count_warn": 1600,
+		"word_count_exempt": ["wiki/roadmap.md"]
+	},
+	"codewiki": {
+		"name": "codewiki package wiki",
+		"rebuild_command": ["python", "scripts/rebuild_docs_meta.py"],
+		"self_drift_scope": {
+			"include": [
+				".wiki/knowledge/**/*.md",
+				".wiki/roadmap.json",
+				".wiki/evidence/**"
+			],
+			"exclude": []
+		},
+		"code_drift_scope": {
+			"docs": [".wiki/knowledge/**/*.md"],
+			"repo_docs": ["README.md"],
+			"code": [
+				"extensions/**",
+				"skills/**",
+				"scripts/**",
+				"package.json",
+				"README.md"
+			]
+		}
+	}
 }

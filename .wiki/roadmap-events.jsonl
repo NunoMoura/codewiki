@@ -1,3 +1,68 @@
 {"ts":"2026-04-17T15:10:00Z","action":"append","id":"TASK-011","title":"Add roadmap-state read model and first-party roadmap widget","status":"done","priority":"high"}
 {"ts":"2026-04-18T07:51:33Z","action":"append","id":"TASK-018","title":"Design and implement status dock v1","status":"in_progress","priority":"critical"}
 {"ts":"2026-04-18T08:12:02Z","action":"close","id":"TASK-018","title":"Design and implement status dock v1","status":"done","priority":"critical"}
+{"ts":"2026-04-18T08:57:53Z","action":"append","id":"TASK-019","title":"Keep status dock visible across new global sessions and replace wiki-status follow-up with roadmap next task","status":"todo","priority":"high"}
+{"ts":"2026-04-18T09:06:23Z","action":"close","id":"TASK-019","title":"Keep status dock visible across new global sessions and replace wiki-status follow-up with roadmap next task","status":"done","priority":"high"}
+{"ts":"2026-04-18T22:46:37Z","action":"append","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"todo","priority":"high"}
+{"ts":"2026-04-18T22:53:49Z","action":"update","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"in_progress","priority":"high"}
+{"ts":"2026-04-19T02:12:46Z","action":"update","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"in_progress","priority":"high"}
+{"ts":"2026-04-19T02:33:49Z","action":"update","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"in_progress","priority":"high"}
+{"ts":"2026-04-19T02:42:56Z","action":"update","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"in_progress","priority":"high"}
+{"ts":"2026-04-19T20:43:23Z","action":"append","id":"TASK-021","title":"Refactor codewiki contract around intent-first wiki and machine-managed .wiki state","status":"in_progress","priority":"critical"}
+{"ts":"2026-04-19T20:59:12Z","action":"close","id":"TASK-021","title":"Refactor codewiki contract around intent-first wiki and machine-managed .wiki state","status":"done","priority":"critical"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-022","title":"Make goal quality first-class across foundational docs and task metadata","status":"todo","priority":"critical"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-023","title":"Add multi-cadence heartbeat drift analysis across product, system, UX, and code","status":"todo","priority":"critical"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-024","title":"Turn status surfaces into a resume-first startup control room","status":"todo","priority":"high"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-025","title":"Add proposal-to-roadmap promotion and causality-preserving dedupe","status":"todo","priority":"high"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-026","title":"Build a task implementation-review-test-closure loop with evidence gates","status":"todo","priority":"high"}
+{"ts":"2026-04-20T05:54:31Z","action":"append","id":"TASK-027","title":"Demote /wiki-fix and /wiki-code behind automated panel-first workflows","status":"todo","priority":"medium"}
+{"ts":"2026-04-20T06:09:04Z","action":"append","id":"TASK-028","title":"Add git-backed revision correlation and freshness tracking across wiki state","status":"todo","priority":"high"}
+{"ts":"2026-04-20T06:16:32Z","action":"update","id":"TASK-022","title":"Make goal quality first-class across foundational docs and task metadata","status":"in_progress","priority":"critical"}
+{"ts":"2026-04-20T06:18:35Z","action":"close","id":"TASK-022","title":"Make goal quality first-class across foundational docs and task metadata","status":"done","priority":"critical"}
+{"ts":"2026-04-20T07:21:28Z","action":"update","id":"TASK-023","title":"Add multi-cadence heartbeat drift analysis across product, system, UX, and code","status":"in_progress","priority":"critical"}
+{"ts":"2026-04-20T07:28:01Z","action":"close","id":"TASK-023","title":"Add multi-cadence heartbeat drift analysis across product, system, UX, and code","status":"done","priority":"critical"}
+{"ts":"2026-04-20T07:39:38Z","action":"update","id":"TASK-023","title":"Add multi-cadence heartbeat drift analysis across product, system, UX, and code","status":"in_progress","priority":"critical"}
+{"ts":"2026-04-20T08:46:41Z","action":"close","id":"TASK-023","title":"Add multi-cadence heartbeat drift analysis across product, system, UX, and code","status":"done","priority":"critical"}
+{"ts":"2026-04-20T08:48:41Z","action":"update","id":"TASK-024","title":"Turn status surfaces into a resume-first startup control room","status":"in_progress","priority":"high"}
+{"ts":"2026-04-20T21:54:00Z","action":"close","id":"TASK-024","title":"Turn status surfaces into a resume-first startup control room","status":"done","priority":"high"}
+{"ts":"2026-04-20T22:01:18Z","action":"update","id":"TASK-025","title":"Add proposal-to-roadmap promotion and causality-preserving dedupe","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T00:28:12Z","action":"update","id":"TASK-025","title":"Add proposal-to-roadmap promotion and causality-preserving dedupe","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T03:24:38Z","action":"update","id":"TASK-026","title":"Build a task implementation-review-test-closure loop with evidence gates","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T20:41:25Z","action":"update","id":"TASK-026","title":"Build a task implementation-review-test-closure loop with evidence gates","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T20:49:19Z","action":"update","id":"TASK-020","title":"Shift status UX to panel-first with optional status line summary","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T22:43:06Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T22:43:07Z","action":"update","id":"TASK-027","title":"Collapse public command surface to /wiki-bootstrap, /wiki-status, and /wiki-resume","status":"todo","priority":"high"}
+{"ts":"2026-04-21T22:43:48Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T22:43:48Z","action":"update","id":"TASK-027","title":"Collapse public command surface to /wiki-bootstrap, /wiki-status, and /wiki-resume","status":"todo","priority":"high"}
+{"ts":"2026-04-21T22:44:06Z","action":"append","id":"TASK-029","title":"Add agent execution visibility to status read model and panel","status":"todo","priority":"high"}
+{"ts":"2026-04-21T22:44:06Z","action":"append","id":"TASK-030","title":"Define pluggable channel routing for agent communications","status":"todo","priority":"medium"}
+{"ts":"2026-04-21T22:44:30Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-21T22:44:31Z","action":"update","id":"TASK-027","title":"Collapse public command surface to /wiki-bootstrap, /wiki-status, and /wiki-resume","status":"todo","priority":"high"}
+{"ts":"2026-04-22T00:27:45Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-22T00:27:45Z","action":"update","id":"TASK-027","title":"Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config","status":"todo","priority":"high"}
+{"ts":"2026-04-22T00:27:45Z","action":"update","id":"TASK-029","title":"Add agent execution visibility to status read model and panel","status":"todo","priority":"high"}
+{"ts":"2026-04-22T00:27:45Z","action":"update","id":"TASK-030","title":"Define pluggable channel routing for agent communications","status":"todo","priority":"medium"}
+{"ts":"2026-04-22T00:27:59Z","action":"update","id":"TASK-021","title":"Refactor codewiki contract around intent-first wiki and machine-managed .wiki state","status":"todo","priority":"critical"}
+{"ts":"2026-04-22T00:28:21Z","action":"update","id":"TASK-021","title":"Refactor codewiki contract around intent-first wiki and machine-managed .wiki state","status":"todo","priority":"critical"}
+{"ts":"2026-04-22T00:28:49Z","action":"append","id":"TASK-031","title":"Rename UX pillar to Clients in authored wiki taxonomy","status":"todo","priority":"medium"}
+{"ts":"2026-04-22T00:51:12Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-22T01:33:53Z","action":"update","id":"TASK-020","title":"Refactor status panel around Wiki, Roadmap, Agents, and Channels","status":"in_progress","priority":"high"}
+{"ts":"2026-04-22T01:33:53Z","action":"update","id":"TASK-026","title":"Build a task todo-research-implement-verify-done loop with evidence gates","status":"in_progress","priority":"high"}
+{"ts":"2026-04-23T02:07:41Z","action":"update","id":"TASK-021","title":"Refactor codewiki contract around intent-first wiki and machine-managed .wiki state","status":"todo","priority":"critical"}
+{"ts":"2026-04-23T02:08:02Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"todo","priority":"critical"}
+{"ts":"2026-04-23T02:08:15Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"implement","priority":"critical"}
+{"ts":"2026-04-23T02:32:58Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"verify","priority":"critical"}
+{"ts":"2026-04-23T03:08:54Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"implement","priority":"critical"}
+{"ts":"2026-04-23T03:46:13Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"verify","priority":"critical"}
+{"ts":"2026-04-23T06:23:27Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"implement","priority":"critical"}
+{"ts":"2026-04-23T06:39:49Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"verify","priority":"critical"}
+{"ts":"2026-04-23T06:52:36Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"implement","priority":"critical"}
+{"ts":"2026-04-23T22:09:41Z","action":"update","id":"TASK-027","title":"Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config","status":"todo","priority":"high"}
+{"ts":"2026-04-23T22:43:49Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"verify","priority":"critical"}
+{"ts":"2026-04-23T22:45:09Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"implement","priority":"critical"}
+{"ts":"2026-04-23T22:47:00Z","action":"update","id":"TASK-025","title":"Add proposal-to-roadmap promotion and causality-preserving dedupe","status":"in_progress","priority":"high"}
+{"ts":"2026-04-24T01:40:24Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"done","priority":"critical"}
+{"ts":"2026-04-24T01:40:32Z","action":"update","id":"TASK-021","title":"Migrate codewiki to a .wiki-only knowledge contract","status":"done","priority":"critical"}
+{"ts":"2026-04-24T02:46:16Z","action":"update","id":"TASK-027","title":"Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config","status":"implement","priority":"high"}
+{"ts":"2026-04-24T02:46:34Z","action":"update","id":"TASK-027","title":"Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config","status":"done","priority":"high"}
+{"ts":"2026-04-24T02:46:44Z","action":"update","id":"TASK-027","title":"Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config","status":"done","priority":"high"}

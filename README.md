@@ -21,23 +21,22 @@ That is the right shape for this package:
 Public command surface is intentionally small:
 
 - `/wiki-bootstrap [project name] [--force]`
-- `/wiki-status [docs|code|both] [repo-path]`
-  - also controls dock modes: `dock auto|pin|off|minimal|standard|full [repo-path]`
-- `/wiki-fix [docs|code|both] [repo-path]`
-- `/wiki-review [idea|architecture] [repo-path]`
-- `/wiki-code [TASK-###] [repo-path]`
+- `Alt+W`
+  - toggles live Codewiki status panel
+- `/wiki-config`
+  - opens interactive Codewiki configuration with option lists and toggles
+  - optional args remain available for direct fallback updates: `[show|auto|pin|off|minimal|standard|full] [repo-path]`
+- `/wiki-resume [TASK-###] [repo-path]`
 
 ### Internal agent tools
 
 - `codewiki_setup`
 - `codewiki_bootstrap`
-- `codewiki_rebuild`
-- `codewiki_status`
-- `codewiki_roadmap_append`
-- `codewiki_roadmap_update`
-- `codewiki_task_session_link`
+- `codewiki_state`
+- `codewiki_task`
+- `codewiki_session`
 
-All internal `codewiki_*` tools also accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo.
+All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one canonical task mutation entrypoint (`codewiki_task`), and one runtime session entrypoint (`codewiki_session`).
 
 ### Skill
 
@@ -46,37 +45,39 @@ All internal `codewiki_*` tools also accept optional `repoPath` so agents can ta
 The skill tells Pi when to use the package for:
 
 - intelligent bootstrap/onboarding of a repo-local wiki
-- wiki health/status review across docs, code, or both
-- drift correction across docs, code, or both
-- senior review from idea or architecture perspectives
+- wiki bootstrap and configuration
+- status inspection and roadmap resumption
 - internal roadmap/task/session operations behind the simplified UX
 
 ## Simplified model
 
-Codewiki now centers on only three canonical artifact classes:
+Codewiki now centers on a hidden `.wiki` knowledge system plus derived views:
 
-- **research** — compact evidence capture in wiki/research JSONL collections
-- **specs** — intended system truth in wiki/specs markdown hierarchy
-- **roadmap** — top-level container for tracked delta work in `wiki/roadmap.json`
+- **knowledge** — canonical markdown knowledge nodes under `.wiki/knowledge/product/`, `.wiki/knowledge/clients/`, and `.wiki/knowledge/system/`
+- **sources** — raw provenance under `.wiki/sources/`
+- **evidence** — compact machine-managed validation findings in `.wiki/evidence/*.jsonl`
+- **roadmap** — machine-managed tracked delta in `.wiki/roadmap.json`
+- **events** — portable mutation history in `.wiki/events.jsonl`
 - **task** — atomic work unit inside roadmap, canonically named `TASK-###`
 
-Generated navigation stays separate:
+Derived navigation and UI views stay separate:
 
 - `wiki/index.md`
 - `wiki/roadmap.md`
-- `.wiki/registry.json`
-- `.wiki/backlinks.json`
+- `.wiki/graph.json` as the primary derived relationship graph and shared view substrate
 - `.wiki/lint.json`
 - `.wiki/roadmap-state.json`
 - `.wiki/status-state.json`
+- `.wiki/graph.json` is the shared derived relationship substrate; no separate registry/backlinks compatibility layer is required
 
 Pi session linkage stays local and operational:
 
 - Pi session JSONL remains Pi-owned
 - codewiki appends custom session entries linking tasks to sessions
 - current task focus is read live from Pi session state at runtime
+- `.wiki/graph.json` is the derived relationship graph and shared view substrate compiled from knowledge, evidence, and roadmap truth
 - `.wiki/roadmap-state.json` is the denormalized roadmap/task read model
-- `.wiki/status-state.json` is the denormalized status-dock read model used by the built-in dock and any future third-party UI readers
+- `.wiki/status-state.json` is the denormalized status read model used by the built-in summary/panel surfaces and any future third-party UI readers
 
 Task identity and compatibility:
 
@@ -86,11 +87,18 @@ Task identity and compatibility:
 
 Working rule:
 
-- research = evidence
-- specs = desired state
-- roadmap = container for trackable delta from desired state to current reality
+- `.wiki/knowledge/` = canonical desired state
+- `.wiki/sources/` = raw provenance
+- `.wiki/evidence/` = machine-managed validation evidence
+- `.wiki/roadmap.json` = machine-managed tracked delta from desired state to current reality
+- `.wiki/events.jsonl` = portable lifecycle log
 - task = atomic work unit inside roadmap
 - Pi session = native execution history linked to tasks
+
+Goal quality rule:
+
+- foundational docs should define clear goals, success signals, non-goals, and verification expectations
+- roadmap tasks should capture the same shape in machine-managed metadata so implementation, review, and closure can follow explicit intent instead of guesswork
 
 ## Install
 
@@ -166,10 +174,9 @@ python3 -m pip install pyyaml
 6. Use:
 
 ```text
-/wiki-status both
-/wiki-fix docs
-/wiki-review architecture
-/wiki-code
+/wiki-config
+/wiki-status
+/wiki-resume
 ```
 
 ### Existing repo
@@ -188,11 +195,11 @@ Minimum expected contract:
 
 ```json
 {
-  "docs_root": "wiki",
-  "specs_root": "wiki/specs",
-  "research_root": "wiki/research",
+  "docs_root": ".wiki/knowledge",
+  "specs_root": ".wiki/knowledge",
+  "evidence_root": ".wiki/evidence",
   "index_path": "wiki/index.md",
-  "roadmap_path": "wiki/roadmap.json",
+  "roadmap_path": ".wiki/roadmap.json",
   "roadmap_doc_path": "wiki/roadmap.md",
   "roadmap_events_path": ".wiki/roadmap-events.jsonl",
   "meta_root": ".wiki",
@@ -206,7 +213,8 @@ The rebuild command should update at least:
 
 - `wiki/index.md`
 - `wiki/roadmap.md`
-- `.wiki/registry.json`
+- `.wiki/graph.json`
+- `.wiki/graph.json`
 - `.wiki/lint.json`
 - `.wiki/roadmap-state.json`
 - `.wiki/status-state.json`
@@ -221,28 +229,27 @@ Recommended loop:
 2. Run:
 
 ```text
-/wiki-status both
-/wiki-status dock pin /home/nunoc/projects/codewiki
+/wiki-config
+/wiki-config pin /home/nunoc/projects/codewiki
 ```
 
-3. If status comes back yellow or red, run:
+3. If status comes back yellow or red, inspect it through:
 
 ```text
-/wiki-fix both
+/wiki-status
 ```
 
-4. When you want a higher-level assessment, run:
+4. When roadmap work is ready to continue, run:
 
 ```text
-/wiki-review architecture
-/wiki-review idea
+/wiki-resume
 ```
 
 5. Let the agent use internal roadmap/task tools when work maps to existing tasks or when unresolved delta should become a new task.
 
 Working rule for this repo:
 
-- edit canonical sources (`README.md`, spec docs under `wiki/specs/`, `wiki/roadmap.json`, runtime code)
+- edit canonical sources (`README.md`, knowledge docs under `.wiki/knowledge/`, `.wiki/roadmap.json`, runtime code)
 - rebuild generated outputs after changes
 - do not hand-edit generated outputs under `wiki/index.md`, `wiki/roadmap.md`, or `.wiki/*.json`
 
@@ -290,37 +297,39 @@ Starter bootstrap includes:
 - `.wiki/events.jsonl`
 - `.wiki/sources/`
 - `scripts/rebuild_docs_meta.py`
-- `wiki/specs/product.md`
-- `wiki/specs/system/overview.md`
-- `wiki/specs/shared/overview.md`
-- inferred first-pass boundary `overview.md` files under `wiki/specs/` when brownfield structure is detected
-- `wiki/research/inspiration.jsonl`
-- `wiki/roadmap.json`
-- generated outputs like `wiki/index.md`, `wiki/roadmap.md`, `.wiki/registry.json`, `.wiki/backlinks.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`, `.wiki/status-state.json`
+- `.wiki/knowledge/product/overview.md`
+- `.wiki/knowledge/clients/overview.md`
+- `.wiki/knowledge/clients/surfaces/roadmap.md`
+- `.wiki/knowledge/clients/surfaces/status-panel.md`
+- `.wiki/knowledge/system/overview.md`
+- inferred first-pass boundary `overview.md` files under `.wiki/knowledge/system/` when brownfield structure is detected
+- `.wiki/evidence/inspiration.jsonl`
+- `.wiki/roadmap.json`
+- generated outputs like `wiki/index.md`, `wiki/roadmap.md`, `.wiki/graph.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`, and `.wiki/status-state.json`
 
 ### Status, fix, and review
 
-The status dock is now the primary status UX. It stays above the editor when enabled, reads `.wiki/status-state.json`, highlights tracked vs untracked drift, shows roadmap completion, and recommends the next command at a glance.
+`Alt+W` is now the primary status UX. It opens a live status panel backed by the same drift-first read model and lets the user inspect the current roadmap/task situation without consuming permanent editor space.
 
-`/wiki-status` is now the expanded inspector and dock control surface. It rebuilds metadata, renders the same drift-first model in text form for `docs`, `code`, or `both`, and queues a concise direction review instead of acting like the only status surface.
+The always-on surface is optional. When enabled it uses Pi's status area for a one-line summary instead of a tall above-editor dock. `/wiki-config` owns summary visibility, pinning, and panel density through an interactive settings panel.
 
-`/wiki-fix` is the corrective command. It uses repo evidence first, asks only high-value clarifying questions when needed, then fixes drift in `docs`, `code`, or `both`.
+`/wiki-status` is the canonical inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
-`/wiki-review` is the senior analysis command. Use `idea` for business value and product coherence review, or `architecture` for technical execution and design review.
+`/wiki-config`, `/wiki-status`, and `/wiki-resume` all accept an optional repo path when relevant. If Pi is running outside a repo with `wiki/` and `.wiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 
-`/wiki-status`, `/wiki-fix`, `/wiki-review`, and `/wiki-code` all accept an optional repo path. If Pi is running outside a repo with `wiki/` and `.wiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
+`/wiki-resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task.
 
-`/wiki-code` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task.
+`/wiki-resume` runs inside the parent-owned task loop. Runtime status and resume output show the active phase plus latest structured evidence summary. Internal agent flows should read state through `codewiki_state`, record canonical task progress and evidence through `codewiki_task`, and keep runtime session focus separate through `codewiki_session`.
 
-### Status dock
+### Status summary and panel
 
-The extension renders a persistent status dock above the editor. It reads `.wiki/status-state.json` plus `.wiki/roadmap-state.json`, prefers the current repo under cwd, can fall back to a pinned repo when Pi is running from a more global path, and supports three densities:
+The extension renders an optional one-line status summary plus a live status panel toggled with `Alt+W`. Both read `.wiki/status-state.json` plus `.wiki/roadmap-state.json`, prefer the current repo under cwd, keep the most recently resolved wiki repo visible across global and new-session starts when cwd is elsewhere, can still fall back to a pinned repo, and support three panel densities:
 
 - `minimal`
 - `standard`
 - `full`
 
-Use `/wiki-status dock auto|pin|off|minimal|standard|full [repo-path]` to configure it.
+Use `/wiki-config` to open the interactive configuration panel. Direct args like `/wiki-config pin /path/to/repo` remain available as fallback for scripting or non-UI flows.
 
 ### Runtime operations
 
@@ -329,22 +338,22 @@ Per Pi's settings model, project settings are loaded from `<cwd>/.pi/settings.js
 Runtime rule:
 
 - first resolve the nearest ancestor containing `.wiki/config.json` from current cwd
-- if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-fix`, `/wiki-review`, and `/wiki-code` may target an explicit repo path instead
+- if no repo-local wiki exists from current cwd, `/wiki-status`, `/wiki-config`, and `/wiki-resume` may target an explicit repo path instead
 - in UI mode, those commands may offer a picker across candidate repos discovered below current cwd
-- dock visibility and pinned-repo fallback are user-owned UI preferences, not repo-owned wiki files
+- summary visibility and pinned-repo fallback are user-owned UI preferences, not repo-owned wiki files
 - if no wiki exists yet, `/wiki-bootstrap` targets the enclosing git repo root when present, else the current working directory
 
 It then uses that repo config to:
 
-- find docs, specs, research, index, and roadmap paths
+- find authored docs, evidence, index, and roadmap paths
 - run the configured rebuild command
-- read `.wiki/registry.json`, `.wiki/lint.json`, `.wiki/events.jsonl`
+- read `.wiki/graph.json`, `.wiki/lint.json`, and `.wiki/events.jsonl`
 - build semantic audit scopes from `.wiki/config.json`
-- append structured roadmap tasks to `wiki/roadmap.json` when audits uncover real unresolved delta
+- append structured roadmap tasks to `.wiki/roadmap.json` when audits uncover real unresolved delta
 - update or close existing roadmap tasks through package-native mutation tools instead of manual JSON edits
 - append Pi custom session entries that link current session to roadmap tasks
 - read active task context from Pi session state at runtime
-- maintain `.wiki/roadmap-state.json` and `.wiki/status-state.json` so the first-party status dock and any future third-party UI can read compact roadmap/task/status state without mutating canonical files
+- maintain `.wiki/graph.json`, `.wiki/roadmap-state.json`, and `.wiki/status-state.json` so the first-party summary/panel surfaces and any future third-party UI can read compact derived state without mutating canonical files
 
 That means one global package install can operate across many repos, while each repo keeps its own `wiki/`, `.wiki/`, and rebuild contract.
 
@@ -352,9 +361,9 @@ That means one global package install can operate across many repos, while each 
 
 This package assumes:
 
-- specs are source of truth for intended design
-- research is compact evidence, not longform archive by default
-- roadmap is freshest delta tracker between specs and code
+- `.wiki/knowledge/` is source of truth for intended product, clients, and system design
+- `.wiki/evidence/` is compact machine-managed validation output, not longform archive by default
+- `.wiki/roadmap.json` is freshest tracked delta between authored docs and code
 - Pi sessions are execution history, not canonical roadmap truth
 - history defaults to git for full diffs, `.wiki/events.jsonl` for compact lifecycle events, and `.wiki/roadmap-events.jsonl` for roadmap mutations; package does not generate a separate compact-history file by default
 - code is implementation evidence

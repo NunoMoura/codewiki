@@ -20,10 +20,10 @@ Starter repos should receive:
 - `.wiki/config.json`
 - `.wiki/events.jsonl`
 - `.wiki/sources/`
-- `wiki/specs/**`
+- `.wiki/knowledge/**`
 - inferred first-pass boundary `overview.md` files when bootstrap can recognize meaningful brownfield ownership seams
-- `wiki/research/*.jsonl`
-- `wiki/roadmap.json`
+- `.wiki/evidence/*.jsonl`
+- `.wiki/roadmap.json`
 - `scripts/rebuild_docs_meta.py`
 
 ## Generated outputs
@@ -32,11 +32,10 @@ Rebuild should deterministically produce:
 
 - `wiki/index.md`
 - `wiki/roadmap.md`
-- `.wiki/registry.json`
-- `.wiki/backlinks.json`
+- `.wiki/graph.json` as the primary derived relationship graph and shared view substrate
 - `.wiki/lint.json`
 - `.wiki/roadmap-state.json` as a generated read-only roadmap/task UI model
-- `.wiki/status-state.json` as a generated read-only status-dock UI model
+- `.wiki/status-state.json` as a generated read-only status summary/panel UI model
 
 ## History strategy
 
@@ -48,7 +47,7 @@ Runtime should be able to append new roadmap tasks, update existing tasks, close
 
 ## Session link support
 
-Runtime should be able to append Pi custom session entries for task work, read active task context from Pi at runtime, generate `.wiki/roadmap-state.json` plus `.wiki/status-state.json`, and surface current-session focus in the status dock without changing Pi's native session JSONL schema. Generated roadmap and dock flows should tolerate legacy `ROADMAP-###` task ids while repos migrate to canonical `TASK-###` ids.
+Runtime should be able to append Pi custom session entries for task work, read active task context from Pi at runtime, generate `.wiki/roadmap-state.json` plus `.wiki/status-state.json`, and surface current-session focus in the status summary or panel without changing Pi's native session JSONL schema. Generated roadmap and status-surface flows should tolerate legacy `ROADMAP-###` task ids while repos migrate to canonical `TASK-###` ids.
 
 ## Lint responsibilities
 
@@ -62,8 +61,8 @@ Rebuild should validate:
 
 ## Related docs
 
-- [Product](../product.md)
-- [System Overview](../system/overview.md)
+- [Product](../../product/overview.md)
+- [System Overview](../overview.md)
 - [Extension Runtime](../extension/overview.md)
-- [Shared Rules](../shared/overview.md)
-- [Roadmap](../../roadmap.md)
+- [System Rules](../rules/overview.md)
+- [Roadmap](../../../../wiki/roadmap.md)

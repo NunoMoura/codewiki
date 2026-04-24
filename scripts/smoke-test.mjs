@@ -13,6 +13,7 @@ const repoRoot = resolve(__dirname, "..");
 const packageJsonPath = resolve(repoRoot, "package.json");
 const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 const require = createRequire(import.meta.url);
+const agentDir = resolve(process.env.HOME ?? resolve(repoRoot, ".."), ".pi", "agent");
 
 function findPiRoot() {
   const fromEnv = process.env.PI_CODING_AGENT_ROOT;
@@ -91,7 +92,8 @@ async function main() {
   extendNodePath(piRoot);
   const python = ensurePythonYamlAvailable();
 
-  const { DefaultResourceLoader } = await import(pathToFileURL(resolve(piRoot, "dist", "index.js")).href);
+  const { DefaultResourceLoader, initTheme } = await import(pathToFileURL(resolve(piRoot, "dist", "index.js")).href);
+  initTheme("dark", false);
 
   assert.equal(packageJson.name, "codewiki", "Unexpected package name");
   assert.ok(Array.isArray(packageJson.pi?.extensions) && packageJson.pi.extensions.length === 1, "Expected one Pi extension in package.json");
@@ -104,7 +106,7 @@ async function main() {
     mkdirSync(resolve(projectDir, ".pi"), { recursive: true });
     writeFileSync(resolve(projectDir, ".pi", "settings.json"), JSON.stringify({ packages: [repoRoot] }, null, 2));
 
-    const loader = new DefaultResourceLoader({ cwd: projectDir });
+    const loader = new DefaultResourceLoader({ cwd: projectDir, agentDir });
     await loader.reload();
 
     const extensionResult = loader.getExtensions();
@@ -118,24 +120,32 @@ async function main() {
     const commandNames = [...extension.commands.keys()];
     ensureIncludes(commandNames, [
       "wiki-bootstrap",
+      "wiki-config",
       "wiki-status",
-      "wiki-fix",
-      "wiki-review",
-      "wiki-code",
+      "wiki-resume",
     ], "extension commands");
-    assert.equal(commandNames.length, 5, `Expected exactly 5 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`);
-    for (const legacyCommand of ["wiki-setup", "wiki-rebuild", "wiki-lint", "wiki-roadmap", "wiki-self-drift", "wiki-code-drift", "wiki-task"]) {
+    assert.equal(commandNames.length, 4, `Expected exactly 4 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`);
+    for (const legacyCommand of ["wiki-fix", "wiki-review", "wiki-code", "wiki-setup", "wiki-rebuild", "wiki-lint", "wiki-roadmap", "wiki-self-drift", "wiki-code-drift", "wiki-task"]) {
       assert.ok(!commandNames.includes(legacyCommand), `Legacy public command should not be registered: ${legacyCommand}`);
     }
+    assert.ok(extension.shortcuts.has("alt+w"), "Expected alt+w shortcut for toggling the status panel");
     ensureIncludes([...extension.tools.keys()], [
       "codewiki_setup",
       "codewiki_bootstrap",
+      "codewiki_state",
+      "codewiki_task",
+      "codewiki_session",
+    ], "extension tools");
+    for (const removedTool of [
       "codewiki_rebuild",
       "codewiki_status",
       "codewiki_roadmap_append",
       "codewiki_roadmap_update",
       "codewiki_task_session_link",
-    ], "extension tools");
+      "codewiki_task_loop_update",
+    ]) {
+      assert.ok(!extension.tools.has(removedTool), `Removed internal tool should not be registered: ${removedTool}`);
+    }
 
     const skillResult = loader.getSkills();
     assert.equal(skillResult.diagnostics.length, 0, `Unexpected skill diagnostics: ${skillResult.diagnostics.map((d) => d.message).join(" | ")}`);
@@ -163,7 +173,7 @@ async function main() {
     const blankDir = resolve(outsideDir, "blank-worktree");
     mkdirSync(blankDir, { recursive: true });
 
-    const loader = new DefaultResourceLoader({ cwd: projectDir });
+    const loader = new DefaultResourceLoader({ cwd: projectDir, agentDir });
     await loader.reload();
     const extension = loader.getExtensions().extensions.find((item) => item.path.startsWith(repoRoot));
     assert.ok(extension, "Expected package extension to load for bootstrap smoke test");
@@ -230,43 +240,43 @@ async function main() {
       ...toolCtx,
       cwd: outsideDir,
     };
-    const rebuildTool = extension.tools.get("codewiki_rebuild");
-    assert.ok(rebuildTool && typeof rebuildTool.definition?.execute === "function", "Rebuild tool missing execute function");
-    const rebuildResult = await rebuildTool.definition.execute(
-      "rebuild-smoke",
-      { repoPath: projectDir },
+    const stateTool = extension.tools.get("codewiki_state");
+    assert.ok(stateTool && typeof stateTool.definition?.execute === "function", "State tool missing execute function");
+    const stateResult = await stateTool.definition.execute(
+      "state-tool-smoke",
+      { repoPath: projectDir, refresh: true, include: ["summary", "roadmap", "graph", "session"] },
       undefined,
       undefined,
       outsideToolCtx,
     );
-    assert.match(rebuildResult.content[0]?.text ?? "", /Smoke Wiki .* rebuild ok/i, "Rebuild tool should accept explicit repoPath from outside cwd");
+    assert.equal(stateResult.details.repo.repo_root, projectDir, "State tool should accept explicit repoPath from outside cwd");
+    assert.match(stateResult.content[0]?.text ?? "", /open \d+; next/i, "State tool should return compact summary text");
 
-    const statusTool = extension.tools.get("codewiki_status");
-    assert.ok(statusTool && typeof statusTool.definition?.execute === "function", "Status tool missing execute function");
-    const statusResult = await statusTool.definition.execute(
-      "status-tool-smoke",
-      { repoPath: projectDir },
-      undefined,
-      undefined,
-      outsideToolCtx,
-    );
-    assert.match(statusResult.content[0]?.text ?? "", /Wiki: Smoke Wiki/, "Status tool should accept explicit repoPath from outside cwd");
-
-    const roadmapAppendTool = extension.tools.get("codewiki_roadmap_append");
-    assert.ok(roadmapAppendTool && typeof roadmapAppendTool.definition?.execute === "function", "Roadmap append tool missing execute function");
-    await roadmapAppendTool.definition.execute(
-      "roadmap-append-smoke",
+    const taskTool = extension.tools.get("codewiki_task");
+    assert.ok(taskTool && typeof taskTool.definition?.execute === "function", "Task tool missing execute function");
+    await taskTool.definition.execute(
+      "task-create-smoke",
       {
         repoPath: projectDir,
+        action: "create",
         tasks: [{
           title: "Smoke audit task",
           priority: "high",
           kind: "agent-workflow",
           summary: "Track unresolved smoke-test delta.",
-          spec_paths: ["wiki/specs/product.md"],
+          spec_paths: [".wiki/knowledge/product/overview.md"],
           code_paths: ["scripts/rebuild_docs_meta.py"],
           research_ids: [],
           labels: ["smoke"],
+          goal: {
+            outcome: "Smoke repo can persist goal-shaped roadmap task metadata.",
+            acceptance: [
+              "Appended task stores success signals.",
+              "Generated roadmap view renders goal metadata.",
+            ],
+            non_goals: ["Exercise every future automation workflow in smoke coverage."],
+            verification: ["Append task through package tool.", "Rebuild generated outputs."],
+          },
           delta: {
             desired: "Smoke repo has structured task append flow.",
             current: "Task was not yet appended.",
@@ -278,49 +288,137 @@ async function main() {
       undefined,
       outsideToolCtx,
     );
-    const appendedRoadmap = JSON.parse(readFileSync(resolve(projectDir, "wiki", "roadmap.json"), "utf8"));
+    const appendedRoadmap = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "roadmap.json"), "utf8"));
     const appendedTaskId = Array.isArray(appendedRoadmap.order)
       ? appendedRoadmap.order.find((id) => appendedRoadmap.tasks[id]?.title === "Smoke audit task")
       : undefined;
     assert.ok(appendedTaskId, "Roadmap order missing appended task before update");
-
-    const roadmapUpdateTool = extension.tools.get("codewiki_roadmap_update");
-    assert.ok(roadmapUpdateTool && typeof roadmapUpdateTool.definition?.execute === "function", "Roadmap update tool missing execute function");
-    await roadmapUpdateTool.definition.execute(
-      "roadmap-update-smoke",
+    const duplicateCreateResult = await taskTool.definition.execute(
+      "task-create-duplicate-smoke",
       {
         repoPath: projectDir,
+        action: "create",
+        tasks: [{
+          title: "Smoke audit task",
+          priority: "high",
+          kind: "agent-workflow",
+          summary: "Duplicate smoke delta should be coordinated automatically.",
+          spec_paths: [".wiki/knowledge/product/overview.md"],
+          code_paths: ["scripts/rebuild_docs_meta.py"],
+          labels: ["smoke"],
+        }],
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.match(duplicateCreateResult.content?.[0]?.text ?? "", /reused/i, "Task tool should coordinate duplicate task intent automatically");
+
+    await taskTool.definition.execute(
+      "task-update-smoke-1",
+      {
+        repoPath: projectDir,
+        action: "update",
         taskId: appendedTaskId,
-        status: "done",
-        summary: "Close smoke-test delta through existing roadmap task mutation.",
-        labels: ["smoke", "closed"],
-        delta: {
-          current: "Task was appended and then closed through package mutation tool.",
-          closure: "Update existing roadmap task through package tool and rebuild generated outputs.",
+        patch: { phase: "research" },
+        evidence: { result: "pass", summary: "Research complete; ready to implement." },
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    await taskTool.definition.execute(
+      "task-update-smoke-2",
+      {
+        repoPath: projectDir,
+        action: "update",
+        taskId: appendedTaskId,
+        patch: { phase: "implement" },
+        evidence: { result: "pass", summary: "Implementation complete; ready to verify." },
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    await taskTool.definition.execute(
+      "task-update-smoke-3",
+      {
+        repoPath: projectDir,
+        action: "update",
+        taskId: appendedTaskId,
+        patch: { phase: "verify" },
+        evidence: { result: "pass", summary: "Verification passed.", checks_run: ["npm test"] },
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    await taskTool.definition.execute(
+      "task-close-smoke",
+      {
+        repoPath: projectDir,
+        action: "close",
+        taskId: appendedTaskId,
+        summary: "Close smoke-test delta through canonical task tool after verify pass.",
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    await taskTool.definition.execute(
+      "task-update-metadata-smoke",
+      {
+        repoPath: projectDir,
+        action: "update",
+        taskId: appendedTaskId,
+        patch: {
+          labels: ["smoke", "closed"],
+          goal: {
+            verification: ["Update existing roadmap task through package tool.", "Rebuild generated outputs after mutation."],
+          },
+          delta: {
+            current: "Task was appended and then moved to done through the unified task tool before a follow-up metadata update.",
+            closure: "Update existing roadmap task through package tool and rebuild generated outputs.",
+          },
         },
       },
       undefined,
       undefined,
       outsideToolCtx,
     );
+    const taskDetailStateResult = await stateTool.definition.execute(
+      "state-task-detail-smoke",
+      { repoPath: projectDir, taskId: appendedTaskId, include: ["task"] },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.equal(taskDetailStateResult.details.task.id, appendedTaskId, "State tool should return requested task detail");
+    assert.equal(taskDetailStateResult.details.task.status, "done", "State tool task detail should reflect canonical task status");
 
-    const taskSessionLinkTool = extension.tools.get("codewiki_task_session_link");
-    assert.ok(taskSessionLinkTool && typeof taskSessionLinkTool.definition?.execute === "function", "Task session link tool missing execute function");
-    await taskSessionLinkTool.definition.execute(
-      "task-link-smoke",
+    const sessionTool = extension.tools.get("codewiki_session");
+    assert.ok(sessionTool && typeof sessionTool.definition?.execute === "function", "Session tool missing execute function");
+    await sessionTool.definition.execute(
+      "session-focus-smoke",
       {
         repoPath: projectDir,
         taskId: "ROADMAP-001",
         action: "focus",
         summary: "Focused smoke session on starter task.",
-        filesTouched: ["extensions/codewiki/index.ts"],
-        spawnedTaskIds: [],
         setSessionName: true,
       },
       undefined,
       undefined,
       outsideToolCtx,
     );
+    const implicitStateResult = await stateTool.definition.execute(
+      "state-outside-implicit-smoke",
+      {},
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.equal(implicitStateResult.details.repo.repo_root, projectDir, "State tool should reuse remembered repo when outside cwd has no local wiki");
     sessionEntries.push({
       type: "custom",
       customType: "codewiki.task-link",
@@ -333,31 +431,100 @@ async function main() {
         spawnedTaskIds: [],
       },
     });
+    const implicitSessionNoteResult = await sessionTool.definition.execute(
+      "session-note-implicit-smoke",
+      {
+        action: "note",
+        summary: "Implicit repo resolution should reuse remembered repo context.",
+        files_touched: ["extensions/codewiki/index.ts"],
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    assert.match(implicitSessionNoteResult.content[0]?.text ?? "", /codewiki session: note TASK-001/i, "Session tool should reuse remembered repo and focused task when outside cwd has no local wiki");
 
     const statusNotifications = [];
-    const fixNotifications = [];
-    const reviewNotifications = [];
-    const codeNotifications = [];
+    const resumeNotifications = [];
+    const resumeBarrierNotifications = [];
     const errorNotifications = [];
     const taskStatuses = [];
+    const statusSummaries = [];
+    const channelInputQueue = [];
     const widgetState = { key: null, content: null, options: null };
-    const renderWidget = () => {
-      assert.equal(widgetState.key, "codewiki-status-dock", "Expected status dock widget key");
-      assert.ok(typeof widgetState.content === "function", "Expected status dock render callback");
-      const instance = widgetState.content(
-        { terminal: { columns: 120 }, requestRender: () => {} },
-        { fg: (_color, text) => text, bold: (text) => text },
-      );
-      return instance.render();
-    };
+    const panelState = { renderedLines: null, terminalInput: null };
+    const configPanelState = { options: null, renderedLines: null, instance: null, error: null, terminalInput: null, widget: null };
+    const configCommand = extension.commands.get("wiki-config");
     const statusCommand = extension.commands.get("wiki-status");
+    const resumeCommand = extension.commands.get("wiki-resume");
+    const statusShortcut = extension.shortcuts.get("alt+w");
+    assert.ok(configCommand && typeof configCommand.handler === "function", "wiki-config command missing handler");
     assert.ok(statusCommand && typeof statusCommand.handler === "function", "wiki-status command missing handler");
-    await statusCommand.handler(`both ${projectDir}`, {
+    assert.ok(resumeCommand && typeof resumeCommand.handler === "function", "wiki-resume command missing handler");
+    assert.ok(statusShortcut && typeof statusShortcut.handler === "function", "alt+w shortcut missing handler");
+    await configCommand.handler("", {
+      cwd: projectDir,
+      isIdle: () => true,
+      sessionManager: toolCtx.sessionManager,
+      ui: {
+        notify: (message, level) => statusNotifications.push({ message, level }),
+        input: async () => undefined,
+        select: async () => undefined,
+        setWidget: (_key, content, options) => {
+          configPanelState.widget = content;
+          configPanelState.options = options;
+          if (typeof content === "function") {
+            const instance = content({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+            configPanelState.instance = instance;
+            configPanelState.renderedLines = instance.render(56);
+          }
+        },
+        onTerminalInput: (handler) => {
+          configPanelState.terminalInput = handler;
+          return () => {
+            configPanelState.terminalInput = null;
+          };
+        },
+      },
+    });
+    assert.deepEqual(configPanelState.options, { placement: "aboveEditor" }, "wiki-config should render as a top widget like status panel");
+    assert.equal(configPanelState.error, null, `wiki-config config panel threw: ${configPanelState.error}`);
+    assert.ok(configPanelState.widget && configPanelState.instance, "wiki-config should render an interactive top-pinned configuration panel");
+    await statusShortcut.handler({
+      cwd: projectDir,
+      isIdle: () => true,
+      sessionManager: toolCtx.sessionManager,
+      ui: {
+        notify: (message, level) => statusNotifications.push({ message, level }),
+        input: async () => channelInputQueue.shift(),
+        select: async () => undefined,
+        setStatus: (key, value) => statusSummaries.push({ key, value }),
+        setWidget: (key, content, options) => {
+          widgetState.key = key;
+          widgetState.content = content;
+          widgetState.options = options;
+        },
+        onTerminalInput: (handler) => {
+          panelState.terminalInput = handler;
+          return () => {
+            panelState.terminalInput = null;
+          };
+        },
+      },
+    });
+    const autoDockPrefs = JSON.parse(readFileSync(resolve(projectDir, ".pi", "codewiki-status.json"), "utf8"));
+    assert.equal(autoDockPrefs.mode, "auto", "wiki-config should keep auto summary mode unless explicitly pinned");
+    assert.equal(autoDockPrefs.lastRepoPath, projectDir, "panel toggle should remember the last resolved repo for future global sessions");
+    widgetState.key = null;
+    widgetState.content = null;
+    widgetState.options = null;
+    await configCommand.handler("auto", {
       cwd: outsideDir,
       isIdle: () => true,
       sessionManager: toolCtx.sessionManager,
       ui: {
         notify: (message, level) => statusNotifications.push({ message, level }),
+        setStatus: (key, value) => statusSummaries.push({ key, value }),
         setWidget: (key, content, options) => {
           widgetState.key = key;
           widgetState.content = content;
@@ -365,12 +532,16 @@ async function main() {
         },
       },
     });
-    await statusCommand.handler(`dock pin ${projectDir}`, {
+    const latestSummary = statusSummaries.at(-1)?.value ?? "";
+    assert.ok(String(latestSummary).startsWith("codewiki: ") && String(latestSummary).split(" · ").length >= 3, "Status summary auto mode should keep a compact extension-labeled health summary outside repo cwd");
+    assert.ok(String(latestSummary).includes("🟢") || String(latestSummary).includes("🟡") || String(latestSummary).includes("🔴"), "Status summary should include a traffic-light circle for repo health");
+    await configCommand.handler(`pin ${projectDir}`, {
       cwd: outsideDir,
       isIdle: () => true,
       sessionManager: toolCtx.sessionManager,
       ui: {
         notify: (message, level) => statusNotifications.push({ message, level }),
+        setStatus: (key, value) => statusSummaries.push({ key, value }),
         setWidget: (key, content, options) => {
           widgetState.key = key;
           widgetState.content = content;
@@ -379,51 +550,20 @@ async function main() {
       },
     });
     const dockPrefs = JSON.parse(readFileSync(resolve(projectDir, ".pi", "codewiki-status.json"), "utf8"));
-    assert.equal(dockPrefs.mode, "pin", "wiki-status dock pin should persist pinned dock mode");
-    assert.equal(dockPrefs.pinnedRepoPath, projectDir, "wiki-status dock pin should persist pinned repo path");
-    const fixCommand = extension.commands.get("wiki-fix");
-    assert.ok(fixCommand && typeof fixCommand.handler === "function", "wiki-fix command missing handler");
-    await fixCommand.handler("docs", {
+    assert.equal(dockPrefs.mode, "pin", "wiki-config pin should persist pinned summary mode");
+    assert.equal(dockPrefs.pinnedRepoPath, projectDir, "wiki-config pin should persist pinned repo path");
+    await resumeCommand.handler("", {
       cwd: outsideDir,
       hasUI: true,
       isIdle: () => true,
       sessionManager: toolCtx.sessionManager,
       ui: {
         custom: async () => projectDir,
-        notify: (message, level) => fixNotifications.push({ message, level }),
-        setWidget: (key, content, options) => {
-          widgetState.key = key;
-          widgetState.content = content;
-          widgetState.options = options;
+        notify: (message, level) => resumeNotifications.push({ message, level }),
+        setStatus: (key, value) => {
+          taskStatuses.push({ key, value });
+          statusSummaries.push({ key, value });
         },
-      },
-    });
-    const reviewCommand = extension.commands.get("wiki-review");
-    assert.ok(reviewCommand && typeof reviewCommand.handler === "function", "wiki-review command missing handler");
-    await reviewCommand.handler(`${projectDir} architecture`, {
-      cwd: outsideDir,
-      isIdle: () => true,
-      sessionManager: toolCtx.sessionManager,
-      ui: {
-        notify: (message, level) => reviewNotifications.push({ message, level }),
-        setWidget: (key, content, options) => {
-          widgetState.key = key;
-          widgetState.content = content;
-          widgetState.options = options;
-        },
-      },
-    });
-    const codeCommand = extension.commands.get("wiki-code");
-    assert.ok(codeCommand && typeof codeCommand.handler === "function", "wiki-code command missing handler");
-    await codeCommand.handler("", {
-      cwd: outsideDir,
-      hasUI: true,
-      isIdle: () => true,
-      sessionManager: toolCtx.sessionManager,
-      ui: {
-        custom: async () => projectDir,
-        notify: (message, level) => codeNotifications.push({ message, level }),
-        setStatus: (key, value) => taskStatuses.push({ key, value }),
         setWidget: (key, content, options) => {
           widgetState.key = key;
           widgetState.content = content;
@@ -432,7 +572,7 @@ async function main() {
       },
     });
 
-    await statusCommand.handler("both", {
+    await configCommand.handler("pin", {
       cwd: blankDir,
       isIdle: () => true,
       sessionManager: toolCtx.sessionManager,
@@ -453,78 +593,203 @@ async function main() {
       },
     });
 
+    await taskTool.definition.execute(
+      "task-verify-fail-smoke",
+      {
+        repoPath: projectDir,
+        action: "update",
+        taskId: "TASK-001",
+        patch: { phase: "verify" },
+        evidence: {
+          result: "fail",
+          summary: "Verification found remaining gaps before done.",
+          checks_run: ["npm test"],
+          files_touched: ["extensions/codewiki/index.ts"],
+          issues: ["Need explicit closure evidence gate."],
+        },
+      },
+      undefined,
+      undefined,
+      outsideToolCtx,
+    );
+    await resumeCommand.handler("TASK-001", {
+      cwd: projectDir,
+      hasUI: true,
+      ui: {
+        notify: (message, level) => resumeNotifications.push({ message, level }),
+        setStatus: (key, value) => taskStatuses.push({ key, value }),
+      },
+      sessionManager: toolCtx.sessionManager,
+    });
+    await resumeCommand.handler("TASK-002", {
+      cwd: projectDir,
+      hasUI: true,
+      ui: {
+        notify: (message, level) => resumeBarrierNotifications.push({ message, level }),
+        setStatus: () => {},
+      },
+      sessionManager: toolCtx.sessionManager,
+    });
+
     const lint = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "lint.json"), "utf8"));
-    const registry = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "registry.json"), "utf8"));
+    const graph = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "graph.json"), "utf8"));
     const config = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "config.json"), "utf8"));
     const indexText = readFileSync(resolve(projectDir, "wiki", "index.md"), "utf8");
-    const systemText = readFileSync(resolve(projectDir, "wiki", "specs", "system", "overview.md"), "utf8");
-    const frontendSpecText = readFileSync(resolve(projectDir, "wiki", "specs", "frontend", "overview.md"), "utf8");
+    const systemText = readFileSync(resolve(projectDir, ".wiki", "knowledge", "system", "overview.md"), "utf8");
+    const frontendSpecText = readFileSync(resolve(projectDir, ".wiki", "knowledge", "system", "frontend", "overview.md"), "utf8");
     const roadmapText = readFileSync(resolve(projectDir, "wiki", "roadmap.md"), "utf8");
-    const roadmapJson = JSON.parse(readFileSync(resolve(projectDir, "wiki", "roadmap.json"), "utf8"));
+    const roadmapJson = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "roadmap.json"), "utf8"));
     const roadmapEvents = readFileSync(resolve(projectDir, ".wiki", "roadmap-events.jsonl"), "utf8");
+    const repoEvents = readFileSync(resolve(projectDir, ".wiki", "events.jsonl"), "utf8");
     const roadmapState = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "roadmap-state.json"), "utf8"));
     const statusState = JSON.parse(readFileSync(resolve(projectDir, ".wiki", "status-state.json"), "utf8"));
-    const widgetLines = renderWidget();
+    let panelLines = panelState.renderedLines ?? [];
     assert.ok(!existsSync(resolve(nestedDir, "wiki")), "Bootstrap should anchor wiki at the existing wiki root, not nested cwd");
 
-    assert.equal(first.created.length, 12, `Expected 12 created starter files including inferred boundary specs, got ${first.created.length}`);
+    assert.equal(first.created.length, 14, `Expected 14 created starter files including client surfaces and inferred boundary specs, got ${first.created.length}`);
     assert.equal(first.updated.length, 0, "Initial bootstrap should not update files");
     assert.equal(second.created.length, 0, "Second bootstrap should not create files");
     assert.equal(second.updated.length, 0, "Second bootstrap should not update files without force");
-    assert.equal(second.skipped.length, 12, `Expected 12 skipped starter files, got ${second.skipped.length}`);
+    assert.equal(second.skipped.length, 14, `Expected 14 skipped starter files, got ${second.skipped.length}`);
     assert.equal(lint.issues.length, 0, `Expected zero lint issues, got ${lint.issues.length}`);
-    assert.ok(Array.isArray(registry.docs) && registry.docs.length >= 7, "Expected generated registry docs including inferred boundary specs");
-    assert.ok(Array.isArray(registry.research) && registry.research.length >= 1, "Expected generated research registry entries");
-    assert.ok(registry.docs.some((doc) => doc.path === "wiki/roadmap.md"), "Expected roadmap.md in generated registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/frontend/overview.md"), "Expected inferred frontend spec in registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/backend/overview.md"), "Expected inferred backend spec in registry");
-    assert.ok(registry.docs.some((doc) => doc.path === "wiki/specs/packages/sdk/overview.md"), "Expected inferred nested package spec in registry");
+    const graphDocNodes = Array.isArray(graph.nodes) ? graph.nodes.filter((node) => node.kind === "doc") : [];
+    const graphResearchNodes = Array.isArray(graph.nodes) ? graph.nodes.filter((node) => node.kind === "research_collection") : [];
+    assert.ok(graphDocNodes.length >= 7, "Expected generated graph doc nodes including inferred boundary specs");
+    assert.ok(graphResearchNodes.length >= 1, "Expected generated graph research nodes");
+    assert.ok(Array.isArray(graph.nodes) && graph.nodes.length >= graphDocNodes.length, "Expected generated graph nodes");
+    assert.ok(Array.isArray(graph.edges) && graph.edges.some((edge) => edge.kind === "task_spec"), "Expected generated graph task→spec edges");
+    assert.ok(graph.views?.docs?.by_group?.system?.includes(".wiki/knowledge/system/overview.md"), "Expected system overview in graph docs-by-group view");
+    assert.ok(graphDocNodes.some((doc) => doc.path === "wiki/roadmap.md"), "Expected roadmap.md in generated graph docs");
+    assert.ok(graphDocNodes.some((doc) => doc.path === ".wiki/knowledge/system/frontend/overview.md"), "Expected inferred frontend spec in graph docs");
+    assert.ok(graphDocNodes.some((doc) => doc.path === ".wiki/knowledge/system/backend/overview.md"), "Expected inferred backend spec in graph docs");
+    assert.ok(graphDocNodes.some((doc) => doc.path === ".wiki/knowledge/system/packages/sdk/overview.md"), "Expected inferred nested package spec in graph docs");
     assert.deepEqual(config.lint.repo_markdown, ["README.md", "backend/**/README.md", "frontend/**/README.md", "packages/sdk/**/README.md"], "Expected inferred repo markdown scope");
     assert.deepEqual(config.codewiki.code_drift_scope.code, ["backend/**", "frontend/**", "packages/sdk/**"], "Expected inferred code drift scope");
     assert.match(indexText, /^# Smoke Wiki Index/m, "Generated index title mismatch");
     assert.match(systemText, /Inferred brownfield boundaries/, "System overview missing inferred boundary section");
-    assert.match(systemText, /\[Frontend\]\(\.\.\/frontend\/overview\.md\)/, "System overview missing inferred frontend link");
+    assert.match(systemText, /\[Frontend\]\(frontend\/overview\.md\)/, "System overview missing inferred frontend link");
     assert.match(frontendSpecText, /^# Frontend/m, "Generated frontend boundary title mismatch");
     assert.match(frontendSpecText, /`frontend`/, "Generated frontend boundary spec missing code path");
     assert.match(roadmapText, /^# Roadmap/m, "Generated roadmap title mismatch");
     assert.ok(roadmapJson.tasks["TASK-001"], "Structured roadmap seed missing");
     assert.ok(!roadmapJson.tasks["ROADMAP-001"], "Canonical roadmap seed should no longer use ROADMAP ids");
-    assert.ok(Object.values(roadmapJson.tasks).some((task) => task.title === "Smoke audit task"), "Roadmap append tool did not persist appended task");
+    assert.ok(Object.values(roadmapJson.tasks).some((task) => task.title === "Smoke audit task"), "Task tool did not persist created task");
     const appendedTaskIdFromJson = Array.isArray(roadmapJson.order) ? roadmapJson.order.find((id) => roadmapJson.tasks[id]?.title === "Smoke audit task") : undefined;
     assert.ok(appendedTaskIdFromJson, "Roadmap order missing appended task");
     assert.match(appendedTaskIdFromJson ?? "", /^TASK-\d+$/, "Appended roadmap task should use canonical TASK ids");
-    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].status, "done", "Roadmap update tool should be able to close an existing task");
-    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].summary, "Close smoke-test delta through existing roadmap task mutation.", "Roadmap update tool should persist summary changes");
-    assert.deepEqual(roadmapJson.tasks[appendedTaskIdFromJson].labels, ["smoke", "closed"], "Roadmap update tool should replace labels");
-    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].delta.current, "Task was appended and then closed through package mutation tool.", "Roadmap update tool should persist delta changes");
+    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].status, "done", "Task tool should be able to close an existing task");
+    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].summary, "Close smoke-test delta through canonical task tool after verify pass.", "Task close action should persist closure summary");
+    assert.deepEqual(roadmapJson.tasks[appendedTaskIdFromJson].labels, ["smoke", "closed"], "Task tool should replace labels");
+    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].goal.outcome, "Smoke repo can persist goal-shaped roadmap task metadata.", "Task create action should persist goal outcome");
+    assert.deepEqual(roadmapJson.tasks[appendedTaskIdFromJson].goal.verification, ["Update existing roadmap task through package tool.", "Rebuild generated outputs after mutation."], "Task tool should replace goal verification steps");
+    assert.equal(roadmapJson.tasks[appendedTaskIdFromJson].delta.current, "Task was appended and then moved to done through the unified task tool before a follow-up metadata update.", "Task tool should persist delta changes");
     assert.match(roadmapText, /Smoke audit task/, "Generated roadmap view missing appended task");
+    assert.match(roadmapText, /Success signals:/, "Generated roadmap view should render task success signals");
     assert.match(roadmapEvents, /"action":"append"/, "Roadmap history missing append mutation");
-    assert.match(roadmapEvents, /"action":"close"/, "Roadmap history missing close mutation");
+    assert.match(roadmapEvents, /"action":"update"/, "Roadmap history missing follow-up task mutation after done transition");
+    assert.match(repoEvents, /"kind":"task_evidence_recorded"/, "Repo event log should record structured evidence when closing a task");
     assert.ok(!existsSync(resolve(projectDir, ".wiki", "task-session-index.json")), "Task session index cache should not be generated");
     assert.equal(roadmapState.version, 2, "Roadmap state should use session-free v2 contract");
     assert.equal(roadmapState.health.color, "green", "Roadmap state should embed deterministic lint health");
     assert.ok(Array.isArray(roadmapState.views.open_task_ids) && roadmapState.views.open_task_ids.length >= 1, "Roadmap state should expose open task ids");
     assert.equal(roadmapState.tasks["TASK-001"].id, "TASK-001", "Roadmap state should carry task identifiers");
+    assert.equal(roadmapState.tasks["TASK-001"].status, "implement", "Task loop failure should sync roadmap task back to implement");
     assert.ok(roadmapState.tasks["TASK-001"].title, "Roadmap state should carry task display data");
+    assert.ok(Array.isArray(roadmapState.tasks["TASK-001"].goal.verification), "Roadmap state should carry task goal metadata");
+    assert.equal(roadmapState.tasks["TASK-001"].loop.phase, "implement", "Roadmap state should send failed verify back to implement phase");
+    assert.equal(roadmapState.tasks["TASK-001"].loop.evidence.verdict, "fail", "Roadmap state should carry latest task evidence verdict");
     assert.equal(statusState.version, 1, "Status state should expose v1 contract");
     assert.equal(statusState.health.color, "green", "Status state should carry deterministic health color");
     assert.ok(Array.isArray(statusState.specs) && statusState.specs.length >= 5, "Status state should carry derived spec rows");
+    assert.ok(Array.isArray(statusState.wiki?.rows) && statusState.wiki.rows.length >= 5, "Status state should expose wiki rows for the primary status tab");
+    assert.ok(Array.isArray(statusState.wiki?.sections) && statusState.wiki.sections.some((section) => section.label === "Product") && statusState.wiki.sections.some((section) => section.label === "System") && statusState.wiki.sections.some((section) => section.label === "Clients"), "Status state should expose Product/System/Clients wiki groups");
+    assert.ok(Array.isArray(statusState.roadmap?.in_progress_task_ids), "Status state should expose roadmap tab task ids");
+    assert.ok(Array.isArray(statusState.roadmap?.columns) && statusState.roadmap.columns.some((column) => column.id === "todo") && statusState.roadmap.columns.some((column) => column.id === "research") && statusState.roadmap.columns.some((column) => column.id === "implement") && statusState.roadmap.columns.some((column) => column.id === "verify") && statusState.roadmap.columns.some((column) => column.id === "done"), "Status state should expose unified kanban task-state columns");
+    assert.ok(Array.isArray(statusState.agents?.rows) && typeof statusState.agents.rows[0]?.name === "string", "Status state should expose named agent rows");
+    assert.equal(statusState.channels?.add_label, "Add channel", "Status state should expose minimal channel-add affordance");
+    assert.ok(Array.isArray(statusState.channels?.rows) && statusState.channels.rows.length === 0, "Status state should keep channels list minimal until user channels are added");
     assert.equal(statusState.bars.spec_mapping.percent, 100, "Smoke repo should have full spec mapping coverage");
     assert.ok(typeof statusState.next_step.command === "string" && statusState.next_step.command.length > 0, "Status state should recommend a next step");
+    assert.equal(statusState.heartbeat.summary.lane_count, 3, "Status state should expose three heartbeat lanes");
+    assert.equal(statusState.heartbeat.summary.freshness_basis, "work-first", "Status state should describe heartbeat freshness as work-first");
+    assert.deepEqual(statusState.heartbeat.summary.high_cadence_lane_ids, ["system_code"], "Status state should classify system↔code as high cadence");
+    assert.ok(statusState.heartbeat.lanes.some((lane) => lane.id === "product_system" && lane.recommendation.command === "/wiki-status"), "Status state should expose heartbeat lane recommendations through wiki-status");
+    assert.ok(statusState.heartbeat.lanes.some((lane) => lane.id === "system_code" && lane.fallback_max_age_hours === 1 && lane.triggers.includes("code_change:mapped")), "Status state should expose work-triggered freshness metadata for heartbeat lanes");
+    assert.equal(statusState.resume.source, "task", "Status state should expose deterministic resume source");
+    assert.match(statusState.resume.command, /^\/wiki-resume TASK-\d+$/, "Status state should expose deterministic resume command");
+    assert.equal(statusState.resume.phase, "implement", "Status state should expose deterministic task phase");
+    assert.ok(typeof statusState.resume.verification === "string" && statusState.resume.verification.length > 0, "Status state should expose a resume verification cue");
+    assert.match(String(statusState.resume.evidence), /Verification found remaining gaps before done/i, "Status state should expose latest evidence summary");
+    assert.ok(typeof statusState.parallel.active_session_count === "number" && statusState.parallel.active_session_count >= 1, "Status state should expose active parallel-session signals");
+    assert.ok(Array.isArray(statusState.parallel.collision_task_ids), "Status state should expose collision task ids array");
     assert.doesNotMatch(roadmapText, /Session links:/, "Generated roadmap view should not persist session linkage metadata");
-    assert.match(statusNotifications[0]?.message ?? "", /Wiki: Smoke Wiki/, "wiki-status should resolve explicit repo paths from outside cwd");
-    assert.match(statusNotifications[0]?.message ?? "", /Tracked drift:/, "wiki-status should summarize tracked drift");
-    assert.match(statusNotifications[0]?.message ?? "", /Direction:/, "wiki-status should provide project direction");
-    assert.equal(widgetState.options?.placement, "aboveEditor", "Status dock should render above the editor");
-    assert.match(widgetLines[0] ?? "", /Smoke Wiki .* GREEN/i, "Status dock header should summarize repo health");
-    assert.match(widgetLines.join("\n"), /Next\s+\/wiki-code TASK-001/i, "Status dock should surface the next command");
-    assert.match(fixNotifications[0]?.message ?? "", /queued docs wiki-fix flow/i, "wiki-fix should queue the requested fix scope");
-    assert.match(reviewNotifications[0]?.message ?? "", /queued architecture review/i, "wiki-review should queue the requested review mode");
-    assert.match(codeNotifications[0]?.message ?? "", /queued implementation for TASK-001/i, "wiki-code should resume implementation from the focused roadmap task");
-    assert.ok(taskStatuses.some((entry) => entry.key === "codewiki-task" && /TASK-001 progress/i.test(String(entry.value))), "wiki-code should refresh task focus status");
+    assert.ok(statusNotifications.every((entry) => !/Wiki: Smoke Wiki/.test(String(entry.message))), "alt+w should prefer opening the panel over posting a long notify when custom UI is available");
+    assert.equal(typeof widgetState.content, "function", "status panel should render as a live top widget");
+    assert.ok(statusSummaries.some((entry) => entry.key === "codewiki-status" && /[🟢🟡🔴]/.test(String(entry.value)) && /Smoke Wiki/.test(String(entry.value))), "panel toggle should refresh the one-line status summary with repo name and traffic-light circle");
+    const widgetInstance = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    panelState.renderedLines = widgetInstance?.render(100) ?? [];
+    panelLines = panelState.renderedLines ?? [];
+    assert.match(panelLines[0] ?? "", /^┌/, "Status panel should render as a framed container");
+    assert.match(panelLines.join("\n"), /Smoke Wiki[\s\S]*\| (🟢|🟡|🔴)/, "Status panel header should contain only repo and traffic-light circle");
+    assert.doesNotMatch(panelLines.join("\n"), /\b(GREEN|YELLOW|RED)\b/i, "Status panel should avoid spelling health colors in the panel body");
+    assert.match(panelLines.join("\n"), /\[Wiki\].*Roadmap.*Agents.*Channels/i, "Status panel should show section tabs");
+    assert.match(panelLines.join("\n"), /Product[\s\S]*System[\s\S]*Clients/i, "Status panel should open on wiki groups for Product, System, and Clients");
+    assert.doesNotMatch(panelLines.join("\n"), /Product, system, and client truth with deterministic drift notes\./i, "Wiki tab should avoid a repeated explanatory preamble above the three-column content");
+    assert.match(panelLines.join("\n"), /Tab section · arrows move · Enter details/i, "Status panel should show keyboard help for tab-only section switching and cursor navigation");
+    panelState.terminalInput?.("\t");
+    const widgetInstanceAfterTab = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const roadmapPanelLines = widgetInstanceAfterTab?.render(100) ?? [];
+    assert.match(roadmapPanelLines.join("\n"), /\[Roadmap\]/i, "Status panel should switch to roadmap tab");
+    assert.match(roadmapPanelLines.join("\n"), /Todo[\s\S]*Research[\s\S]*Implement[\s\S]*Verify[\s\S]*Done/i, "Roadmap tab should render unified kanban task-state columns");
+    assert.match(roadmapPanelLines.join("\n"), /TASK-\d+/i, "Roadmap tab should render task cards inside the kanban columns");
+    assert.doesNotMatch(roadmapPanelLines.join("\n"), /Next: \/wiki-resume|Focused: |Open \d+ · blocked \d+ · done \d+|Verify: |Evidence: /i, "Roadmap tab should render only the kanban board without extra summary text");
+    panelState.terminalInput?.("\r");
+    const widgetInstanceAfterRoadmapDetail = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const roadmapDetailLines = widgetInstanceAfterRoadmapDetail?.render(100) ?? [];
+    assert.match(roadmapDetailLines.join("\n"), /Status: |Phase: |Priority: /i, "Enter on a selected roadmap task should open the reusable detail window");
+    assert.match(roadmapDetailLines.join("\n"), /Resume[\s\S]*Block/i, "Roadmap detail window should expose task actions");
+    panelState.terminalInput?.("\u001b");
+    panelState.terminalInput?.("\u001b[C");
+    const widgetInstanceAfterArrow = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const arrowPanelLines = widgetInstanceAfterArrow?.render(100) ?? [];
+    assert.match(arrowPanelLines.join("\n"), /\[Roadmap\]/i, "Right arrow should move the roadmap cursor inside the active section instead of switching tabs");
+    panelState.terminalInput?.("\u001b[C");
+    const widgetInstanceAfterEmptyColumnMove = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const emptyColumnMoveLines = widgetInstanceAfterEmptyColumnMove?.render(100) ?? [];
+    assert.match(emptyColumnMoveLines.join("\n"), /Todo[\s\S]*Research[\s\S]*Implement[\s\S]*Verify[\s\S]*Done/i, "Roadmap cursor should still move across columns even when some columns are empty");
+    panelState.terminalInput?.("\t");
+    const widgetInstanceAfterAgentsTab = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const agentsPanelLines = widgetInstanceAfterAgentsTab?.render(100) ?? [];
+    assert.match(agentsPanelLines.join("\n"), /\[Agents\]/i, "Tab should advance to the agents section");
+    assert.match(agentsPanelLines.join("\n"), /\| .*TASK-001|\| .*TASK-020|\| .*TASK-/i, "Agents tab should show named agents with task title and low-emphasis task id");
+    assert.match(agentsPanelLines.join("\n"), /Parallel sessions/i, "Agents tab should surface same-user parallel-session context");
+    panelState.terminalInput?.("\t");
+    const widgetInstanceAfterChannels = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const channelPanelLines = widgetInstanceAfterChannels?.render(100) ?? [];
+    assert.match(channelPanelLines.join("\n"), /\[Channels\]/i, "Status panel should switch to channels tab");
+    panelState.terminalInput?.("\t");
+    const widgetInstanceAfterWrap = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const wrappedPanelLines = widgetInstanceAfterWrap?.render(100) ?? [];
+    assert.match(wrappedPanelLines.join("\n"), /\[Wiki\]/i, "Tab should wrap from channels back to wiki");
+    panelState.terminalInput?.("\t");
+    panelState.terminalInput?.("\t");
+    panelState.terminalInput?.("\t");
+    assert.doesNotMatch(channelPanelLines.join("\n"), /Press Enter to open \/wiki-config\./i, "Channels tab should not route add-channel affordance through wiki-config copy");
+    panelState.terminalInput?.("\r");
+    const widgetInstanceAfterChannelEnter = widgetState.content?.({ terminal: { columns: 120, rows: 32 } }, { fg: (_color, text) => text, bg: (_color, text) => text, bold: (text) => text });
+    const channelPanelLinesAfterEnter = widgetInstanceAfterChannelEnter?.render(100) ?? [];
+    assert.match(channelPanelLinesAfterEnter.join("\n"), /Add channel/i, "Pressing Enter in channels should open an add-channel detail pane instead of opening wiki-config");
+    channelInputQueue.push("Smoke channel", "manual", "slack://smoke", "Smoke delivery route");
+    panelState.terminalInput?.("\r");
+    await new Promise((resolveTick) => setTimeout(resolveTick, 25));
+    const storedChannels = JSON.parse(readFileSync(resolve(projectDir, ".pi", "codewiki-channels.json"), "utf8"));
+    assert.match(JSON.stringify(storedChannels), /Smoke channel/i, "Saving the add-channel detail pane should persist a new channel row");
+    assert.match(resumeNotifications.at(-1)?.message ?? "", /queued implement for TASK-001/i, "wiki-resume should resume the deterministic task phase from the focused roadmap task");
+    assert.ok(taskStatuses.some((entry) => entry.key === "codewiki-task" && /TASK-001 progress/i.test(String(entry.value))), "wiki-resume should refresh task focus status");
+    assert.match(resumeBarrierNotifications.at(-1)?.message ?? "", /TASK-002 cannot start yet\. TASK-001 is still active in implement/i, "wiki-resume should refuse to start a todo task while another task is still active in the internal loop");
     assert.match(errorNotifications[0]?.message ?? "", /No repo-local wiki found from/, "Missing-target errors should explain why global commands could not pick a repo");
     assert.match(errorNotifications[0]?.message ?? "", /loaded globally, but each run targets one repo-local wiki/i, "Missing-target errors should explain global-vs-local targeting");
-    assert.match(errorNotifications[0]?.message ?? "", /\/wiki-status \/path\/to\/repo/, "Missing-target errors should suggest passing an explicit repo path");
+    assert.match(errorNotifications[0]?.message ?? "", /\/wiki-config \/path\/to\/repo/, "Missing-target errors should suggest passing an explicit repo path for configuration");
   });
   console.log(`✓ bootstrap smoke test passed (Python: ${python.command}, PyYAML: ${python.yamlVersion})`);
 
