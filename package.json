@@ -1,51 +1,62 @@
 {
-  "name": "codewiki",
-  "version": "0.1.0",
-  "description": "Pi extension and skill for repo-local codebase wiki bootstrap, rebuild, lint, and drift audits.",
-  "keywords": [
-    "pi-package",
-    "pi-extension",
-    "documentation",
-    "wiki",
-    "llm",
-    "agent"
-  ],
-  "type": "module",
-  "scripts": {
-    "test:smoke": "node ./scripts/smoke-test.mjs",
-    "test:pack": "npm pack --dry-run",
-    "test": "npm run test:smoke && npm run test:pack",
-    "prepublishOnly": "npm test"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NunoMoura/codewiki.git"
-  },
-  "bugs": {
-    "url": "https://github.com/NunoMoura/codewiki/issues"
-  },
-  "homepage": "https://github.com/NunoMoura/codewiki#readme",
-  "files": [
-    "extensions",
-    "skills",
-    "README.md",
-    "LICENSE",
-    "package.json"
-  ],
-  "peerDependencies": {
-    "@mariozechner/pi-coding-agent": "*",
-    "@sinclair/typebox": "*"
-  },
-  "engines": {
-    "node": ">=20.6.0"
-  },
-  "pi": {
-    "extensions": [
-      "./extensions/codewiki/index.ts"
-    ],
-    "skills": [
-      "./skills"
-    ]
-  }
+	"name": "codewiki",
+	"version": "0.1.0",
+	"description": "Pi extension and skill for repo-local codebase wiki bootstrap, rebuild, lint, and drift audits.",
+	"keywords": [
+		"pi-package",
+		"pi-extension",
+		"documentation",
+		"wiki",
+		"llm",
+		"agent"
+	],
+	"type": "module",
+	"scripts": {
+		"benchmark:tokens": "node ./scripts/token-benchmark.mjs",
+		"test:smoke": "node ./scripts/smoke-test.mjs",
+		"test:pack": "npm pack --dry-run",
+		"test": "npm run test:smoke && npm run test:pack",
+		"prepublishOnly": "npm test",
+		"typecheck": "tsc --noEmit"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NunoMoura/codewiki.git"
+	},
+	"bugs": {
+		"url": "https://github.com/NunoMoura/codewiki/issues"
+	},
+	"homepage": "https://github.com/NunoMoura/codewiki#readme",
+	"files": [
+		"extensions",
+		"skills",
+		"scripts",
+		"README.md",
+		"LICENSE",
+		"package.json"
+	],
+	"peerDependencies": {
+		"@mariozechner/pi-coding-agent": "*",
+		"@mariozechner/pi-tui": "*",
+		"@sinclair/typebox": "*"
+	},
+	"devDependencies": {
+		"@mariozechner/pi-coding-agent": "*",
+		"@mariozechner/pi-tui": "*",
+		"@sinclair/typebox": "*",
+		"@types/node": "*",
+		"typescript": "^5.9.3"
+	},
+	"engines": {
+		"node": ">=20.6.0"
+	},
+	"pi": {
+		"extensions": [
+			"./extensions/codewiki/index.ts"
+		],
+		"skills": [
+			"./skills"
+		]
+	}
 }

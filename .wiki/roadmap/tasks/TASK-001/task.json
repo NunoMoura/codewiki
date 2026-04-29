@@ -1,0 +1,39 @@
+{
+  "id": "TASK-001",
+  "title": "Lock product intent in specs",
+  "status": "todo",
+  "priority": "high",
+  "kind": "docs",
+  "summary": "Turn codewiki intent into explicit product and system docs.",
+  "spec_paths": [
+    ".wiki/knowledge/product/overview.md",
+    ".wiki/knowledge/system/overview.md"
+  ],
+  "code_paths": [],
+  "research_ids": [],
+  "labels": [
+    "foundation",
+    "specs"
+  ],
+  "goal": {
+    "outcome": "Project intent and ownership boundaries are explicit enough to guide implementation.",
+    "acceptance": [
+      "Foundational specs describe desired outcomes and major constraints.",
+      "At least one roadmap task links back to those specs."
+    ],
+    "non_goals": [
+      "Document every implementation detail before the project has real seams."
+    ],
+    "verification": [
+      "Review starter specs for project-specific intent and ownership coverage.",
+      "Run the rebuild command after replacing placeholders."
+    ]
+  },
+  "delta": {
+    "desired": "Product intent and architecture boundaries are explicit and stable.",
+    "current": "Starter docs need project-specific content.",
+    "closure": "Replace placeholders with concrete intended behavior and ownership boundaries."
+  },
+  "created": "2026-04-29",
+  "updated": "2026-04-29"
+}

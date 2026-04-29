@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-29T21:35:27Z",
+  "context_path": ".wiki/roadmap/tasks/TASK-002/context.json",
+  "budget": {
+    "target_tokens": 6000,
+    "policy": "Use this packet first. Expand only listed specs/code/evidence when phase or stale revision requires exact source."
+  },
+  "task": {
+    "id": "TASK-002",
+    "title": "Map code ownership into spec hierarchy",
+    "status": "todo",
+    "phase": "implement",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Refine the inferred boundary docs until wiki/system mirrors the repo's real ownership seams without creating doc sprawl.",
+    "labels": [
+      "brownfield",
+      "mapping"
+    ],
+    "goal": {
+      "outcome": "wiki/system reflects real stable ownership seams in the repo.",
+      "acceptance": [
+        "Each meaningful code area maps to one canonical owning spec.",
+        "Unnecessary inferred boundaries are removed or collapsed."
+      ],
+      "non_goals": [
+        "Create a spec for every folder regardless of architectural value."
+      ],
+      "verification": [
+        "Review inferred boundary docs against actual repo structure.",
+        "Run rebuild and inspect mapping/drift output."
+      ]
+    },
+    "delta": {
+      "desired": "Each meaningful layer or component has one canonical owning spec.",
+      "current": "Setup can infer first-pass boundaries, but humans still need to confirm or reshape them.",
+      "closure": "Add, remove, or rewrite inferred spec folders until they match real stable ownership seams."
+    }
+  },
+  "revision": {
+    "task": {
+      "digest": "1f81fd253e119a29cca4bcd43f20570a594a60f6debcbc86eaec4012a5f11940"
+    },
+    "git": {
+      "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+      "dirty": true,
+      "dirty_paths": [
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/roadmap.json"
+      ],
+      "paths": {
+        ".wiki/knowledge/system/overview.md": "8be5b61bd6e3",
+        ".wiki/roadmap.json": "8be5b61bd6e3"
+      }
+    },
+    "spec_digest": "df8c952d652531f50a492b9815b47cb93b785be484b38c2b3d4e9b994a64fd33",
+    "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "graph": {
+      "git": {
+        "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+        "dirty": true
+      },
+      "spec_digest": "76e0c026a9b4690c83c2f7ef7e5ff2dec0ebcb26eeafa9da3a4b800513debcfd",
+      "task_digest": "64bf370a6372453c8920b88dddbc8257ed7ef9ad037fffda92b6c904002a99d5",
+      "evidence_digest": "f9b77809b7fdd935bcdd357cd1126bad9373fd4ca249653a37c353b8d89159d1"
+    }
+  },
+  "specs": [
+    {
+      "path": ".wiki/knowledge/system/overview.md",
+      "title": "System Overview",
+      "summary": "Main runtime areas and ownership boundaries for codewiki.",
+      "state": "active",
+      "owners": [
+        "architecture"
+      ],
+      "code_paths": [],
+      "revision": {
+        "digest": "f386b890187194ca049deab04850e30ba5be05cf0f49c750712ad69c48c81fc5"
+      },
+      "expand": {
+        "read": ".wiki/knowledge/system/overview.md"
+      }
+    }
+  ],
+  "code": {
+    "paths": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "expand": []
+  },
+  "evidence": null,
+  "expansion": {
+    "task_json": ".wiki/roadmap/tasks/TASK-002/task.json",
+    "roadmap_state": ".wiki/roadmap-state.json",
+    "status_state": ".wiki/status-state.json",
+    "graph": ".wiki/graph.json"
+  }
+}

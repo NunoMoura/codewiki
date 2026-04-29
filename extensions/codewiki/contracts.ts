@@ -10,7 +10,7 @@ export const ROADMAP_STATUS_VALUES = [
 	"in_progress",
 	"blocked",
 ] as const;
-export const TASK_PHASE_VALUES = ["research", "implement", "verify"] as const;
+export const TASK_PHASE_VALUES = ["implement", "verify"] as const;
 export const ROADMAP_PRIORITY_VALUES = [
 	"critical",
 	"high",
@@ -67,15 +67,33 @@ export interface CodeDriftScopeConfig {
 	code?: string[];
 }
 
+export interface CodewikiGatewayConfig {
+	enabled?: boolean;
+	mode?: "read-only" | "off";
+	allow_paths?: string[];
+	deny_paths?: string[];
+	network?: boolean;
+	max_stdout_bytes?: number;
+	max_read_bytes?: number;
+}
+
 export interface CodewikiConfig {
 	name?: string;
 	rebuild_command?: string[];
+	gateway?: CodewikiGatewayConfig;
 	self_drift_scope?: ScopeConfig;
 	code_drift_scope?: CodeDriftScopeConfig;
 }
 
+export interface RoadmapRetentionConfig {
+	closed_task_limit?: number;
+	archive_path?: string;
+	compress_archive?: boolean;
+}
+
 export interface DocsConfig {
 	project_name?: string;
+	wiki_root?: string;
 	docs_root?: string;
 	specs_root?: string;
 	evidence_root?: string;
@@ -84,6 +102,7 @@ export interface DocsConfig {
 	roadmap_path?: string;
 	roadmap_doc_path?: string;
 	roadmap_events_path?: string;
+	roadmap_retention?: RoadmapRetentionConfig;
 	meta_root?: string;
 	codewiki?: CodewikiConfig;
 }
@@ -279,7 +298,7 @@ export interface CodewikiStateToolInput {
 
 export interface CodewikiTaskToolInput {
 	repoPath?: string;
-	action: "create" | "update" | "close" | "cancel";
+	action: "create" | "update" | "close" | "cancel" | "clear-archive";
 	refresh?: boolean;
 	taskId?: string;
 	tasks?: RoadmapTaskInput[];
@@ -339,6 +358,23 @@ export interface RoadmapStateTaskLoop {
 	evidence: RoadmapStateTaskEvidenceSummary | null;
 }
 
+export interface RoadmapTaskContextPacket {
+	version: number;
+	generated_at: string;
+	context_path: string;
+	budget?: { target_tokens?: number; policy?: string };
+	task?: Record<string, unknown>;
+	revision?: RevisionAnchor | Record<string, unknown>;
+	specs?: Array<Record<string, unknown>>;
+	code?: {
+		paths?: string[];
+		digest?: string;
+		expand?: Array<Record<string, string>>;
+	};
+	evidence?: Record<string, unknown> | null;
+	expansion?: Record<string, string>;
+}
+
 export interface RoadmapStateTaskSummary {
 	id: string;
 	title: string;
@@ -351,6 +387,8 @@ export interface RoadmapStateTaskSummary {
 	spec_paths: string[];
 	code_paths: string[];
 	updated: string;
+	revision?: RevisionAnchor;
+	context_path?: string;
 	loop?: RoadmapStateTaskLoop;
 }
 
@@ -383,6 +421,28 @@ export interface StatusStateSpecRow {
 	note: string;
 }
 
+export interface RevisionAnchor {
+	digest?: string;
+	git?: {
+		head?: string;
+		dirty?: boolean;
+		dirty_paths?: string[];
+		paths?: Record<string, string>;
+	};
+	spec_digest?: string;
+	task_digest?: string;
+	code_digest?: string;
+	evidence_digest?: string;
+}
+
+export interface RevisionFreshness {
+	status: "fresh" | "stale" | string;
+	basis: "revision" | "work" | "time" | "unknown" | string;
+	checked_at?: string;
+	reason: string;
+	stale_state_guidance?: string;
+}
+
 export interface StatusStateHeartbeatLane {
 	id: string;
 	title: string;
@@ -392,6 +452,8 @@ export interface StatusStateHeartbeatLane {
 	interval_hours: number;
 	triggers?: string[];
 	checked_at: string;
+	revision?: RevisionAnchor;
+	freshness?: RevisionFreshness;
 	spec_paths: string[];
 	code_paths: string[];
 	code_area: string;
@@ -539,10 +601,15 @@ export interface StatusDockPrefs {
 	lastRepoPath?: string;
 }
 
-export type StatusPanelSection = "wiki" | "roadmap" | "agents" | "channels";
+export type StatusPanelSection =
+	| "home"
+	| "wiki"
+	| "roadmap"
+	| "agents"
+	| "channels";
 
 export interface StatusPanelDetail {
-	kind: "wiki" | "roadmap" | "agent" | "channel-add" | "channel-edit";
+	kind: "home" | "wiki" | "roadmap" | "agent" | "channel-add" | "channel-edit";
 	title: string;
 	lines: string[];
 	channelId?: string;
@@ -559,6 +626,7 @@ export interface ActiveStatusPanel {
 	section: StatusPanelSection;
 	activeLink: TaskSessionLinkRecord | null;
 	sessionId: string | null;
+	homeIssueIndex: number;
 	wikiColumnIndex: number;
 	wikiRowIndex: number;
 	roadmapColumnIndex: number;
@@ -572,7 +640,7 @@ export interface ActiveStatusPanel {
 	close?: () => void;
 }
 
-export type ConfigPanelSection = "summary" | "pinning";
+export type ConfigPanelSection = "summary" | "pinning" | "gateway";
 
 export interface ActiveConfigPanel {
 	section: ConfigPanelSection;
@@ -594,9 +662,9 @@ export interface WikiProject {
 	docsRoot: string;
 	specsRoot: string;
 	researchRoot: string;
-	indexPath: string;
+	indexPath: string | null;
 	roadmapPath: string;
-	roadmapDocPath: string;
+	roadmapDocPath: string | null;
 	metaRoot: string;
 	configPath: string;
 	lintPath: string;
@@ -657,7 +725,6 @@ export const codewikiTaskCreateSchema = Type.Object({
 	),
 });
 export const taskLoopPhaseSchema = Type.Union([
-	Type.Literal("research"),
 	Type.Literal("implement"),
 	Type.Literal("verify"),
 ]);
@@ -736,6 +803,7 @@ export const codewikiTaskToolInputSchema = Type.Object({
 		Type.Literal("update"),
 		Type.Literal("close"),
 		Type.Literal("cancel"),
+		Type.Literal("clear-archive"),
 	]),
 	refresh: Type.Optional(
 		Type.Boolean({

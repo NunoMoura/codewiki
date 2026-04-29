@@ -1,9 +1,42 @@
 {
   "version": 1,
-  "generated_at": "2026-04-24T03:05:08Z",
+  "generated_at": "2026-04-29T21:35:28Z",
   "source": {
     "graph_version": 1,
-    "graph_generated_at": "2026-04-24T03:05:08Z"
+    "graph_generated_at": "2026-04-29T21:35:27Z",
+    "revision": {
+      "git": {
+        "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+        "dirty": true,
+        "dirty_paths": [
+          ".wiki/knowledge/clients/overview.md",
+          ".wiki/knowledge/clients/surfaces/roadmap.md",
+          ".wiki/knowledge/clients/surfaces/status-panel.md",
+          ".wiki/knowledge/product/overview.md",
+          ".wiki/knowledge/system/overview.md",
+          ".wiki/roadmap.json",
+          "extensions/codewiki/bootstrap.ts",
+          "extensions/codewiki/contracts.ts",
+          "extensions/codewiki/index.ts",
+          "extensions/codewiki/project-root.ts",
+          "extensions/codewiki/templates.ts"
+        ],
+        "paths": {
+          ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          ".wiki/knowledge/clients/surfaces/roadmap.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          ".wiki/knowledge/clients/surfaces/status-panel.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          ".wiki/knowledge/system/extensions/codewiki/overview.md": "",
+          ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          ".wiki/knowledge/system/runtime/overview.md": "",
+          ".wiki/roadmap.json": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+          "extensions/codewiki": "2771a351e64bdd1b39996b9872fd8513865b8c69"
+        }
+      },
+      "spec_digest": "76e0c026a9b4690c83c2f7ef7e5ff2dec0ebcb26eeafa9da3a4b800513debcfd",
+      "task_digest": "64bf370a6372453c8920b88dddbc8257ed7ef9ad037fffda92b6c904002a99d5",
+      "evidence_digest": "f9b77809b7fdd935bcdd357cd1126bad9373fd4ca249653a37c353b8d89159d1"
+    }
   },
   "project": {
     "name": "codewiki",
@@ -11,74 +44,68 @@
     "roadmap_path": ".wiki/roadmap.json"
   },
   "health": {
-    "color": "yellow",
+    "color": "green",
     "errors": 0,
-    "warnings": 46,
-    "total_issues": 46
+    "warnings": 0,
+    "total_issues": 0
   },
   "summary": {
-    "total_specs": 5,
-    "mapped_specs": 5,
-    "aligned_specs": 1,
-    "tracked_specs": 8,
+    "total_specs": 2,
+    "mapped_specs": 2,
+    "aligned_specs": 4,
+    "tracked_specs": 3,
     "untracked_specs": 0,
     "blocked_specs": 0,
     "unmapped_specs": 0,
-    "task_count": 31,
-    "open_task_count": 7,
-    "done_task_count": 24
+    "task_count": 3,
+    "open_task_count": 3,
+    "done_task_count": 0
   },
   "bars": {
     "tracked_drift": {
       "label": "Tracked drift",
-      "value": 8,
-      "total": 8,
+      "value": 3,
+      "total": 3,
       "percent": 100
     },
     "roadmap_done": {
       "label": "Roadmap done",
-      "value": 24,
-      "total": 31,
-      "percent": 77
+      "value": 0,
+      "total": 3,
+      "percent": 0
     },
     "spec_mapping": {
       "label": "Spec mapping",
-      "value": 5,
-      "total": 5,
+      "value": 2,
+      "total": 2,
       "percent": 100
     }
   },
   "views": {
     "risky_spec_paths": [
       ".wiki/knowledge/clients/overview.md",
+      ".wiki/knowledge/product/overview.md",
+      ".wiki/knowledge/system/overview.md",
       ".wiki/knowledge/clients/surfaces/roadmap.md",
       ".wiki/knowledge/clients/surfaces/status-panel.md",
-      ".wiki/knowledge/product/overview.md",
-      ".wiki/knowledge/system/extension/overview.md",
-      ".wiki/knowledge/system/overview.md",
-      ".wiki/knowledge/system/package/overview.md",
-      ".wiki/knowledge/system/rules/overview.md",
-      ".wiki/knowledge/system/templates/overview.md"
+      ".wiki/knowledge/system/extensions/codewiki/overview.md",
+      ".wiki/knowledge/system/runtime/overview.md"
     ],
     "top_risky_spec_paths": [
       ".wiki/knowledge/clients/overview.md",
-      ".wiki/knowledge/clients/surfaces/roadmap.md",
-      ".wiki/knowledge/clients/surfaces/status-panel.md",
       ".wiki/knowledge/product/overview.md",
-      ".wiki/knowledge/system/extension/overview.md"
+      ".wiki/knowledge/system/overview.md",
+      ".wiki/knowledge/clients/surfaces/roadmap.md",
+      ".wiki/knowledge/clients/surfaces/status-panel.md"
     ],
     "open_task_ids": [
-      "TASK-020",
-      "TASK-025",
-      "TASK-026",
-      "TASK-028",
-      "TASK-029",
-      "TASK-030",
-      "TASK-031"
+      "TASK-001",
+      "TASK-002",
+      "TASK-003"
     ]
   },
   "heartbeat": {
-    "generated_at": "2026-04-24T03:05:08Z",
+    "generated_at": "2026-04-29T21:35:28Z",
     "summary": {
       "lane_count": 3,
       "freshness_basis": "work-first",
@@ -106,43 +133,64 @@
           "task_close:architecture",
           "manual_review"
         ],
-        "checked_at": "2026-04-24T03:05:08Z",
+        "checked_at": "2026-04-29T21:35:27Z",
+        "revision": {
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/product/overview.md",
+              ".wiki/knowledge/system/overview.md",
+              ".wiki/roadmap.json",
+              "extensions/codewiki/bootstrap.ts",
+              "extensions/codewiki/contracts.ts",
+              "extensions/codewiki/index.ts",
+              "extensions/codewiki/project-root.ts",
+              "extensions/codewiki/templates.ts"
+            ],
+            "paths": {
+              ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/system/extensions/codewiki/overview.md": "",
+              ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/system/runtime/overview.md": "",
+              ".wiki/roadmap.json": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              "extensions/codewiki": "2771a351e64bdd1b39996b9872fd8513865b8c69"
+            }
+          },
+          "spec_digest": "d71a9fad08b873589bd726a19e3309e20df3b314baf7f09f70864a6d4b1ff171",
+          "task_digest": "f120d30a08c3a07a23230dd7181635165c0eca241ccf722947c53b8dbc7ab0ed",
+          "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "digest": "b05a0aefc3d3b384501ed694d29f2e274a0720738348785981e40f04d1de7a78"
+        },
+        "freshness": {
+          "status": "fresh",
+          "basis": "revision",
+          "checked_at": "2026-04-29T21:35:27Z",
+          "reason": "revision anchors unchanged since previous heartbeat",
+          "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+        },
         "spec_paths": [
           ".wiki/knowledge/product/overview.md",
-          ".wiki/knowledge/system/extension/overview.md",
+          ".wiki/knowledge/system/extensions/codewiki/overview.md",
           ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md",
-          ".wiki/knowledge/system/templates/overview.md"
+          ".wiki/knowledge/system/runtime/overview.md"
         ],
         "code_paths": [
-          "extensions/codewiki",
-          "skills/codewiki",
-          "scripts",
-          ".wiki",
-          "extensions/codewiki/templates.ts",
-          "scripts/rebuild_docs_meta.py"
+          "extensions/codewiki"
         ],
-        "code_area": "extensions, skills +2 more",
+        "code_area": "extensions/codewiki",
         "open_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-026",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030"
+          "TASK-001",
+          "TASK-002"
         ],
         "risky_spec_paths": [
           ".wiki/knowledge/product/overview.md",
-          ".wiki/knowledge/system/extension/overview.md",
-          ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md"
+          ".wiki/knowledge/system/overview.md"
         ],
         "stats": {
-          "total_specs": 6,
-          "aligned_specs": 1,
-          "tracked_specs": 5,
+          "total_specs": 4,
+          "aligned_specs": 2,
+          "tracked_specs": 2,
           "untracked_specs": 0,
           "blocked_specs": 0,
           "unmapped_specs": 0
@@ -167,41 +215,60 @@
           "rebuild_complete",
           "pre_close_check"
         ],
-        "checked_at": "2026-04-24T03:05:08Z",
+        "checked_at": "2026-04-29T21:35:27Z",
+        "revision": {
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/system/overview.md",
+              ".wiki/roadmap.json",
+              "extensions/codewiki/bootstrap.ts",
+              "extensions/codewiki/contracts.ts",
+              "extensions/codewiki/index.ts",
+              "extensions/codewiki/project-root.ts",
+              "extensions/codewiki/templates.ts"
+            ],
+            "paths": {
+              ".wiki/knowledge/system/extensions/codewiki/overview.md": "",
+              ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/system/runtime/overview.md": "",
+              ".wiki/roadmap.json": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              "extensions/codewiki": "2771a351e64bdd1b39996b9872fd8513865b8c69"
+            }
+          },
+          "spec_digest": "d7c8a8325d3da784cb632d8e00c8d438dfb84c943748c7b0874863bc6c908794",
+          "task_digest": "f120d30a08c3a07a23230dd7181635165c0eca241ccf722947c53b8dbc7ab0ed",
+          "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "digest": "af5208c71c0e8a531bf4a0dbde73e48cdb009a0dce3a0cbf27a25b237273bcb2"
+        },
+        "freshness": {
+          "status": "fresh",
+          "basis": "revision",
+          "checked_at": "2026-04-29T21:35:27Z",
+          "reason": "revision anchors unchanged since previous heartbeat",
+          "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+        },
         "spec_paths": [
-          ".wiki/knowledge/system/extension/overview.md",
+          ".wiki/knowledge/system/extensions/codewiki/overview.md",
           ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md",
-          ".wiki/knowledge/system/templates/overview.md"
+          ".wiki/knowledge/system/runtime/overview.md"
         ],
         "code_paths": [
-          "extensions/codewiki",
-          "skills/codewiki",
-          "scripts",
-          ".wiki",
-          "extensions/codewiki/templates.ts",
-          "scripts/rebuild_docs_meta.py"
+          "extensions/codewiki"
         ],
-        "code_area": "extensions, skills +2 more",
+        "code_area": "extensions/codewiki",
         "open_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-026",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030"
+          "TASK-001",
+          "TASK-002"
         ],
         "risky_spec_paths": [
-          ".wiki/knowledge/system/extension/overview.md",
-          ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md"
+          ".wiki/knowledge/system/overview.md"
         ],
         "stats": {
-          "total_specs": 5,
-          "aligned_specs": 1,
-          "tracked_specs": 4,
+          "total_specs": 3,
+          "aligned_specs": 2,
+          "tracked_specs": 1,
           "untracked_specs": 0,
           "blocked_specs": 0,
           "unmapped_specs": 0
@@ -226,50 +293,75 @@
           "code_change:ux_surface",
           "manual_review"
         ],
-        "checked_at": "2026-04-24T03:05:08Z",
+        "checked_at": "2026-04-29T21:35:27Z",
+        "revision": {
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/clients/overview.md",
+              ".wiki/knowledge/clients/surfaces/roadmap.md",
+              ".wiki/knowledge/clients/surfaces/status-panel.md",
+              ".wiki/knowledge/product/overview.md",
+              ".wiki/knowledge/system/overview.md",
+              ".wiki/roadmap.json",
+              "extensions/codewiki/bootstrap.ts",
+              "extensions/codewiki/contracts.ts",
+              "extensions/codewiki/index.ts",
+              "extensions/codewiki/project-root.ts",
+              "extensions/codewiki/templates.ts"
+            ],
+            "paths": {
+              ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/clients/surfaces/roadmap.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/clients/surfaces/status-panel.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/system/extensions/codewiki/overview.md": "",
+              ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              ".wiki/knowledge/system/runtime/overview.md": "",
+              ".wiki/roadmap.json": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d",
+              "extensions/codewiki": "2771a351e64bdd1b39996b9872fd8513865b8c69"
+            }
+          },
+          "spec_digest": "76e0c026a9b4690c83c2f7ef7e5ff2dec0ebcb26eeafa9da3a4b800513debcfd",
+          "task_digest": "64bf370a6372453c8920b88dddbc8257ed7ef9ad037fffda92b6c904002a99d5",
+          "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "digest": "9e9966fb8d4c1ae75849b3419c770db96cc20fdc9d2678b703a87b3d68ddf608"
+        },
+        "freshness": {
+          "status": "fresh",
+          "basis": "revision",
+          "checked_at": "2026-04-29T21:35:27Z",
+          "reason": "revision anchors unchanged since previous heartbeat",
+          "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+        },
         "spec_paths": [
           ".wiki/knowledge/product/overview.md",
-          ".wiki/knowledge/system/extension/overview.md",
+          ".wiki/knowledge/system/extensions/codewiki/overview.md",
           ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md",
-          ".wiki/knowledge/system/templates/overview.md",
+          ".wiki/knowledge/system/runtime/overview.md",
           ".wiki/knowledge/clients/overview.md",
           ".wiki/knowledge/clients/surfaces/roadmap.md",
           ".wiki/knowledge/clients/surfaces/status-panel.md"
         ],
         "code_paths": [
-          "extensions/codewiki",
-          "skills/codewiki",
-          "scripts",
-          ".wiki",
-          "extensions/codewiki/templates.ts",
-          "scripts/rebuild_docs_meta.py"
+          "extensions/codewiki"
         ],
-        "code_area": "extensions, skills +2 more",
+        "code_area": "extensions/codewiki",
         "open_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-026",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030",
-          "TASK-031"
+          "TASK-001",
+          "TASK-002",
+          "TASK-003"
         ],
         "risky_spec_paths": [
           ".wiki/knowledge/product/overview.md",
-          ".wiki/knowledge/system/extension/overview.md",
           ".wiki/knowledge/system/overview.md",
-          ".wiki/knowledge/system/package/overview.md",
-          ".wiki/knowledge/system/rules/overview.md",
-          ".wiki/knowledge/clients/overview.md",
-          ".wiki/knowledge/clients/surfaces/roadmap.md",
-          ".wiki/knowledge/clients/surfaces/status-panel.md"
+          ".wiki/knowledge/clients/overview.md"
         ],
         "stats": {
-          "total_specs": 9,
-          "aligned_specs": 1,
-          "tracked_specs": 8,
+          "total_specs": 7,
+          "aligned_specs": 4,
+          "tracked_specs": 3,
           "untracked_specs": 0,
           "blocked_specs": 0,
           "unmapped_specs": 0
@@ -283,51 +375,21 @@
     ]
   },
   "parallel": {
-    "generated_at": "2026-04-24T03:05:08Z",
-    "active_session_count": 3,
-    "collision_task_ids": [
-      "TASK-020"
-    ],
-    "sessions": [
-      {
-        "session_id": "019db790-cb74-731b-bc61-ac033ad2e955",
-        "task_id": "TASK-027",
-        "action": "focus",
-        "timestamp": "2026-04-24T02:04:30Z",
-        "title": "Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config",
-        "summary": "Switching from completed TASK-021 migration closure to TASK-027 public command cleanup: finish collapsing codewiki onto bootstrap/status/resume/config and remove remaining deprecated public compatibility paths.",
-        "agent_name": "Panda"
-      },
-      {
-        "session_id": "019da8c7-c076-7169-ae11-a49ce90064f8",
-        "task_id": "TASK-020",
-        "action": "progress",
-        "timestamp": "2026-04-22T09:37:07Z",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
-        "summary": "Fixed two live panel issues: Tab now wraps explicitly from Channels back to Wiki, and wiki activity animation now follows the active task's spec paths instead of only the primary task id match. Also made channel add/edit details more explicit by giving them dedicated detail-window actions before opening the editor flow.",
-        "agent_name": "Jaguar"
-      },
-      {
-        "session_id": "019db243-8d49-717a-9eb0-c094b6883d91",
-        "task_id": "TASK-020",
-        "action": "focus",
-        "timestamp": "2026-04-21T22:59:57Z",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
-        "summary": "Resuming interrupted work on status panel refactor; investigating files-widget dependency error in pi while continuing TASK-020.",
-        "agent_name": "Yak"
-      }
-    ]
+    "generated_at": "2026-04-29T21:35:28Z",
+    "active_session_count": 0,
+    "collision_task_ids": [],
+    "sessions": []
   },
   "resume": {
     "source": "task",
-    "task_id": "TASK-020",
+    "task_id": "TASK-001",
     "lane_id": "",
-    "heading": "TASK-020 \u2014 Refactor status panel around Wiki, Roadmap, Agents, and Channels",
-    "command": "/wiki-resume TASK-020",
-    "reason": "Resume roadmap task (in_progress \u00b7 verify).",
-    "phase": "verify",
-    "verification": "Run npm test after reshaping the status read model, panel rendering, command wiring, and footer summary behavior.",
-    "evidence": "Implemented the requested status-panel contract rewrite: specs now describe Product/System/Clients grouping with display-only `Clients` rename, the roadmap panel now renders kanban columns by phase gate, named agents appear with task title then low-emphasis task id, channels became add-plus-list only, `/wiki-config` remained separate, deterministic status-state now carries matching sections and columns, and the TUI footer summary now uses a traffic-light circle instead of health words. \u00b7 2 check(s)",
+    "heading": "TASK-001 \u2014 Lock product intent in specs",
+    "command": "/wiki-resume TASK-001",
+    "reason": "Resume roadmap task (todo \u00b7 implement).",
+    "phase": "implement",
+    "verification": "Review starter specs for project-specific intent and ownership coverage.",
+    "evidence": "No closure evidence recorded yet.",
     "heartbeat": "Roadmap task should stay grounded in current heartbeat cues."
   },
   "wiki": {
@@ -335,7 +397,7 @@
       {
         "path": ".wiki/knowledge/clients/overview.md",
         "title": "Clients Overview",
-        "summary": "codewiki keeps user attention on hidden knowledge while Pi surfaces a four-tab status control room with Product/System/Clients grouping, kanban roadmap progress, named execution ownership, and resume-first workflow through a TUI-first model.",
+        "summary": "User-facing workflow and status-surface expectations for codewiki.",
         "drift_status": "tracked",
         "code_paths": [],
         "code_area": "\u2014",
@@ -345,85 +407,32 @@
           "total": 0
         },
         "related_task_ids": [
-          "TASK-020",
-          "TASK-031",
-          "TASK-022",
-          "TASK-023",
-          "TASK-024",
-          "TASK-027"
+          "TASK-003"
         ],
         "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+          "id": "TASK-003",
+          "status": "todo",
+          "title": "Keep roadmap as freshest delta log"
         },
-        "note": "tracked by TASK-020"
-      },
-      {
-        "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
-        "title": "Roadmap State and TUI",
-        "summary": "Derived roadmap and status read models plus first-party Pi panel rules for a kanban-style roadmap surface with blockers, evidence, agent ownership, and resume visibility inside codewiki.",
-        "drift_status": "tracked",
-        "code_paths": [],
-        "code_area": "\u2014",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
+        "revision": {
+          "digest": "40fc1265e254f351ecbd38d6282003e76cb50f2c458ed34a310e98dac1a882df",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/clients/overview.md"
+            ],
+            "paths": {
+              ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+            }
+          }
         },
-        "related_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-028",
-          "TASK-029",
-          "TASK-018",
-          "TASK-011",
-          "TASK-016",
-          "TASK-019",
-          "TASK-024",
-          "TASK-027",
-          "TASK-015"
-        ],
-        "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-        },
-        "note": "tracked by TASK-020"
-      },
-      {
-        "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
-        "title": "Status Surfaces v4",
-        "summary": "`/wiki-status` and `Alt+W` open one live panel organized as Wiki | Roadmap | Agents | Channels, with a repo-plus-traffic-light header, an optional one-line footer summary, and separate `/wiki-config` configuration.",
-        "drift_status": "tracked",
-        "code_paths": [],
-        "code_area": "\u2014",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
-        },
-        "related_task_ids": [
-          "TASK-020",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030",
-          "TASK-018",
-          "TASK-019",
-          "TASK-024",
-          "TASK-027"
-        ],
-        "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-        },
-        "note": "tracked by TASK-020"
+        "note": "tracked by TASK-003"
       },
       {
         "path": ".wiki/knowledge/product/overview.md",
         "title": "Product",
-        "summary": "codewiki gives Pi a repo-local, docs-first navigation and execution contract for development projects.",
+        "summary": "Product intent, users, and value boundaries for codewiki.",
         "drift_status": "tracked",
         "code_paths": [],
         "code_area": "\u2014",
@@ -433,104 +442,32 @@
           "total": 0
         },
         "related_task_ids": [
-          "TASK-020",
-          "TASK-026",
-          "TASK-030",
-          "TASK-001",
-          "TASK-022",
-          "TASK-027"
+          "TASK-001"
         ],
         "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+          "id": "TASK-001",
+          "status": "todo",
+          "title": "Lock product intent in specs"
         },
-        "note": "tracked by TASK-020"
-      },
-      {
-        "path": ".wiki/knowledge/system/extension/overview.md",
-        "title": "Extension Runtime",
-        "summary": "Extension owns bootstrap, four-tab status rendering, resume execution, and internal roadmap and session operations for repo-local wikis discovered from current cwd or targeted explicitly by repo path or picker.",
-        "drift_status": "tracked",
-        "code_paths": [],
-        "code_area": "\u2014",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
+        "revision": {
+          "digest": "616b473ab875f14493bccecd7b5a110a81f59715bcf35ace56ac12e10c6e8986",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/product/overview.md"
+            ],
+            "paths": {
+              ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+            }
+          }
         },
-        "related_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-026",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030",
-          "TASK-008",
-          "TASK-018",
-          "TASK-023",
-          "TASK-003",
-          "TASK-006",
-          "TASK-010",
-          "TASK-011",
-          "TASK-012",
-          "TASK-014",
-          "TASK-016",
-          "TASK-017",
-          "TASK-019",
-          "TASK-024",
-          "TASK-027",
-          "TASK-005",
-          "TASK-007",
-          "TASK-009",
-          "TASK-015"
-        ],
-        "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-        },
-        "note": "tracked by TASK-020"
+        "note": "tracked by TASK-001"
       },
       {
         "path": ".wiki/knowledge/system/overview.md",
         "title": "System Overview",
-        "summary": "codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
-        "drift_status": "tracked",
-        "code_paths": [
-          "extensions/codewiki",
-          "skills/codewiki",
-          "scripts",
-          ".wiki"
-        ],
-        "code_area": "extensions, skills +2 more",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
-        },
-        "related_task_ids": [
-          "TASK-025",
-          "TASK-028",
-          "TASK-008",
-          "TASK-022",
-          "TASK-023",
-          "TASK-002",
-          "TASK-010",
-          "TASK-011",
-          "TASK-012"
-        ],
-        "primary_task": {
-          "id": "TASK-025",
-          "status": "in_progress",
-          "title": "Add proposal-to-roadmap promotion and causality-preserving dedupe"
-        },
-        "note": "tracked by TASK-025"
-      },
-      {
-        "path": ".wiki/knowledge/system/package/overview.md",
-        "title": "Package Surface",
-        "summary": "codewiki ships one extension and one skill as a globally installable Pi package surface with a small public workflow centered on bootstrap, status, resume, and separate configuration.",
+        "summary": "Main runtime areas and ownership boundaries for codewiki.",
         "drift_status": "tracked",
         "code_paths": [],
         "code_area": "\u2014",
@@ -540,93 +477,140 @@
           "total": 0
         },
         "related_task_ids": [
-          "TASK-020",
-          "TASK-030",
-          "TASK-008",
-          "TASK-018",
-          "TASK-010",
-          "TASK-012",
-          "TASK-016",
-          "TASK-017",
-          "TASK-019",
-          "TASK-027",
-          "TASK-007",
-          "TASK-015"
-        ],
-        "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-        },
-        "note": "tracked by TASK-020"
-      },
-      {
-        "path": ".wiki/knowledge/system/rules/overview.md",
-        "title": "System Rules",
-        "summary": "System-level documentation contract for maintaining codewiki itself with hidden knowledge, machine evidence, roadmap state, and status read models.",
-        "drift_status": "tracked",
-        "code_paths": [],
-        "code_area": "\u2014",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
-        },
-        "related_task_ids": [
-          "TASK-020",
-          "TASK-025",
-          "TASK-026",
-          "TASK-028",
-          "TASK-029",
-          "TASK-030",
           "TASK-001",
-          "TASK-018",
-          "TASK-022",
-          "TASK-023",
-          "TASK-003",
-          "TASK-006",
-          "TASK-014",
-          "TASK-027",
-          "TASK-004",
-          "TASK-013"
-        ],
-        "primary_task": {
-          "id": "TASK-020",
-          "status": "in_progress",
-          "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-        },
-        "note": "tracked by TASK-020"
-      },
-      {
-        "path": ".wiki/knowledge/system/templates/overview.md",
-        "title": "Templates and Rebuild",
-        "summary": "Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.",
-        "drift_status": "aligned",
-        "code_paths": [
-          "extensions/codewiki/templates.ts",
-          "scripts/rebuild_docs_meta.py"
-        ],
-        "code_area": "extensions, scripts",
-        "issue_counts": {
-          "errors": 0,
-          "warnings": 0,
-          "total": 0
-        },
-        "related_task_ids": [
-          "TASK-001",
-          "TASK-018",
-          "TASK-002",
-          "TASK-003",
-          "TASK-006",
-          "TASK-011",
-          "TASK-014",
-          "TASK-004",
-          "TASK-005"
+          "TASK-002"
         ],
         "primary_task": {
           "id": "TASK-001",
-          "status": "done",
-          "title": "Finish simplified research/specs/roadmap refactor"
+          "status": "todo",
+          "title": "Lock product intent in specs"
+        },
+        "revision": {
+          "digest": "f386b890187194ca049deab04850e30ba5be05cf0f49c750712ad69c48c81fc5",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/system/overview.md"
+            ],
+            "paths": {
+              ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+            }
+          }
+        },
+        "note": "tracked by TASK-001"
+      },
+      {
+        "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
+        "title": "Roadmap Surface",
+        "summary": "TUI-first roadmap and inferred-delta experience for codewiki.",
+        "drift_status": "aligned",
+        "code_paths": [],
+        "code_area": "\u2014",
+        "issue_counts": {
+          "errors": 0,
+          "warnings": 0,
+          "total": 0
+        },
+        "related_task_ids": [],
+        "primary_task": null,
+        "revision": {
+          "digest": "e3711159c134454153719b291ab8ab24f2019e6c06efd5224d095172006dda50",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/clients/surfaces/roadmap.md"
+            ],
+            "paths": {
+              ".wiki/knowledge/clients/surfaces/roadmap.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+            }
+          }
+        },
+        "note": "no deterministic drift signals"
+      },
+      {
+        "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
+        "title": "Status Panel",
+        "summary": "Compact status-line and panel rules for codewiki.",
+        "drift_status": "aligned",
+        "code_paths": [],
+        "code_area": "\u2014",
+        "issue_counts": {
+          "errors": 0,
+          "warnings": 0,
+          "total": 0
+        },
+        "related_task_ids": [],
+        "primary_task": null,
+        "revision": {
+          "digest": "a315ef5cd259e30411edfd329df71c3f6b3acd0fba874cfa7383c0a9344bb42c",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": true,
+            "dirty_paths": [
+              ".wiki/knowledge/clients/surfaces/status-panel.md"
+            ],
+            "paths": {
+              ".wiki/knowledge/clients/surfaces/status-panel.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+            }
+          }
+        },
+        "note": "no deterministic drift signals"
+      },
+      {
+        "path": ".wiki/knowledge/system/extensions/codewiki/overview.md",
+        "title": "Extensions / Codewiki",
+        "summary": "Inferred first-pass ownership boundary for extensions/codewiki in codewiki.",
+        "drift_status": "aligned",
+        "code_paths": [
+          "extensions/codewiki"
+        ],
+        "code_area": "extensions/codewiki",
+        "issue_counts": {
+          "errors": 0,
+          "warnings": 0,
+          "total": 0
+        },
+        "related_task_ids": [],
+        "primary_task": null,
+        "revision": {
+          "digest": "eb09a44fb70b67bf8925c6d5920eade69bc74e5e00e11179615f0e5c4f3ce938",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": false,
+            "dirty_paths": [],
+            "paths": {
+              ".wiki/knowledge/system/extensions/codewiki/overview.md": ""
+            }
+          }
+        },
+        "note": "no deterministic drift signals"
+      },
+      {
+        "path": ".wiki/knowledge/system/runtime/overview.md",
+        "title": "Runtime Policy",
+        "summary": "Policy boundary for codewiki runtime access in codewiki.",
+        "drift_status": "aligned",
+        "code_paths": [],
+        "code_area": "\u2014",
+        "issue_counts": {
+          "errors": 0,
+          "warnings": 0,
+          "total": 0
+        },
+        "related_task_ids": [],
+        "primary_task": null,
+        "revision": {
+          "digest": "7d523657090c596a3f761664cc384903b32b9e711f15351b80017f716450672d",
+          "git": {
+            "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+            "dirty": false,
+            "dirty_paths": [],
+            "paths": {
+              ".wiki/knowledge/system/runtime/overview.md": ""
+            }
+          }
         },
         "note": "no deterministic drift signals"
       }
@@ -639,7 +623,7 @@
           {
             "path": ".wiki/knowledge/product/overview.md",
             "title": "Product",
-            "summary": "codewiki gives Pi a repo-local, docs-first navigation and execution contract for development projects.",
+            "summary": "Product intent, users, and value boundaries for codewiki.",
             "drift_status": "tracked",
             "code_paths": [],
             "code_area": "\u2014",
@@ -649,19 +633,27 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-020",
-              "TASK-026",
-              "TASK-030",
-              "TASK-001",
-              "TASK-022",
-              "TASK-027"
+              "TASK-001"
             ],
             "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+              "id": "TASK-001",
+              "status": "todo",
+              "title": "Lock product intent in specs"
             },
-            "note": "tracked by TASK-020"
+            "revision": {
+              "digest": "616b473ab875f14493bccecd7b5a110a81f59715bcf35ace56ac12e10c6e8986",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": true,
+                "dirty_paths": [
+                  ".wiki/knowledge/product/overview.md"
+                ],
+                "paths": {
+                  ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+                }
+              }
+            },
+            "note": "tracked by TASK-001"
           }
         ]
       },
@@ -670,89 +662,9 @@
         "label": "System",
         "rows": [
           {
-            "path": ".wiki/knowledge/system/extension/overview.md",
-            "title": "Extension Runtime",
-            "summary": "Extension owns bootstrap, four-tab status rendering, resume execution, and internal roadmap and session operations for repo-local wikis discovered from current cwd or targeted explicitly by repo path or picker.",
-            "drift_status": "tracked",
-            "code_paths": [],
-            "code_area": "\u2014",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-020",
-              "TASK-025",
-              "TASK-026",
-              "TASK-028",
-              "TASK-029",
-              "TASK-030",
-              "TASK-008",
-              "TASK-018",
-              "TASK-023",
-              "TASK-003",
-              "TASK-006",
-              "TASK-010",
-              "TASK-011",
-              "TASK-012",
-              "TASK-014",
-              "TASK-016",
-              "TASK-017",
-              "TASK-019",
-              "TASK-024",
-              "TASK-027",
-              "TASK-005",
-              "TASK-007",
-              "TASK-009",
-              "TASK-015"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-            },
-            "note": "tracked by TASK-020"
-          },
-          {
             "path": ".wiki/knowledge/system/overview.md",
             "title": "System Overview",
-            "summary": "codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "extensions/codewiki",
-              "skills/codewiki",
-              "scripts",
-              ".wiki"
-            ],
-            "code_area": "extensions, skills +2 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-025",
-              "TASK-028",
-              "TASK-008",
-              "TASK-022",
-              "TASK-023",
-              "TASK-002",
-              "TASK-010",
-              "TASK-011",
-              "TASK-012"
-            ],
-            "primary_task": {
-              "id": "TASK-025",
-              "status": "in_progress",
-              "title": "Add proposal-to-roadmap promotion and causality-preserving dedupe"
-            },
-            "note": "tracked by TASK-025"
-          },
-          {
-            "path": ".wiki/knowledge/system/package/overview.md",
-            "title": "Package Surface",
-            "summary": "codewiki ships one extension and one skill as a globally installable Pi package surface with a small public workflow centered on bootstrap, status, resume, and separate configuration.",
+            "summary": "Main runtime areas and ownership boundaries for codewiki.",
             "drift_status": "tracked",
             "code_paths": [],
             "code_area": "\u2014",
@@ -762,93 +674,82 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-020",
-              "TASK-030",
-              "TASK-008",
-              "TASK-018",
-              "TASK-010",
-              "TASK-012",
-              "TASK-016",
-              "TASK-017",
-              "TASK-019",
-              "TASK-027",
-              "TASK-007",
-              "TASK-015"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-            },
-            "note": "tracked by TASK-020"
-          },
-          {
-            "path": ".wiki/knowledge/system/rules/overview.md",
-            "title": "System Rules",
-            "summary": "System-level documentation contract for maintaining codewiki itself with hidden knowledge, machine evidence, roadmap state, and status read models.",
-            "drift_status": "tracked",
-            "code_paths": [],
-            "code_area": "\u2014",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-020",
-              "TASK-025",
-              "TASK-026",
-              "TASK-028",
-              "TASK-029",
-              "TASK-030",
               "TASK-001",
-              "TASK-018",
-              "TASK-022",
-              "TASK-023",
-              "TASK-003",
-              "TASK-006",
-              "TASK-014",
-              "TASK-027",
-              "TASK-004",
-              "TASK-013"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-            },
-            "note": "tracked by TASK-020"
-          },
-          {
-            "path": ".wiki/knowledge/system/templates/overview.md",
-            "title": "Templates and Rebuild",
-            "summary": "Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.",
-            "drift_status": "aligned",
-            "code_paths": [
-              "extensions/codewiki/templates.ts",
-              "scripts/rebuild_docs_meta.py"
-            ],
-            "code_area": "extensions, scripts",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-001",
-              "TASK-018",
-              "TASK-002",
-              "TASK-003",
-              "TASK-006",
-              "TASK-011",
-              "TASK-014",
-              "TASK-004",
-              "TASK-005"
+              "TASK-002"
             ],
             "primary_task": {
               "id": "TASK-001",
-              "status": "done",
-              "title": "Finish simplified research/specs/roadmap refactor"
+              "status": "todo",
+              "title": "Lock product intent in specs"
+            },
+            "revision": {
+              "digest": "f386b890187194ca049deab04850e30ba5be05cf0f49c750712ad69c48c81fc5",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": true,
+                "dirty_paths": [
+                  ".wiki/knowledge/system/overview.md"
+                ],
+                "paths": {
+                  ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+                }
+              }
+            },
+            "note": "tracked by TASK-001"
+          },
+          {
+            "path": ".wiki/knowledge/system/extensions/codewiki/overview.md",
+            "title": "Extensions / Codewiki",
+            "summary": "Inferred first-pass ownership boundary for extensions/codewiki in codewiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "extensions/codewiki"
+            ],
+            "code_area": "extensions/codewiki",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "eb09a44fb70b67bf8925c6d5920eade69bc74e5e00e11179615f0e5c4f3ce938",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": false,
+                "dirty_paths": [],
+                "paths": {
+                  ".wiki/knowledge/system/extensions/codewiki/overview.md": ""
+                }
+              }
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".wiki/knowledge/system/runtime/overview.md",
+            "title": "Runtime Policy",
+            "summary": "Policy boundary for codewiki runtime access in codewiki.",
+            "drift_status": "aligned",
+            "code_paths": [],
+            "code_area": "\u2014",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "7d523657090c596a3f761664cc384903b32b9e711f15351b80017f716450672d",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": false,
+                "dirty_paths": [],
+                "paths": {
+                  ".wiki/knowledge/system/runtime/overview.md": ""
+                }
+              }
             },
             "note": "no deterministic drift signals"
           }
@@ -861,7 +762,7 @@
           {
             "path": ".wiki/knowledge/clients/overview.md",
             "title": "Clients Overview",
-            "summary": "codewiki keeps user attention on hidden knowledge while Pi surfaces a four-tab status control room with Product/System/Clients grouping, kanban roadmap progress, named execution ownership, and resume-first workflow through a TUI-first model.",
+            "summary": "User-facing workflow and status-surface expectations for codewiki.",
             "drift_status": "tracked",
             "code_paths": [],
             "code_area": "\u2014",
@@ -871,25 +772,33 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-020",
-              "TASK-031",
-              "TASK-022",
-              "TASK-023",
-              "TASK-024",
-              "TASK-027"
+              "TASK-003"
             ],
             "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+              "id": "TASK-003",
+              "status": "todo",
+              "title": "Keep roadmap as freshest delta log"
             },
-            "note": "tracked by TASK-020"
+            "revision": {
+              "digest": "40fc1265e254f351ecbd38d6282003e76cb50f2c458ed34a310e98dac1a882df",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": true,
+                "dirty_paths": [
+                  ".wiki/knowledge/clients/overview.md"
+                ],
+                "paths": {
+                  ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+                }
+              }
+            },
+            "note": "tracked by TASK-003"
           },
           {
             "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
-            "title": "Roadmap State and TUI",
-            "summary": "Derived roadmap and status read models plus first-party Pi panel rules for a kanban-style roadmap surface with blockers, evidence, agent ownership, and resume visibility inside codewiki.",
-            "drift_status": "tracked",
+            "title": "Roadmap Surface",
+            "summary": "TUI-first roadmap and inferred-delta experience for codewiki.",
+            "drift_status": "aligned",
             "code_paths": [],
             "code_area": "\u2014",
             "issue_counts": {
@@ -897,31 +806,28 @@
               "warnings": 0,
               "total": 0
             },
-            "related_task_ids": [
-              "TASK-020",
-              "TASK-025",
-              "TASK-028",
-              "TASK-029",
-              "TASK-018",
-              "TASK-011",
-              "TASK-016",
-              "TASK-019",
-              "TASK-024",
-              "TASK-027",
-              "TASK-015"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "e3711159c134454153719b291ab8ab24f2019e6c06efd5224d095172006dda50",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": true,
+                "dirty_paths": [
+                  ".wiki/knowledge/clients/surfaces/roadmap.md"
+                ],
+                "paths": {
+                  ".wiki/knowledge/clients/surfaces/roadmap.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+                }
+              }
             },
-            "note": "tracked by TASK-020"
+            "note": "no deterministic drift signals"
           },
           {
             "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
-            "title": "Status Surfaces v4",
-            "summary": "`/wiki-status` and `Alt+W` open one live panel organized as Wiki | Roadmap | Agents | Channels, with a repo-plus-traffic-light header, an optional one-line footer summary, and separate `/wiki-config` configuration.",
-            "drift_status": "tracked",
+            "title": "Status Panel",
+            "summary": "Compact status-line and panel rules for codewiki.",
+            "drift_status": "aligned",
             "code_paths": [],
             "code_area": "\u2014",
             "issue_counts": {
@@ -929,45 +835,40 @@
               "warnings": 0,
               "total": 0
             },
-            "related_task_ids": [
-              "TASK-020",
-              "TASK-028",
-              "TASK-029",
-              "TASK-030",
-              "TASK-018",
-              "TASK-019",
-              "TASK-024",
-              "TASK-027"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "a315ef5cd259e30411edfd329df71c3f6b3acd0fba874cfa7383c0a9344bb42c",
+              "git": {
+                "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+                "dirty": true,
+                "dirty_paths": [
+                  ".wiki/knowledge/clients/surfaces/status-panel.md"
+                ],
+                "paths": {
+                  ".wiki/knowledge/clients/surfaces/status-panel.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+                }
+              }
             },
-            "note": "tracked by TASK-020"
+            "note": "no deterministic drift signals"
           }
         ]
       }
     ]
   },
   "roadmap": {
-    "focused_task_id": "TASK-020",
+    "focused_task_id": "TASK-001",
     "blocked_task_ids": [],
-    "in_progress_task_ids": [
-      "TASK-020",
-      "TASK-025",
-      "TASK-026"
-    ],
-    "next_task_id": "TASK-028",
+    "in_progress_task_ids": [],
+    "next_task_id": "TASK-001",
     "columns": [
       {
         "id": "todo",
         "label": "Todo",
         "task_ids": [
-          "TASK-028",
-          "TASK-029",
-          "TASK-030",
-          "TASK-031"
+          "TASK-001",
+          "TASK-002",
+          "TASK-003"
         ]
       },
       {
@@ -978,89 +879,22 @@
       {
         "id": "implement",
         "label": "Implement",
-        "task_ids": [
-          "TASK-025"
-        ]
+        "task_ids": []
       },
       {
         "id": "verify",
         "label": "Verify",
-        "task_ids": [
-          "TASK-020",
-          "TASK-026"
-        ]
+        "task_ids": []
       },
       {
         "id": "done",
         "label": "Done",
-        "task_ids": [
-          "TASK-001",
-          "TASK-002",
-          "TASK-003",
-          "TASK-004",
-          "TASK-005",
-          "TASK-006",
-          "TASK-007",
-          "TASK-008",
-          "TASK-009",
-          "TASK-010",
-          "TASK-011",
-          "TASK-012",
-          "TASK-013",
-          "TASK-014",
-          "TASK-015",
-          "TASK-016",
-          "TASK-017",
-          "TASK-018",
-          "TASK-019",
-          "TASK-021",
-          "TASK-022",
-          "TASK-023",
-          "TASK-024",
-          "TASK-027"
-        ]
+        "task_ids": []
       }
     ]
   },
   "agents": {
-    "rows": [
-      {
-        "id": "session:019db790-cb74-731b-bc61-ac033ad2e955",
-        "label": "Panda",
-        "name": "Panda",
-        "task_id": "TASK-027",
-        "task_title": "Collapse public command surface around /wiki-bootstrap, /wiki-status, /wiki-resume, and /wiki-config",
-        "mode": "manual",
-        "status": "active",
-        "last_action": "Switching from completed TASK-021 migration closure to TASK-027 public command cleanup: finish collapsing codewiki onto bootstrap/status/resume/config and remove remaining deprecated public compatibility paths.",
-        "constraint": "Pi session-linked execution",
-        "session_id": "019db790-cb74-731b-bc61-ac033ad2e955"
-      },
-      {
-        "id": "session:019da8c7-c076-7169-ae11-a49ce90064f8",
-        "label": "Jaguar",
-        "name": "Jaguar",
-        "task_id": "TASK-020",
-        "task_title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
-        "mode": "manual",
-        "status": "active",
-        "last_action": "Fixed two live panel issues: Tab now wraps explicitly from Channels back to Wiki, and wiki activity animation now follows the active task's spec paths instead of only the primary task id match. Also made channel add/edit details more explicit by giving them dedicated detail-window actions before opening the editor flow.",
-        "constraint": "Pi session-linked execution",
-        "session_id": "019da8c7-c076-7169-ae11-a49ce90064f8"
-      },
-      {
-        "id": "session:019db243-8d49-717a-9eb0-c094b6883d91",
-        "label": "Yak",
-        "name": "Yak",
-        "task_id": "TASK-020",
-        "task_title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels",
-        "mode": "manual",
-        "status": "active",
-        "last_action": "Resuming interrupted work on status panel refactor; investigating files-widget dependency error in pi while continuing TASK-020.",
-        "constraint": "Pi session-linked execution",
-        "session_id": "019db243-8d49-717a-9eb0-c094b6883d91"
-      }
-    ]
+    "rows": []
   },
   "channels": {
     "add_label": "Add channel",
@@ -1070,7 +904,7 @@
     {
       "path": ".wiki/knowledge/clients/overview.md",
       "title": "Clients Overview",
-      "summary": "codewiki keeps user attention on hidden knowledge while Pi surfaces a four-tab status control room with Product/System/Clients grouping, kanban roadmap progress, named execution ownership, and resume-first workflow through a TUI-first model.",
+      "summary": "User-facing workflow and status-surface expectations for codewiki.",
       "drift_status": "tracked",
       "code_paths": [],
       "code_area": "\u2014",
@@ -1080,85 +914,32 @@
         "total": 0
       },
       "related_task_ids": [
-        "TASK-020",
-        "TASK-031",
-        "TASK-022",
-        "TASK-023",
-        "TASK-024",
-        "TASK-027"
+        "TASK-003"
       ],
       "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+        "id": "TASK-003",
+        "status": "todo",
+        "title": "Keep roadmap as freshest delta log"
       },
-      "note": "tracked by TASK-020"
-    },
-    {
-      "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
-      "title": "Roadmap State and TUI",
-      "summary": "Derived roadmap and status read models plus first-party Pi panel rules for a kanban-style roadmap surface with blockers, evidence, agent ownership, and resume visibility inside codewiki.",
-      "drift_status": "tracked",
-      "code_paths": [],
-      "code_area": "\u2014",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
+      "revision": {
+        "digest": "40fc1265e254f351ecbd38d6282003e76cb50f2c458ed34a310e98dac1a882df",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": true,
+          "dirty_paths": [
+            ".wiki/knowledge/clients/overview.md"
+          ],
+          "paths": {
+            ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+          }
+        }
       },
-      "related_task_ids": [
-        "TASK-020",
-        "TASK-025",
-        "TASK-028",
-        "TASK-029",
-        "TASK-018",
-        "TASK-011",
-        "TASK-016",
-        "TASK-019",
-        "TASK-024",
-        "TASK-027",
-        "TASK-015"
-      ],
-      "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-      },
-      "note": "tracked by TASK-020"
-    },
-    {
-      "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
-      "title": "Status Surfaces v4",
-      "summary": "`/wiki-status` and `Alt+W` open one live panel organized as Wiki | Roadmap | Agents | Channels, with a repo-plus-traffic-light header, an optional one-line footer summary, and separate `/wiki-config` configuration.",
-      "drift_status": "tracked",
-      "code_paths": [],
-      "code_area": "\u2014",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
-      },
-      "related_task_ids": [
-        "TASK-020",
-        "TASK-028",
-        "TASK-029",
-        "TASK-030",
-        "TASK-018",
-        "TASK-019",
-        "TASK-024",
-        "TASK-027"
-      ],
-      "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-      },
-      "note": "tracked by TASK-020"
+      "note": "tracked by TASK-003"
     },
     {
       "path": ".wiki/knowledge/product/overview.md",
       "title": "Product",
-      "summary": "codewiki gives Pi a repo-local, docs-first navigation and execution contract for development projects.",
+      "summary": "Product intent, users, and value boundaries for codewiki.",
       "drift_status": "tracked",
       "code_paths": [],
       "code_area": "\u2014",
@@ -1168,104 +949,32 @@
         "total": 0
       },
       "related_task_ids": [
-        "TASK-020",
-        "TASK-026",
-        "TASK-030",
-        "TASK-001",
-        "TASK-022",
-        "TASK-027"
+        "TASK-001"
       ],
       "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
+        "id": "TASK-001",
+        "status": "todo",
+        "title": "Lock product intent in specs"
       },
-      "note": "tracked by TASK-020"
-    },
-    {
-      "path": ".wiki/knowledge/system/extension/overview.md",
-      "title": "Extension Runtime",
-      "summary": "Extension owns bootstrap, four-tab status rendering, resume execution, and internal roadmap and session operations for repo-local wikis discovered from current cwd or targeted explicitly by repo path or picker.",
-      "drift_status": "tracked",
-      "code_paths": [],
-      "code_area": "\u2014",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
+      "revision": {
+        "digest": "616b473ab875f14493bccecd7b5a110a81f59715bcf35ace56ac12e10c6e8986",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": true,
+          "dirty_paths": [
+            ".wiki/knowledge/product/overview.md"
+          ],
+          "paths": {
+            ".wiki/knowledge/product/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+          }
+        }
       },
-      "related_task_ids": [
-        "TASK-020",
-        "TASK-025",
-        "TASK-026",
-        "TASK-028",
-        "TASK-029",
-        "TASK-030",
-        "TASK-008",
-        "TASK-018",
-        "TASK-023",
-        "TASK-003",
-        "TASK-006",
-        "TASK-010",
-        "TASK-011",
-        "TASK-012",
-        "TASK-014",
-        "TASK-016",
-        "TASK-017",
-        "TASK-019",
-        "TASK-024",
-        "TASK-027",
-        "TASK-005",
-        "TASK-007",
-        "TASK-009",
-        "TASK-015"
-      ],
-      "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-      },
-      "note": "tracked by TASK-020"
+      "note": "tracked by TASK-001"
     },
     {
       "path": ".wiki/knowledge/system/overview.md",
       "title": "System Overview",
-      "summary": "codewiki is organized around package surface, extension runtime, starter templates, and generated metadata.",
-      "drift_status": "tracked",
-      "code_paths": [
-        "extensions/codewiki",
-        "skills/codewiki",
-        "scripts",
-        ".wiki"
-      ],
-      "code_area": "extensions, skills +2 more",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
-      },
-      "related_task_ids": [
-        "TASK-025",
-        "TASK-028",
-        "TASK-008",
-        "TASK-022",
-        "TASK-023",
-        "TASK-002",
-        "TASK-010",
-        "TASK-011",
-        "TASK-012"
-      ],
-      "primary_task": {
-        "id": "TASK-025",
-        "status": "in_progress",
-        "title": "Add proposal-to-roadmap promotion and causality-preserving dedupe"
-      },
-      "note": "tracked by TASK-025"
-    },
-    {
-      "path": ".wiki/knowledge/system/package/overview.md",
-      "title": "Package Surface",
-      "summary": "codewiki ships one extension and one skill as a globally installable Pi package surface with a small public workflow centered on bootstrap, status, resume, and separate configuration.",
+      "summary": "Main runtime areas and ownership boundaries for codewiki.",
       "drift_status": "tracked",
       "code_paths": [],
       "code_area": "\u2014",
@@ -1275,107 +984,154 @@
         "total": 0
       },
       "related_task_ids": [
-        "TASK-020",
-        "TASK-030",
-        "TASK-008",
-        "TASK-018",
-        "TASK-010",
-        "TASK-012",
-        "TASK-016",
-        "TASK-017",
-        "TASK-019",
-        "TASK-027",
-        "TASK-007",
-        "TASK-015"
-      ],
-      "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-      },
-      "note": "tracked by TASK-020"
-    },
-    {
-      "path": ".wiki/knowledge/system/rules/overview.md",
-      "title": "System Rules",
-      "summary": "System-level documentation contract for maintaining codewiki itself with hidden knowledge, machine evidence, roadmap state, and status read models.",
-      "drift_status": "tracked",
-      "code_paths": [],
-      "code_area": "\u2014",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
-      },
-      "related_task_ids": [
-        "TASK-020",
-        "TASK-025",
-        "TASK-026",
-        "TASK-028",
-        "TASK-029",
-        "TASK-030",
         "TASK-001",
-        "TASK-018",
-        "TASK-022",
-        "TASK-023",
-        "TASK-003",
-        "TASK-006",
-        "TASK-014",
-        "TASK-027",
-        "TASK-004",
-        "TASK-013"
-      ],
-      "primary_task": {
-        "id": "TASK-020",
-        "status": "in_progress",
-        "title": "Refactor status panel around Wiki, Roadmap, Agents, and Channels"
-      },
-      "note": "tracked by TASK-020"
-    },
-    {
-      "path": ".wiki/knowledge/system/templates/overview.md",
-      "title": "Templates and Rebuild",
-      "summary": "Starter templates and rebuild script define canonical on-disk contract for bootstrapped repos.",
-      "drift_status": "aligned",
-      "code_paths": [
-        "extensions/codewiki/templates.ts",
-        "scripts/rebuild_docs_meta.py"
-      ],
-      "code_area": "extensions, scripts",
-      "issue_counts": {
-        "errors": 0,
-        "warnings": 0,
-        "total": 0
-      },
-      "related_task_ids": [
-        "TASK-001",
-        "TASK-018",
-        "TASK-002",
-        "TASK-003",
-        "TASK-006",
-        "TASK-011",
-        "TASK-014",
-        "TASK-004",
-        "TASK-005"
+        "TASK-002"
       ],
       "primary_task": {
         "id": "TASK-001",
-        "status": "done",
-        "title": "Finish simplified research/specs/roadmap refactor"
+        "status": "todo",
+        "title": "Lock product intent in specs"
+      },
+      "revision": {
+        "digest": "f386b890187194ca049deab04850e30ba5be05cf0f49c750712ad69c48c81fc5",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": true,
+          "dirty_paths": [
+            ".wiki/knowledge/system/overview.md"
+          ],
+          "paths": {
+            ".wiki/knowledge/system/overview.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+          }
+        }
+      },
+      "note": "tracked by TASK-001"
+    },
+    {
+      "path": ".wiki/knowledge/clients/surfaces/roadmap.md",
+      "title": "Roadmap Surface",
+      "summary": "TUI-first roadmap and inferred-delta experience for codewiki.",
+      "drift_status": "aligned",
+      "code_paths": [],
+      "code_area": "\u2014",
+      "issue_counts": {
+        "errors": 0,
+        "warnings": 0,
+        "total": 0
+      },
+      "related_task_ids": [],
+      "primary_task": null,
+      "revision": {
+        "digest": "e3711159c134454153719b291ab8ab24f2019e6c06efd5224d095172006dda50",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": true,
+          "dirty_paths": [
+            ".wiki/knowledge/clients/surfaces/roadmap.md"
+          ],
+          "paths": {
+            ".wiki/knowledge/clients/surfaces/roadmap.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+          }
+        }
+      },
+      "note": "no deterministic drift signals"
+    },
+    {
+      "path": ".wiki/knowledge/clients/surfaces/status-panel.md",
+      "title": "Status Panel",
+      "summary": "Compact status-line and panel rules for codewiki.",
+      "drift_status": "aligned",
+      "code_paths": [],
+      "code_area": "\u2014",
+      "issue_counts": {
+        "errors": 0,
+        "warnings": 0,
+        "total": 0
+      },
+      "related_task_ids": [],
+      "primary_task": null,
+      "revision": {
+        "digest": "a315ef5cd259e30411edfd329df71c3f6b3acd0fba874cfa7383c0a9344bb42c",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": true,
+          "dirty_paths": [
+            ".wiki/knowledge/clients/surfaces/status-panel.md"
+          ],
+          "paths": {
+            ".wiki/knowledge/clients/surfaces/status-panel.md": "8be5b61bd6e3b40685c7ef72de7fe64fefe5663d"
+          }
+        }
+      },
+      "note": "no deterministic drift signals"
+    },
+    {
+      "path": ".wiki/knowledge/system/extensions/codewiki/overview.md",
+      "title": "Extensions / Codewiki",
+      "summary": "Inferred first-pass ownership boundary for extensions/codewiki in codewiki.",
+      "drift_status": "aligned",
+      "code_paths": [
+        "extensions/codewiki"
+      ],
+      "code_area": "extensions/codewiki",
+      "issue_counts": {
+        "errors": 0,
+        "warnings": 0,
+        "total": 0
+      },
+      "related_task_ids": [],
+      "primary_task": null,
+      "revision": {
+        "digest": "eb09a44fb70b67bf8925c6d5920eade69bc74e5e00e11179615f0e5c4f3ce938",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": false,
+          "dirty_paths": [],
+          "paths": {
+            ".wiki/knowledge/system/extensions/codewiki/overview.md": ""
+          }
+        }
+      },
+      "note": "no deterministic drift signals"
+    },
+    {
+      "path": ".wiki/knowledge/system/runtime/overview.md",
+      "title": "Runtime Policy",
+      "summary": "Policy boundary for codewiki runtime access in codewiki.",
+      "drift_status": "aligned",
+      "code_paths": [],
+      "code_area": "\u2014",
+      "issue_counts": {
+        "errors": 0,
+        "warnings": 0,
+        "total": 0
+      },
+      "related_task_ids": [],
+      "primary_task": null,
+      "revision": {
+        "digest": "7d523657090c596a3f761664cc384903b32b9e711f15351b80017f716450672d",
+        "git": {
+          "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+          "dirty": false,
+          "dirty_paths": [],
+          "paths": {
+            ".wiki/knowledge/system/runtime/overview.md": ""
+          }
+        }
       },
       "note": "no deterministic drift signals"
     }
   ],
   "next_step": {
     "kind": "code",
-    "command": "/wiki-resume TASK-020",
-    "reason": "Roadmap already covers current delta; continue in-progress implementation."
+    "command": "/wiki-resume TASK-001",
+    "reason": "Roadmap is ready; continue with the next open task."
   },
   "direction": [
-    "Roadmap already covers current delta; continue in-progress implementation.",
-    "Parallel sessions: 3 active, 1 collision task(s).",
+    "Roadmap is ready; continue with the next open task.",
+    "Parallel sessions: 0 active, 0 collision task(s).",
     "Heartbeat lanes: 3 work-first (high=1, medium=1, low=1).",
-    "Mapped specs: 5/5.",
-    "Tracked drift coverage: 8/8."
+    "Mapped specs: 2/2.",
+    "Tracked drift coverage: 3/3."
   ]
 }

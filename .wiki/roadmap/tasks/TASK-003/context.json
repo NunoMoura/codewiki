@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-29T21:35:27Z",
+  "context_path": ".wiki/roadmap/tasks/TASK-003/context.json",
+  "budget": {
+    "target_tokens": 6000,
+    "policy": "Use this packet first. Expand only listed specs/code/evidence when phase or stale revision requires exact source."
+  },
+  "task": {
+    "id": "TASK-003",
+    "title": "Keep roadmap as freshest delta log",
+    "status": "todo",
+    "phase": "implement",
+    "priority": "medium",
+    "kind": "process",
+    "summary": "Move drift and plan tracking into structured roadmap tasks instead of separate prose buckets.",
+    "labels": [
+      "roadmap",
+      "process"
+    ],
+    "goal": {
+      "outcome": "Tracked delta lives in roadmap tasks instead of scattered prose.",
+      "acceptance": [
+        "Active implementation gaps are represented by roadmap tasks.",
+        "Users can resume task work from Pi surfaces without editing roadmap JSON manually."
+      ],
+      "non_goals": [
+        "Maintain separate plan and drift documents for the same live work."
+      ],
+      "verification": [
+        "Inspect generated roadmap view after rebuild.",
+        "Confirm roadmap tasks cover current active delta."
+      ]
+    },
+    "delta": {
+      "desired": "Roadmap is single current queue for closing docs-to-code gaps.",
+      "current": "Teams often spread gaps across plans, drift notes, and chat.",
+      "closure": "Convert each active mismatch or sequence into a scoped roadmap task."
+    }
+  },
+  "revision": {
+    "task": {
+      "digest": "9f1bed7411936c01c9c26d0885bdfdb0d3aa9f6fe72dcca057926fcb13bdcd2c"
+    },
+    "git": {
+      "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+      "dirty": true,
+      "dirty_paths": [
+        ".wiki/knowledge/clients/overview.md",
+        ".wiki/roadmap.json"
+      ],
+      "paths": {
+        ".wiki/knowledge/clients/overview.md": "8be5b61bd6e3",
+        ".wiki/roadmap.json": "8be5b61bd6e3"
+      }
+    },
+    "spec_digest": "b5001c7c489d8a10aec019c267df8621c3adbf29ef7dd0dc93a8daea1c73d706",
+    "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "graph": {
+      "git": {
+        "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+        "dirty": true
+      },
+      "spec_digest": "76e0c026a9b4690c83c2f7ef7e5ff2dec0ebcb26eeafa9da3a4b800513debcfd",
+      "task_digest": "64bf370a6372453c8920b88dddbc8257ed7ef9ad037fffda92b6c904002a99d5",
+      "evidence_digest": "f9b77809b7fdd935bcdd357cd1126bad9373fd4ca249653a37c353b8d89159d1"
+    }
+  },
+  "specs": [
+    {
+      "path": ".wiki/knowledge/clients/overview.md",
+      "title": "Clients Overview",
+      "summary": "User-facing workflow and status-surface expectations for codewiki.",
+      "state": "active",
+      "owners": [
+        "design"
+      ],
+      "code_paths": [],
+      "revision": {
+        "digest": "40fc1265e254f351ecbd38d6282003e76cb50f2c458ed34a310e98dac1a882df"
+      },
+      "expand": {
+        "read": ".wiki/knowledge/clients/overview.md"
+      }
+    }
+  ],
+  "code": {
+    "paths": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "expand": []
+  },
+  "evidence": null,
+  "expansion": {
+    "task_json": ".wiki/roadmap/tasks/TASK-003/task.json",
+    "roadmap_state": ".wiki/roadmap-state.json",
+    "status_state": ".wiki/status-state.json",
+    "graph": ".wiki/graph.json"
+  }
+}

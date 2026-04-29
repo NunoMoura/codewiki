@@ -1,0 +1,38 @@
+{
+  "id": "TASK-002",
+  "title": "Map code ownership into spec hierarchy",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Refine the inferred boundary docs until wiki/system mirrors the repo's real ownership seams without creating doc sprawl.",
+  "spec_paths": [
+    ".wiki/knowledge/system/overview.md"
+  ],
+  "code_paths": [],
+  "research_ids": [],
+  "labels": [
+    "brownfield",
+    "mapping"
+  ],
+  "goal": {
+    "outcome": "wiki/system reflects real stable ownership seams in the repo.",
+    "acceptance": [
+      "Each meaningful code area maps to one canonical owning spec.",
+      "Unnecessary inferred boundaries are removed or collapsed."
+    ],
+    "non_goals": [
+      "Create a spec for every folder regardless of architectural value."
+    ],
+    "verification": [
+      "Review inferred boundary docs against actual repo structure.",
+      "Run rebuild and inspect mapping/drift output."
+    ]
+  },
+  "delta": {
+    "desired": "Each meaningful layer or component has one canonical owning spec.",
+    "current": "Setup can infer first-pass boundaries, but humans still need to confirm or reshape them.",
+    "closure": "Add, remove, or rewrite inferred spec folders until they match real stable ownership seams."
+  },
+  "created": "2026-04-29",
+  "updated": "2026-04-29"
+}

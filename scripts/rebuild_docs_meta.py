@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import gzip
+import hashlib
 import json
 import os
 import re
+import subprocess
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -22,7 +25,7 @@ DEFAULT_FORBIDDEN_HEADINGS = {
     "## How To Use This Doc",
 }
 DEFAULT_WORD_COUNT_WARN = 1600
-DEFAULT_WORD_COUNT_EXEMPT = {"wiki/roadmap.md"}
+DEFAULT_WORD_COUNT_EXEMPT = set()
 DEFAULT_REPO_MARKDOWN_PATTERNS = [
     "README.md",
     "src/**/README.md",
@@ -58,18 +61,33 @@ def maybe_dict(value: Any) -> dict[str, Any] | None:
 CONFIG = load_config()
 LINT_CONFIG = maybe_dict(CONFIG.get("lint")) or {}
 PROJECT_NAME = str(CONFIG.get("project_name", ROOT.name))
-DOCS_ROOT_VALUE = str(CONFIG.get("docs_root", "wiki")).strip().strip("/") or "wiki"
+DOCS_ROOT_VALUE = str(CONFIG.get("docs_root", ".wiki/knowledge")).strip().strip("/") or ".wiki/knowledge"
 SPECS_ROOT_VALUE = str(CONFIG.get("specs_root", DOCS_ROOT_VALUE)).strip().strip("/") or DOCS_ROOT_VALUE
 DOCS_ROOT = ROOT / DOCS_ROOT_VALUE
 SPECS_ROOT = ROOT / SPECS_ROOT_VALUE
 RESEARCH_ROOT = ROOT / str(CONFIG.get("evidence_root", CONFIG.get("research_root", ".wiki/evidence")))
 ROADMAP_PATH = ROOT / str(CONFIG.get("roadmap_path", ".wiki/roadmap.json"))
-ROADMAP_DOC_PATH = ROOT / str(CONFIG.get("roadmap_doc_path", "wiki/roadmap.md"))
 ROADMAP_EVENTS_PATH = ROOT / str(CONFIG.get("roadmap_events_path", ".wiki/roadmap-events.jsonl"))
+ROADMAP_RETENTION_CONFIG = maybe_dict(CONFIG.get("roadmap_retention")) or {}
+CLOSED_TASK_RETENTION_LIMIT = max(0, int(ROADMAP_RETENTION_CONFIG.get("closed_task_limit", 50)))
+ROADMAP_ARCHIVE_PATH = ROOT / str(ROADMAP_RETENTION_CONFIG.get("archive_path", ".wiki/roadmap-archive.jsonl"))
+ROADMAP_ARCHIVE_COMPRESSED = bool(ROADMAP_RETENTION_CONFIG.get("compress_archive", False))
+if ROADMAP_ARCHIVE_COMPRESSED and ROADMAP_ARCHIVE_PATH.suffix != ".gz":
+    ROADMAP_ARCHIVE_PATH = ROADMAP_ARCHIVE_PATH.with_suffix(ROADMAP_ARCHIVE_PATH.suffix + ".gz")
 META_ROOT = ROOT / str(CONFIG.get("meta_root", ".wiki"))
 ROADMAP_STATE_PATH = META_ROOT / "roadmap-state.json"
 STATUS_STATE_PATH = META_ROOT / "status-state.json"
-INDEX_PATH = ROOT / str(CONFIG.get("index_path", "wiki/index.md"))
+ROADMAP_FOLDER_PATH = META_ROOT / "roadmap"
+ROADMAP_TASKS_PATH = ROADMAP_FOLDER_PATH / "tasks"
+
+def optional_output_path(config_key: str) -> Path | None:
+    value = CONFIG.get(config_key)
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return ROOT / value.strip().strip("/")
+
+ROADMAP_DOC_PATH = optional_output_path("roadmap_doc_path")
+INDEX_PATH = optional_output_path("index_path")
 DEFAULT_INDEX_TITLE = f"{PROJECT_NAME} Index" if PROJECT_NAME.lower().endswith("wiki") else f"{PROJECT_NAME} Wiki Index"
 INDEX_TITLE = str(CONFIG.get("index_title", DEFAULT_INDEX_TITLE))
 FORBIDDEN_HEADINGS = set(maybe_str_list(LINT_CONFIG.get("forbidden_headings")) or sorted(DEFAULT_FORBIDDEN_HEADINGS))
@@ -86,6 +104,87 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def canonical_digest(value: Any) -> str:
+    return sha256_text(json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False))
+
+
+def git_output(args: list[str]) -> str:
+    try:
+        return subprocess.check_output(["git", *args], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return ""
+
+
+def git_head_commit() -> str:
+    return git_output(["rev-parse", "HEAD"])
+
+
+def git_path_commit(path: str) -> str:
+    return git_output(["log", "-1", "--format=%H", "--", path])
+
+
+def git_status_paths() -> list[str]:
+    raw = git_output(["status", "--porcelain", "--untracked-files=no"])
+    paths: list[str] = []
+    for line in raw.splitlines():
+        if len(line) < 4:
+            continue
+        path = line[3:].strip()
+        if " -> " in path:
+            path = path.rsplit(" -> ", 1)[-1].strip()
+        if path:
+            paths.append(path)
+    return sorted(set(paths))
+
+
+def git_anchor(paths: list[str] | None = None) -> dict[str, Any]:
+    scoped_paths = sorted(set([str(path).strip() for path in paths or [] if str(path).strip()]))
+    dirty_paths = git_status_paths()
+    scoped_dirty = [path for path in dirty_paths if not scoped_paths or path in scoped_paths or any(path.startswith(f"{prefix.rstrip('/')}/") for prefix in scoped_paths)]
+    commits = {path: git_path_commit(path) for path in scoped_paths if (ROOT / path).exists()}
+    return {
+        "head": git_head_commit(),
+        "dirty": bool(scoped_dirty),
+        "dirty_paths": scoped_dirty[:50],
+        "paths": commits,
+    }
+
+
+def semantic_doc_revision(doc: dict[str, Any]) -> dict[str, Any]:
+    frontmatter = dict(doc.get("frontmatter", {}) if isinstance(doc.get("frontmatter"), dict) else {})
+    frontmatter.pop("updated", None)
+    payload = {
+        "frontmatter": frontmatter,
+        "body": str(doc.get("body", "")).strip().replace("\r\n", "\n"),
+    }
+    return {
+        "digest": canonical_digest(payload),
+        "git": git_anchor([str(doc.get("path", "")).strip()]),
+    }
+
+
+def task_revision(task: dict[str, Any]) -> dict[str, Any]:
+    payload = {
+        key: task.get(key)
+        for key in ["id", "title", "status", "priority", "kind", "summary", "labels", "goal", "spec_paths", "code_paths", "research_ids", "delta"]
+    }
+    return {"digest": canonical_digest(payload)}
+
+
+def load_previous_status_state() -> dict[str, Any]:
+    if not STATUS_STATE_PATH.exists():
+        return {}
+    try:
+        data = json.loads(STATUS_STATE_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def split_frontmatter(text: str) -> tuple[dict[str, Any], str]:
     if not text.startswith("---\n"):
         return {}, text
@@ -94,9 +193,8 @@ def split_frontmatter(text: str) -> tuple[dict[str, Any], str]:
         return {}, text
     raw = text[4:end]
     body = text[end + 5 :]
-    data = yaml.safe_load(raw) or {}
-    if not isinstance(data, dict):
-        data = {}
+    loaded = yaml.safe_load(raw) or {}
+    data: dict[str, Any] = loaded if isinstance(loaded, dict) else {}
     return data, body
 
 
@@ -111,7 +209,7 @@ def extract_title(path: Path, body: str, frontmatter: dict[str, Any]) -> str:
 
 
 def classify_doc(path: Path) -> str:
-    if path == ROADMAP_DOC_PATH:
+    if ROADMAP_DOC_PATH is not None and path == ROADMAP_DOC_PATH:
         return "roadmap"
     if path.is_relative_to(SPECS_ROOT):
         return "spec"
@@ -119,15 +217,16 @@ def classify_doc(path: Path) -> str:
 
 
 def markdown_doc_files() -> list[Path]:
+    generated_outputs = {path for path in [INDEX_PATH, ROADMAP_DOC_PATH] if path is not None}
     files: list[Path] = []
     if SPECS_ROOT.exists():
         for path in sorted(SPECS_ROOT.rglob("*.md")):
-            if path == INDEX_PATH or path == ROADMAP_DOC_PATH:
+            if path in generated_outputs:
                 continue
             if path.is_relative_to(SPECS_ROOT / "_templates"):
                 continue
             files.append(path)
-    if ROADMAP_DOC_PATH.exists():
+    if ROADMAP_DOC_PATH is not None and ROADMAP_DOC_PATH.exists():
         files.append(ROADMAP_DOC_PATH)
     return files
 
@@ -164,6 +263,76 @@ def read_roadmap_file(path: Path) -> dict[str, Any]:
         "order": order,
         "tasks": tasks,
     }
+
+
+def closed_task_sort_key(task_id: str, task: dict[str, Any]) -> tuple[str, str, str]:
+    return (
+        str(task.get("updated", "")),
+        str(task.get("created", "")),
+        task_id,
+    )
+
+
+def archive_existing_task_ids(path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    opener = gzip.open if path.suffix == ".gz" else open
+    result: set[str] = set()
+    with opener(path, "rt", encoding="utf-8") as handle:
+        for raw in handle:
+            line = raw.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            task = record.get("task") if isinstance(record, dict) else None
+            task_id = task.get("id") if isinstance(task, dict) else None
+            if isinstance(task_id, str) and task_id.strip():
+                result.add(task_id.strip())
+    return result
+
+
+def append_archived_tasks(path: Path, records: list[dict[str, Any]]) -> None:
+    if not records:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "at", encoding="utf-8") as handle:
+        for record in records:
+            handle.write(json.dumps(record, separators=(",", ":"), sort_keys=False) + "\n")
+
+
+def compact_roadmap_hot_set(roadmap: dict[str, Any]) -> bool:
+    tasks_raw = roadmap.get("tasks")
+    tasks: dict[str, Any] = tasks_raw if isinstance(tasks_raw, dict) else {}
+    order_raw = roadmap.get("order")
+    order_values = order_raw if isinstance(order_raw, list) else []
+    order = [str(task_id) for task_id in order_values if str(task_id) in tasks]
+    closed_ids = [task_id for task_id in order if is_closed_task_status(tasks[task_id].get("status"))]
+    if len(closed_ids) <= CLOSED_TASK_RETENTION_LIMIT:
+        return False
+    keep_closed = set(sorted(closed_ids, key=lambda task_id: closed_task_sort_key(task_id, tasks[task_id]), reverse=True)[:CLOSED_TASK_RETENTION_LIMIT])
+    archive_ids = [task_id for task_id in closed_ids if task_id not in keep_closed]
+    existing_archive_ids = archive_existing_task_ids(ROADMAP_ARCHIVE_PATH)
+    archived_at = now_iso()
+    archive_records = [
+        {
+            "archived_at": archived_at,
+            "reason": "closed_task_retention",
+            "task": tasks[task_id],
+        }
+        for task_id in archive_ids
+        if task_id not in existing_archive_ids
+    ]
+    append_archived_tasks(ROADMAP_ARCHIVE_PATH, archive_records)
+    for task_id in archive_ids:
+        tasks.pop(task_id, None)
+    roadmap["order"] = [task_id for task_id in order if task_id not in set(archive_ids)]
+    roadmap["tasks"] = tasks
+    roadmap["updated"] = archived_at
+    return True
 
 
 def roadmap_entries(roadmap: dict[str, Any]) -> list[dict[str, Any]]:
@@ -216,10 +385,14 @@ def parse_doc(path: Path) -> dict[str, Any]:
     frontmatter, body = split_frontmatter(text)
     rel = path.relative_to(ROOT)
     title = extract_title(path, body, frontmatter)
-    summary = frontmatter.get("summary") if isinstance(frontmatter.get("summary"), str) else ""
-    owners = frontmatter.get("owners") if isinstance(frontmatter.get("owners"), list) else []
-    tags = frontmatter.get("tags") if isinstance(frontmatter.get("tags"), list) else []
-    code_paths = frontmatter.get("code_paths") if isinstance(frontmatter.get("code_paths"), list) else []
+    summary_raw = frontmatter.get("summary")
+    summary = summary_raw if isinstance(summary_raw, str) else ""
+    owners_raw = frontmatter.get("owners")
+    owners = owners_raw if isinstance(owners_raw, list) else []
+    tags_raw = frontmatter.get("tags")
+    tags = tags_raw if isinstance(tags_raw, list) else []
+    code_paths_raw = frontmatter.get("code_paths")
+    code_paths = code_paths_raw if isinstance(code_paths_raw, list) else []
     doc_type = classify_doc(path)
     return {
         "path": rel.as_posix(),
@@ -235,6 +408,7 @@ def parse_doc(path: Path) -> dict[str, Any]:
         "code_paths": [str(x) for x in code_paths],
         "links": extract_links(body, rel),
         "word_count": len(re.findall(r"\S+", body)),
+        "revision": semantic_doc_revision({"path": rel.as_posix(), "frontmatter": frontmatter, "body": body}),
     }
 
 
@@ -254,6 +428,7 @@ def load_research_collections() -> list[dict[str, Any]]:
                     "web_link": str(entry.get("web_link", "")).strip(),
                     "updated": str(entry.get("updated", "")).strip(),
                     "tags": [str(value) for value in entry.get("tags", []) if str(value).strip()],
+                    "revision": {"digest": canonical_digest(entry), "git": git_anchor([path.relative_to(ROOT).as_posix()])},
                 }
             )
         collections.append(
@@ -309,6 +484,7 @@ def build_graph(docs: list[dict[str, Any]], research: list[dict[str, Any]], road
             summary=str(doc.get("summary", "")).strip(),
             owners=[str(value) for value in doc.get("owners", []) if str(value).strip()],
             tags=[str(value) for value in doc.get("tags", []) if str(value).strip()],
+            revision=doc.get("revision", {}),
         )
         for target in [str(value) for value in doc.get("links", []) if str(value).strip()]:
             add_edge("doc_link", doc_id, f"doc:{target}")
@@ -341,6 +517,7 @@ def build_graph(docs: list[dict[str, Any]], research: list[dict[str, Any]], road
                 web_link=str(entry.get("web_link", "")).strip(),
                 updated=str(entry.get("updated", "")).strip(),
                 tags=[str(value) for value in entry.get("tags", []) if str(value).strip()],
+                revision=entry.get("revision", {}),
             )
             add_edge("collection_contains_entry", collection_id, entry_node_id)
 
@@ -361,6 +538,7 @@ def build_graph(docs: list[dict[str, Any]], research: list[dict[str, Any]], road
             summary=str(task.get("summary", "")).strip(),
             updated=str(task.get("updated", "")).strip(),
             labels=[str(value) for value in task.get("labels", []) if str(value).strip()],
+            revision=task_revision(task),
         )
         for spec_path in [str(value) for value in task.get("spec_paths", []) if str(value).strip()]:
             add_edge("task_spec", task_node_id, f"doc:{spec_path}")
@@ -379,9 +557,17 @@ def build_graph(docs: list[dict[str, Any]], research: list[dict[str, Any]], road
         "clients": [path for path in spec_paths if path_starts_with_any(path, CLIENTS_SPEC_PREFIXES)],
     }
 
+    revision = {
+        "git": git_anchor(doc_paths + sorted(code_paths) + [ROADMAP_PATH.relative_to(ROOT).as_posix()]),
+        "spec_digest": canonical_digest({path: (next((doc.get("revision", {}) for doc in docs if str(doc.get("path", "")) == path), {}) or {}).get("digest", "") for path in spec_paths}),
+        "task_digest": canonical_digest({str(item.get("id", "")).strip(): task_revision(item).get("digest", "") for item in roadmap_entries if str(item.get("id", "")).strip()}),
+        "evidence_digest": canonical_digest(research),
+    }
+
     return {
         "version": 1,
         "generated_at": now_iso(),
+        "revision": revision,
         "nodes": nodes,
         "edges": edges,
         "views": {
@@ -391,8 +577,8 @@ def build_graph(docs: list[dict[str, Any]], research: list[dict[str, Any]], road
                 "by_group": grouped_spec_paths,
                 "by_type": {
                     "spec": spec_paths,
-                    "roadmap": [path for path in doc_paths if path == ROADMAP_DOC_PATH.relative_to(ROOT).as_posix()],
-                    "doc": [path for path in doc_paths if path not in spec_paths and path != ROADMAP_DOC_PATH.relative_to(ROOT).as_posix()],
+                    "roadmap": [path for path in doc_paths if ROADMAP_DOC_PATH is not None and path == ROADMAP_DOC_PATH.relative_to(ROOT).as_posix()],
+                    "doc": [path for path in doc_paths if path not in spec_paths and (ROADMAP_DOC_PATH is None or path != ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())],
                 },
             },
             "roadmap": {
@@ -531,7 +717,8 @@ def lint_roadmap_entries(entries: list[dict[str, Any]], research_collections: li
         spec_paths = [str(value) for value in entry.get("spec_paths", []) if str(value).strip()]
         code_paths = [str(value) for value in entry.get("code_paths", []) if str(value).strip()]
         research_refs = [str(value) for value in entry.get("research_ids", []) if str(value).strip()]
-        goal = entry.get("goal") if isinstance(entry.get("goal"), dict) else {}
+        goal_raw = entry.get("goal")
+        goal: dict[str, Any] = cast(dict[str, Any], goal_raw) if isinstance(goal_raw, dict) else {}
         acceptance = [str(value).strip() for value in goal.get("acceptance", []) if str(value).strip()] if isinstance(goal.get("acceptance"), list) else []
         non_goals = [str(value).strip() for value in goal.get("non_goals", []) if str(value).strip()] if isinstance(goal.get("non_goals"), list) else []
         verification = [str(value).strip() for value in goal.get("verification", []) if str(value).strip()] if isinstance(goal.get("verification"), list) else []
@@ -608,7 +795,8 @@ def lint(docs: list[dict[str, Any]], roadmap_entries: list[dict[str, Any]], rese
 
 
 def lint_health(lint_report: dict[str, Any]) -> dict[str, Any]:
-    issues = lint_report.get("issues") if isinstance(lint_report.get("issues"), list) else []
+    issues_raw = lint_report.get("issues")
+    issues = [item for item in issues_raw if isinstance(item, dict)] if isinstance(issues_raw, list) else []
     errors = sum(1 for item in issues if str(item.get("severity", "")) == "error")
     warnings = sum(1 for item in issues if str(item.get("severity", "")) == "warning")
     color = "red" if errors > 0 else "yellow" if warnings > 0 else "green"
@@ -622,12 +810,12 @@ def lint_health(lint_report: dict[str, Any]) -> dict[str, Any]:
 
 def normalize_task_phase(value: Any) -> str:
     phase = str(value or "").strip()
-    return phase if phase in {"research", "implement", "verify", "done"} else "research"
+    if phase == "research":
+        return "implement"
+    return phase if phase in {"implement", "verify", "done"} else "implement"
 
 
 def next_task_phase(phase: str) -> str:
-    if phase == "research":
-        return "implement"
     if phase == "implement":
         return "verify"
     if phase == "verify":
@@ -637,22 +825,30 @@ def next_task_phase(phase: str) -> str:
 
 def default_task_phase(status: str) -> str:
     normalized = str(status or "todo").strip()
-    if normalized in {"research", "implement", "verify", "done"}:
+    if normalized == "research":
+        return "implement"
+    if normalized in {"implement", "verify", "done"}:
         return normalized
     if normalized == "todo":
-        return "research"
+        return "implement"
     if normalized in {"in_progress", "blocked"}:
         return "implement"
-    return "research"
+    return "implement"
 
 
 def roadmap_task_stage(status: Any, loop_phase: Any = "") -> str:
     normalized = str(status or "todo").strip()
-    if normalized in {"todo", "research", "implement", "verify", "done"}:
+    if normalized == "research":
+        return "research"
+    if normalized in {"todo", "implement", "verify", "done"}:
         return normalized
     if normalized in {"in_progress", "blocked"}:
         return normalize_task_phase(loop_phase)
     return "todo"
+
+
+def is_closed_task_status(status: Any) -> bool:
+    return str(status or "").strip() in {"done", "cancelled"}
 
 
 def is_open_task_status(status: Any) -> bool:
@@ -680,8 +876,7 @@ def build_task_loop_state(task_id: str, status: str, events: list[dict[str, Any]
             phase = next_task_phase(normalize_task_phase(event.get("phase")))
             updated_at = timestamp or updated_at
         elif kind == "task_phase_failed":
-            failed_phase = normalize_task_phase(event.get("phase"))
-            phase = "research" if failed_phase == "research" else "implement"
+            phase = "implement"
             updated_at = timestamp or updated_at
         elif kind == "task_phase_blocked":
             phase = normalize_task_phase(event.get("phase"))
@@ -733,6 +928,8 @@ def build_roadmap_state(entries: list[dict[str, Any]], graph: dict[str, Any], li
             "spec_paths": [str(value) for value in item.get("spec_paths", []) if str(value).strip()],
             "code_paths": [str(value) for value in item.get("code_paths", []) if str(value).strip()],
             "updated": str(item.get("updated", "")).strip(),
+            "revision": task_revision(item),
+            "context_path": (ROADMAP_TASKS_PATH / task_id / "context.json").relative_to(ROOT).as_posix(),
             "loop": build_task_loop_state(task_id, str(item.get("status", "todo")), events or []),
         }
 
@@ -754,6 +951,9 @@ def build_roadmap_state(entries: list[dict[str, Any]], graph: dict[str, Any], li
         "source": {
             "graph_version": int(graph.get("version", 0) or 0),
             "graph_generated_at": str(graph.get("generated_at", "")).strip(),
+            "revision": graph.get("revision", {}),
+            "roadmap_folder": ROADMAP_FOLDER_PATH.relative_to(ROOT).as_posix(),
+            "task_context_root": ROADMAP_TASKS_PATH.relative_to(ROOT).as_posix(),
         },
         "summary": {
             "task_count": len(entries),
@@ -806,6 +1006,8 @@ def spec_group(path: str) -> str:
 
 
 def spec_requires_code_mapping(path: str) -> bool:
+    if path.startswith(f"{SYSTEM_SPEC_PREFIX}runtime/"):
+        return False
     return path.startswith(SYSTEM_SPEC_PREFIX)
 
 
@@ -841,6 +1043,69 @@ def lane_stats(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def previous_heartbeat_lane(previous_status: dict[str, Any], lane_id: str) -> dict[str, Any] | None:
+    heartbeat = previous_status.get("heartbeat") if isinstance(previous_status.get("heartbeat"), dict) else {}
+    lanes = heartbeat.get("lanes", []) if isinstance(heartbeat, dict) else []
+    for lane in lanes if isinstance(lanes, list) else []:
+        if isinstance(lane, dict) and str(lane.get("id", "")).strip() == lane_id:
+            return lane
+    return None
+
+
+def lane_revision_anchor(row_paths: list[str], code_paths: list[str], open_task_ids: list[str], spec_rows_by_path: dict[str, dict[str, Any]], roadmap_entries: list[dict[str, Any]]) -> dict[str, Any]:
+    tasks_by_id = {str(task.get("id", "")).strip(): task for task in roadmap_entries if str(task.get("id", "")).strip()}
+    spec_digests = {
+        path: str(((spec_rows_by_path.get(path, {}) or {}).get("revision") or {}).get("digest", "")).strip()
+        for path in row_paths
+    }
+    task_digests = {
+        task_id: str(task_revision(tasks_by_id[task_id]).get("digest", "")).strip()
+        for task_id in open_task_ids
+        if task_id in tasks_by_id
+    }
+    code_digest = canonical_digest({path: sha256_text((ROOT / path).read_text(encoding="utf-8", errors="ignore")) for path in code_paths if (ROOT / path).is_file()})
+    anchor = {
+        "git": git_anchor(row_paths + code_paths + [ROADMAP_PATH.relative_to(ROOT).as_posix()]),
+        "spec_digest": canonical_digest(spec_digests),
+        "task_digest": canonical_digest(task_digests),
+        "code_digest": code_digest,
+    }
+    anchor["digest"] = canonical_digest(anchor)
+    return anchor
+
+
+def lane_freshness(anchor: dict[str, Any], previous_lane: dict[str, Any] | None, checked_at: str) -> dict[str, Any]:
+    if not previous_lane:
+        return {
+            "status": "fresh",
+            "basis": "revision",
+            "checked_at": checked_at,
+            "reason": "no previous heartbeat anchor; current revision captured",
+            "stale_state_guidance": "Resume normally; future spec, task, or mapped code revision changes will mark this lane stale.",
+        }
+    previous_revision = previous_lane.get("revision")
+    previous_anchor: dict[str, Any] = cast(dict[str, Any], previous_revision) if isinstance(previous_revision, dict) else {}
+    changed = []
+    for key in ["spec_digest", "task_digest", "code_digest"]:
+        if str(anchor.get(key, "")) != str(previous_anchor.get(key, "")):
+            changed.append(key.replace("_digest", ""))
+    if changed:
+        return {
+            "status": "stale",
+            "basis": "revision",
+            "checked_at": checked_at,
+            "reason": f"revision changed: {', '.join(changed)}",
+            "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis.",
+        }
+    return {
+        "status": "fresh",
+        "basis": "revision",
+        "checked_at": checked_at,
+        "reason": "revision anchors unchanged since previous heartbeat",
+        "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions.",
+    }
+
+
 def build_heartbeat_lane(
     lane_id: str,
     title: str,
@@ -851,6 +1116,7 @@ def build_heartbeat_lane(
     spec_rows_by_path: dict[str, dict[str, Any]],
     roadmap_entries: list[dict[str, Any]],
     recommendation: dict[str, str],
+    previous_status: dict[str, Any],
 ) -> dict[str, Any]:
     rows = [spec_rows_by_path[path] for path in spec_paths if path in spec_rows_by_path]
     row_paths = [str(row.get("path", "")).strip() for row in rows if str(row.get("path", "")).strip()]
@@ -873,6 +1139,10 @@ def build_heartbeat_lane(
         if set(task_spec_paths) & set(row_paths) or set(task_code_paths) & set(code_paths):
             open_task_ids.append(task_id)
 
+    checked_at = now_iso()
+    normalized_open_task_ids = unique(open_task_ids)
+    revision = lane_revision_anchor(row_paths, code_paths, normalized_open_task_ids, spec_rows_by_path, roadmap_entries)
+
     return {
         "id": lane_id,
         "title": title,
@@ -881,11 +1151,13 @@ def build_heartbeat_lane(
         "fallback_max_age_hours": fallback_max_age_hours,
         "interval_hours": fallback_max_age_hours,
         "triggers": triggers,
-        "checked_at": now_iso(),
+        "checked_at": checked_at,
+        "revision": revision,
+        "freshness": lane_freshness(revision, previous_heartbeat_lane(previous_status, lane_id), checked_at),
         "spec_paths": row_paths,
         "code_paths": code_paths,
         "code_area": compact_code_area(code_paths),
-        "open_task_ids": unique(open_task_ids),
+        "open_task_ids": normalized_open_task_ids,
         "risky_spec_paths": [path for path in row_paths if str(spec_rows_by_path.get(path, {}).get("drift_status", "aligned")) != "aligned"],
         "stats": lane_stats(rows),
         "recommendation": recommendation,
@@ -932,7 +1204,11 @@ def build_resume_state(
 
     stale_lane: dict[str, Any] | None = None
     for lane in heartbeat_lanes:
-        if (lane.get("risky_spec_paths") or lane.get("open_task_ids") or ((lane.get("stats") or {}).get("untracked_specs", 0)) or ((lane.get("stats") or {}).get("blocked_specs", 0))):
+        freshness_raw = lane.get("freshness")
+        freshness: dict[str, Any] = {}
+        if isinstance(freshness_raw, dict):
+            freshness = freshness_raw
+        if freshness.get("status") == "stale" or (lane.get("risky_spec_paths") or lane.get("open_task_ids") or ((lane.get("stats") or {}).get("untracked_specs", 0)) or ((lane.get("stats") or {}).get("blocked_specs", 0))):
             stale_lane = lane
             break
     if stale_lane:
@@ -943,10 +1219,10 @@ def build_resume_state(
             "heading": str(stale_lane.get("title", "")).strip(),
             "command": str(((stale_lane.get("recommendation") or {}).get("command", "")).strip()),
             "reason": "Resume from stale heartbeat lane.",
-            "phase": "research",
+            "phase": "implement",
             "verification": str(((stale_lane.get("recommendation") or {}).get("reason", "")).strip()),
             "evidence": "No closure evidence recorded yet.",
-            "heartbeat": f"{len(stale_lane.get('risky_spec_paths', []))} risky spec(s) and {len(stale_lane.get('open_task_ids', []))} open task(s).",
+            "heartbeat": str(((stale_lane.get("freshness") or {}).get("stale_state_guidance", "")).strip()) or f"{len(stale_lane.get('risky_spec_paths', []))} risky spec(s) and {len(stale_lane.get('open_task_ids', []))} open task(s).",
         }
 
     return {
@@ -956,7 +1232,7 @@ def build_resume_state(
         "heading": "Roadmap clear",
         "command": str(next_step.get("command", "")).strip(),
         "reason": str(next_step.get("reason", "")).strip(),
-        "phase": "research",
+        "phase": "implement",
         "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
         "heartbeat": "All heartbeat lanes currently fresh.",
@@ -1029,6 +1305,7 @@ def build_parallel_session_state(events: list[dict[str, Any]], roadmap_state: di
 
 
 def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadmap_entries: list[dict[str, Any]], lint_report: dict[str, Any], roadmap_state: dict[str, Any], events: list[dict[str, Any]]) -> dict[str, Any]:
+    previous_status = load_previous_status_state()
     health = lint_health(lint_report)
     doc_by_path = {str(doc.get("path", "")).strip(): doc for doc in docs if str(doc.get("path", "")).strip()}
     graph_doc_code_paths: dict[str, list[str]] = {}
@@ -1048,16 +1325,22 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
         if not path:
             continue
         doc = doc_by_path.get(path, {})
+        doc_code_paths = doc.get("code_paths", [])
+        if not isinstance(doc_code_paths, list):
+            doc_code_paths = []
         graph_spec_docs.append({
             **doc,
             "path": path,
             "title": str(node.get("title", doc.get("title", path))).strip(),
             "summary": str(doc.get("summary", node.get("summary", ""))).strip(),
             "doc_type": "spec",
-            "code_paths": unique(graph_doc_code_paths.get(path, []) or [str(value) for value in doc.get("code_paths", []) if str(value).strip()]),
+            "code_paths": unique(graph_doc_code_paths.get(path, []) or [str(value) for value in doc_code_paths if str(value).strip()]),
+            "revision": node.get("revision", doc.get("revision", {})),
         })
     spec_docs = sorted(graph_spec_docs or [doc for doc in docs if doc.get("doc_type") == "spec"], key=lambda doc: str(doc.get("path", "")))
-    issues = lint_report.get("issues") if isinstance(lint_report.get("issues"), list) else []
+    raw_issues_value = lint_report.get("issues")
+    raw_issues: list[Any] = raw_issues_value if isinstance(raw_issues_value, list) else []
+    issues: list[dict[str, Any]] = [issue for issue in raw_issues if isinstance(issue, dict)]
     open_tasks_by_spec: dict[str, list[dict[str, Any]]] = {}
     blocked_tasks_by_spec: dict[str, list[dict[str, Any]]] = {}
     done_tasks_by_spec: dict[str, list[dict[str, Any]]] = {}
@@ -1137,6 +1420,7 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
                     "status": str(primary_task.get("status", "")).strip(),
                     "title": str(primary_task.get("title", "")).strip(),
                 } if isinstance(primary_task, dict) else None,
+                "revision": doc.get("revision", {}),
                 "note": note,
             }
         )
@@ -1175,6 +1459,7 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
                 "command": "/wiki-status",
                 "reason": "Strategic intent drift should first be inspected through the canonical status surface.",
             },
+            previous_status,
         ),
         build_heartbeat_lane(
             "system_code",
@@ -1196,6 +1481,7 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
                 "command": "/wiki-resume",
                 "reason": "Implementation drift should be checked most frequently against owning system specs.",
             },
+            previous_status,
         ),
         build_heartbeat_lane(
             "product_system_ux",
@@ -1217,6 +1503,7 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
                 "command": "/wiki-status",
                 "reason": "User-visible drift should first be inspected through the canonical status surface.",
             },
+            previous_status,
         ),
     ]
 
@@ -1306,6 +1593,7 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
         "source": {
             "graph_version": int(graph.get("version", 0) or 0),
             "graph_generated_at": str(graph.get("generated_at", "")).strip(),
+            "revision": graph.get("revision", {}),
         },
         "project": {
             "name": PROJECT_NAME,
@@ -1383,12 +1671,12 @@ def build_status_state(docs: list[dict[str, Any]], graph: dict[str, Any], roadma
 
 def docs_relative_link(root_relative_path: str) -> str:
     abs_path = ROOT / root_relative_path
-    output_root = ROADMAP_DOC_PATH.parent if ROADMAP_DOC_PATH.parent.exists() else INDEX_PATH.parent
+    output_root = (ROADMAP_DOC_PATH or INDEX_PATH or META_ROOT).parent
     return os.path.relpath(abs_path, output_root).replace("\\", "/")
 
 
 def roadmap_sort_key(item: dict[str, Any]) -> tuple[int, int, str]:
-    status_order = {"research": 0, "implement": 1, "verify": 2, "in_progress": 1, "blocked": 2, "todo": 3, "done": 4, "cancelled": 5}
+    status_order = {"implement": 0, "verify": 1, "in_progress": 0, "blocked": 1, "todo": 2, "research": 2, "done": 3, "cancelled": 4}
     priority_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     status = str(item.get("status", "todo"))
     priority = str(item.get("priority", "medium"))
@@ -1448,8 +1736,14 @@ def render_roadmap(entries: list[dict[str, Any]]) -> str:
             code_paths = [str(value) for value in item.get("code_paths", []) if str(value).strip()]
             research_ids = [str(value) for value in item.get("research_ids", []) if str(value).strip()]
             labels = [str(value) for value in item.get("labels", []) if str(value).strip()]
-            goal = item.get("goal") if isinstance(item.get("goal"), dict) else {}
-            delta = item.get("delta") if isinstance(item.get("delta"), dict) else {}
+            goal_raw = item.get("goal")
+            goal: dict[str, Any] = {}
+            if isinstance(goal_raw, dict):
+                goal.update(goal_raw)
+            delta_raw = item.get("delta")
+            delta: dict[str, Any] = {}
+            if isinstance(delta_raw, dict):
+                delta.update(delta_raw)
 
             if spec_paths:
                 lines.append("- Specs:")
@@ -1526,6 +1820,7 @@ def render_index(docs: list[dict[str, Any]], research_collections: list[dict[str
         grouped.setdefault(rel.parts[0], []).append(doc)
 
     roadmap_counts = Counter(str(item.get("status", "todo")) for item in roadmap_entries)
+    roadmap_doc_rel = ROADMAP_DOC_PATH.relative_to(ROOT).as_posix() if ROADMAP_DOC_PATH is not None else ""
     lines = [
         f"# {INDEX_TITLE}",
         "",
@@ -1533,7 +1828,7 @@ def render_index(docs: list[dict[str, Any]], research_collections: list[dict[str
         "",
         "## Roadmap",
         "",
-        f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — {len(roadmap_entries)} task(s); " + ", ".join(f"{key}={value}" for key, value in sorted(roadmap_counts.items())) if roadmap_entries else f"- [Roadmap]({docs_relative_link(ROADMAP_DOC_PATH.relative_to(ROOT).as_posix())}) — 0 tasks",
+        f"- [Roadmap]({docs_relative_link(roadmap_doc_rel)}) — {len(roadmap_entries)} task(s); " + ", ".join(f"{key}={value}" for key, value in sorted(roadmap_counts.items())) if roadmap_entries else f"- [Roadmap]({docs_relative_link(roadmap_doc_rel)}) — 0 tasks",
         "",
         "## Docs — Root",
         "",
@@ -1573,28 +1868,195 @@ def write_json(path: Path, data: Any) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=False) + "\n", encoding="utf-8")
 
 
+def code_paths_digest(paths: list[str]) -> str:
+    payload: dict[str, str] = {}
+    for path in paths:
+        candidate = ROOT / path
+        if candidate.is_file():
+            payload[path] = sha256_text(candidate.read_text(encoding="utf-8", errors="ignore"))
+    return canonical_digest(payload)
+
+
+def task_context_rel_path(task_id: str) -> str:
+    return (ROADMAP_TASKS_PATH / task_id / "context.json").relative_to(ROOT).as_posix()
+
+
+def compact_task_goal(task: dict[str, Any]) -> dict[str, Any]:
+    goal_raw = task.get("goal")
+    goal = goal_raw if isinstance(goal_raw, dict) else {}
+    return {
+        "outcome": str(goal.get("outcome", "")).strip(),
+        "acceptance": [str(value).strip() for value in goal.get("acceptance", []) if str(value).strip()] if isinstance(goal.get("acceptance"), list) else [],
+        "non_goals": [str(value).strip() for value in goal.get("non_goals", []) if str(value).strip()] if isinstance(goal.get("non_goals"), list) else [],
+        "verification": [str(value).strip() for value in goal.get("verification", []) if str(value).strip()] if isinstance(goal.get("verification"), list) else [],
+    }
+
+
+def compact_revision_digest(revision: Any) -> dict[str, str]:
+    if not isinstance(revision, dict):
+        return {"digest": ""}
+    return {"digest": str(revision.get("digest", "")).strip()}
+
+
+def compact_git_anchor(paths: list[str]) -> dict[str, Any]:
+    anchor = git_anchor(paths)
+    raw_paths = anchor.get("paths", {}) if isinstance(anchor.get("paths"), dict) else {}
+    return {
+        "head": str(anchor.get("head", "")).strip(),
+        "dirty": bool(anchor.get("dirty", False)),
+        "dirty_paths": [str(path).strip() for path in anchor.get("dirty_paths", [])[:12] if str(path).strip()] if isinstance(anchor.get("dirty_paths"), list) else [],
+        "paths": {str(path): str(commit)[:12] for path, commit in raw_paths.items()},
+    }
+
+
+def compact_graph_revision(graph: dict[str, Any]) -> dict[str, Any]:
+    revision = graph.get("revision") if isinstance(graph.get("revision"), dict) else {}
+    git = revision.get("git") if isinstance(revision.get("git"), dict) else {}
+    return {
+        "git": {
+            "head": str(git.get("head", "")).strip(),
+            "dirty": bool(git.get("dirty", False)),
+        },
+        "spec_digest": str(revision.get("spec_digest", "")).strip(),
+        "task_digest": str(revision.get("task_digest", "")).strip(),
+        "evidence_digest": str(revision.get("evidence_digest", "")).strip(),
+    }
+
+
+def compact_spec_contract(path: str, docs_by_path: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    doc = docs_by_path.get(path) or {}
+    return {
+        "path": path,
+        "title": str(doc.get("title", Path(path).stem)).strip(),
+        "summary": str(doc.get("summary", "")).strip(),
+        "state": str(doc.get("state", "")).strip(),
+        "owners": [str(value).strip() for value in doc.get("owners", []) if str(value).strip()] if isinstance(doc.get("owners"), list) else [],
+        "code_paths": [str(value).strip() for value in doc.get("code_paths", []) if str(value).strip()] if isinstance(doc.get("code_paths"), list) else [],
+        "revision": compact_revision_digest(doc.get("revision", {})),
+        "expand": {"read": path},
+    }
+
+
+def build_task_context_packet(task: dict[str, Any], runtime_task: dict[str, Any], docs_by_path: dict[str, dict[str, Any]], graph: dict[str, Any]) -> dict[str, Any]:
+    task_id = str(task.get("id", "")).strip()
+    spec_paths = [str(value).strip() for value in task.get("spec_paths", []) if str(value).strip()] if isinstance(task.get("spec_paths"), list) else []
+    code_paths = [str(value).strip() for value in task.get("code_paths", []) if str(value).strip()] if isinstance(task.get("code_paths"), list) else []
+    spec_digests: dict[str, str] = {}
+    for path in spec_paths:
+        doc = docs_by_path.get(path)
+        revision_raw = doc.get("revision") if isinstance(doc, dict) else {}
+        revision_doc = revision_raw if isinstance(revision_raw, dict) else {}
+        spec_digests[path] = str(revision_doc.get("digest", "")).strip()
+    loop_raw = runtime_task.get("loop")
+    loop: dict[str, Any] = loop_raw if isinstance(loop_raw, dict) else {}
+    evidence_raw = loop.get("evidence")
+    latest_evidence = evidence_raw if isinstance(evidence_raw, dict) else None
+    phase = str(loop.get("phase", default_task_phase(task.get("status", "todo")))).strip()
+    revision = {
+        "task": task_revision(task),
+        "git": compact_git_anchor(spec_paths + code_paths + [ROADMAP_PATH.relative_to(ROOT).as_posix()]),
+        "spec_digest": canonical_digest(spec_digests),
+        "code_digest": code_paths_digest(code_paths),
+        "graph": compact_graph_revision(graph),
+    }
+    return {
+        "version": 1,
+        "generated_at": now_iso(),
+        "context_path": task_context_rel_path(task_id),
+        "budget": {
+            "target_tokens": 6000,
+            "policy": "Use this packet first. Expand only listed specs/code/evidence when phase or stale revision requires exact source.",
+        },
+        "task": {
+            "id": task_id,
+            "title": str(task.get("title", task_id)).strip(),
+            "status": str(task.get("status", "todo")).strip(),
+            "phase": phase,
+            "priority": str(task.get("priority", "medium")).strip(),
+            "kind": str(task.get("kind", "task")).strip(),
+            "summary": str(task.get("summary", "")).strip(),
+            "labels": [str(value).strip() for value in task.get("labels", []) if str(value).strip()] if isinstance(task.get("labels"), list) else [],
+            "goal": compact_task_goal(task),
+            "delta": task.get("delta", {}) if isinstance(task.get("delta"), dict) else {},
+        },
+        "revision": revision,
+        "specs": [compact_spec_contract(path, docs_by_path) for path in spec_paths],
+        "code": {
+            "paths": code_paths,
+            "digest": revision["code_digest"],
+            "expand": [{"read": path} for path in code_paths],
+        },
+        "evidence": latest_evidence,
+        "expansion": {
+            "task_json": (ROADMAP_TASKS_PATH / task_id / "task.json").relative_to(ROOT).as_posix(),
+            "roadmap_state": ROADMAP_STATE_PATH.relative_to(ROOT).as_posix(),
+            "status_state": STATUS_STATE_PATH.relative_to(ROOT).as_posix(),
+            "graph": (META_ROOT / "graph.json").relative_to(ROOT).as_posix(),
+        },
+    }
+
+
+def write_roadmap_folder_view(roadmap_items: list[dict[str, Any]], roadmap_state: dict[str, Any], docs: list[dict[str, Any]], graph: dict[str, Any]) -> None:
+    ROADMAP_FOLDER_PATH.mkdir(parents=True, exist_ok=True)
+    docs_by_path = {str(doc.get("path", "")).strip(): doc for doc in docs if str(doc.get("path", "")).strip()}
+    runtime_tasks = roadmap_state.get("tasks", {}) if isinstance(roadmap_state.get("tasks"), dict) else {}
+    task_index: list[dict[str, Any]] = []
+    for task in roadmap_items:
+        task_id = str(task.get("id", "")).strip()
+        if not task_id:
+            continue
+        task_dir = ROADMAP_TASKS_PATH / task_id
+        runtime_task = runtime_tasks.get(task_id, {}) if isinstance(runtime_tasks.get(task_id), dict) else {}
+        context = build_task_context_packet(task, runtime_task, docs_by_path, graph)
+        write_json(task_dir / "task.json", task)
+        write_json(task_dir / "context.json", context)
+        task_index.append({
+            "id": task_id,
+            "title": str(task.get("title", task_id)).strip(),
+            "status": str(task.get("status", "todo")).strip(),
+            "context_path": task_context_rel_path(task_id),
+        })
+    write_json(ROADMAP_FOLDER_PATH / "index.json", {
+        "version": 1,
+        "generated_at": now_iso(),
+        "source": ROADMAP_PATH.relative_to(ROOT).as_posix(),
+        "state_path": (ROADMAP_FOLDER_PATH / "state.json").relative_to(ROOT).as_posix(),
+        "events_path": (ROADMAP_FOLDER_PATH / "events.jsonl").relative_to(ROOT).as_posix(),
+        "task_context_root": ROADMAP_TASKS_PATH.relative_to(ROOT).as_posix(),
+        "tasks": task_index,
+    })
+    write_json(ROADMAP_FOLDER_PATH / "state.json", roadmap_state)
+    events_text = ROADMAP_EVENTS_PATH.read_text(encoding="utf-8") if ROADMAP_EVENTS_PATH.exists() else ""
+    (ROADMAP_FOLDER_PATH / "events.jsonl").write_text(events_text, encoding="utf-8")
+
+
 def main() -> None:
     META_ROOT.mkdir(parents=True, exist_ok=True)
     roadmap = read_roadmap_file(ROADMAP_PATH)
+    if compact_roadmap_hot_set(roadmap):
+        write_json(ROADMAP_PATH, roadmap)
     roadmap_items = roadmap_entries(roadmap)
-    ROADMAP_DOC_PATH.parent.mkdir(parents=True, exist_ok=True)
-    ROADMAP_DOC_PATH.write_text(render_roadmap(roadmap_items), encoding="utf-8")
+    if ROADMAP_DOC_PATH is not None:
+        ROADMAP_DOC_PATH.parent.mkdir(parents=True, exist_ok=True)
+        ROADMAP_DOC_PATH.write_text(render_roadmap(roadmap_items), encoding="utf-8")
 
     research_collections = load_research_collections()
     docs = [parse_doc(path) for path in markdown_doc_files()]
     graph = build_graph(docs, research_collections, roadmap_items)
-    index_text = render_index(docs, research_collections, roadmap_items)
 
     write_json(META_ROOT / "graph.json", graph)
     if not (META_ROOT / "events.jsonl").exists():
         (META_ROOT / "events.jsonl").write_text("", encoding="utf-8")
     if not ROADMAP_EVENTS_PATH.exists():
         ROADMAP_EVENTS_PATH.write_text("", encoding="utf-8")
-    INDEX_PATH.write_text(index_text, encoding="utf-8")
+    if INDEX_PATH is not None:
+        INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
+        INDEX_PATH.write_text(render_index(docs, research_collections, roadmap_items), encoding="utf-8")
     lint_report = lint(docs, roadmap_items, research_collections)
     write_json(META_ROOT / "lint.json", lint_report)
     roadmap_state = build_roadmap_state(roadmap_items, graph, lint_report, read_jsonl(META_ROOT / "events.jsonl"))
     write_json(ROADMAP_STATE_PATH, roadmap_state)
+    write_roadmap_folder_view(roadmap_items, roadmap_state, docs, graph)
     events = read_jsonl(META_ROOT / "events.jsonl")
     write_json(STATUS_STATE_PATH, build_status_state(docs, graph, roadmap_items, lint_report, roadmap_state, events))
 

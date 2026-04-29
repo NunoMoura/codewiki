@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-29T21:35:27Z",
+  "context_path": ".wiki/roadmap/tasks/TASK-001/context.json",
+  "budget": {
+    "target_tokens": 6000,
+    "policy": "Use this packet first. Expand only listed specs/code/evidence when phase or stale revision requires exact source."
+  },
+  "task": {
+    "id": "TASK-001",
+    "title": "Lock product intent in specs",
+    "status": "todo",
+    "phase": "implement",
+    "priority": "high",
+    "kind": "docs",
+    "summary": "Turn codewiki intent into explicit product and system docs.",
+    "labels": [
+      "foundation",
+      "specs"
+    ],
+    "goal": {
+      "outcome": "Project intent and ownership boundaries are explicit enough to guide implementation.",
+      "acceptance": [
+        "Foundational specs describe desired outcomes and major constraints.",
+        "At least one roadmap task links back to those specs."
+      ],
+      "non_goals": [
+        "Document every implementation detail before the project has real seams."
+      ],
+      "verification": [
+        "Review starter specs for project-specific intent and ownership coverage.",
+        "Run the rebuild command after replacing placeholders."
+      ]
+    },
+    "delta": {
+      "desired": "Product intent and architecture boundaries are explicit and stable.",
+      "current": "Starter docs need project-specific content.",
+      "closure": "Replace placeholders with concrete intended behavior and ownership boundaries."
+    }
+  },
+  "revision": {
+    "task": {
+      "digest": "8873f0abe6dc7eb1abfbe4c7ea53d0ae35169be7f03b9f1d5008b21f65bd888b"
+    },
+    "git": {
+      "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+      "dirty": true,
+      "dirty_paths": [
+        ".wiki/knowledge/product/overview.md",
+        ".wiki/knowledge/system/overview.md",
+        ".wiki/roadmap.json"
+      ],
+      "paths": {
+        ".wiki/knowledge/product/overview.md": "8be5b61bd6e3",
+        ".wiki/knowledge/system/overview.md": "8be5b61bd6e3",
+        ".wiki/roadmap.json": "8be5b61bd6e3"
+      }
+    },
+    "spec_digest": "aea3a62dd8e69468e7b2d2bb4ecb881ced6ee113e3c3a7478d2ba19c2e14809f",
+    "code_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "graph": {
+      "git": {
+        "head": "2771a351e64bdd1b39996b9872fd8513865b8c69",
+        "dirty": true
+      },
+      "spec_digest": "76e0c026a9b4690c83c2f7ef7e5ff2dec0ebcb26eeafa9da3a4b800513debcfd",
+      "task_digest": "64bf370a6372453c8920b88dddbc8257ed7ef9ad037fffda92b6c904002a99d5",
+      "evidence_digest": "f9b77809b7fdd935bcdd357cd1126bad9373fd4ca249653a37c353b8d89159d1"
+    }
+  },
+  "specs": [
+    {
+      "path": ".wiki/knowledge/product/overview.md",
+      "title": "Product",
+      "summary": "Product intent, users, and value boundaries for codewiki.",
+      "state": "active",
+      "owners": [
+        "product"
+      ],
+      "code_paths": [],
+      "revision": {
+        "digest": "616b473ab875f14493bccecd7b5a110a81f59715bcf35ace56ac12e10c6e8986"
+      },
+      "expand": {
+        "read": ".wiki/knowledge/product/overview.md"
+      }
+    },
+    {
+      "path": ".wiki/knowledge/system/overview.md",
+      "title": "System Overview",
+      "summary": "Main runtime areas and ownership boundaries for codewiki.",
+      "state": "active",
+      "owners": [
+        "architecture"
+      ],
+      "code_paths": [],
+      "revision": {
+        "digest": "f386b890187194ca049deab04850e30ba5be05cf0f49c750712ad69c48c81fc5"
+      },
+      "expand": {
+        "read": ".wiki/knowledge/system/overview.md"
+      }
+    }
+  ],
+  "code": {
+    "paths": [],
+    "digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "expand": []
+  },
+  "evidence": null,
+  "expansion": {
+    "task_json": ".wiki/roadmap/tasks/TASK-001/task.json",
+    "roadmap_state": ".wiki/roadmap-state.json",
+    "status_state": ".wiki/status-state.json",
+    "graph": ".wiki/graph.json"
+  }
+}

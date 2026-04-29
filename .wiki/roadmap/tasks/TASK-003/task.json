@@ -1,0 +1,38 @@
+{
+  "id": "TASK-003",
+  "title": "Keep roadmap as freshest delta log",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "process",
+  "summary": "Move drift and plan tracking into structured roadmap tasks instead of separate prose buckets.",
+  "spec_paths": [
+    ".wiki/knowledge/clients/overview.md"
+  ],
+  "code_paths": [],
+  "research_ids": [],
+  "labels": [
+    "roadmap",
+    "process"
+  ],
+  "goal": {
+    "outcome": "Tracked delta lives in roadmap tasks instead of scattered prose.",
+    "acceptance": [
+      "Active implementation gaps are represented by roadmap tasks.",
+      "Users can resume task work from Pi surfaces without editing roadmap JSON manually."
+    ],
+    "non_goals": [
+      "Maintain separate plan and drift documents for the same live work."
+    ],
+    "verification": [
+      "Inspect generated roadmap view after rebuild.",
+      "Confirm roadmap tasks cover current active delta."
+    ]
+  },
+  "delta": {
+    "desired": "Roadmap is single current queue for closing docs-to-code gaps.",
+    "current": "Teams often spread gaps across plans, drift notes, and chat.",
+    "closure": "Convert each active mismatch or sequence into a scoped roadmap task."
+  },
+  "created": "2026-04-29",
+  "updated": "2026-04-29"
+}

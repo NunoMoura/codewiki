@@ -60,15 +60,14 @@ Codewiki now centers on a hidden `.wiki` knowledge system plus derived views:
 - **events** — portable mutation history in `.wiki/events.jsonl`
 - **task** — atomic work unit inside roadmap, canonically named `TASK-###`
 
-Derived navigation and UI views stay separate:
+Derived navigation and UI views stay hidden under `.wiki/`:
 
-- `wiki/index.md`
-- `wiki/roadmap.md`
 - `.wiki/graph.json` as the primary derived relationship graph and shared view substrate
 - `.wiki/lint.json`
 - `.wiki/roadmap-state.json`
 - `.wiki/status-state.json`
 - `.wiki/graph.json` is the shared derived relationship substrate; no separate registry/backlinks compatibility layer is required
+- top-level generated `wiki/**` files are no longer emitted by default
 
 Pi session linkage stays local and operational:
 
@@ -198,10 +197,13 @@ Minimum expected contract:
   "docs_root": ".wiki/knowledge",
   "specs_root": ".wiki/knowledge",
   "evidence_root": ".wiki/evidence",
-  "index_path": "wiki/index.md",
   "roadmap_path": ".wiki/roadmap.json",
-  "roadmap_doc_path": "wiki/roadmap.md",
   "roadmap_events_path": ".wiki/roadmap-events.jsonl",
+  "roadmap_retention": {
+    "closed_task_limit": 50,
+    "archive_path": ".wiki/roadmap-archive.jsonl",
+    "compress_archive": false
+  },
   "meta_root": ".wiki",
   "codewiki": {
     "rebuild_command": ["python", "scripts/rebuild_docs_meta.py"]
@@ -211,13 +213,12 @@ Minimum expected contract:
 
 The rebuild command should update at least:
 
-- `wiki/index.md`
-- `wiki/roadmap.md`
-- `.wiki/graph.json`
 - `.wiki/graph.json`
 - `.wiki/lint.json`
 - `.wiki/roadmap-state.json`
 - `.wiki/status-state.json`
+
+Repos may opt into generated markdown exports by setting `index_path` or `roadmap_doc_path`, but the default contract does not create top-level `wiki/**` files.
 
 ## Recommended dogfooding workflow
 
@@ -251,7 +252,7 @@ Working rule for this repo:
 
 - edit canonical sources (`README.md`, knowledge docs under `.wiki/knowledge/`, `.wiki/roadmap.json`, runtime code)
 - rebuild generated outputs after changes
-- do not hand-edit generated outputs under `wiki/index.md`, `wiki/roadmap.md`, or `.wiki/*.json`
+- do not hand-edit generated outputs under `.wiki/graph.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`, or `.wiki/status-state.json`
 
 ## Why one extension and one skill
 
@@ -305,7 +306,7 @@ Starter bootstrap includes:
 - inferred first-pass boundary `overview.md` files under `.wiki/knowledge/system/` when brownfield structure is detected
 - `.wiki/evidence/inspiration.jsonl`
 - `.wiki/roadmap.json`
-- generated outputs like `wiki/index.md`, `wiki/roadmap.md`, `.wiki/graph.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`, and `.wiki/status-state.json`
+- generated outputs like `.wiki/graph.json`, `.wiki/lint.json`, `.wiki/roadmap-state.json`, and `.wiki/status-state.json`
 
 ### Status, fix, and review
 
@@ -315,11 +316,13 @@ The always-on surface is optional. When enabled it uses Pi's status area for a o
 
 `/wiki-status` is the canonical inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
-`/wiki-config`, `/wiki-status`, and `/wiki-resume` all accept an optional repo path when relevant. If Pi is running outside a repo with `wiki/` and `.wiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
+`/wiki-config`, `/wiki-status`, and `/wiki-resume` all accept an optional repo path when relevant. If Pi is running outside a repo with `.wiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 
 `/wiki-resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task.
 
 `/wiki-resume` runs inside the parent-owned task loop. Runtime status and resume output show the active phase plus latest structured evidence summary. Internal agent flows should read state through `codewiki_state`, record canonical task progress and evidence through `codewiki_task`, and keep runtime session focus separate through `codewiki_session`.
+
+For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, and all task shards as default context. Prefer compact state, the current task context shard, or latest lifecycle events first; expand to targeted raw specs/code only when phase or stale revision requires exact source.
 
 ### Status summary and panel
 
@@ -345,7 +348,7 @@ Runtime rule:
 
 It then uses that repo config to:
 
-- find authored docs, evidence, index, and roadmap paths
+- find authored docs, evidence, roadmap, and optional generated markdown export paths
 - run the configured rebuild command
 - read `.wiki/graph.json`, `.wiki/lint.json`, and `.wiki/events.jsonl`
 - build semantic audit scopes from `.wiki/config.json`
@@ -355,7 +358,39 @@ It then uses that repo config to:
 - read active task context from Pi session state at runtime
 - maintain `.wiki/graph.json`, `.wiki/roadmap-state.json`, and `.wiki/status-state.json` so the first-party summary/panel surfaces and any future third-party UI can read compact derived state without mutating canonical files
 
-That means one global package install can operate across many repos, while each repo keeps its own `wiki/`, `.wiki/`, and rebuild contract.
+That means one global package install can operate across many repos, while each repo keeps its own hidden `.wiki/` contract.
+
+### Runtime policy and transactions
+
+codewiki's local gateway is a transitional adapter, not the long-term generic sandbox. The intended split is:
+
+- `.wiki/config.json` declares codewiki policy: readable paths, direct writable paths, generated read-only paths, caps, and runtime adapter metadata.
+- `scripts/codewiki-gateway.mjs` validates and applies codewiki transactions today.
+- a future `think-code` executor can provide generic sandbox isolation while reusing the same repo-local policy and transaction schema.
+
+Current transaction shape:
+
+```json
+{
+  "version": 1,
+  "summary": "Update wiki evidence.",
+  "ops": [
+    {
+      "kind": "patch",
+      "path": ".wiki/knowledge/system/overview.md",
+      "oldText": "old exact text",
+      "newText": "new exact text"
+    },
+    {
+      "kind": "append_jsonl",
+      "path": ".wiki/evidence/runtime.jsonl",
+      "value": { "summary": "Evidence entry" }
+    }
+  ]
+}
+```
+
+The gateway applies only validated writes under configured `.wiki` paths and rebuilds generated state after successful writes. Generated files such as `.wiki/graph.json`, `.wiki/status-state.json`, `.wiki/roadmap-state.json`, and `.wiki/roadmap/**` are read-only transaction targets.
 
 ## Philosophy
 
@@ -363,13 +398,15 @@ This package assumes:
 
 - `.wiki/knowledge/` is source of truth for intended product, clients, and system design
 - `.wiki/evidence/` is compact machine-managed validation output, not longform archive by default
-- `.wiki/roadmap.json` is freshest tracked delta between authored docs and code
+- `.wiki/roadmap.json` is freshest tracked delta between authored docs and code, kept as a hot working set rather than unbounded history
+- closed tasks older than the configured retention window move losslessly to `.wiki/roadmap-archive.jsonl` by default
 - Pi sessions are execution history, not canonical roadmap truth
-- history defaults to git for full diffs, `.wiki/events.jsonl` for compact lifecycle events, and `.wiki/roadmap-events.jsonl` for roadmap mutations; package does not generate a separate compact-history file by default
+- history defaults to git for full diffs, `.wiki/events.jsonl` for compact lifecycle events, `.wiki/roadmap-events.jsonl` for roadmap mutations, and the optional roadmap archive for closed-task snapshots; package does not generate a separate compact-history file by default
 - code is implementation evidence
-- there is one generated live index
+- generated read models replace top-level markdown index exports by default
 - machine metadata stays hidden under `.wiki/`
 - plans and drift are better modeled as roadmap tasks than as separate top-level doc buckets
+- archive clearing is explicit only; normal compaction never deletes archived closed-task snapshots
 
 ## Repo layout
 
@@ -402,6 +439,12 @@ Or install it project-locally if you want this repo alone to pin the package sou
 pi install -l /absolute/path/to/codewiki
 ```
 
+Type-check the package with the project-local TypeScript compiler:
+
+```bash
+npm run typecheck
+```
+
 Smoke-test the package locally:
 
 ```bash
@@ -414,6 +457,15 @@ That runs:
 - a `DefaultResourceLoader` package-load smoke test
 - a starter wiki bootstrap + rebuild smoke test
 - an `npm pack --dry-run` tarball validation
+
+Measure approximate token expenditure for the current wiki:
+
+```bash
+npm run benchmark:tokens
+npm run benchmark:tokens -- --json
+```
+
+The benchmark compares raw wiki truth, raw implementation/verification lifecycle artifacts, generated read models, task context shards, and a synthetic compact agent-default packet. Use it to keep optimizing normal agent paths toward lower context usage without requiring users to define explicit token budgets.
 
 If `pi-coding-agent` is not installed in a standard local/global location, set:
 

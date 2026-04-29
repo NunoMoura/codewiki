@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "generated_at": "2026-04-29T21:35:27Z",
+  "source": ".wiki/roadmap.json",
+  "state_path": ".wiki/roadmap/state.json",
+  "events_path": ".wiki/roadmap/events.jsonl",
+  "task_context_root": ".wiki/roadmap/tasks",
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Lock product intent in specs",
+      "status": "todo",
+      "context_path": ".wiki/roadmap/tasks/TASK-001/context.json"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Map code ownership into spec hierarchy",
+      "status": "todo",
+      "context_path": ".wiki/roadmap/tasks/TASK-002/context.json"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Keep roadmap as freshest delta log",
+      "status": "todo",
+      "context_path": ".wiki/roadmap/tasks/TASK-003/context.json"
+    }
+  ]
+}

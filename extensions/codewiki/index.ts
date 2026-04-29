@@ -9,6 +9,7 @@ import {
 } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { promisify } from "node:util";
+import { gzipSync } from "node:zlib";
 import type {
 	ExtensionAPI,
 	ExtensionCommandContext,
@@ -23,6 +24,8 @@ import {
 	Container,
 	Markdown,
 	matchesKey,
+	type SelectItem,
+	SelectList,
 	type SettingItem,
 	SettingsList,
 	Text,
@@ -57,6 +60,7 @@ import {
 	type RoadmapStateHealth,
 	type RoadmapStateTaskSummary,
 	type RoadmapStatus,
+	type RoadmapTaskContextPacket,
 	type RoadmapTaskGoal,
 	type RoadmapTaskInput,
 	type RoadmapTaskRecord,
@@ -105,9 +109,9 @@ const execFileAsync = promisify(execFile);
 const DEFAULT_DOCS_ROOT = "wiki";
 const DEFAULT_SPECS_ROOT = "wiki";
 const DEFAULT_EVIDENCE_ROOT = ".wiki/evidence";
-const DEFAULT_INDEX_PATH = "wiki/index.md";
+const DEFAULT_INDEX_PATH: string | null = null;
 const DEFAULT_ROADMAP_PATH = ".wiki/roadmap.json";
-const DEFAULT_ROADMAP_DOC_PATH = "wiki/roadmap.md";
+const DEFAULT_ROADMAP_DOC_PATH: string | null = null;
 const DEFAULT_ROADMAP_EVENTS_PATH = ".wiki/roadmap-events.jsonl";
 const DEFAULT_META_ROOT = ".wiki";
 const DEFAULT_REBUILD_SCRIPT = "scripts/rebuild_docs_meta.py";
@@ -116,6 +120,9 @@ const GENERATED_METADATA_FILES = [
 	"lint.json",
 	"roadmap-state.json",
 	"status-state.json",
+	"roadmap/index.json",
+	"roadmap/state.json",
+	"roadmap/events.jsonl",
 ] as const;
 const TASK_SESSION_LINK_CUSTOM_TYPE = "codewiki.task-link";
 const STATUS_DOCK_WIDGET_KEY = "codewiki-status-dock";
@@ -305,7 +312,7 @@ export default function codewikiExtension(pi: ExtensionAPI) {
 					statusState: await maybeReadStatusState(project.statusStatePath),
 					source: "pinned",
 				});
-				ctx.ui.notify(`Status summary pinned to ${project.root}.`, "success");
+				ctx.ui.notify(`Status summary pinned to ${project.root}.`, "info");
 			});
 		},
 	});
@@ -462,7 +469,7 @@ export default function codewikiExtension(pi: ExtensionAPI) {
 				details: result,
 			};
 		},
-	});
+	} as any);
 
 	pi.registerTool({
 		name: "codewiki_task",
@@ -490,7 +497,7 @@ export default function codewikiExtension(pi: ExtensionAPI) {
 				details: result,
 			};
 		},
-	});
+	} as any);
 
 	pi.registerTool({
 		name: "codewiki_session",
@@ -517,7 +524,7 @@ export default function codewikiExtension(pi: ExtensionAPI) {
 				details: result,
 			};
 		},
-	});
+	} as any);
 }
 
 async function withUiErrorHandling(
@@ -629,6 +636,7 @@ function statusSectionTabs(
 	active: StatusPanelSection,
 ): string {
 	const tabs: Array<{ key: StatusPanelSection; label: string }> = [
+		{ key: "home", label: "Home" },
 		{ key: "wiki", label: "Wiki" },
 		{ key: "roadmap", label: "Roadmap" },
 		{ key: "agents", label: "Agents" },
@@ -731,10 +739,11 @@ function openStatusPanelDetail(
 function nextStatusPanelSection(
 	section: StatusPanelSection,
 ): StatusPanelSection {
+	if (section === "home") return "wiki";
 	if (section === "wiki") return "roadmap";
 	if (section === "roadmap") return "agents";
 	if (section === "agents") return "channels";
-	return "wiki";
+	return "home";
 }
 
 function buildRoadmapTaskDetail(
@@ -843,6 +852,7 @@ function configSectionTabs(
 	const tabs: Array<{ key: ConfigPanelSection; label: string }> = [
 		{ key: "summary", label: "Summary" },
 		{ key: "pinning", label: "Pinning" },
+		{ key: "gateway", label: "Gateway" },
 	];
 	return tabs
 		.map((tab) =>
@@ -1031,7 +1041,7 @@ async function applyConfigValueChange(
 		}
 		if (!targetPath) return;
 		const project = await resolveCommandProject(
-			ctx,
+			ctx as ExtensionCommandContext,
 			targetPath,
 			`${COMMAND_PREFIX}-config`,
 		);
@@ -1046,7 +1056,7 @@ async function applyConfigValueChange(
 			statusState: await maybeReadStatusState(project.statusStatePath),
 			source: "pinned",
 		});
-		ctx.ui.notify(`Status summary pinned to ${project.root}.`, "success");
+		ctx.ui.notify(`Status summary pinned to ${project.root}.`, "info");
 	}
 }
 
@@ -1076,7 +1086,7 @@ async function openConfigPanel(
 	)
 		return false;
 	let currentPrefs = await readStatusDockPrefs();
-	const sections: ConfigPanelSection[] = ["summary", "pinning"];
+	const sections: ConfigPanelSection[] = ["summary", "pinning", "gateway"];
 	const pinActions = ["browse", "set current", "enter path", "clear"] as const;
 	const panelState: ActiveConfigPanel = {
 		section: "summary",
@@ -1125,6 +1135,24 @@ async function openConfigPanel(
 									: currentPrefs.mode === "pin"
 										? "Show pinned repo in footer status."
 										: "Hide footer status line.",
+							),
+						];
+					} else if (panelState.section === "gateway") {
+						body = [
+							theme.fg("text", theme.bold("Context gateway")),
+							"",
+							theme.fg("text", "Configured in repo-local .wiki/config.json."),
+							theme.fg(
+								"muted",
+								"Bootstrap creates a read-only gateway by default.",
+							),
+							theme.fg(
+								"muted",
+								"Agents should use scripts/codewiki-gateway.mjs for token-light .wiki exploration.",
+							),
+							theme.fg(
+								"muted",
+								"Policy: allow_paths, deny_paths, network, max_stdout_bytes, max_read_bytes.",
 							),
 						];
 					} else {
@@ -1308,17 +1336,38 @@ function statusColor(report: LintReport): "green" | "yellow" | "red" {
 	return "green";
 }
 
-function statusLevel(report: LintReport): "success" | "warning" | "error" {
+function statusLevel(report: LintReport): "info" | "warning" | "error" {
 	const color = statusColor(report);
 	if (color === "red") return "error";
 	if (color === "yellow") return "warning";
-	return "success";
+	return "info";
 }
 
 async function maybeReadRoadmapState(
 	path: string,
 ): Promise<RoadmapStateFile | null> {
 	return maybeReadJson<RoadmapStateFile>(path);
+}
+
+function resolveTaskContextPath(
+	project: WikiProject,
+	taskId: string,
+	runtimeTask?: RoadmapStateTaskSummary | null,
+): string {
+	return resolve(
+		project.root,
+		runtimeTask?.context_path ?? `.wiki/roadmap/tasks/${taskId}/context.json`,
+	);
+}
+
+async function maybeReadTaskContext(
+	project: WikiProject,
+	taskId: string,
+	runtimeTask?: RoadmapStateTaskSummary | null,
+): Promise<RoadmapTaskContextPacket | null> {
+	return maybeReadJson<RoadmapTaskContextPacket>(
+		resolveTaskContextPath(project, taskId, runtimeTask),
+	);
 }
 
 async function maybeReadStatusState(
@@ -1406,7 +1455,6 @@ function formatRoadmapWorkingSetLine(
 		return `- Focused: ${task.id} — ${task.title}`;
 	if (isTaskBlocked(task)) return `- Blocked: ${task.id} — ${task.title}`;
 	const stage = taskBoardColumn(task);
-	if (stage === "research") return `- Research: ${task.id} — ${task.title}`;
 	if (stage === "implement") return `- Implement: ${task.id} — ${task.title}`;
 	if (stage === "verify") return `- Verify: ${task.id} — ${task.title}`;
 	if (index === 0) return `- Next: ${task.id} — ${task.title}`;
@@ -1519,13 +1567,6 @@ const TASK_PHASE_DRIVERS: Record<
 		guidance: string;
 	}
 > = {
-	research: {
-		passTo: "implement",
-		failTo: "research",
-		blockTo: "research",
-		guidance:
-			"Gather internal and external context, tighten assumptions, and leave the task ready for implementation.",
-	},
 	implement: {
 		passTo: "verify",
 		failTo: "implement",
@@ -1544,12 +1585,14 @@ const TASK_PHASE_DRIVERS: Record<
 
 function normalizeTaskPhaseValue(
 	value: string | null | undefined,
-	fallback: TaskPhase = "research",
+	fallback: TaskPhase = "implement",
 ): TaskPhase {
 	const phase = value?.trim();
-	return phase === "research" || phase === "implement" || phase === "verify"
-		? phase
-		: fallback;
+	return phase === "verify"
+		? "verify"
+		: phase === "implement" || phase === "research"
+			? "implement"
+			: fallback;
 }
 
 function roadmapTaskStage(
@@ -1558,11 +1601,8 @@ function roadmapTaskStage(
 ): "todo" | TaskPhase | "done" {
 	const normalizedStatus = status?.trim();
 	if (normalizedStatus === "todo") return "todo";
-	if (
-		normalizedStatus === "research" ||
-		normalizedStatus === "implement" ||
-		normalizedStatus === "verify"
-	)
+	if (normalizedStatus === "research") return "implement";
+	if (normalizedStatus === "implement" || normalizedStatus === "verify")
 		return normalizedStatus;
 	if (normalizedStatus === "done") return "done";
 	if (normalizedStatus === "in_progress" || normalizedStatus === "blocked")
@@ -1574,8 +1614,9 @@ function taskLoopPhase(
 	task: RoadmapStateTaskSummary | null | undefined,
 ): string {
 	const stage = roadmapTaskStage(task?.status, task?.loop?.phase);
-	if (stage === "todo") return "research";
-	return task?.loop?.phase?.trim() || stage;
+	if (stage === "todo") return "implement";
+	if (stage === "done") return "done";
+	return normalizeTaskPhaseValue(task?.loop?.phase, stage);
 }
 
 function taskBoardColumn(
@@ -1607,8 +1648,9 @@ function taskLoopEvidenceLine(
 
 function phaseLabel(phase: string): string {
 	if (phase === "todo") return "todo";
+	if (phase === "research") return "research";
 	if (phase === "done") return "done";
-	return phase || "research";
+	return phase || "implement";
 }
 
 function buildResumeSnapshot(
@@ -1620,6 +1662,7 @@ function buildResumeSnapshot(
 	command: string;
 	reason: string;
 	phase: string;
+	taskId?: string;
 	verification: string;
 	evidence: string;
 	heartbeat: string;
@@ -1632,6 +1675,7 @@ function buildResumeSnapshot(
 		return {
 			heading: `${activeTask.id} — ${activeTask.title}`,
 			command: `/wiki-resume ${activeTask.id}`,
+			taskId: activeTask.id,
 			reason:
 				collisions.length > 0
 					? `Resume focused task (${activeTask.status} · ${phaseLabel(phase)}) with ${collisions.length} parallel session(s) on same task.`
@@ -1651,8 +1695,9 @@ function buildResumeSnapshot(
 		return {
 			heading: state.resume.heading,
 			command: state.resume.command,
+			taskId: state.resume.task_id,
 			reason: state.resume.reason,
-			phase: state.resume.phase ?? "research",
+			phase: state.resume.phase ?? "implement",
 			verification: state.resume.verification,
 			evidence: state.resume.evidence ?? "No closure evidence recorded yet.",
 			heartbeat: state.resume.heartbeat,
@@ -1663,7 +1708,7 @@ function buildResumeSnapshot(
 			heading: heartbeat.lane.title,
 			command: heartbeat.lane.recommendation.command,
 			reason: `Resume from stale heartbeat lane (${heartbeat.freshness.basis}).`,
-			phase: "research",
+			phase: "implement",
 			verification: heartbeat.lane.recommendation.reason,
 			evidence: "No closure evidence recorded yet.",
 			heartbeat: heartbeat.freshness.reason,
@@ -1673,7 +1718,7 @@ function buildResumeSnapshot(
 		heading: summarizeRoadmapFocus(roadmapState, activeLink),
 		command: state.next_step.command,
 		reason: state.next_step.reason,
-		phase: "research",
+		phase: "implement",
 		verification: "No urgent verification cue.",
 		evidence: "No closure evidence recorded yet.",
 		heartbeat: "All heartbeat lanes currently fresh.",
@@ -2055,7 +2100,7 @@ function heartbeatLaneFreshness(
 	now = new Date(),
 ): {
 	status: "fresh" | "stale";
-	basis: "work" | "time" | "unknown";
+	basis: "revision" | "work" | "time" | "unknown";
 	ageHours: number;
 	reason: string;
 } {
@@ -2063,6 +2108,14 @@ function heartbeatLaneFreshness(
 	const ageHours = Number.isFinite(checkedAt)
 		? Math.max(0, (now.getTime() - checkedAt) / 36e5)
 		: Number.POSITIVE_INFINITY;
+	if (lane.freshness?.status === "stale") {
+		return {
+			status: "stale",
+			basis: "revision",
+			ageHours,
+			reason: lane.freshness.reason || "revision anchor changed",
+		};
+	}
 	const workReasons: string[] = [];
 	if ((lane.risky_spec_paths?.length ?? 0) > 0)
 		workReasons.push(`${lane.risky_spec_paths.length} risky spec(s)`);
@@ -2474,6 +2527,221 @@ function readLiveStatusPanelSnapshot(
 	return { state, report, roadmapState };
 }
 
+interface HomeIssue {
+	severity: "blocker" | "warning" | "info";
+	title: string;
+	impact: string;
+	recommended: string;
+	detail: string[];
+}
+
+function phaseUserLabel(phase: string): string {
+	if (phase === "research") return "Design";
+	if (phase === "implement" || phase === "in_progress") return "Build";
+	if (phase === "verify") return "Check";
+	if (phase === "done") return "Done";
+	return phase ? phase[0]!.toUpperCase() + phase.slice(1) : "Design";
+}
+
+function homeIssueLabel(severity: HomeIssue["severity"]): string {
+	if (severity === "blocker") return "Blocker";
+	if (severity === "warning") return "Needs attention";
+	return "OK";
+}
+
+function buildHomeIssues(
+	state: StatusStateFile,
+	report: LintReport,
+	roadmapState: RoadmapStateFile | null,
+	activeLink: TaskSessionLinkRecord | null,
+): HomeIssue[] {
+	const issues: HomeIssue[] = [];
+	const activeTask = activeRoadmapTaskSummary(roadmapState, activeLink);
+	for (const taskId of roadmapState?.views?.blocked_task_ids ?? []) {
+		const task = roadmapState?.tasks?.[taskId];
+		if (!task) continue;
+		issues.push({
+			severity: "blocker",
+			title: `${task.title} is blocked`,
+			impact: "Production progress is paused until this work is unblocked.",
+			recommended:
+				taskLoopEvidenceLine(task) ||
+				"Clarify the blocker in chat and choose the next step.",
+			detail: [
+				`Work item: ${task.id}`,
+				`State: ${task.status} · ${phaseUserLabel(taskLoopPhase(task))}`,
+				`Why it matters: Production progress is paused until this work is unblocked.`,
+			],
+		});
+	}
+	const errorCount = countIssuesBySeverity(report, "error");
+	const warningCount = countIssuesBySeverity(report, "warning");
+	if (errorCount > 0 || warningCount > 0) {
+		const topIssue = report.issues[0];
+		issues.push({
+			severity: errorCount > 0 ? "blocker" : "warning",
+			title: "Project knowledge needs attention",
+			impact:
+				errorCount > 0
+					? "Codewiki found a blocking inconsistency in the project knowledge base."
+					: "Codewiki found project knowledge that should be cleaned up before release.",
+			recommended:
+				topIssue?.message ||
+				"Review the reported issue and let codewiki update the knowledge base.",
+			detail: [
+				`Issues: ${errorCount} blocker(s), ${warningCount} warning(s)`,
+				...(topIssue
+					? [`First issue: ${topIssue.path} — ${topIssue.message}`]
+					: []),
+			],
+		});
+	}
+	if (activeTask && !activeTask.loop?.evidence) {
+		issues.push({
+			severity: "warning",
+			title: "Current work still needs proof",
+			impact:
+				"The active work should not be treated as production-ready before independent checking.",
+			recommended:
+				activeTask.goal.verification[0] ||
+				"Run an independent check and record the result before closing the work.",
+			detail: [
+				`Work item: ${activeTask.id}`,
+				`Current phase: ${phaseUserLabel(taskLoopPhase(activeTask))}`,
+				`Recommended: ${activeTask.goal.verification[0] || "Run an independent check and record the result."}`,
+			],
+		});
+	}
+	const activeTaskId = activeTask?.id ?? activeLink?.taskId;
+	const collisions = parallelTaskCollisions(
+		state,
+		activeTaskId,
+		activeStatusPanelGlobal?.sessionId,
+	);
+	if (collisions.length > 0) {
+		issues.push({
+			severity: "warning",
+			title: "Multiple sessions are touching the same work",
+			impact:
+				"Parallel work can overwrite decisions or duplicate implementation effort.",
+			recommended:
+				"Let one session own the work or explicitly split the responsibility in chat.",
+			detail: collisions.map(
+				(session) =>
+					`${session.title || session.task_id} · ${session.session_id}`,
+			),
+		});
+	}
+	if (issues.length === 0) {
+		issues.push({
+			severity: "info",
+			title: "No blocking issues detected",
+			impact:
+				"Codewiki does not see an immediate blocker in the deterministic status data.",
+			recommended:
+				"Continue the current work and verify it independently before treating it as production-ready.",
+			detail: [
+				"No blockers found in roadmap, project knowledge, or active session state.",
+			],
+		});
+	}
+	return issues.slice(0, 4);
+}
+
+function buildHomeProductionPath(
+	state: StatusStateFile,
+	roadmapState: RoadmapStateFile | null,
+	activeLink: TaskSessionLinkRecord | null,
+): string[] {
+	const activeTask = activeRoadmapTaskSummary(roadmapState, activeLink);
+	const hasOpenWork =
+		(roadmapState?.summary.open_count ?? state.summary.open_task_count) > 0;
+	const hasUnreadyKnowledge =
+		state.summary.untracked_specs > 0 || state.summary.blocked_specs > 0;
+	return [
+		hasUnreadyKnowledge
+			? "Needs attention · Project understanding"
+			: "Ready · Project understanding",
+		activeTask
+			? `Active · ${phaseUserLabel(taskLoopPhase(activeTask))}`
+			: hasOpenWork
+				? "Active · Work remains open"
+				: "Ready · No open work detected",
+		activeTask?.loop?.evidence
+			? "Ready · Latest work has recorded proof"
+			: "Waiting · Independent check",
+	];
+}
+
+function renderHomeTab(
+	project: WikiProject,
+	state: StatusStateFile,
+	report: LintReport,
+	roadmapState: RoadmapStateFile | null,
+	activeLink: TaskSessionLinkRecord | null,
+	panelState: ActiveStatusPanel,
+	theme: {
+		fg: (color: string, text: string) => string;
+		bold: (text: string) => string;
+	},
+	width: number,
+): string[] {
+	const activeTask = activeRoadmapTaskSummary(roadmapState, activeLink);
+	const resume = buildResumeSnapshot(state, roadmapState, activeLink);
+	const issues = buildHomeIssues(state, report, roadmapState, activeLink);
+	panelState.homeIssueIndex = Math.min(
+		Math.max(0, panelState.homeIssueIndex),
+		Math.max(0, issues.length - 1),
+	);
+	const readiness =
+		state.health.color === "green"
+			? "Production path looks clear"
+			: state.health.color === "yellow"
+				? "Not production-ready yet"
+				: "Blocked before production";
+	const currentState = activeTask
+		? `${activeTask.title} is in ${phaseUserLabel(taskLoopPhase(activeTask)).toLowerCase()}. ${issues[0]?.title ?? "No blocking issue detected."}`
+		: `${resume.heading}. ${issues[0]?.title ?? "No blocking issue detected."}`;
+	const lines = [
+		theme.bold(theme.fg("accent", "Current state")),
+		truncatePlain(`${readiness}. ${currentState}`, Math.max(20, width - 4)),
+		"",
+		theme.bold(theme.fg("accent", "Being done now")),
+		activeTask ? activeTask.title : resume.heading,
+		theme.fg(
+			"muted",
+			activeTask
+				? `${phaseUserLabel(taskLoopPhase(activeTask))} · ${activeTask.id}`
+				: `Next: ${resume.reason}`,
+		),
+		"",
+		theme.bold(theme.fg("accent", "Issues")),
+	];
+	for (const [index, issue] of issues.entries()) {
+		const selected = index === panelState.homeIssueIndex;
+		lines.push(
+			highlightSelectable(
+				theme,
+				`${selected ? "▸" : " "} ${homeIssueLabel(issue.severity)} · ${truncatePlain(issue.title, Math.max(12, width - 18))}`,
+				selected,
+			),
+		);
+		lines.push(
+			theme.fg(
+				"muted",
+				truncatePlain(
+					`Recommended: ${issue.recommended}`,
+					Math.max(12, width - 4),
+				),
+			),
+		);
+	}
+	lines.push("");
+	lines.push(theme.bold(theme.fg("accent", "Production path")));
+	lines.push(...buildHomeProductionPath(state, roadmapState, activeLink));
+	return lines;
+}
+
 function renderStatusPanelLines(
 	project: WikiProject,
 	state: StatusStateFile,
@@ -2512,6 +2780,21 @@ function renderStatusPanelLines(
 			panelState.detail,
 			theme,
 			width,
+		);
+	}
+
+	if (section === "home") {
+		body.push(
+			...renderHomeTab(
+				project,
+				state,
+				report,
+				roadmapState,
+				activeLink,
+				panelState,
+				theme,
+				width,
+			),
 		);
 	}
 
@@ -2819,7 +3102,7 @@ async function openStatusPanel(
 	activeLink: TaskSessionLinkRecord | null,
 	source: "cwd" | "pinned",
 	onState?: (state: ActiveStatusPanel | null) => void,
-	initialSection: StatusPanelSection = "wiki",
+	initialSection: StatusPanelSection = "home",
 ): Promise<boolean> {
 	const ui = ctx.ui as {
 		setWidget?: (
@@ -2850,6 +3133,7 @@ async function openStatusPanel(
 		return false;
 	const prefs = await readStatusDockPrefs();
 	const sections: StatusPanelSection[] = [
+		"home",
 		"wiki",
 		"roadmap",
 		"agents",
@@ -2863,6 +3147,7 @@ async function openStatusPanel(
 		section: initialSection,
 		activeLink,
 		sessionId: currentSessionId(ctx),
+		homeIssueIndex: 0,
 		wikiColumnIndex: 0,
 		wikiRowIndex: 0,
 		roadmapColumnIndex: 0,
@@ -3015,7 +3300,26 @@ async function openStatusPanel(
 					matchesKey(data, "up") ||
 					matchesKey(data, "down"))
 			) {
-				if (panelState.section === "wiki") {
+				if (panelState.section === "home") {
+					const issueCount = snapshot
+						? buildHomeIssues(
+								snapshot.state,
+								snapshot.report,
+								snapshot.roadmapState,
+								panelState.activeLink,
+							).length
+						: 1;
+					if (matchesKey(data, "up"))
+						panelState.homeIssueIndex = Math.max(
+							0,
+							panelState.homeIssueIndex - 1,
+						);
+					if (matchesKey(data, "down"))
+						panelState.homeIssueIndex = Math.min(
+							Math.max(0, issueCount - 1),
+							panelState.homeIssueIndex + 1,
+						);
+				} else if (panelState.section === "wiki") {
 					if (matchesKey(data, "left"))
 						panelState.wikiColumnIndex = cycleIndex(
 							Math.max(1, wikiSections.length),
@@ -3141,7 +3445,10 @@ async function openStatusPanel(
 							await updateTaskLoop(panelState.project, {
 								taskId: task.id,
 								action: "block",
-								phase: taskLoopPhase(task),
+								phase: normalizeTaskPhaseValue(
+									taskLoopPhase(task),
+									"implement",
+								),
 								summary,
 							});
 							panelState.detail = buildRoadmapTaskDetail(
@@ -3187,7 +3494,26 @@ async function openStatusPanel(
 					);
 					return { consume: true };
 				}
-				if (panelState.section === "wiki") {
+				if (panelState.section === "home") {
+					const issues = buildHomeIssues(
+						snapshot.state,
+						snapshot.report,
+						snapshot.roadmapState,
+						panelState.activeLink,
+					);
+					const issue = issues[panelState.homeIssueIndex];
+					if (issue)
+						openStatusPanelDetail(panelState, {
+							kind: "home",
+							title: issue.title,
+							lines: [
+								`Impact: ${issue.impact}`,
+								`Recommended: ${issue.recommended}`,
+								"",
+								...issue.detail,
+							],
+						});
+				} else if (panelState.section === "wiki") {
 					const selectedSection = wikiSections[panelState.wikiColumnIndex];
 					const row = selectedSection?.rows?.[panelState.wikiRowIndex];
 					if (row)
@@ -3498,9 +3824,9 @@ async function resolveStatusDockProject(
 function promptContextFiles(project: WikiProject): string[] {
 	return [
 		`- ${project.configPath}`,
-		`- ${project.indexPath}`,
+		...(project.indexPath ? [`- ${project.indexPath}`] : []),
 		`- ${project.roadmapPath}`,
-		`- ${project.roadmapDocPath}`,
+		...(project.roadmapDocPath ? [`- ${project.roadmapDocPath}`] : []),
 		`- ${project.graphPath.replace(`${project.root}/`, "")}`,
 		`- ${project.lintPath.replace(`${project.root}/`, "")}`,
 		`- ${project.roadmapStatePath.replace(`${project.root}/`, "")}`,
@@ -3589,15 +3915,84 @@ function renderScopeForPrompt(
 	];
 }
 
+function compactDigest(value: unknown): string {
+	const text = typeof value === "string" ? value : "";
+	return text ? text.slice(0, 12) : "—";
+}
+
+function contextRecord(value: unknown): Record<string, unknown> {
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: {};
+}
+
+function contextStringList(value: unknown): string[] {
+	return Array.isArray(value)
+		? value.map((item) => String(item).trim()).filter(Boolean)
+		: [];
+}
+
+function renderTaskContextForPrompt(
+	packet: RoadmapTaskContextPacket | null,
+): string[] {
+	if (!packet) return [];
+	const budget = contextRecord(packet.budget);
+	const revision = contextRecord(packet.revision);
+	const taskRevision = contextRecord(revision.task);
+	const gitRevision = contextRecord(revision.git);
+	const code = contextRecord(packet.code);
+	const codePaths = contextStringList(code.paths);
+	const specs = Array.isArray(packet.specs) ? packet.specs : [];
+	const evidence = contextRecord(packet.evidence);
+	return [
+		"Compact task context packet:",
+		`- Path: ${packet.context_path}`,
+		`- Budget: ${budget.target_tokens ?? 6000} tokens; ${budget.policy ?? "Use packet first; expand listed files only when needed."}`,
+		`- Revision: task=${compactDigest(taskRevision.digest)} spec=${compactDigest(revision.spec_digest)} code=${compactDigest(revision.code_digest)} git=${compactDigest(gitRevision.head)} dirty=${gitRevision.dirty === true ? "yes" : "no"}`,
+		...(specs.length > 0
+			? [
+					"Spec contracts:",
+					...specs.slice(0, 8).map((item) => {
+						const spec = contextRecord(item);
+						const specRevision = contextRecord(spec.revision);
+						return `- ${spec.path ?? "unknown"} | ${spec.title ?? "Untitled"} | ${spec.summary ?? ""} | digest=${compactDigest(specRevision.digest)}`;
+					}),
+				]
+			: []),
+		...(codePaths.length > 0
+			? [
+					"Code expansion paths:",
+					...codePaths.slice(0, 12).map((path) => `- ${path}`),
+				]
+			: []),
+		...(evidence.summary
+			? [
+					"Latest evidence:",
+					`- ${evidence.verdict ?? "progress"}: ${evidence.summary}`,
+				]
+			: []),
+		"Expansion rule: read only listed specs/code/evidence when packet is insufficient, stale, or exact implementation detail is required.",
+	];
+}
+
 function codePrompt(
 	project: WikiProject,
 	graph: GraphFile | null,
 	report: LintReport,
 	task: RoadmapTaskRecord,
-	phase = "research",
+	phase = "implement",
 	evidence = "No closure evidence recorded yet.",
+	taskContext: RoadmapTaskContextPacket | null = null,
 ): string {
 	const drift = buildDriftContext(project, graph);
+	const taskContextLines = renderTaskContextForPrompt(taskContext);
+	const fallbackContextLines = [
+		...renderScopeForPrompt("both", drift),
+		"Context files:",
+		...promptContextFiles(project),
+		"Spec map:",
+		...renderSpecPromptMap(graph),
+	];
 	return [
 		`Implement roadmap task ${task.id} for ${project.label}.`,
 		`Task title: ${task.title}.`,
@@ -3624,11 +4019,7 @@ function codePrompt(
 				]
 			: []),
 		`Deterministic preflight color: ${statusColor(report)}.`,
-		...renderScopeForPrompt("both", drift),
-		"Context files:",
-		...promptContextFiles(project),
-		"Spec map:",
-		...renderSpecPromptMap(graph),
+		...(taskContextLines.length > 0 ? taskContextLines : fallbackContextLines),
 		"Task delta:",
 		`- Desired: ${task.delta.desired}`,
 		`- Current: ${task.delta.current}`,
@@ -3646,10 +4037,12 @@ function codePrompt(
 				]
 			: []),
 		"Rules:",
-		`- follow the deterministic task phase: ${TASK_PHASE_DRIVERS.research.guidance} ${TASK_PHASE_DRIVERS.implement.guidance} ${TASK_PHASE_DRIVERS.verify.guidance}`,
-		"- if current phase is research, gather internal and external context, tighten next-step scope, and avoid speculative code changes",
-		"- if current phase is implement, change code or wiki surgically against specs and roadmap truth",
-		"- if current phase is verify, run or assess checks, review evidence, and only recommend done when verification is persuasive",
+		`- follow the deterministic task phase: ${TASK_PHASE_DRIVERS.implement.guidance} ${TASK_PHASE_DRIVERS.verify.guidance}`,
+		"- if current phase is implement, build context through the gateway or compact task packet first, then change code or wiki surgically against specs and roadmap truth",
+		"- during implement, use lint, typecheck, tests, runtime feedback, and Pi-lens as short-cycle correction signals for mechanical code quality",
+		"- if current phase is verify, use fresh-context alignment validation: check user intent, knowledge, architecture, code, evidence, and intra-layer coherence before recommending done",
+		"- codewiki verify should judge alignment/coherence; do not reduce it to linting or typechecking",
+		"- gather research only when uncertainty or unsupported claims require new evidence",
 		"- implement according to specs and roadmap; surface drift instead of silently choosing code over wiki",
 		"- keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, and wiki-resume, while Alt+W toggles the live status panel",
 		"- do not create a separate user-facing wiki-edit command; update roadmap/wiki artifacts automatically when user intent requires it",
@@ -3660,7 +4053,7 @@ function codePrompt(
 		"- rerun deterministic status before summarizing",
 		"Output format:",
 		"- Changes made",
-		"- Task status recommendation: todo|research|implement|verify|done|blocked",
+		"- Task status recommendation: todo|implement|verify|done|blocked",
 		"- Wiki updates made automatically, if any",
 		"- Remaining risks or follow-ups",
 	].join("\n");
@@ -3823,7 +4216,7 @@ async function pickCommandProjectRoot(
 		container.addChild(border);
 
 		return {
-			render: () => container.render(tui?.terminal?.columns ?? 100, 16),
+			render: () => container.render(tui?.terminal?.columns ?? 100),
 			invalidate: () => container.invalidate(),
 			handleInput: (data: string) => {
 				selectList.handleInput(data);
@@ -3989,9 +4382,12 @@ function buildCodewikiNextAction(
 	taskId?: string;
 	reason: string;
 } {
+	const focusedTask = activeLink?.taskId
+		? (roadmapState?.tasks?.[activeLink.taskId] ?? null)
+		: null;
 	const focusedTaskId =
-		activeLink?.taskId && roadmapState?.tasks?.[activeLink.taskId]
-			? activeLink.taskId
+		focusedTask && !isClosedRoadmapStatus(focusedTask.status)
+			? focusedTask.id
 			: null;
 	if (focusedTaskId) {
 		return {
@@ -4042,9 +4438,31 @@ function buildCodewikiNextAction(
 function buildCodewikiTaskDetail(
 	task: RoadmapTaskRecord,
 	runtimeTask: RoadmapStateTaskSummary | null,
+	contextPacket: RoadmapTaskContextPacket | null,
 ) {
 	const apiState = roadmapApiTaskState(task, runtimeTask);
 	const evidence = runtimeTask?.loop?.evidence ?? null;
+	const contextPath =
+		runtimeTask?.context_path ?? `.wiki/roadmap/tasks/${task.id}/context.json`;
+	const enrichedContextPacket = {
+		version: contextPacket?.version ?? 1,
+		generated_at: contextPacket?.generated_at ?? task.updated,
+		context_path: contextPacket?.context_path ?? contextPath,
+		...(contextPacket ?? {}),
+		task: {
+			id: task.id,
+			title: task.title,
+			status: apiState.status,
+			phase: apiState.phase,
+			priority: task.priority,
+			kind: task.kind,
+			summary: task.summary,
+			labels: task.labels,
+			goal: task.goal,
+			delta: task.delta,
+			...(contextPacket?.task ?? {}),
+		},
+	};
 	return {
 		id: task.id,
 		title: task.title,
@@ -4059,6 +4477,8 @@ function buildCodewikiTaskDetail(
 		research_ids: task.research_ids,
 		goal: task.goal,
 		delta: task.delta,
+		context_path: contextPath,
+		context_packet: enrichedContextPacket,
 		latest_evidence: evidence
 			? {
 					result: evidence.verdict,
@@ -4098,7 +4518,7 @@ async function readCodewikiState(
 	const result: Record<string, unknown> = {
 		repo: {
 			repo_root: project.root,
-			wiki_root: project.wikiRoot,
+			wiki_root: project.docsRoot,
 			resolved_from: input.repoPath?.trim() || project.root,
 			contract_version: String(
 				artifacts.graph?.version ?? artifacts.statusState?.version ?? 0,
@@ -4159,7 +4579,12 @@ async function readCodewikiState(
 			const task = await readRoadmapTask(project, input.taskId);
 			if (!task) throw new Error(`Roadmap task not found: ${input.taskId}`);
 			const runtimeTask = artifacts.roadmapState?.tasks?.[task.id] ?? null;
-			result.task = buildCodewikiTaskDetail(task, runtimeTask);
+			const contextPacket = await maybeReadTaskContext(
+				project,
+				task.id,
+				runtimeTask,
+			);
+			result.task = buildCodewikiTaskDetail(task, runtimeTask, contextPacket);
 		}
 	}
 	return result;
@@ -4296,6 +4721,33 @@ async function executeCodewikiTask(
 	input: CodewikiTaskToolInput,
 ) {
 	const refresh = input.refresh ?? true;
+	if (input.action === "clear-archive") {
+		if (!input.summary?.trim()) {
+			throw new Error(
+				"codewiki_task clear-archive requires summary confirmation.",
+			);
+		}
+		const archivePath = roadmapArchivePath(project);
+		await withLockedPaths([archivePath], async () => {
+			await mkdir(dirname(archivePath), { recursive: true });
+			const compressed = archivePath.endsWith(".gz");
+			await writeFile(archivePath, compressed ? gzipSync("") : "", "utf8");
+		});
+		await appendProjectEvent(project, {
+			ts: nowIso(),
+			kind: "roadmap_archive_cleared",
+			title: "Cleared roadmap archive",
+			summary: input.summary.trim(),
+			path: archivePath.replace(`${project.root}/`, ""),
+		});
+		if (refresh) await runRebuild(project);
+		return {
+			action: "clear-archive" as const,
+			changed: true,
+			archive_path: archivePath.replace(`${project.root}/`, ""),
+			summary: `codewiki task: cleared roadmap archive ${archivePath.replace(`${project.root}/`, "")}`,
+		};
+	}
 	if (input.action === "create") {
 		if (!input.tasks?.length)
 			throw new Error("codewiki_task create requires tasks.");
@@ -4452,7 +4904,16 @@ async function executeCodewikiTask(
 	);
 	const finalRuntimeTask =
 		finalRoadmapState?.tasks?.[latestTask.id] ?? runtimeTask;
-	const finalState = buildCodewikiTaskDetail(latestTask, finalRuntimeTask);
+	const finalContextPacket = await maybeReadTaskContext(
+		project,
+		latestTask.id,
+		finalRuntimeTask,
+	);
+	const finalState = buildCodewikiTaskDetail(
+		latestTask,
+		finalRuntimeTask,
+		finalContextPacket,
+	);
 	const result = {
 		action: input.action,
 		changed,
@@ -4818,8 +5279,8 @@ async function runResumeCommand(
 	let runtimeTask = roadmapState?.tasks?.[task.id] ?? null;
 	const initialPhase = taskLoopPhase(runtimeTask);
 	const desiredStatus: RoadmapStatus =
-		task.status === "todo"
-			? "research"
+		task.status === "todo" || task.status === "research"
+			? "implement"
 			: task.status === "in_progress" || task.status === "blocked"
 				? normalizeTaskPhaseValue(initialPhase, "implement")
 				: task.status;
@@ -4873,6 +5334,17 @@ async function runResumeCommand(
 		},
 	);
 	await runRebuild(project);
+	const refreshedRoadmapState = await maybeReadRoadmapState(
+		project.roadmapStatePath,
+	);
+	const refreshedRuntimeTask =
+		refreshedRoadmapState?.tasks?.[resumedTask.id] ?? null;
+	const taskContext = await maybeReadTaskContext(
+		project,
+		resumedTask.id,
+		refreshedRuntimeTask,
+	);
+	const refreshedGraph = (await maybeReadGraph(project.graphPath)) ?? graph;
 	ctx.ui.notify(
 		`${project.label}: queued ${phaseLabel(phase)} for ${resumedTask.id} — ${resumedTask.title}. ${selectionReason} Deterministic preflight is ${statusColor(summary.report)}.`,
 		statusLevel(summary.report),
@@ -4881,7 +5353,15 @@ async function runResumeCommand(
 	await queueAudit(
 		pi,
 		ctx,
-		codePrompt(project, graph, summary.report, resumedTask, phase, evidence),
+		codePrompt(
+			project,
+			refreshedGraph,
+			summary.report,
+			resumedTask,
+			phase,
+			evidence,
+			taskContext,
+		),
 	);
 }
 
@@ -4989,7 +5469,7 @@ function describeResumeSelection(
 			: `Continuing active ${task.status} work.`;
 	}
 	return task.status === "todo"
-		? "No active loop work found; starting next todo task in research."
+		? "No active loop work found; starting next todo task in implement."
 		: `Continuing ${task.status} work.`;
 }
 
@@ -5118,7 +5598,7 @@ async function runRebuildUnlocked(project: WikiProject): Promise<void> {
 
 	if (commands.length === 0) {
 		throw new Error(
-			`No rebuild command configured. Add codewiki.rebuild_command to ${CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
+			`No rebuild command configured. Add codewiki.rebuild_command to ${PREFERRED_WIKI_CONFIG_RELATIVE_PATH} or provide ${DEFAULT_REBUILD_SCRIPT}.`,
 		);
 	}
 
@@ -5140,8 +5620,10 @@ async function runRebuildUnlocked(project: WikiProject): Promise<void> {
 
 function rebuildTargetPaths(project: WikiProject): string[] {
 	return [
-		resolve(project.root, project.indexPath),
-		resolve(project.root, project.roadmapDocPath),
+		...(project.indexPath ? [resolve(project.root, project.indexPath)] : []),
+		...(project.roadmapDocPath
+			? [resolve(project.root, project.roadmapDocPath)]
+			: []),
 		resolve(project.root, project.eventsPath),
 		...GENERATED_METADATA_FILES.map((fileName) =>
 			resolve(project.root, project.metaRoot, fileName),
@@ -5192,13 +5674,13 @@ async function loadProject(startDir: string): Promise<WikiProject> {
 	const researchRoot = normalizeRelativePath(
 		config.evidence_root ?? config.research_root ?? DEFAULT_EVIDENCE_ROOT,
 	);
-	const indexPath = normalizeRelativePath(
+	const indexPath = optionalRelativePath(
 		config.index_path ?? DEFAULT_INDEX_PATH,
 	);
 	const roadmapPath = normalizeRelativePath(
 		config.roadmap_path ?? DEFAULT_ROADMAP_PATH,
 	);
-	const roadmapDocPath = normalizeRelativePath(
+	const roadmapDocPath = optionalRelativePath(
 		config.roadmap_doc_path ?? DEFAULT_ROADMAP_DOC_PATH,
 	);
 	const roadmapEventsPath = normalizeRelativePath(
@@ -5249,7 +5731,11 @@ async function appendRoadmapTasks(
 			const duplicate = findLikelyDuplicateRoadmapTask(roadmap, input);
 			if (duplicate) {
 				const coordinated = isClosedRoadmapStatus(duplicate.status)
-					? applyRoadmapTaskUpdate(duplicate, { status: "todo" }, createdAt)
+					? applyRoadmapTaskUpdate(
+							duplicate,
+							{ taskId: duplicate.id, status: "todo" },
+							createdAt,
+						)
 					: duplicate;
 				roadmap.tasks[coordinated.id] = coordinated;
 				reused.push(coordinated);
@@ -5386,13 +5872,18 @@ function findLikelyDuplicateRoadmapTask(
 		);
 	let best: { task: RoadmapTaskRecord; score: number } | null = null;
 	for (const task of rankedTasks) {
+		const titleMatches =
+			normalizeTaskTitleKey(task.title) === titleKey && titleKey;
+		const labelOverlap = overlapCount(task.labels, input.labels);
+		if (!titleMatches && labelOverlap === 0) continue;
+		if (!titleMatches && isClosedRoadmapStatus(task.status)) continue;
 		let score = 0;
-		if (normalizeTaskTitleKey(task.title) === titleKey && titleKey) score += 4;
+		if (titleMatches) score += 6;
 		if (task.kind === input.kind) score += 1;
 		score += overlapCount(task.spec_paths, input.spec_paths) * 2;
 		score += overlapCount(task.code_paths, input.code_paths);
-		score += overlapCount(task.labels, input.labels);
-		if (score >= 4 && (!best || score > best.score)) best = { task, score };
+		score += labelOverlap * 2;
+		if (score >= 6 && (!best || score > best.score)) best = { task, score };
 	}
 	return best?.task ?? null;
 }
@@ -5420,7 +5911,7 @@ function normalizeRoadmapTask(
 		code_paths: unique(task.code_paths ?? []),
 		research_ids: unique(task.research_ids ?? []),
 		labels: unique(task.labels ?? []),
-		goal: normalizeRoadmapTaskGoal(task.goal),
+		goal: normalizeRoadmapTaskGoal(task.goal, summary),
 		delta: {
 			desired: task.delta?.desired?.trim() ?? "",
 			current: task.delta?.current?.trim() ?? "",
@@ -5536,12 +6027,18 @@ function hasRoadmapTaskUpdateFields(input: RoadmapTaskUpdateInput): boolean {
 
 function normalizeRoadmapTaskGoal(
 	goal?: Partial<RoadmapTaskGoal>,
+	fallbackSummary = "Complete the roadmap task.",
 ): RoadmapTaskGoal {
+	const outcome = goal?.outcome?.trim() || fallbackSummary.trim();
 	return {
-		outcome: goal?.outcome?.trim() ?? "",
+		outcome,
 		acceptance: unique(goal?.acceptance ?? []),
 		non_goals: unique(goal?.non_goals ?? []),
-		verification: unique(goal?.verification ?? []),
+		verification: unique(
+			goal?.verification?.length
+				? goal.verification
+				: ["Record implementation or verification evidence before closing."],
+		),
 	};
 }
 
@@ -5706,7 +6203,7 @@ async function updateTaskLoop(
 		const runtimeTask = roadmapState?.tasks?.[task.id] ?? null;
 		const phase = normalizeTaskPhaseValue(
 			input.phase ?? taskLoopPhase(runtimeTask),
-			roadmapTaskStage(task.status) === "todo" ? "research" : "implement",
+			"implement",
 		);
 		const driver = TASK_PHASE_DRIVERS[phase];
 		const action = input.action;
@@ -5744,7 +6241,11 @@ async function updateTaskLoop(
 		const syncedTask =
 			existing.status === nextStatus
 				? existing
-				: applyRoadmapTaskUpdate(existing, { status: nextStatus }, todayIso());
+				: applyRoadmapTaskUpdate(
+						existing,
+						{ taskId: existing.id, status: nextStatus },
+						todayIso(),
+					);
 		roadmap.tasks[syncedTask.id] = syncedTask;
 		roadmap.updated = nowIso();
 		await writeJsonFile(roadmapPath, roadmap);
@@ -6110,7 +6611,10 @@ async function readRoadmapFile(path: string): Promise<RoadmapFile> {
 						Array.isArray(record.research_ids) ? record.research_ids : [],
 					),
 					labels: unique(Array.isArray(record.labels) ? record.labels : []),
-					goal: normalizeRoadmapTaskGoal(record.goal),
+					goal: normalizeRoadmapTaskGoal(
+						record.goal,
+						String(record.summary ?? ""),
+					),
 					delta: {
 						desired:
 							typeof record.delta?.desired === "string"
@@ -6186,20 +6690,20 @@ async function readLastEventLine(path: string): Promise<string | null> {
 function defaultSelfDriftScope(project: WikiProject): ScopeConfig {
 	return {
 		include: unique([
-			`${project.wikiRoot}/**/*.md`,
+			`${project.docsRoot}/**/*.md`,
 			project.roadmapPath,
 			`${project.researchRoot}/**/*.jsonl`,
 		]),
 		exclude: unique([
-			`${project.wikiRoot}/_templates/**`,
-			project.indexPath,
-			project.roadmapDocPath,
+			`${project.docsRoot}/_templates/**`,
+			...(project.indexPath ? [project.indexPath] : []),
+			...(project.roadmapDocPath ? [project.roadmapDocPath] : []),
 		]),
 	};
 }
 
 function defaultCodeDriftDocsScope(project: WikiProject): string[] {
-	return unique([`${project.wikiRoot}/**/*.md`]);
+	return unique([`${project.docsRoot}/**/*.md`]);
 }
 
 function renderScope(label: string, items: string[]): string[] {
@@ -6236,6 +6740,25 @@ function uniqueCommands(commands: string[][]): string[][] {
 		result.push(command);
 	}
 	return result;
+}
+
+function roadmapArchivePath(project: WikiProject): string {
+	let archivePath = normalizeRelativePath(
+		project.config.roadmap_retention?.archive_path ??
+			".wiki/roadmap-archive.jsonl",
+	);
+	if (
+		project.config.roadmap_retention?.compress_archive &&
+		!archivePath.endsWith(".gz")
+	) {
+		archivePath = `${archivePath}.gz`;
+	}
+	return resolve(project.root, archivePath);
+}
+
+function optionalRelativePath(path: string | null | undefined): string | null {
+	if (typeof path !== "string" || !path.trim()) return null;
+	return normalizeRelativePath(path);
 }
 
 function normalizeRelativePath(path: string): string {

@@ -1,57 +1,112 @@
 {
-	"version": 2,
-	"project_name": "codewiki",
-	"index_title": "codewiki Index",
-	"docs_root": ".wiki/knowledge",
-	"specs_root": ".wiki/knowledge",
-	"evidence_root": ".wiki/evidence",
-	"index_path": "wiki/index.md",
-	"roadmap_path": ".wiki/roadmap.json",
-	"roadmap_doc_path": "wiki/roadmap.md",
-	"roadmap_events_path": ".wiki/roadmap-events.jsonl",
-	"meta_root": ".wiki",
-	"sources_root": ".wiki/sources",
-	"generated_files": [
-		"wiki/index.md",
-		"wiki/roadmap.md",
-		".wiki/graph.json",
-		".wiki/lint.json",
-		".wiki/roadmap-state.json",
-		".wiki/status-state.json"
-	],
-	"lint": {
-		"repo_markdown": ["README.md"],
-		"forbidden_headings": [
-			"## Purpose",
-			"## When To Read",
-			"## Content",
-			"## Summary",
-			"## How To Use This Doc"
-		],
-		"word_count_warn": 1600,
-		"word_count_exempt": ["wiki/roadmap.md"]
-	},
-	"codewiki": {
-		"name": "codewiki package wiki",
-		"rebuild_command": ["python", "scripts/rebuild_docs_meta.py"],
-		"self_drift_scope": {
-			"include": [
-				".wiki/knowledge/**/*.md",
-				".wiki/roadmap.json",
-				".wiki/evidence/**"
-			],
-			"exclude": []
-		},
-		"code_drift_scope": {
-			"docs": [".wiki/knowledge/**/*.md"],
-			"repo_docs": ["README.md"],
-			"code": [
-				"extensions/**",
-				"skills/**",
-				"scripts/**",
-				"package.json",
-				"README.md"
-			]
-		}
-	}
+  "version": 2,
+  "project_name": "codewiki",
+  "template": {
+    "name": "codewiki-starter",
+    "version": 1,
+    "generated_on": "2026-04-29"
+  },
+  "index_title": "codewiki Index",
+  "docs_root": ".wiki/knowledge",
+  "specs_root": ".wiki/knowledge",
+  "evidence_root": ".wiki/evidence",
+  "roadmap_path": ".wiki/roadmap.json",
+  "roadmap_events_path": ".wiki/roadmap-events.jsonl",
+  "roadmap_retention": {
+    "closed_task_limit": 50,
+    "archive_path": ".wiki/roadmap-archive.jsonl",
+    "compress_archive": false
+  },
+  "meta_root": ".wiki",
+  "sources_root": ".wiki/sources",
+  "generated_files": [
+    ".wiki/graph.json",
+    ".wiki/lint.json",
+    ".wiki/roadmap-state.json",
+    ".wiki/status-state.json"
+  ],
+  "lint": {
+    "repo_markdown": [
+      "README.md",
+      "extensions/codewiki/**/README.md"
+    ],
+    "forbidden_headings": [
+      "## Purpose",
+      "## When To Read",
+      "## Content",
+      "## Summary",
+      "## How To Use This Doc"
+    ],
+    "word_count_warn": 1600,
+    "word_count_exempt": []
+  },
+  "codewiki": {
+    "name": "codewiki codebase wiki",
+    "rebuild_command": [
+      "python",
+      "scripts/rebuild_docs_meta.py"
+    ],
+    "self_drift_scope": {
+      "include": [
+        ".wiki/knowledge/**/*.md",
+        ".wiki/roadmap.json",
+        ".wiki/evidence/**"
+      ],
+      "exclude": []
+    },
+    "code_drift_scope": {
+      "docs": [
+        ".wiki/knowledge/**/*.md"
+      ],
+      "repo_docs": [
+        "README.md",
+        "extensions/codewiki/**/README.md"
+      ],
+      "code": [
+        "extensions/codewiki/**",
+        "scripts/**"
+      ]
+    },
+    "gateway": {
+      "enabled": true,
+      "mode": "read-only",
+      "allow_paths": [
+        ".wiki/knowledge/**",
+        ".wiki/roadmap/tasks/**",
+        ".wiki/evidence/**",
+        ".wiki/graph.json",
+        ".wiki/status-state.json",
+        ".wiki/roadmap-state.json",
+        ".wiki/roadmap.json",
+        ".wiki/roadmap-events.jsonl",
+        ".wiki/events.jsonl"
+      ],
+      "write_paths": [
+        ".wiki/knowledge/**",
+        ".wiki/evidence/**"
+      ],
+      "generated_readonly_paths": [
+        ".wiki/graph.json",
+        ".wiki/lint.json",
+        ".wiki/status-state.json",
+        ".wiki/roadmap-state.json",
+        ".wiki/roadmap/**"
+      ],
+      "deny_paths": [
+        "**/.env*",
+        "**/*secret*",
+        ".wiki/sources/private/**"
+      ],
+      "network": false,
+      "max_stdout_bytes": 12000,
+      "max_read_bytes": 200000,
+      "max_write_bytes": 50000
+    },
+    "runtime": {
+      "adapter": "codewiki-gateway-v1",
+      "transaction_schema": "codewiki.transaction.v1",
+      "future_executor": "think-code",
+      "notes": "codewiki owns .wiki semantics; generic sandbox execution may be delegated to think-code when available."
+    }
+  }
 }

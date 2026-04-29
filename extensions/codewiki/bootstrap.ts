@@ -15,12 +15,13 @@ import {
 
 const execFileAsync = promisify(execFile);
 const GENERATED_OUTPUTS = [
-	"wiki/index.md",
-	"wiki/roadmap.md",
 	".wiki/graph.json",
 	".wiki/lint.json",
 	".wiki/roadmap-state.json",
 	".wiki/status-state.json",
+	".wiki/roadmap/index.json",
+	".wiki/roadmap/state.json",
+	".wiki/roadmap/events.jsonl",
 ] as const;
 const CONTAINER_DIR_NAMES = new Set([
 	"apps",
@@ -138,12 +139,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 					ctx.cwd,
 					parseArgs(args, { allowForce: true }),
 				);
-				ctx.ui.notify(
-					formatSummary("Bootstrapped", result),
-					result.updated.length + result.created.length > 0
-						? "success"
-						: "info",
-				);
+				ctx.ui.notify(formatSummary("Bootstrapped", result), "info");
 				queueOnboardingPrompt(pi, ctx, result);
 			} catch (error) {
 				ctx.ui.notify(formatError(error), "error");
@@ -163,12 +159,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 			"This reuses an existing ancestor wiki root when present, otherwise it targets the enclosing git repo root when present, else the current working directory.",
 		],
 		parameters: Type.Object({
-			projectName: Type.Optional(
-				Type.String({
-					description:
-						"Project name to write into starter docs; defaults to current directory name.",
-				}),
-			),
+			projectName: Type.Optional(Type.String()),
 			repoPath: repoPathToolField,
 		}),
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
@@ -183,7 +174,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 				details: result,
 			};
 		},
-	});
+	} as any);
 
 	pi.registerTool({
 		name: "codewiki_bootstrap",
@@ -226,7 +217,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 				details: result,
 			};
 		},
-	});
+	} as any);
 }
 
 export async function setupCodewiki(
