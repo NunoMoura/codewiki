@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-18T09:08:07.066Z",
+  "generated_at": "2026-05-18T09:15:06.680Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -1239,64 +1239,6 @@
       "layer": "roadmap",
       "status": "done",
       "change_type": "system",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "task:TASK-101",
-      "kind": "roadmap_task",
-      "title": "Remove legacy CodeWiki loop skill assets",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "code",
-      "alignment_state": "drift"
-    },
-    {
-      "id": "code:skills/codewiki-feedback",
-      "kind": "code_path",
-      "path": "skills/codewiki-feedback",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:skills/codewiki-documentation",
-      "kind": "code_path",
-      "path": "skills/codewiki-documentation",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:skills/codewiki-planning",
-      "kind": "code_path",
-      "path": "skills/codewiki-planning",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:skills/codewiki-implementation",
-      "kind": "code_path",
-      "path": "skills/codewiki-implementation",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:skills/codewiki-validation",
-      "kind": "code_path",
-      "path": "skills/codewiki-validation",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:tests/smoke/prompt-assets.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/prompt-assets.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:tests/tasks/TASK-076/restructure.test.mjs",
-      "kind": "code_path",
-      "path": "tests/tasks/TASK-076/restructure.test.mjs",
-      "layer": "code",
       "alignment_state": "aligned"
     },
     {
@@ -8945,6 +8887,18 @@
       "id": "code:tests/tasks/TASK-076/trace.json",
       "kind": "code_path",
       "path": "tests/tasks/TASK-076/trace.json",
+      "layer": "code"
+    },
+    {
+      "id": "code:tests/smoke/prompt-assets.test.mjs",
+      "kind": "code_path",
+      "path": "tests/smoke/prompt-assets.test.mjs",
+      "layer": "code"
+    },
+    {
+      "id": "code:tests/tasks/TASK-076/restructure.test.mjs",
+      "kind": "code_path",
+      "path": "tests/tasks/TASK-076/restructure.test.mjs",
       "layer": "code"
     },
     {
@@ -18940,7 +18894,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-101",
       "superseded_by": [
@@ -19093,46 +19047,6 @@
       "safety_status": "blocked",
       "default_hidden": true,
       "layer": "archive"
-    },
-    {
-      "id": "code:skills/codewiki/loops/documentation.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/documentation.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki/loops/feedback.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/feedback.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki/loops/implementation.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/implementation.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki/loops/planning.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/planning.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki/loops/validation.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/validation.md",
-      "layer": "code"
-    },
-    {
-      "id": "closure:TASK-101",
-      "kind": "closure_brief",
-      "path": "TASK-101"
-    },
-    {
-      "id": "closure:TASK-101 remains open until validation and close proof",
-      "kind": "closure_brief",
-      "path": "TASK-101 remains open until validation and close proof"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
@@ -19326,7 +19240,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-101",
       "superseded_by": [
@@ -23013,6 +22927,66 @@
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+        "head_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+        "validated_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+        "tree_sha": "617cebe02126335f472f4a7c86678c4b53dcd85b",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh validator context used source refs only: HEAD/tree, TASK-101 task files, v3 implementation build, committed implementation pass validation, active files, CodeWiki state, and audit output. Worktree cleanliness was checked immediately before this validation report was written; subsequent validation-report/generated-state writes are outside checked content proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity",
+          "audit:stale-reference",
+          "audit:file-structure",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files"
+        ],
+        "content_proof_refs": [
+          "4b107d4eb88612fac8c8a409e156108833250a4d",
+          "617cebe02126335f472f4a7c86678c4b53dcd85b"
+        ]
+      }
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:4b107d4eb88612fac8c8a409e156108833250a4d",
+      "kind": "content_proof",
+      "path": "4b107d4eb88612fac8c8a409e156108833250a4d",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:617cebe02126335f472f4a7c86678c4b53dcd85b",
+      "kind": "content_proof",
+      "path": "617cebe02126335f472f4a7c86678c4b53dcd85b",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
     }
   ],
   "edges": [
@@ -25320,56 +25294,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-078",
       "to": "code:tests/smoke"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-101",
-      "to": "doc:README.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-101",
-      "to": "doc:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki-feedback"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki-documentation"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki-planning"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki-implementation"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:skills/codewiki-validation"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-101",
-      "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
     },
     {
       "kind": "test_code",
@@ -50130,146 +50054,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "build:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json"
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "build:.codewiki/builds/documentation/2026-05-17-documented-skill-loop-restructure.json"
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "task:TASK-101"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "build:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json"
-    },
-    {
-      "kind": "build_consumes_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:README.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:skills/codewiki/loops/**"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "source:tests/tasks/TASK-076/trace.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:README.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/loops/documentation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/loops/feedback.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/loops/implementation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/loops/planning.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:skills/codewiki/loops/validation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "code:tests/tasks/TASK-076/trace.json"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "test:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "test:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "test:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "validation:implementation validation pending"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "closure:TASK-101"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
-      "to": "closure:TASK-101 remains open until validation and close proof"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
       "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
@@ -50775,121 +50559,6 @@
       "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-101",
       "default_hidden": true
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "task:TASK-101"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:README.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:skills/codewiki/loops/**"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "source:tests/tasks/TASK-076/trace.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:README.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/loops/documentation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/loops/feedback.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/loops/implementation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/loops/planning.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:skills/codewiki/loops/validation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "code:tests/tasks/TASK-076/trace.json"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "test:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "test:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "test:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "validation:implementation validation pending"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "closure:TASK-101"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
-      "to": "closure:TASK-101 remains open until validation and close proof"
     },
     {
       "kind": "claim_task",
@@ -54548,6 +54217,71 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
       "to": "task:TASK-101"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "content_proof:4b107d4eb88612fac8c8a409e156108833250a4d",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "content_proof:617cebe02126335f472f4a7c86678c4b53dcd85b",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+      "to": "task:TASK-101"
     }
   ],
   "views": {
@@ -54718,15 +54452,10 @@
         "TASK-076",
         "TASK-077",
         "TASK-084",
-        "TASK-078",
-        "TASK-101"
+        "TASK-078"
       ],
-      "open_task_ids": [
-        "TASK-101"
-      ],
-      "in_progress_task_ids": [
-        "TASK-101"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [
@@ -54785,8 +54514,7 @@
       ],
       "status_counts": {
         "done": 45,
-        "cancelled": 5,
-        "in_progress": 1
+        "cancelled": 5
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -54993,15 +54721,10 @@
         "scripts/check-architecture.mjs",
         "skills",
         "skills/codewiki",
-        "skills/codewiki-documentation",
         "skills/codewiki-documentation/SKILL.md",
-        "skills/codewiki-feedback",
         "skills/codewiki-feedback/SKILL.md",
-        "skills/codewiki-implementation",
         "skills/codewiki-implementation/SKILL.md",
-        "skills/codewiki-planning",
         "skills/codewiki-planning/SKILL.md",
-        "skills/codewiki-validation",
         "skills/codewiki-validation/SKILL.md",
         "skills/codewiki/**",
         "skills/codewiki/SKILL.md",
@@ -55046,8 +54769,6 @@
         "tests/**",
         "tests/smoke",
         "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/prompt-assets.test.mjs",
-        "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
       "dirty_paths": []
@@ -56438,6 +56159,25 @@
             "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
             "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+          "task_id": "TASK-101",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+          "head_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+          "validated_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "4b107d4eb88612fac8c8a409e156108833250a4d",
+            "617cebe02126335f472f4a7c86678c4b53dcd85b"
+          ]
         }
       ]
     },
@@ -57361,6 +57101,7 @@
         "codewiki_audit profiles=alignment,changed,task task_id=TASK-083 — warning overall; alignment pass, changed warning, task pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-083 — warning overall; alignment pass, changed warning for .codewiki/index_graph.json generated-file change during audit, task pass, generated-parity pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-089: alignment warning only (graph health reports 2 warnings), changed pass, task pass, generated-parity pass",
+        "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files",
         "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}",
         "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes (.codewiki/index_graph.json, TASK-101 generated task/context views), not active legacy loop refs",
         "codewiki_audit task,changed,stale-reference TASK-100",
@@ -57464,10 +57205,12 @@
         "3680881721d01f5450aa2ba5aeedc4f15e216b17",
         "3ac936ffbbad8b32613427c515a5b5e46ecc3062",
         "4757f167a6306f11c8f6d142605cc2e9a8220d89",
+        "4b107d4eb88612fac8c8a409e156108833250a4d",
         "57f3b6f568b90103e537a2bd60344cefad74e49f",
         "59ebea7622e14a3faf6596b8a03a5dcb9710730f",
         "5da9d6e78e489e6e9662e6db5923ac5bd4623330",
         "5e4b003070f672cf11c78c8712a7ced5450b6502",
+        "617cebe02126335f472f4a7c86678c4b53dcd85b",
         "69e97f8a3ad77cc24a9413392d1b5bbeb5f5a363",
         "6c53ab1b0cd9ae116fe1fe80286e873424004bee",
         "75f303d0673612b82c959387b9845c7379fe8bb4",
@@ -59437,12 +59180,171 @@
             "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-18-task-close-pass-task-101.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-101",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity",
+            "audit:stale-reference",
+            "audit:file-structure",
+            "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files"
+          ],
+          "content_proof_refs": [
+            "4b107d4eb88612fac8c8a409e156108833250a4d",
+            "617cebe02126335f472f4a7c86678c4b53dcd85b"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-11-control-room-ui.json",
+            ".codewiki/builds/feedback/2026-05-11-cytoscape-graph-visualization-selection.json",
+            ".codewiki/builds/feedback/2026-05-11-progressive-task-refinement-intent.json",
+            ".codewiki/builds/feedback/2026-05-13-claim-wait-queue.json",
+            ".codewiki/builds/feedback/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-087-narrow-dependency-direction-gu.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-088-web-ui-move-slice-from-adapter.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-090-scope-correction-dogfood-sourc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-091-stale-unscoped-validation-bloc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-092-large-doc-warning-cleanup-for-.json",
+            ".codewiki/builds/feedback/2026-05-16-artifact-status-parallel-coordination.json",
+            ".codewiki/builds/feedback/2026-05-16-parallel-wiki-resume-session-scheduler.json",
+            ".codewiki/builds/documentation/2026-05-10-runtime-scoped-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-build-contract-v2-and-efficiency-sprints-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-ui-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-cytoscape-control-room-graph-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-progressive-task-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-reconciliation-lifecycle-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-config-settings-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-simplification-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-final-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-git-backed-archival-gc-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-hot-only-default-context-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-role-worktree-isolation-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-claim-wait-queue-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-document-adapter-managed-session-handoff-capabil.json",
+            ".codewiki/builds/documentation/2026-05-13-loop-session-isolation-policy-docs-v2.json",
+            ".codewiki/builds/documentation/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-087-dependency-direction-guard-s.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-088-web-ui-move-paths-from-src-a.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-090-portable-alignment-drift-fix.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-091-validation-reconciliation-ru.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-092-large-doc-cleanup-by-condens.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-sprint-boundary-contract.json",
+            ".codewiki/builds/planning/2026-05-13-loop-session-isolation-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-13-plan-implementation-of-pi-adapter-session-handof.json",
+            ".codewiki/builds/planning/2026-05-13-task-073-alignment-routing-plan.json",
+            ".codewiki/builds/planning/2026-05-14-plan-task-075-implementation-of-ascii-like-codew.json",
+            ".codewiki/builds/planning/2026-05-15-planned-sprint-003-alignment-hardening-with-umbr.json",
+            ".codewiki/builds/planning/2026-05-16-domain-led-layering-refactor-roadmap.json",
+            ".codewiki/builds/planning/2026-05-16-planned-bounded-enforcement-work-for-task-bounda.json",
+            ".codewiki/builds/planning/2026-05-16-planned-change-type-taxonomy-migration.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-087-dependency-direction-guard-fixt.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-088-web-ui-move-slice.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-090-portable-alignment-drift-fixtur.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-091-stale-unscoped-validation-block.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-092-oversized-system-docs-trim.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/planning/2026-05-17-planned-agent-managed-codewiki-gc.json",
+            ".codewiki/builds/planning/2026-05-17-planned-skill-loop-restructure-sprint.json",
+            ".codewiki/builds/implementation/2026-05-11-task-055-build-contract-v2.json",
+            ".codewiki/builds/implementation/2026-05-11-task-056-efficiency-foundation.json",
+            ".codewiki/builds/implementation/2026-05-11-task-057-status-graph-diff-ui.json",
+            ".codewiki/builds/implementation/2026-05-11-task-058-control-room-shell.json",
+            ".codewiki/builds/implementation/2026-05-11-task-059-system-diagram-inspector.json",
+            ".codewiki/builds/implementation/2026-05-11-task-060-graph-visual-map.json",
+            ".codewiki/builds/implementation/2026-05-11-task-061-control-room-refinement.json",
+            ".codewiki/builds/implementation/2026-05-11-task-062-wiki-ui-browser-open.json",
+            ".codewiki/builds/implementation/2026-05-11-task-063-cytoscape-control-room-graph.json",
+            ".codewiki/builds/implementation/2026-05-11-task-064-graph-spacing-fit.json",
+            ".codewiki/builds/implementation/2026-05-11-task-065-progressive-task-refinement.json",
+            ".codewiki/builds/implementation/2026-05-12-task-066-drift-propagation-assurance.json",
+            ".codewiki/builds/implementation/2026-05-12-task-067-control-room-simplification.json",
+            ".codewiki/builds/implementation/2026-05-12-task-069-control-room-settings.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-claim-wait-queue.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json",
+            ".codewiki/builds/implementation/2026-05-13-task-075-value-first-ui-kanban.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-expanded-audit-cleanup-fixed-stale-sour.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-final-tidy-pass-moved-package-smoke-und.json",
+            ".codewiki/builds/implementation/2026-05-15-task-078-implemented-executable-alignment-graph-.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-deprecated-roadmap-verify-phase.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-and-guards.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-roadmap-wo.json",
+            ".codewiki/builds/implementation/2026-05-15-task-082-task-084-task-close-now-blocks-without-.json",
+            ".codewiki/builds/implementation/2026-05-16-added-audit-and-smoke-test-enforcement-for-bound.json",
+            ".codewiki/builds/implementation/2026-05-16-added-portable-alignment-drift-fixture-matrix-an.json",
+            ".codewiki/builds/implementation/2026-05-16-added-regression-coverage-proving-task-087-depen.json",
+            ".codewiki/builds/implementation/2026-05-16-completed-task-087-domain-led-layering-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-corrected-stale-public-api-guidance-found-by-fre.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-accepted-build-lifecycle-semantics-int.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-change-traceability-normalization-sema.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-roadmap-task-boundary-semantics-into-d.json",
+            ".codewiki/builds/implementation/2026-05-16-finalized-task-086-public-coordination-wording-a.json",
+            ".codewiki/builds/implementation/2026-05-16-fixed-task-086-handoff-blocker-tool-context-new-.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-082-semantic-build-traceability.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-bootstrap-resume-prompt-assets-into-skill-.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-control-room-browser-ui-source-from-adapte.json",
+            ".codewiki/builds/implementation/2026-05-16-stopped-stale-unscoped-validation-block-reports-.json",
+            ".codewiki/builds/implementation/2026-05-16-task-079-source-owned-audit-engine.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy-current-p.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy.json",
+            ".codewiki/builds/implementation/2026-05-16-task-081-source-owned-drift-fixtures.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-public-api.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-resume-scheduler.json",
+            ".codewiki/builds/implementation/2026-05-16-trimmed-oversized-builds-and-roadmap-system-docs.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract-planning-t.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract-planning-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract-planning-trac.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -59500,12 +59402,9 @@
           "TASK-076",
           "TASK-077",
           "TASK-084",
-          "TASK-078",
-          "TASK-101"
+          "TASK-078"
         ],
-        "open_task_ids": [
-          "TASK-101"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -60402,62 +60301,28 @@
             "src/domain/shared/types.ts",
             "tests/smoke"
           ]
-        },
-        "TASK-101": {
-          "kind": "task",
-          "id": "TASK-101",
-          "task_ids": [
-            "TASK-101"
-          ],
-          "open_task_ids": [
-            "TASK-101"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            "README.md",
-            "skills/codewiki/SKILL.md"
-          ],
-          "code_paths": [
-            "skills/codewiki",
-            "skills/codewiki-feedback",
-            "skills/codewiki-documentation",
-            "skills/codewiki-planning",
-            "skills/codewiki-implementation",
-            "skills/codewiki-validation",
-            "tests/smoke/prompt-assets.test.mjs",
-            "tests/tasks/TASK-076/restructure.test.mjs"
-          ]
         }
       }
     },
     "workflow_cursor": {
-      "active_loop": "feedback",
-      "reason": "Validation blocked; escalate ambiguous intent to feedback compiler.",
-      "input_refs": [
-        "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-        "TASK-101"
-      ],
-      "expected_output": "feedback_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "sprint",
         "id": "SPRINT-003"
       },
       "isolation": {
-        "required": true,
-        "mode": "fresh-session-or-clear-context",
-        "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-        "evidence": [
-          "new session id or recorded context reset",
-          "handoff build/task refs only"
-        ],
-        "handoff": "feedback_loop start"
+        "required": false,
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
-      "context_boundary": "fresh-session-or-clear-context",
-      "handoff_refs": [
-        "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-        "TASK-101"
-      ]
+      "context_boundary": "none",
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -60469,16 +60334,13 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-101"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-003"
           ],
           "build_paths": [],
           "validation_paths": [
-            ".codewiki/validation/2026-05-17-documentation-block.json",
-            ".codewiki/validation/2026-05-18-implementation-block-task-101.json"
+            ".codewiki/validation/2026-05-17-documentation-block.json"
           ],
           "claim_ids": [
             "CLAIM-095"
@@ -60821,7 +60683,9 @@
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
           ]
         },
         "purgeable": {
@@ -61598,7 +61462,9 @@
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -61607,62 +61473,41 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-          "source_id": "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-          "state": "blocked",
-          "direction": "gateway",
-          "from_layer": "validation",
-          "to_layer": "feedback",
-          "next_loop": "feedback",
-          "task_id": "TASK-101",
-          "reason": "Validation blocked; escalate ambiguous intent to feedback compiler."
-        }
-      ],
-      "counts_by_loop": {
-        "feedback": 1
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "feedback",
-        "command": "Run feedback compiler",
-        "reason": "Validation blocked; escalate ambiguous intent to feedback compiler.",
-        "item_id": "reconcile:validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-        "isolation_required": true,
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "isolation_required": false,
         "isolation": {
-          "required": true,
-          "mode": "fresh-session-or-clear-context",
-          "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-          "evidence": [
-            "new session id or recorded context reset",
-            "handoff build/task refs only"
-          ],
-          "handoff": "feedback_loop start"
+          "required": false,
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
-        "context_boundary": "fresh-session-or-clear-context",
-        "handoff_refs": [
-          "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-          "TASK-101"
-        ]
+        "context_boundary": "none",
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
         "knowledge": "aligned",
         "roadmap": "aligned",
         "code": "aligned",
-        "validation": "drift"
+        "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-18T09:08:07.003Z",
+      "generated_at": "2026-05-18T09:15:06.612Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-18T09:08:07Z",
+      "generated_at": "2026-05-18T09:15:06Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -61673,18 +61518,17 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 51,
-        "open_count": 1,
+        "task_count": 50,
+        "open_count": 0,
         "sprint_count": 4,
         "active_sprint_count": 1,
         "status_counts": {
           "done": 45,
-          "cancelled": 5,
-          "in_progress": 1
+          "cancelled": 5
         },
         "priority_counts": {
           "high": 28,
-          "medium": 14,
+          "medium": 13,
           "critical": 8,
           "low": 1
         }
@@ -61740,15 +61584,10 @@
           "TASK-076",
           "TASK-077",
           "TASK-084",
-          "TASK-078",
-          "TASK-101"
+          "TASK-078"
         ],
-        "open_task_ids": [
-          "TASK-101"
-        ],
-        "executable_open_task_ids": [
-          "TASK-101"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -61935,12 +61774,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-101"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-101"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -61999,7 +61834,6 @@
           "TASK-077"
         ],
         "recent_task_ids": [
-          "TASK-101",
           "TASK-034",
           "TASK-077",
           "TASK-084",
@@ -64541,64 +64375,12 @@
             "updated_at": "",
             "evidence": null
           }
-        },
-        "TASK-101": {
-          "id": "TASK-101",
-          "title": "Remove legacy CodeWiki loop skill assets",
-          "status": "in_progress",
-          "priority": "medium",
-          "kind": "agent-workflow",
-          "change_type": "code",
-          "summary": "Delete the obsolete skills/codewiki/loops structure now that focused public compiler skills own loop contracts.",
-          "labels": [
-            "skills",
-            "cleanup"
-          ],
-          "goal": {
-            "outcome": "Focused CodeWiki skills are the only loop entry structure; legacy loop markdown is removed from package docs and tests.",
-            "acceptance": [
-              "`skills/codewiki/loops/` no longer exists or is referenced by active source/docs/tests.",
-              "Main `codewiki` skill routes to focused compiler skills without loading parallel loop files.",
-              "README/package smoke/restructure tests reflect the new skill structure."
-            ],
-            "non_goals": [
-              "Do not remove focused public compiler skills, bootstrap assets, prompts, playbooks, or tool catalog."
-            ],
-            "verification": [
-              "Run prompt asset, restructure, package smoke, and pack checks."
-            ]
-          },
-          "spec_paths": [
-            "README.md",
-            "skills/codewiki/SKILL.md"
-          ],
-          "code_paths": [
-            "skills/codewiki",
-            "skills/codewiki-feedback",
-            "skills/codewiki-documentation",
-            "skills/codewiki-planning",
-            "skills/codewiki-implementation",
-            "skills/codewiki-validation",
-            "tests/smoke/prompt-assets.test.mjs",
-            "tests/tasks/TASK-076/restructure.test.mjs"
-          ],
-          "updated": "2026-05-18T09:07:30Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-101/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-18T09:08:07Z",
+      "generated_at": "2026-05-18T09:15:06Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -64618,8 +64400,8 @@
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 51,
-        "open_task_count": 1,
+        "task_count": 50,
+        "open_task_count": 0,
         "done_task_count": 45
       },
       "bars": {
@@ -64632,8 +64414,8 @@
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 45,
-          "total": 51,
-          "percent": 88
+          "total": 50,
+          "percent": 90
         },
         "spec_mapping": {
           "label": "Spec Mapping",
@@ -64645,9 +64427,7 @@
       "views": {
         "risky_spec_paths": [],
         "top_risky_spec_paths": [],
-        "open_task_ids": [
-          "TASK-101"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -64659,39 +64439,29 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:feedback",
-        "command": "Run feedback compiler",
-        "reason": "Validation blocked; escalate ambiguous intent to feedback compiler.",
-        "item_id": "reconcile:validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "feedback",
-        "reason": "Validation blocked; escalate ambiguous intent to feedback compiler.",
-        "input_refs": [
-          "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-          "TASK-101"
-        ],
-        "expected_output": "feedback_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "sprint",
           "id": "SPRINT-003"
         },
         "isolation": {
-          "required": true,
-          "mode": "fresh-session-or-clear-context",
-          "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-          "evidence": [
-            "new session id or recorded context reset",
-            "handoff build/task refs only"
-          ],
-          "handoff": "feedback_loop start"
+          "required": false,
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
-        "context_boundary": "fresh-session-or-clear-context",
-        "handoff_refs": [
-          "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json",
-          "TASK-101"
-        ]
+        "context_boundary": "none",
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -64703,16 +64473,13 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-101"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-003"
             ],
             "build_paths": [],
             "validation_paths": [
-              ".codewiki/validation/2026-05-17-documentation-block.json",
-              ".codewiki/validation/2026-05-18-implementation-block-task-101.json"
+              ".codewiki/validation/2026-05-17-documentation-block.json"
             ],
             "claim_ids": [
               "CLAIM-095"
@@ -65055,7 +64822,9 @@
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
             ]
           },
           "purgeable": {
@@ -65072,7 +64841,7 @@
         ]
       },
       "direction": [
-        "Validation blocked; escalate ambiguous intent to feedback compiler.",
+        "No open deterministic drift requires action right now.",
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 16/16.",
@@ -66031,7 +65800,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-18T09:08:07Z",
+        "generated_at": "2026-05-18T09:15:06Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -66059,12 +65828,17 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T09:08:07Z",
+            "checked_at": "2026-05-18T09:15:06Z",
             "revision": {
               "git": {
-                "head": "6fd58272e24ce33b219dc193b3d71b432186a079",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66145,14 +65919,14 @@
                 }
               },
               "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
-              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
-              "code_digest": "3d31bfebe98cdbf27d456aa4315ba2e79c05e4fb251ae7927d9e33931189ef96",
-              "digest": "aac7c878911df7d8ac383f5110f69d33fd0f983f31edfa966c7d91289718e7fb"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "7d8e6deaf353957513ae69aae26ff1e7d32f295c76c5cc3fdf5d782f2fc4d3b3",
+              "digest": "6ab133cbf332f05f6bb263a80d595497289112e5bb2fbdfd1964c28a9aa04b1a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:08:07Z",
+              "checked_at": "2026-05-18T09:15:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66238,9 +66012,7 @@
               ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-101"
-            ],
+            "open_task_ids": [],
             "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
@@ -66270,12 +66042,17 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-18T09:08:07Z",
+            "checked_at": "2026-05-18T09:15:06Z",
             "revision": {
               "git": {
-                "head": "6fd58272e24ce33b219dc193b3d71b432186a079",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66335,14 +66112,14 @@
                 }
               },
               "spec_digest": "f4b714ec506ab48ab4b1ebfc52c5ea552904e2788c517c2b61d5cf4d8941c789",
-              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
-              "code_digest": "8d8821c3014856370e3c84eca5fa8a11010544805ce58b8a8ce552f7313be1aa",
-              "digest": "692205e6b1d946f46b32563a5b2d6fda95acfc9b83d0265772d594e54f11bbd1"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "b0d97a5d9d546d2539aaa9930cea5024f96c935d28764de118e1ac8928004bf0",
+              "digest": "fb88dc094d1c7d2dc45a7eb3dd51c2eec54598a9fd6427d4cc3303f2b879ff46"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:08:07Z",
+              "checked_at": "2026-05-18T09:15:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66407,9 +66184,7 @@
               ".codewiki/validation"
             ],
             "code_area": "src, skills +2 more",
-            "open_task_ids": [
-              "TASK-101"
-            ],
+            "open_task_ids": [],
             "risky_spec_paths": [],
             "stats": {
               "total_specs": 18,
@@ -66439,12 +66214,17 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T09:08:07Z",
+            "checked_at": "2026-05-18T09:15:06Z",
             "revision": {
               "git": {
-                "head": "6fd58272e24ce33b219dc193b3d71b432186a079",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66525,14 +66305,14 @@
                 }
               },
               "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
-              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
-              "code_digest": "3d31bfebe98cdbf27d456aa4315ba2e79c05e4fb251ae7927d9e33931189ef96",
-              "digest": "aac7c878911df7d8ac383f5110f69d33fd0f983f31edfa966c7d91289718e7fb"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "7d8e6deaf353957513ae69aae26ff1e7d32f295c76c5cc3fdf5d782f2fc4d3b3",
+              "digest": "6ab133cbf332f05f6bb263a80d595497289112e5bb2fbdfd1964c28a9aa04b1a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:08:07Z",
+              "checked_at": "2026-05-18T09:15:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66618,9 +66398,7 @@
               ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-101"
-            ],
+            "open_task_ids": [],
             "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
@@ -66639,19 +66417,19 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-101",
+        "source": "next_step",
+        "task_id": "",
         "lane_id": "",
-        "heading": "TASK-101 — Remove legacy CodeWiki loop skill assets",
-        "command": "/wiki-resume TASK-101",
-        "reason": "Resume roadmap task (in_progress).",
+        "heading": "Roadmap clear",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now.",
         "status": "in_progress",
-        "verification": "Run prompt asset, restructure, package smoke, and pack checks.",
+        "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-05-18T09:08:07Z",
+        "generated_at": "2026-05-18T09:15:06Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -68738,12 +68516,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-101",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-101"
-        ],
-        "next_task_id": "TASK-101",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -68938,9 +68714,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-101"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",

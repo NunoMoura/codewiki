@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-18T09:14:14Z",
+  "profile": "task-close",
+  "task_id": "TASK-101",
+  "verdict": "pass",
+  "rationale": "Fresh task-close validation used source refs only. HEAD 4b107d4eb88612fac8c8a409e156108833250a4d with tree 617cebe02126335f472f4a7c86678c4b53dcd85b matches requested immutable proof and worktree was clean immediately before recording this report. Source checks prove legacy skills/codewiki/loops assets are absent from HEAD and active source/docs/tests/KB/package refs, main skills/codewiki/SKILL.md routes loop work to focused public compiler/gateway skills only, TASK-034 roadmap metadata is reconciled with no legacy or missing code_paths, implementation build v3 is accepted for TASK-101, and committed implementation validation passes against v3. CodeWiki health is green and all required task-close audits pass. Task-close gate may consume this validation; task was not closed.",
+  "checks": [
+    "git rev-parse HEAD => 4b107d4eb88612fac8c8a409e156108833250a4d",
+    "git rev-parse HEAD^{tree} => 617cebe02126335f472f4a7c86678c4b53dcd85b",
+    "git status --short immediately before validation => empty/clean",
+    "codewiki_state refresh=false include repo,health,summary,roadmap,session,task taskId=TASK-101 => health green (0 errors, 0 warnings); roadmap open 1; next TASK-101",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; 0 issues",
+    "git ls-tree -r --name-only HEAD -- skills/codewiki/loops => 0 entries",
+    "git grep --fixed-strings 'skills/codewiki/loops' HEAD -- .codewiki/kb README.md skills tests src package.json package-lock.json => 0 active refs",
+    "skills/codewiki/SKILL.md lines 27-33 route loop-specific work to ../codewiki-feedback, ../codewiki-documentation, ../codewiki-planning, ../codewiki-implementation, and ../codewiki-validation SKILL.md files",
+    "TASK-034 queue metadata from HEAD => status done; legacy_code_paths=0; missing_code_paths=0; focused_skill_refs=5",
+    "HEAD contains .codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json => kind implementation_build; task_id TASK-101; status accepted; cycle.sequence 3; supersedes 2 previous implementation builds",
+    "HEAD contains .codewiki/validation/2026-05-18-implementation-pass-task-101.json => profile implementation; task_id TASK-101; verdict pass; source v3 implementation build"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:stale-reference",
+    "audit:file-structure"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => pass; issues=0; alignment pass; changed pass with 0 changed files; task pass; generated-parity pass for graph presence/freshness and active task views; stale-reference pass over 53 active markdown/source text files; file-structure pass over 85 TypeScript source files"
+  ],
+  "content_proof_refs": [
+    "4b107d4eb88612fac8c8a409e156108833250a4d",
+    "617cebe02126335f472f4a7c86678c4b53dcd85b"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "validated_sha/head_sha/published_sha/tree_sha/package_digest/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+    "head_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+    "validated_sha": "4b107d4eb88612fac8c8a409e156108833250a4d",
+    "tree_sha": "617cebe02126335f472f4a7c86678c4b53dcd85b",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh validator context used source refs only: HEAD/tree, TASK-101 task files, v3 implementation build, committed implementation pass validation, active files, CodeWiki state, and audit output. Worktree cleanliness was checked immediately before this validation report was written; subsequent validation-report/generated-state writes are outside checked content proof.",
+    "role": "validator"
+  }
+}
