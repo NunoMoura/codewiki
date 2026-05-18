@@ -73,8 +73,8 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/application/tools/**`, `src/application/compilers/**`, `src/application/gateways/**`, domain contracts |
 | Agency controller | `agency.md` | application use cases and adapter-exposed agency entrypoints |
-| Compilers | `compilers.md` | `src/application/compilers/**`, `src/application/gateways/**`, `skills/codewiki/loops/**` |
-| Validation gateway | `validation-gateway.md` | `src/application/gateways/**`, `skills/codewiki/loops/validation.md`, hot fail/block/policy-required/current validation reports |
+| Compilers | `compilers.md` | `src/application/compilers/**`, `src/application/gateways/**`, focused `skills/codewiki-*/SKILL.md` compiler skills |
+| Validation gateway | `validation-gateway.md` | `src/application/gateways/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**` |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |

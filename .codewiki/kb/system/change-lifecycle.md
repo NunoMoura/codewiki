@@ -8,7 +8,11 @@ owners:
   - product
 updated: "2026-05-16"
 code_paths:
-  - skills/codewiki/loops
+  - skills/codewiki-feedback/SKILL.md
+  - skills/codewiki-documentation/SKILL.md
+  - skills/codewiki-planning/SKILL.md
+  - skills/codewiki-implementation/SKILL.md
+  - skills/codewiki-validation/SKILL.md
   - src/application/builds.ts
   - src/application/graph.ts
 ---

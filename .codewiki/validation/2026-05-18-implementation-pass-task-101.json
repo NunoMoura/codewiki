@@ -1,40 +1,31 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-05-18T08:42:47Z",
+  "created": "2026-05-18T09:04:51Z",
   "profile": "implementation",
   "task_id": "TASK-101",
   "verdict": "pass",
-  "rationale": "Fresh validation used latest implementation build and source refs only. Latest TASK-101 implementation build is v2 and includes accepted source_planning_build .codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json, fixing the prior policy block. Source checks prove skills/codewiki/loops is absent and active README/skills/tests/src/package refs have no legacy loop path/file/load references. Package loader smoke proves focused public CodeWiki skills load. Package smoke and npm pack dry-run/tarball inspection pass with 109 files, expected focused SKILL.md files present, and zero skills/codewiki/loops entries.",
+  "rationale": "Fresh validation used v3 implementation build and source refs only. skills/codewiki/loops is absent; active .codewiki/kb, README.md, skills, tests, src, package.json, and package-lock.json contain no skills/codewiki/loops references; TASK-034 remains done with no missing or legacy code_paths; package smoke confirms focused public CodeWiki compiler skills load; npm pack dry-run tarball excludes legacy loop assets; CodeWiki health is green and required audits pass except allowed generated dirty warnings.",
   "checks": [
-    "codewiki_state refresh=true taskId=TASK-101",
-    "read .codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+    "read .codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
     "read .codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json",
-    "read .codewiki/validation/2026-05-18-implementation-block-task-101.json",
-    "read .codewiki/roadmap/tasks/TASK-101/task.json and context.json",
-    "confirmed latest TASK-101 implementation build by created timestamp: .codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
     "test ! -e skills/codewiki/loops",
-    "grep -RIn --fixed-strings 'skills/codewiki/loops' README.md skills tests src package.json package-lock.json => no matches",
-    "grep -RInE 'loops/(feedback|documentation|planning|implementation|validation)\\.md|codewiki/loops/(feedback|documentation|planning|implementation|validation)\\.md|read loop-specific guidance|load .*loops' README.md skills tests src package.json package-lock.json => no matches",
-    "focused skill frontmatter check for skills/codewiki/SKILL.md plus codewiki-feedback/documentation/planning/implementation/validation SKILL.md files",
-    "node tests/smoke/prompt-assets.test.mjs",
-    "node tests/tasks/TASK-076/restructure.test.mjs",
-    "node tests/smoke/package-smoke.test.mjs",
-    "npm run test:pack",
-    "npm pack --dry-run --json tarball inspection: totalFiles=109, requiredSkillsPresent=true, legacyLoopEntries=[]",
-    "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true"
+    "grep -R --fixed-strings 'skills/codewiki/loops' .codewiki/kb README.md skills tests src package.json package-lock.json => no matches",
+    "TASK-034 queue metadata check => status done; missing_code_paths=[]; legacy_code_paths=[]",
+    "artifact digest verification for v3 build refs => all current file digests match; deleted loop files remain missing",
+    "codewiki_state refresh=true taskId=TASK-101 => health green (0 errors, 0 warnings)",
+    "codewiki_audit alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => warning only for generated dirty files",
+    "npm run test:smoke => pass; package loads through DefaultResourceLoader with CodeWiki skills",
+    "node tests/tasks/TASK-076/restructure.test.mjs => pass",
+    "npm run test:pack => pass; dry-run tarball has 109 files and no skills/codewiki/loops entries"
   ],
   "issues": [
     {
       "severity": "warning",
-      "summary": "Repository is dirty for pre-commit implementation validation; pass uses working_tree_digest content proof, not a clean commit."
-    },
-    {
-      "severity": "warning",
-      "summary": "Required audit returned non-blocking warnings for existing graph-health and generated CodeWiki state/view files (.codewiki/index_graph.json, .codewiki/roadmap/queue.json, TASK-101 generated task/context views)."
+      "summary": "Working tree is dirty for generated CodeWiki state/views, KB/roadmap metadata, and v3 build artifact; implementation validation records clean=false with working_tree_digest."
     }
   ],
-  "source": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+  "source": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
   "policy_profile": "implementation",
   "required_audits": [
     "alignment",
@@ -51,12 +42,12 @@
     "audit:file-structure"
   ],
   "audit_reports": [
-    "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs."
+    "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}"
   ],
   "content_proof_refs": [
-    "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-    "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-    "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f"
+    "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+    "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+    "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
   ],
   "failed_criteria": [],
   "blocking_questions": [],
@@ -120,13 +111,21 @@
     "warnings": []
   },
   "isolation": {
-    "base_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-    "validated_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-    "tree_sha": "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-    "working_tree_digest": "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+    "validated_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+    "tree_sha": "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+    "working_tree_digest": "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
     "clean": false,
     "fresh_context": true,
-    "notes": "No builder chat used. Validation consumed latest implementation build, source_planning_build, restored prior block report, TASK-101 task/context refs, active README/skills/tests/src/package refs, fresh audit output, and fresh test outputs only. working_tree_digest was computed before writing this pass report and excludes this pass report.",
+    "claim_id": "CLAIM-097",
+    "builder_claim_id": "CLAIM-095",
+    "related_claim_ids": [
+      "CLAIM-095",
+      "CLAIM-097"
+    ],
+    "notes": "Validation was performed from v3 build and source refs only; builder chat was not used. working_tree_digest was computed before writing validation reports and excludes validation-report mutations.",
     "role": "validator"
   }
 }

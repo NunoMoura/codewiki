@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-18T08:44:12.362Z",
+  "generated_at": "2026-05-18T09:07:30.204Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -41,16 +41,16 @@
       "group": ".codewiki"
     },
     {
-      "id": "code:skills/codewiki/loops/implementation.md",
+      "id": "code:skills/codewiki-implementation/SKILL.md",
       "kind": "code_path",
-      "path": "skills/codewiki/loops/implementation.md",
+      "path": "skills/codewiki-implementation/SKILL.md",
       "layer": "code",
       "alignment_state": "aligned"
     },
     {
-      "id": "code:skills/codewiki/loops/documentation.md",
+      "id": "code:skills/codewiki-documentation/SKILL.md",
       "kind": "code_path",
-      "path": "skills/codewiki/loops/documentation.md",
+      "path": "skills/codewiki-documentation/SKILL.md",
       "layer": "code",
       "alignment_state": "aligned"
     },
@@ -85,9 +85,9 @@
       "group": ".codewiki"
     },
     {
-      "id": "code:skills/codewiki/loops/feedback.md",
+      "id": "code:skills/codewiki-feedback/SKILL.md",
       "kind": "code_path",
-      "path": "skills/codewiki/loops/feedback.md",
+      "path": "skills/codewiki-feedback/SKILL.md",
       "layer": "code",
       "alignment_state": "aligned"
     },
@@ -330,9 +330,16 @@
       "alignment_state": "aligned"
     },
     {
-      "id": "code:skills/codewiki/loops",
+      "id": "code:skills/codewiki-planning/SKILL.md",
       "kind": "code_path",
-      "path": "skills/codewiki/loops",
+      "path": "skills/codewiki-planning/SKILL.md",
+      "layer": "code",
+      "alignment_state": "aligned"
+    },
+    {
+      "id": "code:skills/codewiki-validation/SKILL.md",
+      "kind": "code_path",
+      "path": "skills/codewiki-validation/SKILL.md",
       "layer": "code",
       "alignment_state": "aligned"
     },
@@ -415,13 +422,6 @@
       "id": "code:src/application/task.ts",
       "kind": "code_path",
       "path": "src/application/task.ts",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:skills/codewiki/loops/validation.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/validation.md",
       "layer": "code",
       "alignment_state": "aligned"
     },
@@ -7403,24 +7403,6 @@
       "layer": "code"
     },
     {
-      "id": "code:skills/codewiki-feedback/SKILL.md",
-      "kind": "code_path",
-      "path": "skills/codewiki-feedback/SKILL.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki-documentation/SKILL.md",
-      "kind": "code_path",
-      "path": "skills/codewiki-documentation/SKILL.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki-implementation/SKILL.md",
-      "kind": "code_path",
-      "path": "skills/codewiki-implementation/SKILL.md",
-      "layer": "code"
-    },
-    {
       "id": "code:skills/codewiki-verify/SKILL.md",
       "kind": "code_path",
       "path": "skills/codewiki-verify/SKILL.md",
@@ -8689,18 +8671,6 @@
       "id": "code:src/application/tools/gc.ts",
       "kind": "code_path",
       "path": "src/application/tools/gc.ts",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki-planning/SKILL.md",
-      "kind": "code_path",
-      "path": "skills/codewiki-planning/SKILL.md",
-      "layer": "code"
-    },
-    {
-      "id": "code:skills/codewiki-validation/SKILL.md",
-      "kind": "code_path",
-      "path": "skills/codewiki-validation/SKILL.md",
       "layer": "code"
     },
     {
@@ -18970,10 +18940,12 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": true,
+      "compacted": false,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-101",
-      "superseded_by": [],
+      "superseded_by": [
+        ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
+      ],
       "evidence_summary": {
         "canonical_source_refs": [
           ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
@@ -19123,6 +19095,229 @@
       "layer": "archive"
     },
     {
+      "id": "code:skills/codewiki/loops/documentation.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/loops/documentation.md",
+      "layer": "code"
+    },
+    {
+      "id": "code:skills/codewiki/loops/feedback.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/loops/feedback.md",
+      "layer": "code"
+    },
+    {
+      "id": "code:skills/codewiki/loops/implementation.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/loops/implementation.md",
+      "layer": "code"
+    },
+    {
+      "id": "code:skills/codewiki/loops/planning.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/loops/planning.md",
+      "layer": "code"
+    },
+    {
+      "id": "code:skills/codewiki/loops/validation.md",
+      "kind": "code_path",
+      "path": "skills/codewiki/loops/validation.md",
+      "layer": "code"
+    },
+    {
+      "id": "closure:TASK-101",
+      "kind": "closure_brief",
+      "path": "TASK-101"
+    },
+    {
+      "id": "closure:TASK-101 remains open until validation and close proof",
+      "kind": "closure_brief",
+      "path": "TASK-101 remains open until validation and close proof"
+    },
+    {
+      "id": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "title": "TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-101",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+          ".codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json",
+          ".codewiki/builds/documentation/2026-05-17-documented-skill-loop-restructure.json",
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/loops/**",
+          ".codewiki/kb/product/stories/automation.md",
+          ".codewiki/kb/product/stories/intent.md",
+          ".codewiki/kb/system/alignment-model.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          "tests/smoke/prompt-assets.test.mjs",
+          "tests/tasks/TASK-076/restructure.test.mjs",
+          "tests/tasks/TASK-076/trace.json",
+          "TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
+          ".codewiki/roadmap/queue.json TASK-034 code_paths metadata repair",
+          "skills/codewiki/loops/documentation.md",
+          "skills/codewiki/loops/feedback.md",
+          "skills/codewiki/loops/implementation.md",
+          "skills/codewiki/loops/planning.md",
+          "skills/codewiki/loops/validation.md",
+          ".codewiki/roadmap/queue.json",
+          "tests/smoke/package-smoke.test.mjs",
+          "TASK-101",
+          "TASK-034 metadata repair"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit alignment,changed,task,stale-reference,file-structure TASK-101",
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:stale-reference",
+          "profile:file-structure"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json@sha256:b15d5929d8a7e2c63fcb1efa51f9a5e307cdd4b2271e3b03a17b82c34152d0e6",
+          "tests/smoke/prompt-assets.test.mjs@sha256:c5a493c79c26fa18aedb5972f37d143c150d0d1db5e865266d663881e4bdaa93",
+          "tests/tasks/TASK-076/restructure.test.mjs@sha256:70ad3be1f42ce548f982511ac82b6104adb61bc97e2d3380aa76d83f67e00efc",
+          "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+          "README.md@sha256:c604757fc58b6b32808a8770cb3ebbeaceda470dac96cdab1bb636d03c8066d1",
+          "skills/codewiki/SKILL.md@sha256:6978b6db42c3ce3ffed4bd120ceb3014345597b69e2f2e9168e191a678010bee",
+          "tests/tasks/TASK-076/trace.json@sha256:dbaa176c7c9c1a7325afe3df3a8e4df94f086d93f683467ca42c7714c8574151",
+          ".codewiki/kb/product/stories/automation.md@sha256:42dba206d5b9b740b604ea67d72589a72f66a10eb2484f62056a211939a88603",
+          ".codewiki/kb/product/stories/intent.md@sha256:d1bbf1c129b8f04c5f67d4fb43c1c40b76d46dc548bff85dffbb2e30be40bcff",
+          ".codewiki/kb/system/alignment-model.md@sha256:72df1b4cc3a70e65497717046578017daded4f98c51d7a3e7957cc1de7646e55",
+          ".codewiki/kb/system/change-lifecycle.md@sha256:c3c51cb9657051f2474b538f490c364129caee8b322ddbc3d184e29bbf26a520",
+          ".codewiki/kb/system/compilers.md@sha256:5c5532b07979d9dd7c053c5e7e3596f745bb9cbca158bc7bbcd57ef840c63f2a",
+          ".codewiki/kb/system/file-structure.md@sha256:27a3763da01c0f3d6d805ae571bca39ffeca553d17e7b551dee70a1f3d8a58d1",
+          ".codewiki/kb/system/validation-gateway.md@sha256:305ae8c90937fd54bf9010ed5d63bef456a5db90e6708196c112cde80d856326",
+          ".codewiki/roadmap/queue.json@sha256:c537aaa8dcfd0f6cba126f250ec3f5e1cb35e24c2aa7a9c2b63f90c0939b28b4",
+          "refs/codewiki/archive/task/TASK-101",
+          "sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa"
+        ],
+        "validation_attestation_refs": [
+          "implementation validation pending"
+        ]
+      }
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/product/stories/intent.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/product/stories/intent.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
+      "kind": "canonical_source_ref",
+      "path": "TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/roadmap/queue.json TASK-034 code_paths metadata repair",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/queue.json TASK-034 code_paths metadata repair",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:TASK-034 metadata repair",
+      "kind": "canonical_source_ref",
+      "path": "TASK-034 metadata repair",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/product/stories/automation.md@sha256:42dba206d5b9b740b604ea67d72589a72f66a10eb2484f62056a211939a88603",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/product/stories/automation.md@sha256:42dba206d5b9b740b604ea67d72589a72f66a10eb2484f62056a211939a88603",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/product/stories/intent.md@sha256:d1bbf1c129b8f04c5f67d4fb43c1c40b76d46dc548bff85dffbb2e30be40bcff",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/product/stories/intent.md@sha256:d1bbf1c129b8f04c5f67d4fb43c1c40b76d46dc548bff85dffbb2e30be40bcff",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/alignment-model.md@sha256:72df1b4cc3a70e65497717046578017daded4f98c51d7a3e7957cc1de7646e55",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/alignment-model.md@sha256:72df1b4cc3a70e65497717046578017daded4f98c51d7a3e7957cc1de7646e55",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/change-lifecycle.md@sha256:c3c51cb9657051f2474b538f490c364129caee8b322ddbc3d184e29bbf26a520",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/change-lifecycle.md@sha256:c3c51cb9657051f2474b538f490c364129caee8b322ddbc3d184e29bbf26a520",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/compilers.md@sha256:5c5532b07979d9dd7c053c5e7e3596f745bb9cbca158bc7bbcd57ef840c63f2a",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/compilers.md@sha256:5c5532b07979d9dd7c053c5e7e3596f745bb9cbca158bc7bbcd57ef840c63f2a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/file-structure.md@sha256:27a3763da01c0f3d6d805ae571bca39ffeca553d17e7b551dee70a1f3d8a58d1",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/file-structure.md@sha256:27a3763da01c0f3d6d805ae571bca39ffeca553d17e7b551dee70a1f3d8a58d1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/validation-gateway.md@sha256:305ae8c90937fd54bf9010ed5d63bef456a5db90e6708196c112cde80d856326",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/validation-gateway.md@sha256:305ae8c90937fd54bf9010ed5d63bef456a5db90e6708196c112cde80d856326",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/roadmap/queue.json@sha256:c537aaa8dcfd0f6cba126f250ec3f5e1cb35e24c2aa7a9c2b63f90c0939b28b4",
+      "kind": "content_proof",
+      "path": ".codewiki/roadmap/queue.json@sha256:c537aaa8dcfd0f6cba126f250ec3f5e1cb35e24c2aa7a9c2b63f90c0939b28b4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa",
+      "kind": "content_proof",
+      "path": "sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
@@ -19135,7 +19330,8 @@
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-101",
       "superseded_by": [
-        ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+        ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+        ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
       ],
       "evidence_summary": {
         "canonical_source_refs": [
@@ -19199,22 +19395,6 @@
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
-    },
-    {
-      "id": "code:skills/codewiki/loops/planning.md",
-      "kind": "code_path",
-      "path": "skills/codewiki/loops/planning.md",
-      "layer": "code"
-    },
-    {
-      "id": "closure:TASK-101",
-      "kind": "closure_brief",
-      "path": "TASK-101"
-    },
-    {
-      "id": "closure:TASK-101 remains open until validation and close proof",
-      "kind": "closure_brief",
-      "path": "TASK-101 remains open until validation and close proof"
     },
     {
       "id": "claim:CLAIM-095",
@@ -22767,18 +22947,26 @@
       "verdict": "pass",
       "isolation_status": "isolated",
       "isolation": {
-        "base_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-        "validated_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-        "tree_sha": "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-        "working_tree_digest": "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+        "validated_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+        "tree_sha": "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+        "working_tree_digest": "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
         "clean": false,
         "fresh_context": true,
-        "notes": "No builder chat used. Validation consumed latest implementation build, source_planning_build, restored prior block report, TASK-101 task/context refs, active README/skills/tests/src/package refs, fresh audit output, and fresh test outputs only. working_tree_digest was computed before writing this pass report and excludes this pass report.",
+        "claim_id": "CLAIM-097",
+        "builder_claim_id": "CLAIM-095",
+        "related_claim_ids": [
+          "CLAIM-095",
+          "CLAIM-097"
+        ],
+        "notes": "Validation was performed from v3 build and source refs only; builder chat was not used. working_tree_digest was computed before writing validation reports and excludes validation-report mutations.",
         "role": "validator"
       },
       "evidence_summary": {
         "canonical_source_refs": [
-          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
         ],
         "audit_evidence_refs": [
           "audit:alignment",
@@ -22786,92 +22974,45 @@
           "audit:task",
           "audit:stale-reference",
           "audit:file-structure",
-          "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs."
+          "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}"
         ],
         "content_proof_refs": [
-          "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-          "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-          "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f"
+          "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+          "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+          "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
         ]
       }
     },
     {
-      "id": "audit:codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs.",
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}",
       "kind": "audit_evidence",
-      "path": "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs.",
+      "path": "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}",
       "layer": "audit",
       "default_hidden": true
     },
     {
-      "id": "content_proof:sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
+      "id": "content_proof:9638e62a85fba0d60de9d1cca4c0051b79b30a81",
       "kind": "content_proof",
-      "path": "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
-      "proof_kind": "digest",
+      "path": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+      "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true
     },
     {
-      "id": "lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/product/stories/automation.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops/implementation.md"
+      "id": "content_proof:05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+      "kind": "content_proof",
+      "path": "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
     },
     {
-      "id": "lint:missing-code-path:.codewiki/kb/product/stories/intent.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/product/stories/intent.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops/feedback.md"
-    },
-    {
-      "id": "lint:missing-code-path:.codewiki/kb/system/alignment-model.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/system/alignment-model.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops"
-    },
-    {
-      "id": "lint:missing-code-path:.codewiki/kb/system/change-lifecycle.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/system/change-lifecycle.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops"
-    },
-    {
-      "id": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/system/compilers.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops/feedback.md"
-    },
-    {
-      "id": "lint:missing-code-path:.codewiki/kb/system/validation-gateway.md",
-      "kind": "lint_issue",
-      "path": ".codewiki/kb/system/validation-gateway.md",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "missing-code-path",
-      "message": "Referenced code path does not exist: skills/codewiki/loops/validation.md"
-    },
-    {
-      "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/roadmap/queue.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "roadmap-missing-code-path",
-      "message": "TASK-034 references missing code path: skills/codewiki/loops/feedback.md"
+      "id": "content_proof:sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
+      "kind": "content_proof",
+      "path": "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
     }
   ],
   "edges": [
@@ -23018,12 +23159,12 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/product/stories/automation.md",
-      "to": "code:skills/codewiki/loops/implementation.md"
+      "to": "code:skills/codewiki-implementation/SKILL.md"
     },
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/product/stories/automation.md",
-      "to": "code:skills/codewiki/loops/documentation.md"
+      "to": "code:skills/codewiki-documentation/SKILL.md"
     },
     {
       "kind": "doc_link",
@@ -23083,7 +23224,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/product/stories/intent.md",
-      "to": "code:skills/codewiki/loops/feedback.md"
+      "to": "code:skills/codewiki-feedback/SKILL.md"
     },
     {
       "kind": "doc_link",
@@ -23563,7 +23704,27 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/alignment-model.md",
-      "to": "code:skills/codewiki/loops"
+      "to": "code:skills/codewiki-feedback/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/alignment-model.md",
+      "to": "code:skills/codewiki-documentation/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/alignment-model.md",
+      "to": "code:skills/codewiki-planning/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/alignment-model.md",
+      "to": "code:skills/codewiki-implementation/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/alignment-model.md",
+      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "doc_link",
@@ -23728,7 +23889,27 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/change-lifecycle.md",
-      "to": "code:skills/codewiki/loops"
+      "to": "code:skills/codewiki-feedback/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/change-lifecycle.md",
+      "to": "code:skills/codewiki-documentation/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/change-lifecycle.md",
+      "to": "code:skills/codewiki-planning/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/change-lifecycle.md",
+      "to": "code:skills/codewiki-implementation/SKILL.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/change-lifecycle.md",
+      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "doc_code_path",
@@ -23798,22 +23979,22 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:skills/codewiki/loops/feedback.md"
+      "to": "code:skills/codewiki-feedback/SKILL.md"
     },
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:skills/codewiki/loops/documentation.md"
+      "to": "code:skills/codewiki-documentation/SKILL.md"
     },
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:skills/codewiki/loops/implementation.md"
+      "to": "code:skills/codewiki-implementation/SKILL.md"
     },
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:skills/codewiki/loops/validation.md"
+      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "doc_link",
@@ -24293,7 +24474,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:skills/codewiki/loops/validation.md"
+      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "doc_code_path",
@@ -24793,22 +24974,27 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-034",
-      "to": "code:skills/codewiki/loops/feedback.md"
+      "to": "code:skills/codewiki-feedback/SKILL.md"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-034",
-      "to": "code:skills/codewiki/loops/documentation.md"
+      "to": "code:skills/codewiki-documentation/SKILL.md"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-034",
-      "to": "code:skills/codewiki/loops/implementation.md"
+      "to": "code:skills/codewiki-planning/SKILL.md"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-034",
-      "to": "code:skills/codewiki/loops/validation.md"
+      "to": "code:skills/codewiki-implementation/SKILL.md"
+    },
+    {
+      "kind": "task_code_path",
+      "from": "task:TASK-034",
+      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "task_code_path",
@@ -49944,6 +50130,468 @@
       "default_hidden": true
     },
     {
+      "kind": "build_derives_from",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "build:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json"
+    },
+    {
+      "kind": "build_derives_from",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "build:.codewiki/builds/documentation/2026-05-17-documented-skill-loop-restructure.json"
+    },
+    {
+      "kind": "build_derives_from",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
+    },
+    {
+      "kind": "build_consumes_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "task:TASK-101"
+    },
+    {
+      "kind": "build_consumes_planning",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "build:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json"
+    },
+    {
+      "kind": "build_consumes_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "validation:.codewiki/validation/2026-05-18-implementation-block-task-101.json"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:README.md"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:skills/codewiki/loops/**"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:tests/smoke/prompt-assets.test.mjs"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:tests/tasks/TASK-076/restructure.test.mjs"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:tests/tasks/TASK-076/trace.json"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/loops/documentation.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/loops/feedback.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/loops/implementation.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/loops/planning.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:skills/codewiki/loops/validation.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:tests/smoke/prompt-assets.test.mjs"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "code:tests/tasks/TASK-076/trace.json"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "test:tests/smoke/prompt-assets.test.mjs"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "test:tests/tasks/TASK-076/restructure.test.mjs"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "test:tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "validation:implementation validation pending"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "closure:TASK-101"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "closure:TASK-101 remains open until validation and close proof"
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/builds/documentation/2026-05-17-documented-skill-loop-restructure.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:README.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/SKILL.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/**",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/product/stories/automation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/product/stories/intent.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/system/alignment-model.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/system/change-lifecycle.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/system/compilers.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/kb/system/validation-gateway.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:tests/smoke/prompt-assets.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:tests/tasks/TASK-076/restructure.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:tests/tasks/TASK-076/trace.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/roadmap/queue.json TASK-034 code_paths metadata repair",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/documentation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/feedback.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/implementation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/planning.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:skills/codewiki/loops/validation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:.codewiki/roadmap/queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:TASK-101",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "source:TASK-034 metadata repair",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:codewiki_audit alignment,changed,task,stale-reference,file-structure TASK-101",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json@sha256:b15d5929d8a7e2c63fcb1efa51f9a5e307cdd4b2271e3b03a17b82c34152d0e6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:tests/smoke/prompt-assets.test.mjs@sha256:c5a493c79c26fa18aedb5972f37d143c150d0d1db5e865266d663881e4bdaa93",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:tests/tasks/TASK-076/restructure.test.mjs@sha256:70ad3be1f42ce548f982511ac82b6104adb61bc97e2d3380aa76d83f67e00efc",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:README.md@sha256:c604757fc58b6b32808a8770cb3ebbeaceda470dac96cdab1bb636d03c8066d1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:skills/codewiki/SKILL.md@sha256:6978b6db42c3ce3ffed4bd120ceb3014345597b69e2f2e9168e191a678010bee",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:tests/tasks/TASK-076/trace.json@sha256:dbaa176c7c9c1a7325afe3df3a8e4df94f086d93f683467ca42c7714c8574151",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/product/stories/automation.md@sha256:42dba206d5b9b740b604ea67d72589a72f66a10eb2484f62056a211939a88603",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/product/stories/intent.md@sha256:d1bbf1c129b8f04c5f67d4fb43c1c40b76d46dc548bff85dffbb2e30be40bcff",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/system/alignment-model.md@sha256:72df1b4cc3a70e65497717046578017daded4f98c51d7a3e7957cc1de7646e55",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/system/change-lifecycle.md@sha256:c3c51cb9657051f2474b538f490c364129caee8b322ddbc3d184e29bbf26a520",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/system/compilers.md@sha256:5c5532b07979d9dd7c053c5e7e3596f745bb9cbca158bc7bbcd57ef840c63f2a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/system/file-structure.md@sha256:27a3763da01c0f3d6d805ae571bca39ffeca553d17e7b551dee70a1f3d8a58d1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/kb/system/validation-gateway.md@sha256:305ae8c90937fd54bf9010ed5d63bef456a5db90e6708196c112cde80d856326",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:.codewiki/roadmap/queue.json@sha256:c537aaa8dcfd0f6cba126f250ec3f5e1cb35e24c2aa7a9c2b63f90c0939b28b4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-101",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "content_proof:sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "task:TASK-101"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "task:TASK-034 metadata repair"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-101",
+      "default_hidden": true
+    },
+    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
       "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
@@ -53839,7 +54487,7 @@
     {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
-      "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
       "default_hidden": true
     },
     {
@@ -53875,66 +54523,31 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
-      "to": "audit:codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs.",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
-      "to": "content_proof:8637bace59d1b8b2de6283ac37ed3925e07002cb",
+      "to": "content_proof:9638e62a85fba0d60de9d1cca4c0051b79b30a81",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
-      "to": "content_proof:a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
+      "to": "content_proof:05e03d2077d9b9ac1b988a07b5170d7f95262a19",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
-      "to": "content_proof:sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
+      "to": "content_proof:sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
       "default_hidden": true
     },
     {
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-18-implementation-pass-task-101.json",
       "to": "task:TASK-101"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-      "to": "doc:.codewiki/kb/product/stories/automation.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/product/stories/intent.md",
-      "to": "doc:.codewiki/kb/product/stories/intent.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/system/alignment-model.md",
-      "to": "doc:.codewiki/kb/system/alignment-model.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/system/change-lifecycle.md",
-      "to": "doc:.codewiki/kb/system/change-lifecycle.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-      "to": "doc:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:missing-code-path:.codewiki/kb/system/validation-gateway.md",
-      "to": "doc:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "to": "doc:.codewiki/roadmap/queue.json"
     }
   ],
   "views": {
@@ -54381,17 +54994,17 @@
         "skills",
         "skills/codewiki",
         "skills/codewiki-documentation",
+        "skills/codewiki-documentation/SKILL.md",
         "skills/codewiki-feedback",
+        "skills/codewiki-feedback/SKILL.md",
         "skills/codewiki-implementation",
+        "skills/codewiki-implementation/SKILL.md",
         "skills/codewiki-planning",
+        "skills/codewiki-planning/SKILL.md",
         "skills/codewiki-validation",
+        "skills/codewiki-validation/SKILL.md",
         "skills/codewiki/**",
         "skills/codewiki/SKILL.md",
-        "skills/codewiki/loops",
-        "skills/codewiki/loops/documentation.md",
-        "skills/codewiki/loops/feedback.md",
-        "skills/codewiki/loops/implementation.md",
-        "skills/codewiki/loops/validation.md",
         "skills/codewiki/playbooks/architecture.md",
         "skills/codewiki/playbooks/view-audit.md",
         "src",
@@ -55809,15 +56422,21 @@
           "verdict": "pass",
           "status": "isolated",
           "role": "validator",
-          "base_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-          "validated_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+          "validated_sha": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
           "clean": false,
           "fresh_context": true,
-          "related_claim_ids": [],
+          "builder_claim_id": "CLAIM-095",
+          "related_claim_ids": [
+            "CLAIM-095",
+            "CLAIM-097"
+          ],
           "content_proof_refs": [
-            "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-            "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-            "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f"
+            "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+            "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+            "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
           ]
         }
       ]
@@ -56008,6 +56627,7 @@
         ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
         ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
         ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+        ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
         ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
         ".codewiki/builds/planning/2026-05-13-loop-session-isolation-policy-plan.json",
         ".codewiki/builds/planning/2026-05-13-plan-implementation-of-pi-adapter-session-handof.json",
@@ -56034,6 +56654,7 @@
         ".codewiki/kb/product/overview.md",
         ".codewiki/kb/product/stories/automation.md",
         ".codewiki/kb/product/stories/drift.md",
+        ".codewiki/kb/product/stories/intent.md",
         ".codewiki/kb/product/stories/navigation.md",
         ".codewiki/kb/product/stories/sanitation.md",
         ".codewiki/kb/product/uis/board.md",
@@ -56108,6 +56729,7 @@
         ".codewiki/kb/system/validation-gateway.md: validator session starts from handoff refs rather than builder chat",
         ".codewiki/roadmap.json",
         ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/queue.json TASK-034 code_paths metadata repair",
         ".codewiki/roadmap/queue.json#TASK-076",
         ".codewiki/validation/2026-05-11-reconciliation-lifecycle-drift-audit-pass.json",
         ".codewiki/validation/2026-05-15-implementation-block-task-078.json",
@@ -56219,6 +56841,7 @@
         "TASK TBD",
         "TASK-033",
         "TASK-034",
+        "TASK-034 metadata repair",
         "TASK-034 skill package alignment",
         "TASK-035",
         "TASK-035 close evidence",
@@ -56332,6 +56955,7 @@
         "TASK-100 plus user-approved context-reset handoff visibility patch after tool response was hidden by ctx.compact",
         "TASK-100 validation failure .codewiki/validation/2026-05-17-implementation-fail-task-100.json",
         "TASK-101",
+        "TASK-101 implementation after green-state reconciliation of KB and roadmap metadata references to deleted skills/codewiki/loops assets.",
         "TASK-101 implementation after planning build added to satisfy commit-readiness policy.",
         "TASK-28",
         "TASK-29",
@@ -56737,8 +57361,8 @@
         "codewiki_audit profiles=alignment,changed,task task_id=TASK-083 — warning overall; alignment pass, changed warning, task pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-083 — warning overall; alignment pass, changed warning for .codewiki/index_graph.json generated-file change during audit, task pass, generated-parity pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-089: alignment warning only (graph health reports 2 warnings), changed pass, task pass, generated-parity pass",
+        "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}",
         "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes (.codewiki/index_graph.json, TASK-101 generated task/context views), not active legacy loop refs",
-        "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs.",
         "codewiki_audit task,changed,stale-reference TASK-100",
         "codewiki_audit(profiles=[alignment, changed], task_id=TASK-086): alignment pass — Checked generated graph health and roadmap queue reachability; changed warning — Checked 29 changed files across 7 layers; task pass — Checked roadmap task TASK-086; generated-file-changed warnings for .codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-086/context.json, .codewiki/roadmap/tasks/TASK-086/task.json only",
         "codewiki_audit(profiles=[alignment,changed], task_id=TASK-086): pass — alignment pass; changed pass (0 changed files across 0 layers); task pass.",
@@ -56781,6 +57405,8 @@
         ".codewiki/builds/planning/2026-05-17-planned-agent-managed-codewiki-gc.json@sha256:483b0ed98796b479c919589d45d424186175821c3362338bc4c0f2885e58ccd7",
         ".codewiki/builds/planning/2026-05-17-planned-skill-loop-restructure-sprint.json@sha256:99515067beadf3b8f87e1934c606c2d14b7a81ee6732aee2439f58082706d096",
         ".codewiki/builds/planning/2026-05-18-task-101-remove-legacy-skill-loops-plan.json@sha256:b15d5929d8a7e2c63fcb1efa51f9a5e307cdd4b2271e3b03a17b82c34152d0e6",
+        ".codewiki/kb/product/stories/automation.md@sha256:42dba206d5b9b740b604ea67d72589a72f66a10eb2484f62056a211939a88603",
+        ".codewiki/kb/product/stories/intent.md@sha256:d1bbf1c129b8f04c5f67d4fb43c1c40b76d46dc548bff85dffbb2e30be40bcff",
         ".codewiki/kb/system/adapters.md@sha256:18c515b7b17cab792e061990a151c8fe38df8e1df9332f350e2186aff0d36f37",
         ".codewiki/kb/system/adapters.md@sha256:9c75248953903b8f7ca72d89d7f82244170785d5413cab5e715d1d6f3a023c02",
         ".codewiki/kb/system/adapters.md@sha256:c1f891afa3d1fcafba331f700c5e197537e83a0059e44c0c8909bec9d284c1c1",
@@ -56791,6 +57417,7 @@
         ".codewiki/kb/system/agency.md@sha256:78f169c907873911258c4e31a7c45a85648f7fe66a3a28c6ff5b0253b6f5d51d",
         ".codewiki/kb/system/agency.md@sha256:d1e6c8ac66c69156b9308d79d6b1c904eb832d216e593ea376308a372d6c92b8",
         ".codewiki/kb/system/alignment-model.md@sha256:3bacd3f313d8eb52db4a4ec86149f8d82ba4abfdc3e3a9ce19e449b80145aa43",
+        ".codewiki/kb/system/alignment-model.md@sha256:72df1b4cc3a70e65497717046578017daded4f98c51d7a3e7957cc1de7646e55",
         ".codewiki/kb/system/api.md@sha256:228e84f970f47e655e890b9c8f50b24a0696fc62c68aca1b25866f3a501d47a7",
         ".codewiki/kb/system/api.md@sha256:24ea26b7a856cc5bbdaa2c4f9613ab94e4c5d7acf03934f5a163a2e217a65034",
         ".codewiki/kb/system/api.md@sha256:4f983ad53a0d93f63b924f49d7e721d25a0350cb874810a7e25e1686b56cea71",
@@ -56803,9 +57430,12 @@
         ".codewiki/kb/system/builds.md@sha256:42b63ef50e32254e020e86bd29a408145909744aa7e2729ea6da64aaf5d3d3fd",
         ".codewiki/kb/system/builds.md@sha256:6bd6ea66186a5402cfdcb0166657c053f63937d99e24e129cf0c4f83c0cc252b",
         ".codewiki/kb/system/builds.md@sha256:d60aa3ba90424cedd99fde158b9608ac62cc9bcc5ca707237e68bbb0c828de31",
+        ".codewiki/kb/system/change-lifecycle.md@sha256:c3c51cb9657051f2474b538f490c364129caee8b322ddbc3d184e29bbf26a520",
+        ".codewiki/kb/system/compilers.md@sha256:5c5532b07979d9dd7c053c5e7e3596f745bb9cbca158bc7bbcd57ef840c63f2a",
         ".codewiki/kb/system/compilers.md@sha256:90e96073651e075c95a10373b3b2f6a1418d083b642a9380fbf4be007c17d93d",
         ".codewiki/kb/system/compilers.md@sha256:925fe8fd12c69ef93d8b4cd66ec9def3c242b251852b7450bdd566240e3057e7",
         ".codewiki/kb/system/compilers.md@sha256:ebd30fdf7822a2c5ebc3aa7d4e9f8c14c829fbe5e379cde398adc91703e82f01",
+        ".codewiki/kb/system/file-structure.md@sha256:27a3763da01c0f3d6d805ae571bca39ffeca553d17e7b551dee70a1f3d8a58d1",
         ".codewiki/kb/system/file-structure.md@sha256:613116afa2950ac64b2660a94e3ae18756ec7648893f0301cb334c9e14d89d8a",
         ".codewiki/kb/system/graph.md@sha256:6d63ce95be307b17f5615dcda307e34853e026a58bb7f6394288ff068c6fbc6a",
         ".codewiki/kb/system/graph.md@sha256:7b2bbbd34f798f38f70fb4d87fc390439002fe7ad5304e5906a0ef0bc3d99357",
@@ -56814,12 +57444,15 @@
         ".codewiki/kb/system/roadmap.md@sha256:8bd77f46aa98433893295be32077a06f0984ca8890b751528eda7b9bae03e206",
         ".codewiki/kb/system/validation-gateway.md@sha256:1c098c12c926a03ffe722a921db04d433e3b107d080802766461c8a47838c1fd",
         ".codewiki/kb/system/validation-gateway.md@sha256:28412c990a27c6c0c269f079e13dec20e7685ec99bc8c91c2bee42dbf3d7418a",
+        ".codewiki/kb/system/validation-gateway.md@sha256:305ae8c90937fd54bf9010ed5d63bef456a5db90e6708196c112cde80d856326",
         ".codewiki/kb/system/validation-gateway.md@sha256:517cbaebf35140ec51d6be48be6e8e7c32c46ce11867ce9ac366800e6875b543",
         ".codewiki/kb/system/validation-gateway.md@sha256:ad22379f1adaca77f4bee521f9ef75959b7d99b69fa56715bd73d78bb610f265",
         ".codewiki/kb/system/validation-gateway.md@sha256:eaa503964317945e84f67e89a1519b39651cd2cabc2fff79ad72a753f71ed6a0",
         ".codewiki/roadmap/queue.json@sha256:6caf007e5767f9e8c86afedd624d52664d04b60a34b2ecfe663d1abdeb822494",
+        ".codewiki/roadmap/queue.json@sha256:c537aaa8dcfd0f6cba126f250ec3f5e1cb35e24c2aa7a9c2b63f90c0939b28b4",
         ".codewiki/validation/2026-05-17-implementation-block-task-099.json@sha256:fe5dced7dc4d65fb38e77d7411ad5059c16c68c9e7322f1d56fd4a48b83f6f3e",
         "0113a07e9a69ce1914d83b6188603fae1dc98650",
+        "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
         "13e2b0c451ce74f888094e2c7afddab0933e4cee",
         "16f3b1810573b1a797196f223a2320bd4ea11db5",
         "26d6cf170393e483173123242390ecb47cdeaa9e",
@@ -56845,6 +57478,7 @@
         "9299b9cb7eb8d2498a5c382ff2ee84404308d854",
         "935dc8c0ba681fc48a07dc7d47a9b53a0cb614f3",
         "95ce6bdf777f0aec24dde7b154fe459bd3a15f14",
+        "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
         "9b93309b88565cd97347c4c07c077f8709901f83",
         "README.md@sha256:02312313bf67ba306f09083ee6b40c0bf38d14caba26139153c172636c11e7f1",
         "README.md@sha256:2e961747eb2a6032a7ba985a60a165050e9233d00bb5c713130c4bebf799691c",
@@ -56966,6 +57600,7 @@
         "sha256:33a9f3d3a5f29a1033de2a361ff5805251e34df7755c583f57ef6ec314dffe93",
         "sha256:38aeecaf4921dba93abb7c79a94e0ab768eae857c9ff8120cd53530fb1d7f931",
         "sha256:3bb57291d1ac44161054162cb4ee8c905ea8673fffa250c1bcf3cc1abdfbb274",
+        "sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa",
         "sha256:45880d987854a32abfd64d3fcccd8c52467a7f60b12fe297c00bd5d9fae486cd",
         "sha256:4797994c9259bd04324b65c03eb87f658b4892531ca4a82b2930327dee547a44",
         "sha256:486066240f5757e014328e7778abfa63ef6f44105f00b1bd6d6f5ebdf552d319",
@@ -56974,13 +57609,13 @@
         "sha256:54c1dc233569a97a44c47341fb711f65cece2d8ffc290307886e114874ba89fa",
         "sha256:59a9eb78246b055a56ee5eb1952d831cc102c7ec1b9449b9f6fca770a0b18163",
         "sha256:5d85768b4323fe058075d58044e5fdc9129899364418bf04b8ad556035d8ae35",
+        "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778",
         "sha256:674f26686f65ac2e053ae5c2fe51865efcadb0205959eaa1794e132f6d4e49a9",
         "sha256:67d12b59d541d3905ecb9dd7dee9f92dee06958a1807cb16e1dbfd403fcf333f",
         "sha256:690ff9aca6ed94170703349d6e0f4e97ee41840f8bb3868b8ba50a644a3d7774",
         "sha256:6aeabe57629acc7aa269c67eae2df27e33fe1025a3781f800afb0a0fa84a9232",
         "sha256:6cf0258e18c8175becd049017ed04c9a21e7364ed0058e5d8130eeda3b632dbd",
         "sha256:6df3563bddd436fae6424ff836e280ea6c2e497efbd9fa5b9d4800d3ffff0d85",
-        "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f",
         "sha256:726baab5c731037751e525354f9137ad8c32b5b85473c23485a1ab1df655a8e3",
         "sha256:72b5ec4c52f2e4f3579c2167d812ff451e69d6adb1f229ae5918a06c7563d7a0",
         "sha256:74309f923169b12109ffa079966f74514bc83f5e5ee0edad5e7717f55d4081a9",
@@ -58786,7 +59421,7 @@
           "profile": "implementation",
           "task_id": "TASK-101",
           "source_refs": [
-            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
           ],
           "audit_evidence_refs": [
             "audit:alignment",
@@ -58794,12 +59429,12 @@
             "audit:task",
             "audit:stale-reference",
             "audit:file-structure",
-            "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes, not legacy loop refs."
+            "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 => alignment pass; task pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/TASK-034/{context.json,task.json}"
           ],
           "content_proof_refs": [
-            "8637bace59d1b8b2de6283ac37ed3925e07002cb",
-            "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
-            "sha256:6ea868270a0a97e52580a0bca802f8375335b2cc5db842d900600932e4c8a12f"
+            "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+            "05e03d2077d9b9ac1b988a07b5170d7f95262a19",
+            "sha256:65c0b34b51aec67782536f55ee28806b736cae76c242a993547bdfb112b05778"
           ],
           "isolation_status": "isolated"
         }
@@ -58807,7 +59442,285 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/product/stories/automation.md",
+          "change_type": "product",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-10-skill-loop-naming-docs.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json",
+            ".codewiki/builds/implementation/2026-05-10-task-051-loop-skill-rename.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/product/stories/intent.md",
+          "change_type": "product",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/alignment-model.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-13-accepted-intent-enforce-loop-and-gateway-isolati.json",
+            ".codewiki/builds/feedback/2026-05-13-alignment-cycles-planning-gateway-traceability.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-change-type-taxonomy.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-domain-led-layering-refactor.json",
+            ".codewiki/builds/documentation/2026-05-10-agency-and-graph-queue-boundary.json",
+            ".codewiki/builds/documentation/2026-05-10-skill-loop-naming-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-progressive-task-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json",
+            ".codewiki/builds/implementation/2026-05-10-task-046-tester-builder-evidence.json",
+            ".codewiki/builds/implementation/2026-05-10-task-051-loop-skill-rename.json",
+            ".codewiki/builds/implementation/2026-05-11-task-065-progressive-task-refinement.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-082-semantic-build-traceability.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-12-control-room-simplification.json",
+            ".codewiki/builds/feedback/2026-05-12-deprecate-evidence-index-and-enforce-hot-retenti.json",
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-domain-led-layering-refactor.json",
+            ".codewiki/builds/documentation/2026-05-10-agency-and-graph-queue-boundary.json",
+            ".codewiki/builds/documentation/2026-05-10-runtime-scoped-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-ui-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-simplification-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge.json",
+            ".codewiki/builds/documentation/2026-05-17-documented-agent-managed-codewiki-gc.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json",
+            ".codewiki/builds/implementation/2026-05-10-task-053-runtime-scoped-claims-store.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-layer-restructure.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-bootstrap-resume-prompt-assets-into-skill-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-12-deprecate-evidence-index-and-enforce-hot-retenti.json",
+            ".codewiki/builds/feedback/2026-05-12-role-worktree-isolation.json",
+            ".codewiki/builds/feedback/2026-05-13-accepted-intent-enforce-loop-and-gateway-isolati.json",
+            ".codewiki/builds/feedback/2026-05-13-alignment-cycles-planning-gateway-traceability.json",
+            ".codewiki/builds/feedback/2026-05-14-loop-build-validation-contracts.json",
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-domain-led-layering-refactor.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-no-umbrella-task-invariant-tasks-are-bo.json",
+            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-role-worktree-isolation-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-no-umbrella-task-invariant-tasks-are-.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-sprint-boundary-contract.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge-codepaths.json",
+            ".codewiki/builds/documentation/2026-05-16-domain-led-layering-refactor-knowledge.json",
+            ".codewiki/builds/documentation/2026-05-17-documented-agent-managed-codewiki-gc.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/implementation/2026-05-09-closed-task-035-enforced-structured-knowledge-ro.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
+            ".codewiki/builds/implementation/2026-05-15-task-082-task-084-task-close-now-blocks-without-.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-11-control-room-ui.json",
+            ".codewiki/builds/feedback/2026-05-11-cytoscape-graph-visualization-selection.json",
+            ".codewiki/builds/feedback/2026-05-11-progressive-task-refinement-intent.json",
+            ".codewiki/builds/feedback/2026-05-13-claim-wait-queue.json",
+            ".codewiki/builds/feedback/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-087-narrow-dependency-direction-gu.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-088-web-ui-move-slice-from-adapter.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-090-scope-correction-dogfood-sourc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-091-stale-unscoped-validation-bloc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-092-large-doc-warning-cleanup-for-.json",
+            ".codewiki/builds/feedback/2026-05-16-artifact-status-parallel-coordination.json",
+            ".codewiki/builds/feedback/2026-05-16-parallel-wiki-resume-session-scheduler.json",
+            ".codewiki/builds/documentation/2026-05-10-runtime-scoped-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-build-contract-v2-and-efficiency-sprints-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-ui-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-cytoscape-control-room-graph-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-progressive-task-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-reconciliation-lifecycle-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-config-settings-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-simplification-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-final-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-git-backed-archival-gc-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-hot-only-default-context-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-role-worktree-isolation-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-claim-wait-queue-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-document-adapter-managed-session-handoff-capabil.json",
+            ".codewiki/builds/documentation/2026-05-13-loop-session-isolation-policy-docs-v2.json",
+            ".codewiki/builds/documentation/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-087-dependency-direction-guard-s.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-088-web-ui-move-paths-from-src-a.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-090-portable-alignment-drift-fix.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-091-validation-reconciliation-ru.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-092-large-doc-cleanup-by-condens.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-sprint-boundary-contract.json",
+            ".codewiki/builds/planning/2026-05-13-loop-session-isolation-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-13-plan-implementation-of-pi-adapter-session-handof.json",
+            ".codewiki/builds/planning/2026-05-13-task-073-alignment-routing-plan.json",
+            ".codewiki/builds/planning/2026-05-14-plan-task-075-implementation-of-ascii-like-codew.json",
+            ".codewiki/builds/planning/2026-05-15-planned-sprint-003-alignment-hardening-with-umbr.json",
+            ".codewiki/builds/planning/2026-05-16-domain-led-layering-refactor-roadmap.json",
+            ".codewiki/builds/planning/2026-05-16-planned-bounded-enforcement-work-for-task-bounda.json",
+            ".codewiki/builds/planning/2026-05-16-planned-change-type-taxonomy-migration.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-087-dependency-direction-guard-fixt.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-088-web-ui-move-slice.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-090-portable-alignment-drift-fixtur.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-091-stale-unscoped-validation-block.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-092-oversized-system-docs-trim.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/planning/2026-05-17-planned-agent-managed-codewiki-gc.json",
+            ".codewiki/builds/planning/2026-05-17-planned-skill-loop-restructure-sprint.json",
+            ".codewiki/builds/implementation/2026-05-11-task-055-build-contract-v2.json",
+            ".codewiki/builds/implementation/2026-05-11-task-056-efficiency-foundation.json",
+            ".codewiki/builds/implementation/2026-05-11-task-057-status-graph-diff-ui.json",
+            ".codewiki/builds/implementation/2026-05-11-task-058-control-room-shell.json",
+            ".codewiki/builds/implementation/2026-05-11-task-059-system-diagram-inspector.json",
+            ".codewiki/builds/implementation/2026-05-11-task-060-graph-visual-map.json",
+            ".codewiki/builds/implementation/2026-05-11-task-061-control-room-refinement.json",
+            ".codewiki/builds/implementation/2026-05-11-task-062-wiki-ui-browser-open.json",
+            ".codewiki/builds/implementation/2026-05-11-task-063-cytoscape-control-room-graph.json",
+            ".codewiki/builds/implementation/2026-05-11-task-064-graph-spacing-fit.json",
+            ".codewiki/builds/implementation/2026-05-11-task-065-progressive-task-refinement.json",
+            ".codewiki/builds/implementation/2026-05-12-task-066-drift-propagation-assurance.json",
+            ".codewiki/builds/implementation/2026-05-12-task-067-control-room-simplification.json",
+            ".codewiki/builds/implementation/2026-05-12-task-069-control-room-settings.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-claim-wait-queue.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json",
+            ".codewiki/builds/implementation/2026-05-13-task-075-value-first-ui-kanban.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-expanded-audit-cleanup-fixed-stale-sour.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-final-tidy-pass-moved-package-smoke-und.json",
+            ".codewiki/builds/implementation/2026-05-15-task-078-implemented-executable-alignment-graph-.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-deprecated-roadmap-verify-phase.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-and-guards.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-roadmap-wo.json",
+            ".codewiki/builds/implementation/2026-05-15-task-082-task-084-task-close-now-blocks-without-.json",
+            ".codewiki/builds/implementation/2026-05-16-added-audit-and-smoke-test-enforcement-for-bound.json",
+            ".codewiki/builds/implementation/2026-05-16-added-portable-alignment-drift-fixture-matrix-an.json",
+            ".codewiki/builds/implementation/2026-05-16-added-regression-coverage-proving-task-087-depen.json",
+            ".codewiki/builds/implementation/2026-05-16-completed-task-087-domain-led-layering-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-corrected-stale-public-api-guidance-found-by-fre.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-accepted-build-lifecycle-semantics-int.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-change-traceability-normalization-sema.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-roadmap-task-boundary-semantics-into-d.json",
+            ".codewiki/builds/implementation/2026-05-16-finalized-task-086-public-coordination-wording-a.json",
+            ".codewiki/builds/implementation/2026-05-16-fixed-task-086-handoff-blocker-tool-context-new-.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-082-semantic-build-traceability.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-bootstrap-resume-prompt-assets-into-skill-.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-control-room-browser-ui-source-from-adapte.json",
+            ".codewiki/builds/implementation/2026-05-16-stopped-stale-unscoped-validation-block-reports-.json",
+            ".codewiki/builds/implementation/2026-05-16-task-079-source-owned-audit-engine.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy-current-p.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy.json",
+            ".codewiki/builds/implementation/2026-05-16-task-081-source-owned-drift-fixtures.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-public-api.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-resume-scheduler.json",
+            ".codewiki/builds/implementation/2026-05-16-trimmed-oversized-builds-and-roadmap-system-docs.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract-planning-t.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract-planning-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract-planning-trac.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -59489,10 +60402,11 @@
           ],
           "code_paths": [
             "skills/codewiki/SKILL.md",
-            "skills/codewiki/loops/feedback.md",
-            "skills/codewiki/loops/documentation.md",
-            "skills/codewiki/loops/implementation.md",
-            "skills/codewiki/loops/validation.md",
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
             "skills/codewiki/playbooks/architecture.md",
             "skills/codewiki/playbooks/view-audit.md"
           ]
@@ -60015,6 +60929,7 @@
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
             ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
             ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
           ],
           "validation_paths": [
@@ -60184,7 +61099,7 @@
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
             ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+            ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
           ]
         },
         "purgeable": {
@@ -60765,6 +61680,16 @@
         {
           "kind": "task",
           "id": "TASK-101",
+          "build_path": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-101",
+          "commit_sha": "",
+          "digest": "sha256:3d8d49a255058ff14f6161e657a8f99d745cb83ae84f82bcc89388c1923cf9aa",
+          "restore_command": "/wiki-restore TASK-101",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-101",
           "build_path": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-101",
           "commit_sha": "",
@@ -60774,7 +61699,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 57,
+        "ledger_count": 58,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-074",
           "refs/codewiki/archive/task/TASK-074",
@@ -60831,6 +61756,7 @@
           "refs/codewiki/archive/task/TASK-100",
           "refs/codewiki/archive/task/TASK-100",
           "refs/codewiki/archive/task/TASK-100",
+          "refs/codewiki/archive/task/TASK-101",
           "refs/codewiki/archive/task/TASK-101",
           "refs/codewiki/archive/task/TASK-101"
         ],
@@ -60891,6 +61817,7 @@
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
           ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
           ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
         ],
         "blocked_purge_build_paths": [
@@ -60949,7 +61876,7 @@
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
           ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+          ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -60969,193 +61896,10 @@
           "next_loop": "feedback",
           "task_id": "TASK-101",
           "reason": "Validation blocked; escalate ambiguous intent to feedback compiler."
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/product/stories/automation.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/product/stories/automation.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/product/stories/automation.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/product/stories/intent.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/product/stories/intent.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/product/stories/intent.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/alignment-model.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/alignment-model.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/alignment-model.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/change-lifecycle.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/change-lifecycle.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/change-lifecycle.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/compilers.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/compilers.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/compilers.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/compilers.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/compilers.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:missing-code-path:.codewiki/kb/system/validation-gateway.md",
-          "source_id": "lint:missing-code-path:.codewiki/kb/system/validation-gateway.md",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/kb/system/validation-gateway.md"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "documentation",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
         }
       ],
       "counts_by_loop": {
-        "feedback": 1,
-        "documentation": 14
+        "feedback": 1
       },
       "next_action": {
         "loop": "feedback",
@@ -61181,8 +61925,8 @@
       },
       "layer_states": {
         "intent": "aligned",
-        "knowledge": "drift",
-        "roadmap": "drift",
+        "knowledge": "aligned",
+        "roadmap": "aligned",
         "code": "aligned",
         "validation": "drift"
       }
@@ -61190,106 +61934,18 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-18T08:44:12.209Z",
-      "counts": {
-        "missing-code-path": 10,
-        "roadmap-missing-code-path": 4
-      },
-      "issues": [
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/product/stories/automation.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/implementation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/product/stories/automation.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/documentation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/product/stories/intent.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/feedback.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/alignment-model.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/compilers.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/feedback.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/compilers.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/documentation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/compilers.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/implementation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/compilers.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/validation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "missing-code-path",
-          "path": ".codewiki/kb/system/validation-gateway.md",
-          "message": "Referenced code path does not exist: skills/codewiki/loops/validation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-034 references missing code path: skills/codewiki/loops/feedback.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-034 references missing code path: skills/codewiki/loops/documentation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-034 references missing code path: skills/codewiki/loops/implementation.md"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-034 references missing code path: skills/codewiki/loops/validation.md"
-        }
-      ]
+      "generated_at": "2026-05-18T09:07:30.109Z",
+      "counts": {},
+      "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-18T08:44:12Z",
+      "generated_at": "2026-05-18T09:07:30Z",
       "health": {
-        "color": "yellow",
+        "color": "green",
         "errors": 0,
-        "warnings": 14,
-        "total_issues": 14
+        "warnings": 0,
+        "total_issues": 0
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -61622,12 +62278,12 @@
         ],
         "recent_task_ids": [
           "TASK-101",
+          "TASK-034",
           "TASK-077",
           "TASK-084",
           "TASK-078",
           "TASK-076",
           "TASK-038",
-          "TASK-034",
           "TASK-011",
           "TASK-050",
           "TASK-049",
@@ -63214,14 +63870,15 @@
           ],
           "code_paths": [
             "skills/codewiki/SKILL.md",
-            "skills/codewiki/loops/feedback.md",
-            "skills/codewiki/loops/documentation.md",
-            "skills/codewiki/loops/implementation.md",
-            "skills/codewiki/loops/validation.md",
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
             "skills/codewiki/playbooks/architecture.md",
             "skills/codewiki/playbooks/view-audit.md"
           ],
-          "updated": "2026-05-10",
+          "updated": "2026-05-18",
           "boundary": {
             "executable": true,
             "container": false,
@@ -64203,7 +64860,7 @@
             "tests/smoke/prompt-assets.test.mjs",
             "tests/tasks/TASK-076/restructure.test.mjs"
           ],
-          "updated": "2026-05-18T08:43:36Z",
+          "updated": "2026-05-18T09:07:30Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -64219,24 +64876,24 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-18T08:44:12Z",
+      "generated_at": "2026-05-18T09:07:30Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
         "roadmap_path": ".codewiki/roadmap/queue.json"
       },
       "health": {
-        "color": "yellow",
+        "color": "green",
         "errors": 0,
-        "warnings": 14,
-        "total_issues": 14
+        "warnings": 0,
+        "total_issues": 0
       },
       "summary": {
         "total_specs": 16,
         "mapped_specs": 16,
-        "aligned_specs": 28,
+        "aligned_specs": 34,
         "tracked_specs": 0,
-        "untracked_specs": 6,
+        "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
         "task_count": 51,
@@ -64247,8 +64904,8 @@
         "tracked_drift": {
           "label": "Tracked Drift",
           "value": 0,
-          "total": 6,
-          "percent": 0
+          "total": 0,
+          "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
@@ -64264,22 +64921,8 @@
         }
       },
       "views": {
-        "risky_spec_paths": [
-          ".codewiki/kb/product/stories/automation.md",
-          ".codewiki/kb/product/stories/intent.md",
-          ".codewiki/kb/system/alignment-model.md",
-          ".codewiki/kb/system/change-lifecycle.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/validation-gateway.md"
-        ],
-        "top_risky_spec_paths": [
-          ".codewiki/kb/product/stories/automation.md",
-          ".codewiki/kb/product/stories/intent.md",
-          ".codewiki/kb/system/alignment-model.md",
-          ".codewiki/kb/system/change-lifecycle.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/validation-gateway.md"
-        ],
+        "risky_spec_paths": [],
+        "top_risky_spec_paths": [],
         "open_task_ids": [
           "TASK-101"
         ],
@@ -64520,6 +65163,7 @@
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
               ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json",
+              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json",
               ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json"
             ],
             "validation_paths": [
@@ -64689,7 +65333,7 @@
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
               ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
-              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v2.json"
+              ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops-v3.json"
             ]
           },
           "purgeable": {
@@ -64710,7 +65354,7 @@
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 16/16.",
-        "Tracked drift coverage: 0/6."
+        "No tracked spec drift is open."
       ],
       "specs": [
         {
@@ -64783,6 +65427,29 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/product/stories/automation.md",
+          "title": "Use Gated Agency",
+          "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md"
+          ],
+          "code_area": "skills +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/product/stories/drift.md",
           "title": "Prevent Horizontal and Vertical Drift",
           "summary": "CodeWiki should expose contradictions between intent, knowledge, work, graph state, builds, validation, tests, and code.",
@@ -64801,6 +65468,35 @@
           "primary_task": null,
           "revision": {
             "digest": "3ef95c74f346aa23aaeb28e1d484a85a2d311e048e144889fc2b36438be6561d",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/product/stories/intent.md",
+          "title": "Maintain Fresh Intent",
+          "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-feedback/SKILL.md"
+          ],
+          "code_area": "skills/codewiki-feedback/SKILL.md",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-016",
+            "TASK-022"
+          ],
+          "primary_task": {
+            "id": "TASK-016",
+            "status": "done",
+            "title": "Bake product split and lexicon into templates"
+          },
+          "revision": {
+            "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -65139,6 +65835,43 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/alignment-model.md",
+          "title": "Alignment Model",
+          "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/graph.ts",
+            "src/application/builds.ts",
+            "src/application/lint.ts",
+            "src/application/gateway",
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-078",
+            "TASK-084"
+          ],
+          "primary_task": {
+            "id": "TASK-078",
+            "status": "done",
+            "title": "Define executable alignment graph contract"
+          },
+          "revision": {
+            "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/api.md",
           "title": "CodeWiki API",
           "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -65221,6 +65954,70 @@
           },
           "revision": {
             "digest": "c0e2e456ce716137a9ddf570e0c8f83f9ed66369aa7dde623ecdab6130fe058f",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "title": "Change Lifecycle",
+          "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
+            "src/application/builds.ts",
+            "src/application/graph.ts"
+          ],
+          "code_area": "skills, src",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "title": "Compilers",
+          "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/builds.ts",
+            "src/application/roadmap.ts",
+            "src/application/task.ts",
+            "src/application/gateway",
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-034",
+            "TASK-038"
+          ],
+          "primary_task": {
+            "id": "TASK-034",
+            "status": "done",
+            "title": "Align CodeWiki skill package with compiler and API contracts"
+          },
+          "revision": {
+            "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -65348,7 +66145,7 @@
             "title": "Restructure project filesystem and dogfood boundary"
           },
           "revision": {
-            "digest": "4bda66194f6ba25bf62bc717b373ce34ec4214b947289b82b0e70d55ba2ee7e2",
+            "digest": "f8eda55d1fdfcadc7ce3ef7bed0e64912e44b3a66c91bb5e31750ec524da5559",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -65477,154 +66274,21 @@
           "note": "no deterministic drift signals"
         },
         {
-          "path": ".codewiki/kb/product/stories/automation.md",
-          "title": "Use Gated Agency",
-          "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-          "drift_status": "untracked",
-          "code_paths": [
-            "skills/codewiki/loops/implementation.md",
-            "skills/codewiki/loops/documentation.md"
-          ],
-          "code_area": "skills +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 2,
-            "total": 2
-          },
-          "related_task_ids": [],
-          "primary_task": null,
-          "revision": {
-            "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
-            "basis": "source_content"
-          },
-          "note": "2 deterministic issues with no open roadmap task"
-        },
-        {
-          "path": ".codewiki/kb/product/stories/intent.md",
-          "title": "Maintain Fresh Intent",
-          "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
-          "drift_status": "untracked",
-          "code_paths": [
-            "skills/codewiki/loops/feedback.md"
-          ],
-          "code_area": "skills/codewiki/loops/feedback.md",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 1,
-            "total": 1
-          },
-          "related_task_ids": [
-            "TASK-016",
-            "TASK-022"
-          ],
-          "primary_task": null,
-          "revision": {
-            "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
-            "basis": "source_content"
-          },
-          "note": "1 deterministic issue with no open roadmap task"
-        },
-        {
-          "path": ".codewiki/kb/system/alignment-model.md",
-          "title": "Alignment Model",
-          "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
-          "drift_status": "untracked",
-          "code_paths": [
-            "src/application/graph.ts",
-            "src/application/builds.ts",
-            "src/application/lint.ts",
-            "src/application/gateway",
-            "skills/codewiki/loops"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 1,
-            "total": 1
-          },
-          "related_task_ids": [
-            "TASK-078",
-            "TASK-084"
-          ],
-          "primary_task": null,
-          "revision": {
-            "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
-            "basis": "source_content"
-          },
-          "note": "1 deterministic issue with no open roadmap task"
-        },
-        {
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "title": "Change Lifecycle",
-          "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
-          "drift_status": "untracked",
-          "code_paths": [
-            "skills/codewiki/loops",
-            "src/application/builds.ts",
-            "src/application/graph.ts"
-          ],
-          "code_area": "skills, src",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 1,
-            "total": 1
-          },
-          "related_task_ids": [],
-          "primary_task": null,
-          "revision": {
-            "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
-            "basis": "source_content"
-          },
-          "note": "1 deterministic issue with no open roadmap task"
-        },
-        {
-          "path": ".codewiki/kb/system/compilers.md",
-          "title": "Compilers",
-          "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-          "drift_status": "untracked",
-          "code_paths": [
-            "src/application/builds.ts",
-            "src/application/roadmap.ts",
-            "src/application/task.ts",
-            "src/application/gateway",
-            "skills/codewiki/loops/feedback.md",
-            "skills/codewiki/loops/documentation.md",
-            "skills/codewiki/loops/implementation.md",
-            "skills/codewiki/loops/validation.md"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 4,
-            "total": 4
-          },
-          "related_task_ids": [
-            "TASK-034",
-            "TASK-038"
-          ],
-          "primary_task": null,
-          "revision": {
-            "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
-            "basis": "source_content"
-          },
-          "note": "4 deterministic issues with no open roadmap task"
-        },
-        {
           "path": ".codewiki/kb/system/validation-gateway.md",
           "title": "Validation Gateway",
           "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-          "drift_status": "untracked",
+          "drift_status": "aligned",
           "code_paths": [
             "src/application/gateway",
-            "skills/codewiki/loops/validation.md",
+            "skills/codewiki-validation/SKILL.md",
             ".codewiki/validation",
             "src/application/builds.ts"
           ],
           "code_area": "src, skills +1 more",
           "issue_counts": {
             "errors": 0,
-            "warnings": 1,
-            "total": 1
+            "warnings": 0,
+            "total": 0
           },
           "related_task_ids": [
             "TASK-034",
@@ -65632,16 +66296,20 @@
             "TASK-078",
             "TASK-084"
           ],
-          "primary_task": null,
+          "primary_task": {
+            "id": "TASK-034",
+            "status": "done",
+            "title": "Align CodeWiki skill package with compiler and API contracts"
+          },
           "revision": {
             "digest": "dc2ae458de46edd865e8e760d22d891398a20c3bc5e26278b71890cd27fa4980",
             "basis": "source_content"
           },
-          "note": "1 deterministic issue with no open roadmap task"
+          "note": "no deterministic drift signals"
         }
       ],
       "agency": {
-        "generated_at": "2026-05-18T08:44:12Z",
+        "generated_at": "2026-05-18T09:07:30Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -65669,12 +66337,26 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T08:44:12Z",
+            "checked_at": "2026-05-18T09:07:30Z",
             "revision": {
               "git": {
-                "head": "4dcbc10e6f7bdbbb3ff31a260a44dd0e5792b697",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/product/stories/automation.md",
+                  ".codewiki/kb/product/stories/intent.md",
+                  ".codewiki/kb/system/alignment-model.md",
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/compilers.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-034/context.json",
+                  ".codewiki/roadmap/tasks/TASK-034/task.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json",
+                  ".codewiki/validation/2026-05-18-implementation-pass-task-101.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -65718,6 +66400,11 @@
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
+                  "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
+                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
+                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
+                  "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
                   "skills/codewiki/SKILL.md": "4a55f96372da2e47c31750e98331b54dbfe30b58",
                   "skills/codewiki/playbooks/architecture.md": "4ca28b387469620d7797940ca94da91b59ebfc6f",
                   "skills/codewiki/playbooks/view-audit.md": "1f0ef3f887ee1a894a07c4fb7f1c98f7b4fb0679",
@@ -65749,21 +66436,23 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "87536d62eb9da524aeba1f4a61c03b4c6ffce51ddccb6d01b986c8df73defc48",
-              "task_digest": "0d7f5a07ba5d6fbe03b9cc1034bfc926eaa57cbad6093690d1eeaeaa606dc38e",
-              "code_digest": "6e5fd4ce09199c45a19855b550b60f71e8ad5c351d86388e0523babcce8db03f",
-              "digest": "d1baf719f3190d60a63b7ba3b4d7aa1788c68a7bded67c85c1e443baad813253"
+              "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
+              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
+              "code_digest": "3d31bfebe98cdbf27d456aa4315ba2e79c05e4fb251ae7927d9e33931189ef96",
+              "digest": "05eccb94713288c676031041da40f6bc056409b47ebc5f447bbab394f845316b"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-18T08:44:12Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-18T09:07:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
+              ".codewiki/kb/product/stories/automation.md",
               ".codewiki/kb/product/stories/drift.md",
+              ".codewiki/kb/product/stories/intent.md",
               ".codewiki/kb/product/stories/navigation.md",
               ".codewiki/kb/product/stories/sanitation.md",
               ".codewiki/kb/product/uis/board.md",
@@ -65775,13 +66464,14 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/product/stories/intent.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
+              ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -65791,15 +66481,15 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
               "skills/codewiki/playbooks/view-audit.md",
               "skills/codewiki/playbooks/architecture.md",
+              "skills/codewiki-feedback/SKILL.md",
               "skills/codewiki/SKILL.md",
               "src/adapters/pi/ui",
               "tests/smoke/package-smoke.test.mjs",
@@ -65811,19 +66501,21 @@
               "src",
               "src/index.ts",
               "package.json",
-              "skills/codewiki/loops/implementation.md",
-              "skills/codewiki/loops/documentation.md",
-              "skills/codewiki/loops/feedback.md",
               "src/adapters",
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
-              "src/domain",
               "src/application/graph.ts",
               "src/application/builds.ts",
+              "src/application/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
               "src/ui/web/control-room.ts",
               "src/bootstrap.ts",
               "src/templates.ts",
@@ -65835,30 +66527,18 @@
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
-              "src/application/roadmap.ts",
-              "src/application/gateway",
-              "skills/codewiki/loops",
-              "src/application/task.ts",
-              "skills/codewiki/loops/validation.md",
               ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
               "TASK-101"
             ],
-            "risky_spec_paths": [
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/product/stories/intent.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
-              "aligned_specs": 27,
+              "aligned_specs": 33,
               "tracked_specs": 0,
-              "untracked_specs": 6,
+              "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
             },
@@ -65882,12 +66562,26 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-18T08:44:12Z",
+            "checked_at": "2026-05-18T09:07:30Z",
             "revision": {
               "git": {
-                "head": "4dcbc10e6f7bdbbb3ff31a260a44dd0e5792b697",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/product/stories/automation.md",
+                  ".codewiki/kb/product/stories/intent.md",
+                  ".codewiki/kb/system/alignment-model.md",
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/compilers.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-034/context.json",
+                  ".codewiki/roadmap/tasks/TASK-034/task.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json",
+                  ".codewiki/validation/2026-05-18-implementation-pass-task-101.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -65914,6 +66608,11 @@
                   ".codewiki/validation": "",
                   "skills": "",
                   "skills/codewiki": "",
+                  "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
+                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
+                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
+                  "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
                   "src": "",
                   "src/adapters": "",
                   "src/adapters/pi": "",
@@ -65941,24 +66640,27 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "8717e59462471de8cde9afc6358aec2fbfb22e32c6db6503efc291f27b255584",
-              "task_digest": "0d7f5a07ba5d6fbe03b9cc1034bfc926eaa57cbad6093690d1eeaeaa606dc38e",
-              "code_digest": "f4d67817e64f275e894dc6166e080b95cd61ed2eca6351e1668054c12bc21fd5",
-              "digest": "d50005ec3c2aeeeddabaa8677d38af5fb174ef004496dbc4f258a9eadc8f9067"
+              "spec_digest": "f4b714ec506ab48ab4b1ebfc52c5ea552904e2788c517c2b61d5cf4d8941c789",
+              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
+              "code_digest": "8d8821c3014856370e3c84eca5fa8a11010544805ce58b8a8ce552f7313be1aa",
+              "digest": "e2eaeac64cedeea396d24ae2a85b7e5ed8c047d7ade552665b6091e0041a4571"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-18T08:44:12Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-18T09:07:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
+              ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -65968,9 +66670,6 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
@@ -65978,13 +66677,21 @@
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
-              "src/domain",
-              "src/application/lint.ts",
               "src/application/graph.ts",
               "src/application/builds.ts",
+              "src/application/lint.ts",
+              "src/application/gateway",
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
               "src/ui/web",
               "src/adapters/pi/commands",
               "src/ui/web/control-room.ts",
@@ -66003,31 +66710,18 @@
               "skills",
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
-              "src/application/roadmap.ts",
-              "src/application/gateway",
-              "skills/codewiki/loops",
-              "src/application/task.ts",
-              "skills/codewiki/loops/feedback.md",
-              "skills/codewiki/loops/documentation.md",
-              "skills/codewiki/loops/implementation.md",
-              "skills/codewiki/loops/validation.md",
               ".codewiki/validation"
             ],
             "code_area": "src, skills +2 more",
             "open_task_ids": [
               "TASK-101"
             ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 18,
-              "aligned_specs": 14,
+              "aligned_specs": 18,
               "tracked_specs": 0,
-              "untracked_specs": 4,
+              "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
             },
@@ -66051,12 +66745,26 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T08:44:12Z",
+            "checked_at": "2026-05-18T09:07:30Z",
             "revision": {
               "git": {
-                "head": "4dcbc10e6f7bdbbb3ff31a260a44dd0e5792b697",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "9638e62a85fba0d60de9d1cca4c0051b79b30a81",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/product/stories/automation.md",
+                  ".codewiki/kb/product/stories/intent.md",
+                  ".codewiki/kb/system/alignment-model.md",
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/compilers.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-034/context.json",
+                  ".codewiki/roadmap/tasks/TASK-034/task.json",
+                  ".codewiki/roadmap/tasks/TASK-101/context.json",
+                  ".codewiki/roadmap/tasks/TASK-101/task.json",
+                  ".codewiki/validation/2026-05-18-implementation-pass-task-101.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66100,6 +66808,11 @@
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
+                  "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
+                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
+                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
+                  "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
                   "skills/codewiki/SKILL.md": "4a55f96372da2e47c31750e98331b54dbfe30b58",
                   "skills/codewiki/playbooks/architecture.md": "4ca28b387469620d7797940ca94da91b59ebfc6f",
                   "skills/codewiki/playbooks/view-audit.md": "1f0ef3f887ee1a894a07c4fb7f1c98f7b4fb0679",
@@ -66131,21 +66844,23 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "87536d62eb9da524aeba1f4a61c03b4c6ffce51ddccb6d01b986c8df73defc48",
-              "task_digest": "0d7f5a07ba5d6fbe03b9cc1034bfc926eaa57cbad6093690d1eeaeaa606dc38e",
-              "code_digest": "6e5fd4ce09199c45a19855b550b60f71e8ad5c351d86388e0523babcce8db03f",
-              "digest": "d1baf719f3190d60a63b7ba3b4d7aa1788c68a7bded67c85c1e443baad813253"
+              "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
+              "task_digest": "c87c0abfe8a600dfe96293a5e7359feb82a20f92172267b22dd53fc7b203cf53",
+              "code_digest": "3d31bfebe98cdbf27d456aa4315ba2e79c05e4fb251ae7927d9e33931189ef96",
+              "digest": "05eccb94713288c676031041da40f6bc056409b47ebc5f447bbab394f845316b"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-18T08:44:12Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-18T09:07:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
+              ".codewiki/kb/product/stories/automation.md",
               ".codewiki/kb/product/stories/drift.md",
+              ".codewiki/kb/product/stories/intent.md",
               ".codewiki/kb/product/stories/navigation.md",
               ".codewiki/kb/product/stories/sanitation.md",
               ".codewiki/kb/product/uis/board.md",
@@ -66157,13 +66872,14 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/product/stories/intent.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
+              ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -66173,15 +66889,15 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
               "skills/codewiki/playbooks/view-audit.md",
               "skills/codewiki/playbooks/architecture.md",
+              "skills/codewiki-feedback/SKILL.md",
               "skills/codewiki/SKILL.md",
               "src/adapters/pi/ui",
               "tests/smoke/package-smoke.test.mjs",
@@ -66193,19 +66909,21 @@
               "src",
               "src/index.ts",
               "package.json",
-              "skills/codewiki/loops/implementation.md",
-              "skills/codewiki/loops/documentation.md",
-              "skills/codewiki/loops/feedback.md",
               "src/adapters",
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
-              "src/domain",
               "src/application/graph.ts",
               "src/application/builds.ts",
+              "src/application/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
               "src/ui/web/control-room.ts",
               "src/bootstrap.ts",
               "src/templates.ts",
@@ -66217,30 +66935,18 @@
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
-              "src/application/roadmap.ts",
-              "src/application/gateway",
-              "skills/codewiki/loops",
-              "src/application/task.ts",
-              "skills/codewiki/loops/validation.md",
               ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
               "TASK-101"
             ],
-            "risky_spec_paths": [
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/product/stories/intent.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
-              "aligned_specs": 27,
+              "aligned_specs": 33,
               "tracked_specs": 0,
-              "untracked_specs": 6,
+              "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
             },
@@ -66265,7 +66971,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-18T08:44:12Z",
+        "generated_at": "2026-05-18T09:07:30Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -66500,6 +67206,29 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/product/stories/automation.md",
+            "title": "Use Gated Agency",
+            "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md"
+            ],
+            "code_area": "skills +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/product/stories/drift.md",
             "title": "Prevent Horizontal and Vertical Drift",
             "summary": "CodeWiki should expose contradictions between intent, knowledge, work, graph state, builds, validation, tests, and code.",
@@ -66518,6 +67247,35 @@
             "primary_task": null,
             "revision": {
               "digest": "3ef95c74f346aa23aaeb28e1d484a85a2d311e048e144889fc2b36438be6561d",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/product/stories/intent.md",
+            "title": "Maintain Fresh Intent",
+            "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-feedback/SKILL.md"
+            ],
+            "code_area": "skills/codewiki-feedback/SKILL.md",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-016",
+              "TASK-022"
+            ],
+            "primary_task": {
+              "id": "TASK-016",
+              "status": "done",
+              "title": "Bake product split and lexicon into templates"
+            },
+            "revision": {
+              "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -66856,6 +67614,43 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/alignment-model.md",
+            "title": "Alignment Model",
+            "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/graph.ts",
+              "src/application/builds.ts",
+              "src/application/lint.ts",
+              "src/application/gateway",
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-078",
+              "TASK-084"
+            ],
+            "primary_task": {
+              "id": "TASK-078",
+              "status": "done",
+              "title": "Define executable alignment graph contract"
+            },
+            "revision": {
+              "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/api.md",
             "title": "CodeWiki API",
             "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -66938,6 +67733,70 @@
             },
             "revision": {
               "digest": "c0e2e456ce716137a9ddf570e0c8f83f9ed66369aa7dde623ecdab6130fe058f",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/change-lifecycle.md",
+            "title": "Change Lifecycle",
+            "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/application/builds.ts",
+              "src/application/graph.ts"
+            ],
+            "code_area": "skills, src",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/compilers.md",
+            "title": "Compilers",
+            "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/builds.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
+              "src/application/gateway",
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-034",
+              "TASK-038"
+            ],
+            "primary_task": {
+              "id": "TASK-034",
+              "status": "done",
+              "title": "Align CodeWiki skill package with compiler and API contracts"
+            },
+            "revision": {
+              "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -67065,7 +67924,7 @@
               "title": "Restructure project filesystem and dogfood boundary"
             },
             "revision": {
-              "digest": "4bda66194f6ba25bf62bc717b373ce34ec4214b947289b82b0e70d55ba2ee7e2",
+              "digest": "f8eda55d1fdfcadc7ce3ef7bed0e64912e44b3a66c91bb5e31750ec524da5559",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -67194,154 +68053,21 @@
             "note": "no deterministic drift signals"
           },
           {
-            "path": ".codewiki/kb/product/stories/automation.md",
-            "title": "Use Gated Agency",
-            "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-            "drift_status": "untracked",
-            "code_paths": [
-              "skills/codewiki/loops/implementation.md",
-              "skills/codewiki/loops/documentation.md"
-            ],
-            "code_area": "skills +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 2,
-              "total": 2
-            },
-            "related_task_ids": [],
-            "primary_task": null,
-            "revision": {
-              "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
-              "basis": "source_content"
-            },
-            "note": "2 deterministic issues with no open roadmap task"
-          },
-          {
-            "path": ".codewiki/kb/product/stories/intent.md",
-            "title": "Maintain Fresh Intent",
-            "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
-            "drift_status": "untracked",
-            "code_paths": [
-              "skills/codewiki/loops/feedback.md"
-            ],
-            "code_area": "skills/codewiki/loops/feedback.md",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 1,
-              "total": 1
-            },
-            "related_task_ids": [
-              "TASK-016",
-              "TASK-022"
-            ],
-            "primary_task": null,
-            "revision": {
-              "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
-              "basis": "source_content"
-            },
-            "note": "1 deterministic issue with no open roadmap task"
-          },
-          {
-            "path": ".codewiki/kb/system/alignment-model.md",
-            "title": "Alignment Model",
-            "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
-            "drift_status": "untracked",
-            "code_paths": [
-              "src/application/graph.ts",
-              "src/application/builds.ts",
-              "src/application/lint.ts",
-              "src/application/gateway",
-              "skills/codewiki/loops"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 1,
-              "total": 1
-            },
-            "related_task_ids": [
-              "TASK-078",
-              "TASK-084"
-            ],
-            "primary_task": null,
-            "revision": {
-              "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
-              "basis": "source_content"
-            },
-            "note": "1 deterministic issue with no open roadmap task"
-          },
-          {
-            "path": ".codewiki/kb/system/change-lifecycle.md",
-            "title": "Change Lifecycle",
-            "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
-            "drift_status": "untracked",
-            "code_paths": [
-              "skills/codewiki/loops",
-              "src/application/builds.ts",
-              "src/application/graph.ts"
-            ],
-            "code_area": "skills, src",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 1,
-              "total": 1
-            },
-            "related_task_ids": [],
-            "primary_task": null,
-            "revision": {
-              "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
-              "basis": "source_content"
-            },
-            "note": "1 deterministic issue with no open roadmap task"
-          },
-          {
-            "path": ".codewiki/kb/system/compilers.md",
-            "title": "Compilers",
-            "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-            "drift_status": "untracked",
-            "code_paths": [
-              "src/application/builds.ts",
-              "src/application/roadmap.ts",
-              "src/application/task.ts",
-              "src/application/gateway",
-              "skills/codewiki/loops/feedback.md",
-              "skills/codewiki/loops/documentation.md",
-              "skills/codewiki/loops/implementation.md",
-              "skills/codewiki/loops/validation.md"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 4,
-              "total": 4
-            },
-            "related_task_ids": [
-              "TASK-034",
-              "TASK-038"
-            ],
-            "primary_task": null,
-            "revision": {
-              "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
-              "basis": "source_content"
-            },
-            "note": "4 deterministic issues with no open roadmap task"
-          },
-          {
             "path": ".codewiki/kb/system/validation-gateway.md",
             "title": "Validation Gateway",
             "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-            "drift_status": "untracked",
+            "drift_status": "aligned",
             "code_paths": [
               "src/application/gateway",
-              "skills/codewiki/loops/validation.md",
+              "skills/codewiki-validation/SKILL.md",
               ".codewiki/validation",
               "src/application/builds.ts"
             ],
             "code_area": "src, skills +1 more",
             "issue_counts": {
               "errors": 0,
-              "warnings": 1,
-              "total": 1
+              "warnings": 0,
+              "total": 0
             },
             "related_task_ids": [
               "TASK-034",
@@ -67349,12 +68075,16 @@
               "TASK-078",
               "TASK-084"
             ],
-            "primary_task": null,
+            "primary_task": {
+              "id": "TASK-034",
+              "status": "done",
+              "title": "Align CodeWiki skill package with compiler and API contracts"
+            },
             "revision": {
               "digest": "dc2ae458de46edd865e8e760d22d891398a20c3bc5e26278b71890cd27fa4980",
               "basis": "source_content"
             },
-            "note": "1 deterministic issue with no open roadmap task"
+            "note": "no deterministic drift signals"
           }
         ],
         "sections": [
@@ -67396,6 +68126,29 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/product/stories/automation.md",
+                "title": "Use Gated Agency",
+                "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-documentation/SKILL.md"
+                ],
+                "code_area": "skills +1 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/product/stories/drift.md",
                 "title": "Prevent Horizontal and Vertical Drift",
                 "summary": "CodeWiki should expose contradictions between intent, knowledge, work, graph state, builds, validation, tests, and code.",
@@ -67414,6 +68167,35 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "3ef95c74f346aa23aaeb28e1d484a85a2d311e048e144889fc2b36438be6561d",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/product/stories/intent.md",
+                "title": "Maintain Fresh Intent",
+                "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-feedback/SKILL.md"
+                ],
+                "code_area": "skills/codewiki-feedback/SKILL.md",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-016",
+                  "TASK-022"
+                ],
+                "primary_task": {
+                  "id": "TASK-016",
+                  "status": "done",
+                  "title": "Bake product split and lexicon into templates"
+                },
+                "revision": {
+                  "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -67690,54 +68472,6 @@
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
-              },
-              {
-                "path": ".codewiki/kb/product/stories/automation.md",
-                "title": "Use Gated Agency",
-                "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-                "drift_status": "untracked",
-                "code_paths": [
-                  "skills/codewiki/loops/implementation.md",
-                  "skills/codewiki/loops/documentation.md"
-                ],
-                "code_area": "skills +1 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 2,
-                  "total": 2
-                },
-                "related_task_ids": [],
-                "primary_task": null,
-                "revision": {
-                  "digest": "3b3a3bdeddf767c0df30d1cdf3af800913e39f9f68e6444606c0946961576503",
-                  "basis": "source_content"
-                },
-                "note": "2 deterministic issues with no open roadmap task"
-              },
-              {
-                "path": ".codewiki/kb/product/stories/intent.md",
-                "title": "Maintain Fresh Intent",
-                "summary": "CodeWiki should capture, challenge, and preserve current project intent so future work starts from agreed solutions instead of chat archaeology.",
-                "drift_status": "untracked",
-                "code_paths": [
-                  "skills/codewiki/loops/feedback.md"
-                ],
-                "code_area": "skills/codewiki/loops/feedback.md",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 1,
-                  "total": 1
-                },
-                "related_task_ids": [
-                  "TASK-016",
-                  "TASK-022"
-                ],
-                "primary_task": null,
-                "revision": {
-                  "digest": "27e915e781337918b947e258ea047b9182c50ad77fd5f1f9759d06b4aa5b372a",
-                  "basis": "source_content"
-                },
-                "note": "1 deterministic issue with no open roadmap task"
               }
             ]
           },
@@ -67842,6 +68576,43 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/alignment-model.md",
+                "title": "Alignment Model",
+                "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/graph.ts",
+                  "src/application/builds.ts",
+                  "src/application/lint.ts",
+                  "src/application/gateway",
+                  "skills/codewiki-feedback/SKILL.md",
+                  "skills/codewiki-documentation/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-078",
+                  "TASK-084"
+                ],
+                "primary_task": {
+                  "id": "TASK-078",
+                  "status": "done",
+                  "title": "Define executable alignment graph contract"
+                },
+                "revision": {
+                  "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/api.md",
                 "title": "CodeWiki API",
                 "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -67924,6 +68695,70 @@
                 },
                 "revision": {
                   "digest": "c0e2e456ce716137a9ddf570e0c8f83f9ed66369aa7dde623ecdab6130fe058f",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/change-lifecycle.md",
+                "title": "Change Lifecycle",
+                "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-feedback/SKILL.md",
+                  "skills/codewiki-documentation/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "src/application/builds.ts",
+                  "src/application/graph.ts"
+                ],
+                "code_area": "skills, src",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/compilers.md",
+                "title": "Compilers",
+                "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/builds.ts",
+                  "src/application/roadmap.ts",
+                  "src/application/task.ts",
+                  "src/application/gateway",
+                  "skills/codewiki-feedback/SKILL.md",
+                  "skills/codewiki-documentation/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-034",
+                  "TASK-038"
+                ],
+                "primary_task": {
+                  "id": "TASK-034",
+                  "status": "done",
+                  "title": "Align CodeWiki skill package with compiler and API contracts"
+                },
+                "revision": {
+                  "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -68051,7 +68886,7 @@
                   "title": "Restructure project filesystem and dogfood boundary"
                 },
                 "revision": {
-                  "digest": "4bda66194f6ba25bf62bc717b373ce34ec4214b947289b82b0e70d55ba2ee7e2",
+                  "digest": "f8eda55d1fdfcadc7ce3ef7bed0e64912e44b3a66c91bb5e31750ec524da5559",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -68180,106 +69015,21 @@
                 "note": "no deterministic drift signals"
               },
               {
-                "path": ".codewiki/kb/system/alignment-model.md",
-                "title": "Alignment Model",
-                "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
-                "drift_status": "untracked",
-                "code_paths": [
-                  "src/application/graph.ts",
-                  "src/application/builds.ts",
-                  "src/application/lint.ts",
-                  "src/application/gateway",
-                  "skills/codewiki/loops"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 1,
-                  "total": 1
-                },
-                "related_task_ids": [
-                  "TASK-078",
-                  "TASK-084"
-                ],
-                "primary_task": null,
-                "revision": {
-                  "digest": "679dff3a47ff3e4ad7fae4190c252a67cc002beee178d4d058013eba03e41da3",
-                  "basis": "source_content"
-                },
-                "note": "1 deterministic issue with no open roadmap task"
-              },
-              {
-                "path": ".codewiki/kb/system/change-lifecycle.md",
-                "title": "Change Lifecycle",
-                "summary": "Feedback classification and propagation rules for semantic CodeWiki changes.",
-                "drift_status": "untracked",
-                "code_paths": [
-                  "skills/codewiki/loops",
-                  "src/application/builds.ts",
-                  "src/application/graph.ts"
-                ],
-                "code_area": "skills, src",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 1,
-                  "total": 1
-                },
-                "related_task_ids": [],
-                "primary_task": null,
-                "revision": {
-                  "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
-                  "basis": "source_content"
-                },
-                "note": "1 deterministic issue with no open roadmap task"
-              },
-              {
-                "path": ".codewiki/kb/system/compilers.md",
-                "title": "Compilers",
-                "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-                "drift_status": "untracked",
-                "code_paths": [
-                  "src/application/builds.ts",
-                  "src/application/roadmap.ts",
-                  "src/application/task.ts",
-                  "src/application/gateway",
-                  "skills/codewiki/loops/feedback.md",
-                  "skills/codewiki/loops/documentation.md",
-                  "skills/codewiki/loops/implementation.md",
-                  "skills/codewiki/loops/validation.md"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 4,
-                  "total": 4
-                },
-                "related_task_ids": [
-                  "TASK-034",
-                  "TASK-038"
-                ],
-                "primary_task": null,
-                "revision": {
-                  "digest": "8d76d2865fda9e315f6354011d2ef8381393c643f4c13cb3a73de85a0434b857",
-                  "basis": "source_content"
-                },
-                "note": "4 deterministic issues with no open roadmap task"
-              },
-              {
                 "path": ".codewiki/kb/system/validation-gateway.md",
                 "title": "Validation Gateway",
                 "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-                "drift_status": "untracked",
+                "drift_status": "aligned",
                 "code_paths": [
                   "src/application/gateway",
-                  "skills/codewiki/loops/validation.md",
+                  "skills/codewiki-validation/SKILL.md",
                   ".codewiki/validation",
                   "src/application/builds.ts"
                 ],
                 "code_area": "src, skills +1 more",
                 "issue_counts": {
                   "errors": 0,
-                  "warnings": 1,
-                  "total": 1
+                  "warnings": 0,
+                  "total": 0
                 },
                 "related_task_ids": [
                   "TASK-034",
@@ -68287,12 +69037,16 @@
                   "TASK-078",
                   "TASK-084"
                 ],
-                "primary_task": null,
+                "primary_task": {
+                  "id": "TASK-034",
+                  "status": "done",
+                  "title": "Align CodeWiki skill package with compiler and API contracts"
+                },
                 "revision": {
                   "digest": "dc2ae458de46edd865e8e760d22d891398a20c3bc5e26278b71890cd27fa4980",
                   "basis": "source_content"
                 },
-                "note": "1 deterministic issue with no open roadmap task"
+                "note": "no deterministic drift signals"
               }
             ]
           },

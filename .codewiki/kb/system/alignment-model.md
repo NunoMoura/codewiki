@@ -12,7 +12,11 @@ code_paths:
   - src/application/builds.ts
   - src/application/lint.ts
   - src/application/gateway
-  - skills/codewiki/loops
+  - skills/codewiki-feedback/SKILL.md
+  - skills/codewiki-documentation/SKILL.md
+  - skills/codewiki-planning/SKILL.md
+  - skills/codewiki-implementation/SKILL.md
+  - skills/codewiki-validation/SKILL.md
 ---
 
 # Alignment Model

@@ -8,7 +8,7 @@ owners:
 updated: "2026-05-17"
 code_paths:
   - src/application/gateway
-  - skills/codewiki/loops/validation.md
+  - skills/codewiki-validation/SKILL.md
   - .codewiki/validation
   - src/application/builds.ts
 ---

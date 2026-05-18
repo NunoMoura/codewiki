@@ -8,7 +8,7 @@ owners:
 - product
 updated: '2026-05-09'
 code_paths:
-- skills/codewiki/loops/feedback.md
+- skills/codewiki-feedback/SKILL.md
 ---
 
 # Maintain Fresh Intent

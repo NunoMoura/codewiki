@@ -12,10 +12,10 @@ code_paths:
   - src/application/roadmap.ts
   - src/application/task.ts
   - src/application/gateway
-  - skills/codewiki/loops/feedback.md
-  - skills/codewiki/loops/documentation.md
-  - skills/codewiki/loops/implementation.md
-  - skills/codewiki/loops/validation.md
+  - skills/codewiki-feedback/SKILL.md
+  - skills/codewiki-documentation/SKILL.md
+  - skills/codewiki-implementation/SKILL.md
+  - skills/codewiki-validation/SKILL.md
 ---
 
 # Compilers

@@ -8,8 +8,8 @@ owners:
 - product
 updated: '2026-05-09'
 code_paths:
-- skills/codewiki/loops/implementation.md
-- skills/codewiki/loops/documentation.md
+- skills/codewiki-implementation/SKILL.md
+- skills/codewiki-documentation/SKILL.md
 ---
 
 # Use Gated Agency
