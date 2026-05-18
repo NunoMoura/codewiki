@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-18T09:15:06.680Z",
+  "generated_at": "2026-05-18T09:16:06.319Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -19309,65 +19309,6 @@
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
-    },
-    {
-      "id": "claim:CLAIM-095",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-095",
-      "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-      "agent_name": "Koala",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-      "expires_at": "2026-05-18T10:19:53.723Z",
-      "scopes": [
-        {
-          "layer": "code",
-          "path": "skills/codewiki/**"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/prompt-assets.test.mjs"
-        },
-        {
-          "layer": "code",
-          "path": "tests/tasks/TASK-076/restructure.test.mjs"
-        },
-        {
-          "layer": "code",
-          "path": "README.md"
-        },
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-101"
-        }
-      ]
-    },
-    {
-      "id": "claim_scope:skills/codewiki/**",
-      "kind": "change_claim_scope",
-      "path": "skills/codewiki/**"
-    },
-    {
-      "id": "claim_scope:tests/smoke/prompt-assets.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "id": "claim_scope:tests/tasks/TASK-076/restructure.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "id": "claim_scope:README.md",
-      "kind": "change_claim_scope",
-      "path": "README.md"
-    },
-    {
-      "id": "claim_scope:TASK-101",
-      "kind": "change_claim_scope",
-      "path": "TASK-101"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-13-task-close-block-task-074.json",
@@ -50561,36 +50502,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-095",
-      "to": "task:TASK-101"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-095",
-      "to": "claim_scope:skills/codewiki/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-095",
-      "to": "claim_scope:tests/smoke/prompt-assets.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-095",
-      "to": "claim_scope:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-095",
-      "to": "claim_scope:README.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-095",
-      "to": "claim_scope:TASK-101"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-13-task-close-block-task-074.json",
       "to": "source:.codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json; .codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
@@ -54774,282 +54685,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-095",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-101"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-095",
-          "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-          "agent_name": "Koala",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-          "task_id": "TASK-101",
-          "scopes": [
-            {
-              "layer": "code",
-              "path": "skills/codewiki/**"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/prompt-assets.test.mjs"
-            },
-            {
-              "layer": "code",
-              "path": "tests/tasks/TASK-076/restructure.test.mjs"
-            },
-            {
-              "layer": "code",
-              "path": "README.md"
-            },
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-101"
-            }
-          ],
-          "created_at": "2026-05-18T08:19:53Z",
-          "updated_at": "2026-05-18T08:19:53Z",
-          "expires_at": "2026-05-18T10:19:53.723Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "README.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "skills/codewiki/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-101"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/prompt-assets.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/tasks/TASK-076/restructure.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "README.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "skills/codewiki/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-101"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/prompt-assets.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/tasks/TASK-076/restructure.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-095",
-              "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-              "agent_name": "Koala",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-101",
-              "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-              "expires_at": "2026-05-18T10:19:53.723Z"
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -59208,143 +58862,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-11-control-room-ui.json",
-            ".codewiki/builds/feedback/2026-05-11-cytoscape-graph-visualization-selection.json",
-            ".codewiki/builds/feedback/2026-05-11-progressive-task-refinement-intent.json",
-            ".codewiki/builds/feedback/2026-05-13-claim-wait-queue.json",
-            ".codewiki/builds/feedback/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
-            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
-            ".codewiki/builds/feedback/2026-05-16-accepted-task-087-narrow-dependency-direction-gu.json",
-            ".codewiki/builds/feedback/2026-05-16-accepted-task-088-web-ui-move-slice-from-adapter.json",
-            ".codewiki/builds/feedback/2026-05-16-accepted-task-090-scope-correction-dogfood-sourc.json",
-            ".codewiki/builds/feedback/2026-05-16-accepted-task-091-stale-unscoped-validation-bloc.json",
-            ".codewiki/builds/feedback/2026-05-16-accepted-task-092-large-doc-warning-cleanup-for-.json",
-            ".codewiki/builds/feedback/2026-05-16-artifact-status-parallel-coordination.json",
-            ".codewiki/builds/feedback/2026-05-16-parallel-wiki-resume-session-scheduler.json",
-            ".codewiki/builds/documentation/2026-05-10-runtime-scoped-claims-docs.json",
-            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-build-contract-v2-and-efficiency-sprints-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-control-room-refinement-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-control-room-ui-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-cytoscape-control-room-graph-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-progressive-task-refinement-docs.json",
-            ".codewiki/builds/documentation/2026-05-11-reconciliation-lifecycle-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-control-room-config-settings-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-control-room-simplification-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-final-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-git-backed-archival-gc-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-hot-only-default-context-docs.json",
-            ".codewiki/builds/documentation/2026-05-12-role-worktree-isolation-docs.json",
-            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
-            ".codewiki/builds/documentation/2026-05-13-claim-wait-queue-docs.json",
-            ".codewiki/builds/documentation/2026-05-13-document-adapter-managed-session-handoff-capabil.json",
-            ".codewiki/builds/documentation/2026-05-13-loop-session-isolation-policy-docs-v2.json",
-            ".codewiki/builds/documentation/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
-            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-087-dependency-direction-guard-s.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-088-web-ui-move-paths-from-src-a.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-090-portable-alignment-drift-fix.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-091-validation-reconciliation-ru.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-092-large-doc-cleanup-by-condens.json",
-            ".codewiki/builds/documentation/2026-05-16-documented-task-sprint-boundary-contract.json",
-            ".codewiki/builds/planning/2026-05-13-loop-session-isolation-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-13-plan-implementation-of-pi-adapter-session-handof.json",
-            ".codewiki/builds/planning/2026-05-13-task-073-alignment-routing-plan.json",
-            ".codewiki/builds/planning/2026-05-14-plan-task-075-implementation-of-ascii-like-codew.json",
-            ".codewiki/builds/planning/2026-05-15-planned-sprint-003-alignment-hardening-with-umbr.json",
-            ".codewiki/builds/planning/2026-05-16-domain-led-layering-refactor-roadmap.json",
-            ".codewiki/builds/planning/2026-05-16-planned-bounded-enforcement-work-for-task-bounda.json",
-            ".codewiki/builds/planning/2026-05-16-planned-change-type-taxonomy-migration.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-087-dependency-direction-guard-fixt.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-088-web-ui-move-slice.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-090-portable-alignment-drift-fixtur.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-091-stale-unscoped-validation-block.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-092-oversized-system-docs-trim.json",
-            ".codewiki/builds/planning/2026-05-16-planned-task-sprint-boundary-enforcement.json",
-            ".codewiki/builds/planning/2026-05-17-planned-agent-managed-codewiki-gc.json",
-            ".codewiki/builds/planning/2026-05-17-planned-skill-loop-restructure-sprint.json",
-            ".codewiki/builds/implementation/2026-05-11-task-055-build-contract-v2.json",
-            ".codewiki/builds/implementation/2026-05-11-task-056-efficiency-foundation.json",
-            ".codewiki/builds/implementation/2026-05-11-task-057-status-graph-diff-ui.json",
-            ".codewiki/builds/implementation/2026-05-11-task-058-control-room-shell.json",
-            ".codewiki/builds/implementation/2026-05-11-task-059-system-diagram-inspector.json",
-            ".codewiki/builds/implementation/2026-05-11-task-060-graph-visual-map.json",
-            ".codewiki/builds/implementation/2026-05-11-task-061-control-room-refinement.json",
-            ".codewiki/builds/implementation/2026-05-11-task-062-wiki-ui-browser-open.json",
-            ".codewiki/builds/implementation/2026-05-11-task-063-cytoscape-control-room-graph.json",
-            ".codewiki/builds/implementation/2026-05-11-task-064-graph-spacing-fit.json",
-            ".codewiki/builds/implementation/2026-05-11-task-065-progressive-task-refinement.json",
-            ".codewiki/builds/implementation/2026-05-12-task-066-drift-propagation-assurance.json",
-            ".codewiki/builds/implementation/2026-05-12-task-067-control-room-simplification.json",
-            ".codewiki/builds/implementation/2026-05-12-task-069-control-room-settings.json",
-            ".codewiki/builds/implementation/2026-05-13-task-074-claim-wait-queue.json",
-            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
-            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
-            ".codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json",
-            ".codewiki/builds/implementation/2026-05-13-task-075-value-first-ui-kanban.json",
-            ".codewiki/builds/implementation/2026-05-14-task-076-expanded-audit-cleanup-fixed-stale-sour.json",
-            ".codewiki/builds/implementation/2026-05-14-task-076-final-tidy-pass-moved-package-smoke-und.json",
-            ".codewiki/builds/implementation/2026-05-15-task-078-implemented-executable-alignment-graph-.json",
-            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
-            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
-            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
-            ".codewiki/builds/implementation/2026-05-15-task-081-removes-deprecated-roadmap-verify-phase.json",
-            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-and-guards.json",
-            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-roadmap-wo.json",
-            ".codewiki/builds/implementation/2026-05-15-task-082-task-084-task-close-now-blocks-without-.json",
-            ".codewiki/builds/implementation/2026-05-16-added-audit-and-smoke-test-enforcement-for-bound.json",
-            ".codewiki/builds/implementation/2026-05-16-added-portable-alignment-drift-fixture-matrix-an.json",
-            ".codewiki/builds/implementation/2026-05-16-added-regression-coverage-proving-task-087-depen.json",
-            ".codewiki/builds/implementation/2026-05-16-completed-task-087-domain-led-layering-migration.json",
-            ".codewiki/builds/implementation/2026-05-16-corrected-stale-public-api-guidance-found-by-fre.json",
-            ".codewiki/builds/implementation/2026-05-16-extracted-accepted-build-lifecycle-semantics-int.json",
-            ".codewiki/builds/implementation/2026-05-16-extracted-change-traceability-normalization-sema.json",
-            ".codewiki/builds/implementation/2026-05-16-extracted-roadmap-task-boundary-semantics-into-d.json",
-            ".codewiki/builds/implementation/2026-05-16-finalized-task-086-public-coordination-wording-a.json",
-            ".codewiki/builds/implementation/2026-05-16-fixed-task-086-handoff-blocker-tool-context-new-.json",
-            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json",
-            ".codewiki/builds/implementation/2026-05-16-implemented-task-082-semantic-build-traceability.json",
-            ".codewiki/builds/implementation/2026-05-16-implemented-task-sprint-boundary-enforcement.json",
-            ".codewiki/builds/implementation/2026-05-16-moved-bootstrap-resume-prompt-assets-into-skill-.json",
-            ".codewiki/builds/implementation/2026-05-16-moved-control-room-browser-ui-source-from-adapte.json",
-            ".codewiki/builds/implementation/2026-05-16-stopped-stale-unscoped-validation-block-reports-.json",
-            ".codewiki/builds/implementation/2026-05-16-task-079-source-owned-audit-engine.json",
-            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy-current-p.json",
-            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy.json",
-            ".codewiki/builds/implementation/2026-05-16-task-081-source-owned-drift-fixtures.json",
-            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-public-api.json",
-            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-resume-scheduler.json",
-            ".codewiki/builds/implementation/2026-05-16-trimmed-oversized-builds-and-roadmap-system-docs.json",
-            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract-planning-traced.json",
-            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract-planning-t.json",
-            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract-planning-traced.json",
-            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract-planning-.json",
-            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract-planning-trac.json",
-            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract-planning-tra.json",
-            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract.json",
-            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts-planning-tra.json",
-            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts.json",
-            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
-            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
-            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -60342,9 +59860,7 @@
           "validation_paths": [
             ".codewiki/validation/2026-05-17-documentation-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-095"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -61501,13 +61017,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-18T09:15:06.612Z",
+      "generated_at": "2026-05-18T09:16:06.254Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-18T09:15:06Z",
+      "generated_at": "2026-05-18T09:16:06Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -64380,7 +63896,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-18T09:15:06Z",
+      "generated_at": "2026-05-18T09:16:06Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -64481,9 +63997,7 @@
             "validation_paths": [
               ".codewiki/validation/2026-05-17-documentation-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-095"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -64842,7 +64356,7 @@
       },
       "direction": [
         "No open deterministic drift requires action right now.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 16/16.",
         "No tracked spec drift is open."
@@ -65800,7 +65314,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-18T09:15:06Z",
+        "generated_at": "2026-05-18T09:16:06Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -65828,17 +65342,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T09:15:06Z",
+            "checked_at": "2026-05-18T09:16:06Z",
             "revision": {
               "git": {
-                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-101/context.json",
-                  ".codewiki/roadmap/tasks/TASK-101/task.json"
-                ],
+                "head": "42b160729d001aff888fa917305d44431bafea44",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -65877,7 +65386,7 @@
                   ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
                   ".codewiki/kb/system/validation-gateway.md": "1974eafed602767bf6b1165ddd49a84d711b6e56",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "72bd5738fff97112ea292e436c099ade8b7cb424",
+                  ".codewiki/roadmap/queue.json": "879102c1dd93fcea114e949300a8633116a3d92d",
                   ".codewiki/validation": "",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
@@ -65921,12 +65430,12 @@
               "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "7d8e6deaf353957513ae69aae26ff1e7d32f295c76c5cc3fdf5d782f2fc4d3b3",
-              "digest": "6ab133cbf332f05f6bb263a80d595497289112e5bb2fbdfd1964c28a9aa04b1a"
+              "digest": "7b0bdefabdbe09b509e7c38b526084735d3e02872298643e6b6aae9d52e2677e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:15:06Z",
+              "checked_at": "2026-05-18T09:16:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66042,17 +65551,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-18T09:15:06Z",
+            "checked_at": "2026-05-18T09:16:06Z",
             "revision": {
               "git": {
-                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-101/context.json",
-                  ".codewiki/roadmap/tasks/TASK-101/task.json"
-                ],
+                "head": "42b160729d001aff888fa917305d44431bafea44",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66075,7 +65579,7 @@
                   ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
                   ".codewiki/kb/system/validation-gateway.md": "1974eafed602767bf6b1165ddd49a84d711b6e56",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "72bd5738fff97112ea292e436c099ade8b7cb424",
+                  ".codewiki/roadmap/queue.json": "879102c1dd93fcea114e949300a8633116a3d92d",
                   ".codewiki/validation": "",
                   "skills": "",
                   "skills/codewiki": "",
@@ -66114,12 +65618,12 @@
               "spec_digest": "f4b714ec506ab48ab4b1ebfc52c5ea552904e2788c517c2b61d5cf4d8941c789",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "b0d97a5d9d546d2539aaa9930cea5024f96c935d28764de118e1ac8928004bf0",
-              "digest": "fb88dc094d1c7d2dc45a7eb3dd51c2eec54598a9fd6427d4cc3303f2b879ff46"
+              "digest": "7ed829c9dba61f7df01af08235279677f2a267527321f376c1be1116cae6158e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:15:06Z",
+              "checked_at": "2026-05-18T09:16:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66214,17 +65718,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-18T09:15:06Z",
+            "checked_at": "2026-05-18T09:16:06Z",
             "revision": {
               "git": {
-                "head": "4b107d4eb88612fac8c8a409e156108833250a4d",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-101/context.json",
-                  ".codewiki/roadmap/tasks/TASK-101/task.json"
-                ],
+                "head": "42b160729d001aff888fa917305d44431bafea44",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -66263,7 +65762,7 @@
                   ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
                   ".codewiki/kb/system/validation-gateway.md": "1974eafed602767bf6b1165ddd49a84d711b6e56",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "72bd5738fff97112ea292e436c099ade8b7cb424",
+                  ".codewiki/roadmap/queue.json": "879102c1dd93fcea114e949300a8633116a3d92d",
                   ".codewiki/validation": "",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
@@ -66307,12 +65806,12 @@
               "spec_digest": "67bd4eae1bdf49066ef41058cb4990b2c00030d06d33f1fc29aacaae2dc1ff60",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "7d8e6deaf353957513ae69aae26ff1e7d32f295c76c5cc3fdf5d782f2fc4d3b3",
-              "digest": "6ab133cbf332f05f6bb263a80d595497289112e5bb2fbdfd1964c28a9aa04b1a"
+              "digest": "7b0bdefabdbe09b509e7c38b526084735d3e02872298643e6b6aae9d52e2677e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-18T09:15:06Z",
+              "checked_at": "2026-05-18T09:16:06Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -66429,163 +65928,21 @@
         "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-05-18T09:15:06Z",
+        "generated_at": "2026-05-18T09:16:06Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-095",
-            "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-            "agent_name": "Koala",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-            "task_id": "TASK-101",
-            "scopes": [
-              {
-                "layer": "code",
-                "path": "skills/codewiki/**"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/prompt-assets.test.mjs"
-              },
-              {
-                "layer": "code",
-                "path": "tests/tasks/TASK-076/restructure.test.mjs"
-              },
-              {
-                "layer": "code",
-                "path": "README.md"
-              },
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-101"
-              }
-            ],
-            "created_at": "2026-05-18T08:19:53Z",
-            "updated_at": "2026-05-18T08:19:53Z",
-            "expires_at": "2026-05-18T10:19:53.723Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "README.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-095",
-                "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-                "agent_name": "Koala",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-101",
-                "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-                "expires_at": "2026-05-18T10:19:53.723Z"
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "skills/codewiki/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-095",
-                "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-                "agent_name": "Koala",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-101",
-                "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-                "expires_at": "2026-05-18T10:19:53.723Z"
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-101"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-095",
-                "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-                "agent_name": "Koala",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-101",
-                "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-                "expires_at": "2026-05-18T10:19:53.723Z"
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/prompt-assets.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-095",
-                "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-                "agent_name": "Koala",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-101",
-                "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-                "expires_at": "2026-05-18T10:19:53.723Z"
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/tasks/TASK-076/restructure.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-095",
-                "session_id": "019e32ec-88a6-7501-a231-ff6109af62cc",
-                "agent_name": "Koala",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-101",
-                "summary": "Remove obsolete skills/codewiki/loops structure and update docs/tests.",
-                "expires_at": "2026-05-18T10:19:53.723Z"
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
