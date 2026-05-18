@@ -8,9 +8,9 @@
       "code_paths": ["package.json", "src/index.ts"]
     },
     {
-      "criterion": "Only skills/codewiki/SKILL.md is a public CodeWiki skill; loop/playbook instructions live under that skill as supporting markdown.",
+      "criterion": "The main CodeWiki skill and focused public compiler skills are the active skill entry structure; legacy loop markdown is absent.",
       "test": "tests/tasks/TASK-076/restructure.test.mjs",
-      "code_paths": ["skills/codewiki/SKILL.md", "skills/codewiki/loops/**", "skills/codewiki/playbooks/**"]
+      "code_paths": ["skills/codewiki/SKILL.md", "skills/codewiki-*/SKILL.md", "skills/codewiki/playbooks/**"]
     },
     {
       "criterion": "Project Pi system prompt appends a clear .codewiki dogfood-state-not-source-code boundary.",

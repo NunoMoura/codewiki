@@ -20,7 +20,6 @@ for (const asset of [
 	"skills/codewiki-documentation/references/tools.md",
 	"skills/codewiki-planning/SKILL.md",
 	"skills/codewiki-planning/references/tools.md",
-	"skills/codewiki/loops/planning.md",
 	"skills/codewiki-implementation/SKILL.md",
 	"skills/codewiki-implementation/references/tools.md",
 	"skills/codewiki-validation/SKILL.md",

@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-18T08:33:30Z",
+  "profile": "implementation",
+  "task_id": "TASK-101",
+  "verdict": "block",
+  "rationale": "Fresh validation used only implementation build and source refs. `skills/codewiki/loops` is absent; grep over README.md, skills, tests, src, package.json, and package-lock.json found no legacy loop path/file refs; prompt asset/restructure/package smoke checks passed; npm pack dry-run and JSON tarball check passed with 109 files, all focused public compiler SKILL.md entries present, and zero `skills/codewiki/loops/` entries. Implementation policy still blocks pass because the submitted implementation build has no source planning build ref. Policy blocks implementation validation until source_planning_build are recorded.",
+  "checks": [
+    "codewiki_state refresh=true include summary/roadmap/session taskId=TASK-101",
+    "read .codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
+    "read .codewiki/roadmap/tasks/TASK-101/task.json and context.json",
+    "test -e skills/codewiki/loops => missing",
+    "grep -RIn --fixed-strings 'skills/codewiki/loops' README.md skills tests src package.json package-lock.json => no matches",
+    "grep -RInE 'loops/(feedback|documentation|planning|implementation|validation)\\.md|codewiki/loops/(feedback|documentation|planning|implementation|validation)\\.md|read loop-specific guidance|load .*loops' README.md skills tests src package.json package-lock.json => no matches",
+    "node tests/smoke/prompt-assets.test.mjs",
+    "node tests/tasks/TASK-076/restructure.test.mjs",
+    "node tests/smoke/package-smoke.test.mjs",
+    "npm run test:pack",
+    "npm pack --dry-run --json tarball inspection: 109 files, expected focused SKILL.md files present, legacy_loop_entries=[]",
+    "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Repository remains dirty for pre-commit implementation validation; content proof uses working_tree_digest over status, binary diff, and untracked file hashes."
+    },
+    {
+      "severity": "warning",
+      "summary": "Required audit returned non-blocking warnings for generated CodeWiki graph/task view files and existing graph-health warnings."
+    },
+    {
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: source_planning_build."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-18-task-101-remove-legacy-skill-loops.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "stale-reference",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:stale-reference",
+    "audit:file-structure"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,changed,task,stale-reference,file-structure task_id=TASK-101 include_fingerprints=true => task/stale-reference/file-structure pass; alignment/changed warning only for existing graph-health and generated state/view-file changes (.codewiki/index_graph.json, TASK-101 generated task/context views), not active legacy loop refs"
+  ],
+  "content_proof_refs": [
+    "8637bace59d1b8b2de6283ac37ed3925e07002cb",
+    "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
+    "sha256:773d5836d4a0d53dc872df006475eccaeb29ad72600858eadca1acacef8926e2"
+  ],
+  "failed_criteria": [
+    "commit_readiness"
+  ],
+  "blocking_questions": [
+    "Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "stale-reference",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": [
+      "source_planning_build"
+    ]
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "base_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
+    "validated_sha": "8637bace59d1b8b2de6283ac37ed3925e07002cb",
+    "tree_sha": "a7047cf8f239dbb1b97266f40e4aaaa287be1c49",
+    "working_tree_digest": "sha256:773d5836d4a0d53dc872df006475eccaeb29ad72600858eadca1acacef8926e2",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "No builder chat used. Source refs only: implementation build, TASK-101 task files, README/skills/tests/src/package refs, audits, and test outputs. Dirty pre-commit proof computed before writing the TASK-101 validation report.",
+    "role": "validator"
+  }
+}

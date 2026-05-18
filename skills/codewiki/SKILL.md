@@ -26,11 +26,11 @@ Use the main skill when the repo needs:
 
 For loop-specific work, load the focused skill and only the package-local assets needed for that loop:
 
-- `../codewiki-feedback/SKILL.md` and `loops/feedback.md` — capture ambiguous or semantic user intent with `codewiki_diff_table`, accepted rows, and `feedback_build`.
-- `../codewiki-documentation/SKILL.md` and `loops/documentation.md` — turn accepted feedback into `.codewiki/kb/**` changes and `documentation_build`.
-- `../codewiki-planning/SKILL.md` and `loops/planning.md` — shape validated documentation into executable tasks, sprint-aware planning, and `planning_build`.
-- `../codewiki-implementation/SKILL.md` and `loops/implementation.md` — execute one atomic task, emit `implementation_build`, and request fresh validation.
-- `../codewiki-validation/SKILL.md` and `loops/validation.md` — validate builds, task close, graph/drift, and publication/readiness gates without mutating truth.
+- `../codewiki-feedback/SKILL.md` — capture ambiguous or semantic user intent with `codewiki_diff_table`, accepted rows, and `feedback_build`.
+- `../codewiki-documentation/SKILL.md` — turn accepted feedback into `.codewiki/kb/**` changes and `documentation_build`.
+- `../codewiki-planning/SKILL.md` — shape validated documentation into executable tasks, sprint-aware planning, and `planning_build`.
+- `../codewiki-implementation/SKILL.md` — execute one atomic task, emit `implementation_build`, and request fresh validation.
+- `../codewiki-validation/SKILL.md` — validate builds, task close, graph/drift, and publication/readiness gates without mutating truth.
 - `bootstrap/onboarding.md` and `bootstrap/starter-taxonomy.md` — repo-local wiki onboarding prompts and path-class starter guidance.
 - `references/tool-catalog.md` — skill-facing map from `codewiki_*` tools to `src/application/tools/**` contracts, including safe sprint metadata usage.
 - `playbooks/architecture.md`, `playbooks/research.md`, and `playbooks/view-audit.md` — focused review/playbook modes.

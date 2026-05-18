@@ -445,12 +445,6 @@ src/
 skills/
   codewiki/
     SKILL.md
-    loops/
-      feedback.md
-      documentation.md
-      planning.md
-      implementation.md
-      validation.md
     playbooks/
       architecture.md
       research.md
