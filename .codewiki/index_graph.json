@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T07:09:35.351Z",
+  "generated_at": "2026-05-19T07:11:25.271Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -45,7 +45,7 @@
       "kind": "code_path",
       "path": "skills/codewiki-implementation/SKILL.md",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:skills/codewiki-documentation/SKILL.md",
@@ -89,7 +89,7 @@
       "kind": "code_path",
       "path": "skills/codewiki-feedback/SKILL.md",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/product/stories/navigation.md",
@@ -104,7 +104,7 @@
       "kind": "code_path",
       "path": "skills/codewiki/SKILL.md",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/adapters/pi/ui",
@@ -126,7 +126,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application/lint.ts",
@@ -209,14 +209,14 @@
       "kind": "code_path",
       "path": "skills",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src",
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -269,21 +269,21 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application",
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:skills/codewiki",
       "kind": "code_path",
       "path": "skills/codewiki",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/system/agency.md",
@@ -298,7 +298,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/system/alignment-model.md",
@@ -313,14 +313,14 @@
       "kind": "code_path",
       "path": "src/application/graph.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application/builds.ts",
       "kind": "code_path",
       "path": "src/application/builds.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application/gateway",
@@ -356,7 +356,7 @@
       "kind": "code_path",
       "path": "src/domain",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/system/audits.md",
@@ -379,14 +379,14 @@
       "kind": "code_path",
       "path": "src/domain/shared/types.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/adapters/pi/schemas.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/schemas.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/system/change-lifecycle.md",
@@ -416,7 +416,7 @@
       "kind": "code_path",
       "path": "src/application/task.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application/tools/build.ts",
@@ -476,7 +476,7 @@
       "kind": "code_path",
       "path": "src/templates.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application/prompt.ts",
@@ -574,6 +574,42 @@
       "title": "Validation Gateway",
       "doc_type": "spec",
       "group": ".codewiki"
+    },
+    {
+      "id": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "kind": "doc",
+      "path": ".codewiki/kb/system/worktree-isolation.md",
+      "title": "Role Worktree Isolation",
+      "doc_type": "spec",
+      "group": ".codewiki"
+    },
+    {
+      "id": "code:src/application/claims.ts",
+      "kind": "code_path",
+      "path": "src/application/claims.ts",
+      "layer": "code",
+      "alignment_state": "aligned"
+    },
+    {
+      "id": "code:src/application/tools/artifact-status.ts",
+      "kind": "code_path",
+      "path": "src/application/tools/artifact-status.ts",
+      "layer": "code",
+      "alignment_state": "aligned"
+    },
+    {
+      "id": "code:src/application/tools/session-handoff.ts",
+      "kind": "code_path",
+      "path": "src/application/tools/session-handoff.ts",
+      "layer": "code",
+      "alignment_state": "aligned"
+    },
+    {
+      "id": "code:src/adapters/pi/tools",
+      "kind": "code_path",
+      "path": "src/adapters/pi/tools",
+      "layer": "code",
+      "alignment_state": "aligned"
     },
     {
       "id": "sprint:SPRINT-001",
@@ -693,13 +729,6 @@
       "alignment_state": "aligned"
     },
     {
-      "id": "code:src/application/tools/session-handoff.ts",
-      "kind": "code_path",
-      "path": "src/application/tools/session-handoff.ts",
-      "layer": "code",
-      "alignment_state": "drift"
-    },
-    {
       "id": "task:TASK-004",
       "kind": "roadmap_task",
       "title": "Simplify generated state graph lenses",
@@ -729,21 +758,14 @@
       "kind": "code_path",
       "path": "src/application/tools/catalog.ts",
       "layer": "code",
-      "alignment_state": "drift"
-    },
-    {
-      "id": "code:src/adapters/pi/tools",
-      "kind": "code_path",
-      "path": "src/adapters/pi/tools",
-      "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/adapters/pi/tools/session-handoff.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/tools/session-handoff.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:README.md",
@@ -757,7 +779,7 @@
       "kind": "code_path",
       "path": "tests/smoke",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "task:TASK-006",
@@ -769,32 +791,18 @@
       "alignment_state": "drift"
     },
     {
-      "id": "code:src/application/claims.ts",
-      "kind": "code_path",
-      "path": "src/application/claims.ts",
-      "layer": "code",
-      "alignment_state": "drift"
-    },
-    {
-      "id": "code:src/application/tools/artifact-status.ts",
-      "kind": "code_path",
-      "path": "src/application/tools/artifact-status.ts",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
       "id": "code:tests/smoke/session-handoff.test.mjs",
       "kind": "code_path",
       "path": "tests/smoke/session-handoff.test.mjs",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:tests/smoke/role-worktree-isolation.test.mjs",
       "kind": "code_path",
       "path": "tests/smoke/role-worktree-isolation.test.mjs",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "test:scripts/check-architecture.mjs",
@@ -4344,49 +4352,59 @@
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-task-close-block-task-006.json",
       "verdict": "block",
-      "isolation_status": "partial",
+      "isolation_status": "isolated",
       "isolation": {
         "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
         "base_sha": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
-        "tree_sha": "91be025737fef57c98863d56d5222844421e358a",
-        "working_tree_digest": "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
-        "clean": false,
+        "head_sha": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+        "tree_sha": "b5527b51bece34d670daa246b84d46fc4902eed2",
+        "archive_ref": "refs/codewiki/archive/task/TASK-006",
+        "clean": true,
         "fresh_context": true,
-        "notes": "Separate task-close readiness assessment after implementation pass; dirty pre-commit digest was captured before validation reports were written and is insufficient for task-close.",
+        "notes": "Task-close validator used CodeWiki refs and clean local publisher proof commit/archive ref. Remote push not performed.",
         "role": "validator"
       },
       "evidence_summary": {
         "canonical_source_refs": [
-          "TASK-006"
+          ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
         ],
         "audit_evidence_refs": [
           "alignment",
           "changed",
-          "stale-reference",
-          "generated-parity",
-          "file-structure",
-          "package",
           "task:TASK-006",
-          "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass"
+          "generated-parity",
+          "stale-reference",
+          "file-structure",
+          "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass"
         ],
         "content_proof_refs": [
-          "91be025737fef57c98863d56d5222844421e358a",
-          "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96"
+          "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+          "b5527b51bece34d670daa246b84d46fc4902eed2",
+          "refs/codewiki/archive/task/TASK-006"
         ]
       }
     },
     {
-      "id": "audit:CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass",
+      "id": "audit:CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
       "kind": "audit_evidence",
-      "path": "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass",
+      "path": "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
       "layer": "audit",
       "default_hidden": true
     },
     {
-      "id": "content_proof:sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
+      "id": "content_proof:a715ee6fcd548519e268bfa01d3f2f44af11cac3",
       "kind": "content_proof",
-      "path": "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
-      "proof_kind": "digest",
+      "path": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:b5527b51bece34d670daa246b84d46fc4902eed2",
+      "kind": "content_proof",
+      "path": "b5527b51bece34d670daa246b84d46fc4902eed2",
+      "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true
     }
@@ -5881,6 +5899,56 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
       "to": "code:src/application/builds.ts"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "doc:.codewiki/kb/system/adapters.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "doc:.codewiki/kb/system/agency.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "doc:.codewiki/kb/system/api.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "doc:.codewiki/kb/system/roadmap.md"
+    },
+    {
+      "kind": "doc_link",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "doc:.codewiki/kb/system/validation-gateway.md"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "code:src/application/claims.ts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "code:src/application/tools/artifact-status.ts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "code:src/application/tools/session-handoff.ts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "code:src/application/builds.ts"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/worktree-isolation.md",
+      "to": "code:src/adapters/pi/tools"
     },
     {
       "kind": "sprint_task",
@@ -11152,7 +11220,7 @@
     {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "source:TASK-006",
+      "to": "source:.codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
       "default_hidden": true
     },
     {
@@ -11170,7 +11238,7 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "audit:stale-reference",
+      "to": "audit:task:TASK-006",
       "default_hidden": true
     },
     {
@@ -11182,37 +11250,37 @@
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
+      "to": "audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
       "to": "audit:file-structure",
       "default_hidden": true
     },
     {
       "kind": "validation_audit_evidence",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "audit:package",
-      "default_hidden": true
-    },
-    {
-      "kind": "validation_audit_evidence",
-      "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "audit:task:TASK-006",
-      "default_hidden": true
-    },
-    {
-      "kind": "validation_audit_evidence",
-      "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "audit:CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass",
+      "to": "audit:CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "content_proof:91be025737fef57c98863d56d5222844421e358a",
+      "to": "content_proof:a715ee6fcd548519e268bfa01d3f2f44af11cac3",
       "default_hidden": true
     },
     {
       "kind": "validation_content_proof",
       "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
-      "to": "content_proof:sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
+      "to": "content_proof:b5527b51bece34d670daa246b84d46fc4902eed2",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-block-task-006.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-006",
       "default_hidden": true
     },
     {
@@ -11257,7 +11325,8 @@
         ".codewiki/kb/system/knowledge.md",
         ".codewiki/kb/system/overview.md",
         ".codewiki/kb/system/roadmap.md",
-        ".codewiki/kb/system/validation-gateway.md"
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/worktree-isolation.md"
       ],
       "spec_paths": [
         ".codewiki/kb/lexicon.md",
@@ -11293,7 +11362,8 @@
         ".codewiki/kb/system/knowledge.md",
         ".codewiki/kb/system/overview.md",
         ".codewiki/kb/system/roadmap.md",
-        ".codewiki/kb/system/validation-gateway.md"
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/worktree-isolation.md"
       ],
       "by_group": {
         "lexicon.md": [
@@ -11334,7 +11404,8 @@
           ".codewiki/kb/system/knowledge.md",
           ".codewiki/kb/system/overview.md",
           ".codewiki/kb/system/roadmap.md",
-          ".codewiki/kb/system/validation-gateway.md"
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/worktree-isolation.md"
         ]
       }
     },
@@ -11502,31 +11573,7 @@
         "tests/smoke/role-worktree-isolation.test.mjs",
         "tests/smoke/session-handoff.test.mjs"
       ],
-      "dirty_paths": [
-        "skills/codewiki-feedback/SKILL.md",
-        "skills/codewiki-feedback/references/tools.md",
-        "skills/codewiki-implementation/SKILL.md",
-        "skills/codewiki/SKILL.md",
-        "skills/codewiki/references/tool-catalog.md",
-        "src/adapters/pi/index.ts",
-        "src/adapters/pi/schemas.ts",
-        "src/adapters/pi/tools/session-handoff.ts",
-        "src/application/builds.ts",
-        "src/application/claims.ts",
-        "src/application/gc.ts",
-        "src/application/graph.ts",
-        "src/application/task.ts",
-        "src/application/tools/catalog.ts",
-        "src/application/tools/session-handoff.ts",
-        "src/domain/shared/types.ts",
-        "src/templates.ts",
-        "tests/smoke/builds.test.mjs",
-        "tests/smoke/claim-wait-queue.test.mjs",
-        "tests/smoke/loop-isolation-policy.test.mjs",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/role-worktree-isolation.test.mjs",
-        "tests/smoke/session-handoff.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
       "active_claim_count": 1,
@@ -12422,19 +12469,23 @@
           "path": ".codewiki/validation/2026-05-19-task-close-block-task-006.json",
           "task_id": "TASK-006",
           "verdict": "block",
-          "status": "partial",
+          "status": "isolated",
           "role": "validator",
           "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
           "base_sha": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
-          "clean": false,
+          "head_sha": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+          "clean": true,
           "fresh_context": true,
           "related_claim_ids": [],
           "content_proof_refs": [
-            "91be025737fef57c98863d56d5222844421e358a",
-            "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96"
+            "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+            "b5527b51bece34d670daa246b84d46fc4902eed2",
+            "refs/codewiki/archive/task/TASK-006"
           ],
           "publisher_result_refs": [
-            "91be025737fef57c98863d56d5222844421e358a"
+            "b5527b51bece34d670daa246b84d46fc4902eed2",
+            "refs/codewiki/archive/task/TASK-006"
           ]
         }
       ]
@@ -12616,8 +12667,8 @@
         "tests/tasks/TASK-005/**"
       ],
       "audit_evidence_refs": [
+        "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
         "CodeWiki audit warning: alignment pass; stale-reference pass; changed warning only generated-file-changed .codewiki/index_graph.json and TASK-005/TASK-006 generated views",
-        "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass",
         "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 5 warnings only for generated state/task views (.codewiki/index_graph.json, TASK-005/TASK-006 generated context/task views); all required profiles pass",
         "CodeWiki audit: warning; profiles: alignment, stale-reference, generated-parity, file-structure, changed, package; alignment pass; changed warnings only generated files",
         "alignment",
@@ -12671,12 +12722,13 @@
         ".codewiki/kb/system/validation-gateway.md@sha256:26df5f8efa9404d2927ff04e0479bf413b22cc0886fd2d163ff479f97d974608",
         ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
         "91be025737fef57c98863d56d5222844421e358a",
+        "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+        "b5527b51bece34d670daa246b84d46fc4902eed2",
         "refs/codewiki/archive/task/TASK-003",
         "refs/codewiki/archive/task/TASK-006",
         "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
         "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
-        "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
         "sha256:90920af7b47c41e2daaa91135431a3e533cf6f569f6b098f3cd9fbf531a2b545",
         "sha256:acd28cf39a0038795d075af553a65d5fda19b0895fc40cf542b8cd984e8ef6e6",
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
@@ -12874,23 +12926,23 @@
           "profile": "task-close",
           "task_id": "TASK-006",
           "source_refs": [
-            "TASK-006"
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
           ],
           "audit_evidence_refs": [
             "alignment",
             "changed",
-            "stale-reference",
-            "generated-parity",
-            "file-structure",
-            "package",
             "task:TASK-006",
-            "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass"
+            "generated-parity",
+            "stale-reference",
+            "file-structure",
+            "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass"
           ],
           "content_proof_refs": [
-            "91be025737fef57c98863d56d5222844421e358a",
-            "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96"
+            "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+            "b5527b51bece34d670daa246b84d46fc4902eed2",
+            "refs/codewiki/archive/task/TASK-006"
           ],
-          "isolation_status": "partial"
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -13736,7 +13788,8 @@
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-implementation-fail-task-006.json",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
+            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+            ".codewiki/validation/2026-05-19-task-close-block-task-006.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -13815,7 +13868,8 @@
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-implementation-fail-task-006.json",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
+            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+            ".codewiki/validation/2026-05-19-task-close-block-task-006.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -13894,7 +13948,8 @@
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-implementation-fail-task-006.json",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
+            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+            ".codewiki/validation/2026-05-19-task-close-block-task-006.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -13973,7 +14028,8 @@
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-implementation-fail-task-006.json",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
+            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+            ".codewiki/validation/2026-05-19-task-close-block-task-006.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -14052,7 +14108,8 @@
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-implementation-fail-task-006.json",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
+            ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+            ".codewiki/validation/2026-05-19-task-close-block-task-006.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -14544,466 +14601,7 @@
           ]
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/kb/lexicon.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/product/stories/intent.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/product/users/agents.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/adapters.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/agency.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/api.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/builds.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/compilers.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/graph.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/knowledge.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/overview.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/roadmap.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/validation-gateway.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-handoff-recovery-session-orchestration-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-task-006-context-reset-handoff-docs.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "skills/codewiki/SKILL.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "skills/codewiki/references/tool-catalog.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/index.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/schemas.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/tools/session-handoff.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/builds.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/claims.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/gc.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/graph.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/task.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/tools/catalog.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/tools/session-handoff.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/shared/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/templates.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/builds.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/claim-wait-queue.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/loop-isolation-policy.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/package-smoke.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/role-worktree-isolation.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/session-handoff.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 19,
       "gaps": [
@@ -17138,13 +16736,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-19T07:09:35.293Z",
+      "generated_at": "2026-05-19T07:11:25.209Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-19T07:09:35Z",
+      "generated_at": "2026-05-19T07:11:25Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -17658,7 +17256,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-19T07:09:35Z",
+      "generated_at": "2026-05-19T07:11:25Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -17671,9 +17269,9 @@
         "total_issues": 0
       },
       "summary": {
-        "total_specs": 16,
-        "mapped_specs": 16,
-        "aligned_specs": 20,
+        "total_specs": 17,
+        "mapped_specs": 17,
+        "aligned_specs": 21,
         "tracked_specs": 14,
         "untracked_specs": 0,
         "blocked_specs": 0,
@@ -17697,8 +17295,8 @@
         },
         "spec_mapping": {
           "label": "Spec Mapping",
-          "value": 16,
-          "total": 16,
+          "value": 17,
+          "total": 17,
           "percent": 100
         }
       },
@@ -17875,7 +17473,7 @@
         "Validation blocked; escalate ambiguous intent to feedback compiler.",
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
-        "Mapped specs: 16/16.",
+        "Mapped specs: 17/17.",
         "Tracked drift coverage: 14/14."
       ],
       "specs": [
@@ -18783,10 +18381,36 @@
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/worktree-isolation.md",
+          "title": "Role Worktree Isolation",
+          "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/claims.ts",
+            "src/application/tools/artifact-status.ts",
+            "src/application/tools/session-handoff.ts",
+            "src/application/builds.ts",
+            "src/adapters/pi/tools"
+          ],
+          "code_area": "src +4 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "624655539c567ffd5e67c4635966611198f2f793ab9fc9c3186cb6f2a596c655",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
         }
       ],
       "agency": {
-        "generated_at": "2026-05-19T07:09:35Z",
+        "generated_at": "2026-05-19T07:11:25Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -18814,55 +18438,19 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:09:35Z",
+            "checked_at": "2026-05-19T07:11:25Z",
             "revision": {
               "git": {
-                "head": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/lexicon.md",
-                  ".codewiki/kb/product/stories/intent.md",
-                  ".codewiki/kb/product/users/agents.md",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/agency.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/kb/system/builds.md",
-                  ".codewiki/kb/system/change-lifecycle.md",
-                  ".codewiki/kb/system/compilers.md",
-                  ".codewiki/kb/system/graph.md",
-                  ".codewiki/kb/system/knowledge.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/kb/system/roadmap.md",
-                  ".codewiki/kb/system/validation-gateway.md",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-005/context.json",
-                  ".codewiki/roadmap/tasks/TASK-005/task.json",
-                  "skills/codewiki-feedback/SKILL.md",
-                  "skills/codewiki-feedback/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/tools/session-handoff.ts",
-                  "src/application/builds.ts",
-                  "src/application/claims.ts",
-                  "src/application/gc.ts",
-                  "src/application/graph.ts",
-                  "src/application/task.ts",
-                  "src/application/tools/catalog.ts",
-                  "src/application/tools/session-handoff.ts",
-                  "src/domain/shared/types.ts",
-                  "src/templates.ts",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
                   ".codewiki/kb/product/overview.md": "5bea9b75a0cfd25621af7a988580f90423906242",
                   ".codewiki/kb/product/stories/automation.md": "7daee11b8b209fb07d1eb4d37e54ea63c1a22bb8",
                   ".codewiki/kb/product/stories/drift.md": "63aafb74de96ccb4804b51f6dd923c539e573041",
-                  ".codewiki/kb/product/stories/intent.md": "68344cd92f8452d9fa1323f7f7cadbd68ca19e8f",
+                  ".codewiki/kb/product/stories/intent.md": "9d87aea2e4237e4e39933f7f8e4a4b077cbb0362",
                   ".codewiki/kb/product/stories/navigation.md": "cb897a191daf6466851213899f00f717733c5020",
                   ".codewiki/kb/product/stories/sanitation.md": "6df44c2adc91964239cf62552caabce5f855793b",
                   ".codewiki/kb/product/uis/board.md": "df43b5a446e4fdc101a8a915ef59a646a05c4e70",
@@ -18870,81 +18458,86 @@
                   ".codewiki/kb/product/uis/control-room.md": "751638c68b5e19b3157b8589ee5f2d8789e402d2",
                   ".codewiki/kb/product/uis/graph-navigation.md": "620c887d1f59f2a4a879749f00a65a7d120c3262",
                   ".codewiki/kb/product/uis/status-panel.md": "1f470da5e90d523f9ce5babaeca29a8dd6f5c887",
-                  ".codewiki/kb/product/users/agents.md": "b33ad631e08ad594978cc8c00500040dc5b75aa6",
+                  ".codewiki/kb/product/users/agents.md": "2786e628c913a7e8546e566719a0ef7bec56dce9",
                   ".codewiki/kb/product/users/external-users.md": "6fa169f4e72984edc74cc3dbeca8d7657fccd633",
                   ".codewiki/kb/product/users/maintainers.md": "507b35c790494b5d0d7b4a93be541cdabc4cec69",
                   ".codewiki/kb/product/users/package-authors.md": "c84005a8416657dc4ffb840dcd4febaf0f3b9312",
-                  ".codewiki/kb/system/adapters.md": "8dda540153a50d71fad3be2cb977159da9631b15",
-                  ".codewiki/kb/system/agency.md": "12f66a0b43d9762bc68c28db4226af8457ca9938",
+                  ".codewiki/kb/system/adapters.md": "7ee9351b9b6270dc9033d8062f7ba1998d5f94bd",
+                  ".codewiki/kb/system/agency.md": "83f0dedeaf416b102435897f397a2c6f1eccc700",
                   ".codewiki/kb/system/alignment-model.md": "22c87eae6b9b2d84f8bd8f40b8db96a8e5ef5b03",
-                  ".codewiki/kb/system/api.md": "f8234d6935356bb0df437a31be16c26972e2067f",
+                  ".codewiki/kb/system/api.md": "40978173912df47d7c1083e1c5b9431204174f8a",
                   ".codewiki/kb/system/audits.md": "6525e921760ea2ddf9dd3193c6bb7178e6799ca4",
-                  ".codewiki/kb/system/builds.md": "7532ada8693fb73baa05cd2d2eb1fd4a6fe350ae",
-                  ".codewiki/kb/system/change-lifecycle.md": "c1839231998d0fb1788ad82a447765773aa388b0",
-                  ".codewiki/kb/system/compilers.md": "74ea791d18583fb65ad5548eb07d5b9d19ee0529",
+                  ".codewiki/kb/system/builds.md": "c4a382adb8f3912082d79b686ebd6dd30e4757a9",
+                  ".codewiki/kb/system/change-lifecycle.md": "0b46bde68dc9efcc486a9cbdd61adf35339edb5c",
+                  ".codewiki/kb/system/compilers.md": "fb9c0a8dfa325ae23ba60b0669e1af4ad373d4e7",
                   ".codewiki/kb/system/control-room-ui-details.md": "7e26c14de6d76ab241e516c8a02a5f331685e572",
                   ".codewiki/kb/system/control-room-ui.md": "4e40395efc6306d73ebc19e0fbbb9570d68669b6",
                   ".codewiki/kb/system/diagrams/README.md": "ea2884c8230a3c6d3b741e61e705416f8f7d3d46",
                   ".codewiki/kb/system/extension.md": "ccf83d263b8066207f8debf5a0c1b4c9f6ee9bb7",
                   ".codewiki/kb/system/file-structure.md": "105abe879aaf1622cd32d2baf93cfed521bbda56",
-                  ".codewiki/kb/system/graph.md": "368303024e76519b8b623be126caa3d208e75f4f",
-                  ".codewiki/kb/system/knowledge.md": "6dcff9cc9578a96c269a4ae261d71dfea2fead5e",
-                  ".codewiki/kb/system/overview.md": "869d952b5471b77d00521f724b538492b9017230",
-                  ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
-                  ".codewiki/kb/system/validation-gateway.md": "687672cd58c4a196eb4e069ac087db475c0b5a43",
+                  ".codewiki/kb/system/graph.md": "e974cf2e40ff604c40305fa804bc87ae5eedebf9",
+                  ".codewiki/kb/system/knowledge.md": "3e7bc2f3b9292d44273b60c7d74ac63fdc8aa4f8",
+                  ".codewiki/kb/system/overview.md": "90ffa7afe3ca1982269ee1733115328385b34e72",
+                  ".codewiki/kb/system/roadmap.md": "9fbf88191c315d63b31aa0c41e5600c9c550670f",
+                  ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
+                  ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a55674aabc06bc87f6fcd4f4c907d18faffc9f4f",
+                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
-                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
-                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-feedback/SKILL.md": "b7e17df45eecf4f7729bb6f2b1639120d1a87694",
+                  "skills/codewiki-implementation/SKILL.md": "7f80faebc49d5a50a48b53728714bd748a178aa4",
                   "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
                   "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
-                  "skills/codewiki/SKILL.md": "4f04bc320abfbc5e21ed879288d962f4cfb66751",
+                  "skills/codewiki/SKILL.md": "8de0cc0a1dc84aa9c6782c97b44ea563524aa9e1",
                   "skills/codewiki/playbooks/architecture.md": "4ca28b387469620d7797940ca94da91b59ebfc6f",
                   "skills/codewiki/playbooks/view-audit.md": "1f0ef3f887ee1a894a07c4fb7f1c98f7b4fb0679",
                   "src": "",
                   "src/adapters": "",
                   "src/adapters/pi": "",
                   "src/adapters/pi/commands": "",
-                  "src/adapters/pi/schemas.ts": "e3a6e1f9fcf84c2e37fa7aaaf1c183639be6bf47",
+                  "src/adapters/pi/schemas.ts": "f8105d5bece956b10a2a638f14dc7adb51641fb2",
+                  "src/adapters/pi/tools": "",
                   "src/adapters/pi/ui": "",
                   "src/adapters/pi/ui/manager.ts": "e2e6523cd95bc692c2595f335134c796864c36af",
                   "src/application": "",
-                  "src/application/builds.ts": "1b3f1f9f92f4df54903c491ba76421bc1a5c7583",
+                  "src/application/builds.ts": "5617c7cf4ce7c522a555c15259ae7d233334a0c8",
+                  "src/application/claims.ts": "0e7215cac87b40a14c809c793ba01be145057abc",
                   "src/application/gateway": "",
-                  "src/application/graph.ts": "e9ad515e67f2614d94d2c2c9a20b9d86e63d8423",
+                  "src/application/graph.ts": "07372c1bf72e15384a66ba1781e28c71d2998815",
                   "src/application/graph/rebuilder.ts": "eefdbfe9a9397f8667e7825b271f9814c3556914",
                   "src/application/lint.ts": "17942fde0b2e539b12e768f193769f4090380482",
                   "src/application/prompt.ts": "785db3086e01c856bc4bfad578da2efcdec00c25",
                   "src/application/roadmap.ts": "b2af1c2dcbdc9ea699e8e216de7d25356213b350",
                   "src/application/state-builders.ts": "c05f5785a28b2404f6c1a5e8fd2969c11a03a03d",
                   "src/application/state.ts": "79fc694c435a418eded52d525e0a08ed0b5c3388",
-                  "src/application/task.ts": "48112c8db210cf096ba9a0dc18c74b7260453051",
+                  "src/application/task.ts": "61f016899cdaa17f603fbec1d61af1c60a0ae406",
+                  "src/application/tools/artifact-status.ts": "63eeca4646a07176321fae57457957fa9ea1f228",
                   "src/application/tools/build.ts": "02b486474627836061c7ab4cc0dc0f20f2b9b982",
+                  "src/application/tools/session-handoff.ts": "f9eae6143cf0517b46718dedb41ed5bb135ed4da",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "d55c2aa1474e1bbe565b24d15636bba6381607c3",
+                  "src/domain/shared/types.ts": "88f4339a5eaacbc023d048814540b4fa5822958d",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
-                  "src/templates.ts": "727af3989bb84112625e63556d86d75d1df429ca",
+                  "src/templates.ts": "883784613de6c9ec6f76bbc0d7174b400b1c9a3a",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "5197f2fd4b5d81e7e176ff5df04cec728890cf04",
-                  "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
+                  "tests/smoke/package-smoke.test.mjs": "9a76ec5a48f731ed4e9582ab54384f1e33dcfc0d"
                 }
               },
-              "spec_digest": "5e0c77f9a0d70bcf1a46b76ac18f7c03582bfb351679092c6b96d27c1d84a1ad",
+              "spec_digest": "fce5a985f4d161f9dafd7aea90fd721f2a9a1a519fa055612a359be91b33ccf4",
               "task_digest": "cc2cc3368ecd0865887ae155d6d0bbe7835cd3645329a07e42103b24b9fb40f2",
-              "code_digest": "d124754a544f7e0233f3464999f289f96585c4e3346dfd94927e9f13cc114347",
-              "digest": "f2368c92a11cdca1de575fbaaa483257a3cf7696964348ee4ec82558ac26d6db"
+              "code_digest": "5ea8038005fc6c36fd4355fb160c582478d260ea21e85e8aa999bf2dc16907f1",
+              "digest": "f8cf2e1dc58473986cd189c9fd77c5f20821f0f4321b2906ea1e006d39a5b42e"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:09:35Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T07:11:25Z",
+              "reason": "revision changed: spec, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18979,7 +18572,8 @@
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/overview.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -19024,7 +18618,11 @@
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/application/claims.ts",
+              "src/application/tools/artifact-status.ts",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
@@ -19052,8 +18650,8 @@
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
-              "total_specs": 33,
-              "aligned_specs": 19,
+              "total_specs": 34,
+              "aligned_specs": 20,
               "tracked_specs": 14,
               "untracked_specs": 0,
               "blocked_specs": 0,
@@ -19079,116 +18677,85 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-19T07:09:35Z",
+            "checked_at": "2026-05-19T07:11:25Z",
             "revision": {
               "git": {
-                "head": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/lexicon.md",
-                  ".codewiki/kb/product/stories/intent.md",
-                  ".codewiki/kb/product/users/agents.md",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/agency.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/kb/system/builds.md",
-                  ".codewiki/kb/system/change-lifecycle.md",
-                  ".codewiki/kb/system/compilers.md",
-                  ".codewiki/kb/system/graph.md",
-                  ".codewiki/kb/system/knowledge.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/kb/system/roadmap.md",
-                  ".codewiki/kb/system/validation-gateway.md",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-005/context.json",
-                  ".codewiki/roadmap/tasks/TASK-005/task.json",
-                  "skills/codewiki-feedback/SKILL.md",
-                  "skills/codewiki-feedback/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/tools/session-handoff.ts",
-                  "src/application/builds.ts",
-                  "src/application/claims.ts",
-                  "src/application/gc.ts",
-                  "src/application/graph.ts",
-                  "src/application/task.ts",
-                  "src/application/tools/catalog.ts",
-                  "src/application/tools/session-handoff.ts",
-                  "src/domain/shared/types.ts",
-                  "src/templates.ts",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
-                  ".codewiki/kb/system/adapters.md": "8dda540153a50d71fad3be2cb977159da9631b15",
-                  ".codewiki/kb/system/agency.md": "12f66a0b43d9762bc68c28db4226af8457ca9938",
+                  ".codewiki/kb/system/adapters.md": "7ee9351b9b6270dc9033d8062f7ba1998d5f94bd",
+                  ".codewiki/kb/system/agency.md": "83f0dedeaf416b102435897f397a2c6f1eccc700",
                   ".codewiki/kb/system/alignment-model.md": "22c87eae6b9b2d84f8bd8f40b8db96a8e5ef5b03",
-                  ".codewiki/kb/system/api.md": "f8234d6935356bb0df437a31be16c26972e2067f",
+                  ".codewiki/kb/system/api.md": "40978173912df47d7c1083e1c5b9431204174f8a",
                   ".codewiki/kb/system/audits.md": "6525e921760ea2ddf9dd3193c6bb7178e6799ca4",
-                  ".codewiki/kb/system/builds.md": "7532ada8693fb73baa05cd2d2eb1fd4a6fe350ae",
-                  ".codewiki/kb/system/change-lifecycle.md": "c1839231998d0fb1788ad82a447765773aa388b0",
-                  ".codewiki/kb/system/compilers.md": "74ea791d18583fb65ad5548eb07d5b9d19ee0529",
+                  ".codewiki/kb/system/builds.md": "c4a382adb8f3912082d79b686ebd6dd30e4757a9",
+                  ".codewiki/kb/system/change-lifecycle.md": "0b46bde68dc9efcc486a9cbdd61adf35339edb5c",
+                  ".codewiki/kb/system/compilers.md": "fb9c0a8dfa325ae23ba60b0669e1af4ad373d4e7",
                   ".codewiki/kb/system/control-room-ui-details.md": "7e26c14de6d76ab241e516c8a02a5f331685e572",
                   ".codewiki/kb/system/control-room-ui.md": "4e40395efc6306d73ebc19e0fbbb9570d68669b6",
                   ".codewiki/kb/system/diagrams/README.md": "ea2884c8230a3c6d3b741e61e705416f8f7d3d46",
                   ".codewiki/kb/system/extension.md": "ccf83d263b8066207f8debf5a0c1b4c9f6ee9bb7",
                   ".codewiki/kb/system/file-structure.md": "105abe879aaf1622cd32d2baf93cfed521bbda56",
-                  ".codewiki/kb/system/graph.md": "368303024e76519b8b623be126caa3d208e75f4f",
-                  ".codewiki/kb/system/knowledge.md": "6dcff9cc9578a96c269a4ae261d71dfea2fead5e",
-                  ".codewiki/kb/system/overview.md": "869d952b5471b77d00521f724b538492b9017230",
-                  ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
-                  ".codewiki/kb/system/validation-gateway.md": "687672cd58c4a196eb4e069ac087db475c0b5a43",
+                  ".codewiki/kb/system/graph.md": "e974cf2e40ff604c40305fa804bc87ae5eedebf9",
+                  ".codewiki/kb/system/knowledge.md": "3e7bc2f3b9292d44273b60c7d74ac63fdc8aa4f8",
+                  ".codewiki/kb/system/overview.md": "90ffa7afe3ca1982269ee1733115328385b34e72",
+                  ".codewiki/kb/system/roadmap.md": "9fbf88191c315d63b31aa0c41e5600c9c550670f",
+                  ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
+                  ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a55674aabc06bc87f6fcd4f4c907d18faffc9f4f",
+                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
-                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
-                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-feedback/SKILL.md": "b7e17df45eecf4f7729bb6f2b1639120d1a87694",
+                  "skills/codewiki-implementation/SKILL.md": "7f80faebc49d5a50a48b53728714bd748a178aa4",
                   "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
                   "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
                   "src": "",
                   "src/adapters": "",
                   "src/adapters/pi": "",
                   "src/adapters/pi/commands": "",
-                  "src/adapters/pi/schemas.ts": "e3a6e1f9fcf84c2e37fa7aaaf1c183639be6bf47",
+                  "src/adapters/pi/schemas.ts": "f8105d5bece956b10a2a638f14dc7adb51641fb2",
+                  "src/adapters/pi/tools": "",
                   "src/adapters/pi/ui/manager.ts": "e2e6523cd95bc692c2595f335134c796864c36af",
                   "src/application": "",
-                  "src/application/builds.ts": "1b3f1f9f92f4df54903c491ba76421bc1a5c7583",
+                  "src/application/builds.ts": "5617c7cf4ce7c522a555c15259ae7d233334a0c8",
+                  "src/application/claims.ts": "0e7215cac87b40a14c809c793ba01be145057abc",
                   "src/application/gateway": "",
-                  "src/application/graph.ts": "e9ad515e67f2614d94d2c2c9a20b9d86e63d8423",
+                  "src/application/graph.ts": "07372c1bf72e15384a66ba1781e28c71d2998815",
                   "src/application/graph/rebuilder.ts": "eefdbfe9a9397f8667e7825b271f9814c3556914",
                   "src/application/lint.ts": "17942fde0b2e539b12e768f193769f4090380482",
                   "src/application/prompt.ts": "785db3086e01c856bc4bfad578da2efcdec00c25",
                   "src/application/roadmap.ts": "b2af1c2dcbdc9ea699e8e216de7d25356213b350",
                   "src/application/state-builders.ts": "c05f5785a28b2404f6c1a5e8fd2969c11a03a03d",
                   "src/application/state.ts": "79fc694c435a418eded52d525e0a08ed0b5c3388",
-                  "src/application/task.ts": "48112c8db210cf096ba9a0dc18c74b7260453051",
+                  "src/application/task.ts": "61f016899cdaa17f603fbec1d61af1c60a0ae406",
+                  "src/application/tools/artifact-status.ts": "63eeca4646a07176321fae57457957fa9ea1f228",
                   "src/application/tools/build.ts": "02b486474627836061c7ab4cc0dc0f20f2b9b982",
+                  "src/application/tools/session-handoff.ts": "f9eae6143cf0517b46718dedb41ed5bb135ed4da",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "d55c2aa1474e1bbe565b24d15636bba6381607c3",
+                  "src/domain/shared/types.ts": "88f4339a5eaacbc023d048814540b4fa5822958d",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
-                  "src/templates.ts": "727af3989bb84112625e63556d86d75d1df429ca",
+                  "src/templates.ts": "883784613de6c9ec6f76bbc0d7174b400b1c9a3a",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "5197f2fd4b5d81e7e176ff5df04cec728890cf04",
-                  "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
+                  "tests/smoke/package-smoke.test.mjs": "9a76ec5a48f731ed4e9582ab54384f1e33dcfc0d"
                 }
               },
-              "spec_digest": "5e08e26c7cf81feaa06533aa803d9d2a7a7ef3bee88cd5c4c71cc22f6b5050ba",
+              "spec_digest": "2669ed5f9c067d4e30c32543709a43457f4859ea1e2ef54e8d4c415b93e1eeec",
               "task_digest": "cc2cc3368ecd0865887ae155d6d0bbe7835cd3645329a07e42103b24b9fb40f2",
-              "code_digest": "1287a8b033bb2172c5bbb65a61071ffc5b9edc7f7fc5e24a6f7c1ac0be3e0000",
-              "digest": "6e072b53e765f7f478662426a10915cc48ea04c945dceae4f25f0974784d8c78"
+              "code_digest": "852bb792418c621a549648ab1fb1389fc14a579beed9e5b7053d2192ce706af4",
+              "digest": "76302ddc88bb72c0e4e3bbd593db430df3d47354979d996073245457c00b44a2"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:09:35Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T07:11:25Z",
+              "reason": "revision changed: spec, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -19208,7 +18775,8 @@
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/overview.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               "src/adapters",
@@ -19247,7 +18815,11 @@
               "src/adapters/pi/commands",
               "src/ui/web/control-room.ts",
               "src/adapters/pi/ui/manager.ts",
-              "skills"
+              "skills",
+              "src/application/claims.ts",
+              "src/application/tools/artifact-status.ts",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools"
             ],
             "code_area": "src, skills +2 more",
             "open_task_ids": [
@@ -19275,8 +18847,8 @@
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
-              "total_specs": 18,
-              "aligned_specs": 4,
+              "total_specs": 19,
+              "aligned_specs": 5,
               "tracked_specs": 14,
               "untracked_specs": 0,
               "blocked_specs": 0,
@@ -19302,55 +18874,19 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:09:35Z",
+            "checked_at": "2026-05-19T07:11:25Z",
             "revision": {
               "git": {
-                "head": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/lexicon.md",
-                  ".codewiki/kb/product/stories/intent.md",
-                  ".codewiki/kb/product/users/agents.md",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/agency.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/kb/system/builds.md",
-                  ".codewiki/kb/system/change-lifecycle.md",
-                  ".codewiki/kb/system/compilers.md",
-                  ".codewiki/kb/system/graph.md",
-                  ".codewiki/kb/system/knowledge.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/kb/system/roadmap.md",
-                  ".codewiki/kb/system/validation-gateway.md",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-005/context.json",
-                  ".codewiki/roadmap/tasks/TASK-005/task.json",
-                  "skills/codewiki-feedback/SKILL.md",
-                  "skills/codewiki-feedback/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/tools/session-handoff.ts",
-                  "src/application/builds.ts",
-                  "src/application/claims.ts",
-                  "src/application/gc.ts",
-                  "src/application/graph.ts",
-                  "src/application/task.ts",
-                  "src/application/tools/catalog.ts",
-                  "src/application/tools/session-handoff.ts",
-                  "src/domain/shared/types.ts",
-                  "src/templates.ts",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
                   ".codewiki/kb/product/overview.md": "5bea9b75a0cfd25621af7a988580f90423906242",
                   ".codewiki/kb/product/stories/automation.md": "7daee11b8b209fb07d1eb4d37e54ea63c1a22bb8",
                   ".codewiki/kb/product/stories/drift.md": "63aafb74de96ccb4804b51f6dd923c539e573041",
-                  ".codewiki/kb/product/stories/intent.md": "68344cd92f8452d9fa1323f7f7cadbd68ca19e8f",
+                  ".codewiki/kb/product/stories/intent.md": "9d87aea2e4237e4e39933f7f8e4a4b077cbb0362",
                   ".codewiki/kb/product/stories/navigation.md": "cb897a191daf6466851213899f00f717733c5020",
                   ".codewiki/kb/product/stories/sanitation.md": "6df44c2adc91964239cf62552caabce5f855793b",
                   ".codewiki/kb/product/uis/board.md": "df43b5a446e4fdc101a8a915ef59a646a05c4e70",
@@ -19358,81 +18894,86 @@
                   ".codewiki/kb/product/uis/control-room.md": "751638c68b5e19b3157b8589ee5f2d8789e402d2",
                   ".codewiki/kb/product/uis/graph-navigation.md": "620c887d1f59f2a4a879749f00a65a7d120c3262",
                   ".codewiki/kb/product/uis/status-panel.md": "1f470da5e90d523f9ce5babaeca29a8dd6f5c887",
-                  ".codewiki/kb/product/users/agents.md": "b33ad631e08ad594978cc8c00500040dc5b75aa6",
+                  ".codewiki/kb/product/users/agents.md": "2786e628c913a7e8546e566719a0ef7bec56dce9",
                   ".codewiki/kb/product/users/external-users.md": "6fa169f4e72984edc74cc3dbeca8d7657fccd633",
                   ".codewiki/kb/product/users/maintainers.md": "507b35c790494b5d0d7b4a93be541cdabc4cec69",
                   ".codewiki/kb/product/users/package-authors.md": "c84005a8416657dc4ffb840dcd4febaf0f3b9312",
-                  ".codewiki/kb/system/adapters.md": "8dda540153a50d71fad3be2cb977159da9631b15",
-                  ".codewiki/kb/system/agency.md": "12f66a0b43d9762bc68c28db4226af8457ca9938",
+                  ".codewiki/kb/system/adapters.md": "7ee9351b9b6270dc9033d8062f7ba1998d5f94bd",
+                  ".codewiki/kb/system/agency.md": "83f0dedeaf416b102435897f397a2c6f1eccc700",
                   ".codewiki/kb/system/alignment-model.md": "22c87eae6b9b2d84f8bd8f40b8db96a8e5ef5b03",
-                  ".codewiki/kb/system/api.md": "f8234d6935356bb0df437a31be16c26972e2067f",
+                  ".codewiki/kb/system/api.md": "40978173912df47d7c1083e1c5b9431204174f8a",
                   ".codewiki/kb/system/audits.md": "6525e921760ea2ddf9dd3193c6bb7178e6799ca4",
-                  ".codewiki/kb/system/builds.md": "7532ada8693fb73baa05cd2d2eb1fd4a6fe350ae",
-                  ".codewiki/kb/system/change-lifecycle.md": "c1839231998d0fb1788ad82a447765773aa388b0",
-                  ".codewiki/kb/system/compilers.md": "74ea791d18583fb65ad5548eb07d5b9d19ee0529",
+                  ".codewiki/kb/system/builds.md": "c4a382adb8f3912082d79b686ebd6dd30e4757a9",
+                  ".codewiki/kb/system/change-lifecycle.md": "0b46bde68dc9efcc486a9cbdd61adf35339edb5c",
+                  ".codewiki/kb/system/compilers.md": "fb9c0a8dfa325ae23ba60b0669e1af4ad373d4e7",
                   ".codewiki/kb/system/control-room-ui-details.md": "7e26c14de6d76ab241e516c8a02a5f331685e572",
                   ".codewiki/kb/system/control-room-ui.md": "4e40395efc6306d73ebc19e0fbbb9570d68669b6",
                   ".codewiki/kb/system/diagrams/README.md": "ea2884c8230a3c6d3b741e61e705416f8f7d3d46",
                   ".codewiki/kb/system/extension.md": "ccf83d263b8066207f8debf5a0c1b4c9f6ee9bb7",
                   ".codewiki/kb/system/file-structure.md": "105abe879aaf1622cd32d2baf93cfed521bbda56",
-                  ".codewiki/kb/system/graph.md": "368303024e76519b8b623be126caa3d208e75f4f",
-                  ".codewiki/kb/system/knowledge.md": "6dcff9cc9578a96c269a4ae261d71dfea2fead5e",
-                  ".codewiki/kb/system/overview.md": "869d952b5471b77d00521f724b538492b9017230",
-                  ".codewiki/kb/system/roadmap.md": "f6c599374eacc7ec3e438c6ad23788de20bf289d",
-                  ".codewiki/kb/system/validation-gateway.md": "687672cd58c4a196eb4e069ac087db475c0b5a43",
+                  ".codewiki/kb/system/graph.md": "e974cf2e40ff604c40305fa804bc87ae5eedebf9",
+                  ".codewiki/kb/system/knowledge.md": "3e7bc2f3b9292d44273b60c7d74ac63fdc8aa4f8",
+                  ".codewiki/kb/system/overview.md": "90ffa7afe3ca1982269ee1733115328385b34e72",
+                  ".codewiki/kb/system/roadmap.md": "9fbf88191c315d63b31aa0c41e5600c9c550670f",
+                  ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
+                  ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a55674aabc06bc87f6fcd4f4c907d18faffc9f4f",
+                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
-                  "skills/codewiki-feedback/SKILL.md": "725a7b86e27f76f8ab1f2c46c48ba6bd073a14c2",
-                  "skills/codewiki-implementation/SKILL.md": "25ea8b0e4c8f2df65844da099ef916aea1016b8b",
+                  "skills/codewiki-feedback/SKILL.md": "b7e17df45eecf4f7729bb6f2b1639120d1a87694",
+                  "skills/codewiki-implementation/SKILL.md": "7f80faebc49d5a50a48b53728714bd748a178aa4",
                   "skills/codewiki-planning/SKILL.md": "dc4ba44cb518dd2b8eed34008fcee0f7f510a49b",
                   "skills/codewiki-validation/SKILL.md": "751b18426f7f2afc59429cf0249664568a505b70",
-                  "skills/codewiki/SKILL.md": "4f04bc320abfbc5e21ed879288d962f4cfb66751",
+                  "skills/codewiki/SKILL.md": "8de0cc0a1dc84aa9c6782c97b44ea563524aa9e1",
                   "skills/codewiki/playbooks/architecture.md": "4ca28b387469620d7797940ca94da91b59ebfc6f",
                   "skills/codewiki/playbooks/view-audit.md": "1f0ef3f887ee1a894a07c4fb7f1c98f7b4fb0679",
                   "src": "",
                   "src/adapters": "",
                   "src/adapters/pi": "",
                   "src/adapters/pi/commands": "",
-                  "src/adapters/pi/schemas.ts": "e3a6e1f9fcf84c2e37fa7aaaf1c183639be6bf47",
+                  "src/adapters/pi/schemas.ts": "f8105d5bece956b10a2a638f14dc7adb51641fb2",
+                  "src/adapters/pi/tools": "",
                   "src/adapters/pi/ui": "",
                   "src/adapters/pi/ui/manager.ts": "e2e6523cd95bc692c2595f335134c796864c36af",
                   "src/application": "",
-                  "src/application/builds.ts": "1b3f1f9f92f4df54903c491ba76421bc1a5c7583",
+                  "src/application/builds.ts": "5617c7cf4ce7c522a555c15259ae7d233334a0c8",
+                  "src/application/claims.ts": "0e7215cac87b40a14c809c793ba01be145057abc",
                   "src/application/gateway": "",
-                  "src/application/graph.ts": "e9ad515e67f2614d94d2c2c9a20b9d86e63d8423",
+                  "src/application/graph.ts": "07372c1bf72e15384a66ba1781e28c71d2998815",
                   "src/application/graph/rebuilder.ts": "eefdbfe9a9397f8667e7825b271f9814c3556914",
                   "src/application/lint.ts": "17942fde0b2e539b12e768f193769f4090380482",
                   "src/application/prompt.ts": "785db3086e01c856bc4bfad578da2efcdec00c25",
                   "src/application/roadmap.ts": "b2af1c2dcbdc9ea699e8e216de7d25356213b350",
                   "src/application/state-builders.ts": "c05f5785a28b2404f6c1a5e8fd2969c11a03a03d",
                   "src/application/state.ts": "79fc694c435a418eded52d525e0a08ed0b5c3388",
-                  "src/application/task.ts": "48112c8db210cf096ba9a0dc18c74b7260453051",
+                  "src/application/task.ts": "61f016899cdaa17f603fbec1d61af1c60a0ae406",
+                  "src/application/tools/artifact-status.ts": "63eeca4646a07176321fae57457957fa9ea1f228",
                   "src/application/tools/build.ts": "02b486474627836061c7ab4cc0dc0f20f2b9b982",
+                  "src/application/tools/session-handoff.ts": "f9eae6143cf0517b46718dedb41ed5bb135ed4da",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "d55c2aa1474e1bbe565b24d15636bba6381607c3",
+                  "src/domain/shared/types.ts": "88f4339a5eaacbc023d048814540b4fa5822958d",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
-                  "src/templates.ts": "727af3989bb84112625e63556d86d75d1df429ca",
+                  "src/templates.ts": "883784613de6c9ec6f76bbc0d7174b400b1c9a3a",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "5197f2fd4b5d81e7e176ff5df04cec728890cf04",
-                  "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
+                  "tests/smoke/package-smoke.test.mjs": "9a76ec5a48f731ed4e9582ab54384f1e33dcfc0d"
                 }
               },
-              "spec_digest": "5e0c77f9a0d70bcf1a46b76ac18f7c03582bfb351679092c6b96d27c1d84a1ad",
+              "spec_digest": "fce5a985f4d161f9dafd7aea90fd721f2a9a1a519fa055612a359be91b33ccf4",
               "task_digest": "cc2cc3368ecd0865887ae155d6d0bbe7835cd3645329a07e42103b24b9fb40f2",
-              "code_digest": "d124754a544f7e0233f3464999f289f96585c4e3346dfd94927e9f13cc114347",
-              "digest": "f2368c92a11cdca1de575fbaaa483257a3cf7696964348ee4ec82558ac26d6db"
+              "code_digest": "5ea8038005fc6c36fd4355fb160c582478d260ea21e85e8aa999bf2dc16907f1",
+              "digest": "f8cf2e1dc58473986cd189c9fd77c5f20821f0f4321b2906ea1e006d39a5b42e"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:09:35Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T07:11:25Z",
+              "reason": "revision changed: spec, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -19467,7 +19008,8 @@
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
-              ".codewiki/kb/system/overview.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -19512,7 +19054,11 @@
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/application/claims.ts",
+              "src/application/tools/artifact-status.ts",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
@@ -19540,8 +19086,8 @@
               ".codewiki/kb/system/validation-gateway.md"
             ],
             "stats": {
-              "total_specs": 33,
-              "aligned_specs": 19,
+              "total_specs": 34,
+              "aligned_specs": 20,
               "tracked_specs": 14,
               "untracked_specs": 0,
               "blocked_specs": 0,
@@ -19568,7 +19114,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-19T07:09:35Z",
+        "generated_at": "2026-05-19T07:11:25Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -20920,6 +20466,32 @@
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/worktree-isolation.md",
+            "title": "Role Worktree Isolation",
+            "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/claims.ts",
+              "src/application/tools/artifact-status.ts",
+              "src/application/tools/session-handoff.ts",
+              "src/application/builds.ts",
+              "src/adapters/pi/tools"
+            ],
+            "code_area": "src +4 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "624655539c567ffd5e67c4635966611198f2f793ab9fc9c3186cb6f2a596c655",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
           }
         ],
         "sections": [
@@ -21834,6 +21406,32 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "62023572bd0c78038a6ae42bbb847e6705ff107a394390274f4c30e56ca0f7cc",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/worktree-isolation.md",
+                "title": "Role Worktree Isolation",
+                "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/claims.ts",
+                  "src/application/tools/artifact-status.ts",
+                  "src/application/tools/session-handoff.ts",
+                  "src/application/builds.ts",
+                  "src/adapters/pi/tools"
+                ],
+                "code_area": "src +4 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "624655539c567ffd5e67c4635966611198f2f793ab9fc9c3186cb6f2a596c655",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
