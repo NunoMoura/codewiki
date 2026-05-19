@@ -1,6 +1,6 @@
 # CodeWiki tool catalog
 
-Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source-owned contracts live in `src/application/tools/**`, with the machine-readable contract list in `src/application/tools/catalog.ts`; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
+Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source-owned contracts live in `src/application/tools/**`; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
 
 | Tool | Application contract | Purpose | Safe mutation path |
 | --- | --- | --- | --- |
@@ -8,7 +8,6 @@ Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source
 | `codewiki_bootstrap` | `src/application/tools/bootstrap.ts` | Scaffold starter CodeWiki files. | Delegates through bootstrap tool contract; root resolution and Pi UI stay adapter-owned. |
 | `codewiki_state` | `src/application/tools/state.ts` | Read graph-first state. | Read-only except optional generated-state rebuild through ports. |
 | `codewiki_artifact_status` | `src/application/tools/artifact-status.ts` | Manage runtime artifact status. | Runtime coordination only; not roadmap truth. |
-| `codewiki_claim` | `src/application/tools/claim.ts` | Legacy artifact-status compatibility. | Runtime coordination only; prefer `codewiki_artifact_status`. |
 | `codewiki_audit` | `src/application/tools/audit.ts` | Run deterministic audit profiles. | Read-only evidence; validation decides verdict. |
 | `codewiki_build` | `src/application/tools/build.ts` | Write compiler build handoffs. | Writes transient build artifacts and optional generated refresh. |
 | `codewiki_validation` | `src/application/tools/validation.ts` | Write validation reports. | Writes gateway reports; validators do not mutate source truth. |

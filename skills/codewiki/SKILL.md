@@ -72,7 +72,6 @@ Internal agent tools:
 - `codewiki_session`
 - `codewiki_session_handoff`
 - `codewiki_agency`
-- `codewiki_claim` as a legacy compatibility alias for artifact status
 
 Daily default flow: `codewiki_state` for routing, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, agent-owned `new_session`/`context_refresh` when context is noisy, policy-required session boundaries for validation gates, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash.
 

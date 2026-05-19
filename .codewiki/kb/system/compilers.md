@@ -84,7 +84,7 @@ A decision build must record requirement ids, approved rows, row-to-KB mappings,
 
 The documentation loop consumes an accepted `feedback_build` and updates durable product/system knowledge. It produces a `documentation_build` as the knowledge-alignment handoff for planning.
 
-During the vNext migration, documentation remains the compatibility path for feedback-to-knowledge work. New design should target the decision loop, but existing tools and builds stay valid until the decision compiler and `decision_build` are validated behind compatibility aliases.
+During the vNext migration, documentation remains the current path for feedback-to-knowledge work. New design should target the decision loop, and deprecated wrappers or aliases are removed once a direct replacement exists.
 
 The documentation loop updates owning knowledge files, preserves product/system boundaries, maps approved requirement ids to changed clauses, records deferred requirements or questions, avoids roadmap requirements in the target model, and validates knowledge alignment before handoff.
 
@@ -124,7 +124,7 @@ When CodeWiki uses the current toolchain to refactor CodeWiki itself, it runs in
 
 - keep current public tool behavior frozen except critical blocker fixes,
 - use current CodeWiki for decision capture, task planning, artifact status, validation, commits, and closure,
-- implement vNext concepts behind compatibility aliases,
+- implement vNext concepts as direct replacements rather than wrappers or aliases,
 - do not switch live compiler semantics mid-task,
 - switch to vNext flows only after documentation, tests, and validation pass.
 

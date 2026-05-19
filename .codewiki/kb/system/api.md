@@ -46,7 +46,7 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 
 ## vNext tool surface
 
-The vNext API should reduce the common public and agent tool surface while keeping low-level primitives available internally or through compatibility aliases.
+The vNext API should reduce the common public and agent tool surface. Low-level primitives may stay internal, but deprecated public aliases and shim tools are removed instead of preserved.
 
 Preferred public/user-facing commands:
 
@@ -106,7 +106,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Tool-context Pi boundaries stage durable artifacts. Tool-context `sendUserMessage` follow-ups do not execute registered slash commands, so new_session and context_refresh boundaries must not be injected as `/wiki-session-handoff` chat. The adapter may prefill the editor with the compatibility command when UI exists, but command-context execution is still the only current Pi path to `ctx.newSession()`. `/wiki-session-handoff` is a compatibility executor, not a user workflow surface.
 - Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth in the target model or feedback build truth in compatibility mode. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
-- During CodeWiki self-refactors, public tool behavior stays frozen except critical blocker fixes; vNext capabilities are introduced behind compatibility aliases and become default only after documentation, tests, and validation pass.
+- During CodeWiki self-refactors, deprecated aliases and shim tools are removed when a direct replacement exists; if callers break, fix them at the replacement surface instead of keeping compatibility wrappers.
 - Config schema v4 defines quiet rebuild defaults, scoped agency budgets, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
 - Tracked CodeWiki garbage collection must run after an archive/close/publication commit exists. The GC capability requires archive commit/tree proof, supports dry-run, writes a restore ledger with removed paths and `git restore --source=<archive-sha> -- <path>` commands, and applies tracked deletions only in a separate GC commit.
 - Ignored runtime/session artifacts may be purged under runtime policy, but manual deletion of tracked `.codewiki` builds, validation reports, or roadmap truth is not an API-compliant GC path.

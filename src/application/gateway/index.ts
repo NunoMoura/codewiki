@@ -138,14 +138,14 @@ function capabilityManifest() {
 				audit: ["repo", "action", "taskId", "session"],
 			},
 			{
-				name: "codewiki.claim",
+				name: "codewiki.artifact_status",
 				class: "coordination-write",
 				summary:
-					"Create, release, heartbeat, or list temporary scoped change claims for parallel work.",
-				args_schema: "codewikiClaimToolInputSchema",
-				result_schema: "CodeWiki scoped change claim result",
+					"Mark, release, heartbeat, wait on, or list runtime artifact status for parallel work.",
+				args_schema: "codewikiArtifactStatusToolInputSchema",
+				result_schema: "CodeWiki artifact status result",
 				writes: [".codewiki/session/queue.json", ".codewiki/index_graph.json"],
-				audit: ["repo", "action", "claimId", "taskId", "scopes", "session"],
+				audit: ["repo", "action", "recordId", "taskId", "scopes", "session"],
 			},
 			{
 				name: "codewiki.patch",

@@ -255,7 +255,6 @@ async function main() {
 				"codewiki_validation",
 				"codewiki_gc",
 				"codewiki_task",
-				"codewiki_claim",
 				"codewiki_diff_table",
 				"codewiki_session",
 				"codewiki_session_handoff",
@@ -263,16 +262,10 @@ async function main() {
 			],
 			"extension tools",
 		);
-		const toolCatalogSource = readFileSync(resolve(repoRoot, "src", "application", "tools", "catalog.ts"), "utf8");
 		const skillToolCatalog = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
 		for (const toolName of extensionToolNames.filter((name) => name.startsWith("codewiki_"))) {
-			assert.match(toolCatalogSource, new RegExp(`name: "${toolName}"`), `Application tool catalog missing ${toolName}`);
 			assert.match(skillToolCatalog, new RegExp(`\\\`${toolName}\\\``), `Skill-facing tool catalog missing ${toolName}`);
 		}
-		for (const modulePath of [...toolCatalogSource.matchAll(/module: "([^"]+)"/g)].map((match) => match[1])) {
-			assert.ok(existsSync(resolve(repoRoot, modulePath)), `Application tool contract module missing: ${modulePath}`);
-		}
-		assert.match(toolCatalogSource, /action='sprint'/, "Application tool catalog should document safe sprint metadata path");
 		assert.match(skillToolCatalog, /action="sprint"/, "Skill-facing tool catalog should document safe sprint metadata path");
 		const piIndexSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "index.ts"), "utf8");
 		const bootstrapSource = readFileSync(resolve(repoRoot, "src", "bootstrap.ts"), "utf8");
@@ -281,7 +274,7 @@ async function main() {
 		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to application tool executor");
 		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Bootstrap setup tool should delegate through application tool contract");
-		for (const adapterFile of ["agency", "artifact-status", "claim", "session", "session-handoff", "state", "task"]) {
+		for (const adapterFile of ["agency", "artifact-status", "session", "session-handoff", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);
 		}
@@ -1048,18 +1041,14 @@ async function main() {
 			artifactStatusTool && typeof artifactStatusTool.definition?.execute === "function",
 			"Artifact status tool missing execute function",
 		);
-		const claimTool = extension.tools.get("codewiki_claim");
-		assert.ok(
-			claimTool && typeof claimTool.definition?.execute === "function",
-			"Claim tool missing execute function",
-		);
-		const claimResult = await claimTool.definition.execute(
-			"claim-create-smoke",
+		assert.equal(extension.tools.has("codewiki_claim"), false, "Deprecated claim alias should not be registered");
+		const claimResult = await artifactStatusTool.definition.execute(
+			"artifact-status-create-smoke",
 			{
 				repoPath: projectDir,
-				action: "claim",
+				action: "mark",
 				taskId: "TASK-001",
-				summary: "Claim product docs for smoke parallel work.",
+				summary: "Mark product docs for smoke parallel work.",
 				mode: "write",
 				scopes: [{ layer: "knowledge", path: ".codewiki/kb/product/**" }],
 				ttl_minutes: 30,
@@ -1068,7 +1057,7 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(claimResult.details.claim.id, /^CLAIM-\d+$/, "Claim tool should allocate a claim id");
+		assert.match(claimResult.details.claim.id, /^CLAIM-\d+$/, "Artifact status tool should allocate a holder id");
 		const otherSessionCtx = {
 			...outsideToolCtx,
 			sessionManager: {
@@ -1077,11 +1066,11 @@ async function main() {
 				getBranch: () => [],
 			},
 		};
-		const readOverlapResult = await claimTool.definition.execute(
-			"claim-read-overlap-smoke",
+		const readOverlapResult = await artifactStatusTool.definition.execute(
+			"artifact-status-read-overlap-smoke",
 			{
 				repoPath: projectDir,
-				action: "claim",
+				action: "mark",
 				summary: "Read overlapping product docs for smoke parallel work.",
 				mode: "read",
 				scopes: [{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" }],
@@ -1096,12 +1085,12 @@ async function main() {
 			"Read/write overlap should create a warning",
 		);
 		await assert.rejects(
-			() => claimTool.definition.execute(
-				"claim-write-conflict-smoke",
+			() => artifactStatusTool.definition.execute(
+				"artifact-status-write-conflict-smoke",
 				{
 					repoPath: projectDir,
-					action: "claim",
-					summary: "Conflicting product docs write claim.",
+					action: "mark",
+					summary: "Conflicting product docs write holder.",
 					mode: "write",
 					scopes: [{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" }],
 				},
@@ -1109,7 +1098,7 @@ async function main() {
 				undefined,
 				otherSessionCtx,
 			),
-			/codewiki_claim conflict/i,
+			/codewiki_artifact_status conflict/i,
 			"Write/write overlap should block by default",
 		);
 		const claimStateResult = await stateTool.definition.execute(
@@ -1156,16 +1145,16 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		await claimTool.definition.execute(
-			"claim-release-smoke-1",
-			{ repoPath: projectDir, action: "release", claimId: claimResult.details.claim.id },
+		await artifactStatusTool.definition.execute(
+			"artifact-status-release-smoke-1",
+			{ repoPath: projectDir, action: "release", recordId: claimResult.details.claim.id },
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
-		await claimTool.definition.execute(
-			"claim-release-smoke-2",
-			{ repoPath: projectDir, action: "release", claimId: readOverlapResult.details.claim.id },
+		await artifactStatusTool.definition.execute(
+			"artifact-status-release-smoke-2",
+			{ repoPath: projectDir, action: "release", recordId: readOverlapResult.details.claim.id },
 			undefined,
 			undefined,
 			outsideToolCtx,

@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { ActiveStatusPanel } from "../../domain/shared/types.ts";
 import { registerBootstrapFeatures } from "../../bootstrap.ts";
-import { codewikiBuildToolInputSchema, codewikiAgencyToolInputSchema, codewikiClaimToolInputSchema, codewikiDiffTableToolInputSchema, codewikiGcToolInputSchema, codewikiSessionToolInputSchema, codewikiTaskToolInputSchema, codewikiValidationReportSchema } from "./schemas.ts";
+import { codewikiBuildToolInputSchema, codewikiAgencyToolInputSchema, codewikiDiffTableToolInputSchema, codewikiGcToolInputSchema, codewikiSessionToolInputSchema, codewikiTaskToolInputSchema, codewikiValidationReportSchema } from "./schemas.ts";
 import { registerAuditCommand } from "./commands/audit.ts";
 import { registerConfigCommand } from "./commands/config.ts";
 import { registerResumeCommand } from "./commands/resume.ts";
@@ -17,7 +17,6 @@ import { executeCodewikiGcTool } from "../../application/tools/gc.ts";
 import { executeCodewikiAgency } from "./tools/agency.ts";
 import { registerCodewikiArtifactStatusTool } from "./tools/artifact-status.ts";
 import { registerCodewikiAuditTool } from "./tools/audit.ts";
-import { executeCodewikiClaim } from "./tools/claim.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { registerSessionHandoffCommand, registerCodewikiSessionHandoffTool } from "./tools/session-handoff.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
@@ -252,33 +251,6 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		},
 	} as any);
 
-	pi.registerTool({
-		name: "codewiki_claim",
-		label: "Codewiki Claim (legacy alias)",
-		description:
-			"Deprecated compatibility alias for codewiki_artifact_status. Prefer artifact-status language for parallel CodeWiki work.",
-		promptSnippet:
-			"Compatibility only: use codewiki_artifact_status for new runtime artifact coordination.",
-		promptGuidelines: [
-			"Prefer codewiki_artifact_status. Keep this alias only for existing callers during migration.",
-			"Runtime artifact status is not roadmap truth; roadmap tasks, builds, validation, and code remain canonical truth.",
-			"Read/read overlap is safe, read/write overlap warns, and write/write overlap blocks unless explicitly forced.",
-		],
-		parameters: codewikiClaimToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(
-				ctx.cwd,
-				params.repoPath,
-				"codewiki_claim",
-			);
-			const result = await executeCodewikiClaim(pi, project, ctx, params);
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result,
-			};
-		},
-	} as any);
 
 	pi.registerTool({
 		name: "codewiki_diff_table",

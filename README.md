@@ -42,11 +42,10 @@ Public command surface is intentionally small:
 - `codewiki_build`
 - `codewiki_validation`
 - `codewiki_task`
-- `codewiki_claim` (legacy compatibility alias for `codewiki_artifact_status`)
 - `codewiki_session`
 - `codewiki_agency`
 
-All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one transient compiler-build writer (`codewiki_build`), one canonical task mutation entrypoint (`codewiki_task`), one artifact-status coordination entrypoint (`codewiki_artifact_status`), and one runtime session entrypoint (`codewiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `codewiki_claim` remains a legacy compatibility alias for existing callers. `codewiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps.
+All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one transient compiler-build writer (`codewiki_build`), one canonical task mutation entrypoint (`codewiki_task`), one artifact-status coordination entrypoint (`codewiki_artifact_status`), and one runtime session entrypoint (`codewiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `codewiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps.
 
 ### Skills
 

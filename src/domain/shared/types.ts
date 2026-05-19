@@ -932,7 +932,7 @@ export interface CodewikiSessionHandoffToolInput {
 	autoQueue?: boolean;
 }
 
-export interface CodewikiClaimToolInput {
+export interface ChangeClaimMutationInput {
 	repoPath?: string;
 	action: ChangeClaimAction;
 	claimId?: string;

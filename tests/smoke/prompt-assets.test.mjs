@@ -43,7 +43,7 @@ assert.match(mainSkill, /references\/tool-catalog\.md/, "main skill should route
 assert.doesNotMatch(mainSkill, /(?:\.\.\/)+\.codewiki/, "main skill should not rely on package-relative .codewiki links");
 
 const toolCatalog = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
-assert.match(toolCatalog, /src\/application\/tools\/catalog\.ts/, "skill tool catalog should point to application tool contracts");
+assert.doesNotMatch(toolCatalog, /src\/application\/tools\/catalog\.ts/, "skill tool catalog should not point to removed application catalog source");
 assert.match(toolCatalog, /`codewiki_task`/, "skill tool catalog should list codewiki_task");
 assert.match(toolCatalog, /`codewiki_gc`/, "skill tool catalog should list codewiki_gc");
 assert.match(toolCatalog, /archive_sha/, "skill tool catalog should document GC archive proof fields");

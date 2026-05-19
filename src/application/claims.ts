@@ -13,7 +13,7 @@ import type {
 	WorktreeIsolationMetadata,
 	ChangeClaimState,
 	ChangeClaimsFile,
-	CodewikiClaimToolInput,
+	ChangeClaimMutationInput,
 	WikiProject,
 } from "../domain/shared/types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
@@ -650,7 +650,7 @@ export async function mutateArtifactStatuses(
 	};
 }
 
-function mapArtifactStatusInput(input: CodewikiArtifactStatusToolInput): CodewikiClaimToolInput {
+function mapArtifactStatusInput(input: CodewikiArtifactStatusToolInput): ChangeClaimMutationInput {
 	const action = input.action === "mark" ? "claim" : input.action;
 	return {
 		repoPath: input.repoPath,
@@ -680,7 +680,7 @@ function summarizeArtifactStatusAction(action: string, statuses: ArtifactStatusR
 
 export async function mutateChangeClaims(
 	project: WikiProject,
-	input: CodewikiClaimToolInput,
+	input: ChangeClaimMutationInput,
 	session: { sessionId: string; agentName: string },
 ): Promise<ChangeClaimMutationResult> {
 	const filePath = claimsFilePath(project);
@@ -703,7 +703,7 @@ export async function mutateChangeClaims(
 			const nextRefreshed = refreshWaiters(file, now);
 			if (released + cancelled + nextRefreshed > 0) await writeClaimsFile(filePath, file);
 			const state = buildChangeClaimState(file, now);
-			output = mutationOutput(released + cancelled + nextRefreshed > 0, state, `codewiki claim: released ${released} claim(s), cancelled ${cancelled} wait(s), readied ${nextRefreshed} wait(s)`);
+			output = mutationOutput(released + cancelled + nextRefreshed > 0, state, `codewiki artifact-status: released ${released} holder(s), cancelled ${cancelled} wait(s), readied ${nextRefreshed} wait(s)`);
 			return;
 		}
 		if (action === "heartbeat") {
@@ -712,13 +712,13 @@ export async function mutateChangeClaims(
 			const nextRefreshed = refreshWaiters(file, now);
 			if (extended + extendedWaiters + nextRefreshed > 0) await writeClaimsFile(filePath, file);
 			const state = buildChangeClaimState(file, now);
-			output = mutationOutput(extended + extendedWaiters + nextRefreshed > 0, state, `codewiki claim: extended ${extended} claim(s), ${extendedWaiters} wait(s)`);
+			output = mutationOutput(extended + extendedWaiters + nextRefreshed > 0, state, `codewiki artifact-status: extended ${extended} holder(s), ${extendedWaiters} wait(s)`);
 			return;
 		}
 		const scopes = normalizeScopes(input.scopes);
-		if (scopes.length === 0) throw new Error(`codewiki_claim ${action} requires at least one valid scope.`);
+		if (scopes.length === 0) throw new Error(`codewiki_artifact_status ${action} requires at least one valid scope.`);
 		const summary = String(input.summary || "").trim();
-		if (!summary) throw new Error(`codewiki_claim ${action} requires summary.`);
+		if (!summary) throw new Error(`codewiki_artifact_status ${action} requires summary.`);
 		if (action === "wait") {
 			const waiter = createWaiter(project, file, input, session, scopes, summary, now);
 			file.waiters = [...(file.waiters || []), waiter];
@@ -750,7 +750,7 @@ export async function mutateChangeClaims(
 		const nextClaims = [...activeChangeClaims(file, now), candidate];
 		const conflicts = detectClaimConflicts(nextClaims).filter((conflict) => conflict.claim_ids.includes(candidate.id));
 		if (conflicts.some((conflict) => conflict.kind === "conflict") && !input.force) {
-			throw new Error(`codewiki_claim conflict: ${conflicts.map((conflict) => conflict.reason).join("; ")}`);
+			throw new Error(`codewiki_artifact_status conflict: ${conflicts.map((conflict) => conflict.reason).join("; ")}`);
 		}
 		file.claims.push(candidate);
 		file.next_sequence += 1;
@@ -780,7 +780,7 @@ function ttlMinutes(value: unknown): number {
 function createWaiter(
 	project: WikiProject,
 	file: ChangeClaimsFile,
-	input: CodewikiClaimToolInput,
+	input: ChangeClaimMutationInput,
 	session: { sessionId: string; agentName: string },
 	scopes: ChangeClaimScope[],
 	summary: string,

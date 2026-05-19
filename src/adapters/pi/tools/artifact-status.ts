@@ -31,7 +31,6 @@ export function registerCodewikiArtifactStatusTool(pi: ExtensionAPI): void {
 			"Use this before non-trivial semantic changes when another session may touch overlapping docs, roadmap items, builds, validation reports, or code paths.",
 			"Artifact status is runtime coordination evidence, not durable roadmap truth; roadmap tasks, builds, validation, and code remain canonical truth.",
 			"Use action=mark to record current session use, wait to queue behind unavailable artifacts, list to inspect holders/waiters, heartbeat to extend, and release when done.",
-			"Legacy codewiki_claim remains a compatibility alias; prefer artifact-status language in new prompts and docs.",
 		],
 		parameters: codewikiArtifactStatusToolInputSchema,
 		async execute(_toolCallId: string, params: CodewikiArtifactStatusToolInput, _signal: unknown, _onUpdate: unknown, ctx: ExtensionContext) {

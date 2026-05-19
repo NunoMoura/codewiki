@@ -144,9 +144,6 @@ export const toolTaskStatusSchema = Type.Union(
 export const taskEvidenceResultSchema = Type.Union(
 	T.TASK_EVIDENCE_RESULT_VALUES.map((value) => Type.Literal(value)),
 );
-export const changeClaimActionSchema = Type.Union(
-	T.CHANGE_CLAIM_ACTION_VALUES.map((value) => Type.Literal(value)),
-);
 export const artifactStatusActionSchema = Type.Union(
 	T.ARTIFACT_STATUS_ACTION_VALUES.map((value) => Type.Literal(value)),
 );
@@ -674,20 +671,4 @@ export const codewikiArtifactStatusToolInputSchema = Type.Object({
 	ttl_minutes: Type.Optional(Type.Number({ minimum: 1, description: "Runtime artifact status TTL in minutes; default 120, max 1440." })),
 	force: Type.Optional(Type.Boolean({ default: false, description: "Allow mark despite write/write artifact conflicts." })),
 	refresh: Type.Optional(Type.Boolean({ default: true, description: "Rebuild generated graph/status after artifact status mutation." })),
-});
-
-export const codewikiClaimToolInputSchema = Type.Object({
-	repoPath: repoPathToolField,
-	action: changeClaimActionSchema,
-	claimId: Type.Optional(Type.String({ minLength: 1, description: "Existing legacy CLAIM-### or WAIT-### id for release/cancel or heartbeat." })),
-	taskId: Type.Optional(toolTaskIdField),
-	buildRef: Type.Optional(Type.String({ minLength: 1, description: "Optional compiler build path anchoring this compatibility alias." })),
-	summary: Type.Optional(Type.String({ minLength: 1, description: "Short reason for the legacy compatibility entry." })),
-	mode: Type.Optional(changeClaimModeSchema),
-	role: Type.Optional(changeClaimRoleSchema),
-	worktree: Type.Optional(worktreeIsolationSchema),
-	scopes: Type.Optional(Type.Array(changeClaimScopeSchema, { minItems: 1 })),
-	ttl_minutes: Type.Optional(Type.Number({ minimum: 1, description: "Runtime artifact status TTL in minutes; default 120, max 1440." })),
-	force: Type.Optional(Type.Boolean({ default: false, description: "Allow creation despite write/write artifact conflicts." })),
-	refresh: Type.Optional(Type.Boolean({ default: true, description: "Rebuild generated graph/status after compatibility mutation." })),
 });

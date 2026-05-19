@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-19T07:12:58Z",
+  "updated": "2026-05-19T07:30:02Z",
   "order": [
     "TASK-001",
     "TASK-002",
@@ -217,10 +217,10 @@
     "TASK-005": {
       "id": "TASK-005",
       "title": "Consolidate CodeWiki public and agent tool surface",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "migration",
-      "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration; after the role worktree/publisher path lands, remove or extract the /wiki-session-handoff compatibility shim instead of preserving it as user-facing surface.",
+      "summary": "Introduce a smaller CodeWiki public and agent workflow tool surface by removing deprecated aliases and static catalogs instead of preserving compatibility shims.",
       "spec_paths": [
         ".codewiki/kb/system/api.md",
         ".codewiki/kb/system/adapters.md",
@@ -229,53 +229,51 @@
         ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json"
       ],
       "code_paths": [
-        "src/application/tools/catalog.ts",
-        "src/adapters/pi/tools",
-        "src/adapters/pi/commands",
-        "src/application/tools/session-handoff.ts",
-        "src/adapters/pi/tools/session-handoff.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/application/claims.ts",
+        "src/domain/shared/types.ts",
+        "tests/smoke/package-smoke.test.mjs",
         "README.md",
         "skills/codewiki/SKILL.md",
-        "skills/codewiki-implementation/SKILL.md",
-        "tests/smoke"
+        "skills/codewiki/references/tool-catalog.md"
       ],
       "research_ids": [],
       "labels": [
         "tool-surface-consolidation",
-        "compatibility-migration",
-        "handoff-shim-cleanup",
-        "post-worktree-factory"
+        "no-compatibility-shims",
+        "domain-led-cleanup"
       ],
       "change_type": "system",
       "goal": {
-        "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated; once role worktree/publisher orchestration is validated, the /wiki-session-handoff compatibility shim is removed or extracted from user-facing workflow surface.",
+        "outcome": "CodeWiki exposes a smaller direct tool surface, with deprecated aliases and dead application catalogs removed; callers use replacement tools directly and tests/docs enforce the new surface.",
         "acceptance": [
-          "Public command surface is documented around status, decide, work, audit, and maintain concepts.",
-          "Agent-facing workflow tools or orchestrators cover state, decision, work, gate, maintenance, and coordination phases.",
-          "Low-level primitives remain callable through compatibility/debug paths and are not removed prematurely.",
-          "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces.",
-          "After TASK-006 validates isolated worktree/publisher orchestration, /wiki-session-handoff is removed or extracted from normal user-facing recovery flow with migration tests proving intended compatibility/debug behavior."
+          "`codewiki_claim` is not registered and callers use `codewiki_artifact_status` directly.",
+          "Static application tool catalog source is removed; the skill-facing catalog remains the documented tool map.",
+          "Deleted alias/catalog files are absent from package smoke and active docs.",
+          "Artifact-status coordination tests cover mark/read-overlap/conflict/release without the claim alias.",
+          "Active system docs and roadmap no longer instruct preserving wrapper aliases as the migration policy."
         ],
         "non_goals": [
-          "Do not create a single opaque do-everything tool.",
-          "Do not remove existing public primitives until migration and deprecation tests pass.",
-          "Do not remove or extract /wiki-session-handoff before TASK-006 validates isolated worktree/publisher orchestration.",
-          "Do not implement decision_build schema in this task."
+          "Do not remove real application use-case services that still orchestrate IO, mutation, rebuild, or validation.",
+          "Do not refactor `src/application/claims.ts` into domain in this slice; keep runtime coordination behavior stable while removing the public alias.",
+          "Do not change handoff/worktree-isolation behavior owned by TASK-006 beyond avoiding stale references."
         ],
         "verification": [
-          "Run tool catalog and adapter smoke tests.",
-          "Run README/skill stale-reference audits.",
-          "Verify old tool names still work during compatibility.",
-          "Run session-handoff smoke tests proving the remaining command/debug path, or its removal, matches documented public surface after TASK-006 lands."
+          "Run npm run typecheck.",
+          "Run npm run test:smoke.",
+          "Run npm run check:architecture.",
+          "Run CodeWiki stale-reference/file-structure/alignment audits."
         ]
       },
       "delta": {
-        "desired": "Public/agent tool surface is consolidated and /wiki-session-handoff compatibility shim is removed or extracted after the isolated worktree/publisher path is safe.",
-        "current": "Low-level primitives and /wiki-session-handoff compatibility executor remain visible during migration; cleanup is unsafe while sessions share dirty root worktrees.",
+        "desired": "Deprecated tool aliases and dead application catalog are gone; replacement surfaces are direct.",
+        "current": "Before this cleanup, the deprecated claim alias and static application catalog existed in source/tests/docs.",
         "closure": ""
       },
       "created": "2026-05-19",
-      "updated": "2026-05-19T06:00:44Z"
+      "updated": "2026-05-19T07:30:02Z"
     }
   },
   "sprints": {

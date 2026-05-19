@@ -1,0 +1,617 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-19T07:29:52Z",
+  "source": "codewiki_build tool",
+  "task_id": "TASK-005",
+  "task": {
+    "id": "TASK-005",
+    "title": "Consolidate CodeWiki public and agent tool surface",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "migration",
+    "summary": "Introduce a smaller CodeWiki public and agent workflow tool surface by removing deprecated aliases and static catalogs instead of preserving compatibility shims.",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json"
+    ],
+    "code_paths": [
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/application/claims.ts",
+      "src/domain/shared/types.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md"
+    ],
+    "goal": {
+      "outcome": "CodeWiki exposes a smaller direct tool surface, with deprecated aliases and dead application catalogs removed; callers use replacement tools directly and tests/docs enforce the new surface.",
+      "acceptance": [
+        "`codewiki_claim` is not registered and callers use `codewiki_artifact_status` directly.",
+        "Static application tool catalog source is removed; the skill-facing catalog remains the documented tool map.",
+        "Deleted alias/catalog files are absent from package smoke and active docs.",
+        "Artifact-status coordination tests cover mark/read-overlap/conflict/release without the claim alias.",
+        "Active system docs and roadmap no longer instruct preserving wrapper aliases as the migration policy."
+      ],
+      "non_goals": [
+        "Do not remove real application use-case services that still orchestrate IO, mutation, rebuild, or validation.",
+        "Do not refactor `src/application/claims.ts` into domain in this slice; keep runtime coordination behavior stable while removing the public alias.",
+        "Do not change handoff/worktree-isolation behavior owned by TASK-006 beyond avoiding stale references."
+      ],
+      "verification": [
+        "Run npm run typecheck.",
+        "Run npm run test:smoke.",
+        "Run npm run check:architecture.",
+        "Run CodeWiki stale-reference/file-structure/alignment audits."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-05-26T07:29:52.000Z",
+    "purge_after": "2026-06-02T07:29:52.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "implementation_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-005 implementation slice: remove deprecated codewiki_claim alias and dead application tool catalog, requiring direct artifact-status usage and skill-facing catalog only.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "exemption": "mechanical",
+    "semantic": false,
+    "requires_accepted_build": false,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-005"
+    ],
+    "validation": [],
+    "source": [
+      "User rule: avoid shims/SIMs, remove deprecated code/documentation, and fix breakage at the direct replacement surface."
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/application/claims.ts",
+      "src/application/gateway/index.ts",
+      "src/domain/shared/types.ts",
+      "src/adapters/pi/tools/claim.ts (deleted)",
+      "src/application/tools/claim.ts (deleted)",
+      "src/application/tools/catalog.ts (deleted)"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "validation": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run check:architecture",
+      "codewiki_audit alignment,changed,file-structure,stale-reference,generated-parity,task"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-005"
+    ]
+  },
+  "linked_refs": {
+    "documentation_build": "",
+    "planning_build": "",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json"
+    ],
+    "code_paths": [
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/application/claims.ts",
+      "src/domain/shared/types.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs"
+  ],
+  "code_files": [
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/application/claims.ts",
+    "src/application/gateway/index.ts",
+    "src/domain/shared/types.ts",
+    "src/adapters/pi/tools/claim.ts (deleted)",
+    "src/application/tools/claim.ts (deleted)",
+    "src/application/tools/catalog.ts (deleted)"
+  ],
+  "files_changed": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/application/claims.ts",
+    "src/application/gateway/index.ts",
+    "src/domain/shared/types.ts",
+    "src/adapters/pi/tools/claim.ts (deleted)",
+    "src/application/tools/claim.ts (deleted)",
+    "src/application/tools/catalog.ts (deleted)"
+  ],
+  "checks_run": [
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_documentation_build": "",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-005",
+      "test_files": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "evidence": [
+        "Package smoke covers registration absence for codewiki_claim and replacement artifact-status behavior.",
+        "Prompt asset smoke guards against reintroducing the deleted application tool catalog reference."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_documentation_build": "",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-005",
+      "code_files": [
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/application/claims.ts",
+        "src/application/gateway/index.ts",
+        "src/domain/shared/types.ts",
+        "src/adapters/pi/tools/claim.ts (deleted)",
+        "src/application/tools/claim.ts (deleted)",
+        "src/application/tools/catalog.ts (deleted)"
+      ],
+      "evidence": [],
+      "notes": [
+        "Artifact status was marked for TASK-005 before editing; no conflicts reported.",
+        "Worktree was dirty from prior session at first check, but user approved proceeding; by implementation time only this cleanup slice remained in git diff.",
+        "Did not touch TASK-006 handoff/worktree behavior beyond stale docs/tool surface text."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Package smoke covers registration absence for codewiki_claim and replacement artifact-status behavior.",
+    "Prompt asset smoke guards against reintroducing the deleted application tool catalog reference."
+  ],
+  "code_change_evidence": [],
+  "acceptance_mapping": [
+    {
+      "criterion": "`codewiki_claim` is not registered and callers use `codewiki_artifact_status` directly.",
+      "evidence": "Removed Pi registration/import/schema for codewiki_claim; package smoke asserts extension.tools.has(\"codewiki_claim\") is false and uses artifactStatusTool for mark/read-overlap/conflict/release."
+    },
+    {
+      "criterion": "Static application tool catalog source is removed; skill-facing catalog remains the documented tool map.",
+      "evidence": "Deleted src/application/tools/catalog.ts; prompt asset smoke asserts tool-catalog no longer references it; package smoke validates skill-facing catalog coverage."
+    },
+    {
+      "criterion": "Deleted alias/catalog files are absent from package smoke and active docs.",
+      "evidence": "Deleted src/application/tools/claim.ts and src/adapters/pi/tools/claim.ts; grep over src/tests/README/skills/.codewiki/kb/queue found no CodewikiClaimToolInput/codewikiClaimToolInputSchema/deleted-path/compatibility-alias refs."
+    },
+    {
+      "criterion": "Artifact-status coordination tests cover mark/read-overlap/conflict/release without the claim alias.",
+      "evidence": "tests/smoke/package-smoke.test.mjs now uses codewiki_artifact_status for coordination flow and expects codewiki_artifact_status conflict errors."
+    },
+    {
+      "criterion": "Active system docs and roadmap no longer instruct preserving compatibility aliases as the migration policy.",
+      "evidence": ".codewiki/kb/system/api.md and compilers.md now instruct direct replacements and removing deprecated aliases/wrappers."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Remove deprecated/stale application tool shims and docs instead of preserving compatibility wrappers; fix breakage by using direct replacement surfaces.",
+    "implemented_changes": [
+      "Removed codewiki_claim registration, schema, adapter file, and application tool file.",
+      "Removed dead static src/application/tools/catalog.ts and updated tests/docs to rely on skill-facing catalog only.",
+      "Updated artifact-status messages/tests to use codewiki_artifact_status conflict terminology.",
+      "Updated README, skill catalog, and system docs to remove compatibility-alias preservation policy."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/application/claims.ts",
+        "src/application/gateway/index.ts",
+        "src/domain/shared/types.ts"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "npm run test:smoke passed after replacing claim alias smoke coverage with artifact-status coverage.",
+      "npm run check:architecture passed with 76 TypeScript source files after deleting three stale files."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run check:architecture",
+      "codewiki_audit alignment/changed/file-structure/stale-reference/generated-parity/task"
+    ],
+    "non_goals_preserved": [
+      "Did not remove real application orchestration services still needed for IO/rebuild/validation.",
+      "Did not refactor src/application/claims.ts into domain in this slice.",
+      "Did not change TASK-006 handoff/worktree-isolation behavior."
+    ],
+    "remaining_risks": [
+      "External users of codewiki_claim must migrate to codewiki_artifact_status."
+    ]
+  },
+  "risks": [
+    "Downstream callers still using codewiki_claim will fail and must migrate to codewiki_artifact_status per user rule."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-005",
+      "task_id": "TASK-005",
+      "next_focus_task_id": "TASK-001",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-005",
+        "title": "Consolidate CodeWiki public and agent tool surface",
+        "summary": "TASK-005 implementation slice: remove deprecated codewiki_claim alias and dead application tool catalog, requiring direct artifact-status usage and skill-facing catalog only.",
+        "spec_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json"
+        ],
+        "code_paths": [
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/application/claims.ts",
+          "src/domain/shared/types.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md",
+          "src/application/gateway/index.ts",
+          "src/adapters/pi/tools/claim.ts (deleted)",
+          "src/application/tools/claim.ts (deleted)",
+          "src/application/tools/catalog.ts (deleted)"
+        ],
+        "acceptance": [
+          "`codewiki_claim` is not registered and callers use `codewiki_artifact_status` directly.",
+          "Static application tool catalog source is removed; the skill-facing catalog remains the documented tool map.",
+          "Deleted alias/catalog files are absent from package smoke and active docs.",
+          "Artifact-status coordination tests cover mark/read-overlap/conflict/release without the claim alias.",
+          "Active system docs and roadmap no longer instruct preserving wrapper aliases as the migration policy."
+        ],
+        "verification": [
+          "Run npm run typecheck.",
+          "Run npm run test:smoke.",
+          "Run npm run check:architecture.",
+          "Run CodeWiki stale-reference/file-structure/alignment audits."
+        ],
+        "source_planning_build": "",
+        "checks_run": [
+          "npm run typecheck — pass",
+          "npm run test:smoke — pass",
+          "npm run check:architecture — pass",
+          "codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh"
+        ],
+        "test_design_evidence": [
+          "Package smoke covers registration absence for codewiki_claim and replacement artifact-status behavior.",
+          "Prompt asset smoke guards against reintroducing the deleted application tool catalog reference."
+        ],
+        "code_change_evidence": [],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-005",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-005",
+      "show_build": "git show refs/codewiki/archive/task/TASK-005:.codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/application/claims.ts",
+        "src/domain/shared/types.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-005 Consolidate CodeWiki public and agent tool surface implementation evidence",
+      "body": "TASK-005 implementation slice: remove deprecated codewiki_claim alias and dead application tool catalog, requiring direct artifact-status usage and skill-facing catalog only.\n\nChecks: npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-005\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json\nCodeWiki-Checks: npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-005\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-005\nCodeWiki-Digest: sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549\nCodeWiki-Restore: /wiki-restore TASK-005",
+      "trailers": [
+        "CodeWiki-Task: TASK-005",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+        "CodeWiki-Checks: npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-005",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-005",
+        "CodeWiki-Digest: sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
+        "CodeWiki-Restore: /wiki-restore TASK-005"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-005 Consolidate CodeWiki public and agent tool surface implementation evidence",
+      "body": "TASK-005 implementation slice: remove deprecated codewiki_claim alias and dead application tool catalog, requiring direct artifact-status usage and skill-facing catalog only.\n\nChecks: npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-005\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json\nCodeWiki-Checks: npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-005\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-005\nCodeWiki-Digest: sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549\nCodeWiki-Restore: /wiki-restore TASK-005"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-005",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-005"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-005",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-005",
+        "show_build": "git show refs/codewiki/archive/task/TASK-005:.codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/builds/documentation/2026-05-19-role-worktree-factory-publisher-queue-docs.json",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/application/claims.ts",
+          "src/domain/shared/types.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-005",
+      "build_path": ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-005",
+      "commit_sha": "",
+      "digest": "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
+      "restore_command": "/wiki-restore TASK-005"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+          "bytes": 86849
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:5c861b95e9299df4053ae1ce32253eef108f419f6040c98202a3b0ed1a510b15",
+          "bytes": 13399
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:1717609d88b89788d0736b8598dd34f228f300ed562ebf2f9ef17b1aa29304ec",
+          "bytes": 14239
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:a239609a9f8c88a73d96395e7045b84e4240e0c89e1a8dc47dca554642c788bb",
+          "bytes": 31093
+        },
+        {
+          "path": "src/adapters/pi/tools/artifact-status.ts",
+          "role": "code_file",
+          "sha256": "sha256:7c813761f54b5ffe0dbeb11cd3ff61dd9eaef3d34f6bfb49fbe87116263d382f",
+          "bytes": 2595
+        },
+        {
+          "path": "src/application/claims.ts",
+          "role": "code_file",
+          "sha256": "sha256:7ca1bd63672cf58c2ae0f112963f66b7a822080a236eb254d562ae393e8b09ad",
+          "bytes": 38328
+        },
+        {
+          "path": "src/application/gateway/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:5ba8c55f7758b2fbe77e753b9b49886d0cac5f557664145432cd1ddb20d1ed16",
+          "bytes": 8681
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:eabbba4143659a1377ef32b2462e105a9ef0d8aebc8cb2057879d872f4f7a94a",
+          "bytes": 33378
+        }
+      ],
+      "skipped": [
+        {
+          "path": "src/adapters/pi/tools/claim.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/application/tools/claim.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/application/tools/catalog.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        }
+      ]
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck — pass",
+        "npm run test:smoke — pass",
+        "npm run check:architecture — pass",
+        "codewiki_audit profiles alignment,changed,file-structure,stale-reference,generated-parity,task task_id=TASK-005 — warning only for generated graph/task views changed by refresh"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
