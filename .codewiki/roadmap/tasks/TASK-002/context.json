@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-19T00:47:41Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-002/context.json",
+  "task": {
+    "id": "TASK-002",
+    "title": "Implement diagram-backed system KB audits and graph nodes",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Parse system diagram YAML into first-class graph refs and audit system docs against diagram_refs and requires_doc rules after migration flags are enabled.",
+    "labels": [
+      "diagram-ontology",
+      "diagram-refs",
+      "audit"
+    ],
+    "goal": {
+      "outcome": "CodeWiki can treat system diagrams as the system ontology and detect orphan docs, missing diagram refs, stale refs, and requires_doc gaps.",
+      "acceptance": [
+        "Diagram YAML parser exposes components, adapters, flows, domain entities, lifecycles, policies, artifacts, actors, and external systems as graph/audit refs.",
+        "System docs can declare diagram_refs in frontmatter and audits verify target existence.",
+        "Diagram nodes can declare requires_doc and audits report missing owning docs.",
+        "Migration mode can warn before hard enforcement so existing repos can adopt gradually."
+      ],
+      "non_goals": [
+        "Do not require every diagram node to have a doc.",
+        "Do not replace renderer-specific diagram output in this task.",
+        "Do not implement default graph lens simplification in this task."
+      ],
+      "verification": [
+        "Add tests for valid refs, missing refs, missing requires_doc docs, and migration warning mode.",
+        "Run codewiki_audit profiles=[alignment,stale-reference,file-structure]."
+      ]
+    },
+    "delta": {
+      "desired": "Diagram parser/refs/audits only.",
+      "current": "System diagram YAML exists but docs are not validated against diagram refs.",
+      "closure": ""
+    }
+  }
+}

@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - .codewiki/kb
   - src
@@ -43,6 +43,8 @@ Product docs define users, user stories, and visual user interfaces. System docs
 At the `.codewiki/` root, active contract surfaces are limited to config, knowledge, roadmap queue/tasks, session queue coordination, builds, validation, runtime diff tables, sources/research support, and generated graph state. In this repository, `.codewiki/` is dogfood state for maintaining CodeWiki; it is not package source code. Legacy `.codewiki/index/` and default `.codewiki/evidence/**` surfaces are deprecated: `.codewiki/index_graph.json` is the generated index, implementation builds hold execution evidence, validation reports hold hot gateway decisions, and source/research support belongs under `.codewiki/sources/**` or an explicit `research_root`.
 
 System component docs should stay flat. Each major system component should have one matching `.md` file under `system/`. Diagram raw data is the one intended nested system folder and lives under `system/diagrams/**`.
+
+In the vNext target, system diagrams are the allowlist/navigation spine for system docs. Every system `.md` doc except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Diagram refs may point to components, adapters, flows, domain entities, lifecycles, policy boundaries, artifacts, actors, or external systems. Diagram nodes may set `requires_doc` when a doc is mandatory; diagram nodes without that flag may remain diagram-only.
 
 Avoid nested component folders and avoid `overview.md` files except `product/overview.md`, `system/overview.md`, and the diagram contract `system/diagrams/README.md`.
 
@@ -83,7 +85,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `.codewiki/session/queue.json`, artifact statuses, generated session views |
 | Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
 | Task-linked tests | `file-structure.md` | `tests/tasks/TASK-###/**`, stable smoke/regression tests under `tests/smoke/**` |
-| Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` prompt templates, bootstrap workflow assets, loops, and playbooks |
+| Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` router/bootstrap/prompt/playbook/reference assets and focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Pi project prompt boundary | `adapters.md`, `file-structure.md` | `.pi/APPEND_SYSTEM.md` clarifies `.codewiki/` dogfood state vs package source |
 
 `system/diagrams/*.yaml` may also show external artifacts such as users, code/tests, and publication outputs. Those are not system component docs unless they become owned system components.
@@ -195,12 +197,16 @@ Skill assets own agent workflow guidance, prompt templates, bootstrap guidance, 
 
 ```text
 skills/codewiki/
-  SKILL.md
-  loops/
+  SKILL.md                # router/bootstrap/status invariants
   playbooks/
   bootstrap/
   prompts/
-  tools/                  # optional skill helper entrypoints over application tools
+  references/
+skills/codewiki-feedback/SKILL.md
+skills/codewiki-documentation/SKILL.md
+skills/codewiki-planning/SKILL.md
+skills/codewiki-implementation/SKILL.md
+skills/codewiki-validation/SKILL.md
 ```
 
 `scripts/**`, when present, is optional developer convenience. A script may wrap an application tool for local use, but it must be safe to delete without changing CodeWiki product behavior, gateway policy, tests, or package semantics.

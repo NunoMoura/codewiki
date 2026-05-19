@@ -5,7 +5,7 @@ state: active
 summary: Product intent and navigation for CodeWiki's users, stories, and visual UIs.
 owners:
 - product
-updated: '2026-05-09'
+updated: '2026-05-19'
 code_paths:
 - .codewiki/kb/product
 ---
@@ -26,6 +26,8 @@ Folders do not need `overview.md` files by default. Add a navigation page only w
 ## Product boundaries
 
 Product docs own user definitions, user stories, visual UI expectations, value, workflows, and non-goals. They should not own source layout, module boundaries, adapter protocols, runtime packaging, compiler implementation, graph storage mechanics, or distribution details.
+
+Product-oriented decisions should update product meaning first, then preflight system impact. Technical/system decisions should update system truth first, then update product docs only when architecture constraints, workflows, or tool surfaces change user-visible behavior or expectations.
 
 Tools, commands, skills, CLI access, MCP access, package APIs, and harness adapters are not product UIs. Product stories may describe the outcome those access paths must support, but the technical access contract belongs in [CodeWiki API](../system/api.md), [Adapters](../system/adapters.md), and [Extension](../system/extension.md).
 

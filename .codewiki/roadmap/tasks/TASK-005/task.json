@@ -1,0 +1,54 @@
+{
+  "id": "TASK-005",
+  "title": "Consolidate CodeWiki public and agent tool surface",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "migration",
+  "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration.",
+  "spec_paths": [
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/extension.md"
+  ],
+  "code_paths": [
+    "src/application/tools/catalog.ts",
+    "src/adapters/pi/tools",
+    "src/adapters/pi/commands",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "tests/smoke"
+  ],
+  "research_ids": [],
+  "labels": [
+    "tool-surface-consolidation",
+    "compatibility-migration"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated.",
+    "acceptance": [
+      "Public command surface is documented around status, decide, work, audit, and maintain concepts.",
+      "Agent-facing workflow tools or orchestrators cover state, decision, work, gate, maintenance, and coordination phases.",
+      "Low-level primitives remain callable through compatibility/debug paths and are not removed prematurely.",
+      "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces."
+    ],
+    "non_goals": [
+      "Do not create a single opaque do-everything tool.",
+      "Do not remove existing public primitives until migration and deprecation tests pass.",
+      "Do not implement decision_build schema in this task."
+    ],
+    "verification": [
+      "Run tool catalog and adapter smoke tests.",
+      "Run README/skill stale-reference audits.",
+      "Verify old tool names still work during compatibility."
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-05-19",
+  "updated": "2026-05-19"
+}

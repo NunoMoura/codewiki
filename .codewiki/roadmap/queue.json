@@ -1,7 +1,318 @@
 {
   "version": 2,
-  "updated": "2026-05-19T00:09:01Z",
-  "order": [],
-  "tasks": {},
-  "sprints": {}
+  "updated": "2026-05-19T00:47:41Z",
+  "order": [
+    "TASK-001",
+    "TASK-002",
+    "TASK-003",
+    "TASK-004",
+    "TASK-005"
+  ],
+  "tasks": {
+    "TASK-001": {
+      "id": "TASK-001",
+      "title": "Add decision build and decision compiler orchestration",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Introduce vNext decision-build support and decision compiler orchestration behind compatibility so routine intent-to-knowledge work can combine semantic approval, KB preflight, KB updates, and row-to-KB evidence.",
+      "spec_paths": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/alignment-model.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "code_paths": [
+        "src/domain/shared/types.ts",
+        "src/application/builds.ts",
+        "src/application/tools/build.ts",
+        "src/adapters/pi/schemas.ts",
+        "skills/codewiki-feedback/SKILL.md",
+        "skills/codewiki-documentation/SKILL.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "decision-compiler",
+        "decision-build",
+        "compatibility"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki can create and validate decision_build artifacts through compatibility-safe decision orchestration without breaking existing feedback/documentation flows.",
+        "acceptance": [
+          "Decision build kind/schema is represented in domain/application/adapters behind compatibility.",
+          "Decision orchestration supports proposal and accepted modes with no canonical writes before approval.",
+          "Accepted decision artifacts record approved rows, row-to-KB mappings, product/system propagation direction, assumptions, risks, and downstream planning questions.",
+          "Existing feedback_build and documentation_build flows keep working and tests cover compatibility."
+        ],
+        "non_goals": [
+          "Do not remove feedback_build or documentation_build support.",
+          "Do not migrate all tool-surface consolidation in this task.",
+          "Do not implement graph diagram-ref audits or gate fast paths in this task."
+        ],
+        "verification": [
+          "Run typecheck and focused build/tool smoke tests.",
+          "Validate decision-build traceability with a new or updated smoke test.",
+          "Run CodeWiki alignment and stale-reference audits."
+        ]
+      },
+      "delta": {
+        "desired": "Decision compiler and decision_build compatibility support only.",
+        "current": "No vNext decision_build support exists yet.",
+        "closure": ""
+      },
+      "created": "2026-05-19",
+      "updated": "2026-05-19T00:47:36Z"
+    },
+    "TASK-002": {
+      "id": "TASK-002",
+      "title": "Implement diagram-backed system KB audits and graph nodes",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Parse system diagram YAML into first-class graph refs and audit system docs against diagram_refs and requires_doc rules after migration flags are enabled.",
+      "spec_paths": [
+        ".codewiki/kb/system/knowledge.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/audits.md"
+      ],
+      "code_paths": [
+        "src/application/graph.ts",
+        "src/application/graph",
+        "src/application/knowledge",
+        "src/application/lint.ts",
+        "src/application/tools/audit.ts",
+        ".codewiki/kb/system/diagrams"
+      ],
+      "research_ids": [],
+      "labels": [
+        "diagram-ontology",
+        "diagram-refs",
+        "audit"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki can treat system diagrams as the system ontology and detect orphan docs, missing diagram refs, stale refs, and requires_doc gaps.",
+        "acceptance": [
+          "Diagram YAML parser exposes components, adapters, flows, domain entities, lifecycles, policies, artifacts, actors, and external systems as graph/audit refs.",
+          "System docs can declare diagram_refs in frontmatter and audits verify target existence.",
+          "Diagram nodes can declare requires_doc and audits report missing owning docs.",
+          "Migration mode can warn before hard enforcement so existing repos can adopt gradually."
+        ],
+        "non_goals": [
+          "Do not require every diagram node to have a doc.",
+          "Do not replace renderer-specific diagram output in this task.",
+          "Do not implement default graph lens simplification in this task."
+        ],
+        "verification": [
+          "Add tests for valid refs, missing refs, missing requires_doc docs, and migration warning mode.",
+          "Run codewiki_audit profiles=[alignment,stale-reference,file-structure]."
+        ]
+      },
+      "delta": {
+        "desired": "Diagram parser/refs/audits only.",
+        "current": "System diagram YAML exists but docs are not validated against diagram refs.",
+        "closure": ""
+      },
+      "created": "2026-05-19",
+      "updated": "2026-05-19T00:47:41Z"
+    },
+    "TASK-003": {
+      "id": "TASK-003",
+      "title": "Add validation preflight and risk-tier policy",
+      "status": "todo",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Add gateway preflight and risk-tier policy so low-risk mechanical/docs cleanup avoids late metadata blocks while high-risk work escalates to user semantic approval.",
+      "spec_paths": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md"
+      ],
+      "code_paths": [
+        "src/application/gateway",
+        "src/application/tools/validation.ts",
+        "src/application/tools/session-handoff.ts",
+        "skills/codewiki-validation/SKILL.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "validation-preflight",
+        "risk-tier-gates"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Gateways can preflight required metadata/audits/proof before expensive validation and apply risk-tiered user escalation policy.",
+        "acceptance": [
+          "Preflight reports missing upstream builds, audit evidence, task ids, content proof strategy, stale refs, and close/publication blockers before fresh validation handoff.",
+          "Risk tiers distinguish mechanical/docs cleanup, code-local, semantic-system, security/migration/publication, and destructive changes.",
+          "Low-risk fast path remains gateway-validated and records why user approval is not required beyond accepted semantics.",
+          "High-risk categories escalate to user approval before lower-layer promotion."
+        ],
+        "non_goals": [
+          "Do not weaken implementation/task-close/publication content-proof requirements.",
+          "Do not bypass fresh validation where policy requires independence.",
+          "Do not consolidate public tool surface in this task."
+        ],
+        "verification": [
+          "Add gateway/preflight tests for missing metadata, fast path eligibility, and escalation categories.",
+          "Run validation smoke tests and CodeWiki audits."
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-19",
+      "updated": "2026-05-19"
+    },
+    "TASK-004": {
+      "id": "TASK-004",
+      "title": "Simplify generated state graph lenses",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "architecture",
+      "summary": "Refactor generated state output to expose a compact Decision, Knowledge, Work, Execution, Proof default lens while preserving exact trace/audit expansion for gateways.",
+      "spec_paths": [
+        ".codewiki/kb/system/graph.md"
+      ],
+      "code_paths": [
+        "src/application/state-builders.ts",
+        "src/application/state.ts",
+        "src/domain/state",
+        "src/ui/web"
+      ],
+      "research_ids": [],
+      "labels": [
+        "state-lenses",
+        "graph-lenses"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Default CodeWiki state and graph views are simpler and lower-token while trace/audit lenses still expose full evidence refs.",
+        "acceptance": [
+          "Default state/view groups hot context into Decision, Knowledge, Work, Execution, and Proof families.",
+          "Build and validation internals collapse to badges in default views when not the next action.",
+          "Trace/audit lenses expand exact source refs, requirements, validation reports, and content proof for gateways.",
+          "State/graph output remains generated and does not become canonical truth."
+        ],
+        "non_goals": [
+          "Do not drop any evidence needed by validation, archive, restore, or publication.",
+          "Do not implement diagram_ref auditing in this task."
+        ],
+        "verification": [
+          "Add graph/state tests for default lens and trace/audit expansion.",
+          "Run codewiki_state and generated-parity audit."
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-19",
+      "updated": "2026-05-19"
+    },
+    "TASK-005": {
+      "id": "TASK-005",
+      "title": "Consolidate CodeWiki public and agent tool surface",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "migration",
+      "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration.",
+      "spec_paths": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "code_paths": [
+        "src/application/tools/catalog.ts",
+        "src/adapters/pi/tools",
+        "src/adapters/pi/commands",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki-implementation/SKILL.md",
+        "tests/smoke"
+      ],
+      "research_ids": [],
+      "labels": [
+        "tool-surface-consolidation",
+        "compatibility-migration"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated.",
+        "acceptance": [
+          "Public command surface is documented around status, decide, work, audit, and maintain concepts.",
+          "Agent-facing workflow tools or orchestrators cover state, decision, work, gate, maintenance, and coordination phases.",
+          "Low-level primitives remain callable through compatibility/debug paths and are not removed prematurely.",
+          "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces."
+        ],
+        "non_goals": [
+          "Do not create a single opaque do-everything tool.",
+          "Do not remove existing public primitives until migration and deprecation tests pass.",
+          "Do not implement decision_build schema in this task."
+        ],
+        "verification": [
+          "Run tool catalog and adapter smoke tests.",
+          "Run README/skill stale-reference audits.",
+          "Verify old tool names still work during compatibility."
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-19",
+      "updated": "2026-05-19"
+    }
+  },
+  "sprints": {
+    "SPRINT-001": {
+      "id": "SPRINT-001",
+      "title": "CodeWiki vNext decision and graph workflow",
+      "status": "planned",
+      "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments: decision builds, diagram-backed system docs, simpler graph lenses, risk-tier gates, and consolidated workflow tools.",
+      "task_ids": [
+        "TASK-001",
+        "TASK-002",
+        "TASK-003",
+        "TASK-004",
+        "TASK-005"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/knowledge.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/api.md"
+        ],
+        "code": [
+          "src/application/builds.ts",
+          "src/application/graph/**",
+          "src/application/gateway/**",
+          "src/application/tools/**",
+          "src/adapters/pi/**",
+          "skills/codewiki*/**",
+          "tests/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 10,
+        "maxSessions": 10,
+        "risk": "high"
+      },
+      "gates": [
+        "Keep current CodeWiki public behavior frozen except critical blocker fixes until vNext replacement flows validate.",
+        "Do not remove compatibility feedback/documentation/build/tool primitives before deprecation tests pass.",
+        "Each task must produce implementation_build and fresh validation evidence before close."
+      ],
+      "created": "2026-05-19T00:47:24Z",
+      "updated": "2026-05-19T00:47:24Z"
+    }
+  }
 }

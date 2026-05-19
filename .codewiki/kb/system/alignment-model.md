@@ -6,7 +6,7 @@ summary: Core CodeWiki model for context-driven development alignment across int
 owners:
   - architecture
   - product
-updated: "2026-05-16"
+updated: "2026-05-19"
 code_paths:
   - src/application/graph.ts
   - src/application/builds.ts
@@ -31,9 +31,10 @@ Alignment is not a single artifact. It is the result of canonical sources, compi
 
 | Layer | Role | Canonical evidence |
 | --- | --- | --- |
-| User-agent interaction | Captures intent, ambiguity, tradeoffs, and approval. | Approved feedback change rows and `feedback_build` files. |
+| User-agent interaction | Captures intent, ambiguity, tradeoffs, and approval. | Approved feedback change rows and `feedback_build` files in compatibility mode; approved decision rows in vNext mode. |
+| Decision | Captures approved semantic intent plus knowledge update evidence. | `decision_build` files after the vNext decision compiler is enabled. |
 | Product knowledge | Defines users, stories, UI behavior, and product intent. | `.codewiki/kb/product/**`. |
-| System knowledge | Defines architecture, workflows, policies, and file ownership. | `.codewiki/kb/system/**`. |
+| System knowledge | Defines architecture, workflows, policies, file ownership, and diagram-backed system ontology. | `.codewiki/kb/system/**` plus `system/diagrams/**`. |
 | Roadmap | Defines executable work, priority, state, acceptance, non-goals, and verification. | `.codewiki/roadmap/queue.json`. |
 | Tests | Proves intended behavior or records justified test-design evidence. | `tests/**` and implementation-build test evidence. |
 | Code | Implements behavior and package surfaces. | `src/**`, `skills/**`, tests, package files, and other product source. Optional `scripts/**` helpers are not authoritative product source. |
@@ -44,7 +45,9 @@ Alignment is not a single artifact. It is the result of canonical sources, compi
 
 ## Vertical alignment
 
-Vertical alignment means changes propagate through the development stack without missing required layers. A semantic change should be traceable through generated state from accepted intent to durable knowledge, roadmap work, tests/code, implementation evidence, validation, and publication when applicable.
+Vertical alignment means changes propagate through the development stack without missing required layers. A semantic change should be traceable through generated state from accepted intent or decision build to durable knowledge, roadmap work, tests/code, implementation evidence, validation, and publication when applicable.
+
+Product-first and system-first decisions may enter different abstraction layers. Product-first decisions update product meaning before system impact is checked. System-first decisions update system diagrams/knowledge before user-visible product impact is checked. Both paths require explicit propagation or no-impact evidence.
 
 Generated state is the derived vertical state machine. It encodes expected layer edges and reconciliation gaps, but it is not canonical truth. The state engine routes the next loop and points to source refs; agents and gateways must read canonical sources directly before changing or validating semantics.
 
@@ -80,14 +83,16 @@ All agent-led semantic work starts with feedback classification, then routes to 
 
 | Change type | Primary owner | Required propagation check |
 | --- | --- | --- |
-| `product` | Feedback -> documentation | Product docs, system impact, roadmap/tests/code needs. |
-| `system` | Feedback -> documentation | System docs, file ownership, graph/gateway policy, roadmap/code needs. |
+| `product` | Feedback -> documentation in compatibility mode; decision compiler in vNext mode | Product docs, system impact or no-system-impact evidence, roadmap/tests/code needs. |
+| `system` | Feedback -> documentation in compatibility mode; decision compiler in vNext mode | System diagrams/docs, file ownership, graph/gateway policy, product impact or no-product-impact evidence, roadmap/code needs. |
 | `task` | Planning -> implementation | Existing accepted intent/docs/task links, tests/code evidence. |
 | `code` | Feedback, planning, or implementation | Upward docs/roadmap impact if behavior changes. |
 
 Security, audit, publication, and maintenance describe risk, workflow, or intent. They should be represented as labels, profiles, risk metadata, or publication context rather than primary change types. Generated, runtime, and mechanical-only work should use traceability exemption metadata (`generated`, `runtime`, or `mechanical`) and `semantic=false` when policy allows.
 
-When intent is unclear, work routes back to feedback before canonical docs, roadmap, tests, or code change.
+When intent is unclear, work routes back to feedback or the vNext decision proposal phase before canonical docs, roadmap, tests, or code change.
+
+Routine vNext decisions combine user semantic approval and knowledge updates into one decision build. Lower-layer task creation, implementation, closure, and publication are validated by gateways; user approval is reserved for semantic decisions and configured risk escalations.
 
 ## Rules
 
@@ -95,6 +100,7 @@ When intent is unclear, work routes back to feedback before canonical docs, road
 - Gateways decide boundary outcomes, but their reports are attestations over evidence, not content proof.
 - Commits, tree SHAs, and package digests anchor what exists or shipped.
 - Build artifacts carry traceability between loops, not permanent source truth.
+- Decision builds are the vNext semantic root for intent-to-knowledge work; compatibility feedback and documentation builds remain valid until migration completes.
 - Implementation validation proves commit-readiness; task closure proves an actual immutable recovery commit exists.
 - Commits are required content-proof checkpoints for task closure; commit bodies should include task id, build refs, validation refs, checks, and recovery/update notes.
 - Publication is an alignment layer and must match accepted builds, validation, and content proof.

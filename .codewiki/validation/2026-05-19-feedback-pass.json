@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T00:35:29Z",
+  "profile": "feedback",
+  "verdict": "pass",
+  "rationale": "Accepted vNext semantic decisions are captured in the feedback build with approved diff rows, requirement ids, guardrails, risks, non-goals, and downstream deltas. Alignment audit passed with no issues. Downstream documentation/planning must still update canonical KB and roadmap before implementation.",
+  "checks": [
+    "codewiki_diff_table accepted VNX-001..VNX-009",
+    "codewiki_build feedback .codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+    "codewiki_audit profiles=[alignment]: pass"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+  "policy_profile": "feedback",
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment"
+  ],
+  "audit_reports": [
+    "CodeWiki audit: pass; profiles: alignment; issues: 0"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "feedback validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T00:49:23Z",
+  "profile": "planning",
+  "verdict": "pass",
+  "rationale": "Validated documentation build has been decomposed into five bounded executable tasks under SPRINT-001. Task boundaries separate decision-build/compiler support, diagram-backed KB audits, validation preflight/risk tiers, graph lens simplification, and tool-surface consolidation. Initial automatic task reuse merged unrelated work, but planning corrected TASK-001/TASK-002 and created distinct TASK-003..TASK-005. Alignment audit passes; generated changed warnings are expected because roadmap task views and index_graph were refreshed from canonical queue/builds.",
+  "checks": [
+    "Read documentation build .codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
+    "Created/updated TASK-001..TASK-005 with acceptance, non-goals, verification, spec paths, and code paths",
+    "Created SPRINT-001 with compatibility freeze gates",
+    "Created planning build .codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+    "codewiki_audit profiles=[alignment,stale-reference,changed,generated-parity]: alignment pass; stale-reference pass; generated-parity pass; changed warnings only for generated state/task views"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment"
+  ],
+  "audit_reports": [
+    "CodeWiki audit: warning; profiles: alignment, stale-reference, changed, generated-parity; alignment pass; stale-reference pass; generated-parity pass; changed warnings only for generated files"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

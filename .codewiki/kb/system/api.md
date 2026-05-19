@@ -5,7 +5,7 @@ state: active
 summary: Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - src/application
   - src/domain
@@ -25,9 +25,10 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | Capability group | Responsibility |
 | --- | --- |
 | `codewiki.state` | Read compact project status, graph state, active work, focused session, and exact linked context. |
-| `codewiki.feedback` | Capture proposed intent, present diff tables, record accepted feedback builds. |
-| `codewiki.diff_table` | Manage pending, editable feedback diff-table rows before accepted rows compile into feedback builds. |
-| `codewiki.documentation` | Apply accepted feedback to product/system knowledge and produce documentation builds. |
+| `codewiki.feedback` | Compatibility capability for proposed intent, diff tables, and accepted feedback builds. |
+| `codewiki.diff_table` | Compatibility runtime surface for pending, editable feedback rows before accepted rows compile into feedback or decision builds. |
+| `codewiki.documentation` | Compatibility capability for applying accepted feedback to product/system knowledge and producing documentation builds. |
+| `codewiki.decision` | vNext capability for user semantic approval, KB preflight, product/system propagation, KB updates, and decision builds. |
 | `codewiki.implementation` | Coordinate implementation work, evidence collection, and implementation builds. |
 | `codewiki.roadmap` | Manage work truth: queue, status, priority, blockers, progress, and closure. |
 | `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, handoffs, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
@@ -41,6 +42,36 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | `codewiki.bootstrap` | Adopt or initialize repo-local CodeWiki state from skill-owned bootstrap/templates assets through application tools. |
 | `codewiki.patch` | Apply validated CodeWiki patches or append-only source/research writes under policy. |
 | `codewiki.publication` | Prepare commit, PR, issue, changelog, release, and push-readiness outputs from implementation evidence. |
+
+
+## vNext tool surface
+
+The vNext API should reduce the common public and agent tool surface while keeping low-level primitives available internally or through compatibility aliases.
+
+Preferred public/user-facing commands:
+
+| Command | Responsibility |
+| --- | --- |
+| `/wiki status` | Read current project state, health, next action, and active blockers. |
+| `/wiki decide` | Capture or approve semantic decisions at the right abstraction layer. |
+| `/wiki work` | Run one bounded planning/implementation/closure step under gates. |
+| `/wiki audit` | Run deterministic audits or validation-ready checks. |
+| `/wiki maintain` | Refresh generated state, run safe GC planning, or repair non-semantic drift. |
+
+Preferred agent workflow tools:
+
+| Tool | Responsibility |
+| --- | --- |
+| `codewiki_state` | Compact state/graph/task/session read. |
+| `codewiki_decision` | Decision proposal, approval, KB update, and decision-build orchestration. |
+| `codewiki_work` | Planning/implementation/closure orchestration for one bounded work item. |
+| `codewiki_gate` | Preflight, audit, validation, and policy checks. |
+| `codewiki_maintenance` | Generated-state refresh, GC, archive, and non-semantic repair. |
+| `codewiki_coordination` | Artifact status, waits, handoffs, and isolation coordination. |
+
+Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session handoff staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them.
+
+This is a surface-area goal, not a permission to create a magical `do everything` API. Each workflow tool should own one user-level phase and expose precise source refs, policy outcomes, and recovery steps.
 
 ## Access paths
 
@@ -57,7 +88,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## Write rules
 
-- Product/system changes flow through feedback and documentation loops.
+- Product/system changes flow through feedback and documentation loops in compatibility mode; vNext product/system changes flow through the decision capability after explicit user semantic approval.
 - Code/test changes flow through implementation loops.
 - Roadmap changes record work truth, not full requirements briefs.
 - Roadmap task creation must check active work for related intent and refine matching tasks before creating duplicates.
@@ -70,8 +101,9 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Validation callers must provide fresh-context, clean-worktree, and checked-SHA evidence for implementation, task-close, publication, publish, and release profiles; otherwise the API records a `block` verdict.
 - Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, and approval gates.
 - Session handoff callers must provide reason, source refs, expected output, and mode; adapters decide whether that becomes a replacement session, context reset, bounded worker process, or external orchestration plan. Tool-context Pi `new-session` and `context-reset` handoffs stage a durable handoff artifact and return `/wiki-session-handoff`; command-context `/wiki-session-handoff` performs `ctx.newSession` replacement or `ctx.compact` reset because those context mutations are command-context operations and direct tool-context compaction can hide the tool result.
-- Pending diff tables are runtime/session decision surfaces; accepted rows become feedback build truth. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
+- Pending diff tables are runtime/session decision surfaces; accepted rows become feedback build truth in compatibility mode or decision build truth in vNext mode. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
+- During CodeWiki self-refactors, public tool behavior stays frozen except critical blocker fixes; vNext capabilities are introduced behind compatibility aliases and become default only after documentation, tests, and validation pass.
 - Config schema v4 defines quiet rebuild defaults, scoped agency budgets, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
 - Tracked CodeWiki garbage collection must run after an archive/close/publication commit exists. The GC capability requires archive commit/tree proof, supports dry-run, writes a restore ledger with removed paths and `git restore --source=<archive-sha> -- <path>` commands, and applies tracked deletions only in a separate GC commit.
 - Ignored runtime/session artifacts may be purged under runtime policy, but manual deletion of tracked `.codewiki` builds, validation reports, or roadmap truth is not an API-compliant GC path.

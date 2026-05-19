@@ -5,7 +5,7 @@ state: active
 summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - .codewiki/index_graph.json
   - src/application/graph.ts
@@ -34,7 +34,8 @@ The graph is generated from:
 ```text
 .codewiki/config.json
 .codewiki/kb/** frontmatter, paths, explicit refs, and curated Markdown links
-.codewiki/builds/**
+.codewiki/builds/**, including compatibility feedback/documentation builds and vNext decision builds
+.codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, and policy boundaries
 .codewiki/roadmap/**
 .codewiki/validation/**
 .codewiki/session/queue.json session queue focus, waits, scoped leases, and isolation metadata
@@ -58,6 +59,25 @@ The CodeWiki UI graph view reads this file through CodeWiki API or local UI tran
 
 The graph should serve status, queue-order, and session-queue coordination reads directly. Extra queue files should not be generated unless a future adapter proves a concrete performance need; if such caches exist, they are generated graph queries and never separate truth.
 
+
+## vNext graph lenses
+
+Default vNext graph reads should show five families:
+
+```text
+Decision -> Knowledge -> Work -> Execution -> Proof
+```
+
+Decision covers approved rows and risk state. Knowledge covers product docs plus system diagram-backed docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse build/validation internals into badges when they are not the next action; trace, audit, restore, validation, and publication lenses expand exact refs and content proof.
+
+## System diagram nodes
+
+System diagrams are first-class inputs. The graph should parse diagram data into node/edge kinds for components, flows, entities, states, policies, artifacts, actors, adapters, and external systems. After the vNext migration, system docs should declare `diagram_refs`; the graph reports missing refs, missing target nodes, missing docs for nodes marked `requires_doc`, and doc/code mappings that conflict with diagram refs.
+
+## Product/system propagation
+
+The graph should model abstraction propagation separately from compiler sequence with edges such as `product_drives_system`, `system_constrains_product`, `product_requires_system`, `system_impacts_product`, `no_product_impact`, and `no_system_impact`.
+
 ## Hot state machine
 
 The graph should model cross-layer items with:
@@ -71,13 +91,11 @@ The graph should model cross-layer items with:
 
 Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted feedback, documentation, or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
 
-The graph next action should include the context boundary required for the next loop. Compiler-loop actions require a fresh session or recorded context reset. Implementation validation may use a dirty pre-commit `working_tree_digest` when a fresh validator records the checked content. Task-close, publication, publish, and release decisions require fresh validator context, required audit evidence, `clean=true`, and immutable commit/tree/package/archive/remote proof.
+The graph next action should include the required context boundary. Compiler-loop actions require a fresh session or recorded context reset. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
 
-The graph should keep hot context small. Hot state includes active tasks, active sprints, active session leases, latest active or superseding cycle builds, unconsumed handoffs, fail/block validation, current publication blockers, freshness/drift routes, and compact traceability gaps. Warm and cold evidence must stay available only through explicit archive, restore, audit, or refinement workflows. It must not enter the default CodeWiki operating context, agency context, status summary, or user-facing graph view.
+Hot context should stay small: active tasks/sprints/leases, latest active or superseding builds, unconsumed handoffs, fail/block validation, publication blockers, drift routes, and compact traceability gaps. Warm and cold evidence is available only through explicit archive, restore, audit, or refinement workflows.
 
-For Git-backed archival, the graph should prefer compact cold references over expanded cold artifact nodes. A cold task or sprint can be represented by a ledger row containing ids, archive ref, commit sha, digest, restore command, and safety status. Default graph views should hide these cold refs and restore indexes unless the caller explicitly asks for archive context.
-
-GC classification is advisory until archive proof exists. The graph may label artifacts warm, cold, or purgeable, but tracked deletion is safe only when a reachable archive commit/tree contains the artifact and the GC ledger can name exact restore commands. Post-commit GC should surface as a next-action candidate after task-close, sprint-close, publication, or roadmap-end commits when purgeable tracked or runtime artifacts remain hot.
+For Git-backed archival, the graph should prefer compact cold refs over expanded cold artifact nodes. GC labels are advisory until archive proof exists; tracked purge is safe only after a reachable archive commit/tree and restore ledger exist.
 
 ## Requirement traceability
 
@@ -100,6 +118,12 @@ requirement id
 The graph should report gaps such as:
 
 - accepted requirement has no knowledge mapping,
+- decision build has no row-to-KB mapping,
+- product-first change lacks system-impact or no-system-impact evidence,
+- system-first change lacks product-impact or no-product-impact evidence,
+- system doc lacks required diagram refs,
+- diagram ref points to a missing diagram node or flow,
+- diagram node marked `requires_doc` has no owning system doc,
 - knowledge change has no planning build when executable work is needed,
 - planning build has no roadmap task or acceptance mapping,
 - implementation work has no test or justified test-design evidence,
@@ -117,6 +141,11 @@ Traceability should be compact in the default graph. Full historical rows, super
 Graph edges should explain why context is relevant. Useful edge kinds include:
 
 - `captures_intent`,
+- `captures_decision`,
+- `maps_row_to_kb`,
+- `diagram_ref`,
+- `product_drives_system`,
+- `system_constrains_product`,
 - `documents`,
 - `specifies`,
 - `plans`,

@@ -1,0 +1,431 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "feedback_build",
+  "created": "2026-05-19T00:34:50Z",
+  "source": "DT-2026-05-19-13 and DT-2026-05-19-14 accepted by user in chat on 2026-05-19",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-18T00:34:50.000Z",
+    "purge_after": "2026-07-18T00:34:50.000Z"
+  },
+  "cycle": {
+    "loop": "feedback",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "feedback",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "feedback_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "feedback_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "feedback_build -> documentation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-VNX-001",
+      "text": "Introduce a Decision compiler and decision_build for routine intent-to-knowledge work with explicit user semantic approval and gateway-validated KB updates.",
+      "source_refs": [
+        "VNX-001"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-002",
+      "text": "Route accepted decisions by product-first or system-first abstraction and propagate impact to the opposite layer with explicit direction and no-impact evidence.",
+      "source_refs": [
+        "VNX-002"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-003",
+      "text": "Make core system diagrams the system navigation spine and ontology.",
+      "source_refs": [
+        "VNX-003"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-004",
+      "text": "Require diagram_refs for system docs, with rich diagram node types and requires_doc for mandatory detail docs.",
+      "source_refs": [
+        "VNX-004"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-005",
+      "text": "Simplify default graph around Decision, Knowledge, Work, Execution, and Proof while retaining exact trace/audit lenses.",
+      "source_refs": [
+        "VNX-005"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-006",
+      "text": "Limit parallelism to read-only preflight/draft lanes and keep canonical promotion serial.",
+      "source_refs": [
+        "VNX-006"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-007",
+      "text": "Use risk-tiered gates so users approve semantic decisions/escalations and gateways validate lower-layer artifacts.",
+      "source_refs": [
+        "VNX-007"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-008",
+      "text": "Run the self-refactor through current CodeWiki in compatibility/freeze mode with vNext behind compatibility until validated.",
+      "source_refs": [
+        "VNX-008"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-VNX-009",
+      "text": "Reduce vNext public/agent tool surface to fewer workflow tools and move low-level primitives internal or compatibility-only.",
+      "source_refs": [
+        "VNX-009"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "All vNext semantic decisions are user-approved.",
+      "evidence": "DT-2026-05-19-13 rows VNX-001..VNX-007 and DT-2026-05-19-14 rows VNX-008..VNX-009 were accepted after user said they approved everything and agreed to proceed.",
+      "requirement_ids": [
+        "REQ-VNX-001",
+        "REQ-VNX-002",
+        "REQ-VNX-003",
+        "REQ-VNX-004",
+        "REQ-VNX-005",
+        "REQ-VNX-006",
+        "REQ-VNX-007",
+        "REQ-VNX-008",
+        "REQ-VNX-009"
+      ],
+      "source_refs": [
+        ".codewiki/runtime/diff-tables.json",
+        "chat: 2026-05-19 approval"
+      ]
+    },
+    {
+      "criterion": "Known risks and guardrails are preserved for downstream documentation/planning.",
+      "evidence": "Rows and requirements preserve proposal/accepted phase separation, row-to-KB validation, propagation direction, diagram refs, trace/audit graph lenses, draft invalidation, risk tiers, compatibility freeze, and tool-surface deprecation guardrails.",
+      "requirement_ids": [
+        "REQ-VNX-001",
+        "REQ-VNX-002",
+        "REQ-VNX-003",
+        "REQ-VNX-004",
+        "REQ-VNX-005",
+        "REQ-VNX-006",
+        "REQ-VNX-007",
+        "REQ-VNX-008",
+        "REQ-VNX-009"
+      ],
+      "source_refs": [
+        "DT-2026-05-19-13",
+        "DT-2026-05-19-14"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted CodeWiki vNext operating model: decision compiler, abstraction-aware product/system propagation, diagram-backed system KB, simplified graph, parallel preflight, risk-tiered gates, self-refactor compatibility mode, and reduced tool surface.",
+  "diff_table": [
+    {
+      "id": "VNX-001",
+      "current_state": "Feedback and documentation are separate compiler loops.",
+      "desired_state": "Introduce a Decision compiler that combines user interaction, KB preflight, accepted semantic rows, product/system KB updates, and one decision_build for routine intent-to-knowledge work.",
+      "rationale": "Remove one handoff, reduce translation drift, and keep KB updates close to accepted intent.",
+      "affected_layers": [
+        "system",
+        "product",
+        "skills",
+        "builds",
+        "gateway",
+        "graph"
+      ],
+      "risk": "High: requires proposal/accepted phases and row-to-KB validation.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-002",
+      "current_state": "Product/system entry abstraction is not explicit in compiler routing.",
+      "desired_state": "Classify product-first versus system-first decisions and propagate impact to the opposite abstraction layer with direction and no-impact evidence.",
+      "rationale": "Different users enter at different abstraction levels; bidirectional propagation preserves alignment.",
+      "affected_layers": [
+        "product",
+        "system",
+        "graph",
+        "skills",
+        "gateway"
+      ],
+      "risk": "Medium: needs loop prevention and ownership rules.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-003",
+      "current_state": "System diagrams exist but are not mandatory system ontology.",
+      "desired_state": "Make context map, component/container map, key sequence flows, data/domain model, and state/lifecycle map the system navigation spine.",
+      "rationale": "Core diagrams improve overview, onboarding, architecture review, and drift detection.",
+      "affected_layers": [
+        "system",
+        "graph",
+        "ui",
+        "audits"
+      ],
+      "risk": "Medium: diagrams must remain editable and audited against docs/code.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-004",
+      "current_state": "System docs can exist without machine-checkable diagram grounding.",
+      "desired_state": "Require system docs, except overview and diagram README, to declare valid diagram_refs; diagram nodes may use requires_doc to make detail docs mandatory.",
+      "rationale": "Prevents orphan docs without forcing every diagram node to have prose.",
+      "affected_layers": [
+        "system",
+        "audits",
+        "graph",
+        "skills"
+      ],
+      "risk": "Medium: diagrams need rich node types for components, flows, domain entities, lifecycles, policy boundaries, artifacts, adapters, actors, and external systems.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-005",
+      "current_state": "Generated graph mostly exposes docs, code paths, tests, markdown links, and doc-code edges; artifact internals can clutter default context.",
+      "desired_state": "Refactor graph lenses around Decision, Knowledge, Work, Execution, and Proof; parse decision_builds and diagrams as first-class nodes; collapse builds/validation in default view but expand in trace/audit lenses.",
+      "rationale": "Keep default graph simpler and lower-token while retaining exact traceability.",
+      "affected_layers": [
+        "graph",
+        "state",
+        "ui",
+        "audits"
+      ],
+      "risk": "Medium: gateways still need exact evidence refs and content proof.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-006",
+      "current_state": "Compiler parallelism could create write races.",
+      "desired_state": "Use parallel read-only preflight/draft lanes only, with proposal hashes, snapshots, invalidation, and runtime-only storage; promote canonical truth serially.",
+      "rationale": "Find blockers early without creating half-written truth or drift.",
+      "affected_layers": [
+        "skills",
+        "runtime",
+        "graph",
+        "gateway",
+        "builds"
+      ],
+      "risk": "Medium: speculative drafts can become stale or wasted.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-007",
+      "current_state": "Semantic work often follows similar ceremony regardless of risk, and user review can leak into task/code layers.",
+      "desired_state": "Use risk-tiered gates: users approve semantic decisions and escalations; gateways validate KB diffs, planning/tasks, implementation, closure, and diagram/doc alignment.",
+      "rationale": "Keeps users at correct abstraction while preserving safety through gateway evidence.",
+      "affected_layers": [
+        "system",
+        "skills",
+        "gateway",
+        "task",
+        "validation"
+      ],
+      "risk": "High: needs strong audits, stale-ref scans, diagram-doc checks, content proof, and escalation policy.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-008",
+      "current_state": "The self-refactor uses the current CodeWiki toolchain while changing concepts the toolchain depends on.",
+      "desired_state": "Run in bounded self-refactor compatibility mode: do not bypass CodeWiki, freeze public behavior except blockers, use current CodeWiki for traceability, implement vNext behind compatibility, and switch only after validation.",
+      "rationale": "Avoid bootstrapping drift while preserving alignment evidence.",
+      "affected_layers": [
+        "system",
+        "skills",
+        "tools",
+        "gateway",
+        "graph",
+        "roadmap"
+      ],
+      "risk": "Medium: freeze too strict stalls; freeze too loose mutates live flow under itself.",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "VNX-009",
+      "current_state": "CodeWiki exposes many low-level agent/user tools.",
+      "desired_state": "Reduce to fewer powerful public and agent workflow tools; move low-level build/diff/validation/status primitives behind orchestration and compatibility/deprecation boundaries.",
+      "rationale": "Smaller surface reduces tool-call count, mode confusion, and cognitive load.",
+      "affected_layers": [
+        "api",
+        "adapters",
+        "skills",
+        "tools",
+        "README.md",
+        "tests"
+      ],
+      "risk": "High: over-consolidation can hide needed control or become too magical.",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "VNX-001",
+    "VNX-002",
+    "VNX-003",
+    "VNX-004",
+    "VNX-005",
+    "VNX-006",
+    "VNX-007",
+    "VNX-008",
+    "VNX-009"
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Merge routine feedback and documentation into a Decision compiler and decision_build while preserving explicit user semantic approval."
+    },
+    {
+      "id": "D2",
+      "summary": "Route accepted decisions by product/system abstraction layer with bidirectional propagation checks."
+    },
+    {
+      "id": "D3",
+      "summary": "Treat system diagrams as the mandatory system ontology/navigation spine and require diagram-backed system docs."
+    },
+    {
+      "id": "D4",
+      "summary": "Simplify the default state graph around Decision, Knowledge, Work, Execution, and Proof with full trace/audit expansion available."
+    },
+    {
+      "id": "D5",
+      "summary": "Use parallel preflight/draft analysis only; keep canonical truth promotion serial."
+    },
+    {
+      "id": "D6",
+      "summary": "Use risk-tiered gates so gateways validate lower-level artifacts and users approve only semantic decisions or escalations."
+    },
+    {
+      "id": "D7",
+      "summary": "Run this refactor through current CodeWiki in compatibility/freeze mode rather than bypassing or changing live semantics mid-task."
+    },
+    {
+      "id": "D8",
+      "summary": "Reduce the vNext tool surface to fewer public/agent workflow tools and move primitives internal."
+    }
+  ],
+  "assumptions": [
+    "Current CodeWiki remains the safety harness during this self-refactor.",
+    "Legacy feedback/documentation/build/tool names remain available until vNext compatibility is validated.",
+    "Diagram YAML remains agent-editable and can be audited deterministically."
+  ],
+  "open_questions": [
+    "Exact vNext public command names and agent tool names need planning.",
+    "Exact migration/deprecation schedule for existing codewiki_* primitives needs planning.",
+    "Exact diagram_ref schema and diagram node taxonomy need documentation and tests."
+  ],
+  "non_goals": [
+    "Do not bypass CodeWiki entirely during the refactor.",
+    "Do not allow parallel canonical writers.",
+    "Do not remove compatibility aliases before replacement flows validate."
+  ],
+  "lower_layer_delta": {
+    "knowledge": [
+      "Update system specs for Decision compiler, product/system abstraction routing, diagram-backed system KB, graph lenses, risk-tiered gates, self-refactor compatibility, and tool-surface reduction."
+    ],
+    "roadmap": [
+      "Create/refine implementation tasks for vNext compiler/build/gateway/graph/tool-surface changes after documentation is updated."
+    ],
+    "code": [
+      "Later tasks will likely touch src/application/builds.ts, src/application/tools/**, src/application/gateway/**, src/application/graph/**, adapters, skills, README, and tests."
+    ]
+  },
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      "Update system specs for Decision compiler, product/system abstraction routing, diagram-backed system KB, graph lenses, risk-tiered gates, self-refactor compatibility, and tool-surface reduction."
+    ],
+    "roadmap": [
+      "Create/refine implementation tasks for vNext compiler/build/gateway/graph/tool-surface changes after documentation is updated."
+    ],
+    "code": [
+      "Later tasks will likely touch src/application/builds.ts, src/application/tools/**, src/application/gateway/**, src/application/graph/**, adapters, skills, README, and tests."
+    ],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

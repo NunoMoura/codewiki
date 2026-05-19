@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-19",
+  "context_path": ".codewiki/roadmap/tasks/TASK-005/context.json",
+  "task": {
+    "id": "TASK-005",
+    "title": "Consolidate CodeWiki public and agent tool surface",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration.",
+    "labels": [
+      "tool-surface-consolidation",
+      "compatibility-migration"
+    ],
+    "goal": {
+      "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated.",
+      "acceptance": [
+        "Public command surface is documented around status, decide, work, audit, and maintain concepts.",
+        "Agent-facing workflow tools or orchestrators cover state, decision, work, gate, maintenance, and coordination phases.",
+        "Low-level primitives remain callable through compatibility/debug paths and are not removed prematurely.",
+        "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces."
+      ],
+      "non_goals": [
+        "Do not create a single opaque do-everything tool.",
+        "Do not remove existing public primitives until migration and deprecation tests pass.",
+        "Do not implement decision_build schema in this task."
+      ],
+      "verification": [
+        "Run tool catalog and adapter smoke tests.",
+        "Run README/skill stale-reference audits.",
+        "Verify old tool names still work during compatibility."
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

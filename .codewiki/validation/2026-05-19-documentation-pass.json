@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T00:44:09Z",
+  "profile": "documentation",
+  "verdict": "pass",
+  "rationale": "Accepted feedback requirements VNX-001..VNX-009 were translated into canonical product/system knowledge. The KB changes document the vNext Decision compiler, abstraction-aware propagation, diagram-backed system docs, graph lenses, risk-tiered gates, self-refactor compatibility, and compact tool surface without source-code changes. Alignment and stale-reference audits pass; changed audit only warns that generated graph output is dirty because CodeWiki refresh changed .codewiki/index_graph.json.",
+  "checks": [
+    "Read accepted feedback build .codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+    "Updated product/system KB docs",
+    "Created documentation build .codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
+    "codewiki_audit profiles=[alignment,stale-reference,changed,file-structure]: alignment pass; stale-reference pass; file-structure pass; changed warning only for generated .codewiki/index_graph.json"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
+  "policy_profile": "documentation",
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:stale-reference"
+  ],
+  "audit_reports": [
+    "CodeWiki audit: warning; profiles: alignment, stale-reference, changed, file-structure; alignment pass; stale-reference pass; file-structure pass; changed warning generated-file-changed .codewiki/index_graph.json"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "documentation validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

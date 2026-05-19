@@ -2,10 +2,10 @@
 id: spec.system.builds
 title: Builds
 state: active
-summary: High-signal cycle build contracts for intent, knowledge, planning, implementation evidence, and state reconciliation.
+summary: High-signal build contracts for decisions, knowledge, planning, implementation evidence, and state reconciliation.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - src/application/builds.ts
   - src/application/graph.ts
@@ -29,8 +29,9 @@ Tracked build files must not be deleted from the working tree until a reachable 
 
 | Build | Produced by | Consumed by | Role |
 | --- | --- | --- | --- |
-| `feedback_build` | Feedback loop | Documentation loop | Validated user intent and approved changes. |
-| `documentation_build` | Documentation loop | Planning loop | Knowledge changes and requirement-to-KB mapping. |
+| `feedback_build` | Feedback loop | Documentation loop | Compatibility intent handoff with approved changes. |
+| `documentation_build` | Documentation loop | Planning loop | Compatibility knowledge handoff with requirement-to-KB mapping. |
+| `decision_build` | Decision loop | Planning loop | vNext intent-and-knowledge handoff with approved rows, KB diffs, product/system propagation, and diagram/doc evidence. |
 | `planning_build` | Planning loop | Implementation loop | Roadmap alignment, acceptance, TDD plan, and candidate paths. |
 | `implementation_build` | Implementation loop | Validation/publication/closure | Evidence that code, tests, docs, or roadmap changes were implemented. |
 
@@ -49,9 +50,11 @@ Build policy may require fresh context at loop start, validation, or next-loop h
 
 ## Loop-specific contracts
 
-A feedback build contains the user-facing intent contract: approved change rows, accepted decisions, assumptions, non-goals, risks, expected lower-layer changes, and requirement ids.
+A feedback build contains the compatibility user-facing intent contract: approved change rows, accepted decisions, assumptions, non-goals, risks, expected lower-layer changes, and requirement ids.
 
-A documentation build contains source feedback refs, knowledge files changed, requirement-to-knowledge mapping, deferred requirements, planning questions, and validation expectations. It should not duplicate full roadmap tasks.
+A documentation build contains the compatibility knowledge handoff: source feedback refs, knowledge files changed, requirement-to-knowledge mapping, deferred requirements, planning questions, and validation expectations. It should not duplicate full roadmap tasks.
+
+A decision build contains the vNext user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. It replaces the routine feedback-build plus documentation-build pair only after compatibility validation passes.
 
 A planning build contains source documentation refs, task ids or task changes, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping.
 
@@ -66,7 +69,9 @@ New builds should expose explicit DAG fields:
 - `consumes` and `produces`;
 - `change_type`: `product`, `system`, `task`, or `code`;
 - `traceability`: semantic flag, optional `exemption` (`generated`, `runtime`, or `mechanical`), upstream refs, and accepted build refs;
-- `policy.isolation`: loop-start, validation, and next-loop context requirements.
+- `policy.isolation`: loop-start, validation, and next-loop context requirements;
+- `propagation`: product-first, system-first, mixed, or no-op evidence for cross-abstraction impact;
+- `diagram_refs`: system diagram node, flow, entity, lifecycle, policy boundary, artifact, adapter, actor, or external system refs when system knowledge changes.
 
 Graph reconciliation should prefer explicit edges over inferred legacy fields. Semantic changes in knowledge, roadmap, code, tests, package metadata, or publication claims need accepted upstream build refs before implementation validation or task closure can pass. Generated, runtime, and mechanical-only changes may set `traceability.exemption` and `semantic=false` when policy allows. Legacy `change_class` is compatibility input only; new builds write `change_type`.
 
@@ -82,6 +87,7 @@ A build is consumed when lower-layer truth or validation evidence references it:
 
 - feedback: downstream documentation, implementation evidence, or passing validation references it;
 - documentation: planning, passing validation, or knowledge-only policy references it;
+- decision: planning, passing validation, or knowledge-only policy references it;
 - planning: roadmap refinement plus implementation evidence or passing validation references it;
 - implementation: passing validation, a passing validation verdict, or safe publication/archive proof references it.
 

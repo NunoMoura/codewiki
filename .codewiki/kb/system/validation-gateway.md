@@ -5,7 +5,7 @@ state: active
 summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - src/application/gateway
   - skills/codewiki-validation/SKILL.md
@@ -44,6 +44,7 @@ Validation can run at:
 
 - feedback build handoff,
 - documentation build handoff,
+- decision build handoff,
 - planning build handoff,
 - implementation build handoff,
 - roadmap work closure,
@@ -59,9 +60,9 @@ Vertical alignment checks traceability across layers:
 
 ```text
 user intent
-  -> feedback_build
-  -> product/system knowledge
-  -> documentation_build
+  -> decision_build or compatibility feedback_build
+  -> product/system knowledge and system diagrams
+  -> documentation_build when compatibility mode is active
   -> planning_build
   -> roadmap work item
   -> tests/code
@@ -80,6 +81,21 @@ builds agree with their source layer and policy
 ```
 
 Requirement ids and evidence mapping should make this trace explicit. The gateway should not rely on broad prose similarity when explicit refs are available. The graph is required gateway context for routing, missing-edge detection, and freshness, but the gateway must verify against canonical sources and content proof instead of trusting graph summaries blindly.
+
+
+## Decision and knowledge validation
+
+For vNext decision builds, the gateway validates that:
+
+- every semantic KB change maps to an approved decision row,
+- every approved row is reflected in product/system knowledge or explicitly deferred with rationale,
+- product-first changes include system-impact or no-system-impact evidence,
+- system-first changes include product-impact or no-product-impact evidence,
+- system docs changed by the decision have valid diagram refs once the diagram-ref migration is enabled,
+- no KB clause introduces unapproved product or system semantics,
+- risk escalations that require user approval were explicitly approved.
+
+The gateway validates task creation, implementation, closure, diagram/doc alignment, and content proof. The user validates semantic decisions and risk escalations, not low-level task or code machinery.
 
 ## Verdicts
 
@@ -121,6 +137,8 @@ Tracked validation reports are safe to purge only after a reachable archive comm
 - The gateway may recommend next routing: feedback, documentation, planning, implementation, validation, observe, or block.
 - Gated agency must stop on fail/block verdicts or missing required approval.
 - Commit, push, release, or remote updates require gateway/policy approval when configured and immutable content proof when publication policy requires it.
+- Risk-tiered gates may fast-path low-risk mechanical or docs-cleanup work only when deterministic audits, stale-ref scans, diagram/doc checks, and content proof satisfy policy.
+- Destructive changes, security policy changes, public API breaks, migrations, publication, release, ambiguous tradeoffs, or high-cost work must escalate to the user for semantic approval before lower-layer promotion.
 
 ## Isolation evidence
 
