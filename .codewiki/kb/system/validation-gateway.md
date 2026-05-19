@@ -9,7 +9,6 @@ updated: "2026-05-17"
 code_paths:
   - src/application/gateway
   - skills/codewiki-validation/SKILL.md
-  - .codewiki/validation
   - src/application/builds.ts
 ---
 

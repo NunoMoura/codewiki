@@ -7,7 +7,6 @@ owners:
   - architecture
 updated: "2026-05-17"
 code_paths:
-  - .codewiki/builds
   - src/application/builds.ts
   - src/application/graph.ts
   - src/domain/shared/types.ts
