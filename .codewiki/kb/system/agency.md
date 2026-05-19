@@ -75,7 +75,7 @@ The controller does not replace the graph, compilers, roadmap, or validation gat
 graph state -> scoped roadmap/sprint/task focus -> compiler step -> validation gateway -> build/evidence -> next graph state
 ```
 
-When intent is unclear, it routes to the decision loop. When compatibility knowledge tooling must change KB docs, it routes to documentation. When code/tests must change, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually.
+When intent is unclear, it routes to the decision loop. When compatibility knowledge tooling must change KB docs, it routes to documentation. When code/tests must change, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually. If the adapter cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
 
 ## Invariants
 
@@ -88,7 +88,8 @@ When intent is unclear, it routes to the decision loop. When compatibility knowl
 - Parallel write execution should allocate task/role worktrees through the worktree factory when the adapter or local runtime can provide them. Shared-root writes are a solo-mode fallback, not the default for overlapping builder, validator, publisher, or cleanup roles.
 - Agency plans must expose token, time, cost, write, session, and risk budgets in bounded context and policy output.
 - Agency wait and wake output must name exact blockers and next safe actions, such as claim ids, branch refs, patch refs, validation refs, publisher commits, or rebase requirements. It should not tell agents to wait for a vague dirty worktree when an isolated role ref or publisher queue can express the dependency.
-- Agency may spend session budget by requesting adapter session boundaries; each boundary must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. Same-agent `new_session`/`context_refresh` is context hygiene; handoff means transfer to another session, agent, or role. In Pi, tool-context requests stage boundary artifacts and must not inject slash commands through follow-up chat; only command-context `/wiki-session-handoff` can perform interactive session replacement/reset today, while future worker-process adapters must be bounded and explicit.
+- Agency may spend session budget by requesting adapter session boundaries; each boundary must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. Same-agent `new_session`/`context_refresh` is context hygiene; handoff means transfer to another session, agent, or role. In Pi, tool-context requests stage boundary artifacts and must not inject slash commands through follow-up chat; the target behavior is automatic adapter-owned command-context execution when supported. Until then, command-context `/wiki-session-handoff` remains an internal compatibility executor and any user-visible fallback must be reported as platform-limited, not as routine user work.
+- Agency and close reports should expose workflow-efficiency evidence when a task changes orchestration: user interrupts avoided or required, manual command count, session boundaries used, and any remaining platform-limited steps.
 
 ## Related docs
 

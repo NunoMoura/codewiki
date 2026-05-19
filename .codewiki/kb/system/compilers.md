@@ -157,7 +157,8 @@ Propagation is alignment work. The graph should expose the affected loop and sou
 - Validation handoffs require a gateway verdict on the submitted build.
 - Gateways may require audit evidence and checked content proof before passing.
 - Agents may run `new_session` or `context_refresh` at loop boundaries when context health needs it; this is agent-owned hygiene, not a handoff.
-- Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new` or equivalent manually.
+- Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new`, `/wiki-session-handoff`, or equivalent manually. If the adapter cannot execute the boundary automatically, record an explicit platform limitation and next safe action rather than making command submission routine user work.
+- Workflow-efficiency evidence matters: compiler/task-close paths should minimize user interrupts and manual command count while preserving validation, content-proof, and publication gates.
 - Automated compiler execution must run through gated agency controls, not through unbounded loops.
 
 ## Related docs

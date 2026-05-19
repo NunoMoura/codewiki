@@ -1,44 +1,59 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T07:30:02Z",
+  "generated_at": "2026-05-19T07:43:47Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-005/context.json",
   "task": {
     "id": "TASK-005",
-    "title": "Consolidate CodeWiki public and agent tool surface",
+    "title": "Consolidate agent workflow surface and automate session boundaries",
     "status": "in_progress",
-    "priority": "medium",
-    "kind": "migration",
+    "priority": "high",
+    "kind": "agent-workflow",
     "change_type": "system",
-    "summary": "Introduce a smaller CodeWiki public and agent workflow tool surface by removing deprecated aliases and static catalogs instead of preserving compatibility shims.",
+    "summary": "Prioritize a smaller direct agent workflow surface that removes deprecated aliases/catalogs and makes new_session/context_refresh boundaries agent-owned instead of user-command driven.",
     "labels": [
       "tool-surface-consolidation",
       "no-compatibility-shims",
-      "domain-led-cleanup"
+      "domain-led-cleanup",
+      "session-boundary",
+      "agent-owned-automation",
+      "workflow-efficiency",
+      "no-manual-command"
     ],
     "goal": {
-      "outcome": "CodeWiki exposes a smaller direct tool surface, with deprecated aliases and dead application catalogs removed; callers use replacement tools directly and tests/docs enforce the new surface.",
+      "outcome": "CodeWiki exposes a smaller direct workflow surface and required session/context boundaries are handled by the agent/adapter without asking the user to paste or press Enter on internal compatibility commands.",
       "acceptance": [
         "`codewiki_claim` is not registered and callers use `codewiki_artifact_status` directly.",
         "Static application tool catalog source is removed; the skill-facing catalog remains the documented tool map.",
         "Deleted alias/catalog files are absent from package smoke and active docs.",
         "Artifact-status coordination tests cover mark/read-overlap/conflict/release without the claim alias.",
-        "Active system docs and roadmap no longer instruct preserving wrapper aliases as the migration policy."
+        "Active system docs and roadmap no longer instruct preserving wrapper aliases as the migration policy.",
+        "Session-boundary flow does not present /wiki-session-handoff or equivalent compatibility commands as normal user work for required boundaries.",
+        "Where Pi/adapter APIs can execute a boundary automatically, CodeWiki does so from agent-owned control flow and restarts from CodeWiki refs.",
+        "Where host APIs cannot execute a boundary from tool context, CodeWiki records an explicit platform limitation/fallback with next safe action instead of asking the user to press Enter as a routine step.",
+        "Workflow-efficiency evidence records user-interrupt/manual-command impact for the session-boundary path and keeps validation/task-close/publication proof gates intact.",
+        "Focused smoke tests cover automatic/no-user-command behavior and unsupported fallback semantics."
       ],
       "non_goals": [
         "Do not remove real application use-case services that still orchestrate IO, mutation, rebuild, or validation.",
         "Do not refactor `src/application/claims.ts` into domain in this slice; keep runtime coordination behavior stable while removing the public alias.",
-        "Do not change handoff/worktree-isolation behavior owned by TASK-006 beyond avoiding stale references."
+        "Do not reopen TASK-006 role-worktree/publisher proof semantics except where session-boundary UX/tool surface needs stale-reference cleanup.",
+        "Do not implement full decision_build compiler in this task.",
+        "Do not weaken fresh-context/content-proof requirements for validation, task-close, publication, publish, or release.",
+        "Do not promise true new terminal/tab/process creation when Pi does not expose it; use explicit external-orchestrator/worker fallback language when needed.",
+        "Do not make completion-report generation the primary deliverable; keep it as follow-on unless small integration is needed for efficiency evidence."
       ],
       "verification": [
         "Run npm run typecheck.",
         "Run npm run test:smoke.",
         "Run npm run check:architecture.",
-        "Run CodeWiki stale-reference/file-structure/alignment audits."
+        "Run tests/smoke/session-handoff.test.mjs and related claim/wait smoke tests.",
+        "Run CodeWiki audits: alignment, changed, stale-reference, file-structure, generated-parity.",
+        "Validate implementation from fresh CodeWiki refs with checked content proof."
       ]
     },
     "delta": {
-      "desired": "Deprecated tool aliases and dead application catalog are gone; replacement surfaces are direct.",
-      "current": "Before this cleanup, the deprecated claim alias and static application catalog existed in source/tests/docs.",
+      "desired": "Deprecated tool aliases and dead application catalog are gone; replacement surfaces are direct; required new_session/context_refresh boundaries are agent-owned and no routine user command/Enter is needed.",
+      "current": "Claim alias/catalog cleanup is in progress, but session-boundary flow still has compatibility-command/editor-prefill/platform-fallback friction that feels slower than plain agent coding.",
       "closure": ""
     }
   }

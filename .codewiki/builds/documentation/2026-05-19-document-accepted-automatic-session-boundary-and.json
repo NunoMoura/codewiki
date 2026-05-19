@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "documentation_build",
+  "created": "2026-05-19T07:45:45Z",
+  "source": "Accepted feedback build .codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
+  "source_feedback_build": ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-18T07:45:45.000Z",
+    "purge_after": "2026-07-18T07:45:45.000Z"
+  },
+  "cycle": {
+    "loop": "documentation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "documentation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "documentation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "documentation_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "documentation_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-ASE-001",
+      "text": "Policy-required new_session/context_refresh boundaries should be executed by the agent/adapter automatically when host capabilities allow, without asking the user to paste or press Enter on a command.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-ASE-002",
+      "text": "If host limitations prevent automatic session creation/reset, CodeWiki must record a precise platform block/fallback instead of presenting the compatibility command as normal user work.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-ASE-003",
+      "text": "Workflow efficiency must be a roadmap success criterion measured by fewer user interrupts, fewer manual commands, shorter closure path, clear finish reports, and bounded loop/session/write cost.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-ASE-004",
+      "text": "Session automation and workflow-friction reduction take priority over TASK-001 decision_build implementation until the next roadmap alignment says otherwise.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+      ],
+      "state": "documented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Automatic boundary requirement is in system API/agency/compiler policy.",
+      "evidence": ".codewiki/kb/system/api.md, .codewiki/kb/system/agency.md, and .codewiki/kb/system/compilers.md now state that normal workflow must not ask users to submit compatibility commands; unsupported paths record platform-limited fallback/next safe action.",
+      "requirement_ids": [
+        "REQ-ASE-001",
+        "REQ-ASE-002"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/compilers.md"
+      ]
+    },
+    {
+      "criterion": "Efficiency requirement is documented.",
+      "evidence": ".codewiki/kb/system/agency.md and .codewiki/kb/system/compilers.md now require workflow-efficiency evidence such as user interrupts, manual command count, session boundaries, and platform-limited steps.",
+      "requirement_ids": [
+        "REQ-ASE-003"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/compilers.md"
+      ]
+    },
+    {
+      "criterion": "Priority is represented in roadmap.",
+      "evidence": "TASK-005 was refined to high priority with session-boundary automation and workflow-efficiency acceptance, ahead of TASK-001 decision_build implementation.",
+      "requirement_ids": [
+        "REQ-ASE-004"
+      ],
+      "source_refs": [
+        "TASK-005",
+        ".codewiki/roadmap/queue.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Document accepted automatic session-boundary and workflow-efficiency priority.",
+  "knowledge_changes": [
+    ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
+    ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
+    ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates."
+  ],
+  "roadmap_changes": [
+    "TASK-005 refined to high priority next work for direct workflow surface plus agent-owned session-boundary automation."
+  ],
+  "assumptions": [
+    "Existing docs already identified session boundaries as adapter-owned; this documentation build strengthens the accepted no-user-command and efficiency criteria rather than inventing a new subsystem."
+  ],
+  "open_questions": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "feedback",
+    "upstream_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [
+      ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json"
+    ],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/compilers.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
+      ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
+      ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates.",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/compilers.md"
+    ],
+    "roadmap": [
+      "TASK-005 refined to high priority next work for direct workflow surface plus agent-owned session-boundary automation.",
+      "TASK-005"
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
