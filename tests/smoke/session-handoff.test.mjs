@@ -65,11 +65,19 @@ try {
 		toolStaged,
 		{ compact: () => assert.fail("new-session handoff should not compact") },
 	);
-	assert.equal(toolResult.action, "staged");
-	assert.equal(toolResult.command, toolStaged.command);
+	assert.equal(toolResult.action, "platform-limited");
+	assert.equal(toolResult.command, undefined);
 	assert.equal(toolResult.auto_queue, false);
 	assert.match(toolResult.reason, /ctx\.newSession/);
-	assert.match(toolResult.reason, /sendUserMessage follow-ups do not execute extension commands/);
+	assert.match(toolResult.reason, /no slash command was queued/);
+	assert.doesNotMatch(toolResult.reason, /press Enter/i);
+	assert.match(toolResult.next_safe_action, /command-context|external-orchestrator/);
+	assert.deepEqual(toolResult.workflow_efficiency, {
+		user_interrupts: 0,
+		manual_command_count: 0,
+		session_boundaries_used: 0,
+		platform_limited_steps: ["new_session requires command-context or external-orchestrator support"],
+	});
 	const queuedFollowUps = [];
 	const queued = queueSessionHandoffFollowUp(
 		{ sendUserMessage: (content, options) => queuedFollowUps.push({ content, options }) },
@@ -87,22 +95,28 @@ try {
 		resetToolStaged,
 		{ compact: () => { toolCompactCalled = true; } },
 	);
-	assert.equal(resetToolResult.action, "staged");
-	assert.equal(resetToolResult.command, resetToolStaged.command);
+	assert.equal(resetToolResult.action, "completed");
+	assert.equal(resetToolResult.command, undefined);
 	assert.equal(resetToolResult.auto_queue, false);
-	assert.match(resetToolResult.reason, /tool result/);
 	assert.match(resetToolResult.reason, /ctx\.compact/);
-	assert.equal(toolCompactCalled, false, "tool-context context-reset should not call compact directly");
+	assert.match(resetToolResult.reason, /automatically/);
+	assert.equal(toolCompactCalled, true, "tool-context context-refresh should use adapter-owned compaction automatically");
+	assert.deepEqual(resetToolResult.workflow_efficiency, {
+		user_interrupts: 0,
+		manual_command_count: 0,
+		session_boundaries_used: 1,
+		platform_limited_steps: [],
+	});
 	const resetQueuedFollowUps = [];
 	const resetQueued = queueSessionHandoffFollowUp(
 		{ sendUserMessage: (content, options) => resetQueuedFollowUps.push({ content, options }) },
 		resetToolResult.command,
 		{ autoQueue: resetToolResult.auto_queue },
 	);
-	assert.equal(resetQueued, false, "context_refresh boundary should not auto-queue because compact can hide the result");
+	assert.equal(resetQueued, false, "context_refresh boundary should not auto-queue compatibility commands");
 	assert.deepEqual(resetQueuedFollowUps, []);
 	const resetToolQueued = JSON.parse(await readFile(resetToolStaged.absolutePath, "utf8"));
-	assert.equal(resetToolQueued.status, "queued");
+	assert.equal(resetToolQueued.status, "completed");
 
 	const commandStaged = await stageSessionHandoff(project, input);
 	let waited = false;

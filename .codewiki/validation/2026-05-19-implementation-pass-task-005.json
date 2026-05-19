@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T09:09:53Z",
+  "profile": "implementation",
+  "task_id": "TASK-005",
+  "verdict": "pass",
+  "rationale": "Fresh validator after reload used CodeWiki refs and repository files only. TASK-005 implementation satisfies accepted session-boundary automation and workflow-efficiency requirements: context_refresh/context_reset auto-run adapter compaction, tool-context new_session records platform-limited fallback with next_safe_action, no slash command is queued/returned/editor-prefilled as user work in the new source, workflow_efficiency evidence is emitted, compatibility command-context execution remains internal, and proof gates were not weakened.",
+  "checks": [
+    "codewiki_state refresh=true taskId=TASK-005: health yellow only known graph-health warning; next TASK-005; no artifact conflicts",
+    "Read .codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json from repo refs",
+    "Read planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json and TASK-005 generated task/context",
+    "Verified implementation build artifact_digests for 10 planning/code/test refs: all current sha256 and byte counts match",
+    "Checked content digest over implementation build + planning build + code_files + test_files: sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+    "Verified src/application/tools/session-handoff.ts: context-refresh/context-reset calls ctx.compact, marks handoff completed, emits workflow_efficiency zero interrupts/manual commands; new-session returns action=platform-limited with no command and next_safe_action",
+    "Verified src/adapters/pi/tools/session-handoff.ts: no editor prefill or command hint surface in tool result; details include user_command_surfaced=false; prompt guidance says /wiki-session-handoff is internal compatibility only",
+    "Verified tests/smoke/session-handoff.test.mjs covers platform-limited new-session, automatic context-refresh compaction, no follow-up command queue, command-context compatibility, failure status, and malformed boundary handling",
+    "node ./tests/smoke/session-handoff.test.mjs: pass",
+    "node ./tests/smoke/claim-wait-queue.test.mjs: pass",
+    "node ./tests/smoke/package-smoke.test.mjs: pass",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "npm test: pass (19 passed, 0 failed; npm pack --dry-run completed)",
+    "codewiki_audit profiles=[alignment,changed,stale-reference,generated-parity,file-structure,task] task_id=TASK-005 changed=true: stale-reference/generated-parity/file-structure/task pass; alignment/changed warnings only graph-health large-doc and generated dirty views"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Worktree is dirty, so implementation validation uses working_tree_digest content proof; task-close/publication still require clean immutable publisher result proof."
+    },
+    {
+      "severity": "low",
+      "summary": "CodeWiki audit has existing graph-health warning for large .codewiki/kb/system/compilers.md and changed warnings for generated graph/task views; generated-parity and task audits pass."
+    },
+    {
+      "severity": "low",
+      "summary": "Current task includes older alias/catalog cleanup acceptance already represented in TASK-005; this implementation slice targets accepted session-boundary automation priority and does not regress package smoke alias assertions."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:file-structure",
+    "audit:task",
+    "task:TASK-005"
+  ],
+  "audit_reports": [
+    "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning"
+  ],
+  "content_proof_refs": [
+    "4c10b340cecee13d5f8446d6540153573c2d2df6",
+    "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "329217ca7869f8083263b8b6aeb042f672120d1f",
+    "tree_sha": "4c10b340cecee13d5f8446d6540153573c2d2df6",
+    "working_tree_digest": "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "User reloaded before validation. Validation used CodeWiki refs and repository files only, not builder chat. Dirty pre-commit content proof covers submitted build, source planning build, code_files, and test_files.",
+    "role": "validator"
+  }
+}

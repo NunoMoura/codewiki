@@ -96,9 +96,10 @@ export function registerCodewikiSessionHandoffTool(pi: ExtensionAPI): void {
 		promptGuidelines: [
 			"Use this compatibility tool for policy-required boundaries; agents may also request new_session/context_refresh for context hygiene when chat is noisy, stale, or token-heavy.",
 			"Do not call same-agent context hygiene a handoff. Reserve handoff for work transfer to another session/agent/role.",
-			"From tool context, Pi cannot call ctx.newSession, and ctx.compact can hide the tool result; the tool stages a durable boundary file and command-context execution must happen outside the tool result path.",
-			"Do not auto-queue /wiki-session-handoff through sendUserMessage: Pi treats extension-sent slash text as chat, not as a registered command. Leave new_session/context_refresh boundaries staged or prefill the editor when UI is available.",
-			"/wiki-session-handoff is an internal/compatibility command-context executor that performs ctx.newSession or ctx.compact from the staged boundary file when Pi command context is required.",
+			"In Pi tool context, context_refresh/context_reset uses adapter-owned ctx.compact automatically and reports zero user interrupts.",
+			"In Pi tool context, new_session is platform-limited because ctx.newSession is command-context only; report the staged boundary and next safe action instead of asking the user to paste or press Enter on /wiki-session-handoff.",
+			"Do not auto-queue /wiki-session-handoff through sendUserMessage: Pi treats extension-sent slash text as chat, not as a registered command.",
+			"/wiki-session-handoff is an internal/compatibility command-context executor when an adapter has command context; it is not normal user workflow.",
 			"Session boundaries do not replace artifact status coordination, validation, task evidence, checks, or publication policy.",
 		],
 		parameters: codewikiSessionHandoffToolInputSchema,
@@ -107,17 +108,13 @@ export function registerCodewikiSessionHandoffTool(pi: ExtensionAPI): void {
 			const result = await executeCodewikiSessionHandoffTool(project, params, ctx);
 			const shouldAutoQueue = (params.autoQueue ?? true) && result.result.auto_queue !== false;
 			const queued = queueSessionHandoffFollowUp(pi, result.result.command, { autoQueue: shouldAutoQueue });
-			let editorPrefilled = false;
-			if (!queued && result.result.command && ctx.hasUI && (params.autoQueue ?? true)) {
-				ctx.ui.setEditorText(result.result.command);
-				editorPrefilled = true;
-			}
+			const editorPrefilled = false;
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			const commandHint = result.result.command && !queued && !editorPrefilled ? `; command: ${result.result.command}` : "";
-			const queueHint = queued ? "; queued internal boundary executor" : editorPrefilled ? "; command placed in editor" : result.result.command && !shouldAutoQueue ? "; not auto-queued" : "";
+			const nextSafeAction = result.result.next_safe_action ? `; next_safe_action: ${result.result.next_safe_action}` : "";
+			const reason = result.result.reason ? `; reason: ${result.result.reason}` : "";
 			return {
-				content: [{ type: "text", text: `codewiki session_boundary: ${result.result.action} ${result.staged.relativePath}${commandHint}${queueHint}` }],
-				details: { ...result, queued_follow_up: queued, editor_prefilled: editorPrefilled },
+				content: [{ type: "text", text: `codewiki session_boundary: ${result.result.action} ${result.staged.relativePath}${nextSafeAction}${reason}` }],
+				details: { ...result, queued_follow_up: queued, editor_prefilled: editorPrefilled, user_command_surfaced: false },
 			};
 		},
 	} as any);

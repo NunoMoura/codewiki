@@ -654,7 +654,7 @@ export const codewikiSessionHandoffToolInputSchema = Type.Object({
 	kickoff_prompt: Type.Optional(Type.String({ minLength: 1 })),
 	autoQueue: Type.Optional(Type.Boolean({
 		default: true,
-		description: "When true, stage the session boundary and let the Pi adapter offer the compatibility command path when needed; Pi follow-up chat must not auto-execute slash commands.",
+		description: "When true, stage the session boundary and let the Pi adapter execute supported boundaries automatically; unsupported new_session paths record platform-limited fallback instead of asking users to submit slash commands.",
 	})),
 });
 export const codewikiArtifactStatusToolInputSchema = Type.Object({

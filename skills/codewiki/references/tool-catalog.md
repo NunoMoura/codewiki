@@ -15,7 +15,7 @@ Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source
 | `codewiki_task` | `src/application/tools/task.ts` | Mutate roadmap task truth and sprint metadata. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"` and `sprint` input. |
 | `codewiki_diff_table` | `src/application/tools/diff-table.ts` | Manage pending feedback diff rows. | Pending semantic diff state only; accepted rows compile into feedback builds. |
 | `codewiki_session` | `src/application/tools/session.ts` | Manage runtime session focus. | Runtime focus only; not roadmap truth. |
-| `codewiki_session_handoff` | `src/application/tools/session-handoff.ts` | Compatibility session-boundary tool for new_session/context_refresh or true handoff. | Writes runtime boundary files; command context performs new_session/context_refresh execution. |
+| `codewiki_session_handoff` | `src/application/tools/session-handoff.ts` | Compatibility session-boundary tool for new_session/context_refresh or true handoff. | Writes runtime boundary files; context_refresh/context_reset use adapter-owned compaction when available; new_session records platform-limited fallback unless command-context or external-orchestrator execution exists. |
 | `codewiki_agency` | `src/application/tools/agency.ts` | Plan bounded observe/maintain/work cycles. | Planning-only; parent agent owns canonical writes. |
 
 ## Post-commit GC path

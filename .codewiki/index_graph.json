@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T07:48:10.840Z",
+  "generated_at": "2026-05-19T09:09:53.596Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -104,7 +104,7 @@
       "kind": "code_path",
       "path": "skills/codewiki/SKILL.md",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/ui",
@@ -209,14 +209,14 @@
       "kind": "code_path",
       "path": "skills",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src",
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -269,21 +269,21 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application",
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:skills/codewiki",
       "kind": "code_path",
       "path": "skills/codewiki",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/agency.md",
@@ -298,7 +298,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/alignment-model.md",
@@ -386,7 +386,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/schemas.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/change-lifecycle.md",
@@ -602,14 +602,14 @@
       "kind": "code_path",
       "path": "src/application/tools/session-handoff.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/tools",
       "kind": "code_path",
       "path": "src/adapters/pi/tools",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "sprint:SPRINT-001",
@@ -780,21 +780,21 @@
       "kind": "code_path",
       "path": "skills/codewiki/references/tool-catalog.md",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/tools/session-handoff.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/tools/session-handoff.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:tests/smoke/session-handoff.test.mjs",
       "kind": "code_path",
       "path": "tests/smoke/session-handoff.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:tests/smoke/claim-wait-queue.test.mjs",
@@ -2915,6 +2915,184 @@
       "path": "tests/tasks/TASK-005/**"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "title": "TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-005",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+          ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+          "TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+          "src/application/tools/session-handoff.ts",
+          "src/adapters/pi/tools/session-handoff.ts",
+          "src/adapters/pi/schemas.ts",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/kb/system/adapters.md",
+          "tests/smoke/session-handoff.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "TASK-005"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+          "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+          "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+          "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+          "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+          "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+          "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+          "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+          "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+          ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+          "refs/codewiki/archive/task/TASK-005",
+          "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788"
+        ],
+        "validation_attestation_refs": []
+      }
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+      "kind": "canonical_source_ref",
+      "path": "TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:changed",
+      "kind": "audit_evidence",
+      "path": "profile:changed",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+      "kind": "content_proof",
+      "path": ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+      "kind": "content_proof",
+      "path": "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+      "kind": "content_proof",
+      "path": "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+      "kind": "content_proof",
+      "path": "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+      "kind": "content_proof",
+      "path": "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+      "kind": "content_proof",
+      "path": "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+      "kind": "content_proof",
+      "path": "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-005",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-005",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
+      "kind": "content_proof",
+      "path": "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-005",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-005",
+      "task_id": "TASK-005",
+      "digest": "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
+      "restore_command": "/wiki-restore TASK-005",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
@@ -3003,13 +3181,6 @@
       "default_hidden": true
     },
     {
-      "id": "audit:profile:changed",
-      "kind": "audit_evidence",
-      "path": "profile:changed",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
       "id": "content_proof:.codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json@sha256:4f07046203fe39fe385a9dc4aa7454897ae9abc3068eeac854431e3578e8fee9",
       "kind": "content_proof",
       "path": ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json@sha256:4f07046203fe39fe385a9dc4aa7454897ae9abc3068eeac854431e3578e8fee9",
@@ -3053,14 +3224,6 @@
       "id": "content_proof:tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
       "kind": "content_proof",
       "path": "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
-      "proof_kind": "digest",
-      "layer": "content_proof",
-      "default_hidden": true
-    },
-    {
-      "id": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
-      "kind": "content_proof",
-      "path": "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
@@ -3410,14 +3573,6 @@
       "default_hidden": true
     },
     {
-      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
-      "kind": "content_proof",
-      "path": "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
-      "proof_kind": "digest",
-      "layer": "content_proof",
-      "default_hidden": true
-    },
-    {
       "id": "content_proof:tests/smoke/prompt-assets.test.mjs@sha256:5c861b95e9299df4053ae1ce32253eef108f419f6040c98202a3b0ed1a510b15",
       "kind": "content_proof",
       "path": "tests/smoke/prompt-assets.test.mjs@sha256:5c861b95e9299df4053ae1ce32253eef108f419f6040c98202a3b0ed1a510b15",
@@ -3474,31 +3629,12 @@
       "default_hidden": true
     },
     {
-      "id": "content_proof:refs/codewiki/archive/task/TASK-005",
-      "kind": "content_proof",
-      "path": "refs/codewiki/archive/task/TASK-005",
-      "proof_kind": "git_ref",
-      "layer": "content_proof",
-      "default_hidden": true
-    },
-    {
       "id": "content_proof:sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
       "kind": "content_proof",
       "path": "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
-    },
-    {
-      "id": "archive_ref:refs/codewiki/archive/task/TASK-005",
-      "kind": "git_archive_ref",
-      "path": "refs/codewiki/archive/task/TASK-005",
-      "task_id": "TASK-005",
-      "digest": "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
-      "restore_command": "/wiki-restore TASK-005",
-      "safety_status": "blocked",
-      "default_hidden": true,
-      "layer": "archive"
     },
     {
       "id": "code:src/application/gateway/index.ts",
@@ -4519,6 +4655,108 @@
       "default_hidden": true
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "329217ca7869f8083263b8b6aeb042f672120d1f",
+        "tree_sha": "4c10b340cecee13d5f8446d6540153573c2d2df6",
+        "working_tree_digest": "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "User reloaded before validation. Validation used CodeWiki refs and repository files only, not builder chat. Dirty pre-commit content proof covers submitted build, source planning build, code_files, and test_files.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:stale-reference",
+          "audit:generated-parity",
+          "audit:file-structure",
+          "audit:task",
+          "task:TASK-005",
+          "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning"
+        ],
+        "content_proof_refs": [
+          "4c10b340cecee13d5f8446d6540153573c2d2df6",
+          "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75"
+        ]
+      }
+    },
+    {
+      "id": "audit:audit:alignment",
+      "kind": "audit_evidence",
+      "path": "audit:alignment",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:changed",
+      "kind": "audit_evidence",
+      "path": "audit:changed",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:stale-reference",
+      "kind": "audit_evidence",
+      "path": "audit:stale-reference",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:generated-parity",
+      "kind": "audit_evidence",
+      "path": "audit:generated-parity",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:file-structure",
+      "kind": "audit_evidence",
+      "path": "audit:file-structure",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:task",
+      "kind": "audit_evidence",
+      "path": "audit:task",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning",
+      "kind": "audit_evidence",
+      "path": "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:4c10b340cecee13d5f8446d6540153573c2d2df6",
+      "kind": "content_proof",
+      "path": "4c10b340cecee13d5f8446d6540153573c2d2df6",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+      "kind": "content_proof",
+      "path": "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-006.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
@@ -4762,48 +5000,6 @@
           "refs/codewiki/archive/task/TASK-006"
         ]
       }
-    },
-    {
-      "id": "audit:audit:alignment",
-      "kind": "audit_evidence",
-      "path": "audit:alignment",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:changed",
-      "kind": "audit_evidence",
-      "path": "audit:changed",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:task",
-      "kind": "audit_evidence",
-      "path": "audit:task",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:generated-parity",
-      "kind": "audit_evidence",
-      "path": "audit:generated-parity",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:stale-reference",
-      "kind": "audit_evidence",
-      "path": "audit:stale-reference",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:file-structure",
-      "kind": "audit_evidence",
-      "path": "audit:file-structure",
-      "layer": "audit",
-      "default_hidden": true
     },
     {
       "id": "content_proof:6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
@@ -9662,6 +9858,179 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:.codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:src/application/tools/session-handoff.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:src/adapters/pi/tools/session-handoff.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:src/adapters/pi/schemas.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:skills/codewiki/SKILL.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:skills/codewiki/references/tool-catalog.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:.codewiki/kb/system/adapters.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:tests/smoke/session-handoff.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:tests/smoke/claim-wait-queue.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "source:TASK-005",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:.codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-005",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "content_proof:sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "task:TASK-005"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-005",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
       "to": "source:.codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
       "default_hidden": true
@@ -11700,6 +12069,77 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:task:TASK-005",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "audit:CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "content_proof:4c10b340cecee13d5f8446d6540153573c2d2df6",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "content_proof:sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+      "to": "task:TASK-005"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-006.json",
       "to": "source:.codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
       "default_hidden": true
@@ -12345,7 +12785,14 @@
         "tests/smoke/package-smoke.test.mjs",
         "tests/smoke/session-handoff.test.mjs"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/session-handoff.ts",
+        "src/application/tools/session-handoff.ts",
+        "tests/smoke/session-handoff.test.mjs"
+      ]
     },
     "claims": {
       "active_claim_count": 0,
@@ -12402,6 +12849,26 @@
             "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309"
           ],
           "publisher_result_refs": []
+        },
+        {
+          "path": ".codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+          "task_id": "TASK-005",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "329217ca7869f8083263b8b6aeb042f672120d1f",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "4c10b340cecee13d5f8446d6540153573c2d2df6",
+            "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75"
+          ],
+          "publisher_result_refs": [
+            "4c10b340cecee13d5f8446d6540153573c2d2df6"
+          ]
         },
         {
           "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
@@ -12525,6 +12992,7 @@
         ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
         ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
         ".codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+        ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
         ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
         ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
         ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
@@ -12620,6 +13088,7 @@
         "TASK-003",
         "TASK-004",
         "TASK-005",
+        "TASK-005 planning build .codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         "TASK-005 refined to consume post-TASK-006 /wiki-session-handoff removal/extraction as tool-surface cleanup after isolated workflow is safe.",
         "TASK-005 refined to high priority next work for direct workflow surface plus agent-owned session-boundary automation.",
         "TASK-006",
@@ -12705,6 +13174,7 @@
         "CodeWiki audit warning after documentation/roadmap updates: stale-reference, generated-parity, file-structure pass; warnings are generated graph/task view dirty and one graph-health warning from uncommitted generated state.",
         "CodeWiki audit warning: alignment pass; stale-reference pass; changed warning only generated-file-changed .codewiki/index_graph.json and TASK-005/TASK-006 generated views",
         "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 5 warnings only for generated state/task views (.codewiki/index_graph.json, TASK-005/TASK-006 generated context/task views); all required profiles pass",
+        "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning",
         "CodeWiki audit: warning; profiles: alignment, stale-reference, generated-parity, file-structure, changed, package; alignment pass; changed warnings only generated files",
         "alignment",
         "audit:alignment",
@@ -12736,6 +13206,7 @@
         "task:TASK-006"
       ],
       "content_proof_refs": [
+        ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json@sha256:d248b6f1112cb01caf96dbe4502274b2d9a67a86f957a8feb4c68ca360b0cbf2",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json@sha256:bd3192aedc8c97c81ea5d4859e8473a31b7ae40167bed3530cfe10dea15ab4a3",
         ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json@sha256:4510588b3b837ecb9ed3d29ab38cfb0bc91849facf45bfeb4ddaf93055ccc1bc",
@@ -12745,6 +13216,7 @@
         ".codewiki/kb/product/users/agents.md@sha256:6766709858beeb5e92c5266bd1bb0767b6e8ce922c2a09fbddc5e8471e06b435",
         ".codewiki/kb/system/adapters.md@sha256:4b52457e0c86e98d96f6ab184c03f111c133c5a5cffc41f6105a356ee381317f",
         ".codewiki/kb/system/adapters.md@sha256:86b7717b67ae5311c74ebf71783fedc46d6b7dcac6cb8dc688808bf6f613b971",
+        ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
         ".codewiki/kb/system/adapters.md@sha256:ec66df9ba7e3ecf67129e69242f0139da557f7861287b8693d65bd741bdfef6c",
         ".codewiki/kb/system/adapters.md@sha256:f9a777795f6b69986cad558f1e7ceb243aca0d0bb85e96bdf55ff0847be38e12",
         ".codewiki/kb/system/agency.md@sha256:3447d88269bcb5c7c70f323bf03320f14f5c0f76aa46a3e4d1f63d1f8f4d995c",
@@ -12762,6 +13234,7 @@
         ".codewiki/kb/system/overview.md@sha256:6fbe39e9ae86ce97b55205c849bb563563aa29d05dc9d111e6b96e3c1965712e",
         ".codewiki/kb/system/validation-gateway.md@sha256:26df5f8efa9404d2927ff04e0479bf413b22cc0886fd2d163ff479f97d974608",
         ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
+        "4c10b340cecee13d5f8446d6540153573c2d2df6",
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
         "91be025737fef57c98863d56d5222844421e358a",
         "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
@@ -12774,17 +13247,21 @@
         "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
         "sha256:90920af7b47c41e2daaa91135431a3e533cf6f569f6b098f3cd9fbf531a2b545",
+        "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
         "sha256:acd28cf39a0038795d075af553a65d5fda19b0895fc40cf542b8cd984e8ef6e6",
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
         "sha256:f5760f9cdd89be57c6b87048e569c23f39bb48a998c79a35892813a7f4771b13",
+        "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
         "sha256:fd8b57dbf8c13e6a8a7a9255e1fb8fe511bc5c3aeaaca6464baca36a5c37ee35",
         "skills/codewiki-feedback/SKILL.md@sha256:cda08a672f08d5eb1b55e334fc4726adeca957084d379c31aea08e95b07f9909",
         "skills/codewiki-feedback/references/tools.md@sha256:2d80601375112beab4c358427f65c28e05ba183a5cf3834e0989c89f40f4f2cf",
         "skills/codewiki-implementation/SKILL.md@sha256:e7bf05525c8e850463a52463f1913e23edcba56a0c26747fd2489d04ca2eca45",
+        "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
         "skills/codewiki/SKILL.md@sha256:8d77e189f1cf65925375530655d71fb42a9b0dfa821fc595f13e18280eec6918",
         "skills/codewiki/SKILL.md@sha256:da8b3a9d80cd703534c345c0b42bc8bc13b1d8c7e59d62de41cc885929829464",
+        "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
         "skills/codewiki/references/tool-catalog.md@sha256:ede945d677e2c5cfd0d6cad96f1bc067cb73d6ec2e9dcda9dd693b688be9ea48",
         "src/adapters/pi/artifact-wake.ts@sha256:3f8b95bc45fb65e6985a4cd8c05ff97bd0a3d6b15ecce8d710022b58f2201a3b",
         "src/adapters/pi/artifact-wake.ts@sha256:42ec1ca1ab1e7ba4d233ddc409694a3540e0f8ab3a8d9178c2969c657812c1ed",
@@ -12792,6 +13269,7 @@
         "src/adapters/pi/index.ts@sha256:686003b93a889c4cb987dc302dce98c169daadac091184f539a6014e98762ef2",
         "src/adapters/pi/index.ts@sha256:9cfdd389e0c9af4ac30627d637a5cd4a95e3fe61f8629c2d4a33565d80bc56e6",
         "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+        "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
         "src/adapters/pi/schemas.ts@sha256:59c31d0e75bc0b42346bf7cfd6a64aaf67faa017867478f16311d67d2802e698",
         "src/adapters/pi/schemas.ts@sha256:6dfe469b58ba04c79cbb27e06ad467fc2bc6b68c034364256ab9dbabc1df11b6",
         "src/adapters/pi/schemas.ts@sha256:a239609a9f8c88a73d96395e7045b84e4240e0c89e1a8dc47dca554642c788bb",
@@ -12801,6 +13279,7 @@
         "src/adapters/pi/tools/session-handoff.ts@sha256:4bbd79bbd0dc4f8728446d453a3ccb5cf544a90862da0edceec02339c755e5f2",
         "src/adapters/pi/tools/session-handoff.ts@sha256:57737bdf6b4b31ce9098e274251d3509204939faaab652e10fa6630a7050ec6f",
         "src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+        "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
         "src/application/builds.ts@sha256:2749dd82cefe8188a5a521b9d7ba7d2e696dac3118a68c115c32796c3d5db98b",
         "src/application/builds.ts@sha256:8860529f90e40d7cd1d45dc5aa6a1ad74635d088ae6fd2811bc814cc881e9c99",
         "src/application/claims.ts@sha256:7ca1bd63672cf58c2ae0f112963f66b7a822080a236eb254d562ae393e8b09ad",
@@ -12813,6 +13292,7 @@
         "src/application/task.ts@sha256:0474d476dc43aecf70711afeeaa8fce7dd2d53cbe76df61c5749cef96853b73d",
         "src/application/tools/catalog.ts@sha256:bda331d1f9854e2d6346cab87fb1902d85152c25da102152413979f041623ec9",
         "src/application/tools/session-handoff.ts@sha256:1b4acfbde76b35265547c6df3a96fabecaa91811df044ae0c871870ca01a732a",
+        "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
         "src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
         "src/application/tools/session-handoff.ts@sha256:7bca21feb5baadec1f318a6299ffcdd04cea06a0cac29e60eb99998008568e7d",
         "src/application/tools/session-handoff.ts@sha256:8b493063c8c1ad1263e235824ba5835680e5c98ef7b4aee2a2c35f1267aa8699",
@@ -12832,6 +13312,7 @@
         "tests/smoke/prompt-assets.test.mjs@sha256:5c861b95e9299df4053ae1ce32253eef108f419f6040c98202a3b0ed1a510b15",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:ecdc9dfd4777658f6217a1b8a113c5b49b3e07a93045c15d8ec8b861baa792d4",
         "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
+        "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
         "tests/smoke/session-handoff.test.mjs@sha256:9015ef0664b45f61f3ba58cfba6568baa3ca7488d9f5a46cfbb107aa754b40b7",
         "tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
         "tests/smoke/session-handoff.test.mjs@sha256:e960d9cdd5a13faa842f34c3841bb1d641f8ddeaaeefe5d69461d9ca0f6314fd",
@@ -12889,6 +13370,30 @@
           ],
           "content_proof_refs": [
             "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-19-implementation-pass-task-005.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-005",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:stale-reference",
+            "audit:generated-parity",
+            "audit:file-structure",
+            "audit:task",
+            "task:TASK-005",
+            "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, task; stale-reference/generated-parity/file-structure/task pass; warnings limited to generated dirty views and existing graph-health large-doc warning"
+          ],
+          "content_proof_refs": [
+            "4c10b340cecee13d5f8446d6540153573c2d2df6",
+            "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75"
           ],
           "isolation_status": "isolated"
         },
@@ -13047,16 +13552,45 @@
           "roadmap_task_ids": [
             "TASK-005"
           ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "test_paths": [
+            "tests/smoke/session-handoff.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/package-smoke.test.mjs"
+          ],
+          "code_paths": [
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/references/tool-catalog.md",
+            ".codewiki/kb/system/adapters.md"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-19-implementation-pass-task-005.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+            "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+            "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+            "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+            "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+            "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+            "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+            "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+            ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+            "refs/codewiki/archive/task/TASK-005",
+            "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788"
+          ],
+          "gaps": []
         },
         {
           "requirement_id": "REQ-ASE-002",
@@ -13079,16 +13613,45 @@
           "roadmap_task_ids": [
             "TASK-005"
           ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "test_paths": [
+            "tests/smoke/session-handoff.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/package-smoke.test.mjs"
+          ],
+          "code_paths": [
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/references/tool-catalog.md",
+            ".codewiki/kb/system/adapters.md"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-19-implementation-pass-task-005.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+            "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+            "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+            "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+            "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+            "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+            "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+            "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+            ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+            "refs/codewiki/archive/task/TASK-005",
+            "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788"
+          ],
+          "gaps": []
         },
         {
           "requirement_id": "REQ-ASE-003",
@@ -13111,16 +13674,45 @@
           "roadmap_task_ids": [
             "TASK-005"
           ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "test_paths": [
+            "tests/smoke/session-handoff.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/package-smoke.test.mjs"
+          ],
+          "code_paths": [
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/references/tool-catalog.md",
+            ".codewiki/kb/system/adapters.md"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-19-implementation-pass-task-005.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+            "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+            "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+            "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+            "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+            "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+            "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+            "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+            ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+            "refs/codewiki/archive/task/TASK-005",
+            "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788"
+          ],
+          "gaps": []
         },
         {
           "requirement_id": "REQ-ASE-004",
@@ -13143,151 +13735,206 @@
           "roadmap_task_ids": [
             "TASK-005"
           ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "test_paths": [
+            "tests/smoke/session-handoff.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/package-smoke.test.mjs"
+          ],
+          "code_paths": [
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki/references/tool-catalog.md",
+            ".codewiki/kb/system/adapters.md"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-19-implementation-pass-task-005.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json@sha256:68af98f5afbb6ebbf7697526db4a6bc770398e0fef649622212ea9e17ba82061",
+            "tests/smoke/session-handoff.test.mjs@sha256:88151dfea57cee5a3643e1972da90d060aed6d59225d819179e053f636be6302",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
+            "tests/smoke/package-smoke.test.mjs@sha256:dfa5cbf1fbe7776bb917fcf40e4c96ed0f9c74a28fb6e0648a0b88aca594c241",
+            "src/application/tools/session-handoff.ts@sha256:58d79f7a34e85aff3a4973cf8d70f752b437e8310dd2e23cd56cb913251cb8ad",
+            "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
+            "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
+            "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
+            "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+            ".codewiki/kb/system/adapters.md@sha256:9ca8d96dd0f231a687983b476f76d3e8238bd7a8a9982187fb79a18ede948395",
+            "refs/codewiki/archive/task/TASK-005",
+            "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788"
+          ],
+          "gaps": []
         }
       ],
-      "semantic_change_rows": [],
-      "semantic_change_gaps": [],
-      "gap_count": 4,
-      "gaps": [
+      "semantic_change_rows": [
         {
-          "requirement_id": "REQ-ASE-001",
-          "requirement_text": "Policy-required new_session/context_refresh boundaries should be executed by the agent/adapter automatically when host capabilities allow, without asking the user to paste or press Enter on a command.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json"
+          "path": ".codewiki/kb/system/adapters.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
           ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
-            ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
-            ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates.",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/compilers.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-005"
-          ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
-          "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "REQ-ASE-002",
-          "requirement_text": "If host limitations prevent automatic session creation/reset, CodeWiki must record a precise platform block/fallback instead of presenting the compatibility command as normal user work.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json"
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
+            ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json",
+            ".codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json",
+            ".codewiki/builds/documentation/2026-05-19-handoff-recovery-session-orchestration-docs.json",
+            ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
+            ".codewiki/builds/documentation/2026-05-19-task-006-context-reset-handoff-docs.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
           ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
-            ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
-            ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates.",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/compilers.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-005"
-          ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
-          "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "REQ-ASE-003",
-          "requirement_text": "Workflow efficiency must be a roadmap success criterion measured by fewer user interrupts, fewer manual commands, shorter closure path, clear finish reports, and bounded loop/session/write cost.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json"
+          "path": "skills/codewiki/SKILL.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
           ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
-            ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
-            ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates.",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/compilers.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-005"
-          ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
-          "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "REQ-ASE-004",
-          "requirement_text": "Session automation and workflow-friction reduction take priority over TASK-001 decision_build implementation until the next roadmap alignment says otherwise.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json"
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
           ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/api.md: strengthened session-boundary contract so normal workflow must not ask the user to paste/submit compatibility commands; unsupported paths record platform-limited fallback or external-orchestrator requirement.",
-            ".codewiki/kb/system/agency.md: added platform-limited fallback behavior and workflow-efficiency evidence fields for orchestration changes.",
-            ".codewiki/kb/system/compilers.md: added /wiki-session-handoff to manual-command prohibition and required workflow-efficiency evidence while preserving gates.",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/compilers.md"
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
           ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json"
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/tools/session-handoff.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
           ],
-          "roadmap_task_ids": [
-            "TASK-005"
+          "gaps": []
+        },
+        {
+          "path": "src/application/tools/session-handoff.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json"
           ],
-          "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
-          "publication_refs": [],
-          "content_proof_refs": [],
-          "gaps": [
-            "missing_implementation_build"
-          ]
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/session-handoff.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
+          ],
+          "gaps": []
         }
-      ]
+      ],
+      "semantic_change_gaps": [],
+      "gap_count": 0,
+      "gaps": []
     },
     "scope_views": {
       "roadmap": {
@@ -13585,6 +14232,7 @@
             ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
             ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
             ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -13595,6 +14243,7 @@
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
             ".codewiki/validation/2026-05-19-feedback-pass.json",
+            ".codewiki/validation/2026-05-19-implementation-pass-task-005.json",
             ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
             ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
             ".codewiki/validation/2026-05-19-planning-pass.json",
@@ -13608,6 +14257,7 @@
             ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
             ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
             ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -13631,6 +14281,16 @@
     },
     "archive": {
       "restore_index": [
+        {
+          "kind": "task",
+          "id": "TASK-005",
+          "build_path": ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-005",
+          "commit_sha": "",
+          "digest": "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
+          "restore_command": "/wiki-restore TASK-005",
+          "safety_status": "blocked"
+        },
         {
           "kind": "task",
           "id": "TASK-006",
@@ -13713,8 +14373,9 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 8,
+        "ledger_count": 9,
         "archive_refs": [
+          "refs/codewiki/archive/task/TASK-005",
           "refs/codewiki/archive/task/TASK-006",
           "refs/codewiki/archive/task/TASK-003",
           "refs/codewiki/archive/task/TASK-005",
@@ -13725,6 +14386,7 @@
           "refs/codewiki/archive/task/TASK-006"
         ],
         "build_paths": [
+          ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
           ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
           ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
           ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
@@ -13735,6 +14397,7 @@
           ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
         ],
         "blocked_purge_build_paths": [
+          ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
           ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
           ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
           ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -13773,62 +14436,6 @@
           "reason": "Accepted implementation build still needs passing validation gateway evidence."
         },
         {
-          "id": "reconcile:traceability:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json:REQ-ASE-001",
-          "source_id": "build:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "intent",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-005",
-          "reason": "Traceability gap for REQ-ASE-001: missing_implementation_build.",
-          "gaps": [
-            "missing_implementation_build"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json:REQ-ASE-002",
-          "source_id": "build:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "intent",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-005",
-          "reason": "Traceability gap for REQ-ASE-002: missing_implementation_build.",
-          "gaps": [
-            "missing_implementation_build"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json:REQ-ASE-003",
-          "source_id": "build:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "intent",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-005",
-          "reason": "Traceability gap for REQ-ASE-003: missing_implementation_build.",
-          "gaps": [
-            "missing_implementation_build"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json:REQ-ASE-004",
-          "source_id": "build:.codewiki/builds/feedback/2026-05-19-accepted-priority-automatic-session-boundaries-a.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "intent",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-005",
-          "reason": "Traceability gap for REQ-ASE-004: missing_implementation_build.",
-          "gaps": [
-            "missing_implementation_build"
-          ]
-        },
-        {
           "id": "reconcile:task:TASK-001",
           "source_id": "task:TASK-001",
           "state": "drift",
@@ -13864,7 +14471,7 @@
       ],
       "counts_by_loop": {
         "validation": 2,
-        "implementation": 7
+        "implementation": 3
       },
       "next_action": {
         "loop": "implementation",
@@ -13889,7 +14496,7 @@
         ]
       },
       "layer_states": {
-        "intent": "drift",
+        "intent": "aligned",
         "knowledge": "aligned",
         "roadmap": "drift",
         "code": "drift",
@@ -13899,7 +14506,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-19T07:48:10.809Z",
+      "generated_at": "2026-05-19T09:09:53.566Z",
       "counts": {
         "large-doc": 1
       },
@@ -13914,7 +14521,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-19T07:48:10Z",
+      "generated_at": "2026-05-19T09:09:53Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -14343,7 +14950,7 @@
             "tests/smoke/session-handoff.test.mjs",
             "tests/smoke/claim-wait-queue.test.mjs"
           ],
-          "updated": "2026-05-19T07:43:47Z",
+          "updated": "2026-05-19T08:23:48Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -14359,7 +14966,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-19T07:48:10Z",
+      "generated_at": "2026-05-19T09:09:53Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -14531,6 +15138,7 @@
               ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
               ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
               ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -14541,6 +15149,7 @@
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
               ".codewiki/validation/2026-05-19-feedback-pass.json",
+              ".codewiki/validation/2026-05-19-implementation-pass-task-005.json",
               ".codewiki/validation/2026-05-19-implementation-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass-task-006.json",
               ".codewiki/validation/2026-05-19-planning-pass.json",
@@ -14554,6 +15163,7 @@
               ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
               ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
               ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -14608,7 +15218,7 @@
             "title": "Consolidate agent workflow surface and automate session boundaries"
           },
           "revision": {
-            "digest": "289be8fd5f3087051f373e54c01585d2eb3f8b0b240f67979f7752ff41bd0782",
+            "digest": "13cd7ca1ff66d4de24e57b920d673f80f382bb21a2adb5e34bf89ea45ca0116c",
             "basis": "source_content"
           },
           "note": "tracked by TASK-005"
@@ -15513,7 +16123,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-19T07:48:10Z",
+        "generated_at": "2026-05-19T09:09:53Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -15541,12 +16151,22 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:48:10Z",
+            "checked_at": "2026-05-19T09:09:53Z",
             "revision": {
               "git": {
-                "head": "48897142c610e06604840e6d9d72ff2167a04aeb",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "329217ca7869f8083263b8b6aeb042f672120d1f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-005/context.json",
+                  ".codewiki/roadmap/tasks/TASK-005/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -15630,15 +16250,15 @@
                   "tests/smoke/package-smoke.test.mjs": "bc98c88916aeea80c778132d07f2fbed1ef8106c"
                 }
               },
-              "spec_digest": "e0eb22b0df3c9c50b8fc66d96c95e070fe07e1b78b512bb41356653c5d8240ac",
-              "task_digest": "cd0d5b4a9387a14ec3c833f0e9ea88579f531ccd0a1cb2eff1e6ec4183c58247",
-              "code_digest": "5f992ae6d586ba58761ee0949b0fe67bfd1c90164c3fbf4a79ecbf7e68565069",
-              "digest": "f52927c49bc87c7f67c3dce84b6e3ec023889933ceb81fe2627e0569bbe1ca09"
+              "spec_digest": "781bb986d807024d98f95656560b0af3b704eba8e51cc40f6258b1c410e87889",
+              "task_digest": "61ce370458e529dd2b24b9c8c0c1718e418f7f83faa2bdf7f7467a036d132faf",
+              "code_digest": "94d23f8b9398134ce27992ed766c11542f0fbca2dffbdea16dc2288a7a37a9d3",
+              "digest": "b8e00e72fc3a68afb3ded435021471aff86e43790e5bf0f2a8d5ae8de039fe4a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:48:10Z",
+              "checked_at": "2026-05-19T09:09:53Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -15779,12 +16399,22 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-19T07:48:10Z",
+            "checked_at": "2026-05-19T09:09:53Z",
             "revision": {
               "git": {
-                "head": "48897142c610e06604840e6d9d72ff2167a04aeb",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "329217ca7869f8083263b8b6aeb042f672120d1f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-005/context.json",
+                  ".codewiki/roadmap/tasks/TASK-005/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "7ee9351b9b6270dc9033d8062f7ba1998d5f94bd",
@@ -15847,15 +16477,15 @@
                   "tests/smoke/package-smoke.test.mjs": "bc98c88916aeea80c778132d07f2fbed1ef8106c"
                 }
               },
-              "spec_digest": "626fa963dad33629496c2e251d9c62a9a2c104fd50afe8f25690cb6df5032649",
-              "task_digest": "cd0d5b4a9387a14ec3c833f0e9ea88579f531ccd0a1cb2eff1e6ec4183c58247",
-              "code_digest": "f40c35bd8e778daa262f006ed167ff6bc9f83c6b05a89201a88b66c93ffeb29e",
-              "digest": "870bb2e26bbf3a236ac2c05a3e20199152d03c2a9e35be1dfb0cb2fc58f38a8f"
+              "spec_digest": "ff1579f0dcf02176662cb38d45f519d9f19c2f088fda9da1d3f046792fc3950b",
+              "task_digest": "61ce370458e529dd2b24b9c8c0c1718e418f7f83faa2bdf7f7467a036d132faf",
+              "code_digest": "a35200d5e746ede36073fd8d3bf8486482535c83d14c22880fb7c294e5f56bd5",
+              "digest": "8dd06b45f9f995559b84afb3a1175a530692f81bdad02f29c52387690c11a888"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:48:10Z",
+              "checked_at": "2026-05-19T09:09:53Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -15975,12 +16605,22 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:48:10Z",
+            "checked_at": "2026-05-19T09:09:53Z",
             "revision": {
               "git": {
-                "head": "48897142c610e06604840e6d9d72ff2167a04aeb",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "329217ca7869f8083263b8b6aeb042f672120d1f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-005/context.json",
+                  ".codewiki/roadmap/tasks/TASK-005/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -16064,15 +16704,15 @@
                   "tests/smoke/package-smoke.test.mjs": "bc98c88916aeea80c778132d07f2fbed1ef8106c"
                 }
               },
-              "spec_digest": "e0eb22b0df3c9c50b8fc66d96c95e070fe07e1b78b512bb41356653c5d8240ac",
-              "task_digest": "cd0d5b4a9387a14ec3c833f0e9ea88579f531ccd0a1cb2eff1e6ec4183c58247",
-              "code_digest": "5f992ae6d586ba58761ee0949b0fe67bfd1c90164c3fbf4a79ecbf7e68565069",
-              "digest": "f52927c49bc87c7f67c3dce84b6e3ec023889933ceb81fe2627e0569bbe1ca09"
+              "spec_digest": "781bb986d807024d98f95656560b0af3b704eba8e51cc40f6258b1c410e87889",
+              "task_digest": "61ce370458e529dd2b24b9c8c0c1718e418f7f83faa2bdf7f7467a036d132faf",
+              "code_digest": "94d23f8b9398134ce27992ed766c11542f0fbca2dffbdea16dc2288a7a37a9d3",
+              "digest": "b8e00e72fc3a68afb3ded435021471aff86e43790e5bf0f2a8d5ae8de039fe4a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:48:10Z",
+              "checked_at": "2026-05-19T09:09:53Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -16214,7 +16854,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-19T07:48:10Z",
+        "generated_at": "2026-05-19T09:09:53Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -16262,7 +16902,7 @@
               "title": "Consolidate agent workflow surface and automate session boundaries"
             },
             "revision": {
-              "digest": "289be8fd5f3087051f373e54c01585d2eb3f8b0b240f67979f7752ff41bd0782",
+              "digest": "13cd7ca1ff66d4de24e57b920d673f80f382bb21a2adb5e34bf89ea45ca0116c",
               "basis": "source_content"
             },
             "note": "tracked by TASK-005"
@@ -17543,7 +18183,7 @@
                   "title": "Consolidate agent workflow surface and automate session boundaries"
                 },
                 "revision": {
-                  "digest": "289be8fd5f3087051f373e54c01585d2eb3f8b0b240f67979f7752ff41bd0782",
+                  "digest": "13cd7ca1ff66d4de24e57b920d673f80f382bb21a2adb5e34bf89ea45ca0116c",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-005"

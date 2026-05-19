@@ -129,7 +129,7 @@ Routing rules:
 - Use `codewiki_session` for runtime focus; it is not roadmap truth.
 - Use `codewiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
 - Agents may run `new_session`/`context_refresh` when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
-- Use the compatibility `codewiki_session_handoff` tool only for required session boundaries or true role/session transfer. In Pi tool context, it stages a boundary; do not inject `/wiki-session-handoff` through follow-up chat because Pi treats extension-sent slash text as chat, not as a command.
+- Use the compatibility `codewiki_session_handoff` tool only for required session boundaries or true role/session transfer. In Pi tool context, `context_refresh`/`context_reset` run through adapter-owned compaction, while `new_session` records platform-limited fallback unless a command-context or external-orchestrator path exists. Do not ask users to paste, press Enter on, or run `/wiki-session-handoff` as routine workflow.
 
 ## Agency policy
 
