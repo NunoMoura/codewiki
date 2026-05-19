@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T00:04:59.119Z",
+  "generated_at": "2026-05-19T00:05:49.536Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -1246,29 +1246,6 @@
       "layer": "roadmap",
       "status": "done",
       "change_type": "system",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "task:TASK-102",
-      "kind": "roadmap_task",
-      "title": "Lean source structure and remove wrapper seams",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift"
-    },
-    {
-      "id": "code:src/domain/roadmap/task-boundary.ts",
-      "kind": "code_path",
-      "path": "src/domain/roadmap/task-boundary.ts",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:tests/smoke/roadmap-task-boundary.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/roadmap-task-boundary.test.mjs",
-      "layer": "code",
       "alignment_state": "aligned"
     },
     {
@@ -9158,6 +9135,12 @@
       "id": "code:src/application/gateway/profiles/**",
       "kind": "code_path",
       "path": "src/application/gateway/profiles/**",
+      "layer": "code"
+    },
+    {
+      "id": "code:src/domain/roadmap/task-boundary.ts",
+      "kind": "code_path",
+      "path": "src/domain/roadmap/task-boundary.ts",
       "layer": "code"
     },
     {
@@ -23729,6 +23712,69 @@
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "head_sha": "3464c592a12b54d96fde7f568a15041e249e0479",
+        "validated_sha": "3464c592a12b54d96fde7f568a15041e249e0479",
+        "tree_sha": "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation from committed artifact refs and clean worktree proof after implementation commit.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity",
+          "audit:file-structure",
+          "audit:stale-reference",
+          "audit:alignment pass — Checked generated graph health and roadmap queue reachability.",
+          "audit:changed pass — Checked 0 changed files across 0 layers.",
+          "audit:task pass — Checked roadmap task TASK-102.",
+          "audit:generated-parity pass — Checked generated graph presence, freshness, and active roadmap task views against canonical sources.",
+          "audit:file-structure pass — Checked 77 TypeScript source files and architecture wrapper boundaries.",
+          "audit:stale-reference pass — Scanned 53 active markdown/source text files for known stale references."
+        ],
+        "content_proof_refs": [
+          "3464c592a12b54d96fde7f568a15041e249e0479",
+          "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b"
+        ]
+      }
+    },
+    {
+      "id": "audit:audit:changed pass — Checked 0 changed files across 0 layers.",
+      "kind": "audit_evidence",
+      "path": "audit:changed pass — Checked 0 changed files across 0 layers.",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:3464c592a12b54d96fde7f568a15041e249e0479",
+      "kind": "content_proof",
+      "path": "3464c592a12b54d96fde7f568a15041e249e0479",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b",
+      "kind": "content_proof",
+      "path": "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
     }
   ],
   "edges": [
@@ -26036,66 +26082,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-078",
       "to": "code:tests/smoke"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/kb/system/overview.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/kb/system/api.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-102",
-      "to": "doc:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-102",
-      "to": "code:src/application"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-102",
-      "to": "code:src/domain/roadmap/task-boundary.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-102",
-      "to": "code:src/adapters"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-102",
-      "to": "code:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-102",
-      "to": "code:tests/smoke/roadmap-task-boundary.test.mjs"
     },
     {
       "kind": "test_code",
@@ -56037,6 +56023,101 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-19-implementation-pass-task-102.json",
       "to": "task:TASK-102"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:alignment pass — Checked generated graph health and roadmap queue reachability.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:changed pass — Checked 0 changed files across 0 layers.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:task pass — Checked roadmap task TASK-102.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:generated-parity pass — Checked generated graph presence, freshness, and active roadmap task views against canonical sources.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:file-structure pass — Checked 77 TypeScript source files and architecture wrapper boundaries.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "audit:audit:stale-reference pass — Scanned 53 active markdown/source text files for known stale references.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "content_proof:3464c592a12b54d96fde7f568a15041e249e0479",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "content_proof:d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+      "to": "task:TASK-102"
     }
   ],
   "views": {
@@ -56207,15 +56288,10 @@
         "TASK-076",
         "TASK-077",
         "TASK-084",
-        "TASK-078",
-        "TASK-102"
+        "TASK-078"
       ],
-      "open_task_ids": [
-        "TASK-102"
-      ],
-      "in_progress_task_ids": [
-        "TASK-102"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [
@@ -56274,8 +56350,7 @@
       ],
       "status_counts": {
         "done": 45,
-        "cancelled": 5,
-        "in_progress": 1
+        "cancelled": 5
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -56521,7 +56596,6 @@
         "src/application/tools/build.ts",
         "src/bootstrap.ts",
         "src/domain",
-        "src/domain/roadmap/task-boundary.ts",
         "src/domain/shared/types.ts",
         "src/index.ts",
         "src/infrastructure/codewiki-rebuilder.ts",
@@ -56532,7 +56606,6 @@
         "tests/**",
         "tests/smoke",
         "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/roadmap-task-boundary.test.mjs",
         "tsconfig.json"
       ],
       "dirty_paths": []
@@ -57706,6 +57779,23 @@
           "content_proof_refs": [
             "sha256:142eafbedc00e96a25a5a3dedf531a224c5b078e669b4710f3d296c56e1908a9"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+          "task_id": "TASK-102",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "head_sha": "3464c592a12b54d96fde7f568a15041e249e0479",
+          "validated_sha": "3464c592a12b54d96fde7f568a15041e249e0479",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "3464c592a12b54d96fde7f568a15041e249e0479",
+            "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b"
+          ]
         }
       ]
     },
@@ -58613,6 +58703,7 @@
         "audit:changed pass Checked 9 changed files across 3 layers before commit.",
         "audit:changed pass Checked 9 changed files across 3 layers.",
         "audit:changed pass Checked changed files before commit.",
+        "audit:changed pass — Checked 0 changed files across 0 layers.",
         "audit:changed warning checked 23 changed files; generated-file-changed .codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-077/context.json, .codewiki/roadmap/tasks/TASK-077/task.json.",
         "audit:changed warning generated .codewiki/index_graph.json and TASK-091 views changed from rebuild.",
         "audit:changed warning only generated .codewiki/index_graph.json and TASK-092 task view/context changed.",
@@ -58782,6 +58873,7 @@
         "2c36f7ddc10114ddcec8785d0948915bc14c9624",
         "2d2673719bd55fd50876ccae84672c3773b7215a",
         "335e0dab36bf7c49eb14ff1c50477c6d08ed0c1f",
+        "3464c592a12b54d96fde7f568a15041e249e0479",
         "3680881721d01f5450aa2ba5aeedc4f15e216b17",
         "3ac936ffbbad8b32613427c515a5b5e46ecc3062",
         "4757f167a6306f11c8f6d142605cc2e9a8220d89",
@@ -58826,6 +58918,7 @@
         "c37cf0a1a1790ddd96532c57087b19fdb8a7a5de",
         "c87e595962a5df630a22e211afe310d936e8e3e4",
         "cc0f949346f8dda07b980c54b451b1b247686155",
+        "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b",
         "d72fb38ed289c5089bbafaf3676b0367325400b8",
         "dd62bdedeb9c47ae5bf37937dde693d8112b46bb",
         "e2c184a96a3fd7c10bf169b78409ec6ab5ab95bf",
@@ -60840,373 +60933,178 @@
             "sha256:142eafbedc00e96a25a5a3dedf531a224c5b078e669b4710f3d296c56e1908a9"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-19-task-close-pass-task-102.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-102",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity",
+            "audit:file-structure",
+            "audit:stale-reference",
+            "audit:alignment pass — Checked generated graph health and roadmap queue reachability.",
+            "audit:changed pass — Checked 0 changed files across 0 layers.",
+            "audit:task pass — Checked roadmap task TASK-102.",
+            "audit:generated-parity pass — Checked generated graph presence, freshness, and active roadmap task views against canonical sources.",
+            "audit:file-structure pass — Checked 77 TypeScript source files and architecture wrapper boundaries.",
+            "audit:stale-reference pass — Scanned 53 active markdown/source text files for known stale references."
+          ],
+          "content_proof_refs": [
+            "3464c592a12b54d96fde7f568a15041e249e0479",
+            "d6a0a6dfe36a6d1dc0b3bafb464b92299f419c3b"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
     "traceability": {
-      "rows": [
+      "rows": [],
+      "semantic_change_rows": [
         {
-          "requirement_id": "REQ-LEAN-001",
-          "requirement_text": "Wrapper-only application compiler/gateway files must be deleted unless they own real orchestration or policy.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json"
-          ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md: component map, package architecture tree, and dependency direction now describe focused application modules instead of placeholder compilers/gateways/state-engine folders.",
-            ".codewiki/kb/system/overview.md: target architecture now says adapters/UI/skills call focused application use cases/tools without placeholder wrapper seams.",
-            ".codewiki/kb/system/api.md: API boundary now describes application tools calling focused use cases for builds, validation, roadmap/session, state/graph, and runtime behavior.",
-            ".codewiki/kb/system/compilers.md: compiler ownership now points to build-writing modules and skill loop instructions instead of src/application/compilers wrappers.",
-            ".codewiki/kb/system/validation-gateway.md: gateway ownership now points to validation tool/application gateway modules without requiring application/gateways placeholder folders.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-102"
-          ],
-          "test_paths": [
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/run.mjs",
-            "updated task-boundary smoke import"
-          ],
-          "code_paths": [
-            "src/application/compilers/feedback.ts (deleted)",
-            "src/application/compilers/documentation.ts (deleted)",
-            "src/application/compilers/planning.ts (deleted)",
-            "src/application/compilers/implementation.ts (deleted)",
-            "src/application/gateway/profiles/implementation.ts (deleted)",
-            "src/application/gateway/profiles/task-close.ts (deleted)",
-            "src/application/task-boundary.ts (deleted)",
-            "src/adapters/web/control-room.ts (deleted)",
-            "src/application/roadmap.ts",
-            "src/application/state-builders.ts",
-            "src/application/lint.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/ui/web/control-room.ts",
-            "README.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md",
-            "lean source wrapper cleanup"
-          ],
-          "implementation_builds": [
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/feedback/2026-05-11-control-room-ui.json",
+            ".codewiki/builds/feedback/2026-05-11-cytoscape-graph-visualization-selection.json",
+            ".codewiki/builds/feedback/2026-05-11-progressive-task-refinement-intent.json",
+            ".codewiki/builds/feedback/2026-05-13-claim-wait-queue.json",
+            ".codewiki/builds/feedback/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/feedback/2026-05-15-accepted-codewiki-alignment-hardening-principles.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-087-narrow-dependency-direction-gu.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-088-web-ui-move-slice-from-adapter.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-090-scope-correction-dogfood-sourc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-091-stale-unscoped-validation-bloc.json",
+            ".codewiki/builds/feedback/2026-05-16-accepted-task-092-large-doc-warning-cleanup-for-.json",
+            ".codewiki/builds/feedback/2026-05-16-artifact-status-parallel-coordination.json",
+            ".codewiki/builds/feedback/2026-05-16-parallel-wiki-resume-session-scheduler.json",
+            ".codewiki/builds/documentation/2026-05-10-runtime-scoped-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-10-scoped-change-claims-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-build-contract-v2-and-efficiency-sprints-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-control-room-ui-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-cytoscape-control-room-graph-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-progressive-task-refinement-docs.json",
+            ".codewiki/builds/documentation/2026-05-11-reconciliation-lifecycle-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-config-settings-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-control-room-simplification-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-deprecated-evidence-index-retention-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-drift-propagation-assurance-final-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-git-backed-archival-gc-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-hot-only-default-context-docs.json",
+            ".codewiki/builds/documentation/2026-05-12-role-worktree-isolation-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-alignment-cycles-planning-gateway-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-claim-wait-queue-docs.json",
+            ".codewiki/builds/documentation/2026-05-13-document-adapter-managed-session-handoff-capabil.json",
+            ".codewiki/builds/documentation/2026-05-13-loop-session-isolation-policy-docs-v2.json",
+            ".codewiki/builds/documentation/2026-05-13-ui-progressive-disclosure-source-drawer-retro-bo.json",
+            ".codewiki/builds/documentation/2026-05-15-documented-codewiki-alignment-model-audit-archit.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-change-type-taxonomy.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-087-dependency-direction-guard-s.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-088-web-ui-move-paths-from-src-a.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-090-portable-alignment-drift-fix.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-091-validation-reconciliation-ru.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-092-large-doc-cleanup-by-condens.json",
+            ".codewiki/builds/documentation/2026-05-16-documented-task-sprint-boundary-contract.json",
+            ".codewiki/builds/planning/2026-05-13-loop-session-isolation-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-13-plan-implementation-of-pi-adapter-session-handof.json",
+            ".codewiki/builds/planning/2026-05-13-task-073-alignment-routing-plan.json",
+            ".codewiki/builds/planning/2026-05-14-plan-task-075-implementation-of-ascii-like-codew.json",
+            ".codewiki/builds/planning/2026-05-15-planned-sprint-003-alignment-hardening-with-umbr.json",
+            ".codewiki/builds/planning/2026-05-16-domain-led-layering-refactor-roadmap.json",
+            ".codewiki/builds/planning/2026-05-16-planned-bounded-enforcement-work-for-task-bounda.json",
+            ".codewiki/builds/planning/2026-05-16-planned-change-type-taxonomy-migration.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-087-dependency-direction-guard-fixt.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-088-web-ui-move-slice.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-090-portable-alignment-drift-fixtur.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-091-stale-unscoped-validation-block.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-092-oversized-system-docs-trim.json",
+            ".codewiki/builds/planning/2026-05-16-planned-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/planning/2026-05-17-planned-agent-managed-codewiki-gc.json",
+            ".codewiki/builds/planning/2026-05-17-planned-skill-loop-restructure-sprint.json",
+            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-11-task-055-build-contract-v2.json",
+            ".codewiki/builds/implementation/2026-05-11-task-056-efficiency-foundation.json",
+            ".codewiki/builds/implementation/2026-05-11-task-057-status-graph-diff-ui.json",
+            ".codewiki/builds/implementation/2026-05-11-task-058-control-room-shell.json",
+            ".codewiki/builds/implementation/2026-05-11-task-059-system-diagram-inspector.json",
+            ".codewiki/builds/implementation/2026-05-11-task-060-graph-visual-map.json",
+            ".codewiki/builds/implementation/2026-05-11-task-061-control-room-refinement.json",
+            ".codewiki/builds/implementation/2026-05-11-task-062-wiki-ui-browser-open.json",
+            ".codewiki/builds/implementation/2026-05-11-task-063-cytoscape-control-room-graph.json",
+            ".codewiki/builds/implementation/2026-05-11-task-064-graph-spacing-fit.json",
+            ".codewiki/builds/implementation/2026-05-11-task-065-progressive-task-refinement.json",
+            ".codewiki/builds/implementation/2026-05-12-task-066-drift-propagation-assurance.json",
+            ".codewiki/builds/implementation/2026-05-12-task-067-control-room-simplification.json",
+            ".codewiki/builds/implementation/2026-05-12-task-069-control-room-settings.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-claim-wait-queue.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-isolation-session-handoff.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-loop-session-isolation-policy.json",
+            ".codewiki/builds/implementation/2026-05-13-task-074-session-handoff-fresh-process-fix.json",
+            ".codewiki/builds/implementation/2026-05-13-task-075-value-first-ui-kanban.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-expanded-audit-cleanup-fixed-stale-sour.json",
+            ".codewiki/builds/implementation/2026-05-14-task-076-final-tidy-pass-moved-package-smoke-und.json",
+            ".codewiki/builds/implementation/2026-05-15-task-078-implemented-executable-alignment-graph-.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-implementation-gateway-now-enforces-com.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-corrected-task-close-policy-di.json",
+            ".codewiki/builds/implementation/2026-05-15-task-080-task-084-gateway-content-proof-policy-n.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-deprecated-roadmap-verify-phase.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-and-guards.json",
+            ".codewiki/builds/implementation/2026-05-15-task-081-removes-task-phases-entirely-roadmap-wo.json",
+            ".codewiki/builds/implementation/2026-05-15-task-082-task-084-task-close-now-blocks-without-.json",
+            ".codewiki/builds/implementation/2026-05-16-added-audit-and-smoke-test-enforcement-for-bound.json",
+            ".codewiki/builds/implementation/2026-05-16-added-portable-alignment-drift-fixture-matrix-an.json",
+            ".codewiki/builds/implementation/2026-05-16-added-regression-coverage-proving-task-087-depen.json",
+            ".codewiki/builds/implementation/2026-05-16-completed-task-087-domain-led-layering-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-corrected-stale-public-api-guidance-found-by-fre.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-accepted-build-lifecycle-semantics-int.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-change-traceability-normalization-sema.json",
+            ".codewiki/builds/implementation/2026-05-16-extracted-roadmap-task-boundary-semantics-into-d.json",
+            ".codewiki/builds/implementation/2026-05-16-finalized-task-086-public-coordination-wording-a.json",
+            ".codewiki/builds/implementation/2026-05-16-fixed-task-086-handoff-blocker-tool-context-new-.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-change-type-taxonomy-migration.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-082-semantic-build-traceability.json",
+            ".codewiki/builds/implementation/2026-05-16-implemented-task-sprint-boundary-enforcement.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-bootstrap-resume-prompt-assets-into-skill-.json",
+            ".codewiki/builds/implementation/2026-05-16-moved-control-room-browser-ui-source-from-adapte.json",
+            ".codewiki/builds/implementation/2026-05-16-stopped-stale-unscoped-validation-block-reports-.json",
+            ".codewiki/builds/implementation/2026-05-16-task-079-source-owned-audit-engine.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy-current-p.json",
+            ".codewiki/builds/implementation/2026-05-16-task-080-gateway-audit-evidence-policy.json",
+            ".codewiki/builds/implementation/2026-05-16-task-081-source-owned-drift-fixtures.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-public-api.json",
+            ".codewiki/builds/implementation/2026-05-16-task-086-artifact-status-resume-scheduler.json",
+            ".codewiki/builds/implementation/2026-05-16-trimmed-oversized-builds-and-roadmap-system-docs.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-093-feedback-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract-planning-t.json",
+            ".codewiki/builds/implementation/2026-05-17-task-094-documentation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract-planning-traced.json",
+            ".codewiki/builds/implementation/2026-05-17-task-095-planning-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract-planning-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-096-implementation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract-planning-trac.json",
+            ".codewiki/builds/implementation/2026-05-17-task-097-validation-skill-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-098-main-skill-router-contract.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts-planning-tra.json",
+            ".codewiki/builds/implementation/2026-05-17-task-099-application-tool-contracts.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-active-handoff-.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc-handoff-visibil.json",
+            ".codewiki/builds/implementation/2026-05-17-task-100-post-commit-codewiki-gc.json",
             ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "validation_paths": [
-            "implementation validation handoff needed",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-102.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json@sha256:1de4a081225791910f0e2ac336c0238ec2165023235168e5270caae7ebe56f63",
-            "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
-            "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
-            "tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
-            "src/application/roadmap.ts@sha256:e6f713627b10b789841499de0d316dbb6f2c429c462f72e4ab19ac884ece9895",
-            "src/application/state-builders.ts@sha256:540228cdf3545ee96fc096d3476622025f3946d7d56a321c6101c17986e4006e",
-            "src/application/lint.ts@sha256:8f4a038f9c15ed3044282073c8a92afab9919a5fa793a12201ba589cdc5faaf5",
-            "src/application/tools/audit.ts@sha256:da2dedb0a12a500ca2f79ab2dc2a72fa89a4b75f6d2f4a5e24478b8899f33661",
-            "src/adapters/pi/commands/resume.ts@sha256:08be6934046e3f8cd9773c6c9384909df8b2445d4bdd42edef6b114c48510fac",
-            "src/domain/roadmap/task-boundary.ts@sha256:69c52873fd0c15bc6808543b9002bd2e53678444b3bb80a2ab74be1a9a1a507e",
-            "src/ui/web/control-room.ts@sha256:13a17bc268ee227989d145f93e1d97bf6aa6872547a1973515e85879409c0376",
-            "README.md@sha256:f93e5a706b2f493397b6bf5128c41e083ad9dd6714ce1c41b837792c27155c15",
-            ".codewiki/kb/system/file-structure.md@sha256:f6a5452006875fd4c6efad69ae036910c07dda44066f751ca72aa88f1f8ebce9",
-            ".codewiki/kb/system/overview.md@sha256:5ff4d3e5cda8cee89e1bd37f19839b26680dd9bbe427f9eb6a4acf37fad16b07",
-            ".codewiki/kb/system/api.md@sha256:87efc18026268648608e10fd26a92aee46e47eb0039fc70f71d30c1da649fdfd",
-            ".codewiki/kb/system/compilers.md@sha256:746dfe38720f910515798f7fd9e13a0cf4a5bc161c94635684a58966375aa9c3",
-            ".codewiki/kb/system/validation-gateway.md@sha256:dac1ecddc54e3fbab97180fe0027fe894dddaa4f500475e9a06c6d276afecfd9",
-            "refs/codewiki/archive/task/TASK-102",
-            "sha256:b9f8fe4331dee7b096f5895b3ef846749ae73c83f72bdd3934f6b4fed1fc70fa"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "REQ-LEAN-002",
-          "requirement_text": "Repo-internal compatibility re-exports must be removed after imports migrate; public compatibility aliases require explicit compatibility decision.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json"
-          ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md: component map, package architecture tree, and dependency direction now describe focused application modules instead of placeholder compilers/gateways/state-engine folders.",
-            ".codewiki/kb/system/overview.md: target architecture now says adapters/UI/skills call focused application use cases/tools without placeholder wrapper seams.",
-            ".codewiki/kb/system/api.md: API boundary now describes application tools calling focused use cases for builds, validation, roadmap/session, state/graph, and runtime behavior.",
-            ".codewiki/kb/system/compilers.md: compiler ownership now points to build-writing modules and skill loop instructions instead of src/application/compilers wrappers.",
-            ".codewiki/kb/system/validation-gateway.md: gateway ownership now points to validation tool/application gateway modules without requiring application/gateways placeholder folders.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-102"
-          ],
-          "test_paths": [
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/run.mjs",
-            "updated task-boundary smoke import"
-          ],
-          "code_paths": [
-            "src/application/compilers/feedback.ts (deleted)",
-            "src/application/compilers/documentation.ts (deleted)",
-            "src/application/compilers/planning.ts (deleted)",
-            "src/application/compilers/implementation.ts (deleted)",
-            "src/application/gateway/profiles/implementation.ts (deleted)",
-            "src/application/gateway/profiles/task-close.ts (deleted)",
-            "src/application/task-boundary.ts (deleted)",
-            "src/adapters/web/control-room.ts (deleted)",
-            "src/application/roadmap.ts",
-            "src/application/state-builders.ts",
-            "src/application/lint.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/ui/web/control-room.ts",
-            "README.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md",
-            "lean source wrapper cleanup"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "validation_paths": [
-            "implementation validation handoff needed",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-102.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json@sha256:1de4a081225791910f0e2ac336c0238ec2165023235168e5270caae7ebe56f63",
-            "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
-            "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
-            "tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
-            "src/application/roadmap.ts@sha256:e6f713627b10b789841499de0d316dbb6f2c429c462f72e4ab19ac884ece9895",
-            "src/application/state-builders.ts@sha256:540228cdf3545ee96fc096d3476622025f3946d7d56a321c6101c17986e4006e",
-            "src/application/lint.ts@sha256:8f4a038f9c15ed3044282073c8a92afab9919a5fa793a12201ba589cdc5faaf5",
-            "src/application/tools/audit.ts@sha256:da2dedb0a12a500ca2f79ab2dc2a72fa89a4b75f6d2f4a5e24478b8899f33661",
-            "src/adapters/pi/commands/resume.ts@sha256:08be6934046e3f8cd9773c6c9384909df8b2445d4bdd42edef6b114c48510fac",
-            "src/domain/roadmap/task-boundary.ts@sha256:69c52873fd0c15bc6808543b9002bd2e53678444b3bb80a2ab74be1a9a1a507e",
-            "src/ui/web/control-room.ts@sha256:13a17bc268ee227989d145f93e1d97bf6aa6872547a1973515e85879409c0376",
-            "README.md@sha256:f93e5a706b2f493397b6bf5128c41e083ad9dd6714ce1c41b837792c27155c15",
-            ".codewiki/kb/system/file-structure.md@sha256:f6a5452006875fd4c6efad69ae036910c07dda44066f751ca72aa88f1f8ebce9",
-            ".codewiki/kb/system/overview.md@sha256:5ff4d3e5cda8cee89e1bd37f19839b26680dd9bbe427f9eb6a4acf37fad16b07",
-            ".codewiki/kb/system/api.md@sha256:87efc18026268648608e10fd26a92aee46e47eb0039fc70f71d30c1da649fdfd",
-            ".codewiki/kb/system/compilers.md@sha256:746dfe38720f910515798f7fd9e13a0cf4a5bc161c94635684a58966375aa9c3",
-            ".codewiki/kb/system/validation-gateway.md@sha256:dac1ecddc54e3fbab97180fe0027fe894dddaa4f500475e9a06c6d276afecfd9",
-            "refs/codewiki/archive/task/TASK-102",
-            "sha256:b9f8fe4331dee7b096f5895b3ef846749ae73c83f72bdd3934f6b4fed1fc70fa"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "REQ-LEAN-003",
-          "requirement_text": "Docs must describe the lean actual source structure and avoid requiring placeholder folders or seams.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json"
-          ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md: component map, package architecture tree, and dependency direction now describe focused application modules instead of placeholder compilers/gateways/state-engine folders.",
-            ".codewiki/kb/system/overview.md: target architecture now says adapters/UI/skills call focused application use cases/tools without placeholder wrapper seams.",
-            ".codewiki/kb/system/api.md: API boundary now describes application tools calling focused use cases for builds, validation, roadmap/session, state/graph, and runtime behavior.",
-            ".codewiki/kb/system/compilers.md: compiler ownership now points to build-writing modules and skill loop instructions instead of src/application/compilers wrappers.",
-            ".codewiki/kb/system/validation-gateway.md: gateway ownership now points to validation tool/application gateway modules without requiring application/gateways placeholder folders.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-102"
-          ],
-          "test_paths": [
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/run.mjs",
-            "updated task-boundary smoke import"
-          ],
-          "code_paths": [
-            "src/application/compilers/feedback.ts (deleted)",
-            "src/application/compilers/documentation.ts (deleted)",
-            "src/application/compilers/planning.ts (deleted)",
-            "src/application/compilers/implementation.ts (deleted)",
-            "src/application/gateway/profiles/implementation.ts (deleted)",
-            "src/application/gateway/profiles/task-close.ts (deleted)",
-            "src/application/task-boundary.ts (deleted)",
-            "src/adapters/web/control-room.ts (deleted)",
-            "src/application/roadmap.ts",
-            "src/application/state-builders.ts",
-            "src/application/lint.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/ui/web/control-room.ts",
-            "README.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md",
-            "lean source wrapper cleanup"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "validation_paths": [
-            "implementation validation handoff needed",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-102.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json@sha256:1de4a081225791910f0e2ac336c0238ec2165023235168e5270caae7ebe56f63",
-            "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
-            "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
-            "tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
-            "src/application/roadmap.ts@sha256:e6f713627b10b789841499de0d316dbb6f2c429c462f72e4ab19ac884ece9895",
-            "src/application/state-builders.ts@sha256:540228cdf3545ee96fc096d3476622025f3946d7d56a321c6101c17986e4006e",
-            "src/application/lint.ts@sha256:8f4a038f9c15ed3044282073c8a92afab9919a5fa793a12201ba589cdc5faaf5",
-            "src/application/tools/audit.ts@sha256:da2dedb0a12a500ca2f79ab2dc2a72fa89a4b75f6d2f4a5e24478b8899f33661",
-            "src/adapters/pi/commands/resume.ts@sha256:08be6934046e3f8cd9773c6c9384909df8b2445d4bdd42edef6b114c48510fac",
-            "src/domain/roadmap/task-boundary.ts@sha256:69c52873fd0c15bc6808543b9002bd2e53678444b3bb80a2ab74be1a9a1a507e",
-            "src/ui/web/control-room.ts@sha256:13a17bc268ee227989d145f93e1d97bf6aa6872547a1973515e85879409c0376",
-            "README.md@sha256:f93e5a706b2f493397b6bf5128c41e083ad9dd6714ce1c41b837792c27155c15",
-            ".codewiki/kb/system/file-structure.md@sha256:f6a5452006875fd4c6efad69ae036910c07dda44066f751ca72aa88f1f8ebce9",
-            ".codewiki/kb/system/overview.md@sha256:5ff4d3e5cda8cee89e1bd37f19839b26680dd9bbe427f9eb6a4acf37fad16b07",
-            ".codewiki/kb/system/api.md@sha256:87efc18026268648608e10fd26a92aee46e47eb0039fc70f71d30c1da649fdfd",
-            ".codewiki/kb/system/compilers.md@sha256:746dfe38720f910515798f7fd9e13a0cf4a5bc161c94635684a58966375aa9c3",
-            ".codewiki/kb/system/validation-gateway.md@sha256:dac1ecddc54e3fbab97180fe0027fe894dddaa4f500475e9a06c6d276afecfd9",
-            "refs/codewiki/archive/task/TASK-102",
-            "sha256:b9f8fe4331dee7b096f5895b3ef846749ae73c83f72bdd3934f6b4fed1fc70fa"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "REQ-LEAN-004",
-          "requirement_text": "Cleanup must include dependency/reference scanning before deletion and full checks after deletion.",
-          "feedback_build": ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-          "documentation_builds": [
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json"
-          ],
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md: component map, package architecture tree, and dependency direction now describe focused application modules instead of placeholder compilers/gateways/state-engine folders.",
-            ".codewiki/kb/system/overview.md: target architecture now says adapters/UI/skills call focused application use cases/tools without placeholder wrapper seams.",
-            ".codewiki/kb/system/api.md: API boundary now describes application tools calling focused use cases for builds, validation, roadmap/session, state/graph, and runtime behavior.",
-            ".codewiki/kb/system/compilers.md: compiler ownership now points to build-writing modules and skill loop instructions instead of src/application/compilers wrappers.",
-            ".codewiki/kb/system/validation-gateway.md: gateway ownership now points to validation tool/application gateway modules without requiring application/gateways placeholder folders.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-102"
-          ],
-          "test_paths": [
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/smoke/package-smoke.test.mjs",
-            "tests/run.mjs",
-            "updated task-boundary smoke import"
-          ],
-          "code_paths": [
-            "src/application/compilers/feedback.ts (deleted)",
-            "src/application/compilers/documentation.ts (deleted)",
-            "src/application/compilers/planning.ts (deleted)",
-            "src/application/compilers/implementation.ts (deleted)",
-            "src/application/gateway/profiles/implementation.ts (deleted)",
-            "src/application/gateway/profiles/task-close.ts (deleted)",
-            "src/application/task-boundary.ts (deleted)",
-            "src/adapters/web/control-room.ts (deleted)",
-            "src/application/roadmap.ts",
-            "src/application/state-builders.ts",
-            "src/application/lint.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/ui/web/control-room.ts",
-            "README.md",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md",
-            "lean source wrapper cleanup"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-18-task-102-lean-structure-wrapper-cleanup.json"
-          ],
-          "validation_paths": [
-            "implementation validation handoff needed",
-            ".codewiki/validation/2026-05-19-implementation-pass-task-102.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-18-planned-task-102-lean-structure-wrapper-cleanup.json@sha256:1de4a081225791910f0e2ac336c0238ec2165023235168e5270caae7ebe56f63",
-            "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
-            "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
-            "tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
-            "src/application/roadmap.ts@sha256:e6f713627b10b789841499de0d316dbb6f2c429c462f72e4ab19ac884ece9895",
-            "src/application/state-builders.ts@sha256:540228cdf3545ee96fc096d3476622025f3946d7d56a321c6101c17986e4006e",
-            "src/application/lint.ts@sha256:8f4a038f9c15ed3044282073c8a92afab9919a5fa793a12201ba589cdc5faaf5",
-            "src/application/tools/audit.ts@sha256:da2dedb0a12a500ca2f79ab2dc2a72fa89a4b75f6d2f4a5e24478b8899f33661",
-            "src/adapters/pi/commands/resume.ts@sha256:08be6934046e3f8cd9773c6c9384909df8b2445d4bdd42edef6b114c48510fac",
-            "src/domain/roadmap/task-boundary.ts@sha256:69c52873fd0c15bc6808543b9002bd2e53678444b3bb80a2ab74be1a9a1a507e",
-            "src/ui/web/control-room.ts@sha256:13a17bc268ee227989d145f93e1d97bf6aa6872547a1973515e85879409c0376",
-            "README.md@sha256:f93e5a706b2f493397b6bf5128c41e083ad9dd6714ce1c41b837792c27155c15",
-            ".codewiki/kb/system/file-structure.md@sha256:f6a5452006875fd4c6efad69ae036910c07dda44066f751ca72aa88f1f8ebce9",
-            ".codewiki/kb/system/overview.md@sha256:5ff4d3e5cda8cee89e1bd37f19839b26680dd9bbe427f9eb6a4acf37fad16b07",
-            ".codewiki/kb/system/api.md@sha256:87efc18026268648608e10fd26a92aee46e47eb0039fc70f71d30c1da649fdfd",
-            ".codewiki/kb/system/compilers.md@sha256:746dfe38720f910515798f7fd9e13a0cf4a5bc161c94635684a58966375aa9c3",
-            ".codewiki/kb/system/validation-gateway.md@sha256:dac1ecddc54e3fbab97180fe0027fe894dddaa4f500475e9a06c6d276afecfd9",
-            "refs/codewiki/archive/task/TASK-102",
-            "sha256:b9f8fe4331dee7b096f5895b3ef846749ae73c83f72bdd3934f6b4fed1fc70fa"
           ],
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -61264,12 +61162,9 @@
           "TASK-076",
           "TASK-077",
           "TASK-084",
-          "TASK-078",
-          "TASK-102"
+          "TASK-078"
         ],
-        "open_task_ids": [
-          "TASK-102"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -62166,64 +62061,28 @@
             "src/domain/shared/types.ts",
             "tests/smoke"
           ]
-        },
-        "TASK-102": {
-          "kind": "task",
-          "id": "TASK-102",
-          "task_ids": [
-            "TASK-102"
-          ],
-          "open_task_ids": [
-            "TASK-102"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "code_paths": [
-            "src/application",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/adapters",
-            "src/ui/web/control-room.ts",
-            "tests/smoke/roadmap-task-boundary.test.mjs"
-          ]
         }
       }
     },
     "workflow_cursor": {
-      "active_loop": "implementation",
-      "reason": "TASK-102 is open implementation delta below knowledge.",
-      "input_refs": [
-        "task:TASK-102",
-        "TASK-102"
-      ],
-      "expected_output": "implementation_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "sprint",
         "id": "SPRINT-003"
       },
       "isolation": {
-        "required": true,
-        "mode": "fresh-session-or-clear-context",
-        "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-        "evidence": [
-          "new session id or recorded context reset",
-          "handoff build/task refs only"
-        ],
-        "handoff": "implementation_loop start"
+        "required": false,
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
-      "context_boundary": "fresh-session-or-clear-context",
-      "handoff_refs": [
-        "task:TASK-102",
-        "TASK-102"
-      ]
+      "context_boundary": "none",
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -62235,9 +62094,7 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-102"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-003"
           ],
@@ -63393,62 +63250,41 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:task:TASK-102",
-          "source_id": "task:TASK-102",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-102",
-          "reason": "TASK-102 is open implementation delta below knowledge."
-        }
-      ],
-      "counts_by_loop": {
-        "implementation": 1
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "implementation",
-        "command": "/wiki-resume TASK-102",
-        "reason": "TASK-102 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-102",
-        "isolation_required": true,
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "isolation_required": false,
         "isolation": {
-          "required": true,
-          "mode": "fresh-session-or-clear-context",
-          "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-          "evidence": [
-            "new session id or recorded context reset",
-            "handoff build/task refs only"
-          ],
-          "handoff": "implementation_loop start"
+          "required": false,
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
-        "context_boundary": "fresh-session-or-clear-context",
-        "handoff_refs": [
-          "task:TASK-102",
-          "TASK-102"
-        ]
+        "context_boundary": "none",
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
         "knowledge": "aligned",
-        "roadmap": "drift",
-        "code": "drift",
+        "roadmap": "aligned",
+        "code": "aligned",
         "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-19T00:04:59.048Z",
+      "generated_at": "2026-05-19T00:05:49.466Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-19T00:04:59Z",
+      "generated_at": "2026-05-19T00:05:49Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -63459,17 +63295,16 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 51,
-        "open_count": 1,
+        "task_count": 50,
+        "open_count": 0,
         "sprint_count": 4,
         "active_sprint_count": 1,
         "status_counts": {
           "done": 45,
-          "cancelled": 5,
-          "in_progress": 1
+          "cancelled": 5
         },
         "priority_counts": {
-          "high": 29,
+          "high": 28,
           "medium": 13,
           "critical": 8,
           "low": 1
@@ -63526,15 +63361,10 @@
           "TASK-076",
           "TASK-077",
           "TASK-084",
-          "TASK-078",
-          "TASK-102"
+          "TASK-078"
         ],
-        "open_task_ids": [
-          "TASK-102"
-        ],
-        "executable_open_task_ids": [
-          "TASK-102"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -63721,12 +63551,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-102"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-102"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -63785,7 +63611,6 @@
           "TASK-077"
         ],
         "recent_task_ids": [
-          "TASK-102",
           "TASK-034",
           "TASK-077",
           "TASK-084",
@@ -66327,81 +66152,12 @@
             "updated_at": "",
             "evidence": null
           }
-        },
-        "TASK-102": {
-          "id": "TASK-102",
-          "title": "Lean source structure and remove wrapper seams",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "architecture",
-          "change_type": "system",
-          "summary": "Remove wrapper-only application seams and stale compatibility re-exports while aligning docs/tests to the lean domain/application/adapters structure.",
-          "labels": [
-            "architecture",
-            "cleanup",
-            "lean-structure",
-            "wrapper-removal"
-          ],
-          "goal": {
-            "outcome": "Code and docs use the lean actual structure with no empty application compiler/gateway/profile wrappers or stale internal compatibility re-exports.",
-            "acceptance": [
-              "Wrapper-only `src/application/compilers/**` files are removed unless they own real behavior.",
-              "Wrapper-only `src/application/gateway/profiles/**` files are removed unless they own real behavior.",
-              "Internal imports of task-boundary helpers use the domain owner directly and `src/application/task-boundary.ts` is removed.",
-              "The stale `src/adapters/web/control-room.ts` compatibility re-export is removed after repo imports/tests point to `src/ui/web/control-room.ts`.",
-              "System docs do not require placeholder `application/gateways/**`, `application/compilers/**`, or `application/state-engine/**` paths.",
-              "Dependency/reference scan shows no live imports of removed wrapper paths.",
-              "Typecheck, architecture audit, smoke/features/pack tests, stale-reference audit, and CodeWiki state refresh pass or document only generated-state warnings."
-            ],
-            "non_goals": [
-              "Do not purge tracked `.codewiki` history/builds/validation archives before this cleanup is committed and GC has commit/tree proof.",
-              "Do not remove public `codewiki_claim` compatibility alias in this cleanup.",
-              "Do not refactor domain/shared type ownership beyond import cleanup needed for removed wrappers."
-            ],
-            "verification": [
-              "python dependency/reference scan for removed wrapper paths",
-              "npm run typecheck",
-              "npm run check:architecture",
-              "npm run test:smoke",
-              "npm run test:features",
-              "npm run test:pack",
-              "codewiki_audit profiles=file-structure,stale-reference,changed,task",
-              "codewiki_state refresh=true"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
-            ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/overview.md",
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "code_paths": [
-            "src/application",
-            "src/domain/roadmap/task-boundary.ts",
-            "src/adapters",
-            "src/ui/web/control-room.ts",
-            "tests/smoke/roadmap-task-boundary.test.mjs"
-          ],
-          "updated": "2026-05-18T23:40:32Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-102/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-19T00:04:59Z",
+      "generated_at": "2026-05-19T00:05:49Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -66416,27 +66172,27 @@
       "summary": {
         "total_specs": 16,
         "mapped_specs": 16,
-        "aligned_specs": 29,
-        "tracked_specs": 5,
+        "aligned_specs": 34,
+        "tracked_specs": 0,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 51,
-        "open_task_count": 1,
+        "task_count": 50,
+        "open_task_count": 0,
         "done_task_count": 45
       },
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 5,
-          "total": 5,
+          "value": 0,
+          "total": 0,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 45,
-          "total": 51,
-          "percent": 88
+          "total": 50,
+          "percent": 90
         },
         "spec_mapping": {
           "label": "Spec Mapping",
@@ -66446,23 +66202,9 @@
         }
       },
       "views": {
-        "risky_spec_paths": [
-          ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/overview.md",
-          ".codewiki/kb/system/validation-gateway.md"
-        ],
-        "top_risky_spec_paths": [
-          ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/file-structure.md",
-          ".codewiki/kb/system/overview.md",
-          ".codewiki/kb/system/validation-gateway.md"
-        ],
-        "open_task_ids": [
-          "TASK-102"
-        ],
+        "risky_spec_paths": [],
+        "top_risky_spec_paths": [],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -66474,39 +66216,29 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-102",
-        "reason": "TASK-102 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-102"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "implementation",
-        "reason": "TASK-102 is open implementation delta below knowledge.",
-        "input_refs": [
-          "task:TASK-102",
-          "TASK-102"
-        ],
-        "expected_output": "implementation_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "sprint",
           "id": "SPRINT-003"
         },
         "isolation": {
-          "required": true,
-          "mode": "fresh-session-or-clear-context",
-          "reason": "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-          "evidence": [
-            "new session id or recorded context reset",
-            "handoff build/task refs only"
-          ],
-          "handoff": "implementation_loop start"
+          "required": false,
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
-        "context_boundary": "fresh-session-or-clear-context",
-        "handoff_refs": [
-          "task:TASK-102",
-          "TASK-102"
-        ]
+        "context_boundary": "none",
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -66518,9 +66250,7 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-102"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-003"
             ],
@@ -66892,190 +66622,13 @@
         ]
       },
       "direction": [
-        "TASK-102 is open implementation delta below knowledge.",
+        "No open deterministic drift requires action right now.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 16/16.",
-        "Tracked drift coverage: 5/5."
+        "No tracked spec drift is open."
       ],
       "specs": [
-        {
-          "path": ".codewiki/kb/system/api.md",
-          "title": "CodeWiki API",
-          "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/application",
-            "src/domain",
-            "src/adapters"
-          ],
-          "code_area": "src +2 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-102",
-            "TASK-034"
-          ],
-          "primary_task": {
-            "id": "TASK-102",
-            "status": "in_progress",
-            "title": "Lean source structure and remove wrapper seams"
-          },
-          "revision": {
-            "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-102"
-        },
-        {
-          "path": ".codewiki/kb/system/compilers.md",
-          "title": "Compilers",
-          "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/application/builds.ts",
-            "src/application/roadmap.ts",
-            "src/application/task.ts",
-            "src/application/tools/build.ts",
-            "skills/codewiki-feedback/SKILL.md",
-            "skills/codewiki-documentation/SKILL.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-validation/SKILL.md"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-102",
-            "TASK-034",
-            "TASK-038"
-          ],
-          "primary_task": {
-            "id": "TASK-102",
-            "status": "in_progress",
-            "title": "Lean source structure and remove wrapper seams"
-          },
-          "revision": {
-            "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-102"
-        },
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "title": "File Structure",
-          "summary": "Target knowledge-base and package file structure for CodeWiki.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/kb",
-            "src",
-            "skills/codewiki"
-          ],
-          "code_area": ".codewiki, src +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-102",
-            "TASK-076"
-          ],
-          "primary_task": {
-            "id": "TASK-102",
-            "status": "in_progress",
-            "title": "Lean source structure and remove wrapper seams"
-          },
-          "revision": {
-            "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-102"
-        },
-        {
-          "path": ".codewiki/kb/system/overview.md",
-          "title": "System Overview",
-          "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src",
-            "skills"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-102",
-            "TASK-001",
-            "TASK-002",
-            "TASK-004",
-            "TASK-010",
-            "TASK-011",
-            "TASK-012",
-            "TASK-013",
-            "TASK-014",
-            "TASK-015",
-            "TASK-028",
-            "TASK-029",
-            "TASK-031",
-            "TASK-033",
-            "TASK-044"
-          ],
-          "primary_task": {
-            "id": "TASK-102",
-            "status": "in_progress",
-            "title": "Lean source structure and remove wrapper seams"
-          },
-          "revision": {
-            "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-102"
-        },
-        {
-          "path": ".codewiki/kb/system/validation-gateway.md",
-          "title": "Validation Gateway",
-          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/application/gateway",
-            "skills/codewiki-validation/SKILL.md",
-            ".codewiki/validation",
-            "src/application/builds.ts"
-          ],
-          "code_area": "src, skills +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-102",
-            "TASK-034",
-            "TASK-038",
-            "TASK-078",
-            "TASK-084"
-          ],
-          "primary_task": {
-            "id": "TASK-102",
-            "status": "in_progress",
-            "title": "Lean source structure and remove wrapper seams"
-          },
-          "revision": {
-            "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-102"
-        },
         {
           "path": ".codewiki/kb/lexicon.md",
           "title": "Lexicon",
@@ -67591,6 +67144,36 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/api.md",
+          "title": "CodeWiki API",
+          "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application",
+            "src/domain",
+            "src/adapters"
+          ],
+          "code_area": "src +2 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-034"
+          ],
+          "primary_task": {
+            "id": "TASK-034",
+            "status": "done",
+            "title": "Align CodeWiki skill package with compiler and API contracts"
+          },
+          "revision": {
+            "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/audits.md",
           "title": "Audits",
           "summary": "Audit engine and user command model for deterministic alignment, security, package, and file-structure evidence.",
@@ -67671,6 +67254,42 @@
           "primary_task": null,
           "revision": {
             "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "title": "Compilers",
+          "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/builds.ts",
+            "src/application/roadmap.ts",
+            "src/application/task.ts",
+            "src/application/tools/build.ts",
+            "skills/codewiki-feedback/SKILL.md",
+            "skills/codewiki-documentation/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-034",
+            "TASK-038"
+          ],
+          "primary_task": {
+            "id": "TASK-034",
+            "status": "done",
+            "title": "Align CodeWiki skill package with compiler and API contracts"
+          },
+          "revision": {
+            "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -67774,6 +67393,36 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "title": "File Structure",
+          "summary": "Target knowledge-base and package file structure for CodeWiki.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/kb",
+            "src",
+            "skills/codewiki"
+          ],
+          "code_area": ".codewiki, src +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-076"
+          ],
+          "primary_task": {
+            "id": "TASK-076",
+            "status": "done",
+            "title": "Restructure project filesystem and dogfood boundary"
+          },
+          "revision": {
+            "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/graph.md",
           "title": "Graph",
           "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -67831,6 +67480,48 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/overview.md",
+          "title": "System Overview",
+          "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src",
+            "skills"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-001",
+            "TASK-002",
+            "TASK-004",
+            "TASK-010",
+            "TASK-011",
+            "TASK-012",
+            "TASK-013",
+            "TASK-014",
+            "TASK-015",
+            "TASK-028",
+            "TASK-029",
+            "TASK-031",
+            "TASK-033",
+            "TASK-044"
+          ],
+          "primary_task": {
+            "id": "TASK-001",
+            "status": "done",
+            "title": "Lock product intent in specs"
+          },
+          "revision": {
+            "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/roadmap.md",
           "title": "Roadmap",
           "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
@@ -67853,10 +67544,44 @@
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "title": "Validation Gateway",
+          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/gateway",
+            "skills/codewiki-validation/SKILL.md",
+            ".codewiki/validation",
+            "src/application/builds.ts"
+          ],
+          "code_area": "src, skills +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [
+            "TASK-034",
+            "TASK-038",
+            "TASK-078",
+            "TASK-084"
+          ],
+          "primary_task": {
+            "id": "TASK-034",
+            "status": "done",
+            "title": "Align CodeWiki skill package with compiler and API contracts"
+          },
+          "revision": {
+            "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
         }
       ],
       "agency": {
-        "generated_at": "2026-05-19T00:04:59Z",
+        "generated_at": "2026-05-19T00:05:49Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -67884,12 +67609,17 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T00:04:59Z",
+            "checked_at": "2026-05-19T00:05:49Z",
             "revision": {
               "git": {
-                "head": "c6c306962509e15339c0e81521107141d6f64be5",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "3464c592a12b54d96fde7f568a15041e249e0479",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-102/context.json",
+                  ".codewiki/roadmap/tasks/TASK-102/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -67971,16 +67701,16 @@
                 }
               },
               "spec_digest": "6af21479de6644cf50e2612de5492b638f30a7ed87c1c6b36638b29885122f0c",
-              "task_digest": "6a13bb152bf2e5012916e00eac745cb6403d657746ada9066c9bfd7b452e243c",
-              "code_digest": "802efaa15a9022a26c2f03c30ceeeefd3804f498b26b91a2cece2e7b0d77f449",
-              "digest": "fb3c8d38083a61e1d2935b42f3889aa29c4cc65845ab4d2bf57110435bceaaa3"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "345795e269d3fc0016fea2830b14bab1ea2cc62c276c6346c1a9f2f49e934ae8",
+              "digest": "f29b4891d5d1e2df8b30f1208f0cd179c7e25972fdcb4c02a80cde14052ad686"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:04:59Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T00:05:49Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -67998,24 +67728,24 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -68035,50 +67765,42 @@
               "src",
               "src/index.ts",
               "package.json",
-              "src/application",
-              "src/domain",
               "src/adapters",
-              "src/application/builds.ts",
-              "src/application/roadmap.ts",
-              "src/application/task.ts",
-              "src/application/tools/build.ts",
-              "skills/codewiki-validation/SKILL.md",
-              ".codewiki/kb",
+              "src/application",
               "skills/codewiki",
-              "src/application/gateway",
-              ".codewiki/validation",
               "src/adapters/pi",
               "src/application/graph.ts",
+              "src/application/builds.ts",
+              "src/application/gateway",
               "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
+              "src/application/tools/build.ts",
               "src/ui/web/control-room.ts",
               "src/bootstrap.ts",
               "src/templates.ts",
               "src/application/prompt.ts",
+              ".codewiki/kb",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap"
+              ".codewiki/roadmap",
+              ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-102"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
-              "aligned_specs": 28,
-              "tracked_specs": 5,
+              "aligned_specs": 33,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -68103,12 +67825,17 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-19T00:04:59Z",
+            "checked_at": "2026-05-19T00:05:49Z",
             "revision": {
               "git": {
-                "head": "c6c306962509e15339c0e81521107141d6f64be5",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "3464c592a12b54d96fde7f568a15041e249e0479",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-102/context.json",
+                  ".codewiki/roadmap/tasks/TASK-102/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -68169,62 +67896,58 @@
                 }
               },
               "spec_digest": "27d157502ad0209bf069202483e3e11656e92b01c70ccf2d600dac7c36ebec95",
-              "task_digest": "6a13bb152bf2e5012916e00eac745cb6403d657746ada9066c9bfd7b452e243c",
-              "code_digest": "93d451c301059e881df648726251cfaf24cd94fd9063a57e94e692a0c5eee768",
-              "digest": "64af7756fc80d60273069068e16b1d45b82563d7b9cb57bdb642862257affbf8"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "18151347ae6e0467522048adc67bfd15e3b5476a91642e0470c286a3adfa1ff2",
+              "digest": "1fbfebb47dc343e4a884c64985cc8d1a6d577998f1431a0bcea635e906fd5115"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:04:59Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T00:05:49Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
-              "src/application",
-              "src/domain",
               "src/adapters",
-              "src/application/builds.ts",
-              "src/application/roadmap.ts",
-              "src/application/task.ts",
-              "src/application/tools/build.ts",
-              "skills/codewiki-feedback/SKILL.md",
-              "skills/codewiki-documentation/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              ".codewiki/kb",
-              "src",
+              "src/application",
               "skills/codewiki",
-              "skills",
-              "src/application/gateway",
-              ".codewiki/validation",
               "src/adapters/pi",
               "src/application/graph.ts",
+              "src/application/builds.ts",
               "src/application/lint.ts",
+              "src/application/gateway",
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
               "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
+              "src/application/tools/build.ts",
               "src/ui/web",
               "src/adapters/pi/commands",
               "src/ui/web/control-room.ts",
@@ -68234,28 +67957,24 @@
               "src/templates.ts",
               "src/application/prompt.ts",
               "tests/smoke/package-smoke.test.mjs",
+              ".codewiki/kb",
+              "src",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
+              "skills",
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap"
+              ".codewiki/roadmap",
+              ".codewiki/validation"
             ],
             "code_area": "src, skills +2 more",
-            "open_task_ids": [
-              "TASK-102"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 18,
-              "aligned_specs": 13,
-              "tracked_specs": 5,
+              "aligned_specs": 18,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -68280,12 +67999,17 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T00:04:59Z",
+            "checked_at": "2026-05-19T00:05:49Z",
             "revision": {
               "git": {
-                "head": "c6c306962509e15339c0e81521107141d6f64be5",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "3464c592a12b54d96fde7f568a15041e249e0479",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-102/context.json",
+                  ".codewiki/roadmap/tasks/TASK-102/task.json"
+                ],
                 "paths": {
                   ".codewiki/builds": "",
                   ".codewiki/kb": "",
@@ -68367,16 +68091,16 @@
                 }
               },
               "spec_digest": "6af21479de6644cf50e2612de5492b638f30a7ed87c1c6b36638b29885122f0c",
-              "task_digest": "6a13bb152bf2e5012916e00eac745cb6403d657746ada9066c9bfd7b452e243c",
-              "code_digest": "802efaa15a9022a26c2f03c30ceeeefd3804f498b26b91a2cece2e7b0d77f449",
-              "digest": "fb3c8d38083a61e1d2935b42f3889aa29c4cc65845ab4d2bf57110435bceaaa3"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "345795e269d3fc0016fea2830b14bab1ea2cc62c276c6346c1a9f2f49e934ae8",
+              "digest": "f29b4891d5d1e2df8b30f1208f0cd179c7e25972fdcb4c02a80cde14052ad686"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:04:59Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T00:05:49Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -68394,24 +68118,24 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -68431,50 +68155,42 @@
               "src",
               "src/index.ts",
               "package.json",
-              "src/application",
-              "src/domain",
               "src/adapters",
-              "src/application/builds.ts",
-              "src/application/roadmap.ts",
-              "src/application/task.ts",
-              "src/application/tools/build.ts",
-              "skills/codewiki-validation/SKILL.md",
-              ".codewiki/kb",
+              "src/application",
               "skills/codewiki",
-              "src/application/gateway",
-              ".codewiki/validation",
               "src/adapters/pi",
               "src/application/graph.ts",
+              "src/application/builds.ts",
+              "src/application/gateway",
               "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/domain",
               ".codewiki/builds",
               "src/domain/shared/types.ts",
               "src/adapters/pi/schemas.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
+              "src/application/tools/build.ts",
               "src/ui/web/control-room.ts",
               "src/bootstrap.ts",
               "src/templates.ts",
               "src/application/prompt.ts",
+              ".codewiki/kb",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
               ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap"
+              ".codewiki/roadmap",
+              ".codewiki/validation"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-102"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 33,
-              "aligned_specs": 28,
-              "tracked_specs": 5,
+              "aligned_specs": 33,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -68488,19 +68204,19 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-102",
-        "lane_id": "",
-        "heading": "TASK-102 — Lean source structure and remove wrapper seams",
-        "command": "/wiki-resume TASK-102",
-        "reason": "Resume roadmap task (in_progress).",
+        "source": "agency",
+        "task_id": "",
+        "lane_id": "product_system",
+        "heading": "Product ↔ System",
+        "command": "/wiki-status",
+        "reason": "Resume from stale agency lane.",
         "status": "in_progress",
-        "verification": "python dependency/reference scan for removed wrapper paths",
+        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-19T00:04:59Z",
+        "generated_at": "2026-05-19T00:05:49Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -68523,183 +68239,6 @@
       },
       "wiki": {
         "rows": [
-          {
-            "path": ".codewiki/kb/system/api.md",
-            "title": "CodeWiki API",
-            "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/application",
-              "src/domain",
-              "src/adapters"
-            ],
-            "code_area": "src +2 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-102",
-              "TASK-034"
-            ],
-            "primary_task": {
-              "id": "TASK-102",
-              "status": "in_progress",
-              "title": "Lean source structure and remove wrapper seams"
-            },
-            "revision": {
-              "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-102"
-          },
-          {
-            "path": ".codewiki/kb/system/compilers.md",
-            "title": "Compilers",
-            "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/application/builds.ts",
-              "src/application/roadmap.ts",
-              "src/application/task.ts",
-              "src/application/tools/build.ts",
-              "skills/codewiki-feedback/SKILL.md",
-              "skills/codewiki-documentation/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-102",
-              "TASK-034",
-              "TASK-038"
-            ],
-            "primary_task": {
-              "id": "TASK-102",
-              "status": "in_progress",
-              "title": "Lean source structure and remove wrapper seams"
-            },
-            "revision": {
-              "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-102"
-          },
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "title": "File Structure",
-            "summary": "Target knowledge-base and package file structure for CodeWiki.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/kb",
-              "src",
-              "skills/codewiki"
-            ],
-            "code_area": ".codewiki, src +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-102",
-              "TASK-076"
-            ],
-            "primary_task": {
-              "id": "TASK-102",
-              "status": "in_progress",
-              "title": "Lean source structure and remove wrapper seams"
-            },
-            "revision": {
-              "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-102"
-          },
-          {
-            "path": ".codewiki/kb/system/overview.md",
-            "title": "System Overview",
-            "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src",
-              "skills"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-102",
-              "TASK-001",
-              "TASK-002",
-              "TASK-004",
-              "TASK-010",
-              "TASK-011",
-              "TASK-012",
-              "TASK-013",
-              "TASK-014",
-              "TASK-015",
-              "TASK-028",
-              "TASK-029",
-              "TASK-031",
-              "TASK-033",
-              "TASK-044"
-            ],
-            "primary_task": {
-              "id": "TASK-102",
-              "status": "in_progress",
-              "title": "Lean source structure and remove wrapper seams"
-            },
-            "revision": {
-              "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-102"
-          },
-          {
-            "path": ".codewiki/kb/system/validation-gateway.md",
-            "title": "Validation Gateway",
-            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/application/gateway",
-              "skills/codewiki-validation/SKILL.md",
-              ".codewiki/validation",
-              "src/application/builds.ts"
-            ],
-            "code_area": "src, skills +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-102",
-              "TASK-034",
-              "TASK-038",
-              "TASK-078",
-              "TASK-084"
-            ],
-            "primary_task": {
-              "id": "TASK-102",
-              "status": "in_progress",
-              "title": "Lean source structure and remove wrapper seams"
-            },
-            "revision": {
-              "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-102"
-          },
           {
             "path": ".codewiki/kb/lexicon.md",
             "title": "Lexicon",
@@ -69215,6 +68754,36 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/api.md",
+            "title": "CodeWiki API",
+            "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application",
+              "src/domain",
+              "src/adapters"
+            ],
+            "code_area": "src +2 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-034"
+            ],
+            "primary_task": {
+              "id": "TASK-034",
+              "status": "done",
+              "title": "Align CodeWiki skill package with compiler and API contracts"
+            },
+            "revision": {
+              "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/audits.md",
             "title": "Audits",
             "summary": "Audit engine and user command model for deterministic alignment, security, package, and file-structure evidence.",
@@ -69295,6 +68864,42 @@
             "primary_task": null,
             "revision": {
               "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/compilers.md",
+            "title": "Compilers",
+            "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/builds.ts",
+              "src/application/roadmap.ts",
+              "src/application/task.ts",
+              "src/application/tools/build.ts",
+              "skills/codewiki-feedback/SKILL.md",
+              "skills/codewiki-documentation/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-034",
+              "TASK-038"
+            ],
+            "primary_task": {
+              "id": "TASK-034",
+              "status": "done",
+              "title": "Align CodeWiki skill package with compiler and API contracts"
+            },
+            "revision": {
+              "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -69398,6 +69003,36 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/file-structure.md",
+            "title": "File Structure",
+            "summary": "Target knowledge-base and package file structure for CodeWiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/kb",
+              "src",
+              "skills/codewiki"
+            ],
+            "code_area": ".codewiki, src +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-076"
+            ],
+            "primary_task": {
+              "id": "TASK-076",
+              "status": "done",
+              "title": "Restructure project filesystem and dogfood boundary"
+            },
+            "revision": {
+              "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/graph.md",
             "title": "Graph",
             "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -69455,6 +69090,48 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/overview.md",
+            "title": "System Overview",
+            "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src",
+              "skills"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-001",
+              "TASK-002",
+              "TASK-004",
+              "TASK-010",
+              "TASK-011",
+              "TASK-012",
+              "TASK-013",
+              "TASK-014",
+              "TASK-015",
+              "TASK-028",
+              "TASK-029",
+              "TASK-031",
+              "TASK-033",
+              "TASK-044"
+            ],
+            "primary_task": {
+              "id": "TASK-001",
+              "status": "done",
+              "title": "Lock product intent in specs"
+            },
+            "revision": {
+              "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/roadmap.md",
             "title": "Roadmap",
             "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
@@ -69474,6 +69151,40 @@
             "primary_task": null,
             "revision": {
               "digest": "c9efe80b4b34c71ed2991e26df4c232d0e9f7e7fd032a5a1317309104579af88",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/validation-gateway.md",
+            "title": "Validation Gateway",
+            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/gateway",
+              "skills/codewiki-validation/SKILL.md",
+              ".codewiki/validation",
+              "src/application/builds.ts"
+            ],
+            "code_area": "src, skills +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [
+              "TASK-034",
+              "TASK-038",
+              "TASK-078",
+              "TASK-084"
+            ],
+            "primary_task": {
+              "id": "TASK-034",
+              "status": "done",
+              "title": "Align CodeWiki skill package with compiler and API contracts"
+            },
+            "revision": {
+              "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -69872,183 +69583,6 @@
             "label": "System",
             "rows": [
               {
-                "path": ".codewiki/kb/system/api.md",
-                "title": "CodeWiki API",
-                "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/application",
-                  "src/domain",
-                  "src/adapters"
-                ],
-                "code_area": "src +2 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-102",
-                  "TASK-034"
-                ],
-                "primary_task": {
-                  "id": "TASK-102",
-                  "status": "in_progress",
-                  "title": "Lean source structure and remove wrapper seams"
-                },
-                "revision": {
-                  "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-102"
-              },
-              {
-                "path": ".codewiki/kb/system/compilers.md",
-                "title": "Compilers",
-                "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/application/builds.ts",
-                  "src/application/roadmap.ts",
-                  "src/application/task.ts",
-                  "src/application/tools/build.ts",
-                  "skills/codewiki-feedback/SKILL.md",
-                  "skills/codewiki-documentation/SKILL.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-validation/SKILL.md"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-102",
-                  "TASK-034",
-                  "TASK-038"
-                ],
-                "primary_task": {
-                  "id": "TASK-102",
-                  "status": "in_progress",
-                  "title": "Lean source structure and remove wrapper seams"
-                },
-                "revision": {
-                  "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-102"
-              },
-              {
-                "path": ".codewiki/kb/system/file-structure.md",
-                "title": "File Structure",
-                "summary": "Target knowledge-base and package file structure for CodeWiki.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/kb",
-                  "src",
-                  "skills/codewiki"
-                ],
-                "code_area": ".codewiki, src +1 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-102",
-                  "TASK-076"
-                ],
-                "primary_task": {
-                  "id": "TASK-102",
-                  "status": "in_progress",
-                  "title": "Lean source structure and remove wrapper seams"
-                },
-                "revision": {
-                  "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-102"
-              },
-              {
-                "path": ".codewiki/kb/system/overview.md",
-                "title": "System Overview",
-                "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src",
-                  "skills"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-102",
-                  "TASK-001",
-                  "TASK-002",
-                  "TASK-004",
-                  "TASK-010",
-                  "TASK-011",
-                  "TASK-012",
-                  "TASK-013",
-                  "TASK-014",
-                  "TASK-015",
-                  "TASK-028",
-                  "TASK-029",
-                  "TASK-031",
-                  "TASK-033",
-                  "TASK-044"
-                ],
-                "primary_task": {
-                  "id": "TASK-102",
-                  "status": "in_progress",
-                  "title": "Lean source structure and remove wrapper seams"
-                },
-                "revision": {
-                  "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-102"
-              },
-              {
-                "path": ".codewiki/kb/system/validation-gateway.md",
-                "title": "Validation Gateway",
-                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/application/gateway",
-                  "skills/codewiki-validation/SKILL.md",
-                  ".codewiki/validation",
-                  "src/application/builds.ts"
-                ],
-                "code_area": "src, skills +1 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-102",
-                  "TASK-034",
-                  "TASK-038",
-                  "TASK-078",
-                  "TASK-084"
-                ],
-                "primary_task": {
-                  "id": "TASK-102",
-                  "status": "in_progress",
-                  "title": "Lean source structure and remove wrapper seams"
-                },
-                "revision": {
-                  "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-102"
-              },
-              {
                 "path": ".codewiki/kb/lexicon.md",
                 "title": "Lexicon",
                 "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -70182,6 +69716,36 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/api.md",
+                "title": "CodeWiki API",
+                "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application",
+                  "src/domain",
+                  "src/adapters"
+                ],
+                "code_area": "src +2 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-034"
+                ],
+                "primary_task": {
+                  "id": "TASK-034",
+                  "status": "done",
+                  "title": "Align CodeWiki skill package with compiler and API contracts"
+                },
+                "revision": {
+                  "digest": "91a77ead7eb4f4d468acd5d63de24277c162fd85022388eeb2d08147e3760b12",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/audits.md",
                 "title": "Audits",
                 "summary": "Audit engine and user command model for deterministic alignment, security, package, and file-structure evidence.",
@@ -70262,6 +69826,42 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "bb929ed5a4b485ca06e3f7e5d1c0b1df8af963dedf7c296cd005f205f3ceeb80",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/compilers.md",
+                "title": "Compilers",
+                "summary": "Alignment loops that create source-backed cycle builds for intent, knowledge, planning, and implementation.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/builds.ts",
+                  "src/application/roadmap.ts",
+                  "src/application/task.ts",
+                  "src/application/tools/build.ts",
+                  "skills/codewiki-feedback/SKILL.md",
+                  "skills/codewiki-documentation/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-034",
+                  "TASK-038"
+                ],
+                "primary_task": {
+                  "id": "TASK-034",
+                  "status": "done",
+                  "title": "Align CodeWiki skill package with compiler and API contracts"
+                },
+                "revision": {
+                  "digest": "8516353a24e6f3595543a3cd98fb1f01d1b2564a1662c95820de8084f1e107e5",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -70365,6 +69965,36 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/file-structure.md",
+                "title": "File Structure",
+                "summary": "Target knowledge-base and package file structure for CodeWiki.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/kb",
+                  "src",
+                  "skills/codewiki"
+                ],
+                "code_area": ".codewiki, src +1 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-076"
+                ],
+                "primary_task": {
+                  "id": "TASK-076",
+                  "status": "done",
+                  "title": "Restructure project filesystem and dogfood boundary"
+                },
+                "revision": {
+                  "digest": "f7eac648c1dab118e800f2d29cf2cd1fda363017a4673a21eae7ef7a971e7b6e",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/graph.md",
                 "title": "Graph",
                 "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -70422,6 +70052,48 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/overview.md",
+                "title": "System Overview",
+                "summary": "Main runtime areas and ownership boundaries for CodeWiki.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src",
+                  "skills"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-001",
+                  "TASK-002",
+                  "TASK-004",
+                  "TASK-010",
+                  "TASK-011",
+                  "TASK-012",
+                  "TASK-013",
+                  "TASK-014",
+                  "TASK-015",
+                  "TASK-028",
+                  "TASK-029",
+                  "TASK-031",
+                  "TASK-033",
+                  "TASK-044"
+                ],
+                "primary_task": {
+                  "id": "TASK-001",
+                  "status": "done",
+                  "title": "Lock product intent in specs"
+                },
+                "revision": {
+                  "digest": "a0073f2d05740468028e1121e899371841afd198749fa58cc2b48644ff5da14e",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/roadmap.md",
                 "title": "Roadmap",
                 "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
@@ -70444,6 +70116,40 @@
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/validation-gateway.md",
+                "title": "Validation Gateway",
+                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/gateway",
+                  "skills/codewiki-validation/SKILL.md",
+                  ".codewiki/validation",
+                  "src/application/builds.ts"
+                ],
+                "code_area": "src, skills +1 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [
+                  "TASK-034",
+                  "TASK-038",
+                  "TASK-078",
+                  "TASK-084"
+                ],
+                "primary_task": {
+                  "id": "TASK-034",
+                  "status": "done",
+                  "title": "Align CodeWiki skill package with compiler and API contracts"
+                },
+                "revision": {
+                  "digest": "7fadc7356650f0a899853031d696728f3294ccebaed5da3a37043151b1fe511b",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
               }
             ]
           },
@@ -70455,12 +70161,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-102",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-102"
-        ],
-        "next_task_id": "TASK-102",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -70655,9 +70359,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-102"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
