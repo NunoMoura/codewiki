@@ -1,7 +1,7 @@
 {
   "id": "TASK-003",
   "title": "Add validation preflight and risk-tier policy",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "architecture",
   "summary": "Add gateway preflight and risk-tier policy so low-risk mechanical/docs cleanup avoids late metadata blocks while high-risk work escalates to user semantic approval.",
@@ -45,5 +45,5 @@
     "closure": ""
   },
   "created": "2026-05-19",
-  "updated": "2026-05-19"
+  "updated": "2026-05-19T01:25:28Z"
 }

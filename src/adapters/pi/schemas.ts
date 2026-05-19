@@ -656,7 +656,7 @@ export const codewikiSessionHandoffToolInputSchema = Type.Object({
 	kickoff_prompt: Type.Optional(Type.String({ minLength: 1 })),
 	autoQueue: Type.Optional(Type.Boolean({
 		default: true,
-		description: "When true, execute tool-safe handoffs immediately. Pi tool context stages new-session handoffs and returns the /wiki-session-handoff command because ctx.newSession is command-only.",
+		description: "When true, stage the handoff and let the Pi adapter queue the internal /wiki-session-handoff command-context executor when needed.",
 	})),
 });
 export const codewikiArtifactStatusToolInputSchema = Type.Object({

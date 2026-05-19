@@ -5,6 +5,7 @@ import { join } from "node:path";
 import {
 	buildSessionHandoffPayload,
 	executeSessionHandoffFromTool,
+	queueSessionHandoffFollowUp,
 	runSessionHandoffCommand,
 	stageSessionHandoff,
 } from "../../src/adapters/pi/tools/session-handoff.ts";
@@ -67,6 +68,14 @@ try {
 	assert.equal(toolResult.action, "staged");
 	assert.equal(toolResult.command, toolStaged.command);
 	assert.match(toolResult.reason, /ctx\.newSession/);
+	assert.match(toolResult.reason, /queues the internal \/wiki-session-handoff command/);
+	const queuedFollowUps = [];
+	const queued = queueSessionHandoffFollowUp(
+		{ sendUserMessage: (content, options) => queuedFollowUps.push({ content, options }) },
+		toolResult.command,
+	);
+	assert.equal(queued, true);
+	assert.deepEqual(queuedFollowUps, [{ content: toolStaged.command, options: { deliverAs: "followUp" } }]);
 	const toolQueued = JSON.parse(await readFile(toolStaged.absolutePath, "utf8"));
 	assert.equal(toolQueued.status, "queued");
 
@@ -78,7 +87,7 @@ try {
 	);
 	assert.equal(resetToolResult.action, "staged");
 	assert.equal(resetToolResult.command, resetToolStaged.command);
-	assert.match(resetToolResult.reason, /hide the tool result/);
+	assert.match(resetToolResult.reason, /tool result is visible/);
 	assert.equal(toolCompactCalled, false, "tool-context context-reset should not call compact directly");
 	const resetToolQueued = JSON.parse(await readFile(resetToolStaged.absolutePath, "utf8"));
 	assert.equal(resetToolQueued.status, "queued");
@@ -137,6 +146,8 @@ try {
 	await assert.rejects(() => runSessionHandoffCommand(failingStaged.relativePath, failingCtx), /newSession failed/);
 	const failed = JSON.parse(await readFile(failingStaged.absolutePath, "utf8"));
 	assert.equal(failed.status, "failed");
+
+	assert.equal(queueSessionHandoffFollowUp({ sendUserMessage: () => assert.fail("no command should not queue") }, undefined), false);
 
 	const badRelativePath = ".codewiki/runtime/session-handoffs/bad.json";
 	await writeFile(join(root, badRelativePath), JSON.stringify({ kind: "not_codewiki" }) + "\n", "utf8");

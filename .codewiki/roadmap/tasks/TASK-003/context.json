@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19",
+  "generated_at": "2026-05-19T01:25:28Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-003/context.json",
   "task": {
     "id": "TASK-003",
     "title": "Add validation preflight and risk-tier policy",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "architecture",
     "change_type": "system",

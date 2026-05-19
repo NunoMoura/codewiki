@@ -66,6 +66,15 @@ export async function runSessionHandoffCommand(
 	return { payload, cancelled: false };
 }
 
+export function queueSessionHandoffFollowUp(
+	pi: Pick<ExtensionAPI, "sendUserMessage">,
+	command: string | undefined,
+): boolean {
+	if (!command) return false;
+	pi.sendUserMessage(command, { deliverAs: "followUp" });
+	return true;
+}
+
 export function registerSessionHandoffCommand(pi: ExtensionAPI): void {
 	pi.registerCommand(HANDOFF_COMMAND, {
 		description: "Continue CodeWiki work in a fresh session from a staged handoff.",
@@ -81,23 +90,24 @@ export function registerCodewikiSessionHandoffTool(pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "codewiki_session_handoff",
 		label: "Codewiki Session Handoff",
-		description: "Stage a CodeWiki fresh-session/context-reset handoff and execute only handoffs that are safe from tool context without hiding the tool result.",
+		description: "Stage a CodeWiki fresh-session/context-reset handoff and queue the Pi command-context executor internally when needed.",
 		promptSnippet: "Request a fresh CodeWiki session/context handoff at compiler, validation, or agency boundaries.",
 		promptGuidelines: [
-			"Use codewiki_session_handoff when graph/build policy requires a fresh session or context reset; do not ask the user to run /new manually.",
-			"From tool context, Pi cannot call ctx.newSession, and ctx.compact can hide the tool result; for new-session and context-reset handoffs codewiki_session_handoff stages a durable handoff file and returns the /wiki-session-handoff command.",
-			"/wiki-session-handoff uses command-context ctx.newSession with the staged handoff file and is the reliable Pi replacement-session execution path.",
+			"Use codewiki_session_handoff when graph/build policy requires a fresh session or context reset; do not ask the user to run /new or /wiki-session-handoff manually.",
+			"From tool context, Pi cannot call ctx.newSession, and ctx.compact can hide the tool result; codewiki_session_handoff stages a durable handoff file and queues the internal /wiki-session-handoff command as a follow-up.",
+			"/wiki-session-handoff is an internal/compatibility command-context executor that performs ctx.newSession or ctx.compact from the staged handoff file.",
 			"Session handoffs do not replace artifact status coordination, validation, task evidence, checks, or publication policy.",
 		],
 		parameters: codewikiSessionHandoffToolInputSchema,
 		async execute(_toolCallId: string, params: CodewikiSessionHandoffToolInput, _signal: AbortSignal | undefined, _onUpdate: unknown, ctx: ExtensionContext) {
 			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_session_handoff");
 			const result = await executeCodewikiSessionHandoffTool(project, params, ctx);
+			const queued = (params.autoQueue ?? true) && queueSessionHandoffFollowUp(pi, result.result.command);
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			const commandHint = result.result.command ? `; command: ${result.result.command}` : "";
+			const queueHint = queued ? "; queued internal handoff command" : "";
 			return {
-				content: [{ type: "text", text: `codewiki session_handoff: ${result.result.action} ${result.staged.relativePath}${commandHint}` }],
-				details: result,
+				content: [{ type: "text", text: `codewiki session_handoff: ${result.result.action} ${result.staged.relativePath}${queueHint}` }],
+				details: { ...result, queued_follow_up: queued },
 			};
 		},
 	} as any);

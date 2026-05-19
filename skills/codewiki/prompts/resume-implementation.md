@@ -32,7 +32,7 @@ Rules:
 - Compile an `implementation_build` with `codewiki_build kind="implementation"` after edits/checks and before requesting implementation validation.
 - Request fresh validation with `codewiki_session_handoff` when policy requires independent context. Validation gateway judges alignment/coherence and must start from artifacts, not builder chat.
 - Do not close the task from builder context when policy requires fresh validation/content proof. Use `codewiki_task action="update"` for builder evidence; use `action="close"` only after required pass proof exists.
-- Keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, wiki-resume, wiki-session-handoff, and /audit; Alt+W toggles the live status panel.
+- Keep public UX focused on wiki-bootstrap, wiki-status, wiki-config, wiki-resume, and /audit; `/wiki-session-handoff` is an internal/compatibility executor queued by `codewiki_session_handoff`; Alt+W toggles the live status panel.
 - Do not create a separate user-facing wiki-edit command; update roadmap/wiki artifacts automatically when user intent requires it.
 - Rebuild generated outputs before finishing.
 - Rerun deterministic status before summarizing.

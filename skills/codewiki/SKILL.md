@@ -53,7 +53,7 @@ Public commands:
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-config`
 - `/wiki-resume [TASK-###] [repo-path] [-- follow-up intent]`
-- `/wiki-session-handoff [handoff-path]`
+- `/wiki-session-handoff [handoff-path]` (internal/compatibility executor)
 - `/wiki-ui [repo-path] [port]`
 - `Alt+W` to toggle the compact live status panel
 
@@ -128,7 +128,7 @@ Routing rules:
 - Persist durable intent in knowledge, roadmap tasks/sprints, builds, validation reports, and source code/tests.
 - Use `codewiki_session` for runtime focus; it is not roadmap truth.
 - Use `codewiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
-- Use `codewiki_session_handoff` when loop/gateway policy requires fresh context. In Pi tool context, this stages a handoff and returns `/wiki-session-handoff` for command-context execution.
+- Use `codewiki_session_handoff` when loop/gateway policy requires fresh context. In Pi tool context, this stages a handoff and queues the internal `/wiki-session-handoff` command-context executor; do not ask users to run it manually.
 
 ## Agency policy
 

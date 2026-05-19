@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T00:51:02.284Z",
+  "generated_at": "2026-05-19T01:25:28.600Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -104,7 +104,7 @@
       "kind": "code_path",
       "path": "skills/codewiki/SKILL.md",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/ui",
@@ -209,14 +209,14 @@
       "kind": "code_path",
       "path": "skills",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src",
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -269,21 +269,21 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application",
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:skills/codewiki",
       "kind": "code_path",
       "path": "skills/codewiki",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/agency.md",
@@ -298,7 +298,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/alignment-model.md",
@@ -386,7 +386,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/schemas.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/change-lifecycle.md",
@@ -681,7 +681,7 @@
       "kind": "roadmap_task",
       "title": "Add validation preflight and risk-tier policy",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "system",
       "alignment_state": "drift"
     },
@@ -697,7 +697,7 @@
       "kind": "code_path",
       "path": "src/application/tools/session-handoff.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "task:TASK-004",
@@ -736,7 +736,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/tools",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:README.md",
@@ -750,7 +750,7 @@
       "kind": "code_path",
       "path": "tests/smoke",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "test:scripts/check-architecture.mjs",
@@ -1277,6 +1277,237 @@
       "id": "test:tests/tasks/TASK-005/**",
       "kind": "test_file",
       "path": "tests/tasks/TASK-005/**"
+    },
+    {
+      "id": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "drift",
+      "compacted": false,
+      "default_hidden": false,
+      "archive_ref": "refs/codewiki/archive/task/TASK-003",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+          "User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
+          "codewiki_build tool",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/agency.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          "src/application/tools/session-handoff.ts",
+          "src/adapters/pi/tools/session-handoff.ts",
+          "src/adapters/pi/schemas.ts",
+          "tests/smoke/session-handoff.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "TASK-003"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          "tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
+          "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+          "src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
+          "src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+          "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+          "refs/codewiki/archive/task/TASK-003",
+          "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7"
+        ],
+        "validation_attestation_refs": [
+          "node tests/smoke/session-handoff.test.mjs",
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "codewiki_audit alignment,changed,file-structure,stale-reference,generated-parity"
+        ]
+      }
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
+      "kind": "canonical_source_ref",
+      "path": "User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:codewiki_build tool",
+      "kind": "canonical_source_ref",
+      "path": "codewiki_build tool",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/system/adapters.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/system/adapters.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/system/agency.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/system/agency.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:skills/codewiki/SKILL.md",
+      "kind": "canonical_source_ref",
+      "path": "skills/codewiki/SKILL.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:skills/codewiki/prompts/resume-implementation.md",
+      "kind": "canonical_source_ref",
+      "path": "skills/codewiki/prompts/resume-implementation.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/application/tools/session-handoff.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/application/tools/session-handoff.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/adapters/pi/tools/session-handoff.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/adapters/pi/tools/session-handoff.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/adapters/pi/schemas.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/adapters/pi/schemas.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:tests/smoke/session-handoff.test.mjs",
+      "kind": "canonical_source_ref",
+      "path": "tests/smoke/session-handoff.test.mjs",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:tests/smoke/package-smoke.test.mjs",
+      "kind": "canonical_source_ref",
+      "path": "tests/smoke/package-smoke.test.mjs",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:changed",
+      "kind": "audit_evidence",
+      "path": "profile:changed",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
+      "kind": "content_proof",
+      "path": "tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+      "kind": "content_proof",
+      "path": "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
+      "kind": "content_proof",
+      "path": "src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-003",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-003",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+      "kind": "content_proof",
+      "path": "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-003",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-003",
+      "task_id": "TASK-003",
+      "digest": "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+      "restore_command": "/wiki-restore TASK-003",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive"
+    },
+    {
+      "id": "code:src/adapters/pi/tools/session-handoff.ts",
+      "kind": "code_path",
+      "path": "src/adapters/pi/tools/session-handoff.ts",
+      "layer": "code"
+    },
+    {
+      "id": "test:tests/smoke/session-handoff.test.mjs",
+      "kind": "test_file",
+      "path": "tests/smoke/session-handoff.test.mjs"
+    },
+    {
+      "id": "test:tests/smoke/package-smoke.test.mjs",
+      "kind": "test_file",
+      "path": "tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "id": "closure:TASK-003",
+      "kind": "closure_brief",
+      "path": "TASK-003"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -3758,6 +3989,245 @@
       "to": "test:tests/tasks/TASK-005/**"
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:.codewiki/kb/system/api.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:.codewiki/kb/system/adapters.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:.codewiki/kb/system/agency.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:skills/codewiki/SKILL.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:skills/codewiki/prompts/resume-implementation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:src/application/tools/session-handoff.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:src/adapters/pi/tools/session-handoff.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:src/adapters/pi/schemas.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:tests/smoke/session-handoff.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "content_proof:sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "task:TASK-003"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_consumes_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "task:TASK-003"
+    },
+    {
+      "kind": "build_consumes_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "source:User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently."
+    },
+    {
+      "kind": "build_produces_knowledge",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "doc:.codewiki/kb/system/api.md"
+    },
+    {
+      "kind": "build_produces_knowledge",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "doc:.codewiki/kb/system/adapters.md"
+    },
+    {
+      "kind": "build_produces_knowledge",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "doc:.codewiki/kb/system/agency.md"
+    },
+    {
+      "kind": "build_produces_knowledge",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "doc:skills/codewiki/SKILL.md"
+    },
+    {
+      "kind": "build_produces_knowledge",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "doc:skills/codewiki/prompts/resume-implementation.md"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "code:src/application/tools/session-handoff.ts"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "code:src/adapters/pi/tools/session-handoff.ts"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "code:src/adapters/pi/schemas.ts"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "test:tests/smoke/session-handoff.test.mjs"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "test:tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "validation:node tests/smoke/session-handoff.test.mjs"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "validation:npm run typecheck"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "validation:npm run check:architecture"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "validation:npm run test:smoke"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "validation:codewiki_audit alignment,changed,file-structure,stale-reference,generated-parity"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+      "to": "closure:TASK-003"
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
@@ -3952,10 +4422,10 @@
       ],
       "in_progress_task_ids": [
         "TASK-001",
-        "TASK-002"
+        "TASK-002",
+        "TASK-003"
       ],
       "todo_task_ids": [
-        "TASK-003",
         "TASK-004",
         "TASK-005"
       ],
@@ -3963,8 +4433,8 @@
       "done_task_ids": [],
       "cancelled_task_ids": [],
       "status_counts": {
-        "in_progress": 2,
-        "todo": 3
+        "in_progress": 3,
+        "todo": 2
       },
       "sprint_ids": [
         "SPRINT-001"
@@ -4091,7 +4561,14 @@
         "tests/smoke",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/prompts/resume-implementation.md",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/session-handoff.ts",
+        "src/application/tools/session-handoff.ts",
+        "tests/smoke/session-handoff.test.mjs"
+      ]
     },
     "claims": {
       "active_claim_count": 0,
@@ -4155,8 +4632,11 @@
       "canonical_source_refs": [
         ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
         ".codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+        ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
         ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
         ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/agency.md",
         ".codewiki/kb/system/alignment-model.md",
         ".codewiki/kb/system/api.md",
         ".codewiki/kb/system/builds.md",
@@ -4186,17 +4666,26 @@
         "Updated graph spec with Decision/Knowledge/Work/Execution/Proof lenses, first-class diagram nodes, propagation edges, and new gap types, then compacted wording to keep graph health green.",
         "Updated knowledge and file-structure specs with diagram-backed system doc contract and product/system entrypoint routing.",
         "Updated validation gateway spec with decision-build validation, row-to-KB checks, diagram/doc checks, and risk-tiered escalation.",
+        "User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
         "Validated documentation build .codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
+        "codewiki_build tool",
         "skills/codewiki*/**",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/prompts/resume-implementation.md",
         "src/adapters/pi/**",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/session-handoff.ts",
         "src/application/builds.ts",
         "src/application/gateway/**",
         "src/application/graph.ts",
         "src/application/state-builders.ts",
         "src/application/tools/**",
+        "src/application/tools/session-handoff.ts",
         "src/domain/shared/types.ts",
         "tests/features/**/*.test.*",
         "tests/smoke/*.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/session-handoff.test.mjs",
         "tests/tasks/TASK-001/**",
         "tests/tasks/TASK-002/**",
         "tests/tasks/TASK-003/**",
@@ -4210,9 +4699,18 @@
         "audit:alignment",
         "audit:stale-reference",
         "profile:alignment",
+        "profile:changed",
         "profile:stale-reference"
       ],
-      "content_proof_refs": [],
+      "content_proof_refs": [
+        "refs/codewiki/archive/task/TASK-003",
+        "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+        "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
+        "src/adapters/pi/tools/session-handoff.ts@sha256:98feea435af720501d5cdf8fe156c9bd6adb406eb332a58557e482c8780a54ca",
+        "src/application/tools/session-handoff.ts@sha256:60415b4da07d54206bfb052775b094ac17019d46074d63cd94beae11e1144a4e",
+        "tests/smoke/package-smoke.test.mjs@sha256:cc0af70c914dd0bd82bd817b673621d47e592709a8349e75f9905bd635fb5dfa",
+        "tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e"
+      ],
       "validation_attestations": [
         {
           "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -4676,9 +5174,146 @@
           ]
         }
       ],
-      "semantic_change_rows": [],
-      "semantic_change_gaps": [],
-      "gap_count": 9,
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/tools/session-handoff.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/tools/session-handoff.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/session-handoff.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        }
+      ],
+      "semantic_change_gaps": [
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "tests/smoke/session-handoff.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        }
+      ],
+      "gap_count": 14,
       "gaps": [
         {
           "requirement_id": "REQ-VNX-001",
@@ -5093,6 +5728,51 @@
           "gaps": [
             "missing_implementation_build"
           ]
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "tests/smoke/session-handoff.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
         }
       ]
     },
@@ -5299,13 +5979,12 @@
       }
     },
     "workflow_cursor": {
-      "active_loop": "implementation",
-      "reason": "TASK-001 is open implementation delta below knowledge.",
+      "active_loop": "feedback",
+      "reason": "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
       "input_refs": [
-        "task:TASK-001",
-        "TASK-001"
+        "path:.codewiki/kb/system/adapters.md"
       ],
-      "expected_output": "implementation_build",
+      "expected_output": "feedback_build",
       "exit_gate": "validation pass or explicit user decision",
       "scope": {
         "kind": "sprint",
@@ -5319,12 +5998,11 @@
           "new session id or recorded context reset",
           "handoff build/task refs only"
         ],
-        "handoff": "implementation_loop start"
+        "handoff": "feedback_loop start"
       },
       "context_boundary": "fresh-session-or-clear-context",
       "handoff_refs": [
-        "task:TASK-001",
-        "TASK-001"
+        "path:.codewiki/kb/system/adapters.md"
       ]
     },
     "gc": {
@@ -5347,7 +6025,9 @@
           "sprint_ids": [
             "SPRINT-001"
           ],
-          "build_paths": [],
+          "build_paths": [
+            ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
+          ],
           "validation_paths": [],
           "claim_ids": [],
           "claim_wait_ids": []
@@ -5386,11 +6066,26 @@
       ]
     },
     "archive": {
-      "restore_index": [],
+      "restore_index": [
+        {
+          "kind": "task",
+          "id": "TASK-003",
+          "build_path": ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-003",
+          "commit_sha": "",
+          "digest": "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
+          "restore_command": "/wiki-restore TASK-003",
+          "safety_status": "blocked"
+        }
+      ],
       "git_archive": {
-        "ledger_count": 0,
-        "archive_refs": [],
-        "build_paths": [],
+        "ledger_count": 1,
+        "archive_refs": [
+          "refs/codewiki/archive/task/TASK-003"
+        ],
+        "build_paths": [
+          ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
+        ],
         "blocked_purge_build_paths": [],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -5400,6 +6095,87 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
+        {
+          "id": "reconcile:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+          "source_id": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
+          "state": "drift",
+          "direction": "gateway",
+          "from_layer": "build",
+          "to_layer": "validation",
+          "next_loop": "validation",
+          "task_id": "TASK-003",
+          "reason": "Accepted implementation build still needs passing validation gateway evidence."
+        },
+        {
+          "id": "reconcile:semantic-build:.codewiki/kb/system/adapters.md",
+          "source_id": "path:.codewiki/kb/system/adapters.md",
+          "state": "drift",
+          "direction": "upward",
+          "from_layer": "knowledge",
+          "to_layer": "build",
+          "next_loop": "feedback",
+          "reason": "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "system"
+        },
+        {
+          "id": "reconcile:semantic-build:.codewiki/kb/system/agency.md",
+          "source_id": "path:.codewiki/kb/system/agency.md",
+          "state": "drift",
+          "direction": "upward",
+          "from_layer": "knowledge",
+          "to_layer": "build",
+          "next_loop": "feedback",
+          "reason": "Semantic system change .codewiki/kb/system/agency.md lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "system"
+        },
+        {
+          "id": "reconcile:semantic-build:skills/codewiki/SKILL.md",
+          "source_id": "path:skills/codewiki/SKILL.md",
+          "state": "drift",
+          "direction": "upward",
+          "from_layer": "knowledge",
+          "to_layer": "build",
+          "next_loop": "feedback",
+          "reason": "Semantic system change skills/codewiki/SKILL.md lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "system"
+        },
+        {
+          "id": "reconcile:semantic-build:skills/codewiki/prompts/resume-implementation.md",
+          "source_id": "path:skills/codewiki/prompts/resume-implementation.md",
+          "state": "drift",
+          "direction": "upward",
+          "from_layer": "knowledge",
+          "to_layer": "build",
+          "next_loop": "feedback",
+          "reason": "Semantic system change skills/codewiki/prompts/resume-implementation.md lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "system"
+        },
+        {
+          "id": "reconcile:semantic-build:tests/smoke/session-handoff.test.mjs",
+          "source_id": "path:tests/smoke/session-handoff.test.mjs",
+          "state": "drift",
+          "direction": "upward",
+          "from_layer": "code",
+          "to_layer": "build",
+          "next_loop": "implementation",
+          "reason": "Semantic code change tests/smoke/session-handoff.test.mjs lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "code"
+        },
         {
           "id": "reconcile:traceability:.codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json:REQ-VNX-001",
           "source_id": "build:.codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
@@ -5549,17 +6325,6 @@
           "reason": "TASK-002 is open implementation delta below knowledge."
         },
         {
-          "id": "reconcile:task:TASK-003",
-          "source_id": "task:TASK-003",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-003",
-          "reason": "TASK-003 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-004",
           "source_id": "task:TASK-004",
           "state": "drift",
@@ -5583,13 +6348,15 @@
         }
       ],
       "counts_by_loop": {
+        "validation": 1,
+        "feedback": 4,
         "implementation": 14
       },
       "next_action": {
-        "loop": "implementation",
-        "command": "/wiki-resume TASK-001",
-        "reason": "TASK-001 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-001",
+        "loop": "feedback",
+        "command": "Run feedback compiler",
+        "reason": "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
+        "item_id": "reconcile:semantic-build:.codewiki/kb/system/adapters.md",
         "isolation_required": true,
         "isolation": {
           "required": true,
@@ -5599,32 +6366,31 @@
             "new session id or recorded context reset",
             "handoff build/task refs only"
           ],
-          "handoff": "implementation_loop start"
+          "handoff": "feedback_loop start"
         },
         "context_boundary": "fresh-session-or-clear-context",
         "handoff_refs": [
-          "task:TASK-001",
-          "TASK-001"
+          "path:.codewiki/kb/system/adapters.md"
         ]
       },
       "layer_states": {
         "intent": "drift",
-        "knowledge": "aligned",
+        "knowledge": "drift",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "aligned"
+        "validation": "drift"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-19T00:51:02.275Z",
+      "generated_at": "2026-05-19T01:25:28.566Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-19T00:51:02Z",
+      "generated_at": "2026-05-19T01:25:28Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -5640,8 +6406,8 @@
         "sprint_count": 1,
         "active_sprint_count": 1,
         "status_counts": {
-          "in_progress": 2,
-          "todo": 3
+          "in_progress": 3,
+          "todo": 2
         },
         "priority_counts": {
           "high": 3,
@@ -5730,19 +6496,19 @@
         ],
         "in_progress_task_ids": [
           "TASK-001",
-          "TASK-002"
+          "TASK-002",
+          "TASK-003"
         ],
         "executable_in_progress_task_ids": [
           "TASK-001",
-          "TASK-002"
+          "TASK-002",
+          "TASK-003"
         ],
         "todo_task_ids": [
-          "TASK-003",
           "TASK-004",
           "TASK-005"
         ],
         "executable_todo_task_ids": [
-          "TASK-003",
           "TASK-004",
           "TASK-005"
         ],
@@ -5750,11 +6516,11 @@
         "done_task_ids": [],
         "cancelled_task_ids": [],
         "recent_task_ids": [
+          "TASK-003",
           "TASK-002",
           "TASK-001",
           "TASK-005",
-          "TASK-004",
-          "TASK-003"
+          "TASK-004"
         ]
       },
       "tasks": {
@@ -5876,7 +6642,7 @@
         "TASK-003": {
           "id": "TASK-003",
           "title": "Add validation preflight and risk-tier policy",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "architecture",
           "change_type": "system",
@@ -5913,7 +6679,7 @@
             "src/application/tools/session-handoff.ts",
             "skills/codewiki-validation/SKILL.md"
           ],
-          "updated": "2026-05-19",
+          "updated": "2026-05-19T01:25:28Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -6036,7 +6802,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-19T00:51:02Z",
+      "generated_at": "2026-05-19T01:25:28Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -6122,19 +6888,18 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-001",
-        "reason": "TASK-001 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-001"
+        "kind": "reconciliation:feedback",
+        "command": "Run feedback compiler",
+        "reason": "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
+        "item_id": "reconcile:semantic-build:.codewiki/kb/system/adapters.md"
       },
       "workflow_cursor": {
-        "active_loop": "implementation",
-        "reason": "TASK-001 is open implementation delta below knowledge.",
+        "active_loop": "feedback",
+        "reason": "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
         "input_refs": [
-          "task:TASK-001",
-          "TASK-001"
+          "path:.codewiki/kb/system/adapters.md"
         ],
-        "expected_output": "implementation_build",
+        "expected_output": "feedback_build",
         "exit_gate": "validation pass or explicit user decision",
         "scope": {
           "kind": "sprint",
@@ -6148,12 +6913,11 @@
             "new session id or recorded context reset",
             "handoff build/task refs only"
           ],
-          "handoff": "implementation_loop start"
+          "handoff": "feedback_loop start"
         },
         "context_boundary": "fresh-session-or-clear-context",
         "handoff_refs": [
-          "task:TASK-001",
-          "TASK-001"
+          "path:.codewiki/kb/system/adapters.md"
         ]
       },
       "gc": {
@@ -6176,7 +6940,9 @@
             "sprint_ids": [
               "SPRINT-001"
             ],
-            "build_paths": [],
+            "build_paths": [
+              ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
+            ],
             "validation_paths": [],
             "claim_ids": [],
             "claim_wait_ids": []
@@ -6215,7 +6981,7 @@
         ]
       },
       "direction": [
-        "TASK-001 is open implementation delta below knowledge.",
+        "Semantic system change .codewiki/kb/system/adapters.md lacks accepted compiler build coverage.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 16/16.",
@@ -6247,7 +7013,7 @@
             "title": "Consolidate CodeWiki public and agent tool surface"
           },
           "revision": {
-            "digest": "7e678bee96b43076f3c11141b3a379afa16fa483968ea69e9b4be031eda8be50",
+            "digest": "5692baacdb97f8e3cecec4dee2e8e4dc6d562e0033b05f15bbe988163b79b499",
             "basis": "source_content"
           },
           "note": "tracked by TASK-005"
@@ -6314,7 +7080,7 @@
             "title": "Add decision build and decision compiler orchestration"
           },
           "revision": {
-            "digest": "9a6dc6eaef7c04e68042a02890176d86007cff818c41f537a2e4fcd32227e83f",
+            "digest": "187826972638b3e24311f2f388371391f561431e768c1bc82efea830c2ab54cc",
             "basis": "source_content"
           },
           "note": "tracked by TASK-001"
@@ -6406,7 +7172,7 @@
           ],
           "primary_task": {
             "id": "TASK-003",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Add validation preflight and risk-tier policy"
           },
           "revision": {
@@ -6598,7 +7364,7 @@
           ],
           "primary_task": {
             "id": "TASK-003",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Add validation preflight and risk-tier policy"
           },
           "revision": {
@@ -6988,7 +7754,7 @@
           "related_task_ids": [],
           "primary_task": null,
           "revision": {
-            "digest": "1ba90db16066f0dba14b236fd637992a332ea5615313a32fef5b1d9536eb0420",
+            "digest": "f9f58ddd71da57ea1eb79ffbe2e02cfac4ed5ede486df93e5ea44fa3a44f44a7",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -7112,7 +7878,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-19T00:51:02Z",
+        "generated_at": "2026-05-19T01:25:28Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -7140,12 +7906,24 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T00:51:02Z",
+            "checked_at": "2026-05-19T01:25:28Z",
             "revision": {
               "git": {
-                "head": "51daf044852f5bb7fee35c4cec52270a9e718e6a",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "7e2119e75e409287da91f638fdf35c0dec6656dc",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -7224,17 +8002,17 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "17c865b7903a58ff780707532839683121393d43297856f1b278e4d7fab498b5",
-              "task_digest": "bc39612d118ad7b4aa77a5576d68c46d6c7c8f413631854c143e3d71d5d7fcd6",
-              "code_digest": "6b8d49f444d8bb61f99421fc30d7558344744a32ceb84ec92d4bdfdf8a3f57da",
-              "digest": "2c8046602f933f4cb27dde6de7b2963ee05b9005dd8ea936c25fb5d296965a69"
+              "spec_digest": "e6e132fd28da34310cc1bd5c25d26bf37c4d8f725296f9188b181d7027a8b501",
+              "task_digest": "0d237825f73f8ef1c53cf6991ae17eeacbe4e1c19aba54e9f015bb394b12b8a2",
+              "code_digest": "dda51f67bcda736fb2b2b78764183f449f80d26bfe5219a84246fbc80a6252b9",
+              "digest": "c372972427dc10dbf74d56c4566b1f58e47fbf3b378f4eb804c7d727b589458a"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:51:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T01:25:28Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -7366,12 +8144,24 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-19T00:51:02Z",
+            "checked_at": "2026-05-19T01:25:28Z",
             "revision": {
               "git": {
-                "head": "51daf044852f5bb7fee35c4cec52270a9e718e6a",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "7e2119e75e409287da91f638fdf35c0dec6656dc",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "e6ec717fdb7ee8690f64459e594c614ff6c8cc76",
@@ -7429,17 +8219,17 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "f7d65649b1775dc3450d3d928d7c81ec01f6be93e8b848da5dea82cc10fe3952",
-              "task_digest": "bc39612d118ad7b4aa77a5576d68c46d6c7c8f413631854c143e3d71d5d7fcd6",
-              "code_digest": "b34a8359586e1a1bab281904c98053918aab3a4d8e16da4e98d7b2cd63e8c720",
-              "digest": "2b654bf78f78e4a4a5b93c6660c61dc9985171811e18408b7e2271fb5774ab53"
+              "spec_digest": "cb03afb5823cd26ee19c469ab6e48167689e0e24e342ebfd7321bf49e94dfcd8",
+              "task_digest": "0d237825f73f8ef1c53cf6991ae17eeacbe4e1c19aba54e9f015bb394b12b8a2",
+              "code_digest": "67279b549acd585dbd6999b27f75d91bc85ac66e2ab3ffc8be310455c7c6ec1a",
+              "digest": "e9a839e79de83be8c66a012956f94749aa615a6f3ef1f3287bedaa4d54a5b2c9"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:51:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T01:25:28Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -7550,12 +8340,24 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T00:51:02Z",
+            "checked_at": "2026-05-19T01:25:28Z",
             "revision": {
               "git": {
-                "head": "51daf044852f5bb7fee35c4cec52270a9e718e6a",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "7e2119e75e409287da91f638fdf35c0dec6656dc",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/application/tools/session-handoff.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -7634,17 +8436,17 @@
                   "tests/smoke/package-smoke.test.mjs": "845d8319ed524f5e59522722abf0d2f9549a4e12"
                 }
               },
-              "spec_digest": "17c865b7903a58ff780707532839683121393d43297856f1b278e4d7fab498b5",
-              "task_digest": "bc39612d118ad7b4aa77a5576d68c46d6c7c8f413631854c143e3d71d5d7fcd6",
-              "code_digest": "6b8d49f444d8bb61f99421fc30d7558344744a32ceb84ec92d4bdfdf8a3f57da",
-              "digest": "2c8046602f933f4cb27dde6de7b2963ee05b9005dd8ea936c25fb5d296965a69"
+              "spec_digest": "e6e132fd28da34310cc1bd5c25d26bf37c4d8f725296f9188b181d7027a8b501",
+              "task_digest": "0d237825f73f8ef1c53cf6991ae17eeacbe4e1c19aba54e9f015bb394b12b8a2",
+              "code_digest": "dda51f67bcda736fb2b2b78764183f449f80d26bfe5219a84246fbc80a6252b9",
+              "digest": "c372972427dc10dbf74d56c4566b1f58e47fbf3b378f4eb804c7d727b589458a"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-19T00:51:02Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-19T01:25:28Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -7777,7 +8579,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-19T00:51:02Z",
+        "generated_at": "2026-05-19T01:25:28Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -7825,7 +8627,7 @@
               "title": "Consolidate CodeWiki public and agent tool surface"
             },
             "revision": {
-              "digest": "7e678bee96b43076f3c11141b3a379afa16fa483968ea69e9b4be031eda8be50",
+              "digest": "5692baacdb97f8e3cecec4dee2e8e4dc6d562e0033b05f15bbe988163b79b499",
               "basis": "source_content"
             },
             "note": "tracked by TASK-005"
@@ -7892,7 +8694,7 @@
               "title": "Add decision build and decision compiler orchestration"
             },
             "revision": {
-              "digest": "9a6dc6eaef7c04e68042a02890176d86007cff818c41f537a2e4fcd32227e83f",
+              "digest": "187826972638b3e24311f2f388371391f561431e768c1bc82efea830c2ab54cc",
               "basis": "source_content"
             },
             "note": "tracked by TASK-001"
@@ -7984,7 +8786,7 @@
             ],
             "primary_task": {
               "id": "TASK-003",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Add validation preflight and risk-tier policy"
             },
             "revision": {
@@ -8176,7 +8978,7 @@
             ],
             "primary_task": {
               "id": "TASK-003",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Add validation preflight and risk-tier policy"
             },
             "revision": {
@@ -8566,7 +9368,7 @@
             "related_task_ids": [],
             "primary_task": null,
             "revision": {
-              "digest": "1ba90db16066f0dba14b236fd637992a332ea5615313a32fef5b1d9536eb0420",
+              "digest": "f9f58ddd71da57ea1eb79ffbe2e02cfac4ed5ede486df93e5ea44fa3a44f44a7",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -9066,7 +9868,7 @@
                   "title": "Consolidate CodeWiki public and agent tool surface"
                 },
                 "revision": {
-                  "digest": "7e678bee96b43076f3c11141b3a379afa16fa483968ea69e9b4be031eda8be50",
+                  "digest": "5692baacdb97f8e3cecec4dee2e8e4dc6d562e0033b05f15bbe988163b79b499",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-005"
@@ -9133,7 +9935,7 @@
                   "title": "Add decision build and decision compiler orchestration"
                 },
                 "revision": {
-                  "digest": "9a6dc6eaef7c04e68042a02890176d86007cff818c41f537a2e4fcd32227e83f",
+                  "digest": "187826972638b3e24311f2f388371391f561431e768c1bc82efea830c2ab54cc",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-001"
@@ -9225,7 +10027,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-003",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Add validation preflight and risk-tier policy"
                 },
                 "revision": {
@@ -9417,7 +10219,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-003",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Add validation preflight and risk-tier policy"
                 },
                 "revision": {
@@ -9466,7 +10268,7 @@
                 "related_task_ids": [],
                 "primary_task": null,
                 "revision": {
-                  "digest": "1ba90db16066f0dba14b236fd637992a332ea5615313a32fef5b1d9536eb0420",
+                  "digest": "f9f58ddd71da57ea1eb79ffbe2e02cfac4ed5ede486df93e5ea44fa3a44f44a7",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -9602,7 +10404,8 @@
         "blocked_task_ids": [],
         "in_progress_task_ids": [
           "TASK-001",
-          "TASK-002"
+          "TASK-002",
+          "TASK-003"
         ],
         "next_task_id": "TASK-001",
         "sprint_ids": [
@@ -9667,7 +10470,6 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-003",
               "TASK-004",
               "TASK-005"
             ]
@@ -9677,7 +10479,8 @@
             "label": "Implement",
             "task_ids": [
               "TASK-001",
-              "TASK-002"
+              "TASK-002",
+              "TASK-003"
             ]
           },
           {

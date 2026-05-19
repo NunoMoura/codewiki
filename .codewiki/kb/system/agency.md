@@ -86,7 +86,7 @@ When intent is unclear, it routes to feedback. When knowledge must change, it ro
 - Commit, push, release, and remote updates require explicit publication policy approval.
 - Parallel sprint execution must mark narrow artifact scopes in use and stop on write/write conflicts unless policy explicitly permits override.
 - Agency plans must expose token, time, cost, write, session, and risk budgets in bounded context and policy output.
-- Agency may spend session budget by requesting adapter session handoffs; each handoff must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. In Pi, tool-context requests stage handoff artifacts; only command-context `/wiki-session-handoff` performs interactive session replacement, while future worker-process adapters must be bounded and explicit.
+- Agency may spend session budget by requesting adapter session handoffs; each handoff must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. In Pi, tool-context requests stage handoff artifacts and queue the internal command-context executor; only `/wiki-session-handoff` performs interactive session replacement/reset, while future worker-process adapters must be bounded and explicit.
 
 ## Related docs
 

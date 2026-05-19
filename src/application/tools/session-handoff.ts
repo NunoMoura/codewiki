@@ -189,13 +189,13 @@ export async function executeSessionHandoffFromTool(
 		return {
 			action: "staged",
 			command: staged.command,
-			reason: "context-reset handoffs must run from command context; tool-context compaction can hide the tool result.",
+			reason: "context-reset handoffs must run from command context after the tool result is visible; the Pi adapter queues the internal /wiki-session-handoff command as a follow-up.",
 		};
 	}
 	return {
 		action: "staged",
 		command: staged.command,
-		reason: "new-session handoffs require command-context ctx.newSession; run the staged /wiki-session-handoff command from an interactive Pi session.",
+		reason: "new-session handoffs require command-context ctx.newSession; the Pi adapter queues the internal /wiki-session-handoff command as a follow-up.",
 	};
 }
 
@@ -212,7 +212,7 @@ export async function executeCodewikiSessionHandoffTool(
 		staged,
 		result,
 		summary: result.action === "staged"
-			? `codewiki session_handoff: staged ${staged.relativePath}; command: ${staged.command}`
+			? `codewiki session_handoff: staged ${staged.relativePath}; internal command prepared`
 			: `codewiki session_handoff: ${result.action} ${staged.relativePath}`,
 	};
 }
