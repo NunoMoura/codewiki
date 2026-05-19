@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19T07:13:04.636Z",
+  "generated_at": "2026-05-19T07:14:32.558Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -3862,142 +3862,6 @@
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
-    },
-    {
-      "id": "claim:CLAIM-112",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-112",
-      "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-      "agent_name": "Otter",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-      "expires_at": "2026-05-19T09:09:35.224Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-        "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-        "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-006"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-        },
-        {
-          "layer": "code",
-          "path": "src/application/worktree-isolation.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/application/claims.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/application/builds.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/application/graph.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/application/task.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/artifact-wake.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/domain/shared/types.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/smoke/**"
-        },
-        {
-          "layer": "graph",
-          "path": ".codewiki/index_graph.json"
-        },
-        {
-          "layer": "roadmap",
-          "path": ".codewiki/roadmap/tasks/TASK-006/**"
-        }
-      ]
-    },
-    {
-      "id": "claim_scope:TASK-006",
-      "kind": "change_claim_scope",
-      "path": "TASK-006"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/2026-05-19-implementation-pass-task-006.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-    },
-    {
-      "id": "claim_scope:src/application/worktree-isolation.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/worktree-isolation.ts"
-    },
-    {
-      "id": "claim_scope:src/application/claims.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/claims.ts"
-    },
-    {
-      "id": "claim_scope:src/application/builds.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/builds.ts"
-    },
-    {
-      "id": "claim_scope:src/application/graph.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/graph.ts"
-    },
-    {
-      "id": "claim_scope:src/application/task.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/task.ts"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/artifact-wake.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/artifact-wake.ts"
-    },
-    {
-      "id": "claim_scope:src/domain/shared/types.ts",
-      "kind": "change_claim_scope",
-      "path": "src/domain/shared/types.ts"
-    },
-    {
-      "id": "claim_scope:tests/smoke/**",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/**"
-    },
-    {
-      "id": "claim_scope:.codewiki/index_graph.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/index_graph.json"
-    },
-    {
-      "id": "claim_scope:.codewiki/roadmap/tasks/TASK-006/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/roadmap/tasks/TASK-006/**"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -10295,76 +10159,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-112",
-      "to": "task:TASK-006"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:TASK-006"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:.codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:.codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/application/worktree-isolation.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/application/claims.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/application/builds.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/application/graph.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/application/task.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/adapters/pi/artifact-wake.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:src/domain/shared/types.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:tests/smoke/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:.codewiki/index_graph.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-112",
-      "to": "claim_scope:.codewiki/roadmap/tasks/TASK-006/**"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -11127,813 +10921,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-112",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-006",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-          "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-112",
-          "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-          "agent_name": "Otter",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-          "task_id": "TASK-006",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-006"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-            },
-            {
-              "layer": "code",
-              "path": "src/application/worktree-isolation.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/application/claims.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/application/builds.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/application/graph.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/application/task.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/artifact-wake.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/domain/shared/types.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/smoke/**"
-            },
-            {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            },
-            {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/tasks/TASK-006/**"
-            }
-          ],
-          "created_at": "2026-05-19T07:09:35Z",
-          "updated_at": "2026-05-19T07:09:35Z",
-          "expires_at": "2026-05-19T09:09:35.224Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/tasks/TASK-006/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/artifact-wake.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/builds.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/claims.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/graph.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/task.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/worktree-isolation.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/domain/shared/types.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-006"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/tasks/TASK-006/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/artifact-wake.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/builds.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/claims.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/graph.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/task.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/application/worktree-isolation.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/domain/shared/types.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-006"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-112",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-006",
-              "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-              "expires_at": "2026-05-19T09:09:35.224Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -12555,34 +11561,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
-            ".codewiki/builds/feedback/2026-05-19-task-006-context-reset-handoff-hotfix-decision.json",
-            ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-handoff-recovery-session-orchestration-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
-            ".codewiki/builds/documentation/2026-05-19-task-006-context-reset-handoff-docs.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -12846,9 +11825,7 @@
             ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
           ],
           "validation_paths": [],
-          "claim_ids": [
-            "CLAIM-112"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -13115,13 +12092,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-19T07:13:04.594Z",
+      "generated_at": "2026-05-19T07:14:32.520Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-19T07:13:04Z",
+      "generated_at": "2026-05-19T07:14:32Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -13542,7 +12519,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-19T07:13:04Z",
+      "generated_at": "2026-05-19T07:14:32Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -13687,9 +12664,7 @@
               ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
             ],
             "validation_paths": [],
-            "claim_ids": [
-              "CLAIM-112"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -13756,7 +12731,7 @@
       },
       "direction": [
         "TASK-001 is open implementation delta below knowledge.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "Tracked drift coverage: 13/13."
@@ -14684,7 +13659,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-19T07:13:04Z",
+        "generated_at": "2026-05-19T07:14:32Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -14712,16 +13687,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:13:04Z",
+            "checked_at": "2026-05-19T07:14:32Z",
             "revision": {
               "git": {
-                "head": "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-006/context.json",
-                  ".codewiki/roadmap/tasks/TASK-006/task.json"
-                ],
+                "head": "3c3758d8d64c8b8229894a6d2d02607cd432a391",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -14760,7 +13731,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
                   ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
+                  ".codewiki/roadmap/queue.json": "e9972b2a63785a829ab234d45d258780859f6305",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
@@ -14808,12 +13779,12 @@
               "spec_digest": "fce5a985f4d161f9dafd7aea90fd721f2a9a1a519fa055612a359be91b33ccf4",
               "task_digest": "ae93fcbfba7e48acc2b3a2767d9f58100ca226e5defa6b3f9cc3d4ee4fbc4e2b",
               "code_digest": "51d1f5cc59cbde3cf268539d4804a62baa77a850cb734088c26a2122c36d67f9",
-              "digest": "9e735be0e0936d065981a2952fa3096d9f1d6ba7aa015e20d25578e8f7a45ed3"
+              "digest": "9b9b3a11986e3e5a567b12fedbcff17ed4e0d2aa8d55f120c17dcf2705934ed8"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:13:04Z",
+              "checked_at": "2026-05-19T07:14:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -14953,16 +13924,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-19T07:13:04Z",
+            "checked_at": "2026-05-19T07:14:32Z",
             "revision": {
               "git": {
-                "head": "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-006/context.json",
-                  ".codewiki/roadmap/tasks/TASK-006/task.json"
-                ],
+                "head": "3c3758d8d64c8b8229894a6d2d02607cd432a391",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "7ee9351b9b6270dc9033d8062f7ba1998d5f94bd",
@@ -14985,7 +13952,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
                   ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
+                  ".codewiki/roadmap/queue.json": "e9972b2a63785a829ab234d45d258780859f6305",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-documentation/SKILL.md": "ca4bff76038b008c90fe8fec0bb16791e4c33bbd",
@@ -15028,12 +13995,12 @@
               "spec_digest": "2669ed5f9c067d4e30c32543709a43457f4859ea1e2ef54e8d4c415b93e1eeec",
               "task_digest": "ae93fcbfba7e48acc2b3a2767d9f58100ca226e5defa6b3f9cc3d4ee4fbc4e2b",
               "code_digest": "1a5f84c1f39b91233de94b36eee5c44428ce9651d3b0b4da658abca3c3c325e0",
-              "digest": "8cd45521cc20479492950f4ddd6f2cc0fc1d4fe139161604d40c6a8187b1cc4e"
+              "digest": "0154e520200bbac14df0aed77dc375dda338953e736b29b9458ae1c18101641e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:13:04Z",
+              "checked_at": "2026-05-19T07:14:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -15152,16 +14119,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-19T07:13:04Z",
+            "checked_at": "2026-05-19T07:14:32Z",
             "revision": {
               "git": {
-                "head": "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-006/context.json",
-                  ".codewiki/roadmap/tasks/TASK-006/task.json"
-                ],
+                "head": "3c3758d8d64c8b8229894a6d2d02607cd432a391",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -15200,7 +14163,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "f81c2319748de1a77fc07aa65ce55ece33e5f075",
                   ".codewiki/kb/system/worktree-isolation.md": "ff7b400cec3b20d8fb3b1e3453647d705ee24a90",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "25fbb309c76f341afe1561e891bc9d12fc3aa92f",
+                  ".codewiki/roadmap/queue.json": "e9972b2a63785a829ab234d45d258780859f6305",
                   "package.json": "d4896da385fc70ba168653d7134b82a155501e73",
                   "skills": "",
                   "skills/codewiki": "",
@@ -15248,12 +14211,12 @@
               "spec_digest": "fce5a985f4d161f9dafd7aea90fd721f2a9a1a519fa055612a359be91b33ccf4",
               "task_digest": "ae93fcbfba7e48acc2b3a2767d9f58100ca226e5defa6b3f9cc3d4ee4fbc4e2b",
               "code_digest": "51d1f5cc59cbde3cf268539d4804a62baa77a850cb734088c26a2122c36d67f9",
-              "digest": "9e735be0e0936d065981a2952fa3096d9f1d6ba7aa015e20d25578e8f7a45ed3"
+              "digest": "9b9b3a11986e3e5a567b12fedbcff17ed4e0d2aa8d55f120c17dcf2705934ed8"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-19T07:13:04Z",
+              "checked_at": "2026-05-19T07:14:32Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -15394,446 +14357,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-19T07:13:04Z",
+        "generated_at": "2026-05-19T07:14:32Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-112",
-            "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "agent_name": "Otter",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-            "task_id": "TASK-006",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-006"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-              },
-              {
-                "layer": "code",
-                "path": "src/application/worktree-isolation.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/application/claims.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/application/builds.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/application/graph.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/application/task.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/artifact-wake.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/domain/shared/types.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/smoke/**"
-              },
-              {
-                "layer": "graph",
-                "path": ".codewiki/index_graph.json"
-              },
-              {
-                "layer": "roadmap",
-                "path": ".codewiki/roadmap/tasks/TASK-006/**"
-              }
-            ],
-            "created_at": "2026-05-19T07:09:35Z",
-            "updated_at": "2026-05-19T07:09:35Z",
-            "expires_at": "2026-05-19T09:09:35.224Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/tasks/TASK-006/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-05-19-implementation-pass-task-006.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/artifact-wake.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/application/builds.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/application/claims.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/application/graph.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/application/task.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/application/worktree-isolation.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/domain/shared/types.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-006"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/smoke/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-112",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-006",
-                "summary": "Publisher gate for TASK-006 implementation pass: refresh generated state, create clean local proof, run task-close validation, close task if allowed.",
-                "expires_at": "2026-05-19T09:09:35.224Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-006; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-112 release or validated publisher/patch ref for codewiki/TASK-006/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
