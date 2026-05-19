@@ -502,6 +502,24 @@ export interface WorktreeIsolationMetadata {
 	notes?: string;
 }
 
+export interface ArtifactStatusBlocker {
+	claim_id: string;
+	session_id: string;
+	agent_name?: string;
+	role?: ChangeClaimRole;
+	task_id?: string;
+	build_ref?: string;
+	branch?: string;
+	worktree_path?: string;
+	head_sha?: string;
+	published_sha?: string;
+	tree_sha?: string;
+	patch_ref?: string;
+	scope?: string;
+	summary?: string;
+	next_safe_action: string;
+}
+
 export interface ChangeClaimRecord {
 	id: string;
 	session_id: string;
@@ -533,6 +551,9 @@ export interface ChangeClaimWaiterRecord {
 	worktree?: WorktreeIsolationMetadata;
 	scopes: ChangeClaimScope[];
 	blocked_by_claim_ids: string[];
+	blockers?: ArtifactStatusBlocker[];
+	blocker_summary?: string;
+	next_safe_action?: string;
 	created_at: string;
 	updated_at: string;
 	expires_at: string;
@@ -564,8 +585,13 @@ export interface ArtifactStatusHolder {
 	mode: ChangeClaimMode;
 	role?: ChangeClaimRole;
 	task_id?: string;
+	build_ref?: string;
 	summary?: string;
 	expires_at?: string;
+	worktree?: WorktreeIsolationMetadata;
+	blockers?: ArtifactStatusBlocker[];
+	blocker_summary?: string;
+	next_safe_action?: string;
 }
 
 export interface ArtifactStatusRecord {
@@ -575,6 +601,8 @@ export interface ArtifactStatusRecord {
 	waiters: ArtifactStatusHolder[];
 	conflict_ids: string[];
 	reason?: string;
+	blockers?: ArtifactStatusBlocker[];
+	next_safe_action?: string;
 }
 
 export interface ChangeClaimState {
@@ -893,7 +921,7 @@ export interface CodewikiSessionToolInput {
 
 export interface CodewikiSessionHandoffToolInput {
 	repoPath?: string;
-	mode?: "new-session" | "context-reset" | "external-orchestrator";
+	mode?: "new-session" | "context-refresh" | "context-reset" | "external-orchestrator";
 	taskId?: string;
 	buildRef?: string;
 	profile?: string;

@@ -6,7 +6,7 @@ summary: System mechanism for bounded roadmap automation through agency cycles a
 owners:
   - architecture
   - engineering
-updated: "2026-05-11"
+updated: "2026-05-19"
 code_paths:
   - src/application
   - src/adapters/pi
@@ -42,7 +42,7 @@ Agency can run at three scopes:
 | `sprint` | Advance a bounded cohort of related tasks with shared budget, session leases, and closure checkpoint. |
 | `task` | Advance one atomic roadmap work item. |
 
-Sprint scope is the default target for parallel work when a sprint is active. If the harness can spawn sessions or fresh worker processes, CodeWiki may create one isolated execution per sprint or bounded sprint workstream through the adapter session handoff capability. Otherwise it emits a plan-only `session_spawn_plan` with task ids, required scoped leases, and stop reasons for manual or external orchestration.
+Sprint scope is the default target for parallel work when a sprint is active. If the harness can spawn sessions or fresh worker processes, CodeWiki may create one isolated execution per sprint or bounded sprint workstream through adapter session-boundary capability. Otherwise it emits a plan-only `session_spawn_plan` with task ids, required scoped leases, and stop reasons for manual or external orchestration.
 
 ## Modes
 
@@ -75,7 +75,7 @@ The controller does not replace the graph, compilers, roadmap, or validation gat
 graph state -> scoped roadmap/sprint/task focus -> compiler step -> validation gateway -> build/evidence -> next graph state
 ```
 
-When intent is unclear, it routes to feedback. When knowledge must change, it routes to documentation. When code/tests must change, it routes to implementation. When evidence is ready, it routes to validation or closure. When a route requires a fresh context boundary and the session budget allows it, agency should call the adapter session handoff capability instead of asking the user to run a host command manually.
+When intent is unclear, it routes to the decision loop. When compatibility knowledge tooling must change KB docs, it routes to documentation. When code/tests must change, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually.
 
 ## Invariants
 
@@ -85,11 +85,14 @@ When intent is unclear, it routes to feedback. When knowledge must change, it ro
 - The controller must not bypass validation gateway or policy decisions.
 - Commit, push, release, and remote updates require explicit publication policy approval.
 - Parallel sprint execution must mark narrow artifact scopes in use and stop on write/write conflicts unless policy explicitly permits override.
+- Parallel write execution should allocate task/role worktrees through the worktree factory when the adapter or local runtime can provide them. Shared-root writes are a solo-mode fallback, not the default for overlapping builder, validator, publisher, or cleanup roles.
 - Agency plans must expose token, time, cost, write, session, and risk budgets in bounded context and policy output.
-- Agency may spend session budget by requesting adapter session handoffs; each handoff must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. In Pi, tool-context requests stage handoff artifacts and queue the internal command-context executor; only `/wiki-session-handoff` performs interactive session replacement/reset, while future worker-process adapters must be bounded and explicit.
+- Agency wait and wake output must name exact blockers and next safe actions, such as claim ids, branch refs, patch refs, validation refs, publisher commits, or rebase requirements. It should not tell agents to wait for a vague dirty worktree when an isolated role ref or publisher queue can express the dependency.
+- Agency may spend session budget by requesting adapter session boundaries; each boundary must carry a minimal kickoff prompt, source refs, task/build ids, and expected output. Same-agent `new_session`/`context_refresh` is context hygiene; handoff means transfer to another session, agent, or role. In Pi, tool-context requests stage boundary artifacts and must not inject slash commands through follow-up chat; only command-context `/wiki-session-handoff` can perform interactive session replacement/reset today, while future worker-process adapters must be bounded and explicit.
 
 ## Related docs
 
+- [Role Worktree Isolation](worktree-isolation.md)
 - [Roadmap](roadmap.md)
 - [Graph](graph.md)
 - [Validation Gateway](validation-gateway.md)

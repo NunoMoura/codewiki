@@ -37,7 +37,7 @@ CodeWiki separates truth by role so that agents can reason about the current sta
 | Truth type | Lives in | Role |
 | --- | --- | --- |
 | Repo-local contract truth | `.codewiki/config.json` | Defines project roots, policy, generated files, and runtime settings. |
-| Intent truth | accepted `feedback_build` files under `.codewiki/builds/feedback/**` | Temporary validated brief of user intent for the documentation loop. |
+| Intent truth | accepted `decision_build` files, or compatibility `feedback_build` files under `.codewiki/builds/feedback/**` | Temporary validated brief of user intent for the next loop. |
 | Product and system truth | `.codewiki/kb/**/*.md`, `.codewiki/kb/**/*.yaml`, and `.codewiki/kb/**/*.json` | Durable intended behavior, product decisions, architecture, diagram raw data, workflows, and non-goals. |
 | Knowledge handoff truth | accepted `documentation_build` files under `.codewiki/builds/documentation/**` | Temporary knowledge-alignment brief for the planning loop. |
 | Planning handoff truth | accepted `planning_build` files under `.codewiki/builds/planning/**` | Temporary roadmap, acceptance, verification, and TDD-strategy brief for the implementation loop. |
@@ -66,9 +66,8 @@ CodeWiki's target alignment model uses four compiler loops and a pure validation
 - [Audits](audits.md) — deterministic audit profiles and `/audit [flags]` semantics.
 
 ```text
-feedback loop -> feedback_build -> validation gateway
-  -> documentation loop -> documentation_build -> validation gateway
-    -> planning loop -> planning_build -> validation gateway
+decision loop -> decision_build -> validation gateway
+  -> planning loop -> planning_build -> validation gateway
       -> implementation loop -> implementation_build -> validation gateway/publication
 ```
 
@@ -80,7 +79,7 @@ Roadmap items reference accepted builds and knowledge paths, then track priority
 
 Implementation builds also support publication. They can recommend commit, PR, issue, release-note, and push-readiness text, but validation and policy decide whether commit, push, release, or remote updates are allowed.
 
-Gateways check vertical and horizontal alignment, but they do not invent requirements or compile the next handoff.
+Gateways check vertical and horizontal alignment, but they do not invent requirements or compile the next build.
 
 ## Ownership seams
 

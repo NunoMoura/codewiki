@@ -86,7 +86,7 @@ The vNext decision compiler routes by abstraction entrypoint:
 - system-first changes update system diagrams and system truth, then preflight user-visible product impact;
 - mixed changes must name both owning docs and the propagation direction for each requirement.
 
-The feedback loop should expose change proposals with diff tables before canonical knowledge edits are applied. In the vNext target, accepted decision rows and knowledge edits are compiled together into a decision build with row-to-KB and diagram-ref evidence.
+The decision loop should expose change proposals with diff tables before canonical knowledge edits are applied. Accepted decision rows and knowledge edits compile together into a decision build with row-to-KB and diagram-ref evidence. Compatibility feedback/documentation builds remain valid until the decision compiler fully replaces them.
 
 ## Related docs
 

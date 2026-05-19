@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "feedback_build",
+  "created": "2026-05-19T03:04:44Z",
+  "source": "User explicitly accepted HND-006..HND-009: decision loop replaces feedback-loop language; new_session/context_refresh is same-agent context hygiene; handoff is transfer; CodeWiki is orchestration OS for user-opened sessions.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-18T03:04:44.000Z",
+    "purge_after": "2026-07-18T03:04:44.000Z"
+  },
+  "cycle": {
+    "loop": "feedback",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "feedback",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "feedback_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "feedback_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "feedback_build -> documentation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accept decision-loop and agent-owned context refresh model",
+  "diff_table": [
+    {
+      "id": "HND-006",
+      "current_state": "CodeWiki still uses session_handoff language broadly for context refresh and for actual transfer, and some docs still say feedback loop even though vNext direction renamed it to decision loop.",
+      "desired_state": "Use decision loop for user semantic approval/decision capture. Use new_session or context_refresh for same-agent context hygiene. Reserve handoff for actual transfer between distinct sessions/agents/roles.",
+      "rationale": "Names should match control reality: current Pi can replace/clear current session context, not spawn a new tab/agent. Decision loop is the accepted vNext semantic, not feedback loop.",
+      "affected_layers": [
+        "product",
+        "system",
+        "api",
+        "docs",
+        "code"
+      ],
+      "risk": "Medium: requires compatibility aliases and careful docs updates so existing builds/tools remain readable.",
+      "user_action": "accepted",
+      "alternatives": []
+    },
+    {
+      "id": "HND-007",
+      "current_state": "Fresh context is sometimes framed as handoff/isolation even when the same agent continues from CodeWiki artifacts.",
+      "desired_state": "Make new_session an agent-owned context hygiene primitive: the agent may refresh when context becomes noisy, stale, or too token-heavy, as long as it restarts from CodeWiki source refs and records the reason/source refs when the refresh is policy-relevant.",
+      "rationale": "CodeWiki is the source of truth and boundaries are clear enough for agents to manage their own context window. Refresh should improve signal without requiring user ceremony.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "skills",
+        "docs",
+        "code"
+      ],
+      "risk": "Medium: agents must not confuse discretionary context refresh with independent validation proof.",
+      "user_action": "accepted",
+      "alternatives": []
+    },
+    {
+      "id": "HND-008",
+      "current_state": "Parallel multi-session orchestration is represented by artifact status and wait queues, but the product language does not yet describe CodeWiki as the operating system for user-opened sessions.",
+      "desired_state": "CodeWiki should be the orchestration layer for all sessions the user chooses to have open: tasks, scopes, builds, validation, artifact status, wait/wake, and source refs coordinate agents without chat dependence.",
+      "rationale": "The product cannot create arbitrary agents/tabs, but it can let user-opened sessions coordinate through shared CodeWiki state for maximum safe parallelism.",
+      "affected_layers": [
+        "product",
+        "system",
+        "runtime",
+        "docs",
+        "code"
+      ],
+      "risk": "High: requires strong runtime contracts, wake semantics, and clear task/scope ownership policy.",
+      "user_action": "accepted",
+      "alternatives": []
+    },
+    {
+      "id": "HND-009",
+      "current_state": "Trigger points are not clearly separated into decision continuity, discretionary context hygiene, validation independence, and wait/wake resume.",
+      "desired_state": "Define clear defaults but let agents choose discretionary new_session when needed: stay in current session during decision loop unless context is degraded; refresh after accepted build boundaries or before implementation when useful; require fresh/independent context for validation/task-close/publication; use wait/wake for parallel sessions; reserve handoff for role/session transfer.",
+      "rationale": "Agents can optimize their own context window because CodeWiki artifacts provide complete recovery context, while hard gates still need explicit proof semantics.",
+      "affected_layers": [
+        "system",
+        "validation",
+        "skills",
+        "docs"
+      ],
+      "risk": "Medium: needs alignment across skills and KB so future agents refresh context safely without overusing handoff language.",
+      "user_action": "accepted",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "HND-006",
+    "HND-007",
+    "HND-008",
+    "HND-009"
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Rename current user semantic approval loop to decision loop in forward-looking docs, preserving feedback compatibility where tools/build kinds still use it."
+    },
+    {
+      "id": "D2",
+      "summary": "Treat new_session/context_refresh as same-agent context hygiene, not handoff."
+    },
+    {
+      "id": "D3",
+      "summary": "Let agents decide discretionary context refresh when context is noisy, stale, or token-heavy, provided they restart from CodeWiki source refs."
+    },
+    {
+      "id": "D4",
+      "summary": "Keep fresh/independent context proof required for validation/task-close/publication gates."
+    },
+    {
+      "id": "D5",
+      "summary": "Use CodeWiki as the orchestration layer/OS for multiple user-opened sessions through tasks, scopes, artifact status, wait/wake, builds, validation, and source refs."
+    }
+  ],
+  "assumptions": [
+    "Existing tool names such as codewiki_session_handoff and feedback build kind remain compatibility surfaces until vNext tool consolidation changes them.",
+    "Pi cannot spawn a new tab/agent today; same-terminal replacement session is the controllable primitive.",
+    "User-owned multiple open sessions are the parallelism mechanism; CodeWiki state coordinates them."
+  ],
+  "open_questions": [
+    "Which compatibility names should be deprecated first when vNext decision/work/gate tools land?",
+    "Should agent-owned new_session have a soft token/context threshold or remain judgment-based?"
+  ],
+  "non_goals": [
+    "Do not implement terminal tab spawning.",
+    "Do not weaken validation/task-close/publication fresh proof requirements.",
+    "Do not remove compatibility aliases in this patch."
+  ],
+  "lower_layer_delta": {
+    "knowledge": [
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [
+      "TASK-006 evidence/builds should cite HND-006..HND-009."
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "skills/codewiki-feedback/SKILL.md may remain compatibility until vNext task."
+    ]
+  },
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [
+      "TASK-006 evidence/builds should cite HND-006..HND-009."
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "skills/codewiki-feedback/SKILL.md may remain compatibility until vNext task."
+    ],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

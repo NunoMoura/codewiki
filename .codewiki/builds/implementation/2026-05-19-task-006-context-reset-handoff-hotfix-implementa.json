@@ -1,0 +1,519 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-19T01:33:13Z",
+  "source": "TASK-006 implementation from accepted hotfix planning build.",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+  "task_id": "TASK-006",
+  "task": {
+    "id": "TASK-006",
+    "title": "Prevent context-reset handoff compaction from swallowing tool result",
+    "status": "todo",
+    "priority": "high",
+    "kind": "bug",
+    "summary": "Fix Pi session handoff auto-queue behavior so context-reset handoffs do not immediately compact before the tool result is visible.",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "code_paths": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "tests/smoke/session-handoff.test.mjs"
+    ],
+    "goal": {
+      "outcome": "A context-reset handoff stages durable refs and reports a visible tool result instead of being hidden by immediate compaction.",
+      "acceptance": [
+        "Context-reset handoffs from tool context are not auto-queued into immediate `/wiki-session-handoff` execution by default.",
+        "New-session handoffs can still queue the command-context executor when requested.",
+        "Tests cover context-reset no-auto-queue behavior and preserved queued handoff status.",
+        "KB/API docs describe the safe behavior and the reason."
+      ],
+      "non_goals": [
+        "Do not change validated vNext task scope.",
+        "Do not remove `/wiki-session-handoff` command-context support.",
+        "Do not change fresh-session/new-session replacement semantics beyond queue safety."
+      ],
+      "verification": [
+        "Run node ./tests/smoke/session-handoff.test.mjs.",
+        "Run npm run typecheck.",
+        "Run CodeWiki alignment and stale-reference audits."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-02T01:33:13.000Z",
+    "purge_after": "2026-06-16T01:33:13.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "implementation_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Fix context-reset session handoff result visibility",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-006"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "tests": [
+      "tests/smoke/session-handoff.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-006"
+    ]
+  },
+  "linked_refs": {
+    "documentation_build": "",
+    "planning_build": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "code_paths": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "tests/smoke/session-handoff.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/session-handoff.test.mjs"
+  ],
+  "code_files": [
+    "src/application/tools/session-handoff.ts",
+    "src/adapters/pi/tools/session-handoff.ts",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md"
+  ],
+  "files_changed": [
+    "tests/smoke/session-handoff.test.mjs",
+    "src/application/tools/session-handoff.ts",
+    "src/adapters/pi/tools/session-handoff.ts",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md"
+  ],
+  "checks_run": [
+    "node ./tests/smoke/session-handoff.test.mjs: pass",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]: pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_documentation_build": "",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+      "roadmap_task_id": "TASK-006",
+      "test_files": [
+        "tests/smoke/session-handoff.test.mjs"
+      ],
+      "evidence": [
+        "Focused smoke test already covered staged handoffs and command-context execution; extended it to cover the regression path: context-reset tool result plus auto-queue disabled.",
+        "No browser/UI test added because the failure is adapter command queue policy and is reproducible through exported handoff helpers."
+      ],
+      "notes": [
+        "Regression observed in live tool call: context-reset handoff staged valid artifact then immediate compaction left tool result as `No result provided`.",
+        "Focused test simulates context-reset tool execution and verifies compact is not called in tool context."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_documentation_build": "",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+      "roadmap_task_id": "TASK-006",
+      "code_files": [
+        "src/application/tools/session-handoff.ts",
+        "src/adapters/pi/tools/session-handoff.ts",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "evidence": [
+        "Added optional `auto_queue` to `ToolSessionHandoffResult`.",
+        "Set `auto_queue:false` for context-reset handoffs and `auto_queue:true` for new-session handoffs.",
+        "Guarded `queueSessionHandoffFollowUp` with `options.autoQueue` and wired adapter execution through result metadata.",
+        "Included returned command in tool-visible text and add `not auto-queued` hint when context-reset is staged.",
+        "Updated KB docs for safe Pi context-reset behavior."
+      ],
+      "notes": [
+        "Preserved `/wiki-session-handoff` command-context executor and new-session follow-up queuing.",
+        "Changed only context-reset auto-queue policy from tool context."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Focused smoke test already covered staged handoffs and command-context execution; extended it to cover the regression path: context-reset tool result plus auto-queue disabled.",
+    "No browser/UI test added because the failure is adapter command queue policy and is reproducible through exported handoff helpers."
+  ],
+  "code_change_evidence": [
+    "Added optional `auto_queue` to `ToolSessionHandoffResult`.",
+    "Set `auto_queue:false` for context-reset handoffs and `auto_queue:true` for new-session handoffs.",
+    "Guarded `queueSessionHandoffFollowUp` with `options.autoQueue` and wired adapter execution through result metadata.",
+    "Included returned command in tool-visible text and add `not auto-queued` hint when context-reset is staged.",
+    "Updated KB docs for safe Pi context-reset behavior."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Context-reset handoffs from tool context are not auto-queued into immediate `/wiki-session-handoff` execution by default.",
+      "evidence": "`executeSessionHandoffFromTool` returns `auto_queue:false` for `context-reset`; Pi adapter computes `shouldAutoQueue` from params plus result metadata; focused test asserts no follow-up is queued and handoff remains `queued`."
+    },
+    {
+      "criterion": "New-session handoffs can still queue the command-context executor when requested.",
+      "evidence": "`executeSessionHandoffFromTool` returns `auto_queue:true` for `new-session`; focused test asserts `queueSessionHandoffFollowUp` sends follow-up with `deliverAs:\"followUp\"`."
+    },
+    {
+      "criterion": "Tests cover context-reset no-auto-queue behavior and preserved queued handoff status.",
+      "evidence": "`tests/smoke/session-handoff.test.mjs` asserts tool-context context-reset does not call `compact`, does not queue follow-up when auto_queue=false, and leaves the staged handoff status as `queued`."
+    },
+    {
+      "criterion": "KB/API docs describe the safe behavior and the reason.",
+      "evidence": "`.codewiki/kb/system/api.md` and `.codewiki/kb/system/adapters.md` now document that tool-context handoffs return the command, new-session may auto-queue, and context-reset stays staged to avoid hiding tool results."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Fix bug where successful context-reset handoff immediately compacted and hid the tool result, blocking the agent loop.",
+    "implemented_changes": [
+      "Context-reset handoff result now carries `auto_queue:false`.",
+      "Pi adapter no longer queues immediate follow-up for context-reset when result metadata disables it.",
+      "New-session handoff auto-queue remains enabled.",
+      "Focused smoke test covers no-auto-queue context-reset regression.",
+      "System API/adapters docs describe safe behavior."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "roadmap": [
+        "TASK-006"
+      ],
+      "code": [
+        "src/application/tools/session-handoff.ts",
+        "src/adapters/pi/tools/session-handoff.ts"
+      ],
+      "tests": [
+        "tests/smoke/session-handoff.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "Context-reset acceptance: code/test evidence above.",
+      "New-session acceptance: existing and extended smoke test evidence.",
+      "Docs acceptance: API/adapters KB updates."
+    ],
+    "checks": [
+      "node ./tests/smoke/session-handoff.test.mjs: pass",
+      "npm run typecheck: pass",
+      "npm run check:architecture: pass",
+      "codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]: pass"
+    ],
+    "non_goals_preserved": [
+      "Did not remove `/wiki-session-handoff`.",
+      "Did not change TASK-001 vNext scope.",
+      "Did not change command-context execution semantics beyond tool-context auto-queue safety."
+    ],
+    "remaining_risks": [
+      "Live Pi command scheduling should be rechecked after package reload/install because current session may still use loaded extension code until reload."
+    ]
+  },
+  "risks": [
+    "Context-reset handoffs now require explicit command-context execution after the visible result; this is intentional to preserve result visibility."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-006",
+      "task_id": "TASK-006",
+      "next_focus_task_id": "TASK-001",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-006",
+        "title": "Prevent context-reset handoff compaction from swallowing tool result",
+        "summary": "Fix context-reset session handoff result visibility",
+        "spec_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md"
+        ],
+        "code_paths": [
+          "src/application/tools/session-handoff.ts",
+          "src/adapters/pi/tools/session-handoff.ts",
+          "tests/smoke/session-handoff.test.mjs",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md"
+        ],
+        "acceptance": [
+          "Context-reset handoffs from tool context are not auto-queued into immediate `/wiki-session-handoff` execution by default.",
+          "New-session handoffs can still queue the command-context executor when requested.",
+          "Tests cover context-reset no-auto-queue behavior and preserved queued handoff status.",
+          "KB/API docs describe the safe behavior and the reason."
+        ],
+        "verification": [
+          "Run node ./tests/smoke/session-handoff.test.mjs.",
+          "Run npm run typecheck.",
+          "Run CodeWiki alignment and stale-reference audits."
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+        "checks_run": [
+          "node ./tests/smoke/session-handoff.test.mjs: pass",
+          "npm run typecheck: pass",
+          "npm run check:architecture: pass",
+          "codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]: pass"
+        ],
+        "test_design_evidence": [
+          "Focused smoke test already covered staged handoffs and command-context execution; extended it to cover the regression path: context-reset tool result plus auto-queue disabled.",
+          "No browser/UI test added because the failure is adapter command queue policy and is reproducible through exported handoff helpers."
+        ],
+        "code_change_evidence": [
+          "Added optional `auto_queue` to `ToolSessionHandoffResult`.",
+          "Set `auto_queue:false` for context-reset handoffs and `auto_queue:true` for new-session handoffs.",
+          "Guarded `queueSessionHandoffFollowUp` with `options.autoQueue` and wired adapter execution through result metadata.",
+          "Included returned command in tool-visible text and add `not auto-queued` hint when context-reset is staged.",
+          "Updated KB docs for safe Pi context-reset behavior."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-006",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-006",
+      "show_build": "git show refs/codewiki/archive/task/TASK-006:.codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        "src/application/tools/session-handoff.ts",
+        "src/adapters/pi/tools/session-handoff.ts",
+        "tests/smoke/session-handoff.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "fix(codewiki): keep context-reset handoff result visible",
+      "body": "Prevent tool-context context-reset handoffs from auto-queueing immediate `/wiki-session-handoff` execution, because the command calls `ctx.compact()` and can hide the tool result. Context-reset handoffs now stay staged with a visible command/result, while new-session handoffs retain auto-queue behavior.\n\nChecks: node ./tests/smoke/session-handoff.test.mjs; npm run typecheck; npm run check:architecture; codewiki_audit alignment/stale-reference/generated-parity/file-structure\n\nCodeWiki-Task: TASK-006\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementation.json\nCodeWiki-Checks: node ./tests/smoke/session-handoff.test.mjs, npm run typecheck, npm run check:architecture, codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-006",
+      "trailers": [
+        "CodeWiki-Task: TASK-006",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+        "CodeWiki-Checks: node ./tests/smoke/session-handoff.test.mjs: pass, npm run typecheck: pass, npm run check:architecture: pass, codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]: pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-006",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-006",
+        "CodeWiki-Digest: sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
+        "CodeWiki-Restore: /wiki-restore TASK-006"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "fix(codewiki): keep context-reset handoff result visible",
+      "body": "Prevent tool-context context-reset handoffs from auto-queueing immediate `/wiki-session-handoff` execution, because the command calls `ctx.compact()` and can hide the tool result. Context-reset handoffs now stay staged with a visible command/result, while new-session handoffs retain auto-queue behavior.\n\nChecks: node ./tests/smoke/session-handoff.test.mjs; npm run typecheck; npm run check:architecture; codewiki_audit alignment/stale-reference/generated-parity/file-structure\n\nCodeWiki-Task: TASK-006\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementation.json\nCodeWiki-Checks: node ./tests/smoke/session-handoff.test.mjs, npm run typecheck, npm run check:architecture, codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-006"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-006",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-006"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-006",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-006",
+        "show_build": "git show refs/codewiki/archive/task/TASK-006:.codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          "src/application/tools/session-handoff.ts",
+          "src/adapters/pi/tools/session-handoff.ts",
+          "tests/smoke/session-handoff.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-006",
+      "build_path": ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-006",
+      "commit_sha": "",
+      "digest": "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
+      "restore_command": "/wiki-restore TASK-006"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:d248b6f1112cb01caf96dbe4502274b2d9a67a86f957a8feb4c68ca360b0cbf2",
+          "bytes": 6067
+        },
+        {
+          "path": "tests/smoke/session-handoff.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9015ef0664b45f61f3ba58cfba6568baa3ca7488d9f5a46cfbb107aa754b40b7",
+          "bytes": 7970
+        },
+        {
+          "path": "src/application/tools/session-handoff.ts",
+          "role": "code_file",
+          "sha256": "sha256:8b493063c8c1ad1263e235824ba5835680e5c98ef7b4aee2a2c35f1267aa8699",
+          "bytes": 8523
+        },
+        {
+          "path": "src/adapters/pi/tools/session-handoff.ts",
+          "role": "code_file",
+          "sha256": "sha256:0e9785c5558737d689c80ffb94cf0488ded7c63e7db307f0429f27266e3a9351",
+          "bytes": 5444
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:055dc47da773b4a1163eb69aa51b88d7638e2446e19757847c46e5f749cc6f9d",
+          "bytes": 11198
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "role": "code_file",
+          "sha256": "sha256:ec66df9ba7e3ecf67129e69242f0139da557f7861287b8693d65bd741bdfef6c",
+          "bytes": 4763
+        }
+      ],
+      "skipped": []
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node ./tests/smoke/session-handoff.test.mjs: pass",
+        "npm run typecheck: pass",
+        "npm run check:architecture: pass",
+        "codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure]: pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

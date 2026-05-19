@@ -70,7 +70,7 @@ export const CODEWIKI_TOOL_CONTRACTS = [
 		module: "src/application/tools/gc.ts",
 		layer: "gc",
 		summary: "Dry-run or purge eligible CodeWiki artifacts after archive commit proof and restore-ledger emission.",
-		safeMutationPath: "Tracked purge requires archive_sha/tree_sha, writes a restore ledger first, and runs after the archive/close/publication commit; runtime cleanup is scoped to ignored session handoffs.",
+		safeMutationPath: "Tracked purge requires archive_sha/tree_sha, writes a restore ledger first, and runs after the archive/close/publication commit; runtime cleanup is scoped to ignored session-boundary artifacts.",
 	},
 	{
 		name: "codewiki_task",
@@ -97,8 +97,8 @@ export const CODEWIKI_TOOL_CONTRACTS = [
 		name: "codewiki_session_handoff",
 		module: "src/application/tools/session-handoff.ts",
 		layer: "session",
-		summary: "Stage fresh-session/context-reset handoffs from durable artifact refs.",
-		safeMutationPath: "Writes runtime handoff files and lets command context perform new-session/context-reset execution.",
+		summary: "Compatibility surface for staging new_session/context_refresh boundaries or true role handoffs from durable refs.",
+		safeMutationPath: "Writes runtime boundary files and lets command context perform new_session/context_refresh execution.",
 	},
 	{
 		name: "codewiki_agency",

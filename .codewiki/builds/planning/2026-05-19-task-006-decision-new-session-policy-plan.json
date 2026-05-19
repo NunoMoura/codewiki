@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-19T03:17:06Z",
+  "source": "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
+  "source_documentation_build": ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-02T03:17:06.000Z",
+    "purge_after": "2026-06-16T03:17:06.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "planning_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan TASK-006 decision-loop and session-boundary policy implementation",
+  "task_ids": [
+    "TASK-006"
+  ],
+  "task_changes": [
+    "TASK-006 now includes terminology/policy split: decision loop primary; new_session/context_refresh same-agent hygiene; handoff true transfer; CodeWiki orchestrates user-opened sessions.",
+    "Default compiler-loop isolation policy should become optional/agent-owned instead of required, while validation/task-close/publication proof remains required.",
+    "Session-boundary compatibility tool should accept context-refresh naming and describe boundaries instead of overusing handoff."
+  ],
+  "roadmap_changes": [
+    "TASK-006 now includes terminology/policy split: decision loop primary; new_session/context_refresh same-agent hygiene; handoff true transfer; CodeWiki orchestrates user-opened sessions.",
+    "Default compiler-loop isolation policy should become optional/agent-owned instead of required, while validation/task-close/publication proof remains required.",
+    "Session-boundary compatibility tool should accept context-refresh naming and describe boundaries instead of overusing handoff."
+  ],
+  "tdd_plan": [
+    "Update loop-isolation-policy smoke test to expect optional agent-owned compiler-loop boundaries and required validation isolation unchanged.",
+    "Update session-handoff smoke test for new_session context boundary and context-refresh alias behavior.",
+    "Run focused smoke tests, typecheck, architecture check, full npm test, and CodeWiki audits."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/session-handoff.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/application/builds.ts",
+    "src/application/graph.ts",
+    "src/application/tools/session-handoff.ts",
+    "src/adapters/pi/tools/session-handoff.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/domain/shared/types.ts",
+    "src/application/tools/catalog.ts",
+    "src/application/gc.ts",
+    "src/templates.ts",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki-feedback/SKILL.md",
+    "skills/codewiki-feedback/references/tools.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    ".codewiki/kb/**"
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Decision loop replaces feedback-loop terminology for forward workflow while preserving compatibility.",
+      "evidence": "KB docs and skills updated; feedback_build remains compatibility artifact until decision_build tooling lands."
+    },
+    {
+      "criterion": "Agents own discretionary context refresh from CodeWiki refs.",
+      "evidence": "Build and graph default isolation policies set compiler loop boundaries to required=false and mode=agent-owned-new-session."
+    },
+    {
+      "criterion": "Validation proof remains required.",
+      "evidence": "Implementation validation/task-close/publication policy remains fresh-context/content-proof enforced; loop-isolation smoke preserves validation checks."
+    },
+    {
+      "criterion": "Session-boundary compatibility tool supports context-refresh and avoids user-facing handoff framing.",
+      "evidence": "Schema includes context-refresh; output/guidelines say session_boundary/new_session/context_refresh; /wiki-session-handoff remains compatibility executor."
+    },
+    {
+      "criterion": "CodeWiki remains multi-session orchestration OS.",
+      "evidence": "Artifact wait wake implementation retained; docs clarify session queue/wait/wake/scoped lease orchestration."
+    }
+  ],
+  "assumptions": [
+    "Full decision_build compiler/tooling is TASK-001/vNext work, not completed here.",
+    "Compatibility codewiki_session_handoff remains until a vNext session_boundary/new_session surface replaces it.",
+    "No terminal-tab creation is needed for this accepted model."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not remove feedback/documentation compatibility tools or historical build support.",
+    "Do not change validation proof requirements.",
+    "Do not implement automatic agent/tab spawning."
+  ],
+  "risks": [
+    "Some names remain compatibility names in tool IDs and historical files.",
+    "Agents may over-refresh without future heuristics; current policy relies on judgment and CodeWiki source refs."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "documentation",
+    "upstream_build_refs": [
+      ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [
+      ".codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-006"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-006"
+    ],
+    "code": [
+      "src/application/builds.ts",
+      "src/application/graph.ts",
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/domain/shared/types.ts",
+      "src/application/tools/catalog.ts",
+      "src/application/gc.ts",
+      "src/templates.ts",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki-feedback/SKILL.md",
+      "skills/codewiki-feedback/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      ".codewiki/kb/**"
+    ],
+    "tests": [
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/session-handoff.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

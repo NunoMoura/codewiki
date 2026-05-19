@@ -205,8 +205,15 @@ async function run() {
 		assert.match(missingIsolationResult.details.path, /\.codewiki\/validation\/.*task-close-block.*\.json$/);
 		assert.equal(missingIsolationResult.details.data.verdict, "block");
 		assert.ok(missingIsolationResult.details.data.failed_criteria.includes("validation_isolation"));
+		const validatorOnlyCloseResult = await valTool.definition.execute(
+			"val-validator-only-task-close-block", { repoPath: projectDir, profile: "task-close", task_id: "TASK-001", verdict: "pass", rationale: "Validator proof alone lacks publisher result.", source: implResult.details.path, audit_refs: taskCloseAuditRefs, isolation: { role: "validator", fresh_context: true, clean: true, validated_sha: "abc1234", builder_session_id: "build-test-session" } },
+			undefined, undefined, ctx,
+		);
+		assert.match(validatorOnlyCloseResult.details.path, /\.codewiki\/validation\/.*task-close-block.*\.json$/);
+		assert.equal(validatorOnlyCloseResult.details.data.verdict, "block");
+		assert.ok(validatorOnlyCloseResult.details.data.failed_criteria.includes("publisher_result_proof"));
 		const passResult = await valTool.definition.execute(
-			"val-pass", { repoPath: projectDir, profile: "task-close", task_id: "TASK-001", verdict: "pass", rationale: "All good.", source: implResult.details.path, audit_refs: taskCloseAuditRefs, isolation: { role: "validator", fresh_context: true, clean: true, validated_sha: "abc1234", builder_session_id: "build-test-session" } },
+			"val-pass", { repoPath: projectDir, profile: "task-close", task_id: "TASK-001", verdict: "pass", rationale: "All good.", source: implResult.details.path, audit_refs: taskCloseAuditRefs, isolation: { role: "validator", fresh_context: true, clean: true, published_sha: "def5678", tree_sha: "abc1234", builder_session_id: "build-test-session" } },
 			undefined, undefined, ctx,
 		);
 		assert.match(passResult.details.path, /\.codewiki\/validation\/.*task-close-pass.*\.json$/);

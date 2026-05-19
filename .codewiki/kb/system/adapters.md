@@ -5,7 +5,7 @@ state: active
 summary: Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.
 owners:
   - architecture
-updated: "2026-05-16"
+updated: "2026-05-19"
 code_paths:
   - src/adapters
   - src/application
@@ -35,7 +35,7 @@ Pi is the only implemented harness adapter now. It packages:
 - compact visual status UI,
 - skills,
 - session integration,
-- session handoff control,
+- session boundary and handoff control,
 - session queue artifact statuses for parallel work,
 - setup actions that call application bootstrap tools.
 
@@ -43,7 +43,13 @@ Pi is the only implemented harness adapter now. It packages:
 
 Future harnesses may not support Pi packages or extensions. They should use the same API through CLI, MCP, or a package-level programmatic interface.
 
-Session handoff is an adapter capability, not a Pi-only semantic. CodeWiki can request `new-session`, `context-reset`, or `external-orchestrator` modes when build/graph policy requires fresh context. Each adapter maps that semantic request to its native mechanism. In Pi, an LLM-callable tool cannot call command-only `ctx.newSession()`, and direct tool-context `ctx.compact()` can hide the tool response, so tool-context `new-session` and `context-reset` handoffs stage a durable handoff artifact and queue the internal `/wiki-session-handoff` command as a follow-up rather than asking the user to run it. `/wiki-session-handoff` remains the command-context executor and performs `ctx.newSession()` or `ctx.compact()`. A CLI/MCP adapter may spawn a bounded worker process, clear conversation state, or emit a plan-only handoff when it cannot replace context itself.
+Session boundary control is an adapter capability, not a Pi-only semantic. CodeWiki can request `new-session`, `context-refresh`, `context-reset` compatibility, or `external-orchestrator` modes when agents need context hygiene or policy requires a boundary. Same-agent context hygiene is `new_session` or `context_refresh`; `handoff` is transfer to another session, agent, or role. In Pi, an LLM-callable tool cannot call command-only `ctx.newSession()`, and direct or immediate tool-context `ctx.compact()` can hide the tool response, so tool-context boundaries stage a durable artifact. Pi `sendUserMessage` follow-ups disable prompt/command expansion and would deliver `/wiki-session-handoff` as chat, not execute it. Therefore the adapter must not auto-inject the compatibility command through follow-up chat; it may prefill the editor when UI exists, or leave the staged command path visible for command-context execution. Pi `ctx.newSession()` creates a fresh replacement session in the current Pi process/terminal; the current extension API does not expose a portable way to open a new terminal tab. `/wiki-session-handoff` remains a compatibility command-context executor, not a normal user workflow surface. A CLI/MCP adapter may spawn a bounded worker process, clear conversation state, or emit a plan-only boundary when it cannot replace context itself.
+
+Artifact-status wait/release coordination is also an adapter capability. The application queue computes pending and ready waits, but an interactive adapter must give waiting sessions a wake path. Pi sessions watch the CodeWiki session queue and inject a bounded wake message when a wait owned by the current session becomes ready; the agent must still re-read current state and claim/mark scopes before writing. Other adapters can implement the same semantics through filesystem watches, RPC events, web sockets, MCP notifications, or worker orchestration.
+
+Role worktree orchestration is an adapter/local-runtime capability over shared CodeWiki semantics. For parallel write work, adapters should ask the application worktree factory for a task/role worktree instead of letting multiple builders, validators, publishers, or cleanup agents edit the same root working tree. The adapter may translate that request into Git worktree commands, bounded worker processes, branch checkout, or a plan-only instruction when the host cannot create a separate filesystem workspace. The resulting path, branch, base/head/tree SHA, clean state, and digest metadata must flow back into artifact status and validation reports.
+
+Publisher orchestration is also adapter-facing but not adapter-owned. Builders should hand off branch or patch refs, validators should check immutable refs from fresh worktrees, and a publisher role should serialize final merge, generated-state refresh, commit, and clean proof in the coordination worktree. Wait/wake messages should name the exact branch, patch, claim, validation, or publisher commit that unblocks work; a vague “dirty from another session” message is insufficient when isolated refs exist.
 
 Potential future access paths:
 
@@ -67,6 +73,8 @@ Global third-party skills should not mutate CodeWiki state unless adapted to the
 
 ## Rules
 
+Role worktree and publisher details live in [Role Worktree Isolation](worktree-isolation.md).
+
 - Harness-specific dependencies stay in adapters.
 - Adapters call application use cases or API capabilities.
 - Adapters never hand-edit generated graph state.
@@ -74,7 +82,7 @@ Global third-party skills should not mutate CodeWiki state unless adapted to the
 - Adapter differences must not create different truth semantics.
 - Browser UI code lives under `src/ui/**` and must not import Pi SDK or Pi TUI packages.
 - Adapter-exposed agency controls must route through application tools and the agency controller rather than running unbounded loops directly.
-- Adapter session-control mechanisms must be explicit handoffs with bounded kickoff context; they must not silently carry builder chat history across isolation boundaries.
+- Adapter session-control mechanisms must be explicit context boundaries with bounded kickoff context; they must not silently carry builder chat history across isolation boundaries. Handoff wording is reserved for transfer between sessions, agents, or roles.
 
 ## Related docs
 

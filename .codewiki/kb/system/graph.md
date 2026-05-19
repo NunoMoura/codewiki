@@ -91,7 +91,7 @@ The graph should model cross-layer items with:
 
 Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted feedback, documentation, or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
 
-The graph next action should include the required context boundary. Compiler-loop actions require a fresh session or recorded context reset. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
+The graph next action should include context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend agent-owned `new_session` or `context_refresh` when context is noisy, stale, or token-heavy. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
 
 Hot context should stay small: active tasks/sprints/leases, latest active or superseding builds, unconsumed handoffs, fail/block validation, publication blockers, drift routes, and compact traceability gaps. Warm and cold evidence is available only through explicit archive, restore, audit, or refinement workflows.
 

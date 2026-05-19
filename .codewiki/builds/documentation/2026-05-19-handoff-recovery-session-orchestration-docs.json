@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "documentation_build",
+  "created": "2026-05-19T02:20:09Z",
+  "source": "Accepted handoff recovery feedback HND-001..HND-005 plus Pi docs/examples/API review.",
+  "source_feedback_build": ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-02T02:20:09.000Z",
+    "purge_after": "2026-06-16T02:20:09.000Z"
+  },
+  "cycle": {
+    "loop": "documentation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "documentation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "documentation_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "documentation_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "documentation_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "HND-001",
+      "text": "Handoff must not depend on user-facing /wiki-session-handoff command dispatch for normal workflow.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-002",
+      "text": "Fresh-context handoffs must honestly represent Pi semantics and use a true terminal/process path only when adapter support exists.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json",
+        "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/docs/extensions.md"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-003",
+      "text": "Artifact wait/release must include a wake path for waiting sessions.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-004",
+      "text": "Handoff points must be policy-defined around loop/gateway boundaries and context health.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-005",
+      "text": "Pause narrow hotfix closure until broader handoff failures are researched and fixed or explicitly deferred.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+      ],
+      "state": "documented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Pi docs reviewed for session replacement semantics.",
+      "evidence": "docs/extensions.md documents tools receive ExtensionContext while commands receive ExtensionCommandContext; ctx.newSession is command-only and uses withSession after replacement; no terminal-tab launcher appears in ExtensionAPI types or docs.",
+      "requirement_ids": [
+        "HND-002"
+      ],
+      "source_refs": [
+        "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/docs/extensions.md",
+        "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/types.d.ts"
+      ]
+    },
+    {
+      "criterion": "Artifact wait wake model documented.",
+      "evidence": "api.md and adapters.md require adapters to watch/subscribe to session queue and inject bounded wake messages for ready waiters.",
+      "requirement_ids": [
+        "HND-003"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md"
+      ]
+    },
+    {
+      "criterion": "Handoff policy documented.",
+      "evidence": "validation-gateway.md now defines default handoff points for feedback/decision, documentation/planning, implementation, validation, task-close/publication, and artifact wait wakes.",
+      "requirement_ids": [
+        "HND-004"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Document session handoff recovery model and Pi adapter constraints",
+  "knowledge_changes": [
+    ".codewiki/kb/system/api.md: Session queue waits now require adapter wake/subscribe behavior; Pi new-session is documented as a fresh replacement session in the current terminal, not a portable new terminal tab; /wiki-session-handoff is compatibility executor rather than user workflow surface.",
+    ".codewiki/kb/system/adapters.md: Pi adapter constraints documented from current Pi extension docs: tools cannot call ctx.newSession, ctx.newSession replaces current session, withSession sends kickoff to replacement, no portable terminal-tab API, context-reset compaction can hide tool result, and artifact wait wake is adapter-owned.",
+    ".codewiki/kb/system/validation-gateway.md: Handoff policy now distinguishes feedback/decision continuity, documentation/planning context reset, implementation fresh start, validator independence, artifact wait wakes, and adapter fallback blocking.",
+    ".codewiki/kb/system/change-lifecycle.md: Chat is continuity only; builds/KB/roadmap/code/checks/validation are source of truth."
+  ],
+  "roadmap_changes": [
+    "TASK-006 refined from narrow context-reset hotfix into broader session handoff orchestration stabilization task."
+  ],
+  "assumptions": [
+    "Current Pi extension API lacks a portable way to open a new terminal tab; CodeWiki should implement honest fallback or external worker/orchestrator paths instead.",
+    "Auto-queued internal command remains a compatibility mechanism for command-context-only replacement until a richer adapter API or worker path exists."
+  ],
+  "open_questions": [
+    "Should CodeWiki implement a terminal launcher config for optional true terminal-tab handoff in known terminals such as tmux, WezTerm, Kitty, or GNOME Terminal?",
+    "Should validation handoffs prefer a bounded worker-process Pi run over interactive replacement sessions when full independence is required?",
+    "How should ready wait wake messages avoid resuming stale work after a long wait beyond TTL or changed task scope?"
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "feedback",
+    "upstream_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [
+      ".codewiki/builds/feedback/2026-05-19-handoff-recovery-session-orchestration-feedback.json"
+    ],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md: Session queue waits now require adapter wake/subscribe behavior; Pi new-session is documented as a fresh replacement session in the current terminal, not a portable new terminal tab; /wiki-session-handoff is compatibility executor rather than user workflow surface.",
+      ".codewiki/kb/system/adapters.md: Pi adapter constraints documented from current Pi extension docs: tools cannot call ctx.newSession, ctx.newSession replaces current session, withSession sends kickoff to replacement, no portable terminal-tab API, context-reset compaction can hide tool result, and artifact wait wake is adapter-owned.",
+      ".codewiki/kb/system/validation-gateway.md: Handoff policy now distinguishes feedback/decision continuity, documentation/planning context reset, implementation fresh start, validator independence, artifact wait wakes, and adapter fallback blocking.",
+      ".codewiki/kb/system/change-lifecycle.md: Chat is continuity only; builds/KB/roadmap/code/checks/validation are source of truth."
+    ],
+    "roadmap": [
+      "TASK-006 refined from narrow context-reset hotfix into broader session handoff orchestration stabilization task."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

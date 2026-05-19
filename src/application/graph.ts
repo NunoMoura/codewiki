@@ -56,17 +56,17 @@ function loopIsolationRequirement(loop: ReconciliationLoop) {
 			required: true,
 			mode: "fresh-context-checked-content",
 			reason: "Gateway validation must not reuse builder thought context and must cite checked content proof.",
-			evidence: ["fresh_context=true", "clean state recorded", "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest", "publication profiles require clean=true plus immutable proof"],
+			evidence: ["fresh_context=true", "clean state recorded", "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest", "task-close/publication profiles require clean publisher result proof"],
 			handoff: "submitted build -> validation gateway",
 			profiles: ["implementation", "task-close", "publication", "publish", "release"],
 		};
 	}
 	return {
-		required: true,
-		mode: "fresh-session-or-clear-context",
-		reason: "Compiler loops start from source refs and handoff builds, not prior loop chat memory.",
-		evidence: ["new session id or recorded context reset", "handoff build/task refs only"],
-		handoff: `${loop}_loop start`,
+		required: false,
+		mode: "agent-owned-new-session",
+		reason: "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+		evidence: ["source build/task refs read", "new_session or context_refresh when useful"],
+		handoff: `${loop}_loop context boundary`,
 	};
 }
 
@@ -437,9 +437,10 @@ function validationIsolationSummary(validation: { path: string; taskId?: string;
 	const profile = String(validation.data?.profile || "").trim().toLowerCase();
 	const immutableProfile = ["task-close", "publication", "publish", "release"].includes(profile);
 	const hasImmutableProof = Boolean(isolation?.validated_sha || isolation?.head_sha || isolation?.published_sha || isolation?.tree_sha || isolation?.package_digest || isolation?.archive_ref || isolation?.remote_ref);
+	const hasPublisherProof = Boolean(isolation?.published_sha || isolation?.tree_sha || isolation?.archive_ref || isolation?.remote_ref);
 	const hasWorkingTreeProof = Boolean(isolation?.working_tree_digest || isolation?.worktree_digest);
 	const isolated = immutableProfile
-		? isolation?.fresh_context === true && isolation?.clean === true && hasImmutableProof
+		? isolation?.fresh_context === true && isolation?.clean === true && hasPublisherProof
 		: isolation?.fresh_context === true && typeof isolation?.clean === "boolean" && (hasImmutableProof || hasWorkingTreeProof || proofRefs.length > 0);
 	const status = isolation ? (isolated ? "isolated" : "partial") : "legacy";
 	return {
@@ -460,6 +461,7 @@ function validationIsolationSummary(validation: { path: string; taskId?: string;
 		builder_claim_id: isolation?.builder_claim_id,
 		related_claim_ids: isolation?.related_claim_ids || [],
 		content_proof_refs: proofRefs,
+		publisher_result_refs: [isolation?.published_sha, isolation?.tree_sha, isolation?.archive_ref, isolation?.remote_ref].map((value) => String(value || "").trim()).filter(Boolean),
 	};
 }
 
@@ -1135,6 +1137,9 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			expires_at: waiter.expires_at,
 			ready_at: waiter.ready_at,
 			blocked_by_claim_ids: waiter.blocked_by_claim_ids,
+			blockers: waiter.blockers || [],
+			blocker_summary: waiter.blocker_summary || "",
+			next_safe_action: waiter.next_safe_action || "",
 			worktree: waiter.worktree,
 			scopes: waiter.scopes,
 		});

@@ -31,9 +31,9 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | `codewiki.decision` | vNext capability for user semantic approval, KB preflight, product/system propagation, KB updates, and decision builds. |
 | `codewiki.implementation` | Coordinate implementation work, evidence collection, and implementation builds. |
 | `codewiki.roadmap` | Manage work truth: queue, status, priority, blockers, progress, and closure. |
-| `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, handoffs, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
+| `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, wait/wake, context-boundary metadata, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
 | `codewiki.agency` | Run bounded roadmap, sprint, or task automation through token, time, cost, write, session, risk, validation, policy, and approval gates. |
-| `codewiki.session_handoff` | Request adapter-managed fresh-process/fresh-session, context-reset, or external-orchestrator handoffs with bounded kickoff context. |
+| `codewiki.session_boundary` | Request adapter-managed new_session, context_refresh, external-orchestrator, or true handoff boundaries with bounded kickoff context. Existing `codewiki_session_handoff` remains a compatibility tool. |
 | `codewiki.build` | Read and write accepted compiler build briefs. |
 | `codewiki.validation` | Run validation gateways and persist failed, blocked, or policy-kept reports. |
 | `codewiki.state_engine` | Rebuild and read generated state/graph representations. |
@@ -67,11 +67,11 @@ Preferred agent workflow tools:
 | `codewiki_work` | Planning/implementation/closure orchestration for one bounded work item. |
 | `codewiki_gate` | Preflight, audit, validation, and policy checks. |
 | `codewiki_maintenance` | Generated-state refresh, GC, archive, and non-semantic repair. |
-| `codewiki_coordination` | Artifact status, waits, handoffs, and isolation coordination. |
+| `codewiki_coordination` | Artifact status, waits/wakes, context boundaries, handoffs, and isolation coordination. |
 
-Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session handoff staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them.
+Low-level primitives such as diff-table mutation, raw build writing, validation report writing, artifact status mutation, task mutation, session-boundary staging, graph rebuild, and GC ledger writes should become internal implementation details for these workflow tools unless a compatibility, audit, or expert/debug surface explicitly needs them.
 
-This is a surface-area goal, not a permission to create a magical `do everything` API. Each workflow tool should own one user-level phase and expose precise source refs, policy outcomes, and recovery steps.
+Each workflow tool owns one user-level phase and exposes source refs, policy outcomes, and recovery steps; no opaque do-everything API.
 
 ## Access paths
 
@@ -94,14 +94,17 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Roadmap task creation must check active work for related intent and refine matching tasks before creating duplicates.
 - Parallel sessions should mark affected artifacts in the session queue before non-trivial overlapping documentation, roadmap, build, validation, or code edits.
 - Artifact status records are temporary coordination records; they do not replace roadmap tasks, builds, validation, git, or code review.
-- Session queue callers may register wait entries when an overlapping write artifact status blocks needed scopes. Wait entries have their own TTL/heartbeat, can be cancelled through release, and become ready when blocking active write status records release or expire.
-- Ready wait entries are wake signals, not stale-context revival. Adapters should resume from task/build/scope artifacts and current generated state, or request a fresh session handoff when policy requires it.
+- Session queue callers may register wait entries when overlapping write artifact status blocks needed scopes. Waits have TTL/heartbeat, can be cancelled through release, and become ready when blockers release or expire. Adapter sessions that own waits should subscribe to queue changes and wake the agent; passive queue state is not enough for parallel work.
+- Ready waits are wake signals, not stale-context revival. Wake messages should name wait id, task/build refs, and scopes, then require current state and artifact-status re-check before writing.
 - Session queue callers may provide role/worktree metadata for builder, validator, publisher, or observer sessions so status and generated state views can explain isolation without making artifact status records the filesystem source of truth.
+- Parallel write roles should follow [Role Worktree Isolation](worktree-isolation.md): per-task role worktrees/refs by default, root worktree for coordination/publishing, and solo-mode only when safe.
+- Coordination/publication should expose worktree-factory, publisher-queue, and exact wait/wake blocker semantics; artifact status shows metadata but Git refs remain content proof.
 - Validation callers may provide isolation metadata such as fresh-context status, worktree path, branch, base/head/validated SHA, and clean worktree result when independence matters.
 - Validation callers must provide fresh-context, clean-worktree, and checked-SHA evidence for implementation, task-close, publication, publish, and release profiles; otherwise the API records a `block` verdict.
 - Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, and approval gates.
-- Session handoff callers must provide reason, source refs, expected output, and mode; adapters decide whether that becomes a replacement session, context reset, bounded worker process, or external orchestration plan. Tool-context Pi `new-session` and `context-reset` handoffs stage a durable handoff artifact and queue the internal `/wiki-session-handoff` command as a follow-up; command-context `/wiki-session-handoff` performs `ctx.newSession` replacement or `ctx.compact` reset because those context mutations are command-context operations and direct tool-context compaction can hide the tool result.
-- Pending diff tables are runtime/session decision surfaces; accepted rows become feedback build truth in compatibility mode or decision build truth in vNext mode. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
+- Session-boundary callers must provide reason, source refs, expected output, and mode. `new_session` and `context_refresh` are same-agent context hygiene; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. True separate process isolation needs an explicit external-orchestrator or worker adapter path.
+- Tool-context Pi boundaries stage durable artifacts. Tool-context `sendUserMessage` follow-ups do not execute registered slash commands, so new_session and context_refresh boundaries must not be injected as `/wiki-session-handoff` chat. The adapter may prefill the editor with the compatibility command when UI exists, but command-context execution is still the only current Pi path to `ctx.newSession()`. `/wiki-session-handoff` is a compatibility executor, not a user workflow surface.
+- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth in the target model or feedback build truth in compatibility mode. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
 - During CodeWiki self-refactors, public tool behavior stays frozen except critical blocker fixes; vNext capabilities are introduced behind compatibility aliases and become default only after documentation, tests, and validation pass.
 - Config schema v4 defines quiet rebuild defaults, scoped agency budgets, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
@@ -114,7 +117,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## API boundary
 
-The API belongs in `src/application/tools/**` and domain contracts. Application tools call focused application use cases for build writing, validation reporting, roadmap/session operations, generated state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skill helpers translate external inputs and outputs into those tools. Built-in local runtime implementations under `application/local/**` and focused application services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until a concrete external adapter needs its own boundary.
+The API belongs in `src/application/tools/**` and domain contracts. Application tools call focused use cases for builds, validation, roadmap/session operations, state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into those tools. Local runtime services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until an external adapter needs its own boundary.
 
 The API should stay stable while adapter protocols change.
 
@@ -123,4 +126,5 @@ The API should stay stable while adapter protocols change.
 - [CodeWiki UI](control-room-ui.md)
 - [Adapters](adapters.md)
 - [Agency Controller](agency.md)
+- [Role Worktree Isolation](worktree-isolation.md)
 - [Compilers](compilers.md)

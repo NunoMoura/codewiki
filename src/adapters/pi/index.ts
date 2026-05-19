@@ -20,6 +20,7 @@ import { registerCodewikiAuditTool } from "./tools/audit.ts";
 import { executeCodewikiClaim } from "./tools/claim.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { registerSessionHandoffCommand, registerCodewikiSessionHandoffTool } from "./tools/session-handoff.ts";
+import { installArtifactWaiterWake } from "./artifact-wake.ts";
 import { registerCodewikiStateTool } from "./tools/state.ts";
 import { executeCodewikiTask } from "./tools/task.ts";
 import {
@@ -37,6 +38,12 @@ const COMMAND_PREFIX = "wiki";
 export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerBootstrapFeatures(pi);
 	let activeStatusPanel: ActiveStatusPanel | null = activeStatusPanelGlobal;
+	let disposeArtifactWake: (() => void) | null = null;
+
+	pi.on("session_shutdown", () => {
+		disposeArtifactWake?.();
+		disposeArtifactWake = null;
+	});
 
 	pi.on("turn_start", async (_event, ctx) => {
 		const resolved = await resolveStatusDockProject(ctx);
@@ -55,12 +62,15 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	pi.on("session_start", async (_event, ctx) => {
+		disposeArtifactWake?.();
+		disposeArtifactWake = null;
 		const resolved = await resolveStatusDockProject(ctx);
 		if (!resolved) {
 			ctx.ui.setStatus("codewiki-focus", undefined);
 			clearStatusDock(ctx);
 			return;
 		}
+		disposeArtifactWake = installArtifactWaiterWake(pi, resolved.project, ctx);
 
 		await withUiErrorHandling(ctx, async () => {
 			const active = currentTaskLink(ctx);
@@ -168,7 +178,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		promptSnippet:
 			"Write accepted compiler handoff builds with lifecycle metadata",
 		promptGuidelines: [
-			"Use this after the user accepts feedback-loop decisions (kind='feedback'), when knowledge changes must become a documentation build (kind='documentation'), when roadmap alignment becomes a planning build (kind='planning'), or when implementation evidence must be captured (kind='implementation').",
+			"Use kind='feedback' as the compatibility decision-loop build after the user accepts semantic rows, kind='documentation' for compatibility knowledge builds, kind='planning' for roadmap alignment, or kind='implementation' for implementation evidence.",
 			"Builds are transient payloads, not long-term truth; canonical truth belongs in knowledge, roadmap, tests, and code.",
 			"Build policy records loop_start, validation, and next_loop isolation requirements so downstream loops can start fresh from artifacts instead of chat memory.",
 			"Use kind='feedback' for accepted decisions. Use kind='documentation' when .codewiki/kb/ changes. Use kind='planning' for roadmap alignment. Use kind='implementation' to record test/code/check evidence for a task.",

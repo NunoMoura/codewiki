@@ -51,7 +51,7 @@ try {
 	};
 	const payload = buildSessionHandoffPayload(project, input);
 	assert.equal(payload.kind, "codewiki_session_handoff");
-	assert.equal(payload.context_boundary, "fresh-process-or-session");
+	assert.equal(payload.context_boundary, "new_session");
 	assert.ok(payload.input_refs.includes("TASK-074"));
 	assert.ok(payload.input_refs.includes(input.buildRef));
 	assert.match(payload.kickoff_prompt, /Do not rely on previous chat context/);
@@ -67,19 +67,21 @@ try {
 	);
 	assert.equal(toolResult.action, "staged");
 	assert.equal(toolResult.command, toolStaged.command);
+	assert.equal(toolResult.auto_queue, false);
 	assert.match(toolResult.reason, /ctx\.newSession/);
-	assert.match(toolResult.reason, /queues the internal \/wiki-session-handoff command/);
+	assert.match(toolResult.reason, /sendUserMessage follow-ups do not execute extension commands/);
 	const queuedFollowUps = [];
 	const queued = queueSessionHandoffFollowUp(
 		{ sendUserMessage: (content, options) => queuedFollowUps.push({ content, options }) },
 		toolResult.command,
+		{ autoQueue: toolResult.auto_queue },
 	);
-	assert.equal(queued, true);
-	assert.deepEqual(queuedFollowUps, [{ content: toolStaged.command, options: { deliverAs: "followUp" } }]);
+	assert.equal(queued, false);
+	assert.deepEqual(queuedFollowUps, []);
 	const toolQueued = JSON.parse(await readFile(toolStaged.absolutePath, "utf8"));
 	assert.equal(toolQueued.status, "queued");
 
-	const resetToolStaged = await stageSessionHandoff(project, { ...input, mode: "context-reset", reason: "Context reset should keep a visible tool result." });
+	const resetToolStaged = await stageSessionHandoff(project, { ...input, mode: "context-refresh", reason: "Context refresh should keep a visible tool result." });
 	let toolCompactCalled = false;
 	const resetToolResult = await executeSessionHandoffFromTool(
 		resetToolStaged,
@@ -87,8 +89,18 @@ try {
 	);
 	assert.equal(resetToolResult.action, "staged");
 	assert.equal(resetToolResult.command, resetToolStaged.command);
-	assert.match(resetToolResult.reason, /tool result is visible/);
+	assert.equal(resetToolResult.auto_queue, false);
+	assert.match(resetToolResult.reason, /tool result/);
+	assert.match(resetToolResult.reason, /ctx\.compact/);
 	assert.equal(toolCompactCalled, false, "tool-context context-reset should not call compact directly");
+	const resetQueuedFollowUps = [];
+	const resetQueued = queueSessionHandoffFollowUp(
+		{ sendUserMessage: (content, options) => resetQueuedFollowUps.push({ content, options }) },
+		resetToolResult.command,
+		{ autoQueue: resetToolResult.auto_queue },
+	);
+	assert.equal(resetQueued, false, "context_refresh boundary should not auto-queue because compact can hide the result");
+	assert.deepEqual(resetQueuedFollowUps, []);
 	const resetToolQueued = JSON.parse(await readFile(resetToolStaged.absolutePath, "utf8"));
 	assert.equal(resetToolQueued.status, "queued");
 
@@ -121,11 +133,11 @@ try {
 	const commandCompleted = JSON.parse(await readFile(commandStaged.absolutePath, "utf8"));
 	assert.equal(commandCompleted.status, "completed");
 
-	const resetCommandStaged = await stageSessionHandoff(project, { ...input, mode: "context-reset", reason: "Command context reset should compact." });
+	const resetCommandStaged = await stageSessionHandoff(project, { ...input, mode: "context-refresh", reason: "Command context refresh should compact." });
 	compactInstructions = undefined;
 	const resetCommandResult = await runSessionHandoffCommand(resetCommandStaged.relativePath, commandCtx);
 	assert.equal(resetCommandResult.cancelled, false);
-	assert.match(compactInstructions, /Command context reset should compact/);
+	assert.match(compactInstructions, /Command context refresh should compact/);
 	const resetCommandCompleted = JSON.parse(await readFile(resetCommandStaged.absolutePath, "utf8"));
 	assert.equal(resetCommandCompleted.status, "completed");
 
@@ -148,10 +160,11 @@ try {
 	assert.equal(failed.status, "failed");
 
 	assert.equal(queueSessionHandoffFollowUp({ sendUserMessage: () => assert.fail("no command should not queue") }, undefined), false);
+	assert.equal(queueSessionHandoffFollowUp({ sendUserMessage: () => assert.fail("disabled autoQueue should not queue") }, toolStaged.command, { autoQueue: false }), false);
 
 	const badRelativePath = ".codewiki/runtime/session-handoffs/bad.json";
 	await writeFile(join(root, badRelativePath), JSON.stringify({ kind: "not_codewiki" }) + "\n", "utf8");
-	await assert.rejects(() => runSessionHandoffCommand(badRelativePath, commandCtx), /Invalid CodeWiki session handoff/);
+	await assert.rejects(() => runSessionHandoffCommand(badRelativePath, commandCtx), /Invalid CodeWiki session boundary/);
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

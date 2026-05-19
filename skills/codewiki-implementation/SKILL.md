@@ -1,6 +1,6 @@
 ---
 name: codewiki-implementation
-description: Use when executing one atomic roadmap task from a validated planning_build, /wiki-resume task context, or accepted implementation handoff. Runs the implementation compiler with artifact-status coordination, test-design/TDD evidence, implementation_build creation before validation, fresh validation handoff, and task-close gate rules.
+description: Use when executing one atomic roadmap task from a validated planning_build, /wiki-resume task context, or accepted implementation boundary. Runs the implementation compiler with artifact-status coordination, test-design/TDD evidence, implementation_build creation before validation, fresh validation boundary, and task-close gate rules.
 id: skill.codewiki-implementation
 title: CodeWiki implementation compiler skill
 state: active
@@ -80,7 +80,7 @@ End implementation mode with:
 - changed files and why they changed;
 - tests/checks run with outcomes;
 - `implementation_build` path;
-- fresh validation handoff command/path;
+- fresh validation boundary path/command when staged;
 - post-commit GC review status: purged with ledger, deferred, blocked, or not yet eligible;
 - task status recommendation: `in_progress`, `blocked`, or `done after validation`;
 - remaining risks or follow-up routing.

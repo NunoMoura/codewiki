@@ -14,9 +14,9 @@ code_paths:
 
 # Agents and Subagents
 
-Agents use CodeWiki as persistent project memory through harness adapters. They need compact current state, clear source-of-truth boundaries, session queue scoped leases for parallel coordination, and explicit gates before they change knowledge, roadmap work, code, tests, or publication state.
+Agents use CodeWiki as persistent project memory and orchestration state through harness adapters. They need compact current state, clear source-of-truth boundaries, session queue scoped leases for parallel coordination, wait/wake signals, and explicit gates before they change knowledge, roadmap work, code, tests, or publication state.
 
-Subagents run focused work with fresh context windows. They support validation, research, architecture review, planning review, tester work, builder work, and other bounded tasks where isolated context reduces token cost and parent-session bias.
+User-opened sessions and subagents run focused work from CodeWiki refs with fresh context windows when useful. They support validation, research, architecture review, planning review, tester work, builder work, and other bounded tasks where isolated context reduces token cost and parent-session bias.
 
 ## Success signals
 
@@ -25,7 +25,7 @@ Subagents run focused work with fresh context windows. They support validation, 
 - Agents can advance roadmap work automatically only inside explicit token, time, risk, validation, policy, and approval gates.
 - Parallel agents can lease narrow documentation, roadmap, build, validation, or code scopes and see overlap warnings or conflicts before work proceeds.
 - Subagents return compact structured results rather than mutating canonical truth directly.
-- Ambiguous intent escalates back to the feedback loop instead of being guessed.
+- Ambiguous intent escalates back to the decision loop instead of being guessed.
 
 ## Related docs
 

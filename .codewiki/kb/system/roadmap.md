@@ -5,7 +5,7 @@ state: active
 summary: Work truth for active items, priority, status, blockers, progress, and closure.
 owners:
   - architecture
-updated: "2026-05-17"
+updated: "2026-05-19"
 code_paths:
   - .codewiki/roadmap/queue.json
   - .codewiki/roadmap
@@ -56,6 +56,10 @@ It should not duplicate full feedback, documentation, planning, or implementatio
 
 Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Worktrees isolate filesystem state; validation isolates judgment.
 
+Parallel write work should be planned as role-isolated execution. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue and worktree factory own temporary filesystem leases and branch/worktree metadata.
+
+Task-close and publication readiness should assume a publisher queue when parallel sessions are active. Builders produce branch or patch refs, validators verify immutable refs from fresh worktrees, and the publisher serializes merge, generated-state update, final commit, and clean proof. Closing a task from a shared dirty root worktree is not sufficient when isolated role refs or pending publisher work exist.
+
 ## Status semantics
 
 Canonical active statuses are:
@@ -99,6 +103,7 @@ Until planning-loop refactor is complete, agents must not treat a green graph or
 
 ## Related docs
 
+- [Role Worktree Isolation](worktree-isolation.md)
 - [Builds](builds.md)
 - [Graph](graph.md)
 - [Compilers](compilers.md)

@@ -5,7 +5,7 @@ import { splitCommandArgs, unique } from "../../domain/shared/utils.ts";
 
 export const HANDOFF_COMMAND = "wiki-session-handoff";
 export const HANDOFF_KIND = "codewiki_session_handoff";
-export type HandoffMode = "new-session" | "context-reset" | "external-orchestrator";
+export type HandoffMode = "new-session" | "context-refresh" | "context-reset" | "external-orchestrator";
 export type HandoffStatus = "queued" | "started" | "completed" | "cancelled" | "external" | "failed";
 
 export interface CodewikiSessionHandoffPayload {
@@ -37,6 +37,7 @@ export interface ToolSessionHandoffResult {
 	action: "staged" | "external";
 	command?: string;
 	reason?: string;
+	auto_queue?: boolean;
 }
 
 export interface CompactContext {
@@ -44,11 +45,11 @@ export interface CompactContext {
 }
 
 function slug(value: string): string {
-	return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "handoff";
+	return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "session-boundary";
 }
 
 function normalizeMode(mode: string | undefined): HandoffMode {
-	if (mode === "context-reset" || mode === "external-orchestrator") return mode;
+	if (mode === "context-reset" || mode === "context-refresh" || mode === "external-orchestrator") return mode;
 	return "new-session";
 }
 
@@ -58,8 +59,13 @@ export function buildSessionHandoffPrompt(payload: Omit<CodewikiSessionHandoffPa
 	const buildLine = payload.build_ref ? `Build: ${payload.build_ref}\n` : "";
 	const profileLine = payload.profile ? `Profile: ${payload.profile}\n` : "";
 	const expected = payload.expected_output || "Continue the next CodeWiki loop from artifacts.";
+	const boundary = payload.mode === "new-session"
+		? "CodeWiki new_session context refresh."
+		: payload.mode === "context-refresh" || payload.mode === "context-reset"
+			? "CodeWiki context_refresh."
+			: "CodeWiki external orchestration boundary.";
 	return [
-		"CodeWiki fresh-session handoff.",
+		boundary,
 		"Do not rely on previous chat context. Start from repository truth and the refs below.",
 		"",
 		`Repo: ${payload.repo_path}`,
@@ -72,7 +78,7 @@ export function buildSessionHandoffPrompt(payload: Omit<CodewikiSessionHandoffPa
 		"",
 		"Start:",
 		`1. Run codewiki_state for repo ${payload.repo_path}${payload.task_id ? ` and ${payload.task_id}` : ""}.`,
-		"2. Read only the handoff refs needed for the active loop.",
+		"2. Read only the boundary refs needed for the active loop.",
 		"3. Use artifact statuses, builds, validation, and task evidence normally.",
 		"",
 		"Handoff refs:",
@@ -110,7 +116,7 @@ export function buildSessionHandoffPayload(
 		reason,
 		input_refs: inputRefs,
 		...(input.expected_output?.trim() ? { expected_output: input.expected_output.trim() } : {}),
-		context_boundary: mode === "new-session" ? "fresh-process-or-session" : mode,
+		context_boundary: mode === "new-session" ? "new_session" : mode === "context-refresh" || mode === "context-reset" ? "context_refresh" : mode,
 	};
 	return {
 		...base,
@@ -138,7 +144,7 @@ export async function stageSessionHandoff(
 
 export async function readHandoffFile(absolutePath: string): Promise<{ payload: CodewikiSessionHandoffPayload; path: string }> {
 	const payload = JSON.parse(await readFile(absolutePath, "utf8")) as CodewikiSessionHandoffPayload;
-	if (payload.kind !== HANDOFF_KIND) throw new Error(`Invalid CodeWiki session handoff: ${basename(absolutePath)}`);
+	if (payload.kind !== HANDOFF_KIND) throw new Error(`Invalid CodeWiki session boundary: ${basename(absolutePath)}`);
 	return { payload, path: absolutePath };
 }
 
@@ -170,7 +176,7 @@ export async function readStagedHandoff(cwd: string, arg: string): Promise<{ pay
 	if (raw) return readHandoffFile(isAbsolute(raw) ? raw : resolve(cwd, raw));
 	const latest = await readLatestQueuedHandoff(cwd);
 	if (latest) return latest;
-	throw new Error(`/${HANDOFF_COMMAND} requires a staged handoff path or a queued handoff in .codewiki/runtime/session-handoffs.`);
+	throw new Error(`/${HANDOFF_COMMAND} requires a staged boundary path or a queued boundary in .codewiki/runtime/session-handoffs.`);
 }
 
 export async function markHandoff(path: string, payload: CodewikiSessionHandoffPayload, status: HandoffStatus): Promise<void> {
@@ -185,17 +191,19 @@ export async function executeSessionHandoffFromTool(
 		await markHandoff(staged.absolutePath, staged.payload, "external");
 		return { action: "external" };
 	}
-	if (staged.payload.mode === "context-reset") {
+	if (staged.payload.mode === "context-reset" || staged.payload.mode === "context-refresh") {
 		return {
 			action: "staged",
 			command: staged.command,
-			reason: "context-reset handoffs must run from command context after the tool result is visible; the Pi adapter queues the internal /wiki-session-handoff command as a follow-up.",
+			auto_queue: false,
+			reason: "context_refresh boundaries must stay staged from tool context because immediate ctx.compact can hide the tool result; the compatibility command may run only after the result is visible.",
 		};
 	}
 	return {
 		action: "staged",
 		command: staged.command,
-		reason: "new-session handoffs require command-context ctx.newSession; the Pi adapter queues the internal /wiki-session-handoff command as a follow-up.",
+		auto_queue: false,
+		reason: "new_session requires command-context ctx.newSession; Pi sendUserMessage follow-ups do not execute extension commands, so the adapter must leave the boundary staged instead of injecting the compatibility command as chat.",
 	};
 }
 
@@ -212,7 +220,7 @@ export async function executeCodewikiSessionHandoffTool(
 		staged,
 		result,
 		summary: result.action === "staged"
-			? `codewiki session_handoff: staged ${staged.relativePath}; internal command prepared`
-			: `codewiki session_handoff: ${result.action} ${staged.relativePath}`,
+			? `codewiki session_boundary: staged ${staged.relativePath}; internal executor prepared`
+			: `codewiki session_boundary: ${result.action} ${staged.relativePath}`,
 	};
 }

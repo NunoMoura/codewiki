@@ -30,9 +30,13 @@ A bounded work wave through the compiler pipeline. A sprint groups one or more r
 
 A CodeWiki workflow layer that compiles one abstraction level into the smallest useful cycle build for the next layer. Compilers create builds; the validation gateway evaluates builds.
 
+## Decision compiler
+
+The compiler that turns user conversation, grounded reads, and approved semantic rows into durable knowledge updates and a `decision_build`. It validates that user intent, constraints, assumptions, blind spots, and non-goals are mapped before downstream work starts.
+
 ## Feedback compiler
 
-The compiler that turns user conversation and grounded reads into an accepted `feedback_build`. It validates that user intent, constraints, assumptions, blind spots, and non-goals are mapped before documentation changes are made.
+Compatibility name for the pre-vNext compiler that turns user conversation and grounded reads into an accepted `feedback_build` before documentation changes are made.
 
 ## Documentation compiler
 
@@ -48,7 +52,7 @@ The compiler that turns a `planning_build` and roadmap work item into tests, cod
 
 ## Diff table
 
-Feedback-loop decision surface that compares current state to desired state before canonical edits. Pending rows can live in runtime/session UI state and be approved, rejected, deferred, or edited with alternatives. Approved rows compile into a `feedback_build`.
+Decision-loop surface that compares current state to desired state before canonical edits. Pending rows can live in runtime/session UI state and be approved, rejected, deferred, or edited with alternatives. Approved rows compile into a `decision_build` in the target model or a `feedback_build` in compatibility mode.
 
 ## Feedback build
 
@@ -92,18 +96,18 @@ One compiler build attempt inside a loop. A cycle has inputs, policy, exit crite
 
 ## Requirement ID
 
-Stable identifier for an accepted requirement as it moves from feedback to knowledge, planning, tests/code, implementation evidence, and validation. Requirement ids let CodeWiki prove alignment without relying on broad prose matching.
+Stable identifier for an accepted requirement as it moves from decision to knowledge, planning, tests/code, implementation evidence, and validation. Requirement ids let CodeWiki prove alignment without relying on broad prose matching.
 
 ## Traceability matrix
 
-Compact generated view that connects requirement ids to feedback rows, knowledge clauses, documentation builds, planning builds, roadmap tasks, tests/code, implementation builds, and validation verdicts. It reports gaps but does not own requirements.
+Compact generated view that connects requirement ids to decision rows, compatibility feedback rows, knowledge clauses, documentation builds, planning builds, roadmap tasks, tests/code, implementation builds, and validation verdicts. It reports gaps but does not own requirements.
 
 ## Vertical alignment
 
 Traceability across layers:
 
 ```text
-user intent -> feedback_build -> .codewiki/kb -> documentation_build -> planning_build -> roadmap work item -> tests/code -> implementation_build
+user intent -> decision_build -> planning_build -> roadmap work item -> tests/code -> implementation_build
 ```
 
 ## Horizontal alignment
@@ -116,7 +120,7 @@ Primary generated hot state index at `.codewiki/index_graph.json`. Domain langua
 
 ## State propagation
 
-The state engine's ability to index current hot state and, when any source layer changes, expose what drifted downstream or upstream. Changing feedback triggers documentation drift. Changing knowledge triggers planning drift. Changing planning triggers implementation drift. Changing code can trigger validation, planning, or documentation drift. Generated state surfaces these as reconciliation items with explicit direction, layer, and next-loop routing so agents know which loop needs to rerun, while source-backed builds and knowledge remain truth.
+The state engine's ability to index current hot state and, when any source layer changes, expose what drifted downstream or upstream. Changing decision intent triggers knowledge or planning drift. Changing knowledge triggers planning drift. Changing planning triggers implementation drift. Changing code can trigger validation, planning, or documentation drift. Generated state surfaces these as reconciliation items with explicit direction, layer, and next-loop routing so agents know which loop needs to rerun, while source-backed builds and knowledge remain truth.
 
 ## View
 
@@ -140,7 +144,7 @@ The active Pi agent session memory. It is volatile RAM and expensive because it 
 
 ## Session queue
 
-Runtime coordination state under `.codewiki/session/queue.json`. It records active focus, waiting work, ready wake signals, scoped leases, handoff metadata, and isolation context for current agent sessions. The session queue is temporary coordination state, not requirements, roadmap truth, or history.
+Runtime coordination state under `.codewiki/session/queue.json`. It records active focus, waiting work, ready wake signals, scoped leases, context-boundary metadata, handoff metadata, and isolation context for current agent sessions. The session queue is temporary coordination state, not requirements, roadmap truth, or history.
 
 ## Scoped lease
 

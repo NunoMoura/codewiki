@@ -241,7 +241,7 @@ function collectRuntimeCandidates(project: WikiProject, scopes: string[]): Codew
 			path: relPath,
 			kind: "runtime",
 			bytes: safeSize(absPath),
-			reason: "runtime session handoff artifact is ignored operational state and already consumed or legacy disposable state",
+			reason: "runtime session-boundary artifact is ignored operational state and already consumed or legacy disposable state",
 		});
 	}
 	return uniqueCandidates(candidates);

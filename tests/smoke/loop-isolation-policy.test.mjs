@@ -51,8 +51,9 @@ try {
 		candidate_code_paths: ["src/application/builds.ts"],
 	});
 	const planningData = JSON.parse(await readFile(join(root, planning.path), "utf8"));
-	assert.equal(planningData.policy.isolation.loop_start.required, true);
-	assert.equal(planningData.policy.isolation.loop_start.mode, "fresh-session-or-clear-context");
+	assert.equal(planningData.policy.isolation.loop_start.required, false);
+	assert.equal(planningData.policy.isolation.loop_start.mode, "agent-owned-new-session");
+	assert.equal(planningData.policy.isolation.next_loop.required, false);
 	assert.equal(planningData.policy.isolation.next_loop.handoff, "planning_build -> implementation_loop");
 	assert.equal(planningData.policy.isolation.validation.required, false);
 
@@ -216,17 +217,36 @@ try {
 	assert.equal(dirtyPreCommitPassed.data.verdict, "pass");
 	assert.equal(dirtyPreCommitPassed.data.isolation.working_tree_digest, "sha256:dirty-tree");
 
-	const taskCloseTraceabilityWarn = await writeValidationReport(project, {
+	const taskCloseWithoutPublisherBlocked = await writeValidationReport(project, {
 		profile: "task-close",
 		task_id: "TASK-123",
 		verdict: "pass",
-		rationale: "Legacy task-close report has immutable proof but no source build.",
+		rationale: "Task close cannot pass with validator proof only; it needs publisher result proof.",
+		source: implementation.path,
 		audit_refs: taskCloseAuditRefs,
 		isolation: {
 			role: "validator",
 			fresh_context: true,
 			clean: true,
 			validated_sha: "abc1234",
+		},
+	});
+	assert.equal(taskCloseWithoutPublisherBlocked.data.verdict, "block");
+	assert.ok(taskCloseWithoutPublisherBlocked.data.failed_criteria.includes("publisher_result_proof"));
+	assert.match(taskCloseWithoutPublisherBlocked.data.issues.at(-1).summary, /published_sha|tree_sha|archive_ref|remote_ref/);
+
+	const taskCloseTraceabilityWarn = await writeValidationReport(project, {
+		profile: "task-close",
+		task_id: "TASK-123",
+		verdict: "pass",
+		rationale: "Legacy task-close report has publisher proof but no source build.",
+		audit_refs: taskCloseAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			published_sha: "def5678",
+			tree_sha: "abc1234",
 		},
 	});
 	assert.equal(taskCloseTraceabilityWarn.data.verdict, "pass");
@@ -266,7 +286,9 @@ try {
 	});
 	assert.equal(dirtyPublicationBlocked.data.verdict, "block");
 	assert.ok(dirtyPublicationBlocked.data.failed_criteria.includes("validation_isolation"));
-	assert.match(dirtyPublicationBlocked.data.issues.at(-1).summary, /clean=true|immutable_content_proof/);
+	assert.ok(dirtyPublicationBlocked.data.failed_criteria.includes("publisher_result_proof"));
+	assert.ok(dirtyPublicationBlocked.data.issues.some((issue) => /clean=true|immutable_content_proof/.test(issue.summary)));
+	assert.ok(dirtyPublicationBlocked.data.issues.some((issue) => /published_sha|tree_sha|archive_ref|remote_ref/.test(issue.summary)));
 
 	const publicationPassed = await writeValidationReport(project, {
 		profile: "publication",
@@ -302,9 +324,9 @@ try {
 		claims: { version: 1, claims: [] },
 	});
 	assert.equal(graph.views.reconciliation.next_action.loop, "planning");
-	assert.equal(graph.views.reconciliation.next_action.isolation_required, true);
-	assert.equal(graph.views.reconciliation.next_action.isolation.mode, "fresh-session-or-clear-context");
-	assert.equal(graph.views.workflow_cursor.context_boundary, "fresh-session-or-clear-context");
+	assert.equal(graph.views.reconciliation.next_action.isolation_required, false);
+	assert.equal(graph.views.reconciliation.next_action.isolation.mode, "agent-owned-new-session");
+	assert.equal(graph.views.workflow_cursor.context_boundary, "none");
 	assert.ok(graph.views.workflow_cursor.handoff_refs.includes("build:.codewiki/builds/documentation/doc.json"));
 } finally {
 	await rm(root, { recursive: true, force: true });

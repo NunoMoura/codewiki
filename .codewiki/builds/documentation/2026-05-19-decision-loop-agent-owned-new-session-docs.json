@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "documentation_build",
+  "created": "2026-05-19T03:16:47Z",
+  "source": "Accepted HND-006..HND-009 clarification: decision loop primary, new_session/context_refresh same-agent context hygiene, handoff only transfer, CodeWiki orchestrates user-opened sessions.",
+  "source_feedback_build": ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-02T03:16:47.000Z",
+    "purge_after": "2026-06-16T03:16:47.000Z"
+  },
+  "cycle": {
+    "loop": "documentation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "documentation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "documentation_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "documentation_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "documentation_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "HND-006",
+      "text": "Use decision loop for user semantic approval; use new_session/context_refresh for same-agent context hygiene; reserve handoff for transfer.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-007",
+      "text": "Agents may decide discretionary new_session/context_refresh when context is noisy, stale, or token-heavy, restarting from CodeWiki refs.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-008",
+      "text": "CodeWiki is the orchestration layer for all user-opened sessions through tasks, scopes, builds, validation, artifact status, wait/wake, and source refs.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "HND-009",
+      "text": "Trigger policy distinguishes decision continuity, discretionary context hygiene, required validation proof, wait/wake resume, and true handoff transfer.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+      ],
+      "state": "documented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Decision-loop naming replaces feedback-loop as forward model.",
+      "evidence": "compilers.md, change-lifecycle.md, lexicon.md, product/stories/intent.md, and skills/codewiki/SKILL.md now use decision-loop terminology with feedback/documentation compatibility notes.",
+      "requirement_ids": [
+        "HND-006"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/kb/lexicon.md",
+        "skills/codewiki/SKILL.md"
+      ]
+    },
+    {
+      "criterion": "Agent-owned context refresh documented.",
+      "evidence": "compilers.md, graph.md, builds.md, validation-gateway.md, api.md, and adapters.md distinguish new_session/context_refresh from handoff and define discretionary agent use.",
+      "requirement_ids": [
+        "HND-007",
+        "HND-009"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md"
+      ]
+    },
+    {
+      "criterion": "CodeWiki orchestration OS documented.",
+      "evidence": "api.md, adapters.md, agency.md, product/users/agents.md, and lexicon.md describe session queue, wait/wake, scoped leases, builds, validation, and source refs as multi-session coordination state.",
+      "requirement_ids": [
+        "HND-008"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/product/users/agents.md",
+        ".codewiki/kb/lexicon.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Document decision loop and agent-owned new_session context hygiene",
+  "knowledge_changes": [
+    ".codewiki/kb/system/change-lifecycle.md: decision loop replaces feedback-loop terminology; accepted rows compile into decision_build target or compatibility feedback/documentation builds; agents may run new_session/context_refresh for noisy/stale/token-heavy context.",
+    ".codewiki/kb/system/compilers.md: target flow begins with decision loop; compatibility feedback/documentation flow remains; compiler loop isolation is agent-owned context hygiene while validation gates keep proof requirements.",
+    ".codewiki/kb/system/api.md: vNext surface now distinguishes session_boundary from compatibility codewiki_session_handoff; new_session/context_refresh are same-agent hygiene; handoff means transfer.",
+    ".codewiki/kb/system/adapters.md: adapter capability now named session boundary control; Pi newSession documented as same-terminal replacement and not a tab/agent spawner.",
+    ".codewiki/kb/system/validation-gateway.md: context refresh policy allows decision loop to stay in-session and lets agents refresh when noisy; validation/task-close/publication still require fresh/content proof.",
+    ".codewiki/kb/system/graph.md and builds.md: graph/build policy changed from required compiler-loop handoff to agent-owned new_session/context_refresh guidance.",
+    ".codewiki/kb/product/users/agents.md, product/stories/intent.md, lexicon.md, system/knowledge.md, system/overview.md, system/agency.md: product/system language now frames CodeWiki as orchestration OS and decision loop as intent boundary."
+  ],
+  "roadmap_changes": [
+    "TASK-006 scope/evidence now includes HND-006..HND-009 naming and context-boundary policy."
+  ],
+  "assumptions": [
+    "Feedback/documentation tool names remain compatibility names until vNext decision_build tooling lands.",
+    "Agents can judge context health without user confirmation because CodeWiki refs are source truth.",
+    "Required validation/task-close/publication proof remains non-discretionary."
+  ],
+  "open_questions": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "feedback",
+    "upstream_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [
+      ".codewiki/builds/feedback/2026-05-19-decision-loop-agent-owned-new-session-feedback.json"
+    ],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/change-lifecycle.md: decision loop replaces feedback-loop terminology; accepted rows compile into decision_build target or compatibility feedback/documentation builds; agents may run new_session/context_refresh for noisy/stale/token-heavy context.",
+      ".codewiki/kb/system/compilers.md: target flow begins with decision loop; compatibility feedback/documentation flow remains; compiler loop isolation is agent-owned context hygiene while validation gates keep proof requirements.",
+      ".codewiki/kb/system/api.md: vNext surface now distinguishes session_boundary from compatibility codewiki_session_handoff; new_session/context_refresh are same-agent hygiene; handoff means transfer.",
+      ".codewiki/kb/system/adapters.md: adapter capability now named session boundary control; Pi newSession documented as same-terminal replacement and not a tab/agent spawner.",
+      ".codewiki/kb/system/validation-gateway.md: context refresh policy allows decision loop to stay in-session and lets agents refresh when noisy; validation/task-close/publication still require fresh/content proof.",
+      ".codewiki/kb/system/graph.md and builds.md: graph/build policy changed from required compiler-loop handoff to agent-owned new_session/context_refresh guidance.",
+      ".codewiki/kb/product/users/agents.md, product/stories/intent.md, lexicon.md, system/knowledge.md, system/overview.md, system/agency.md: product/system language now frames CodeWiki as orchestration OS and decision loop as intent boundary."
+    ],
+    "roadmap": [
+      "TASK-006 scope/evidence now includes HND-006..HND-009 naming and context-boundary policy."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

@@ -1,26 +1,26 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-05-19T00:35:29Z",
+  "created": "2026-05-19T05:53:34Z",
   "profile": "feedback",
   "verdict": "pass",
-  "rationale": "Accepted vNext semantic decisions are captured in the feedback build with approved diff rows, requirement ids, guardrails, risks, non-goals, and downstream deltas. Alignment audit passed with no issues. Downstream documentation/planning must still update canonical KB and roadmap before implementation.",
+  "rationale": "User explicitly accepted all rows in DT-2026-05-19-1. Feedback build captures accepted system decision to prevent shared-dirty-worktree blocking through isolated role worktrees, worktree factory, publisher/merge queue, actionable wait/wake blockers, and post-isolation hard cleanup of /wiki-session-handoff compatibility shim. Alignment audit passed.",
   "checks": [
-    "codewiki_diff_table accepted VNX-001..VNX-009",
-    "codewiki_build feedback .codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
-    "codewiki_audit profiles=[alignment]: pass"
+    "codewiki_diff_table accept ROW-001..ROW-005 for DT-2026-05-19-1",
+    "codewiki_audit profiles=[alignment]: pass",
+    "codewiki_build kind=feedback wrote accepted build"
   ],
   "issues": [],
-  "source": ".codewiki/builds/feedback/2026-05-19-vnext-decision-compiler-diagram-graph-tool-surfa.json",
+  "source": ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
   "policy_profile": "feedback",
   "required_audits": [
     "alignment"
   ],
   "audit_refs": [
-    "audit:alignment"
+    "alignment"
   ],
   "audit_reports": [
-    "CodeWiki audit: pass; profiles: alignment; issues: 0"
+    "codewiki_audit profiles=[alignment]: pass"
   ],
   "content_proof_refs": [],
   "failed_criteria": [],

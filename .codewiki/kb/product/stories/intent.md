@@ -18,7 +18,7 @@ As a maintainer or agent, I want CodeWiki to capture and challenge current proje
 ## Acceptance signals
 
 - Product and system knowledge describe the desired current state.
-- The feedback loop surfaces tradeoffs, blind spots, pitfalls, simpler alternatives, and conflicts before intent is accepted.
+- The decision loop surfaces tradeoffs, blind spots, pitfalls, simpler alternatives, and conflicts before intent is accepted.
 - Diff tables show current state, proposed state, rationale, affected layers, risk, and user action before canonical edits are applied.
 - Accepted feedback decisions become feedback builds before documentation changes.
 - Obsolete details are removed or converted into compact historical summaries.

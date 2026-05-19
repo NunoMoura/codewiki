@@ -70,13 +70,10 @@ export async function patchCodewikiTask(
 // Close task with verification gateway
 // ---------------------------------------------------------------------------
 
-function hasImmutableTaskCloseProof(isolation: any): boolean {
+function hasPublisherTaskCloseProof(isolation: any): boolean {
 	return Boolean(
-		isolation?.validated_sha ||
-		isolation?.head_sha ||
 		isolation?.published_sha ||
 		isolation?.tree_sha ||
-		isolation?.package_digest ||
 		isolation?.archive_ref ||
 		isolation?.remote_ref,
 	);
@@ -102,7 +99,7 @@ async function hasPassingTaskCloseValidation(project: WikiProject, taskId: strin
 				data?.verdict === "pass" &&
 				isolation.fresh_context === true &&
 				isolation.clean === true &&
-				hasImmutableTaskCloseProof(isolation)
+				hasPublisherTaskCloseProof(isolation)
 			) return true;
 		} catch {
 			// Ignore malformed or partial validation files; validation writer owns schema errors.
@@ -127,11 +124,11 @@ export async function closeCodewikiTask(
 
 	// The validation gateway owns task-close decisions. Closing is a
 	// publication/content-proof boundary, so it must cite a passing task-close
-	// validation report with clean immutable proof rather than dirty pre-commit
-	// implementation evidence.
+	// validation report with clean publisher result proof rather than dirty
+	// pre-commit implementation evidence or validator-only attestations.
 	if (!await hasPassingTaskCloseValidation(project, task.id)) {
 		throw new Error(
-			`Task close blocked for ${task.id}: requires passing task-close validation with fresh_context=true, clean=true, and immutable commit/tree/package/archive/remote proof.`,
+			`Task close blocked for ${task.id}: requires passing task-close validation with fresh_context=true, clean=true, and publisher result proof (published_sha/tree_sha/archive_ref/remote_ref).`,
 		);
 	}
 

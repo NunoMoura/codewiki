@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19",
+  "generated_at": "2026-05-19T06:00:44Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-005/context.json",
   "task": {
     "id": "TASK-005",
@@ -9,33 +9,38 @@
     "priority": "medium",
     "kind": "migration",
     "change_type": "system",
-    "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration.",
+    "summary": "Introduce a smaller vNext public and agent workflow tool surface while keeping low-level primitives available internally or through compatibility aliases during migration; after the role worktree/publisher path lands, remove or extract the /wiki-session-handoff compatibility shim instead of preserving it as user-facing surface.",
     "labels": [
       "tool-surface-consolidation",
-      "compatibility-migration"
+      "compatibility-migration",
+      "handoff-shim-cleanup",
+      "post-worktree-factory"
     ],
     "goal": {
-      "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated.",
+      "outcome": "CodeWiki exposes fewer, more powerful workflow tools/commands for common use while existing primitive tools remain compatible until deprecation is validated; once role worktree/publisher orchestration is validated, the /wiki-session-handoff compatibility shim is removed or extracted from user-facing workflow surface.",
       "acceptance": [
         "Public command surface is documented around status, decide, work, audit, and maintain concepts.",
         "Agent-facing workflow tools or orchestrators cover state, decision, work, gate, maintenance, and coordination phases.",
         "Low-level primitives remain callable through compatibility/debug paths and are not removed prematurely.",
-        "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces."
+        "Tool catalog, Pi adapter exposure, README, and skills consistently describe public/agent/internal surfaces.",
+        "After TASK-006 validates isolated worktree/publisher orchestration, /wiki-session-handoff is removed or extracted from normal user-facing recovery flow with migration tests proving intended compatibility/debug behavior."
       ],
       "non_goals": [
         "Do not create a single opaque do-everything tool.",
         "Do not remove existing public primitives until migration and deprecation tests pass.",
+        "Do not remove or extract /wiki-session-handoff before TASK-006 validates isolated worktree/publisher orchestration.",
         "Do not implement decision_build schema in this task."
       ],
       "verification": [
         "Run tool catalog and adapter smoke tests.",
         "Run README/skill stale-reference audits.",
-        "Verify old tool names still work during compatibility."
+        "Verify old tool names still work during compatibility.",
+        "Run session-handoff smoke tests proving the remaining command/debug path, or its removal, matches documented public surface after TASK-006 lands."
       ]
     },
     "delta": {
-      "desired": "",
-      "current": "",
+      "desired": "Public/agent tool surface is consolidated and /wiki-session-handoff compatibility shim is removed or extracted after the isolated worktree/publisher path is safe.",
+      "current": "Low-level primitives and /wiki-session-handoff compatibility executor remain visible during migration; cleanup is unsafe while sessions share dirty root worktrees.",
       "closure": ""
     }
   }

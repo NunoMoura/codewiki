@@ -9,6 +9,7 @@ import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceabi
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { normalizeWorktreeIsolation } from "./claims.ts";
 import { readRoadmapTask } from "./roadmap.ts";
+import { hasPublisherResultProof, publisherProofRefs } from "./worktree-isolation.ts";
 import { maybeReadGraph } from "./state-artifacts.ts";
 
 // ---------------------------------------------------------------------------
@@ -300,7 +301,7 @@ function validationIsolationRequirement(profile: string, policyProfile?: string)
 				? "Implementation validation requires independent validator context and checked content proof."
 				: "Fresh validation is preferred but not required for this profile.",
 		immutableRequired
-			? ["fresh_context=true", "clean=true", "validated_sha/head_sha/published_sha/tree_sha/package_digest/archive_ref/remote_ref"]
+			? ["fresh_context=true", "clean=true", "publisher queue result proof", "published_sha/tree_sha/archive_ref/remote_ref"]
 			: required
 				? ["fresh_context=true", "clean state recorded", "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"]
 				: ["fresh_context=true when high-risk or policy-required"],
@@ -336,6 +337,11 @@ function validationIsolationGaps(isolation: ReturnType<typeof normalizeValidatio
 	if (!hasImmutableProof && !hasWorkingTreeProof) gaps.push("checked_content_proof");
 	if (isolation?.clean === false && !hasWorkingTreeProof) gaps.push("working_tree_digest");
 	return unique(gaps);
+}
+
+function validationPublisherResultGaps(isolation: ReturnType<typeof normalizeValidationIsolation> | undefined, requirement: ReturnType<typeof isolationBoundary>): string[] {
+	if (!requirement.required || requirement.mode !== "fresh-context-clean-immutable-content") return [];
+	return hasPublisherResultProof(isolation) ? [] : ["published_sha/tree_sha/archive_ref/remote_ref"];
 }
 
 function validationCommitReadinessGaps(project: WikiProject, input: CodewikiValidationReportInput, profile: string, isolationGaps: string[]): string[] {
@@ -468,11 +474,11 @@ function defaultIsolationPolicy(loop: string) {
 				? "implementation"
 				: "validation";
 	const compilerBoundary = isolationBoundary(
-		true,
-		"fresh-session-or-clear-context",
-		"Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
-		["new session id or recorded context reset", "handoff build/task refs only"],
-		`${loop}_loop start`,
+		false,
+		"agent-owned-new-session",
+		"Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+		["source build/task refs read", "new_session or context_refresh when useful"],
+		`${loop}_loop context boundary`,
 	);
 	const semanticValidation = loop === "implementation";
 	return {
@@ -503,10 +509,10 @@ function defaultIsolationPolicy(loop: string) {
 				["implementation"],
 			)
 			: isolationBoundary(
-				true,
-				"fresh-session-or-clear-context",
-				"The next compiler loop should start from the build handoff, not the producing compiler context.",
-				["new session id or recorded context reset", "source build ref"],
+				false,
+				"agent-owned-new-session",
+				"The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+				["source build ref", "new_session or context_refresh when useful"],
 				`${loop}_build -> ${nextLoop}_loop`,
 			),
 	};
@@ -679,6 +685,34 @@ function publicationDefaults(
 	const remoteVisibility = input.publication?.remote_visibility?.trim() || "required";
 	const privateEvidence = input.publication?.private_evidence?.trim() || "required";
 	const safeToPush = input.publication?.safe_to_push === true && secretScan === "pass" && remoteVisibility === "pass" && privateEvidence === "pass";
+	const publisherQueue = {
+		status: validationRefs.length ? "ready_for_publisher" : "waiting_validation",
+		task_id: taskId,
+		source_build: buildPath,
+		role: "publisher",
+		inputs: {
+			builder_refs: unique([
+				...trimList(input.code_files),
+				...trimList(input.test_files),
+				...trimList(input.produces?.code),
+				...trimList(input.produces?.tests),
+			]),
+			validation_refs: validationRefs,
+			archive_ref: archiveRef,
+			restore_command: restoreCommand,
+		},
+		required_steps: [
+			"consume implementation_build from fresh publisher context",
+			"refresh generated CodeWiki state",
+			"verify validation refs and checks",
+			"create clean publisher commit/tree or archive ref",
+			"record immutable publisher result proof",
+		],
+		result: {
+			state: "pending",
+			required_proof: ["clean=true", "published_sha", "tree_sha", "archive_ref or remote_ref"],
+		},
+	};
 	return {
 		policy: {
 			execution: "recommendation_only",
@@ -724,6 +758,7 @@ function publicationDefaults(
 			restore_command: restoreCommand,
 		},
 		artifact_digests: artifactDigests,
+		publisher_queue: publisherQueue,
 		push_readiness: {
 			checks_recorded: checksRun,
 			validation_refs: validationRefs,
@@ -1116,6 +1151,7 @@ export async function writeValidationReport(
 	const policyProfile = (input.policy_profile ?? input.profile ?? "").trim() || undefined;
 	const requirement = validationIsolationRequirement(profile, policyProfile);
 	const isolationGaps = validationIsolationGaps(isolation, requirement);
+	const publisherResultGaps = validationPublisherResultGaps(isolation, requirement);
 	const commitReadinessGaps = validationCommitReadinessGaps(project, input, profile, isolationGaps);
 	const traceabilityPolicy = validationSemanticTraceability(project, input, profile);
 	const auditRefs = unique(trimList(input.audit_refs));
@@ -1124,6 +1160,7 @@ export async function writeValidationReport(
 	const auditGaps = input.verdict === "pass" ? auditEvidenceGaps([...auditRefs, ...auditReports], auditReq) : [];
 	const policyGaps = unique([
 		...isolationGaps,
+		...publisherResultGaps.map((gap) => `publisher_result:${gap}`),
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...auditGaps.map((profileName) => `audit:${profileName}`),
@@ -1137,6 +1174,9 @@ export async function writeValidationReport(
 	const inputIssues = (input.issues ?? []).map((i) => ({ severity: i.severity.trim(), summary: i.summary.trim() })).filter((i) => i.summary);
 	const isolationIssue = isolationGaps.length > 0
 		? [{ severity: "high", summary: `Missing required validation isolation evidence: ${isolationGaps.join(", ")}.` }]
+		: [];
+	const publisherResultIssue = publisherResultGaps.length > 0
+		? [{ severity: "high", summary: `Missing publisher result proof: ${publisherResultGaps.join(", ")}.` }]
 		: [];
 	const commitReadinessIssue = commitReadinessGaps.length > 0
 		? [{ severity: "high", summary: `Implementation build is not commit-ready: ${commitReadinessGaps.join(", ")}.` }]
@@ -1159,7 +1199,7 @@ export async function writeValidationReport(
 			? `${input.rationale.trim()} Policy blocks ${profile} validation until ${policyGaps.join(", ")} are recorded.`
 			: input.rationale.trim(),
 		checks: (input.checks ?? []).map((v) => v.trim()).filter(Boolean),
-		issues: [...inputIssues, ...isolationIssue, ...commitReadinessIssue, ...traceabilityIssue, ...auditIssue],
+		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...auditIssue],
 		source: (input.source ?? "").trim() || undefined,
 		policy_profile: policyProfile,
 		required_audits: auditReq.profiles,
@@ -1169,6 +1209,7 @@ export async function writeValidationReport(
 		failed_criteria: unique([
 			...trimList(input.failed_criteria),
 			...(isolationGaps.length > 0 ? ["validation_isolation"] : []),
+			...(publisherResultGaps.length > 0 ? ["publisher_result_proof"] : []),
 			...(commitReadinessGaps.length > 0 ? ["commit_readiness"] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["semantic_build_traceability"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
@@ -1176,11 +1217,20 @@ export async function writeValidationReport(
 		blocking_questions: unique([
 			...trimList(input.blocking_questions),
 			...(isolationGaps.length > 0 ? ["Run this gateway from fresh validator context and record required checked content proof for the profile."] : []),
+			...(publisherResultGaps.length > 0 ? ["Publish through the publisher queue or cite its clean immutable result proof before this profile can pass."] : []),
 			...(commitReadinessGaps.length > 0 ? ["Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["Cite an accepted upstream compiler build chain for semantic changes or set a generated/runtime/mechanical traceability exemption when policy allows."] : []),
 			...(auditGaps.length > 0 ? [`Run or cite audit evidence for required profiles: ${auditGaps.join(", ")}.`] : []),
 		]),
 		isolation_requirement: requirement,
+		publisher_result_requirement: requirement.mode === "fresh-context-clean-immutable-content"
+			? {
+				required: true,
+				evidence: ["publisher queue result", "clean=true", "published_sha/tree_sha/archive_ref/remote_ref"],
+				proof_refs: publisherProofRefs(isolation),
+				gaps: publisherResultGaps,
+			}
+			: undefined,
 		audit_requirement: {
 			...auditReq,
 			gaps: auditGaps,

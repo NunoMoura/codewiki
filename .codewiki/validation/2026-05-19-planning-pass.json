@@ -1,28 +1,28 @@
 {
   "version": 1,
   "kind": "validation_report",
-  "created": "2026-05-19T00:49:23Z",
+  "created": "2026-05-19T03:18:27Z",
   "profile": "planning",
   "verdict": "pass",
-  "rationale": "Validated documentation build has been decomposed into five bounded executable tasks under SPRINT-001. Task boundaries separate decision-build/compiler support, diagram-backed KB audits, validation preflight/risk tiers, graph lens simplification, and tool-surface consolidation. Initial automatic task reuse merged unrelated work, but planning corrected TASK-001/TASK-002 and created distinct TASK-003..TASK-005. Alignment audit passes; generated changed warnings are expected because roadmap task views and index_graph were refreshed from canonical queue/builds.",
+  "rationale": "Planning build translates HND-006..HND-009 documentation into bounded TASK-006 work: update compiler-loop isolation defaults to agent-owned context hygiene, keep validation proof gates required, support context-refresh compatibility mode, and update tests/docs/skills. Scope is executable and preserves non-goals around compatibility removal and terminal-tab spawning.",
   "checks": [
-    "Read documentation build .codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",
-    "Created/updated TASK-001..TASK-005 with acceptance, non-goals, verification, spec paths, and code paths",
-    "Created SPRINT-001 with compatibility freeze gates",
-    "Created planning build .codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-    "codewiki_audit profiles=[alignment,stale-reference,changed,generated-parity]: alignment pass; stale-reference pass; generated-parity pass; changed warnings only for generated state/task views"
+    "Read documentation build .codewiki/builds/documentation/2026-05-19-decision-loop-agent-owned-new-session-docs.json",
+    "Read planning build .codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+    "Reviewed TASK-006 scope and updated tests/code paths",
+    "codewiki_state refresh=true: health green",
+    "codewiki_audit profiles=[alignment,stale-reference,generated-parity,file-structure,changed,package]: required profiles pass; changed warnings only generated state/task views"
   ],
   "issues": [],
-  "source": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+  "source": ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
   "policy_profile": "planning",
   "required_audits": [
     "alignment"
   ],
   "audit_refs": [
-    "audit:alignment"
+    "alignment"
   ],
   "audit_reports": [
-    "CodeWiki audit: warning; profiles: alignment, stale-reference, changed, generated-parity; alignment pass; stale-reference pass; generated-parity pass; changed warnings only for generated files"
+    "CodeWiki audit: warning; profiles: alignment, stale-reference, generated-parity, file-structure, changed, package; alignment pass; changed warnings only generated files"
   ],
   "content_proof_refs": [],
   "failed_criteria": [],

@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T06:05:18Z",
+  "profile": "planning",
+  "task_id": "TASK-006",
+  "verdict": "pass",
+  "rationale": "Planning build maps validated worktree-isolation documentation into executable roadmap work. TASK-006 is refined as the implementation task for role worktree factory/orchestration, exact wait/wake blockers, publisher queue/result, and proof gating. TASK-005 is refined only as post-TASK-006 tool-surface cleanup for /wiki-session-handoff removal/extraction. Required task and alignment audit evidence is present; generated-parity passes with changed warnings only on generated state/task views.",
+  "checks": [
+    "Read documentation build .codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
+    "Read planning build .codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+    "Read TASK-006 and TASK-005 generated task views after roadmap updates",
+    "codewiki_audit profiles=[task] TASK-006: pass",
+    "codewiki_audit profiles=[task] TASK-005: pass",
+    "codewiki_audit profiles=[alignment,changed,generated-parity]: alignment pass, generated-parity pass, changed warnings only generated state/task views"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Changed audit reports generated state/task view files dirty; expected after roadmap/doc/build mutations and must be included or refreshed in final publisher commit."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment",
+    "task"
+  ],
+  "audit_refs": [
+    "alignment",
+    "task",
+    "task:TASK-006",
+    "task:TASK-005",
+    "generated-parity",
+    "changed"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=[task] task_id=TASK-006: pass",
+    "codewiki_audit profiles=[task] task_id=TASK-005: pass",
+    "codewiki_audit profiles=[alignment,changed,generated-parity]: alignment pass, generated-parity pass, changed warning only generated CodeWiki state/task views"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

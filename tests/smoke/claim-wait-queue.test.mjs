@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { mutateChangeClaims } from "../../src/application/claims.ts";
+import { mutateChangeClaims, readyWaitersForSession } from "../../src/application/claims.ts";
+import { notifyReadyArtifactWaiters } from "../../src/adapters/pi/artifact-wake.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-claim-wait-"));
@@ -94,6 +95,38 @@ try {
 	assert.equal(readyClaim.claim.id, "CLAIM-002");
 
 	const claimsFile = JSON.parse(await readFile(join(root, ".codewiki/session/queue.json"), "utf8"));
+	const readyForWaiter = readyWaitersForSession(claimsFile, "waiter-session");
+	assert.equal(readyForWaiter.length, 1);
+	assert.equal(readyForWaiter[0].id, "WAIT-001");
+	assert.deepEqual(readyWaitersForSession(claimsFile, "waiter-session", new Set(["WAIT-001"])), []);
+
+	const sentMessages = [];
+	const appendedEntries = [];
+	const wakeStatuses = [];
+	const notified = await notifyReadyArtifactWaiters(
+		{
+			appendEntry: (type, data) => appendedEntries.push({ type, data }),
+			sendUserMessage: (content, options) => sentMessages.push({ content, options }),
+		},
+		project,
+		{
+			sessionManager: { getSessionId: () => "waiter-session", getBranch: () => [] },
+			ui: { setStatus: (key, value) => wakeStatuses.push({ key, value }) },
+		},
+		new Set(),
+	);
+	assert.equal(notified.length, 1);
+	assert.equal(appendedEntries[0].type, "codewiki_artifact_wait_wake");
+	assert.equal(appendedEntries[0].data.waiter_id, "WAIT-001");
+	assert.match(sentMessages[0].content, /CodeWiki artifact wait ready: WAIT-001/);
+	assert.deepEqual(sentMessages[0].options, { deliverAs: "followUp" });
+	assert.deepEqual(await notifyReadyArtifactWaiters(
+		{ appendEntry: () => assert.fail("already notified"), sendUserMessage: () => assert.fail("already notified") },
+		project,
+		{ sessionManager: { getSessionId: () => "waiter-session", getBranch: () => appendedEntries.map((entry) => ({ type: "custom", customType: entry.type, data: entry.data })) }, ui: { setStatus: () => undefined } },
+		new Set(["WAIT-001"]),
+	), []);
+
 	const graph = buildGraph({
 		project,
 		docs: [],

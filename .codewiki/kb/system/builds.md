@@ -29,7 +29,7 @@ Tracked build files must not be deleted from the working tree until a reachable 
 
 | Build | Produced by | Consumed by | Role |
 | --- | --- | --- | --- |
-| `feedback_build` | Feedback loop | Documentation loop | Compatibility intent handoff with approved changes. |
+| `feedback_build` | Decision-loop compatibility tooling | Documentation loop | Compatibility intent handoff with approved changes. |
 | `documentation_build` | Documentation loop | Planning loop | Compatibility knowledge handoff with requirement-to-KB mapping. |
 | `decision_build` | Decision loop | Planning loop | vNext intent-and-knowledge handoff with approved rows, KB diffs, product/system propagation, and diagram/doc evidence. |
 | `planning_build` | Planning loop | Implementation loop | Roadmap alignment, acceptance, TDD plan, and candidate paths. |
@@ -46,13 +46,13 @@ Loop-level builds should include:
 - audit refs, assumptions, open questions, non-goals, risks, and agent assessment;
 - content proof when required, such as working-tree digest, tree SHA, commit SHA, package digest, archive ledger, or remote ref.
 
-Build policy may require fresh context at loop start, validation, or next-loop handoff. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
+Build policy may recommend agent-owned new_session/context_refresh at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
 
 ## Loop-specific contracts
 
-A feedback build contains the compatibility user-facing intent contract: approved change rows, accepted decisions, assumptions, non-goals, risks, expected lower-layer changes, and requirement ids.
+A feedback build contains the compatibility user-facing intent contract: approved change rows, accepted decisions, assumptions, non-goals, risks, expected lower-layer changes, and requirement ids. New routine semantic work should target decision builds once the decision compiler is active.
 
-A documentation build contains the compatibility knowledge handoff: source feedback refs, knowledge files changed, requirement-to-knowledge mapping, deferred requirements, planning questions, and validation expectations. It should not duplicate full roadmap tasks.
+A documentation build contains the compatibility knowledge handoff: source feedback/decision refs, knowledge files changed, requirement-to-knowledge mapping, deferred requirements, planning questions, and validation expectations. It should not duplicate full roadmap tasks.
 
 A decision build contains the vNext user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. It replaces the routine feedback-build plus documentation-build pair only after compatibility validation passes.
 

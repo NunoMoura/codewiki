@@ -33,8 +33,8 @@ Use these tools in feedback mode. Keep canonical writes out of feedback except r
   - Use when feedback policy requires validation or when verdict is fail/block/policy-required.
   - Persist fail/block reports; pass reports can be transient unless policy requires storage.
 
-- `codewiki_session_handoff`
-  - Use when the next compiler loop must start from the accepted `feedback_build` in a fresh session or recorded context reset.
+- `codewiki_session_handoff` (compatibility session-boundary tool)
+  - Use only when policy requires a boundary or the agent chooses `new_session`/`context_refresh` for context hygiene before the next loop starts from the accepted `feedback_build`.
 
 - `codewiki_artifact_status`
   - Mark narrow scopes only when feedback work overlaps with other active semantic edits.

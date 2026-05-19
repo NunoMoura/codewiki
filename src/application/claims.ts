@@ -18,6 +18,13 @@ import type {
 } from "../domain/shared/types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
+import {
+	artifactBlockerFromClaim,
+	ensureRoleWorktreeMetadata,
+	nextSafeActionForWaiter,
+	summarizeArtifactBlockers,
+	type ArtifactBlocker,
+} from "./worktree-isolation.ts";
 
 const DEFAULT_TTL_MINUTES = 120;
 const MAX_TTL_MINUTES = 24 * 60;
@@ -114,6 +121,7 @@ function normalizeClaimWaiterRecord(value: any): ChangeClaimWaiterRecord | null 
 	const blockedBy = Array.isArray(value?.blocked_by_claim_ids)
 		? value.blocked_by_claim_ids.map(optionalTrim).filter(Boolean) as string[]
 		: [];
+	const blockers = normalizeArtifactBlockers(value?.blockers);
 	return {
 		id,
 		session_id: sessionId,
@@ -127,12 +135,42 @@ function normalizeClaimWaiterRecord(value: any): ChangeClaimWaiterRecord | null 
 		worktree: normalizeWorktreeIsolation(value?.worktree),
 		scopes: normalizeScopes(value?.scopes),
 		blocked_by_claim_ids: Array.from(new Set(blockedBy)),
+		blockers,
+		blocker_summary: optionalTrim(value?.blocker_summary || value?.blockerSummary),
+		next_safe_action: optionalTrim(value?.next_safe_action || value?.nextSafeAction),
 		created_at: String(value?.created_at || value?.updated_at || nowIso()).trim(),
 		updated_at: String(value?.updated_at || value?.created_at || nowIso()).trim(),
 		expires_at: String(value?.expires_at || nowIso()).trim(),
 		ready_at: optionalTrim(value?.ready_at),
 		cancelled_at: optionalTrim(value?.cancelled_at),
 	};
+}
+
+function normalizeArtifactBlockers(value: unknown): ArtifactBlocker[] {
+	if (!Array.isArray(value)) return [];
+	return value.map((raw: any) => {
+		const claimId = optionalTrim(raw?.claim_id || raw?.claimId);
+		const sessionId = optionalTrim(raw?.session_id || raw?.sessionId);
+		const nextSafeAction = optionalTrim(raw?.next_safe_action || raw?.nextSafeAction);
+		if (!claimId || !sessionId || !nextSafeAction) return null;
+		return {
+			claim_id: claimId,
+			session_id: sessionId,
+			agent_name: optionalTrim(raw?.agent_name || raw?.agentName),
+			role: normalizeClaimRole(raw?.role),
+			task_id: optionalTrim(raw?.task_id || raw?.taskId),
+			build_ref: optionalTrim(raw?.build_ref || raw?.buildRef),
+			branch: optionalTrim(raw?.branch),
+			worktree_path: optionalTrim(raw?.worktree_path || raw?.worktreePath),
+			head_sha: optionalTrim(raw?.head_sha || raw?.headSha),
+			published_sha: optionalTrim(raw?.published_sha || raw?.publishedSha),
+			tree_sha: optionalTrim(raw?.tree_sha || raw?.treeSha),
+			patch_ref: optionalTrim(raw?.patch_ref || raw?.patchRef),
+			scope: optionalTrim(raw?.scope),
+			summary: optionalTrim(raw?.summary),
+			next_safe_action: nextSafeAction,
+		};
+	}).filter(Boolean) as ArtifactBlocker[];
 }
 
 function optionalTrim(value: unknown): string | undefined {
@@ -274,6 +312,18 @@ export function activeClaimWaiters(file: ChangeClaimsFile, now = new Date()): Ch
 	return (file.waiters || []).filter((waiter) => isClaimWaiterActive(waiter, now));
 }
 
+export function readyWaitersForSession(
+	file: ChangeClaimsFile,
+	sessionId: string,
+	notifiedWaiterIds: Set<string> | string[] = new Set(),
+	now = new Date(),
+): ChangeClaimWaiterRecord[] {
+	const notified = notifiedWaiterIds instanceof Set ? notifiedWaiterIds : new Set(notifiedWaiterIds);
+	return buildChangeClaimState(file, now).waiters.filter((waiter) =>
+		waiter.session_id === sessionId && waiter.status === "ready" && !notified.has(waiter.id),
+	);
+}
+
 export function buildChangeClaimState(file: ChangeClaimsFile, now = new Date()): ChangeClaimState {
 	const claims = activeChangeClaims(file, now).sort((a, b) => {
 		const t = String(b.updated_at || "").localeCompare(String(a.updated_at || ""));
@@ -309,7 +359,17 @@ function waiterStatusRank(status: ChangeClaimWaiterRecord["status"]): number {
 	return status === "ready" ? 0 : status === "pending" ? 1 : 2;
 }
 
+function uniqueBlockers(blockers: ArtifactBlocker[]): ArtifactBlocker[] {
+	const byKey = new Map<string, ArtifactBlocker>();
+	for (const blocker of blockers) {
+		const key = [blocker.claim_id, blocker.scope || "", blocker.branch || blocker.patch_ref || blocker.head_sha || ""].join("|");
+		if (!byKey.has(key)) byKey.set(key, blocker);
+	}
+	return [...byKey.values()].sort((a, b) => a.claim_id.localeCompare(b.claim_id));
+}
+
 function holderFromClaim(claim: ChangeClaimRecord): ArtifactStatusHolder {
+	const blocker = artifactBlockerFromClaim(claim);
 	return {
 		record_id: claim.id,
 		session_id: claim.session_id,
@@ -317,8 +377,11 @@ function holderFromClaim(claim: ChangeClaimRecord): ArtifactStatusHolder {
 		mode: claim.mode,
 		...(claim.role ? { role: claim.role } : {}),
 		...(claim.task_id ? { task_id: claim.task_id } : {}),
+		...(claim.build_ref ? { build_ref: claim.build_ref } : {}),
 		...(claim.summary ? { summary: claim.summary } : {}),
 		...(claim.expires_at ? { expires_at: claim.expires_at } : {}),
+		...(claim.worktree ? { worktree: claim.worktree } : {}),
+		next_safe_action: blocker.next_safe_action,
 	};
 }
 
@@ -330,8 +393,13 @@ function holderFromWaiter(waiter: ChangeClaimWaiterRecord): ArtifactStatusHolder
 		mode: waiter.mode,
 		...(waiter.role ? { role: waiter.role } : {}),
 		...(waiter.task_id ? { task_id: waiter.task_id } : {}),
+		...(waiter.build_ref ? { build_ref: waiter.build_ref } : {}),
 		...(waiter.summary ? { summary: waiter.summary } : {}),
 		...(waiter.expires_at ? { expires_at: waiter.expires_at } : {}),
+		...(waiter.worktree ? { worktree: waiter.worktree } : {}),
+		...(waiter.blockers ? { blockers: waiter.blockers } : {}),
+		...(waiter.blocker_summary ? { blocker_summary: waiter.blocker_summary } : {}),
+		...(waiter.next_safe_action ? { next_safe_action: waiter.next_safe_action } : {}),
 	};
 }
 
@@ -367,13 +435,22 @@ export function buildArtifactStatusRecords(state: Pick<ChangeClaimState, "claims
 			const record = ensure(scope);
 			record.waiters.push(holderFromWaiter(waiter));
 			if (record.status === "available") record.status = "waiting";
+			if (waiter.next_safe_action && !record.next_safe_action) record.next_safe_action = waiter.next_safe_action;
+			if (waiter.blockers?.length) record.blockers = uniqueBlockers([...(record.blockers || []), ...waiter.blockers]);
 		}
 	}
 	for (const conflict of state.conflicts) {
 		const record = ensure(conflict.scope);
 		record.status = conflict.kind === "conflict" ? "conflict" : record.status === "conflict" ? "conflict" : "in-use";
 		record.conflict_ids.push(...conflict.claim_ids);
-		record.reason = conflict.reason;
+		const blockers = state.claims
+			.filter((claim) => conflict.claim_ids.includes(claim.id))
+			.map((claim) => artifactBlockerFromClaim(claim, conflict.scope));
+		record.blockers = uniqueBlockers([...(record.blockers || []), ...blockers]);
+		record.reason = record.blockers.length > 0
+			? `${conflict.reason} Blockers: ${summarizeArtifactBlockers(record.blockers)}.`
+			: conflict.reason;
+		record.next_safe_action = record.blockers[0]?.next_safe_action || record.next_safe_action;
 	}
 	return [...records.values()].map((record) => ({
 		...record,
@@ -388,13 +465,15 @@ export function artifactStatusesForScopes(
 	mode: ChangeClaimMode = "write",
 ): ArtifactStatusRecord[] {
 	return scopes.map((scope) => {
-		const holders = state.claims
-			.filter((claim) => claim.session_id !== sessionId && claim.scopes.some((claimScope) => scopesOverlap(scope, claimScope)))
-			.map(holderFromClaim);
+		const holderClaims = state.claims
+			.filter((claim) => claim.session_id !== sessionId && claim.scopes.some((claimScope) => scopesOverlap(scope, claimScope)));
+		const holders = holderClaims.map(holderFromClaim);
 		const waiters = state.waiters
 			.filter((waiter) => waiter.session_id !== sessionId && waiter.scopes.some((waitScope) => scopesOverlap(scope, waitScope)))
 			.map(holderFromWaiter);
-		const blockers = holders.filter((holder) => mode === "write" || holder.mode === "write");
+		const blockers = mode === "write"
+			? holderClaims.filter((claim) => claim.mode === "write").map((claim) => artifactBlockerFromClaim(claim, scope))
+			: [];
 		const status: ArtifactStatusRecord["status"] = blockers.length > 0
 			? "conflict"
 			: holders.length > 0
@@ -407,8 +486,12 @@ export function artifactStatusesForScopes(
 			status,
 			holders,
 			waiters,
-			conflict_ids: blockers.map((holder) => holder.record_id).sort(),
-			...(blockers.length > 0 ? { reason: "Artifact is already in use by another active session." } : {}),
+			conflict_ids: blockers.map((blocker) => blocker.claim_id).sort(),
+			...(blockers.length > 0 ? {
+				blockers,
+				reason: `Artifact is already in use by another active session. Blockers: ${summarizeArtifactBlockers(blockers)}.`,
+				next_safe_action: blockers[0].next_safe_action,
+			} : {}),
 		};
 	});
 }
@@ -419,9 +502,25 @@ export function hasBlockingArtifactStatus(statuses: ArtifactStatusRecord[]): boo
 
 function computedWaiterState(waiter: ChangeClaimWaiterRecord, claims: ChangeClaimRecord[]): ChangeClaimWaiterRecord {
 	if (!["pending", "ready"].includes(waiter.status)) return waiter;
-	const blockedBy = blockingClaimIdsForWaiter(waiter, claims);
-	if (blockedBy.length > 0) return { ...waiter, status: "pending", blocked_by_claim_ids: blockedBy };
-	return { ...waiter, status: "ready", blocked_by_claim_ids: [] };
+	const blockers = blockingClaimBlockersForWaiter(waiter, claims);
+	if (blockers.length > 0) {
+		return {
+			...waiter,
+			status: "pending",
+			blocked_by_claim_ids: blockers.map((blocker) => blocker.claim_id).sort(),
+			blockers,
+			blocker_summary: summarizeArtifactBlockers(blockers),
+			next_safe_action: nextSafeActionForWaiter(waiter, blockers),
+		};
+	}
+	return {
+		...waiter,
+		status: "ready",
+		blocked_by_claim_ids: [],
+		blockers: [],
+		blocker_summary: "",
+		next_safe_action: nextSafeActionForWaiter(waiter, []),
+	};
 }
 
 export function detectClaimConflicts(claims: ChangeClaimRecord[]): ChangeClaimConflict[] {
@@ -482,16 +581,18 @@ export function scopesOverlap(left: ChangeClaimScope, right: ChangeClaimScope): 
 	return Boolean(left.description && right.description && left.description === right.description);
 }
 
-function blockingClaimIdsForWaiter(waiter: ChangeClaimWaiterRecord, claims: ChangeClaimRecord[]): string[] {
+function blockingClaimBlockersForWaiter(waiter: ChangeClaimWaiterRecord, claims: ChangeClaimRecord[]): ArtifactBlocker[] {
 	if (waiter.mode !== "write") return [];
-	const ids = new Set<string>();
+	const blockers: ArtifactBlocker[] = [];
 	for (const claim of claims) {
 		if (claim.session_id === waiter.session_id || claim.mode !== "write") continue;
-		if (waiter.scopes.some((waitScope) => claim.scopes.some((claimScope) => scopesOverlap(waitScope, claimScope)))) {
-			ids.add(claim.id);
+		for (const waitScope of waiter.scopes) {
+			const matchingScope = claim.scopes.find((claimScope) => scopesOverlap(waitScope, claimScope));
+			if (!matchingScope) continue;
+			blockers.push(artifactBlockerFromClaim(claim, commonScope(waitScope, matchingScope)));
 		}
 	}
-	return Array.from(ids).sort();
+	return uniqueBlockers(blockers);
 }
 
 function pathBase(path: string): { base: string; glob: boolean } {
@@ -619,7 +720,7 @@ export async function mutateChangeClaims(
 		const summary = String(input.summary || "").trim();
 		if (!summary) throw new Error(`codewiki_claim ${action} requires summary.`);
 		if (action === "wait") {
-			const waiter = createWaiter(file, input, session, scopes, summary, now);
+			const waiter = createWaiter(project, file, input, session, scopes, summary, now);
 			file.waiters = [...(file.waiters || []), waiter];
 			file.next_wait_sequence = (file.next_wait_sequence || 1) + 1;
 			await writeClaimsFile(filePath, file);
@@ -627,17 +728,20 @@ export async function mutateChangeClaims(
 			output = mutationOutput(true, state, summarizeClaimAction(action, state, undefined, waiter), undefined, waiter);
 			return;
 		}
+		const candidateMode = normalizeClaimMode(input.mode);
+		const candidateRole = normalizeClaimRole(input.role);
+		const candidateTaskId = optionalTrim(input.taskId);
 		const candidate: ChangeClaimRecord = {
 			id: formatClaimId(file.next_sequence),
 			session_id: session.sessionId,
 			agent_name: session.agentName,
 			status: "active",
-			mode: normalizeClaimMode(input.mode),
-			role: normalizeClaimRole(input.role),
+			mode: candidateMode,
+			role: candidateRole,
 			summary,
-			task_id: optionalTrim(input.taskId),
+			task_id: candidateTaskId,
 			build_ref: optionalTrim(input.buildRef),
-			worktree: normalizeWorktreeIsolation(input.worktree),
+			worktree: ensureRoleWorktreeMetadata(project, { mode: candidateMode, role: candidateRole, task_id: candidateTaskId, session_id: session.sessionId, worktree: normalizeWorktreeIsolation(input.worktree) }),
 			scopes,
 			created_at: nowIso(),
 			updated_at: nowIso(),
@@ -674,6 +778,7 @@ function ttlMinutes(value: unknown): number {
 }
 
 function createWaiter(
+	project: WikiProject,
 	file: ChangeClaimsFile,
 	input: CodewikiClaimToolInput,
 	session: { sessionId: string; agentName: string },
@@ -681,29 +786,30 @@ function createWaiter(
 	summary: string,
 	now: Date,
 ): ChangeClaimWaiterRecord {
+	const mode = normalizeClaimMode(input.mode);
+	const role = normalizeClaimRole(input.role);
+	const taskId = optionalTrim(input.taskId);
 	const waiter: ChangeClaimWaiterRecord = {
 		id: formatWaitId(file.next_wait_sequence || 1),
 		session_id: session.sessionId,
 		agent_name: session.agentName,
 		status: "pending",
-		mode: normalizeClaimMode(input.mode),
-		role: normalizeClaimRole(input.role),
+		mode,
+		role,
 		summary,
-		task_id: optionalTrim(input.taskId),
+		task_id: taskId,
 		build_ref: optionalTrim(input.buildRef),
-		worktree: normalizeWorktreeIsolation(input.worktree),
+		worktree: ensureRoleWorktreeMetadata(project, { mode, role, task_id: taskId, session_id: session.sessionId, worktree: normalizeWorktreeIsolation(input.worktree) }),
 		scopes,
 		blocked_by_claim_ids: [],
+		blockers: [],
 		created_at: nowIso(),
 		updated_at: nowIso(),
 		expires_at: new Date(Date.now() + ttlMinutes(input.ttl_minutes) * 60_000).toISOString(),
 	};
-	waiter.blocked_by_claim_ids = blockingClaimIdsForWaiter(waiter, activeChangeClaims(file, now));
-	if (waiter.blocked_by_claim_ids.length === 0) {
-		waiter.status = "ready";
-		waiter.ready_at = nowIso();
-	}
-	return waiter;
+	const computed = computedWaiterState(waiter, activeChangeClaims(file, now));
+	if (computed.status === "ready") computed.ready_at = nowIso();
+	return computed;
 }
 
 function markExpired(file: ChangeClaimsFile, now: Date): number {
@@ -731,19 +837,22 @@ function refreshWaiters(file: ChangeClaimsFile, now: Date): number {
 	const claims = activeChangeClaims(file, now);
 	for (const waiter of file.waiters || []) {
 		if (!["pending", "ready"].includes(waiter.status)) continue;
-		const blockers = blockingClaimIdsForWaiter(waiter, claims);
-		const previous = waiter.blocked_by_claim_ids.join(",");
+		const computed = computedWaiterState(waiter, claims);
+		const previousIds = waiter.blocked_by_claim_ids.join(",");
+		const nextIds = computed.blocked_by_claim_ids.join(",");
+		const previousBlockers = JSON.stringify(waiter.blockers || []);
+		const nextBlockers = JSON.stringify(computed.blockers || []);
 		let touched = false;
-		if (previous !== blockers.join(",")) {
-			waiter.blocked_by_claim_ids = blockers;
+		if (previousIds !== nextIds || previousBlockers !== nextBlockers || waiter.status !== computed.status || waiter.next_safe_action !== computed.next_safe_action) {
+			waiter.blocked_by_claim_ids = computed.blocked_by_claim_ids;
+			waiter.blockers = computed.blockers;
+			waiter.blocker_summary = computed.blocker_summary;
+			waiter.next_safe_action = computed.next_safe_action;
+			waiter.status = computed.status;
 			touched = true;
 		}
-		if (blockers.length === 0 && waiter.status !== "ready") {
-			waiter.status = "ready";
+		if (computed.status === "ready" && !waiter.ready_at) {
 			waiter.ready_at = nowIso();
-			touched = true;
-		} else if (blockers.length > 0 && waiter.status !== "pending") {
-			waiter.status = "pending";
 			touched = true;
 		}
 		if (touched) {

@@ -641,6 +641,7 @@ export const codewikiSessionToolInputSchema = Type.Object({
 });
 export const codewikiSessionHandoffModeSchema = Type.Union([
 	Type.Literal("new-session"),
+	Type.Literal("context-refresh"),
 	Type.Literal("context-reset"),
 	Type.Literal("external-orchestrator"),
 ]);
@@ -656,7 +657,7 @@ export const codewikiSessionHandoffToolInputSchema = Type.Object({
 	kickoff_prompt: Type.Optional(Type.String({ minLength: 1 })),
 	autoQueue: Type.Optional(Type.Boolean({
 		default: true,
-		description: "When true, stage the handoff and let the Pi adapter queue the internal /wiki-session-handoff command-context executor when needed.",
+		description: "When true, stage the session boundary and let the Pi adapter offer the compatibility command path when needed; Pi follow-up chat must not auto-execute slash commands.",
 	})),
 });
 export const codewikiArtifactStatusToolInputSchema = Type.Object({

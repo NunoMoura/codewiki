@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "feedback_build",
+  "created": "2026-05-19T02:11:16Z",
+  "source": "User reported multiple blocked /wiki-session-handoff flows and requested durable recovery build plus deeper handoff redesign before proceeding.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-18T02:11:16.000Z",
+    "purge_after": "2026-07-18T02:11:16.000Z"
+  },
+  "cycle": {
+    "loop": "feedback",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "feedback",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "feedback_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "feedback_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "feedback_build -> documentation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accept session handoff recovery and redesign requirements",
+  "diff_table": [
+    {
+      "id": "HND-001",
+      "current_state": "Session handoff depends on `/wiki-session-handoff` as a user-facing command path, and normal chat delivery can fail to dispatch it.",
+      "desired_state": "Session handoff must be an adapter-managed/internal orchestration path, not a user-facing command the user must copy or invoke.",
+      "rationale": "User-facing command dispatch blocks agents and violates the goal that CodeWiki manages compiler/gateway handoffs from durable artifacts.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "High: changes Pi adapter orchestration and may require API/extension constraints research.",
+      "user_action": "accepted by user request to document and fix handoff blockers.",
+      "alternatives": []
+    },
+    {
+      "id": "HND-002",
+      "current_state": "Fresh `new-session` handoffs do not reliably create a new terminal tab/fresh visible session in the Pi UI.",
+      "desired_state": "Fresh-context handoffs should create or route to a clearly new terminal tab/process/session when Pi supports it; if Pi lacks the API, CodeWiki must document and implement a safe fallback that preserves source-ref isolation.",
+      "rationale": "Agent isolation needs a practical place to continue work; a hidden or same-chat command does not give users or agents reliable continuity.",
+      "affected_layers": [
+        "product",
+        "system",
+        "adapter",
+        "code"
+      ],
+      "risk": "High: depends on Pi extension APIs and may need upstream constraints or fallback design.",
+      "user_action": "accepted by user request to document and fix handoff blockers.",
+      "alternatives": []
+    },
+    {
+      "id": "HND-003",
+      "current_state": "Artifact-status waiting sessions can record waits, but no communication vehicle wakes or unblocks waiting agents when holders release artifacts.",
+      "desired_state": "Artifact lock/unlock must include a minimum cross-session notification or wake mechanism so waiting agents can resume when artifacts become available.",
+      "rationale": "Parallel CodeWiki work needs coordination beyond passive queue state; otherwise sessions stall even when blockers clear.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "runtime"
+      ],
+      "risk": "High: requires concurrency semantics, notification transport, and race-safe queue handling.",
+      "user_action": "accepted by user request to document and fix handoff blockers.",
+      "alternatives": []
+    },
+    {
+      "id": "HND-004",
+      "current_state": "Handoff points are policy-driven but not yet clear enough for efficient agent work; handoffs may be overused or underused.",
+      "desired_state": "CodeWiki should explicitly define handoff points around loop/gateway boundaries and choose context reset/fresh session only when it improves validation independence, compiler isolation, or context-window health.",
+      "rationale": "Agents need enough context to work, but CodeWiki is source-of-truth; chat continuity is a convenience, and context refresh mainly protects the wiki workflow from bloated/noisy context.",
+      "affected_layers": [
+        "product",
+        "system",
+        "knowledge",
+        "validation"
+      ],
+      "risk": "Medium: affects workflow policy and agent ergonomics.",
+      "user_action": "accepted by user request to document and fix handoff blockers.",
+      "alternatives": []
+    },
+    {
+      "id": "HND-005",
+      "current_state": "TASK-006 hotfix only addresses immediate context-reset auto-queue/result hiding; broader handoff failures remain likely.",
+      "desired_state": "Pause closure of the narrow hotfix, preserve current evidence for recovery, and perform a deeper Pi/CodeWiki handoff audit before final implementation.",
+      "rationale": "The observed failures span terminal/session creation, command exposure, wait/wake communication, and context policy; a narrow patch risks another blocked session.",
+      "affected_layers": [
+        "roadmap",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "Medium: may delay TASK-001 but prevents compounding handoff defects.",
+      "user_action": "accepted by user request to document and fix handoff blockers.",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "HND-001",
+    "HND-002",
+    "HND-003",
+    "HND-004",
+    "HND-005"
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Make session handoff adapter-managed/internal rather than user-facing command-driven."
+    },
+    {
+      "id": "D2",
+      "summary": "Require visible fresh-context continuation: new terminal tab/process/session when Pi supports it, or documented safe fallback preserving source-ref isolation."
+    },
+    {
+      "id": "D3",
+      "summary": "Add cross-session wait/release communication so artifact waiters can resume when blockers clear."
+    },
+    {
+      "id": "D4",
+      "summary": "Define handoff points around loop/gateway boundaries and context-health policy instead of overusing handoffs."
+    },
+    {
+      "id": "D5",
+      "summary": "Pause narrow TASK-006 closure and perform deeper Pi/CodeWiki handoff audit before final implementation."
+    }
+  ],
+  "assumptions": [
+    "The reported blocked sessions are sufficient evidence to prioritize handoff reliability over resuming TASK-001 immediately.",
+    "Current dirty TASK-006 hotfix evidence should be preserved but not considered complete until broader handoff design is researched.",
+    "If Pi cannot spawn a new terminal tab from extension APIs, CodeWiki should choose the safest available fallback rather than pretending the terminal-tab requirement is met."
+  ],
+  "open_questions": [
+    "Which Pi extension API can create a new terminal tab or visible fresh session, if any?",
+    "Can Pi extensions send follow-up messages to a different/new session or only current chat?",
+    "What reliable cross-session transport exists today: session queue polling, status dock, follow-up messages, filesystem watcher, command queue, or external worker?",
+    "At which exact compiler/gateway boundaries should CodeWiki require fresh session vs context reset vs no handoff?",
+    "How should waiting sessions block/sleep/resume without causing busy polling, hidden commands, or user-facing command burden?"
+  ],
+  "non_goals": [
+    "Do not close TASK-006 as complete before broader handoff failures are investigated.",
+    "Do not resume TASK-001 until handoff blocker path is stable enough for validation/implementation loops.",
+    "Do not remove traceability/fresh-context requirements; fix orchestration instead."
+  ],
+  "lower_layer_delta": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [
+      "TASK-006 should be refined or superseded with broader session handoff orchestration scope."
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "src/application/tools/artifact-status.ts or current session queue implementation",
+      "tests/smoke/session-handoff.test.mjs"
+    ]
+  },
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [
+      "TASK-006 should be refined or superseded with broader session handoff orchestration scope."
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "src/application/tools/artifact-status.ts or current session queue implementation",
+      "tests/smoke/session-handoff.test.mjs"
+    ],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

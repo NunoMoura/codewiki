@@ -19,15 +19,15 @@ Use the main skill when the repo needs:
 
 - `.codewiki` setup, bootstrap, onboarding, or starter taxonomy guidance;
 - status/roadmap/session visibility before choosing work;
-- routing between feedback, documentation, planning, implementation, and validation loops;
+- routing between decision, compatibility feedback/documentation, planning, implementation, and validation loops;
 - CodeWiki invariants for canonical vs generated vs runtime state;
 - artifact-status coordination policy before broad edits;
 - a safe answer about whether a request belongs in a task, sprint metadata, build, validation report, or package source.
 
 For loop-specific work, load the focused skill and only the package-local assets needed for that loop:
 
-- `../codewiki-feedback/SKILL.md` — capture ambiguous or semantic user intent with `codewiki_diff_table`, accepted rows, and `feedback_build`.
-- `../codewiki-documentation/SKILL.md` — turn accepted feedback into `.codewiki/kb/**` changes and `documentation_build`.
+- `../codewiki-feedback/SKILL.md` — compatibility decision-loop surface for ambiguous or semantic user intent with `codewiki_diff_table`, accepted rows, and `feedback_build` until `decision_build` is default.
+- `../codewiki-documentation/SKILL.md` — compatibility path that turns accepted feedback into `.codewiki/kb/**` changes and `documentation_build`.
 - `../codewiki-planning/SKILL.md` — shape validated documentation into executable tasks, sprint-aware planning, and `planning_build`.
 - `../codewiki-implementation/SKILL.md` — execute one atomic task, emit `implementation_build`, and request fresh validation.
 - `../codewiki-validation/SKILL.md` — validate builds, task close, graph/drift, and publication/readiness gates without mutating truth.
@@ -74,7 +74,7 @@ Internal agent tools:
 - `codewiki_agency`
 - `codewiki_claim` as a legacy compatibility alias for artifact status
 
-Daily default flow: `codewiki_state` for routing, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, `codewiki_session_handoff` for required fresh-context boundaries, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash.
+Daily default flow: `codewiki_state` for routing, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, agent-owned `new_session`/`context_refresh` when context is noisy, policy-required session boundaries for validation gates, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash.
 
 ## Core invariants
 
@@ -105,18 +105,19 @@ Do not hand-edit sprint metadata. Until an explicit sprint mutation tool exists,
 ## Compiler routing
 
 ```text
-feedback compiler -> feedback_build
-  -> documentation compiler -> documentation_build
-    -> planning compiler -> planning_build + roadmap tasks / sprint metadata
-      -> implementation compiler -> implementation_build
-        -> validation gateway -> pass | fail | block
+decision compiler -> decision_build
+  -> planning compiler -> planning_build + roadmap tasks / sprint metadata
+    -> implementation compiler -> implementation_build
+      -> validation gateway -> pass | fail | block
+
+compatibility: feedback_build -> documentation_build -> planning_build
 ```
 
 Routing rules:
 
-- Ambiguous intent, changed requirements, risk approval, or unclear task meaning goes to feedback.
-- Accepted semantic intent becomes `feedback_build`.
-- Knowledge changes go through documentation and `documentation_build`.
+- Ambiguous intent, changed requirements, risk approval, or unclear task meaning goes to the decision loop.
+- Accepted semantic intent becomes `decision_build` in the target model, or `feedback_build` in compatibility mode.
+- Knowledge changes go through the decision loop in the target model, or documentation and `documentation_build` in compatibility mode.
 - Roadmap task shaping and sprint-aware cohort decisions go through planning and `planning_build`.
 - Code/test/docs execution happens in implementation and emits `implementation_build` before validation.
 - Independent checks happen in validation from exact refs, audits, and required proof.
@@ -128,7 +129,8 @@ Routing rules:
 - Persist durable intent in knowledge, roadmap tasks/sprints, builds, validation reports, and source code/tests.
 - Use `codewiki_session` for runtime focus; it is not roadmap truth.
 - Use `codewiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
-- Use `codewiki_session_handoff` when loop/gateway policy requires fresh context. In Pi tool context, this stages a handoff and queues the internal `/wiki-session-handoff` command-context executor; do not ask users to run it manually.
+- Agents may run `new_session`/`context_refresh` when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
+- Use the compatibility `codewiki_session_handoff` tool only for required session boundaries or true role/session transfer. In Pi tool context, it stages a boundary; do not inject `/wiki-session-handoff` through follow-up chat because Pi treats extension-sent slash text as chat, not as a command.
 
 ## Agency policy
 

@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "documentation_build",
+  "created": "2026-05-19T05:59:09Z",
+  "source": "Accepted feedback build .codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
+  "source_feedback_build": ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-02T05:59:09.000Z",
+    "purge_after": "2026-06-16T05:59:09.000Z"
+  },
+  "cycle": {
+    "loop": "documentation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "documentation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "documentation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "documentation_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "documentation_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-WT-001",
+      "text": "Parallel CodeWiki write roles default to isolated Git worktrees/branches per task and role, with an explicit solo-mode override only when safe.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json#REQ-WT-001"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-WT-002",
+      "text": "A worktree factory/orchestrator prepares, records, heartbeats, verifies, and cleans builder, validator, and publisher worktrees with branch/path/base/head/tree/clean/digest metadata.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json#REQ-WT-002"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-WT-003",
+      "text": "Task-close and publication use a publisher/merge queue: builders produce branch or patch refs, validators verify immutable refs from fresh worktrees, and publishers serialize final merge/commit/generated-state updates with clean proof.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json#REQ-WT-003"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-WT-004",
+      "text": "Artifact wait/wake records name exact branch, patch, claim, and next safe action so sessions do not block solely on unrelated shared worktree dirtiness.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json#REQ-WT-004"
+      ],
+      "state": "documented"
+    },
+    {
+      "id": "REQ-WT-005",
+      "text": "Once the isolated worktree/publisher path lands, /wiki-session-handoff compatibility cleanup should remove or extract the shim in a dedicated worktree unless an explicit migration task requires preservation.",
+      "source_refs": [
+        ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json#REQ-WT-005"
+      ],
+      "state": "documented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Shared dirty worktree blockers are prevented by default.",
+      "evidence": ".codewiki/kb/system/api.md, adapters.md, roadmap.md, and agency.md now specify default isolated role worktrees and solo-mode fallback only when safe.",
+      "requirement_ids": [
+        "REQ-WT-001"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/agency.md"
+      ]
+    },
+    {
+      "criterion": "Worktree metadata is enforced by orchestration, not just recorded opportunistically.",
+      "evidence": ".codewiki/kb/system/api.md and adapters.md now define role worktree factory preparation, metadata recording, verification, and cleanup responsibilities.",
+      "requirement_ids": [
+        "REQ-WT-002"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md"
+      ]
+    },
+    {
+      "criterion": "Task close becomes controlled and proof-bearing.",
+      "evidence": ".codewiki/kb/system/api.md, roadmap.md, and validation-gateway.md now define publisher queue/result and clean immutable proof for close/publication.",
+      "requirement_ids": [
+        "REQ-WT-003"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ]
+    },
+    {
+      "criterion": "Waiting agents get actionable resume state.",
+      "evidence": ".codewiki/kb/system/api.md, adapters.md, and agency.md now require exact blockers and next safe actions in wait/wake messages.",
+      "requirement_ids": [
+        "REQ-WT-004"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/agency.md"
+      ]
+    },
+    {
+      "criterion": "Compatibility cleanup proceeds only after safe isolation flow exists.",
+      "evidence": ".codewiki/kb/system/roadmap.md and planning handoff route cleanup as executable work after isolated worktree/publisher flow exists.",
+      "requirement_ids": [
+        "REQ-WT-005"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/roadmap.md"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "alignment",
+    "changed",
+    "stale-reference"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=[alignment,changed,stale-reference]: alignment pass, stale-reference pass, changed warning only generated file changes already present"
+  ],
+  "agent_assessment": "",
+  "summary": "Document accepted worktree factory and publisher queue semantics for CodeWiki parallel write work.",
+  "knowledge_changes": [
+    ".codewiki/kb/system/api.md: added default role-isolated worktree, worktree factory, publisher queue, and exact wait/wake blocker API rules.",
+    ".codewiki/kb/system/adapters.md: added adapter/local-runtime worktree orchestration and publisher orchestration responsibilities.",
+    ".codewiki/kb/system/roadmap.md: added role-isolated execution and publisher queue expectations for roadmap planning/closure.",
+    ".codewiki/kb/system/validation-gateway.md: aligned isolation evidence with role worktrees, immutable refs, and publisher result close validation.",
+    ".codewiki/kb/system/agency.md: added agency invariants for worktree factory allocation and exact blocker wake output."
+  ],
+  "roadmap_changes": [
+    "Planning should create or refine executable work for worktree factory/orchestrator, publisher/merge queue, wait/wake blocker precision, and post-isolation /wiki-session-handoff cleanup."
+  ],
+  "assumptions": [
+    "Existing role/worktree metadata in the session queue can be extended into a worktree factory without replacing artifact status semantics.",
+    "Publisher queue should serialize canonical root commits and generated CodeWiki state changes.",
+    "The first implementation can support local Git worktrees before adding richer external worker adapters."
+  ],
+  "open_questions": [
+    "Choose default worktree root: repo-local ignored directory, external temp directory, or configurable path.",
+    "Choose branch naming convention for task/role/session worktrees.",
+    "Decide whether publisher queue starts as application tool, Pi command, or internal agency role."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "feedback",
+    "upstream_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json"
+    ]
+  },
+  "consumes": {
+    "feedback": [
+      ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json"
+    ],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md: added default role-isolated worktree, worktree factory, publisher queue, and exact wait/wake blocker API rules.",
+      ".codewiki/kb/system/adapters.md: added adapter/local-runtime worktree orchestration and publisher orchestration responsibilities.",
+      ".codewiki/kb/system/roadmap.md: added role-isolated execution and publisher queue expectations for roadmap planning/closure.",
+      ".codewiki/kb/system/validation-gateway.md: aligned isolation evidence with role worktrees, immutable refs, and publisher result close validation.",
+      ".codewiki/kb/system/agency.md: added agency invariants for worktree factory allocation and exact blocker wake output."
+    ],
+    "roadmap": [
+      "Planning should create or refine executable work for worktree factory/orchestrator, publisher/merge queue, wait/wake blocker precision, and post-isolation /wiki-session-handoff cleanup."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

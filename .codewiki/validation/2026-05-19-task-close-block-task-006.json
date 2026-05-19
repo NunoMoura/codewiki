@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-19T05:42:13Z",
+  "profile": "task-close",
+  "task_id": "TASK-006",
+  "verdict": "block",
+  "rationale": "Implementation validation for the latest TASK-006 build passed, but task-close readiness is blocked. Task-close policy requires clean=true plus immutable commit/tree proof; current repository is dirty/uncommitted and validation only has pre-commit working_tree_digest proof. Generated-file dirty warnings also need refresh/revert or inclusion in the final clean commit before close/publication. Policy blocks task-close validation until clean=true are recorded.",
+  "checks": [
+    "Implementation validation report exists: .codewiki/validation/2026-05-19-implementation-pass-task-006.json",
+    "codewiki_state refresh=true taskId=TASK-006: health green",
+    "codewiki_audit profiles=[alignment,changed,stale-reference,generated-parity,file-structure,package] task_id=TASK-006: pass with changed warnings only generated state/task views",
+    "git status --porcelain=v1 -uall before implementation validation: dirty with 53 entries; after validation/task-close report writes, still dirty",
+    "Task TASK-006 status: in_progress; closure field empty",
+    "Latest implementation build publication payload still had CodeWiki-Validation: <pending-validation> before this validation report"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Task-close immutable proof missing: no clean worktree, no final commit SHA/tree SHA for the implemented content."
+    },
+    {
+      "severity": "medium",
+      "summary": "Generated CodeWiki files are dirty; close/publication should use refreshed generated state or revert generated-only noise before final proof."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required validation isolation evidence: clean=true."
+    }
+  ],
+  "source": "TASK-006",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "alignment",
+    "changed",
+    "stale-reference",
+    "generated-parity",
+    "file-structure",
+    "package",
+    "task:TASK-006"
+  ],
+  "audit_reports": [
+    "CodeWiki audit warning: profiles alignment, changed, stale-reference, generated-parity, file-structure, package, task; 3 warnings only for changed generated files; all required profiles pass"
+  ],
+  "content_proof_refs": [
+    "91be025737fef57c98863d56d5222844421e358a",
+    "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96"
+  ],
+  "failed_criteria": [
+    "Task-close requires clean=true; current validation state is clean=false.",
+    "Task-close requires immutable committed content proof; only base_sha/tree_sha plus working_tree_digest exists for dirty pre-commit validation.",
+    "Task-close should happen after final validation refs/evidence are reflected in publication/closure metadata.",
+    "validation_isolation"
+  ],
+  "blocking_questions": [
+    "Create or provide a clean commit/tree proof for the intended TASK-006 content, refresh/revert generated files as needed, then rerun task-close validation.",
+    "Run this gateway from fresh validator context and record required checked content proof for the profile."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "validated_sha/head_sha/published_sha/tree_sha/package_digest/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "base_sha": "787d461e7bc56cd55d5ec0d3f406cc651ae2bf0a",
+    "tree_sha": "91be025737fef57c98863d56d5222844421e358a",
+    "working_tree_digest": "sha256:7fb5c9b01aa2071c6e8e03109ba3098e0876abdd4a5efc345945d9d3d7db4e96",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Separate task-close readiness assessment after implementation pass; dirty pre-commit digest was captured before validation reports were written and is insufficient for task-close.",
+    "role": "validator"
+  }
+}

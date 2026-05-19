@@ -2,16 +2,16 @@
 name: codewiki-feedback
 description: Use when user intent, requirements, architecture/product/system direction, semantic change proposals, or approval decisions must be clarified before CodeWiki knowledge, roadmap, or code changes. Runs the feedback compiler with codewiki_diff_table and accepted feedback_build handoffs.
 id: skill.codewiki-feedback
-title: CodeWiki feedback compiler skill
+title: CodeWiki decision compiler compatibility skill
 state: active
-summary: Feedback-loop instructions for semantic diff capture and accepted feedback build handoffs.
+summary: Compatibility instructions for decision-loop semantic diff capture and accepted feedback build handoffs until decision_build is default.
 owners: [maintainers]
 updated: "2026-05-17"
 ---
 
-# CodeWiki Feedback Compiler
+# CodeWiki Decision Compiler (compatibility)
 
-Use this skill before canonical knowledge, roadmap, or code changes when user intent is ambiguous, strategic, semantic, or requires approval. The feedback loop converts discussion into approved semantic diff rows and an accepted `feedback_build` handoff.
+Use this skill before canonical knowledge, roadmap, or code changes when user intent is ambiguous, strategic, semantic, or requires approval. This is the compatibility surface for the decision loop: it converts discussion into approved semantic diff rows and an accepted `feedback_build` until `decision_build` is default.
 
 For exact tool arguments and output fields, read `references/tools.md` when needed.
 
@@ -56,7 +56,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 6. **Validate or route**
    - Run deterministic audit evidence when risk or policy requires it, usually `codewiki_audit profiles=["alignment"]`.
    - Use `codewiki_validation profile="feedback"` for fail/block/policy-required feedback validation reports or when policy requires a persisted pass report.
-   - Route accepted feedback to the documentation compiler from the `feedback_build` ref in a fresh session or recorded context reset.
+   - Route accepted decisions to the documentation compiler from the compatibility `feedback_build` ref. Agents may run `new_session` or `context_refresh` first when context is noisy, stale, or token-heavy.
 
 ## Stop conditions
 
@@ -68,4 +68,4 @@ End feedback mode with one of:
 
 - accepted `feedback_build` path and accepted row ids;
 - rejected/deferred diff rows and no build;
-- blocking questions that must be answered before the feedback loop can continue.
+- blocking questions that must be answered before the decision loop can continue.

@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "feedback_build",
+  "created": "2026-05-19T01:31:52Z",
+  "source": "User report: successful wiki_session_handoff followed by immediate compaction produced missing tool result / No result provided.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-18T01:31:52.000Z",
+    "purge_after": "2026-07-18T01:31:52.000Z"
+  },
+  "cycle": {
+    "loop": "feedback",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "feedback",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "feedback_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "feedback_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "feedback_build -> documentation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accept hotfix decision for context-reset handoff result visibility",
+  "diff_table": [
+    {
+      "id": "HOT-001",
+      "current_state": "Tool-context `context-reset` session handoffs can auto-queue `/wiki-session-handoff`, causing command-context `ctx.compact()` to run immediately and hide the tool result.",
+      "desired_state": "Tool-context `context-reset` handoffs must stage durable refs and return a visible command/result without auto-queueing immediate compaction; command-context compaction runs only after the result is visible.",
+      "rationale": "Direct or immediate compaction from a tool path can erase the tool response and block the agent loop even though the handoff artifact is valid.",
+      "affected_layers": [
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "Low-to-medium: changes Pi adapter queue timing for context-reset only while preserving command executor and new-session behavior.",
+      "user_action": "User identified this as a blocker bug and asked to proceed.",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "HOT-001"
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Context-reset handoff auto-queue is disabled from tool context; new-session auto-queue remains allowed."
+    }
+  ],
+  "assumptions": [],
+  "open_questions": [],
+  "non_goals": [],
+  "lower_layer_delta": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "roadmap": [
+      "TASK-006"
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "tests/smoke/session-handoff.test.mjs"
+    ]
+  },
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "roadmap": [
+      "TASK-006"
+    ],
+    "code": [
+      "src/application/tools/session-handoff.ts",
+      "src/adapters/pi/tools/session-handoff.ts",
+      "tests/smoke/session-handoff.test.mjs"
+    ],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
