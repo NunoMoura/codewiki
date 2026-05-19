@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { assessRoadmapTaskBoundary, assertExecutableRoadmapTask } from "../../src/application/task-boundary.ts";
+import { assessRoadmapTaskBoundary, assertExecutableRoadmapTask } from "../../src/domain/roadmap/task-boundary.ts";
 import { runTaskClosePreflight } from "../../src/application/roadmap.ts";
 
 const boundedTask = {

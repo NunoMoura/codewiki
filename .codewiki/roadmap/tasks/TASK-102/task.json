@@ -1,0 +1,66 @@
+{
+  "id": "TASK-102",
+  "title": "Lean source structure and remove wrapper seams",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Remove wrapper-only application seams and stale compatibility re-exports while aligning docs/tests to the lean domain/application/adapters structure.",
+  "spec_paths": [
+    ".codewiki/builds/feedback/2026-05-18-accepted-lean-repo-cleanup-before-hot-codewiki-g.json",
+    ".codewiki/builds/documentation/2026-05-18-documented-lean-source-structure-cleanup.json",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md"
+  ],
+  "code_paths": [
+    "src/application",
+    "src/domain/roadmap/task-boundary.ts",
+    "src/adapters",
+    "src/ui/web/control-room.ts",
+    "tests/smoke/roadmap-task-boundary.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "architecture",
+    "cleanup",
+    "lean-structure",
+    "wrapper-removal"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Code and docs use the lean actual structure with no empty application compiler/gateway/profile wrappers or stale internal compatibility re-exports.",
+    "acceptance": [
+      "Wrapper-only `src/application/compilers/**` files are removed unless they own real behavior.",
+      "Wrapper-only `src/application/gateway/profiles/**` files are removed unless they own real behavior.",
+      "Internal imports of task-boundary helpers use the domain owner directly and `src/application/task-boundary.ts` is removed.",
+      "The stale `src/adapters/web/control-room.ts` compatibility re-export is removed after repo imports/tests point to `src/ui/web/control-room.ts`.",
+      "System docs do not require placeholder `application/gateways/**`, `application/compilers/**`, or `application/state-engine/**` paths.",
+      "Dependency/reference scan shows no live imports of removed wrapper paths.",
+      "Typecheck, architecture audit, smoke/features/pack tests, stale-reference audit, and CodeWiki state refresh pass or document only generated-state warnings."
+    ],
+    "non_goals": [
+      "Do not purge tracked `.codewiki` history/builds/validation archives before this cleanup is committed and GC has commit/tree proof.",
+      "Do not remove public `codewiki_claim` compatibility alias in this cleanup.",
+      "Do not refactor domain/shared type ownership beyond import cleanup needed for removed wrappers."
+    ],
+    "verification": [
+      "python dependency/reference scan for removed wrapper paths",
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "codewiki_audit profiles=file-structure,stale-reference,changed,task",
+      "codewiki_state refresh=true"
+    ]
+  },
+  "delta": {
+    "desired": "Lean source structure without placeholder wrapper seams; docs and tests match actual domain/application/adapters ownership.",
+    "current": "Docs have been aligned and source deletion/import migration is in progress.",
+    "closure": "Task closes after source wrappers are removed, docs/tests align, and checks pass."
+  },
+  "created": "2026-05-18",
+  "updated": "2026-05-18T23:40:32Z"
+}

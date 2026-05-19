@@ -27,7 +27,7 @@ import {
     resolveRoadmapTask,
     isClosedRoadmapStatus,
 } from "../../../application/roadmap.ts";
-import { assessRoadmapTaskBoundary } from "../../../application/task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../../../domain/roadmap/task-boundary.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
 import { recordSessionTaskAction } from "../../../application/session.ts";
 import {

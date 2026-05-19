@@ -5,7 +5,7 @@ import type { ChangeClaimsFile, GraphFile, LintReport, RoadmapStateFile, Roadmap
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 import { buildChangeClaimState } from "./claims.ts";
-import { assessRoadmapTaskBoundary } from "./task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 
 export function sha256Text(text: string): string {
 	return createHash("sha256").update(text).digest("hex");

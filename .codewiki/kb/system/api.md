@@ -82,7 +82,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## API boundary
 
-The API belongs in `src/application/tools/**` and domain contracts. Application tools orchestrate compilers, gateways, state-engine operations, and domain concepts. Adapters, UI transport, CLI/MCP wrappers, and skill helpers translate external inputs and outputs into those tools. Built-in local runtime implementations under `application/local/**` and focused application services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until a concrete external adapter needs its own boundary.
+The API belongs in `src/application/tools/**` and domain contracts. Application tools call focused application use cases for build writing, validation reporting, roadmap/session operations, generated state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skill helpers translate external inputs and outputs into those tools. Built-in local runtime implementations under `application/local/**` and focused application services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until a concrete external adapter needs its own boundary.
 
 The API should stay stable while adapter protocols change.
 

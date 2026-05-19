@@ -25,7 +25,7 @@ import {
 } from "../domain/shared/types.ts";
 import { unique, nowIso, formatError } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
-import { assertExecutableRoadmapTask, assessRoadmapTaskBoundary } from "./task-boundary.ts";
+import { assertExecutableRoadmapTask, assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 import {
 	rebuildTargetPaths,
 	runRebuildUnlocked,

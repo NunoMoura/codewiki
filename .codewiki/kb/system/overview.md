@@ -105,7 +105,7 @@ CodeWiki should not implement a general sandbox, hosted SaaS, or duplicate Pi ob
 
 ## Target package architecture
 
-The package follows the structure owned by [File Structure](file-structure.md): `adapters/ui/skills -> application tools -> application compilers/gateways/state-engine -> domain`, with no top-level `infrastructure/` source layer. Built-in local filesystem/Git/process implementations live under `application/local/**` behind application ports. `scripts/**` is optional developer convenience only and must not enforce authoritative CodeWiki semantics.
+The package follows the structure owned by [File Structure](file-structure.md): adapters, UI, and skills call focused application use cases and tools, and application code uses domain concepts without placeholder wrapper seams. There is no top-level `infrastructure/` source layer. Built-in local filesystem/Git/process implementations live under `application/local/**` behind application ports. `scripts/**` is optional developer convenience only and must not enforce authoritative CodeWiki semantics.
 
 ## Knowledge-base organization rule
 

@@ -11,7 +11,7 @@ code_paths:
   - src/application/builds.ts
   - src/application/roadmap.ts
   - src/application/task.ts
-  - src/application/gateway
+  - src/application/tools/build.ts
   - skills/codewiki-feedback/SKILL.md
   - skills/codewiki-documentation/SKILL.md
   - skills/codewiki-implementation/SKILL.md
@@ -22,7 +22,7 @@ code_paths:
 
 ## Responsibility
 
-CodeWiki compilers move information through context-driven development boundaries. Each compiler creates a build for one alignment cycle. Application compiler implementations live under `src/application/compilers/**`. Validation gateway implementations live separately under `src/application/gateways/**` and evaluate the build; they do not define the requirements or do the compiler's work.
+CodeWiki compilers move information through context-driven development boundaries. Each compiler creates a build for one alignment cycle. Build-writing code lives in focused application modules such as `src/application/builds.ts`, while compiler-loop instructions live in focused `skills/codewiki-*` skills. Validation reports are written through the application validation tool and evaluated as a gateway step; validation does not define requirements or do the compiler's work.
 
 The target alignment flow is:
 

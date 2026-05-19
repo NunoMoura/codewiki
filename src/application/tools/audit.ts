@@ -16,7 +16,7 @@ import type {
 import { AUDIT_PROFILE_VALUES } from "../../domain/shared/types.ts";
 import { formatError, nowIso, unique } from "../../domain/shared/utils.ts";
 import { pathExists } from "../local/filesystem.ts";
-import { assessRoadmapTaskBoundary } from "../task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../../domain/roadmap/task-boundary.ts";
 
 const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [

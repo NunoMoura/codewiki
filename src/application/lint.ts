@@ -3,7 +3,7 @@ import { resolve, relative } from "node:path";
 import type { LintIssue, LintReport, RoadmapTaskRecord, WikiProject } from "../domain/shared/types.ts";
 import { extractLinks } from "./knowledge/doc-parser.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
-import { assessRoadmapTaskBoundary } from "./task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 
 const DEFAULT_REQUIRED_FIELDS = ["id", "title", "state", "summary", "owners", "updated"];
 const FORBIDDEN_HEADINGS = [

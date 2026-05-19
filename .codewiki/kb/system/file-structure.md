@@ -71,17 +71,17 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | CodeWiki UI | `control-room-ui.md` | `src/ui/web/**`, local UI launch commands |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
-| CodeWiki API | `api.md` | `src/application/tools/**`, `src/application/compilers/**`, `src/application/gateways/**`, domain contracts |
+| CodeWiki API | `api.md` | `src/application/tools/**`, focused application use-case modules, domain contracts |
 | Agency controller | `agency.md` | application use cases and adapter-exposed agency entrypoints |
-| Compilers | `compilers.md` | `src/application/compilers/**`, `src/application/gateways/**`, focused `skills/codewiki-*/SKILL.md` compiler skills |
-| Validation gateway | `validation-gateway.md` | `src/application/gateways/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
+| Compilers | `compilers.md` | `src/application/builds.ts`, `src/application/roadmap.ts`, `src/application/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
+| Validation gateway | `validation-gateway.md` | `src/application/builds.ts`, `src/application/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**` |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |
 | Audits | `audits.md` | audit engine, `/audit [flags]`, gateway-required audit profiles |
 | Roadmap | `roadmap.md` | `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `.codewiki/session/queue.json`, artifact statuses, generated session views |
-| State engine / generated graph | `graph.md` | `.codewiki/index_graph.json`, `src/domain/state/**`, `src/application/state-engine/**` |
+| Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
 | Task-linked tests | `file-structure.md` | `tests/tasks/TASK-###/**`, stable smoke/regression tests under `tests/smoke/**` |
 | Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` prompt templates, bootstrap workflow assets, loops, and playbooks |
 | Pi project prompt boundary | `adapters.md`, `file-structure.md` | `.pi/APPEND_SYSTEM.md` clarifies `.codewiki/` dogfood state vs package source |
@@ -171,22 +171,15 @@ src/
     state/                 # generated-state and reconciliation domain concepts
     shared/                # tiny primitives only
   application/
-    compilers/
-      feedback/
-      documentation/
-      planning/
-      implementation/
-    gateways/
-      feedback/
-      documentation/
-      planning/
-      implementation/
-      task-close/
-      drift-audit/
-      graph-audit/
-    state-engine/          # rebuilds/querying for generated state and graph outputs
     tools/                 # agent-callable use-case API used by adapters, skills, CLI, MCP
+    gateway/               # local policy/patch gateway implementation
+    graph/                 # generated graph rebuild orchestration
+    knowledge/             # knowledge parsing and link extraction
     local/                 # built-in local fs/git/process/persistence implementations
+    state*.ts              # generated state read/rebuild helpers
+    builds.ts              # compiler build writers
+    roadmap.ts             # roadmap use cases
+    task.ts                # task mutation use cases
     ports.ts
   adapters/
     pi/
@@ -224,8 +217,8 @@ src/adapters/mcp/
 ## Dependency direction
 
 ```text
-adapters -> application/tools -> application compilers/gateways/state-engine -> domain
-ui -> application/tools -> application compilers/gateways/state-engine -> domain
+adapters -> application tools/use cases -> domain
+ui -> application read/state services -> domain
 skill helper scripts/tools -> application/tools
 optional scripts -> application/tools
 application/local -> application ports / domain contracts
@@ -235,7 +228,7 @@ domain/shared -> primitives only, no product behavior
 Rules:
 
 - `domain/**` has no Node I/O, no Pi imports, no adapter imports, and no application imports.
-- `application/**` owns compiler orchestration, gateway policy, state-engine rebuild/query orchestration, agent-callable tool APIs, ports, and built-in local runtime implementations. It must remain agent-agnostic and must not import adapters, UI code, skills, scripts, or Pi SDK/TUI packages.
+- `application/**` owns concrete use cases: compiler build writing, validation report writing, roadmap/session operations, generated state/graph rebuild and query helpers, agent-callable tool APIs, ports, and built-in local runtime implementations. It must remain agent-agnostic and must not import adapters, UI code, skills, scripts, or Pi SDK/TUI packages.
 - `adapters/**` translate harness APIs or protocol surfaces into application tools and translate results back into commands, tools, protocol messages, sessions, or host-native compact UI. Browser UI source belongs under `src/ui/**`, not `src/adapters/**`.
 - `domain/**` owns product semantics for tasks, roadmap, session queue, builds, validation, and state. `domain/shared/**` stays small and cannot become a dumping ground.
 - `core/**`, `engine/**`, and top-level `infrastructure/**` must not exist in the target implementation; former responsibilities now live under `domain/**`, `application/**`, and `adapters/**`.

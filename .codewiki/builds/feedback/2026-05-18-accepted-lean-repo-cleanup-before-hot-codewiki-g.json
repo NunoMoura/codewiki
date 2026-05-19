@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "feedback_build",
+  "created": "2026-05-18T23:32:07Z",
+  "source": "User approval 2026-05-18: proceed with recommended path after DT-2026-05-18-12",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-05-25T23:32:07.000Z",
+    "purge_after": "2026-06-01T23:32:07.000Z"
+  },
+  "cycle": {
+    "loop": "feedback",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "feedback",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "Compiler loops start from source refs and build handoffs, not prior loop chat memory.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "handoff build/task refs only"
+        ],
+        "handoff": "feedback_loop start",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "feedback_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-session-or-clear-context",
+        "reason": "The next compiler loop should start from the build handoff, not the producing compiler context.",
+        "evidence": [
+          "new session id or recorded context reset",
+          "source build ref"
+        ],
+        "handoff": "feedback_build -> documentation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-LEAN-001",
+      "text": "Wrapper-only application compiler/gateway files must be deleted unless they own real orchestration or policy.",
+      "source_refs": [
+        "DT-2026-05-18-12#LEAN-001"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-LEAN-002",
+      "text": "Repo-internal compatibility re-exports must be removed after imports migrate; public compatibility aliases require explicit compatibility decision.",
+      "source_refs": [
+        "DT-2026-05-18-12#LEAN-002"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-LEAN-003",
+      "text": "Docs must describe the lean actual source structure and avoid requiring placeholder folders or seams.",
+      "source_refs": [
+        "DT-2026-05-18-12#LEAN-004"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-LEAN-004",
+      "text": "Cleanup must include dependency/reference scanning before deletion and full checks after deletion.",
+      "source_refs": [
+        "DT-2026-05-18-12#LEAN-005"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "User approved recommended cleanup path.",
+      "evidence": "User said: \"Yeah, let's proceed with your recommended path.\"",
+      "requirement_ids": [
+        "REQ-LEAN-001",
+        "REQ-LEAN-002",
+        "REQ-LEAN-003",
+        "REQ-LEAN-004"
+      ],
+      "source_refs": [
+        "chat 2026-05-18"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted lean cleanup direction: remove wrapper-only seams, remove stale compatibility re-exports after import migration, align docs to lean actual structure, and gate deletion with dependency/reference scans plus full checks. Hot-path CodeWiki GC remains deferred until cleanup commit proof exists.",
+  "diff_table": [
+    {
+      "id": "LEAN-001",
+      "current_state": "TASK-087 intentionally kept wrapper seams such as src/application/compilers/*.ts and src/application/gateway/profiles/*.ts to satisfy transitional architecture docs.",
+      "desired_state": "Delete wrapper-only source seams unless they contain real orchestration or policy; update imports/docs/tests to target the real owner directly.",
+      "rationale": "Empty modules add abstraction without behavior and make package structure harder to reason about.",
+      "affected_layers": [
+        "knowledge",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep wrapper seams as stable public/internal import paths but document them as intentional compatibility surfaces."
+      ]
+    },
+    {
+      "id": "LEAN-002",
+      "current_state": "Compatibility re-exports and legacy aliases remain after moves, including src/adapters/web/control-room.ts and src/application/task-boundary.ts; codewiki_claim remains a public compatibility tool alias.",
+      "desired_state": "Remove compatibility re-exports after repo-internal imports migrate; keep only explicitly supported public compatibility aliases, or remove them in a breaking cleanup if approved.",
+      "rationale": "Compatibility files should not linger as permanent duplicate architecture unless they are truly part of supported package API.",
+      "affected_layers": [
+        "knowledge",
+        "code",
+        "tests",
+        "docs"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": [
+        "Retain public aliases through one release cycle and remove only private/internal wrappers now."
+      ]
+    },
+    {
+      "id": "LEAN-004",
+      "current_state": "System docs still describe target folders like application/gateways and application/state-engine even when source currently uses application/gateway and application/state modules with wrappers.",
+      "desired_state": "Align docs to actual lean structure: domain owns semantics, application owns concrete use cases/tools/local orchestration, adapters/UI translate surfaces; no folder exists just to satisfy architecture words.",
+      "rationale": "Docs should prevent drift and over-abstraction instead of requiring placeholder folders.",
+      "affected_layers": [
+        "knowledge",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Rename folders to match docs instead of simplifying docs/code."
+      ]
+    },
+    {
+      "id": "LEAN-005",
+      "current_state": "Cleanup lacks an executable safety gate for removing wrappers and hot-state artifacts.",
+      "desired_state": "Before deletion, run dependency/reference scan; after deletion, run typecheck, architecture audit, smoke/features/pack tests, stale-reference audit, and CodeWiki state refresh.",
+      "rationale": "Removal should be surgical and reversible through Git, with evidence that no live imports or hot contracts broke.",
+      "affected_layers": [
+        "tests",
+        "validation",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Do only read-only stale scan now; defer deletions to a later task."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "LEAN-001",
+    "LEAN-002",
+    "LEAN-004",
+    "LEAN-005"
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Remove wrapper-only application compiler/gateway seams instead of preserving placeholder architecture files."
+    },
+    {
+      "id": "D2",
+      "summary": "Remove repo-internal compatibility re-exports after imports/tests/docs migrate; defer public compatibility alias decisions unless explicitly approved."
+    },
+    {
+      "id": "D3",
+      "summary": "Align system docs to lean structure and actual folders, not aspirational placeholder folders."
+    },
+    {
+      "id": "D4",
+      "summary": "Run dependency/reference scan before deletion and typecheck/architecture/smoke/features/pack/stale-reference checks after deletion."
+    }
+  ],
+  "assumptions": [
+    "LEAN-003 hot-path CodeWiki purge remains deferred until cleanup commit/tree proof exists.",
+    "codewiki_claim public alias is not removed in this cleanup unless tests/docs prove it is private and user accepts breaking removal."
+  ],
+  "open_questions": [
+    "Whether a later breaking release should remove codewiki_claim public tool alias entirely."
+  ],
+  "non_goals": [
+    "Do not purge tracked .codewiki closed-task/build/validation history in this first cleanup before the cleanup commit exists.",
+    "Do not change user-facing behavior except removing dead internal wrapper paths."
+  ],
+  "lower_layer_delta": {
+    "knowledge": [
+      "Update file-structure, compilers, validation-gateway, overview/API docs to remove placeholder gateway/state-engine wrapper requirements and describe lean actual structure."
+    ],
+    "roadmap": [
+      "Create one bounded cleanup task for accepted lean structure cleanup."
+    ],
+    "code": [
+      "Delete zero-behavior wrapper seams and compatibility re-exports after imports/tests/docs migrate."
+    ]
+  },
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "feedback": [],
+    "documentation": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      "Update file-structure, compilers, validation-gateway, overview/API docs to remove placeholder gateway/state-engine wrapper requirements and describe lean actual structure.",
+      "lean structure cleanup requirements"
+    ],
+    "roadmap": [
+      "Create one bounded cleanup task for accepted lean structure cleanup.",
+      "bounded cleanup task"
+    ],
+    "code": [
+      "Delete zero-behavior wrapper seams and compatibility re-exports after imports/tests/docs migrate.",
+      "wrapper removal plan"
+    ],
+    "tests": [
+      "post-deletion check plan"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

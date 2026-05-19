@@ -441,6 +441,7 @@ src/
     tools/
   adapters/
     pi/
+  ui/
     web/
 skills/
   codewiki/

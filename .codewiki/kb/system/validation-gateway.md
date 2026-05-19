@@ -17,7 +17,7 @@ code_paths:
 
 ## Responsibility
 
-The validation gateway has one job: validate a submitted cycle build against its policy, source refs, exit criteria, and evidence. It returns `pass`, `fail`, or `block`. Gateway source belongs under `src/application/gateways/**`, separate from compiler implementations, so independent validation does not collapse into build production.
+The validation gateway has one job: validate a submitted cycle build against its policy, source refs, exit criteria, and evidence. It returns `pass`, `fail`, or `block`. Gateway behavior is exposed through the validation tool and focused application modules such as `src/application/builds.ts` and `src/application/gateway/**`; it stays separate from compiler-loop instructions so independent validation does not collapse into build production.
 
 The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove that content exists. Compilers create builds. Commits, tree SHAs, package digests, and canonical files prove content. The gateway evaluates builds and emits an attestation over named evidence. For implementation builds, the gateway must also verify commit-readiness: the build must contain everything needed to create the task recovery commit after validation.
 
