@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T21:37:45.512Z",
+  "generated_at": "2026-05-20T21:38:19.867Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -209,7 +209,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -262,7 +262,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:src/application",
@@ -291,7 +291,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "doc:.codewiki/kb/system/alignment-model.md",
@@ -681,14 +681,14 @@
       "kind": "code_path",
       "path": "src/adapters/pi/compaction.ts",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "code:tests/smoke/codewiki-compaction.test.mjs",
       "kind": "code_path",
       "path": "tests/smoke/codewiki-compaction.test.mjs",
       "layer": "code",
-      "alignment_state": "drift"
+      "alignment_state": "aligned"
     },
     {
       "id": "test:scripts/check-architecture.mjs",
@@ -6031,88 +6031,6 @@
       "safety_status": "blocked",
       "default_hidden": true,
       "layer": "archive"
-    },
-    {
-      "id": "claim:CLAIM-130",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-130",
-      "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-      "agent_name": "Otter",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-      "expires_at": "2026-05-20T23:37:45.298Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-        "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-        "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-007"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-        },
-        {
-          "layer": "validation",
-          "description": "TASK-007 task-close validation reports"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/compaction.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/codewiki-compaction.test.mjs"
-        }
-      ]
-    },
-    {
-      "id": "claim_scope:TASK-007",
-      "kind": "change_claim_scope",
-      "path": "TASK-007"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-    },
-    {
-      "id": "claim_scope:TASK-007 task-close validation reports",
-      "kind": "change_claim_scope",
-      "path": "TASK-007 task-close validation reports"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/compaction.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/compaction.ts"
-    },
-    {
-      "id": "claim_scope:tests/smoke/codewiki-compaction.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/codewiki-compaction.test.mjs"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -15405,46 +15323,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-130",
-      "to": "task:TASK-007"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:TASK-007"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:.codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:.codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:TASK-007 task-close validation reports"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-130",
-      "to": "claim_scope:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -17591,471 +17469,28 @@
         "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": [
-        "src/adapters/pi/compaction.ts",
-        "tests/smoke/codewiki-compaction.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-130",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-007",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-          "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-130",
-          "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-          "agent_name": "Otter",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-          "task_id": "TASK-007",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-007"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-            },
-            {
-              "layer": "validation",
-              "description": "TASK-007 task-close validation reports"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/codewiki-compaction.test.mjs"
-            }
-          ],
-          "created_at": "2026-05-20T21:37:45Z",
-          "updated_at": "2026-05-20T21:37:45Z",
-          "expires_at": "2026-05-20T23:37:45.298Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-007"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "description": "TASK-007 task-close validation reports"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/codewiki-compaction.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-007"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "description": "TASK-007 task-close validation reports"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/codewiki-compaction.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-130",
-              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "agent_name": "Otter",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-007",
-              "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-              "expires_at": "2026-05-20T23:37:45.298Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -19790,71 +19225,7 @@
           ]
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/compaction.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/codewiki-compaction.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 2,
       "gaps": [
@@ -20116,9 +19487,7 @@
           "validation_paths": [
             ".codewiki/validation/2026-05-20-implementation-block-task-007.json"
           ],
-          "claim_ids": [
-            "CLAIM-130"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -20600,13 +19969,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T21:37:45.474Z",
+      "generated_at": "2026-05-20T21:38:19.817Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T21:37:45Z",
+      "generated_at": "2026-05-20T21:38:19Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -20765,7 +20134,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T21:37:45Z",
+      "generated_at": "2026-05-20T21:38:19Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -20881,9 +20250,7 @@
             "validation_paths": [
               ".codewiki/validation/2026-05-20-implementation-block-task-007.json"
             ],
-            "claim_ids": [
-              "CLAIM-130"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -20985,7 +20352,7 @@
       },
       "direction": [
         "Traceability gap for REQ-CTX-REFRESH-NO-FALLTHROUGH: missing_knowledge_mapping.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "Tracked drift coverage: 1/1."
@@ -21837,7 +21204,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T21:37:45Z",
+        "generated_at": "2026-05-20T21:38:19Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -21865,15 +21232,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T21:37:45Z",
+            "checked_at": "2026-05-20T21:38:19Z",
             "revision": {
               "git": {
-                "head": "b428366dcb8c7ed33f8344ad9c43826aeda97d89",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts"
-                ],
+                "head": "84836af7d6c2f42d2c864e66c3a408e2741938c9",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -21912,7 +21276,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "3070f77ffdb3f9f22c7d63d945c2204fc8026e10",
+                  ".codewiki/roadmap/queue.json": "b39e359ee47d99f8e6daae19693ac1466a14823b",
                   "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
                   "skills": "",
                   "skills/codewiki": "",
@@ -21960,12 +21324,12 @@
               "spec_digest": "882f52884fc1d54b27f9ffd4e6c59744797b8e9adfa5e40c10d871f16a7b68ab",
               "task_digest": "f0f6024dcda13b7d4ce10aa542936f62a6da4b8ba1770006fc9d61e552d6b3a2",
               "code_digest": "aafc7c51572990a2828fcf8a3e8064a73aa4d166ff092e8e0f2d8a281f3cb678",
-              "digest": "50f403f023357050ae79e610a288df4216a313b01e341ad0d6d1757b5bdcfa10"
+              "digest": "0f8242232266092c6d4fc564f2dde410d673668fe8f98c746943020f58981dd4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T21:37:45Z",
+              "checked_at": "2026-05-20T21:38:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -22089,15 +21453,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T21:37:45Z",
+            "checked_at": "2026-05-20T21:38:19Z",
             "revision": {
               "git": {
-                "head": "b428366dcb8c7ed33f8344ad9c43826aeda97d89",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts"
-                ],
+                "head": "84836af7d6c2f42d2c864e66c3a408e2741938c9",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -22120,7 +21481,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "3070f77ffdb3f9f22c7d63d945c2204fc8026e10",
+                  ".codewiki/roadmap/queue.json": "b39e359ee47d99f8e6daae19693ac1466a14823b",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -22163,12 +21524,12 @@
               "spec_digest": "890b53938cb556c865caea1540f875b8273cad122d895e465f8f6740f53ee2d7",
               "task_digest": "f0f6024dcda13b7d4ce10aa542936f62a6da4b8ba1770006fc9d61e552d6b3a2",
               "code_digest": "1a287bf4ceac70d00c05db8be4d66aeeb1e472602e1560765dd0f25deef35e17",
-              "digest": "e491fbe00b3ce514070bf13fbb8d010c22c59ba719084232a9a82c3e01c1f5c5"
+              "digest": "735052f6086b1d5c531fa91afd75ac86653eb182a1e30713aea249eaa58cf225"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T21:37:45Z",
+              "checked_at": "2026-05-20T21:38:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -22271,15 +21632,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T21:37:45Z",
+            "checked_at": "2026-05-20T21:38:19Z",
             "revision": {
               "git": {
-                "head": "b428366dcb8c7ed33f8344ad9c43826aeda97d89",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts"
-                ],
+                "head": "84836af7d6c2f42d2c864e66c3a408e2741938c9",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -22318,7 +21676,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "3070f77ffdb3f9f22c7d63d945c2204fc8026e10",
+                  ".codewiki/roadmap/queue.json": "b39e359ee47d99f8e6daae19693ac1466a14823b",
                   "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
                   "skills": "",
                   "skills/codewiki": "",
@@ -22366,12 +21724,12 @@
               "spec_digest": "882f52884fc1d54b27f9ffd4e6c59744797b8e9adfa5e40c10d871f16a7b68ab",
               "task_digest": "f0f6024dcda13b7d4ce10aa542936f62a6da4b8ba1770006fc9d61e552d6b3a2",
               "code_digest": "aafc7c51572990a2828fcf8a3e8064a73aa4d166ff092e8e0f2d8a281f3cb678",
-              "digest": "50f403f023357050ae79e610a288df4216a313b01e341ad0d6d1757b5bdcfa10"
+              "digest": "0f8242232266092c6d4fc564f2dde410d673668fe8f98c746943020f58981dd4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T21:37:45Z",
+              "checked_at": "2026-05-20T21:38:19Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -22496,260 +21854,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T21:37:45Z",
+        "generated_at": "2026-05-20T21:38:19Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-130",
-            "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-            "agent_name": "Otter",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-            "task_id": "TASK-007",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-              "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-007"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-              },
-              {
-                "layer": "validation",
-                "description": "TASK-007 task-close validation reports"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/compaction.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/codewiki-compaction.test.mjs"
-              }
-            ],
-            "created_at": "2026-05-20T21:37:45Z",
-            "updated_at": "2026-05-20T21:37:45Z",
-            "expires_at": "2026-05-20T23:37:45.298Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-007"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "description": "TASK-007 task-close validation reports"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/codewiki-compaction.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-130",
-                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                "agent_name": "Otter",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-007",
-                "summary": "Commit TASK-007 implementation proof, create archive ref, run task-close validation, and close roadmap task.",
-                "expires_at": "2026-05-20T23:37:45.298Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "branch": "codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5",
-                  "notes": "factory=role-worktree; task=TASK-007; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-130 release or validated publisher/patch ref for codewiki/TASK-007/publisher/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
