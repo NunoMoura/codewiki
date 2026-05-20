@@ -322,8 +322,17 @@ export interface DocsConfig {
 		forbidden_headings?: string[];
 		word_count_warn?: number;
 		word_count_exempt?: string[];
+		diagram_refs_mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
 	};
 	codewiki?: {
+		system_diagrams?: {
+			diagram_refs?: {
+				mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
+			};
+		};
+		diagram_refs?: {
+			mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
+		};
 		self_drift_scope?: ScopeConfig;
 		code_drift_scope?: CodeDriftScopeConfig;
 		rebuild?: {

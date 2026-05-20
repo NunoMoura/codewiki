@@ -33,6 +33,20 @@ Each diagram should include:
 
 Agents should prefer small stable IDs, explicit source paths, and short labels. Long explanations belong in component Markdown docs, product docs, roadmap tasks, builds, or validation reports.
 
+## Diagram refs
+
+Each YAML node, entity, state, actor, adapter, artifact, policy, external system, edge, relationship, step, or transition becomes a graph/audit ref using `<diagram-file-stem>:<local-id>`; for example, `component-map:application` or `data-model:roadmap_task`. The parser also accepts `<diagram-id>:<local-id>` as an alias when docs or builds use the diagram `id` field.
+
+System Markdown docs may declare owning diagram refs in frontmatter:
+
+```yaml
+diagram_refs:
+  - component-map:application
+  - key-flow:resume-task
+```
+
+Nodes can set `requires_doc: true` when at least one system doc must declare that ref. Diagram-ref migration is controlled by `codewiki.system_diagrams.diagram_refs.mode`: `off` disables missing-doc enforcement, `warn` reports migration warnings, and `error` hard-enforces missing docs and required-doc gaps.
+
 ## Core diagram set
 
 | File | Kind | Purpose | Preferred rendering |

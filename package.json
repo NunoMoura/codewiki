@@ -13,7 +13,7 @@
 	"type": "module",
 	"scripts": {
 		"benchmark:tokens": "node ./scripts/token-benchmark.mjs",
-		"test:smoke": "node ./tests/smoke/package-smoke.test.mjs && node ./tests/smoke/audit.test.mjs && node ./tests/smoke/audit-drift.test.mjs && node ./tests/smoke/alignment-drift-fixtures.test.mjs && node ./tests/smoke/resume-scheduler.test.mjs && node ./tests/smoke/codewiki-compaction.test.mjs && node ./tests/smoke/prompt-assets.test.mjs",
+		"test:smoke": "node ./tests/smoke/package-smoke.test.mjs && node ./tests/smoke/audit.test.mjs && node ./tests/smoke/audit-drift.test.mjs && node ./tests/smoke/alignment-drift-fixtures.test.mjs && node ./tests/smoke/diagram-refs.test.mjs && node ./tests/smoke/resume-scheduler.test.mjs && node ./tests/smoke/codewiki-compaction.test.mjs && node ./tests/smoke/prompt-assets.test.mjs",
 		"test:features": "node ./tests/run.mjs",
 		"test:pack": "npm pack --dry-run",
 		"check:architecture": "node ./scripts/check-architecture.mjs",

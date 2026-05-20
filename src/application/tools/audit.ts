@@ -17,6 +17,8 @@ import { AUDIT_PROFILE_VALUES } from "../../domain/shared/types.ts";
 import { formatError, nowIso, unique } from "../../domain/shared/utils.ts";
 import { pathExists } from "../local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../../domain/roadmap/task-boundary.ts";
+import { parseDoc } from "../knowledge/doc-parser.ts";
+import { validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
 
 const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [
@@ -312,18 +314,33 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 		}
 	}
 
+	const docFiles = await walkFiles(resolve(project.root, project.docsRoot), (path) => path.endsWith(".md") || path.endsWith(".mdx"));
+	const docs = docFiles.flatMap((file) => {
+		try {
+			return [parseDoc(project.root, project, file)];
+		} catch {
+			return [];
+		}
+	});
+	const diagramValidation = validateSystemDiagramRefs(project.root, project, docs);
+	for (const issue of diagramValidation.issues) {
+		issues.push(createIssue(profile, issue.severity, issue.kind, issue.message, issue.path, undefined, issue.refs));
+	}
+	evidence.push(".codewiki/kb/system/diagrams", ...diagramValidation.diagrams.map((diagram) => diagram.path));
+
 	const fingerprints = await fingerprintFiles(project, [
 		"src/application/tools/audit.ts",
 		"src/domain/shared/types.ts",
 		"src/adapters/pi/schemas.ts",
 		"src/adapters/pi/index.ts",
 		"scripts/check-architecture.mjs",
+		...diagramValidation.diagrams.map((diagram) => diagram.path),
 	], input.include_fingerprints !== false);
 	return {
 		profile,
 		status: statusForIssues(issues),
-		summary: `Checked ${tsFiles.length} TypeScript source files and architecture wrapper boundaries.`,
-		checked_scopes: { root: project.root, files: ["src/**/*.ts", "scripts/**/*.mjs", "scripts/check-architecture.mjs"] },
+		summary: `Checked ${tsFiles.length} TypeScript source files, architecture wrapper boundaries, and ${diagramValidation.refs.length} diagram refs.`,
+		checked_scopes: { root: project.root, files: ["src/**/*.ts", "scripts/**/*.mjs", "scripts/check-architecture.mjs", ".codewiki/kb/system/diagrams/**/*.yaml"] },
 		issues,
 		evidence_refs: evidence,
 		fingerprints,

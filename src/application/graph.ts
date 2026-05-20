@@ -3,6 +3,7 @@ import { normalizeChangeType, normalizeTraceabilityExemption } from "../domain/c
 import type { ChangeClaimsFile, GraphEdge, GraphFile, GraphNode, GraphViews, LintReport, RoadmapTaskRecord, WikiProject } from "../domain/shared/types.ts";
 import { GitCache } from "./local/git-cache.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
+import { parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";
 import { buildChangeClaimState, claimScopeLabels } from "./claims.ts";
 import { unique } from "../domain/shared/utils.ts";
 
@@ -525,6 +526,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const canonicalSourceRefs = new Set<string>();
 	const auditEvidenceRefSet = new Set<string>();
 	const contentProofRefSet = new Set<string>();
+	const diagramInventory = parseSystemDiagrams(project.root, project);
+	const docsByDiagramRef = new Map<string, string[]>();
 	const validationAttestations: any[] = [];
 	const researchEntryIds: string[] = [];
 	const docsByCodePath = new Map<string, string[]>();
@@ -559,6 +562,54 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		dirtyPaths = [];
 	}
 
+	// Process system diagram raw data
+	const diagramRefsByCategory: Record<string, string[]> = {};
+	for (const diagram of diagramInventory.diagrams) {
+		const diagramNodeId = `diagram:${diagram.path}`;
+		addNode(diagramNodeId, {
+			kind: "system_diagram",
+			path: diagram.path,
+			title: diagram.title,
+			diagram_id: diagram.id,
+			diagram_kind: diagram.kind,
+			purpose: diagram.purpose,
+			layer: "knowledge",
+		});
+		for (const sourceDoc of diagram.source_docs) addEdge("diagram_source_doc", diagramNodeId, `doc:${sourceDoc}`);
+		for (const ref of diagram.refs) {
+			if (!diagramRefsByCategory[ref.category]) diagramRefsByCategory[ref.category] = [];
+			diagramRefsByCategory[ref.category].push(ref.ref);
+			const refNodeId = `diagram_ref:${ref.ref}`;
+			addNode(refNodeId, {
+				kind: "system_diagram_ref",
+				title: ref.label,
+				path: ref.diagram_path,
+				ref: ref.ref,
+				aliases: ref.aliases,
+				diagram_id: ref.diagram_id,
+				diagram_slug: ref.diagram_slug,
+				ref_category: ref.category,
+				raw_kind: ref.raw_kind,
+				requires_doc: ref.requires_doc,
+				source: ref.source,
+				layer: "knowledge",
+			});
+			addEdge("diagram_contains_ref", diagramNodeId, refNodeId);
+			if (ref.source) addEdge("diagram_ref_source_doc", refNodeId, `doc:${ref.source}`);
+		}
+		for (const edge of diagram.edges) {
+			const fromRef = resolveDiagramRef(`${diagram.slug}:${edge.from}`, diagramInventory) || resolveDiagramRef(edge.from, diagramInventory);
+			const toRef = resolveDiagramRef(`${diagram.slug}:${edge.to}`, diagramInventory) || resolveDiagramRef(edge.to, diagramInventory);
+			const flowRef = edge.ref ? (resolveDiagramRef(`${diagram.slug}:${edge.ref}`, diagramInventory) || resolveDiagramRef(edge.ref, diagramInventory)) : null;
+			if (flowRef) {
+				if (fromRef) addEdge("diagram_flow_from", `diagram_ref:${flowRef}`, `diagram_ref:${fromRef}`, { label: edge.label, diagram_path: edge.diagram_path });
+				if (toRef) addEdge("diagram_flow_to", `diagram_ref:${flowRef}`, `diagram_ref:${toRef}`, { label: edge.label, diagram_path: edge.diagram_path });
+			} else if (fromRef && toRef) {
+				addEdge("diagram_ref_relation", `diagram_ref:${fromRef}`, `diagram_ref:${toRef}`, { label: edge.label, relation_kind: edge.kind, diagram_path: edge.diagram_path });
+			}
+		}
+	}
+
 	// Process Docs
 	const sortedDocs = [...docs].sort((a, b) => a.path.localeCompare(b.path));
 	for (const doc of sortedDocs) {
@@ -574,6 +625,16 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 
 		for (const target of doc.links) {
 			addEdge("doc_link", docId, `doc:${target}`);
+		}
+		for (const rawRef of stringList(doc.frontmatter?.diagram_refs)) {
+			const resolvedRef = resolveDiagramRef(rawRef, diagramInventory);
+			const refNodeId = `diagram_ref:${resolvedRef || rawRef}`;
+			if (!resolvedRef) addNode(refNodeId, { kind: "missing_system_diagram_ref", ref: rawRef, layer: "knowledge" });
+			addEdge("doc_diagram_ref", docId, refNodeId, { ref: rawRef, resolved: Boolean(resolvedRef) });
+			if (resolvedRef) {
+				if (!docsByDiagramRef.has(resolvedRef)) docsByDiagramRef.set(resolvedRef, []);
+				docsByDiagramRef.get(resolvedRef)!.push(doc.path);
+			}
 		}
 		for (const codePath of doc.code_paths) {
 			codePaths.add(codePath);
@@ -1470,6 +1531,14 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			audit_evidence_refs: Array.from(auditEvidenceRefSet).sort(),
 			content_proof_refs: Array.from(contentProofRefSet).sort(),
 			validation_attestations: validationAttestations,
+		},
+		system_diagrams: {
+			diagram_paths: diagramInventory.diagrams.map((diagram) => diagram.path).sort(),
+			refs: diagramInventory.refs.map((ref) => ref.ref).sort(),
+			by_category: Object.fromEntries(Object.entries(diagramRefsByCategory).map(([category, refs]) => [category, unique(refs).sort()])),
+			docs_by_ref: Object.fromEntries([...docsByDiagramRef.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([ref, docPaths]) => [ref, unique(docPaths).sort()])),
+			required_refs: diagramInventory.refs.filter((ref) => ref.requires_doc).map((ref) => ref.ref).sort(),
+			parse_issue_count: diagramInventory.parse_issues.length,
 		},
 		traceability: {
 			rows: traceabilityRows,

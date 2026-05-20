@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T03:58:13Z",
+  "profile": "implementation",
+  "task_id": "TASK-002",
+  "verdict": "block",
+  "rationale": "TASK-002 implementation build satisfies the approved roadmap boundary from source refs after CodeWiki resume/compaction context boundary. Diagram parser exposes first-class diagram refs/categories, graph generation emits system diagram/ref nodes and views, lint/file-structure audit validates diagram_refs and requires_doc gaps behind off/warn/error migration mode, and focused smoke tests cover valid refs, missing refs, missing required docs, and migration warning/error behavior. Worktree remains dirty pre-commit, so this pass supports implementation consumption but not task-close/publication. Policy blocks implementation validation until audit:alignment, audit:changed, audit:stale-reference, audit:file-structure, audit:generated-parity, audit:package, audit:security, audit:task are recorded.",
+  "checks": [
+    "codewiki_resume_context refresh=true for TASK-002 used as fresh context boundary",
+    "Read implementation build .codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+    "Read source implementation files src/application/knowledge/diagram-parser.ts, src/application/graph.ts, src/application/lint.ts, src/application/tools/audit.ts, src/domain/shared/types.ts, package.json",
+    "Read/checked tests/smoke/diagram-refs.test.mjs",
+    "npm run typecheck: pass",
+    "node ./tests/smoke/diagram-refs.test.mjs: pass",
+    "npm test: pass (20 passed)",
+    "git diff --check: pass",
+    "source CodewikiRebuilder rebuildAll: pass",
+    "source graph inspection: 5 diagrams, 137 refs, all required categories present, 0 parse issues, system_diagram/system_diagram_ref nodes present",
+    "source executeCodewikiAudit file-structure task_id=TASK-002: pass; checked 77 TypeScript files and 137 diagram refs",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002: pass",
+    "codewiki_audit profiles=generated-parity,package,security task_id=TASK-002: pass",
+    "codewiki_audit profiles=changed task_id=TASK-002: warning only for dirty generated files before publication"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "changed audit warns because .codewiki generated files are dirty pre-commit; this does not block implementation validation but blocks task-close/publication until committed proof exists."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required audit evidence for profiles: alignment, changed, stale-reference, file-structure, generated-parity, package, security, task."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "stale-reference",
+    "file-structure",
+    "generated-parity",
+    "package",
+    "security",
+    "task"
+  ],
+  "audit_refs": [
+    "codewiki_audit:alignment:pass",
+    "codewiki_audit:stale-reference:pass",
+    "codewiki_audit:file-structure:pass",
+    "codewiki_audit:generated-parity:pass",
+    "codewiki_audit:package:pass",
+    "codewiki_audit:security:pass",
+    "codewiki_audit:task:TASK-002:pass",
+    "codewiki_audit:changed:warning-generated-dirty",
+    "source_executeCodewikiAudit:file-structure:pass:137-diagram-refs"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+    "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+    "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs"
+  ],
+  "content_proof_refs": [
+    "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208"
+  ],
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite audit evidence for required profiles: alignment, changed, stale-reference, file-structure, generated-parity, package, security, task."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "package",
+      "security",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:package or profile:package",
+      "audit:security or profile:security",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "changed",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "package",
+      "security",
+      "task"
+    ]
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+    "working_tree_digest": "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh boundary supplied by CodeWiki resume/compaction context per current workflow; validation started from build/source refs, not builder chat. Dirty pre-commit implementation content checked by deterministic working-tree digest.",
+    "role": "validator"
+  }
+}

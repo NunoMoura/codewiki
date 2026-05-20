@@ -4,6 +4,7 @@ import type { LintIssue, LintReport, RoadmapTaskRecord, WikiProject } from "../d
 import { extractLinks } from "./knowledge/doc-parser.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
+import { validateSystemDiagramRefs } from "./knowledge/diagram-parser.ts";
 
 const DEFAULT_REQUIRED_FIELDS = ["id", "title", "state", "summary", "owners", "updated"];
 const FORBIDDEN_HEADINGS = [
@@ -407,9 +408,11 @@ export function lintEvidenceLinks(
 }
 
 export function buildLintReport(repoRoot: string, project: WikiProject, docs: ParsedDoc[], roadmapEntries: RoadmapTaskRecord[], research: any[], evidence: EvidenceLinkInput = {}): LintReport {
+	const diagramValidation = validateSystemDiagramRefs(repoRoot, project, docs);
 	const issues: LintIssue[] = [
 		...lintFileContract(repoRoot, project, docs),
 		...lintMarkdownDocs(repoRoot, project, docs),
+		...diagramValidation.issues.map((issue) => createIssue(issue.severity, issue.kind, issue.path, issue.message)),
 		...lintRoadmapEntries(repoRoot, project, roadmapEntries, research),
 		...lintEvidenceLinks(project, roadmapEntries, evidence),
 	];

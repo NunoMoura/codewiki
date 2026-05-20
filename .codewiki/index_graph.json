@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T02:34:54.830Z",
+  "generated_at": "2026-05-20T04:02:33.198Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -126,7 +126,7 @@
       "kind": "code_path",
       "path": "src/application/lint.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/product/uis/board.md",
@@ -209,7 +209,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -247,7 +247,7 @@
       "kind": "code_path",
       "path": "package.json",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/adapters.md",
@@ -269,7 +269,7 @@
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:skills/codewiki",
@@ -306,7 +306,7 @@
       "kind": "code_path",
       "path": "src/application/graph.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application/builds.ts",
@@ -349,7 +349,7 @@
       "kind": "code_path",
       "path": "src/domain",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/audits.md",
@@ -372,7 +372,7 @@
       "kind": "code_path",
       "path": "src/domain/shared/types.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/schemas.ts",
@@ -695,7 +695,7 @@
       "kind": "code_path",
       "path": "src/application/tools/audit.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:.codewiki/kb/system/diagrams",
@@ -4845,6 +4845,322 @@
       "default_hidden": true
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-002",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+          ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+          ".codewiki/kb/system/knowledge.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/diagrams/README.md",
+          "src/application/graph.ts",
+          "src/application/lint.ts",
+          "src/application/tools/audit.ts",
+          "codewiki_build tool",
+          ".codewiki/index_graph.json",
+          "src/application/knowledge/diagram-parser.ts",
+          "src/domain/shared/types.ts",
+          "package.json",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs",
+          "TASK-002"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:stale-reference",
+          "audit:file-structure",
+          "audit:generated-parity",
+          "audit:package",
+          "audit:security",
+          "audit:changed",
+          "task:TASK-002",
+          "profile:alignment",
+          "profile:changed",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:generated-parity",
+          "profile:package",
+          "profile:security",
+          "profile:task"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+          "tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
+          "tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
+          "src/application/knowledge/diagram-parser.ts@sha256:a552ae96e79c128f8d560d49674379d9091a93da04772d8b469ba78544f06d96",
+          "src/application/graph.ts@sha256:7764247fe4656336ea1d208789444b39f95c834aaa4767d0bc2387cfd1ab1894",
+          "src/application/lint.ts@sha256:4911a4558196c012bd23da8b26196f6b7a82b621a9c703beaebfa093d3ca15e7",
+          "src/application/tools/audit.ts@sha256:66a93783bfbf4309e75b3f18b4ad3515d9ccaba16952c33100911fe42c8de5f4",
+          "src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
+          "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
+          "refs/codewiki/archive/task/TASK-002",
+          "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002"
+        ],
+        "validation_attestation_refs": [
+          "fresh implementation validation required for TASK-002"
+        ]
+      }
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/system/file-structure.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/system/file-structure.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/system/audits.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/system/audits.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/kb/system/diagrams/README.md",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/kb/system/diagrams/README.md",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/application/tools/audit.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/application/tools/audit.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:.codewiki/index_graph.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/index_graph.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/application/knowledge/diagram-parser.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/application/knowledge/diagram-parser.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:tests/smoke/diagram-refs.test.mjs",
+      "kind": "canonical_source_ref",
+      "path": "tests/smoke/diagram-refs.test.mjs",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:alignment",
+      "kind": "audit_evidence",
+      "path": "audit:alignment",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:stale-reference",
+      "kind": "audit_evidence",
+      "path": "audit:stale-reference",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:file-structure",
+      "kind": "audit_evidence",
+      "path": "audit:file-structure",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:generated-parity",
+      "kind": "audit_evidence",
+      "path": "audit:generated-parity",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:package",
+      "kind": "audit_evidence",
+      "path": "audit:package",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:security",
+      "kind": "audit_evidence",
+      "path": "audit:security",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:audit:changed",
+      "kind": "audit_evidence",
+      "path": "audit:changed",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:task:TASK-002",
+      "kind": "audit_evidence",
+      "path": "task:TASK-002",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:stale-reference",
+      "kind": "audit_evidence",
+      "path": "profile:stale-reference",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:file-structure",
+      "kind": "audit_evidence",
+      "path": "profile:file-structure",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:generated-parity",
+      "kind": "audit_evidence",
+      "path": "profile:generated-parity",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:package",
+      "kind": "audit_evidence",
+      "path": "profile:package",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:profile:security",
+      "kind": "audit_evidence",
+      "path": "profile:security",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+      "kind": "content_proof",
+      "path": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
+      "kind": "content_proof",
+      "path": "tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
+      "kind": "content_proof",
+      "path": "tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/knowledge/diagram-parser.ts@sha256:a552ae96e79c128f8d560d49674379d9091a93da04772d8b469ba78544f06d96",
+      "kind": "content_proof",
+      "path": "src/application/knowledge/diagram-parser.ts@sha256:a552ae96e79c128f8d560d49674379d9091a93da04772d8b469ba78544f06d96",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/graph.ts@sha256:7764247fe4656336ea1d208789444b39f95c834aaa4767d0bc2387cfd1ab1894",
+      "kind": "content_proof",
+      "path": "src/application/graph.ts@sha256:7764247fe4656336ea1d208789444b39f95c834aaa4767d0bc2387cfd1ab1894",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/lint.ts@sha256:4911a4558196c012bd23da8b26196f6b7a82b621a9c703beaebfa093d3ca15e7",
+      "kind": "content_proof",
+      "path": "src/application/lint.ts@sha256:4911a4558196c012bd23da8b26196f6b7a82b621a9c703beaebfa093d3ca15e7",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/tools/audit.ts@sha256:66a93783bfbf4309e75b3f18b4ad3515d9ccaba16952c33100911fe42c8de5f4",
+      "kind": "content_proof",
+      "path": "src/application/tools/audit.ts@sha256:66a93783bfbf4309e75b3f18b4ad3515d9ccaba16952c33100911fe42c8de5f4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
+      "kind": "content_proof",
+      "path": "src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
+      "kind": "content_proof",
+      "path": "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-002",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-002",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+      "kind": "content_proof",
+      "path": "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-002",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-002",
+      "task_id": "TASK-002",
+      "digest": "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+      "restore_command": "/wiki-restore TASK-002",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
@@ -4980,22 +5296,6 @@
       "kind": "canonical_source_ref",
       "path": ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
       "layer": "source",
-      "default_hidden": true
-    },
-    {
-      "id": "content_proof:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
-      "kind": "content_proof",
-      "path": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
-      "proof_kind": "digest",
-      "layer": "content_proof",
-      "default_hidden": true
-    },
-    {
-      "id": "content_proof:tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
-      "kind": "content_proof",
-      "path": "tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
-      "proof_kind": "digest",
-      "layer": "content_proof",
       "default_hidden": true
     },
     {
@@ -5219,41 +5519,6 @@
           "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75"
         ]
       }
-    },
-    {
-      "id": "audit:audit:alignment",
-      "kind": "audit_evidence",
-      "path": "audit:alignment",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:changed",
-      "kind": "audit_evidence",
-      "path": "audit:changed",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:stale-reference",
-      "kind": "audit_evidence",
-      "path": "audit:stale-reference",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:generated-parity",
-      "kind": "audit_evidence",
-      "path": "audit:generated-parity",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:file-structure",
-      "kind": "audit_evidence",
-      "path": "audit:file-structure",
-      "layer": "audit",
-      "default_hidden": true
     },
     {
       "id": "audit:audit:task",
@@ -5673,6 +5938,137 @@
       "default_hidden": true
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "verdict": "block",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+        "working_tree_digest": "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh boundary supplied by CodeWiki resume/compaction context per current workflow; validation started from build/source refs, not builder chat. Dirty pre-commit implementation content checked by deterministic working-tree digest.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit:alignment:pass",
+          "codewiki_audit:stale-reference:pass",
+          "codewiki_audit:file-structure:pass",
+          "codewiki_audit:generated-parity:pass",
+          "codewiki_audit:package:pass",
+          "codewiki_audit:security:pass",
+          "codewiki_audit:task:TASK-002:pass",
+          "codewiki_audit:changed:warning-generated-dirty",
+          "source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+          "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+          "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs"
+        ],
+        "content_proof_refs": [
+          "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208"
+        ]
+      }
+    },
+    {
+      "id": "audit:codewiki_audit:alignment:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:alignment:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:stale-reference:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:stale-reference:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:file-structure:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:file-structure:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:generated-parity:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:generated-parity:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:package:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:package:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:security:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:security:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:task:TASK-002:pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:task:TASK-002:pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit:changed:warning-generated-dirty",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit:changed:warning-generated-dirty",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
+      "kind": "audit_evidence",
+      "path": "source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs",
+      "kind": "audit_evidence",
+      "path": "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
+      "kind": "content_proof",
+      "path": "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-001.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
@@ -5706,20 +6102,6 @@
       }
     },
     {
-      "id": "audit:audit:package",
-      "kind": "audit_evidence",
-      "path": "audit:package",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
-      "id": "audit:audit:security",
-      "kind": "audit_evidence",
-      "path": "audit:security",
-      "layer": "audit",
-      "default_hidden": true
-    },
-    {
       "id": "audit:codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
       "kind": "audit_evidence",
       "path": "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
@@ -5731,6 +6113,60 @@
       "kind": "audit_evidence",
       "path": "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
       "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+        "working_tree_digest": "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh boundary supplied by CodeWiki resume/compaction context per current workflow; validation started from build/source refs, not builder chat. Dirty pre-commit implementation content checked by deterministic working-tree digest.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:stale-reference",
+          "audit:file-structure",
+          "audit:generated-parity",
+          "audit:package",
+          "audit:security",
+          "audit:task",
+          "profile:alignment",
+          "profile:changed",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:generated-parity",
+          "profile:package",
+          "profile:security",
+          "profile:task",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+          "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+          "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs"
+        ],
+        "content_proof_refs": [
+          "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94"
+        ]
+      }
+    },
+    {
+      "id": "content_proof:sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
+      "kind": "content_proof",
+      "path": "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
+      "proof_kind": "digest",
+      "layer": "content_proof",
       "default_hidden": true
     },
     {
@@ -12418,6 +12854,287 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/kb/system/knowledge.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/kb/system/graph.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/kb/system/audits.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/kb/system/diagrams/README.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:src/application/graph.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:src/application/lint.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:src/application/tools/audit.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:.codewiki/index_graph.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:src/application/knowledge/diagram-parser.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:src/domain/shared/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:package.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:tests/smoke/diagram-refs.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:tests/smoke/alignment-graph.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "source:TASK-002",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:task:TASK-002",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:src/application/knowledge/diagram-parser.ts@sha256:a552ae96e79c128f8d560d49674379d9091a93da04772d8b469ba78544f06d96",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:src/application/graph.ts@sha256:7764247fe4656336ea1d208789444b39f95c834aaa4767d0bc2387cfd1ab1894",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:src/application/lint.ts@sha256:4911a4558196c012bd23da8b26196f6b7a82b621a9c703beaebfa093d3ca15e7",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:src/application/tools/audit.ts@sha256:66a93783bfbf4309e75b3f18b4ad3515d9ccaba16952c33100911fe42c8de5f4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-002",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "content_proof:sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "task:TASK-002"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-002",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
       "to": "source:.codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
       "default_hidden": true
@@ -13337,6 +14054,95 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:alignment:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:stale-reference:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:file-structure:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:generated-parity:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:package:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:security:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:task:TASK-002:pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit:changed:warning-generated-dirty",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "audit:source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "content_proof:sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-block-task-002.json",
+      "to": "task:TASK-002"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-001.json",
       "to": "source:.codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
       "default_hidden": true
@@ -13405,6 +14211,137 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-001.json",
       "to": "task:TASK-001"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "audit:source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "content_proof:sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+      "to": "task:TASK-002"
     },
     {
       "kind": "validation_attests_source",
@@ -13773,7 +14710,13 @@
         "tests/**",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "package.json",
+        "src/application/graph.ts",
+        "src/application/lint.ts",
+        "src/application/tools/audit.ts",
+        "src/domain/shared/types.ts"
+      ]
     },
     "claims": {
       "active_claim_count": 0,
@@ -13981,6 +14924,23 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-20-implementation-block-task-002.json",
+          "task_id": "TASK-002",
+          "verdict": "block",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
           "task_id": "TASK-001",
           "verdict": "pass",
@@ -13991,6 +14951,23 @@
           "related_claim_ids": [],
           "content_proof_refs": [
             "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f"
+          ],
+          "publisher_result_refs": []
+        },
+        {
+          "path": ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+          "task_id": "TASK-002",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94"
           ],
           "publisher_result_refs": []
         },
@@ -14051,6 +15028,7 @@
         ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
         ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
         ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+        ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
         ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
         ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
@@ -14059,6 +15037,7 @@
         ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
         ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+        ".codewiki/index_graph.json",
         ".codewiki/kb/**",
         ".codewiki/kb/lexicon.md",
         ".codewiki/kb/product/stories/intent.md",
@@ -14067,14 +15046,17 @@
         ".codewiki/kb/system/agency.md",
         ".codewiki/kb/system/alignment-model.md",
         ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/audits.md",
         ".codewiki/kb/system/builds.md",
         ".codewiki/kb/system/change-lifecycle.md",
         ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/diagrams/README.md",
         ".codewiki/kb/system/diagrams/component-map.yaml",
         ".codewiki/kb/system/diagrams/data-model.yaml",
         ".codewiki/kb/system/diagrams/key-flow.yaml",
         ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
         ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/graph.md",
         ".codewiki/kb/system/knowledge.md",
         ".codewiki/kb/system/overview.md",
@@ -14140,6 +15122,7 @@
         "src/application/gc.ts",
         "src/application/graph.ts",
         "src/application/graph/rebuilder.ts",
+        "src/application/knowledge/diagram-parser.ts",
         "src/application/lint.ts",
         "src/application/resume-context.ts",
         "src/application/roadmap.ts",
@@ -14147,6 +15130,7 @@
         "src/application/task.ts",
         "src/application/tools/**",
         "src/application/tools/artifact-status.ts",
+        "src/application/tools/audit.ts",
         "src/application/tools/catalog.ts",
         "src/application/tools/catalog.ts (deleted)",
         "src/application/tools/claim.ts (deleted)",
@@ -14168,6 +15152,7 @@
         "tests/smoke/builds.test.mjs",
         "tests/smoke/claim-wait-queue.test.mjs",
         "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
         "tests/smoke/drift-propagation.test.mjs",
         "tests/smoke/efficiency-ui.test.mjs",
         "tests/smoke/loop-isolation-policy.test.mjs",
@@ -14213,18 +15198,36 @@
         "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; changed pass; task pass",
         "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
+        "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
+        "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+        "codewiki_audit:alignment:pass",
+        "codewiki_audit:changed:warning-generated-dirty",
+        "codewiki_audit:file-structure:pass",
+        "codewiki_audit:generated-parity:pass",
+        "codewiki_audit:package:pass",
+        "codewiki_audit:security:pass",
+        "codewiki_audit:stale-reference:pass",
+        "codewiki_audit:task:TASK-002:pass",
         "file-structure",
         "generated-parity",
         "generated-parity pass; file-structure pass; package pass; security pass; stale-reference pass",
         "package",
         "profile:alignment",
         "profile:changed",
+        "profile:file-structure",
+        "profile:generated-parity",
+        "profile:package",
+        "profile:security",
+        "profile:stale-reference",
         "profile:task",
+        "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs",
+        "source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
         "stale-reference",
         "task",
         "task:TASK-001",
+        "task:TASK-002",
         "task:TASK-005",
         "task:TASK-006"
       ],
@@ -14293,8 +15296,10 @@
         "b5527b51bece34d670daa246b84d46fc4902eed2",
         "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
         "ccc06de45add0502b691dd440240dc4281b4f026",
+        "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
         "package.json@sha256:bebf4e9079272c4b04e6fb3e03f0262827bc5e1b7f94f1ea90280e48db69bf19",
         "refs/codewiki/archive/task/TASK-001",
+        "refs/codewiki/archive/task/TASK-002",
         "refs/codewiki/archive/task/TASK-003",
         "refs/codewiki/archive/task/TASK-005",
         "refs/codewiki/archive/task/TASK-006",
@@ -14302,7 +15307,9 @@
         "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
         "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
         "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
+        "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
         "sha256:4b4bbddd1fc1a4b378e3253bd710fd06ba376552c2a99eb38fb3ce08eda72980",
+        "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
         "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
         "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
@@ -14318,6 +15325,7 @@
         "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
         "sha256:f5760f9cdd89be57c6b87048e569c23f39bb48a998c79a35892813a7f4771b13",
         "sha256:f619e151a6bacd943cf6a70ef84e898337135e42a0e57a61c0104c357358db0e",
+        "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208",
         "sha256:fc290eb135d2c28c37c6ffdc281224c9341f15097d92871818e2aee14b8ca788",
         "sha256:fd8b57dbf8c13e6a8a7a9255e1fb8fe511bc5c3aeaaca6464baca36a5c37ee35",
         "skills/codewiki-decision/SKILL.md@sha256:ed9066632b73edc8129da5187187a8d11be3eb35201910e4b37f30e8ab6156c6",
@@ -14388,16 +15396,20 @@
         "src/application/diff-table.ts@sha256:0591fd16a043c99d6194a6785d8af637f28c783233c298283ed545850427659f",
         "src/application/gateway/index.ts@sha256:5ba8c55f7758b2fbe77e753b9b49886d0cac5f557664145432cd1ddb20d1ed16",
         "src/application/gc.ts@sha256:e7f6eb51b5122f75a3b3dcffc43f45d25b27328f49fe5927671d92a059d50790",
+        "src/application/graph.ts@sha256:7764247fe4656336ea1d208789444b39f95c834aaa4767d0bc2387cfd1ab1894",
         "src/application/graph.ts@sha256:79ef71a038ebf2c3e38fbb26dba419ad043482d220ebbbd0c27d161f193bd276",
         "src/application/graph.ts@sha256:8ebaea43ac9ecc03fe28976cbdc64f4debf896f729577ef93040162a2cfc0626",
         "src/application/graph.ts@sha256:edf1829449f1ea9ac50d13310a8ac7bcd910c1d1ef0c0effa2ef877325c065c0",
         "src/application/graph/rebuilder.ts@sha256:50c14b2da78b59a6c33309abd14bb94ca1e3793cff394123f1c5485e93de6432",
+        "src/application/knowledge/diagram-parser.ts@sha256:a552ae96e79c128f8d560d49674379d9091a93da04772d8b469ba78544f06d96",
+        "src/application/lint.ts@sha256:4911a4558196c012bd23da8b26196f6b7a82b621a9c703beaebfa093d3ca15e7",
         "src/application/lint.ts@sha256:d3a832ca4818021dca7279e3e2ffabe78de388aa3a8069747c278b1398eae7a3",
         "src/application/lint.ts@sha256:e6d41fe5b7a8a75d204dcedc954d0a2255cea863f48bd6ccc1358a9bf580eba1",
         "src/application/resume-context.ts@sha256:4dc7883c5e9dd977f83f354a3d90ccb25505a6ad266f4df895957fc791cb96de",
         "src/application/resume-context.ts@sha256:7dc90b132be34e8cca8c0befe91773b38ca0d780d5a75affa8f2370e4a1be440",
         "src/application/roadmap.ts@sha256:ecbfd955e78f8022e25e9bf61b95f6f362dd05ce4fb62fc2e826b84993f176ea",
         "src/application/task.ts@sha256:0474d476dc43aecf70711afeeaa8fce7dd2d53cbe76df61c5749cef96853b73d",
+        "src/application/tools/audit.ts@sha256:66a93783bfbf4309e75b3f18b4ad3515d9ccaba16952c33100911fe42c8de5f4",
         "src/application/tools/catalog.ts@sha256:bda331d1f9854e2d6346cab87fb1902d85152c25da102152413979f041623ec9",
         "src/application/tools/resume-context.ts@sha256:49c5f4f0cec50866bd288b97d4162b49cbfe0ef2252255bc25856948411b2242",
         "src/application/tools/session-handoff.ts@sha256:009587e0d2408fb32f360ff8e43c9056338e3809f4bda1746b8fd89e87555990",
@@ -14413,6 +15425,7 @@
         "src/domain/shared/session.ts@sha256:28fc53fd422b22201de15f057e2a1c3c4c47e99a32d0ec14d661c58d599d4b4c",
         "src/domain/shared/types.ts@sha256:10ea71e6ff93e53229bfc3cf543a5d47ffb684c00cfe59d640ebe33cd64a9767",
         "src/domain/shared/types.ts@sha256:1cba41a526a4e0fb59452de9d477e4acdb767e06af0e2933f2e8924773a8ff4a",
+        "src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
         "src/domain/shared/types.ts@sha256:de6738a6d8484bb34c1fa171977b19040b6cdb92ceb6eda7aa794c32ff38334b",
         "src/domain/shared/types.ts@sha256:eabbba4143659a1377ef32b2462e105a9ef0d8aebc8cb2057879d872f4f7a94a",
         "src/domain/shared/types.ts@sha256:f601428b243f6c98e3e19a6ce7e3da48f87b7279782c9a7c72729027239ab35a",
@@ -14426,6 +15439,7 @@
         "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
         "tests/smoke/codewiki-compaction.test.mjs@sha256:2fb45149eaec11bade718626b1cdda4801a6e2bee22879be6ffc7ac01ca0ce70",
         "tests/smoke/codewiki-compaction.test.mjs@sha256:ebd7d0525a32fad7d325c7cfa30d63d939af8e1d8486870c947ee6e689d4092c",
+        "tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
         "tests/smoke/drift-propagation.test.mjs@sha256:9a2cb7cfe2199f0cae7e12f953a6f308d5daa911a4280be825ff5ddfec13867c",
         "tests/smoke/efficiency-ui.test.mjs@sha256:828ab2c0564f8fa45f3cacd7c3b0e25a86e7d88aa3039b1b49fdc7df74bc92c1",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:01f60f962bdddad06d3f212bd8e8b8282e1f8973adf631fc7621d26ae0549136",
@@ -14707,6 +15721,33 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-20-implementation-block-task-002.json",
+          "verdict": "block",
+          "profile": "implementation",
+          "task_id": "TASK-002",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "audit_evidence_refs": [
+            "codewiki_audit:alignment:pass",
+            "codewiki_audit:stale-reference:pass",
+            "codewiki_audit:file-structure:pass",
+            "codewiki_audit:generated-parity:pass",
+            "codewiki_audit:package:pass",
+            "codewiki_audit:security:pass",
+            "codewiki_audit:task:TASK-002:pass",
+            "codewiki_audit:changed:warning-generated-dirty",
+            "source_executeCodewikiAudit:file-structure:pass:137-diagram-refs",
+            "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+            "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+            "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs"
+          ],
+          "content_proof_refs": [
+            "sha256:f6817bff80f83c990ba657a657ab6a6aa9de2a92700144d443882ad0f303d208"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -14727,6 +15768,40 @@
           ],
           "content_proof_refs": [
             "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-002",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:stale-reference",
+            "audit:file-structure",
+            "audit:generated-parity",
+            "audit:package",
+            "audit:security",
+            "audit:task",
+            "profile:alignment",
+            "profile:changed",
+            "profile:stale-reference",
+            "profile:file-structure",
+            "profile:generated-parity",
+            "profile:package",
+            "profile:security",
+            "profile:task",
+            "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
+            "codewiki_audit profiles=generated-parity,package,security,changed task_id=TASK-002 => warning; only changed/generated-file-changed warnings",
+            "source executeCodewikiAudit profiles=file-structure task_id=TASK-002 => pass; 137 diagram refs"
+          ],
+          "content_proof_refs": [
+            "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94"
           ],
           "isolation_status": "isolated"
         },
@@ -14762,7 +15837,158 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/audits.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/README.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/graph.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/knowledge.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "package.json",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/graph.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/lint.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/tools/audit.ts",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -14962,7 +16188,9 @@
           "build_paths": [
             ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
           ],
-          "validation_paths": [],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-20-implementation-block-task-002.json"
+          ],
           "claim_ids": [],
           "claim_wait_ids": []
         },
@@ -14989,6 +16217,7 @@
             ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
             ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
             ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
             ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
             ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
           ],
@@ -15002,6 +16231,7 @@
             ".codewiki/validation/2026-05-19-task-close-pass-task-005.json",
             ".codewiki/validation/2026-05-19-task-close-pass-task-006.json",
             ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
+            ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
             ".codewiki/validation/2026-05-20-task-close-pass-task-001.json"
           ]
         },
@@ -15025,6 +16255,7 @@
             ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
             ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
             ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
             ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
             ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
           ]
@@ -15206,6 +16437,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-002",
+          "build_path": ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-002",
+          "commit_sha": "",
+          "digest": "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+          "restore_command": "/wiki-restore TASK-002",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-001",
           "build_path": ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-001",
@@ -15226,7 +16467,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 18,
+        "ledger_count": 19,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -15244,6 +16485,7 @@
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
+          "refs/codewiki/archive/task/TASK-002",
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001"
         ],
@@ -15264,6 +16506,7 @@
           ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
           ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
           ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+          ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
           ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
           ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
         ],
@@ -15283,6 +16526,7 @@
           ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
           ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
           ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+          ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
           ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
           ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
         ],
@@ -15365,13 +16609,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T02:34:54.804Z",
+      "generated_at": "2026-05-20T04:02:33.152Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T02:34:54Z",
+      "generated_at": "2026-05-20T04:02:33Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -15488,8 +16732,8 @@
         "done_task_ids": [],
         "cancelled_task_ids": [],
         "recent_task_ids": [
-          "TASK-003",
           "TASK-002",
+          "TASK-003",
           "TASK-004"
         ]
       },
@@ -15539,7 +16783,7 @@
             "src/application/tools/audit.ts",
             ".codewiki/kb/system/diagrams"
           ],
-          "updated": "2026-05-19T00:47:41Z",
+          "updated": "2026-05-20T04:00:39Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -15657,7 +16901,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T02:34:54Z",
+      "generated_at": "2026-05-20T04:02:33Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -15786,7 +17030,9 @@
             "build_paths": [
               ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
             ],
-            "validation_paths": [],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-20-implementation-block-task-002.json"
+            ],
             "claim_ids": [],
             "claim_wait_ids": []
           },
@@ -15813,6 +17059,7 @@
               ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
               ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
               ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
               ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
               ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
             ],
@@ -15826,6 +17073,7 @@
               ".codewiki/validation/2026-05-19-task-close-pass-task-005.json",
               ".codewiki/validation/2026-05-19-task-close-pass-task-006.json",
               ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
+              ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
               ".codewiki/validation/2026-05-20-task-close-pass-task-001.json"
             ]
           },
@@ -15849,6 +17097,7 @@
               ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
               ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
               ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
               ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
               ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
             ]
@@ -15900,7 +17149,7 @@
             "title": "Implement diagram-backed system KB audits and graph nodes"
           },
           "revision": {
-            "digest": "4b0eef2cf664abb510006a6bbb680de618535890201a4bdc0e82434e66430ff6",
+            "digest": "9223598b007399ec77a47982aada713ae3ee30edc0a16880193228942e573028",
             "basis": "source_content"
           },
           "note": "tracked by TASK-002"
@@ -15963,7 +17212,7 @@
             "title": "Implement diagram-backed system KB audits and graph nodes"
           },
           "revision": {
-            "digest": "1677bb08587f70d8a0ec5abac9d62e727433d25e62fb4d6488d329f0adca6c4a",
+            "digest": "68f09f7bd55e51d0e590214761382c79250e045eed0fea43bdc9e372e037f6eb",
             "basis": "source_content"
           },
           "note": "tracked by TASK-002"
@@ -15997,7 +17246,7 @@
             "title": "Implement diagram-backed system KB audits and graph nodes"
           },
           "revision": {
-            "digest": "e4f6087ffb22dd40a898bcf4d0c0a0074dbe33fc6d4965de9fe85dbc9bc0524f",
+            "digest": "39319cdf79353e25ccc8689de30ec93ce4213abd9c1e0a683e031d9797fdbd81",
             "basis": "source_content"
           },
           "note": "tracked by TASK-002"
@@ -16025,7 +17274,7 @@
             "title": "Implement diagram-backed system KB audits and graph nodes"
           },
           "revision": {
-            "digest": "2cddf72e89f3d04daf64bd2b2a383ca4725b49903068ba80ce977a986b1ba337",
+            "digest": "5cfce11ba611dfac76bede03162d7624783a39a7a37864bd10e99afaeeebfa10",
             "basis": "source_content"
           },
           "note": "tracked by TASK-002"
@@ -16642,7 +17891,7 @@
           "related_task_ids": [],
           "primary_task": null,
           "revision": {
-            "digest": "fba8702d65cef28e87a0d76a455371854edfeeab689336d6772e6b5baebcc5cf",
+            "digest": "9388198f84b790d4b762fea05a9e3fe1fd5185a4e1b6bff12f604f9daaf9b260",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -16751,7 +18000,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T02:34:54Z",
+        "generated_at": "2026-05-20T04:02:33Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -16779,12 +18028,26 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T02:34:54Z",
+            "checked_at": "2026-05-20T04:02:33Z",
             "revision": {
               "git": {
-                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/audits.md",
+                  ".codewiki/kb/system/diagrams/README.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/graph.md",
+                  ".codewiki/kb/system/knowledge.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-002/context.json",
+                  ".codewiki/roadmap/tasks/TASK-002/task.json",
+                  "package.json",
+                  "src/application/graph.ts",
+                  "src/application/lint.ts",
+                  "src/application/tools/audit.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -16868,15 +18131,15 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "87c66cdfef3b1a6eb38de23cd9fbd9b84d0378c5305ab6dde46bc08034a1ca8f",
-              "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
-              "code_digest": "6254bc28a86f699addc8815ee1d19ef74f555be61a71651aefc4e77eb03d6237",
-              "digest": "60f435108ca6b360216c9e19df0b192dab3bdf0540dc7e639b5192e06fa35e39"
+              "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
+              "task_digest": "54df38687859b7bf088815cfd1805b4a1ead2d99a653db9e76db8c88f968466f",
+              "code_digest": "a7db24e84c31645b20901bf60c8a64192cdef657fe5dc3e76b1c6b1bfa2fdfb2",
+              "digest": "fd6339c03502d647ea08db6dd43a65a041b4b2e409a183c59abbe6a098b1ab84"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:54Z",
+              "checked_at": "2026-05-20T04:02:33Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17007,12 +18270,25 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T02:34:54Z",
+            "checked_at": "2026-05-20T04:02:33Z",
             "revision": {
               "git": {
-                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/audits.md",
+                  ".codewiki/kb/system/diagrams/README.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/graph.md",
+                  ".codewiki/kb/system/knowledge.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-002/context.json",
+                  ".codewiki/roadmap/tasks/TASK-002/task.json",
+                  "src/application/graph.ts",
+                  "src/application/lint.ts",
+                  "src/application/tools/audit.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -17075,15 +18351,15 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "b0d485d01928ed4877ed01f7964fc1afd2f2faa16a35967a8da71fc0c3bc47a4",
-              "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
-              "code_digest": "c6844fd043164150f4605eae84db8a82dfc5c548e4a022b4102243e3973e4311",
-              "digest": "0366f74adb21e486c04e68af5734d8a5362dfa0ebfb737b2259a7beacc8e6bed"
+              "spec_digest": "0fc8caaf5af7dfc89b19ee8eb48acba94aff941030a924f79bf7c8af91df7e8f",
+              "task_digest": "54df38687859b7bf088815cfd1805b4a1ead2d99a653db9e76db8c88f968466f",
+              "code_digest": "a5a10428f795551e29f08548507937e07dd5f6eed1c74ce6c2017051dc1d7da5",
+              "digest": "acadf08a7573b905d90929d2d1800d4926d4d5be0290504903f9bf3d2cb8902a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:54Z",
+              "checked_at": "2026-05-20T04:02:33Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17193,12 +18469,26 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T02:34:54Z",
+            "checked_at": "2026-05-20T04:02:33Z",
             "revision": {
               "git": {
-                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/audits.md",
+                  ".codewiki/kb/system/diagrams/README.md",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/graph.md",
+                  ".codewiki/kb/system/knowledge.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-002/context.json",
+                  ".codewiki/roadmap/tasks/TASK-002/task.json",
+                  "package.json",
+                  "src/application/graph.ts",
+                  "src/application/lint.ts",
+                  "src/application/tools/audit.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -17282,15 +18572,15 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "87c66cdfef3b1a6eb38de23cd9fbd9b84d0378c5305ab6dde46bc08034a1ca8f",
-              "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
-              "code_digest": "6254bc28a86f699addc8815ee1d19ef74f555be61a71651aefc4e77eb03d6237",
-              "digest": "60f435108ca6b360216c9e19df0b192dab3bdf0540dc7e639b5192e06fa35e39"
+              "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
+              "task_digest": "54df38687859b7bf088815cfd1805b4a1ead2d99a653db9e76db8c88f968466f",
+              "code_digest": "a7db24e84c31645b20901bf60c8a64192cdef657fe5dc3e76b1c6b1bfa2fdfb2",
+              "digest": "fd6339c03502d647ea08db6dd43a65a041b4b2e409a183c59abbe6a098b1ab84"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:54Z",
+              "checked_at": "2026-05-20T04:02:33Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17422,7 +18712,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T02:34:54Z",
+        "generated_at": "2026-05-20T04:02:33Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -17471,7 +18761,7 @@
               "title": "Implement diagram-backed system KB audits and graph nodes"
             },
             "revision": {
-              "digest": "4b0eef2cf664abb510006a6bbb680de618535890201a4bdc0e82434e66430ff6",
+              "digest": "9223598b007399ec77a47982aada713ae3ee30edc0a16880193228942e573028",
               "basis": "source_content"
             },
             "note": "tracked by TASK-002"
@@ -17534,7 +18824,7 @@
               "title": "Implement diagram-backed system KB audits and graph nodes"
             },
             "revision": {
-              "digest": "1677bb08587f70d8a0ec5abac9d62e727433d25e62fb4d6488d329f0adca6c4a",
+              "digest": "68f09f7bd55e51d0e590214761382c79250e045eed0fea43bdc9e372e037f6eb",
               "basis": "source_content"
             },
             "note": "tracked by TASK-002"
@@ -17568,7 +18858,7 @@
               "title": "Implement diagram-backed system KB audits and graph nodes"
             },
             "revision": {
-              "digest": "e4f6087ffb22dd40a898bcf4d0c0a0074dbe33fc6d4965de9fe85dbc9bc0524f",
+              "digest": "39319cdf79353e25ccc8689de30ec93ce4213abd9c1e0a683e031d9797fdbd81",
               "basis": "source_content"
             },
             "note": "tracked by TASK-002"
@@ -17596,7 +18886,7 @@
               "title": "Implement diagram-backed system KB audits and graph nodes"
             },
             "revision": {
-              "digest": "2cddf72e89f3d04daf64bd2b2a383ca4725b49903068ba80ce977a986b1ba337",
+              "digest": "5cfce11ba611dfac76bede03162d7624783a39a7a37864bd10e99afaeeebfa10",
               "basis": "source_content"
             },
             "note": "tracked by TASK-002"
@@ -18213,7 +19503,7 @@
             "related_task_ids": [],
             "primary_task": null,
             "revision": {
-              "digest": "fba8702d65cef28e87a0d76a455371854edfeeab689336d6772e6b5baebcc5cf",
+              "digest": "9388198f84b790d4b762fea05a9e3fe1fd5185a4e1b6bff12f604f9daaf9b260",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -18699,7 +19989,7 @@
                   "title": "Implement diagram-backed system KB audits and graph nodes"
                 },
                 "revision": {
-                  "digest": "4b0eef2cf664abb510006a6bbb680de618535890201a4bdc0e82434e66430ff6",
+                  "digest": "9223598b007399ec77a47982aada713ae3ee30edc0a16880193228942e573028",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-002"
@@ -18762,7 +20052,7 @@
                   "title": "Implement diagram-backed system KB audits and graph nodes"
                 },
                 "revision": {
-                  "digest": "1677bb08587f70d8a0ec5abac9d62e727433d25e62fb4d6488d329f0adca6c4a",
+                  "digest": "68f09f7bd55e51d0e590214761382c79250e045eed0fea43bdc9e372e037f6eb",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-002"
@@ -18796,7 +20086,7 @@
                   "title": "Implement diagram-backed system KB audits and graph nodes"
                 },
                 "revision": {
-                  "digest": "e4f6087ffb22dd40a898bcf4d0c0a0074dbe33fc6d4965de9fe85dbc9bc0524f",
+                  "digest": "39319cdf79353e25ccc8689de30ec93ce4213abd9c1e0a683e031d9797fdbd81",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-002"
@@ -18824,7 +20114,7 @@
                   "title": "Implement diagram-backed system KB audits and graph nodes"
                 },
                 "revision": {
-                  "digest": "2cddf72e89f3d04daf64bd2b2a383ca4725b49903068ba80ce977a986b1ba337",
+                  "digest": "5cfce11ba611dfac76bede03162d7624783a39a7a37864bd10e99afaeeebfa10",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-002"
@@ -19100,7 +20390,7 @@
                 "related_task_ids": [],
                 "primary_task": null,
                 "revision": {
-                  "digest": "fba8702d65cef28e87a0d76a455371854edfeeab689336d6772e6b5baebcc5cf",
+                  "digest": "9388198f84b790d4b762fea05a9e3fe1fd5185a4e1b6bff12f604f9daaf9b260",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"

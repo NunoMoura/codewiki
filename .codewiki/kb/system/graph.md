@@ -72,7 +72,7 @@ Decision covers approved rows and risk state. Knowledge covers product docs plus
 
 ## System diagram nodes
 
-System diagrams are first-class inputs. The graph should parse diagram data into node/edge kinds for components, flows, entities, states, policies, artifacts, actors, adapters, and external systems. After the vNext migration, system docs should declare `diagram_refs`; the graph reports missing refs, missing target nodes, missing docs for nodes marked `requires_doc`, and doc/code mappings that conflict with diagram refs.
+System diagrams are first-class inputs. The graph parses diagram data into refs for components, adapters, flows, domain entities, lifecycles, policies, artifacts, actors, and external systems. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias. System docs may declare `diagram_refs`; the graph links docs to resolved diagram refs and exposes `views.system_diagrams` with refs grouped by category. Diagram-ref audits report missing refs, missing target nodes, and missing docs for nodes marked `requires_doc` according to migration mode.
 
 ## Product/system propagation
 

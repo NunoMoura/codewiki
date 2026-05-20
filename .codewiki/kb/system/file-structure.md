@@ -44,7 +44,7 @@ At the `.codewiki/` root, active contract surfaces are limited to config, knowle
 
 System component docs should stay flat. Each major system component should have one matching `.md` file under `system/`. Diagram raw data is the one intended nested system folder and lives under `system/diagrams/**`.
 
-In the vNext target, system diagrams are the allowlist/navigation spine for system docs. Every system `.md` doc except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Diagram refs may point to components, adapters, flows, domain entities, lifecycles, policy boundaries, artifacts, actors, or external systems. Diagram nodes may set `requires_doc` when a doc is mandatory; diagram nodes without that flag may remain diagram-only.
+In the vNext target, system diagrams are the allowlist/navigation spine for system docs. Every system `.md` doc except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias. Diagram refs may point to components, adapters, flows, domain entities, lifecycles, policy boundaries, artifacts, actors, or external systems. Diagram nodes may set `requires_doc` when a doc is mandatory; diagram nodes without that flag may remain diagram-only. `codewiki.system_diagrams.diagram_refs.mode` controls migration: `off`, `warn`, or `error`.
 
 Avoid nested component folders and avoid `overview.md` files except `product/overview.md`, `system/overview.md`, and the diagram contract `system/diagrams/README.md`.
 

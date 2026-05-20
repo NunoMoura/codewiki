@@ -32,7 +32,7 @@ CodeWiki should expose one audit surface implemented in source, with adapter-fac
 | Profile | Purpose | Typical gate use |
 | --- | --- | --- |
 | `alignment` | Check decision, knowledge, roadmap, tests, code, builds, validation, and publication traceability. | Decision, planning, implementation, task-close. |
-| `file-structure` | Check path taxonomy, layer ownership, forbidden folders, generated/canonical boundaries, stale architecture references, and that optional scripts do not own authoritative semantics. | Architecture/system changes, task-close, publication. |
+| `file-structure` | Check path taxonomy, layer ownership, forbidden folders, generated/canonical boundaries, system diagram refs, stale architecture references, and that optional scripts do not own authoritative semantics. | Architecture/system changes, task-close, publication. |
 | `stale-reference` | Check active docs/source for deleted paths, legacy command names, stale architecture paths, and obsolete CodeWiki surfaces. | Documentation, implementation, release. |
 | `package` | Check package reachability, tarball contents, missing lockfile, source files included/excluded, and publication metadata. | Publication, release. |
 | `security` | Check dependencies, secret-risk paths, unsafe command paths, network/package manager behavior, and publication safety. | Security changes, publication, release. |
@@ -90,7 +90,8 @@ Hot audit reports should persist only when they block, fail, are policy-required
 
 - Audits produce evidence; gateways decide.
 - Audit profiles should be deterministic wherever possible.
-- Audit checks must understand canonical, generated, transient, runtime, dogfood, source, test, optional-helper-script, and package path classes. Scripts may be checked for package hygiene, but authoritative audit policy must live in source-owned engines, not in scripts.
+- Audit checks must understand canonical, generated, transient, runtime, dogfood, source, test, optional-helper-script, package, and system-diagram path classes. Scripts may be checked for package hygiene, but authoritative audit policy must live in source-owned engines, not in scripts.
+- System diagram audits parse `.codewiki/kb/system/diagrams/**/*.yaml`, verify declared `diagram_refs`, and report `requires_doc` gaps through migration mode warnings or hard errors according to `codewiki.system_diagrams.diagram_refs.mode`.
 - Full audit is the default user command behavior; gateway audits should be scoped by policy to avoid unnecessary cost.
 - If a non-deterministic validator finds drift not covered by an audit profile, a follow-up task should add or extend a deterministic audit rule.
 
