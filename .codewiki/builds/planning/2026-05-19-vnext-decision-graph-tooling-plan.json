@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_version": 2,
+  "schema_version": 1,
   "kind": "planning_build",
   "created": "2026-05-19T00:48:30Z",
   "source": "Validated documentation build .codewiki/builds/documentation/2026-05-19-vnext-decision-compiler-knowledge-model.json",

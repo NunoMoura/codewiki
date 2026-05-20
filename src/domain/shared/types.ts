@@ -58,7 +58,7 @@ export const AGENCY_MODE_VALUES = ["auto", "dry-run", "manual", "observe", "main
 export const AGENCY_TRIGGER_VALUES = ["manual", "task_end", "sprint_end", "roadmap_end", "budget_end"] as const;
 export const AGENCY_RISK_VALUES = ["low", "medium", "high"] as const;
 export const AGENCY_SCOPE_KIND_VALUES = ["roadmap", "sprint", "task"] as const;
-export const WORKFLOW_LOOP_VALUES = ["feedback", "documentation", "planning", "implementation", "validation", "observe"] as const;
+export const WORKFLOW_LOOP_VALUES = ["decision", "planning", "implementation", "validation", "observe"] as const;
 export const CHANGE_TYPE_VALUES = ["product", "system", "task", "code"] as const;
 export const TRACEABILITY_EXEMPTION_VALUES = ["generated", "runtime", "mechanical"] as const;
 /** @deprecated Use CHANGE_TYPE_VALUES. */
@@ -725,8 +725,7 @@ export interface CodewikiDiffTableRowInput {
 }
 
 export interface CodewikiBuildRefsInput {
-	feedback?: string[];
-	documentation?: string[];
+	decision?: string[];
 	planning?: string[];
 	implementation?: string[];
 	roadmap?: string[];
@@ -790,9 +789,27 @@ export interface CodewikiEvidenceMappingInput {
 	source_refs?: string[];
 }
 
+export interface CodewikiDecisionKbMappingInput {
+	row_id: string;
+	knowledge_refs?: string[];
+	diagram_refs?: string[];
+	evidence: string;
+	deferred?: boolean;
+	deferred_reason?: string;
+}
+
+export interface CodewikiDecisionPropagationInput {
+	direction?: "product-first" | "system-first" | "mixed" | "no-op" | string;
+	product_impact?: string[];
+	system_impact?: string[];
+	no_product_impact?: string;
+	no_system_impact?: string;
+	downstream_planning_questions?: string[];
+}
+
 export interface CodewikiBuildToolInput {
 	repoPath?: string;
-	kind: "feedback" | "documentation" | "planning" | "implementation";
+	kind: "decision" | "planning" | "implementation";
 	refresh?: boolean;
 	/** Common */
 	summary: string;
@@ -829,24 +846,23 @@ export interface CodewikiBuildToolInput {
 		archive_after?: string;
 		purge_after?: string;
 	};
-	/** Feedback-specific */
+	/** Decision-specific */
+	decision_mode?: "proposal" | "accepted";
+	row_to_kb_mappings?: CodewikiDecisionKbMappingInput[];
+	propagation?: CodewikiDecisionPropagationInput;
+	diagram_refs?: string[];
+	downstream_planning_questions?: string[];
+	/** Decision row table */
 	diff_table?: CodewikiDiffTableRowInput[];
 	approved_diff_rows?: string[];
 	decisions?: string[];
 	assumptions?: string[];
 	open_questions?: string[];
 	non_goals?: string[];
-	lower_layer_delta?: {
-		knowledge?: string[];
-		roadmap?: string[];
-		code?: string[];
-	};
-	/** Documentation-specific */
-	source_feedback_build?: string;
 	knowledge_changes?: string[];
 	roadmap_changes?: string[];
 	/** Planning-specific */
-	source_documentation_build?: string;
+	source_decision_build?: string;
 	task_ids?: string[];
 	task_changes?: string[];
 	tdd_plan?: string[];
@@ -919,19 +935,6 @@ export interface CodewikiSessionToolInput {
 	refresh?: boolean;
 }
 
-export interface CodewikiSessionHandoffToolInput {
-	repoPath?: string;
-	mode?: "new-session" | "context-refresh" | "context-reset" | "external-orchestrator";
-	taskId?: string;
-	buildRef?: string;
-	profile?: string;
-	reason: string;
-	handoff_refs?: string[];
-	expected_output?: string;
-	kickoff_prompt?: string;
-	autoQueue?: boolean;
-}
-
 export interface ChangeClaimMutationInput {
 	repoPath?: string;
 	action: ChangeClaimAction;
@@ -962,6 +965,13 @@ export interface CodewikiArtifactStatusToolInput {
 	ttl_minutes?: number;
 	force?: boolean;
 	refresh?: boolean;
+}
+
+export interface CodewikiResumeContextToolInput {
+	repoPath?: string;
+	refresh?: boolean;
+	taskId?: string;
+	followUpIntent?: string;
 }
 
 export interface CodewikiStateToolInput {

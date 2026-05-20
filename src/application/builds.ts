@@ -50,16 +50,15 @@ function trimList(values?: unknown[]): string[] {
 }
 
 function inferChangeTypeForBuild(kind: string, inputOrBuild: any): ChangeType {
-	if (kind === "feedback_build" || kind === "feedback") {
-		const delta = inputOrBuild.lower_layer_delta || {};
-		const produces = inputOrBuild.produces || {};
-		if (trimList(delta.roadmap).length || trimList(produces.roadmap).length) return "task";
-		if (trimList(delta.code).length || trimList(produces.code).length) return "code";
-		return "product";
-	}
-	if (kind === "documentation_build" || kind === "documentation") {
-		const paths = [...trimList(inputOrBuild.knowledge_changes), ...trimList(inputOrBuild.produces?.knowledge)];
-		return paths.some((path) => path.includes("/product/")) ? "product" : "system";
+	if (kind === "decision_build" || kind === "decision") {
+		const paths = [
+			...trimList(inputOrBuild.knowledge_changes),
+			...trimList(inputOrBuild.produces?.knowledge),
+			...trimList(inputOrBuild.row_to_kb_mappings?.flatMap((mapping: any) => mapping?.knowledge_refs ?? [])),
+		];
+		const direction = String(inputOrBuild.propagation?.direction || "").trim();
+		if (direction === "product-first" || paths.some((path) => path.includes("/product/"))) return "product";
+		return "system";
 	}
 	if (kind === "planning_build" || kind === "planning") return "task";
 	if (kind === "implementation_build" || kind === "implementation") {
@@ -106,14 +105,12 @@ function acceptedBuildRefGaps(project: WikiProject, refs: string[], gapName: str
 	return unique(gaps);
 }
 
-function buildRefsByKind(build: any, loop: "feedback" | "documentation" | "planning" | "implementation"): string[] {
-	const field = loop === "feedback"
-		? "source_feedback_build"
-		: loop === "documentation"
-			? "source_documentation_build"
-			: loop === "planning"
-				? "source_planning_build"
-				: "source_implementation_build";
+function buildRefsByKind(build: any, loop: "decision" | "planning" | "implementation"): string[] {
+	const field = loop === "decision"
+		? "source_decision_build"
+		: loop === "planning"
+			? "source_planning_build"
+			: "source_implementation_build";
 	return unique([
 		...trimList([build?.[field]]),
 		...trimList(build?.consumes?.[loop]),
@@ -122,9 +119,8 @@ function buildRefsByKind(build: any, loop: "feedback" | "documentation" | "plann
 	]);
 }
 
-function requiredUpstreamLoop(kind: string): "feedback" | "documentation" | "planning" | null {
-	if (kind === "documentation_build") return "feedback";
-	if (kind === "planning_build") return "documentation";
+function requiredUpstreamLoop(kind: string): "decision" | "planning" | null {
+	if (kind === "planning_build") return "decision";
 	if (kind === "implementation_build") return "planning";
 	return null;
 }
@@ -170,8 +166,7 @@ function buildTraceability(kind: string, input: CodewikiBuildToolInput, consumes
 }
 
 const DEFAULT_REQUIRED_AUDIT_PROFILES: Record<string, string[]> = {
-	feedback: ["alignment"],
-	documentation: ["alignment", "stale-reference"],
+	decision: ["alignment", "stale-reference"],
 	planning: ["alignment"],
 	implementation: ["alignment", "changed"],
 	"task-close": ["alignment", "changed", "task", "generated-parity"],
@@ -416,8 +411,7 @@ function validationSemanticTraceability(project: WikiProject, input: CodewikiVal
 
 function trimRefGroups(input?: CodewikiBuildRefsInput): CodewikiBuildRefsInput {
 	return {
-		feedback: trimList(input?.feedback),
-		documentation: trimList(input?.documentation),
+		decision: trimList(input?.decision),
 		planning: trimList(input?.planning),
 		implementation: trimList(input?.implementation),
 		roadmap: trimList(input?.roadmap),
@@ -466,13 +460,11 @@ function isolationBoundary(required: boolean, mode: string, reason: string, evid
 }
 
 function defaultIsolationPolicy(loop: string) {
-	const nextLoop = loop === "feedback"
-		? "documentation"
-		: loop === "documentation"
-			? "planning"
-			: loop === "planning"
-				? "implementation"
-				: "validation";
+	const nextLoop = loop === "decision"
+		? "planning"
+		: loop === "planning"
+			? "implementation"
+			: "validation";
 	const compilerBoundary = isolationBoundary(
 		false,
 		"agent-owned-new-session",
@@ -602,6 +594,31 @@ function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
 function approvedDiffRows(rows: ReturnType<typeof normalizeDiffTable>, approvedIds?: string[]) {
 	const explicitApproved = new Set(trimList(approvedIds));
 	return rows.filter((row) => row.user_action === "approved" || explicitApproved.has(row.id));
+}
+
+function normalizeDecisionKbMappings(input: CodewikiBuildToolInput) {
+	return (input.row_to_kb_mappings ?? [])
+		.map((mapping) => ({
+			row_id: String(mapping.row_id || "").trim(),
+			knowledge_refs: trimList(mapping.knowledge_refs),
+			diagram_refs: trimList(mapping.diagram_refs),
+			evidence: String(mapping.evidence || "").trim(),
+			deferred: Boolean(mapping.deferred),
+			deferred_reason: String(mapping.deferred_reason || "").trim() || undefined,
+		}))
+		.filter((mapping) => mapping.row_id && mapping.evidence);
+}
+
+function normalizeDecisionPropagation(input: CodewikiBuildToolInput) {
+	const propagation = input.propagation || {};
+	return {
+		direction: String(propagation.direction || "").trim() || undefined,
+		product_impact: trimList(propagation.product_impact),
+		system_impact: trimList(propagation.system_impact),
+		no_product_impact: String(propagation.no_product_impact || "").trim() || undefined,
+		no_system_impact: String(propagation.no_system_impact || "").trim() || undefined,
+		downstream_planning_questions: trimList(propagation.downstream_planning_questions),
+	};
 }
 
 function normalizeClosureBrief(input: CodewikiClosureBriefInput | undefined, task: RoadmapTaskRecord | null, checksRun: string[], acceptanceEvidence: string[], validationRefs: string[], risks: string[]) {
@@ -785,55 +802,96 @@ function publicationDefaults(
 // Build writers
 // ---------------------------------------------------------------------------
 
-export async function writeFeedbackBuild(
+export async function writeDecisionBuild(
 	project: WikiProject,
 	input: CodewikiBuildToolInput,
 ) {
+	if (!input.summary?.trim()) throw new Error("Decision build requires summary.");
+
 	const diffTable = normalizeDiffTable(input.diff_table);
 	const approvedRows = approvedDiffRows(diffTable, input.approved_diff_rows);
 	const decisions = trimList(input.decisions).length
 		? trimList(input.decisions)
 		: approvedRows.map((row) => row.desired_state);
-	if (!input.summary?.trim()) throw new Error("Feedback build requires summary.");
-
 	const created = nowIso();
-	const slug = buildSlug(input.slug || input.summary, "feedback-build");
+	const slug = buildSlug(input.slug || input.summary, "decision-build");
 	const day = created.slice(0, 10);
-	const absPath = buildBuildPath(project, "feedback", slug, day);
+	const absPath = buildBuildPath(project, "decision", slug, day);
 	const lifecycle = buildLifecycle(input, created, 30);
-	if (lifecycle.state === "accepted" && approvedRows.length === 0) {
-		throw new Error("Accepted feedback build requires at least one approved diff_table row.");
+	const mode = String(input.decision_mode || (lifecycle.state === "proposed" ? "proposal" : "accepted")).trim();
+	if (!["proposal", "accepted"].includes(mode)) throw new Error("Decision build mode must be proposal or accepted.");
+	if (mode === "proposal") lifecycle.state = "proposed";
+	if (mode === "accepted" && lifecycle.state === "proposed") throw new Error("Accepted decision build cannot use proposed lifecycle state.");
+
+	const knowledgeChanges = trimList(input.knowledge_changes);
+	const roadmapChanges = trimList(input.roadmap_changes);
+	const rowToKbMappings = normalizeDecisionKbMappings(input);
+	const propagation = normalizeDecisionPropagation(input);
+	const diagramRefs = unique([
+		...trimList(input.diagram_refs),
+		...rowToKbMappings.flatMap((mapping) => mapping.diagram_refs),
+	]);
+	const downstreamPlanningQuestions = unique([
+		...trimList(input.downstream_planning_questions),
+		...propagation.downstream_planning_questions,
+	]);
+	const producedKnowledge = unique([
+		...knowledgeChanges,
+		...trimList(input.produces?.knowledge),
+		...rowToKbMappings.flatMap((mapping) => mapping.knowledge_refs),
+	]);
+
+	if (mode === "proposal") {
+		if (approvedRows.length > 0 || knowledgeChanges.length > 0 || rowToKbMappings.length > 0) {
+			throw new Error("Proposal decision build must not record approved rows or canonical KB changes.");
+		}
+	} else {
+		if (approvedRows.length === 0) throw new Error("Accepted decision build requires at least one approved diff_table row.");
+		if (!decisions.length) throw new Error("Decision build requires at least one accepted decision or approved diff_table row.");
+		if (rowToKbMappings.length === 0) throw new Error("Accepted decision build requires row_to_kb_mappings.");
+		const mappedRows = new Set(rowToKbMappings.map((mapping) => mapping.row_id));
+		const missingRows = approvedRows.map((row) => row.id).filter((rowId) => !mappedRows.has(rowId));
+		if (missingRows.length) throw new Error(`Accepted decision build missing row_to_kb_mappings for ${missingRows.join(", ")} .`.replace(" .", "."));
+		if (!propagation.direction) throw new Error("Accepted decision build requires propagation.direction.");
+		if (propagation.direction === "product-first" && !propagation.system_impact.length && !propagation.no_system_impact) {
+			throw new Error("Product-first decision build requires system_impact or no_system_impact evidence.");
+		}
+		if (propagation.direction === "system-first" && !propagation.product_impact.length && !propagation.no_product_impact) {
+			throw new Error("System-first decision build requires product_impact or no_product_impact evidence.");
+		}
 	}
-	if (!decisions.length) throw new Error("Feedback build requires at least one accepted decision or approved diff_table row.");
-	const lowerLayerDelta = {
-		knowledge: trimList(input.lower_layer_delta?.knowledge),
-		roadmap: trimList(input.lower_layer_delta?.roadmap),
-		code: trimList(input.lower_layer_delta?.code),
-	};
-	const produces = mergeProduces({
-		knowledge: lowerLayerDelta.knowledge,
-		roadmap: lowerLayerDelta.roadmap,
-		code: lowerLayerDelta.code,
-	}, input.produces);
+
 	const consumes = trimRefGroups(input.consumes);
-	const traceability = buildTraceability("feedback", input, consumes, produces);
+	const produces = mergeProduces({
+		knowledge: producedKnowledge,
+		roadmap: roadmapChanges,
+	}, input.produces);
+	const traceability = buildTraceability("decision", input, consumes, produces);
 	const data = {
 		version: 1,
 		schema_version: input.schema_version ?? 2,
-		kind: "feedback_build",
+		kind: "decision_build",
 		created,
 		source: input.source?.trim() || "codewiki_build tool",
 		status: lifecycle.state,
 		lifecycle,
-		...buildCycleFields(input, "feedback", "feedback"),
+		...buildCycleFields(input, "decision", "decision"),
 		summary: input.summary.trim(),
+		decision_mode: mode,
 		diff_table: diffTable,
 		approved_diff_rows: approvedRows.map((row) => row.id),
+		approved_rows: approvedRows,
 		accepted_decisions: decisions.map((summary, index) => ({ id: `D${index + 1}`, summary })),
+		knowledge_changes: knowledgeChanges,
+		roadmap_changes: roadmapChanges,
+		row_to_kb_mappings: rowToKbMappings,
+		propagation,
+		diagram_refs: diagramRefs,
+		downstream_planning_questions: downstreamPlanningQuestions,
 		assumptions: trimList(input.assumptions),
 		open_questions: trimList(input.open_questions),
 		non_goals: trimList(input.non_goals),
-		lower_layer_delta: lowerLayerDelta,
+		risks: trimList(input.risks),
 		change_type: traceability.change_type,
 		traceability,
 		consumes,
@@ -841,56 +899,7 @@ export async function writeFeedbackBuild(
 	};
 	await mkdir(dirname(absPath), { recursive: true });
 	await writeFile(absPath, JSON.stringify(data, null, 2) + "\n", "utf8");
-	const relPath = `.codewiki/builds/feedback/${day}-${slug}.json`;
-	return { path: relPath, data };
-}
-
-export async function writeDocumentationBuild(
-	project: WikiProject,
-	input: CodewikiBuildToolInput,
-) {
-	if (!input.summary?.trim()) throw new Error("Documentation build requires summary.");
-	if (!input.source_feedback_build?.trim()) throw new Error("Documentation build requires source_feedback_build.");
-
-	const created = nowIso();
-	const slug = buildSlug(input.slug || input.summary, "documentation-build");
-	const day = created.slice(0, 10);
-	const absPath = buildBuildPath(project, "documentation", slug, day);
-	const lifecycle = buildLifecycle(input, created, 14);
-	const knowledgeChanges = trimList(input.knowledge_changes);
-	const roadmapChanges = trimList(input.roadmap_changes);
-	const consumes = trimRefGroups({
-		...input.consumes,
-		feedback: unique([input.source_feedback_build.trim(), ...(input.consumes?.feedback ?? [])]),
-	});
-	const produces = mergeProduces({
-		knowledge: knowledgeChanges,
-		roadmap: roadmapChanges,
-	}, input.produces);
-	const traceability = buildTraceability("documentation", input, consumes, produces);
-	const data = {
-		version: 1,
-		schema_version: input.schema_version ?? 2,
-		kind: "documentation_build",
-		created,
-		source: input.source?.trim() || "codewiki_build tool",
-		source_feedback_build: input.source_feedback_build.trim(),
-		status: lifecycle.state,
-		lifecycle,
-		...buildCycleFields(input, "documentation", "documentation"),
-		summary: input.summary.trim(),
-		knowledge_changes: knowledgeChanges,
-		roadmap_changes: roadmapChanges,
-		assumptions: trimList(input.assumptions),
-		open_questions: trimList(input.open_questions),
-		change_type: traceability.change_type,
-		traceability,
-		consumes,
-		produces,
-	};
-	await mkdir(dirname(absPath), { recursive: true });
-	await writeFile(absPath, JSON.stringify(data, null, 2) + "\n", "utf8");
-	const relPath = `.codewiki/builds/documentation/${day}-${slug}.json`;
+	const relPath = `.codewiki/builds/decision/${day}-${slug}.json`;
 	return { path: relPath, data };
 }
 
@@ -899,14 +908,14 @@ export async function writePlanningBuild(
 	input: CodewikiBuildToolInput,
 ) {
 	if (!input.summary?.trim()) throw new Error("Planning build requires summary.");
-	if (!input.source_documentation_build?.trim()) throw new Error("Planning build requires source_documentation_build.");
+	if (!input.source_decision_build?.trim()) throw new Error("Planning build requires source_decision_build.");
 
 	const created = nowIso();
 	const slug = buildSlug(input.slug || input.summary, "planning-build");
 	const day = created.slice(0, 10);
 	const absPath = buildBuildPath(project, "planning", slug, day);
 	const lifecycle = buildLifecycle(input, created, 14);
-	const sourceDocumentationBuild = input.source_documentation_build.trim();
+	const sourceDecisionBuild = input.source_decision_build.trim();
 	const taskIds = trimList(input.task_ids);
 	const taskChanges = trimList(input.task_changes).length ? trimList(input.task_changes) : trimList(input.roadmap_changes);
 	const tddPlan = trimList(input.tdd_plan);
@@ -914,7 +923,7 @@ export async function writePlanningBuild(
 	const candidateCodePaths = trimList(input.candidate_code_paths);
 	const consumes = trimRefGroups({
 		...input.consumes,
-		documentation: unique([sourceDocumentationBuild, ...(input.consumes?.documentation ?? [])]),
+		decision: unique([sourceDecisionBuild, ...(input.consumes?.decision ?? [])]),
 		roadmap: unique([...taskIds, ...(input.consumes?.roadmap ?? [])]),
 	});
 	const produces = mergeProduces({
@@ -929,7 +938,7 @@ export async function writePlanningBuild(
 		kind: "planning_build",
 		created,
 		source: input.source?.trim() || "codewiki_build tool",
-		source_documentation_build: sourceDocumentationBuild,
+		source_decision_build: sourceDecisionBuild,
 		status: lifecycle.state,
 		lifecycle,
 		...buildCycleFields(input, "planning", "planning"),
@@ -982,7 +991,6 @@ export async function writeImplementationBuild(
 	const risks = trimList(input.risks);
 	const openQuestions = trimList(input.open_questions);
 	const nextFocus = await nextFocusTaskId(project, taskId);
-	const sourceDocumentationBuild = (input.source_documentation_build ?? "").trim();
 	const sourcePlanningBuild = (input.source_planning_build ?? "").trim();
 	const acceptanceMapping = (input.acceptance_mapping ?? []).filter((m) => m.criterion.trim() && m.evidence.trim());
 	const acceptanceEvidence = acceptanceMapping.map((mapping) => `${mapping.criterion}: ${mapping.evidence}`);
@@ -1011,7 +1019,6 @@ export async function writeImplementationBuild(
 	const roleEvidence = {
 		tester: {
 			role: "tester",
-			source_documentation_build: sourceDocumentationBuild || "",
 			source_planning_build: sourcePlanningBuild || "",
 			roadmap_task_id: taskId,
 			test_files: testFiles,
@@ -1021,7 +1028,6 @@ export async function writeImplementationBuild(
 		},
 		builder: {
 			role: "builder",
-			source_documentation_build: sourceDocumentationBuild || "",
 			source_planning_build: sourcePlanningBuild || "",
 			roadmap_task_id: taskId,
 			code_files: codeFiles,
@@ -1032,7 +1038,6 @@ export async function writeImplementationBuild(
 	};
 	const consumes = trimRefGroups({
 		...input.consumes,
-		documentation: unique([...(sourceDocumentationBuild ? [sourceDocumentationBuild] : []), ...(input.consumes?.documentation ?? [])]),
 		planning: unique([...(sourcePlanningBuild ? [sourcePlanningBuild] : []), ...(input.consumes?.planning ?? [])]),
 		roadmap: unique([taskId, ...(input.consumes?.roadmap ?? [])]),
 	});
@@ -1044,7 +1049,6 @@ export async function writeImplementationBuild(
 	}, input.produces);
 	const traceability = buildTraceability("implementation", input, consumes, produces);
 	const artifactDigests = buildArtifactDigests(project, [
-		...(sourceDocumentationBuild ? [{ path: sourceDocumentationBuild, role: "source_documentation_build" }] : []),
 		...(sourcePlanningBuild ? [{ path: sourcePlanningBuild, role: "source_planning_build" }] : []),
 		...validationRefs.map((path) => ({ path, role: "validation_ref" })),
 		...testFiles.map((path) => ({ path, role: "test_file" })),
@@ -1066,7 +1070,6 @@ export async function writeImplementationBuild(
 		kind: "implementation_build",
 		created,
 		source: input.source?.trim() || "codewiki_build tool",
-		source_documentation_build: sourceDocumentationBuild || undefined,
 		source_planning_build: sourcePlanningBuild || undefined,
 		task_id: taskId,
 		task: taskSnapshot(task),
@@ -1079,7 +1082,6 @@ export async function writeImplementationBuild(
 		consumes,
 		produces,
 		linked_refs: {
-			documentation_build: sourceDocumentationBuild || "",
 			planning_build: sourcePlanningBuild || "",
 			spec_paths: task?.spec_paths ?? [],
 			code_paths: task?.code_paths ?? [],
@@ -1120,10 +1122,8 @@ export async function writeBuild(
 	input: CodewikiBuildToolInput,
 ) {
 	switch (input.kind) {
-		case "feedback":
-			return writeFeedbackBuild(project, input);
-		case "documentation":
-			return writeDocumentationBuild(project, input);
+		case "decision":
+			return writeDecisionBuild(project, input);
 		case "planning":
 			return writePlanningBuild(project, input);
 		case "implementation":

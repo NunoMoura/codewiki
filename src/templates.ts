@@ -156,7 +156,7 @@ export function starterFiles(
 			date,
 			"compilers",
 			"Compiler Flow",
-			"User intent moves through decision, planning, implementation, and validation boundaries; feedback/documentation remain compatibility loops.",
+			"User intent moves through decision, planning, implementation, and validation boundaries; decision builds replace the old split intent/knowledge handoff.",
 		),
 		".codewiki/kb/system/validation-gateway.md": runtimePolicyDoc(
 			projectName,

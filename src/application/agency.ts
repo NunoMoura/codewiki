@@ -214,7 +214,7 @@ export async function planAgency(
 				scope,
 				next_task: nextTask,
 				open_tasks: openTasks,
-				recommended_next_loop: trigger === "sprint_end" ? "documentation" : "implementation",
+				recommended_next_loop: trigger === "sprint_end" ? "decision" : "implementation",
 				session_spawn_plan: canSpawnSessions ? {
 					mode: "plan-only",
 					max_sessions: maxSessions,

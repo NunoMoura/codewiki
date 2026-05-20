@@ -33,12 +33,12 @@ function isOpenTaskStatus(status: string): boolean {
 	return ["todo", "in_progress", "blocked"].includes(status);
 }
 
-type ReconciliationLoop = "feedback" | "documentation" | "planning" | "implementation" | "validation" | "observe";
+type ReconciliationLoop = "decision" | "planning" | "implementation" | "validation" | "observe";
 type BuildArtifact = GraphBuildInputs["builds"][number];
 type ValidationArtifact = GraphBuildInputs["validations"][number];
 
 function reconciliationPriority(loop: ReconciliationLoop): number {
-	return { feedback: 0, documentation: 1, planning: 2, implementation: 3, validation: 4, observe: 5 }[loop];
+	return { decision: 0, planning: 1, implementation: 2, validation: 3, observe: 4 }[loop];
 }
 
 function loopIsolationRequirement(loop: ReconciliationLoop) {
@@ -191,8 +191,7 @@ function buildReconciliationAction(items: any[]) {
 		};
 	}
 	const commands: Record<ReconciliationLoop, string> = {
-		feedback: "Run feedback compiler",
-		documentation: "Run documentation compiler",
+		decision: "Run decision compiler",
 		planning: "Run planning compiler",
 		implementation: first.task_id ? `/wiki-resume ${first.task_id}` : "/wiki-resume",
 		validation: "Run validation gateway",
@@ -232,7 +231,7 @@ function normalizeCodewikiRef(value: any): string {
 	return ref;
 }
 
-function buildRefs(data: any, key: "feedback" | "documentation" | "planning" | "implementation"): string[] {
+function buildRefs(data: any, key: "decision" | "planning" | "implementation"): string[] {
 	return [
 		...stringList(data?.linked_builds?.[key]),
 		...stringList(data?.consumes?.[key]),
@@ -241,11 +240,9 @@ function buildRefs(data: any, key: "feedback" | "documentation" | "planning" | "
 
 function consumedBuildRefs(data: any): string[] {
 	return [
-		...stringList(data?.source_feedback_build),
-		...stringList(data?.source_documentation_build),
+		...stringList(data?.source_decision_build),
 		...stringList(data?.source_planning_build),
-		...stringList(data?.consumes?.feedback),
-		...stringList(data?.consumes?.documentation),
+		...stringList(data?.consumes?.decision),
 		...stringList(data?.consumes?.planning),
 		...stringList(data?.consumes?.implementation),
 	].map(normalizeCodewikiRef).filter(Boolean);
@@ -271,12 +268,6 @@ function buildTaskIds(build: BuildArtifact): string[] {
 
 function firstTaskId(build: BuildArtifact): string | undefined {
 	return buildTaskIds(build)[0];
-}
-
-function hasActionableLowerLayerDelta(build: BuildArtifact | undefined): boolean {
-	if (!build) return false;
-	const delta = build.data?.lower_layer_delta || {};
-	return stringList(delta.roadmap).length > 0 || stringList(delta.code).length > 0 || producedRefs(build.data, "roadmap").length > 0 || producedRefs(build.data, "code").length > 0 || producedRefs(build.data, "tests").length > 0;
 }
 
 function hasRoadmapChanges(build: BuildArtifact): boolean {
@@ -689,11 +680,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const buildTaskMap = new Map<string, string[]>();
 	const reconciliationItems: any[] = [];
 	const buildsByPath = new Map<string, BuildArtifact>();
-	const documentationByFeedback = new Map<string, BuildArtifact[]>();
-	const planningByDocumentation = new Map<string, BuildArtifact[]>();
+	const planningByDecision = new Map<string, BuildArtifact[]>();
 	const implementationByPlanning = new Map<string, BuildArtifact[]>();
-	const implementationByDocumentation = new Map<string, BuildArtifact[]>();
-	const implementationByFeedback = new Map<string, BuildArtifact[]>();
 
 	for (const build of builds) {
 		const buildPath = normalizeCodewikiRef(build.path);
@@ -709,25 +697,14 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		}
 	}
 	for (const build of builds) {
-		if (build.kind === "documentation_build") {
-			indexPush(documentationByFeedback, build.data?.source_feedback_build, build);
-			for (const ref of buildRefs(build.data, "feedback")) {
-				indexPush(documentationByFeedback, ref, build);
-			}
-		} else if (build.kind === "planning_build") {
-			indexPush(planningByDocumentation, build.data?.source_documentation_build, build);
-			for (const ref of buildRefs(build.data, "documentation")) {
-				indexPush(planningByDocumentation, ref, build);
+		if (build.kind === "planning_build") {
+			indexPush(planningByDecision, build.data?.source_decision_build, build);
+			for (const ref of buildRefs(build.data, "decision")) {
+				indexPush(planningByDecision, ref, build);
 			}
 		} else if (build.kind === "implementation_build") {
 			for (const ref of [normalizeCodewikiRef(build.data?.source_planning_build), ...buildRefs(build.data, "planning")]) {
 				indexPush(implementationByPlanning, ref, build);
-			}
-			for (const ref of [normalizeCodewikiRef(build.data?.source_documentation_build), ...buildRefs(build.data, "documentation")]) {
-				indexPush(implementationByDocumentation, ref, build);
-			}
-			for (const ref of buildRefs(build.data, "feedback")) {
-				indexPush(implementationByFeedback, ref, build);
 			}
 		}
 	}
@@ -749,24 +726,11 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			return Boolean(validation.taskId && taskIds.has(validation.taskId) && ["implementation", "task-close"].includes(profile) && sources.length === 0);
 		});
 	};
-	const feedbackConsumed = (build: BuildArtifact) => {
+	const decisionConsumed = (build: BuildArtifact) => {
 		const buildPath = normalizeCodewikiRef(build.path);
 		return Boolean(
-			documentationByFeedback.get(buildPath)?.length ||
-			implementationByFeedback.get(buildPath)?.length ||
+			planningByDecision.get(buildPath)?.length ||
 			hasPassingValidationForBuild(build)
-		);
-	};
-	const documentationConsumed = (build: BuildArtifact) => {
-		const buildPath = normalizeCodewikiRef(build.path);
-		const sourceFeedback = buildsByPath.get(normalizeCodewikiRef(build.data?.source_feedback_build));
-		const expectsPlanning = hasActionableLowerLayerDelta(sourceFeedback);
-		return Boolean(
-			planningByDocumentation.get(buildPath)?.length ||
-			hasRoadmapChanges(build) ||
-			implementationByDocumentation.get(buildPath)?.length ||
-			hasPassingValidationForBuild(build) ||
-			!expectsPlanning
 		);
 	};
 	const planningConsumed = (build: BuildArtifact) => {
@@ -794,7 +758,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		const lifecycleState = String(build.data?.lifecycle?.state || build.data?.status || build.status || "").trim() || "unknown";
 		const buildValidated = hasPassingValidationForBuild(build);
 		const superseded = supersededByPath.has(buildPath);
-		const consumed = build.kind === "feedback_build" ? feedbackConsumed(build) : build.kind === "documentation_build" ? documentationConsumed(build) : build.kind === "planning_build" ? planningConsumed(build) : false;
+		const consumed = build.kind === "decision_build" ? decisionConsumed(build) : build.kind === "planning_build" ? planningConsumed(build) : false;
 		const historicalCold = historicalColdBuild(build, lifecycleState);
 		const buildAlignmentState = superseded || isLifecycleComplete(lifecycleState) || buildValidated || consumed || historicalCold ? "aligned" : "drift";
 		const archiveLedger = buildArchiveLedger(build);
@@ -806,7 +770,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		addNode(buildId, {
 			kind: build.kind as any,
 			path: buildPath,
-			title: build.data?.source_feedback_build || build.data?.source || buildPath,
+			title: build.data?.source_decision_build || build.data?.source || buildPath,
 			status: build.data?.status ?? build.status,
 			layer: "build",
 			lifecycle_state: lifecycleState,
@@ -825,7 +789,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		for (const ref of buildCanonicalRefs) addCanonicalSourceRef(buildId, ref, "build_references_canonical_source");
 		for (const ref of buildAuditRefs) addAuditEvidenceRef(buildId, ref, "build_audit_evidence");
 		for (const ref of buildContentProofRefs) addContentProofRef(buildId, ref, "build_content_proof");
-		if (!superseded && !historicalCold && build.kind === "feedback_build" && lifecycleState === "proposed") {
+		if (!superseded && !historicalCold && build.kind === "decision_build" && lifecycleState === "proposed") {
 			reconciliationItems.push({
 				id: `reconcile:${buildPath}`,
 				source_id: buildId,
@@ -833,21 +797,10 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				direction: "downward",
 				from_layer: "intent",
 				to_layer: "knowledge",
-				next_loop: "feedback",
-				reason: "Feedback build is proposed; confirm or reject intent before documentation changes.",
+				next_loop: "decision",
+				reason: "Decision build is proposed; approve, edit, reject, or defer semantic rows before canonical knowledge changes.",
 			});
-		} else if (!superseded && !historicalCold && build.kind === "feedback_build" && lifecycleState === "accepted" && !feedbackConsumed(build)) {
-			reconciliationItems.push({
-				id: `reconcile:${buildPath}`,
-				source_id: buildId,
-				state: "drift",
-				direction: "downward",
-				from_layer: "intent",
-				to_layer: "knowledge",
-				next_loop: "documentation",
-				reason: "Accepted feedback build has no downstream documentation, implementation, or validation evidence yet.",
-			});
-		} else if (!superseded && !historicalCold && build.kind === "documentation_build" && lifecycleState === "accepted" && !documentationConsumed(build)) {
+		} else if (!superseded && !historicalCold && build.kind === "decision_build" && lifecycleState === "accepted" && !decisionConsumed(build)) {
 			reconciliationItems.push({
 				id: `reconcile:${buildPath}`,
 				source_id: buildId,
@@ -856,7 +809,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				from_layer: "knowledge",
 				to_layer: "roadmap",
 				next_loop: "planning",
-				reason: "Accepted documentation build has actionable downstream delta but no planning build, roadmap change, implementation link, or validation evidence yet.",
+				reason: "Accepted decision build has no downstream planning build or validation evidence yet.",
 			});
 		} else if (!superseded && !historicalCold && build.kind === "planning_build" && lifecycleState === "accepted" && !planningConsumed(build)) {
 			reconciliationItems.push({
@@ -881,7 +834,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				task_id: firstTaskId(build),
 				reason: "Accepted implementation build still needs passing validation gateway evidence.",
 			});
-		} else if (!superseded && !historicalCold && ["documentation_build", "planning_build", "implementation_build"].includes(build.kind) && lifecycleState === "applied" && !buildValidated) {
+		} else if (!superseded && !historicalCold && ["decision_build", "planning_build", "implementation_build"].includes(build.kind) && lifecycleState === "applied" && !buildValidated) {
 			reconciliationItems.push({
 				id: `reconcile:${buildPath}`,
 				source_id: buildId,
@@ -988,56 +941,43 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			direction: "upward",
 			from_layer: row.change_type === "code" ? "code" : row.change_type === "task" ? "roadmap" : "knowledge",
 			to_layer: "build",
-			next_loop: row.change_type === "product" || row.change_type === "system" ? "feedback" : row.change_type === "task" ? "planning" : "implementation",
+			next_loop: row.change_type === "product" || row.change_type === "system" ? "decision" : row.change_type === "task" ? "planning" : "implementation",
 			reason: `Semantic ${row.change_type} change ${row.path} lacks accepted compiler build coverage.`,
 			gaps: row.gaps,
 			change_type: row.change_type,
 		});
 	}
-	for (const feedback of builds.filter((build) => {
-		if (build.kind !== "feedback_build") return false;
+	for (const decision of builds.filter((build) => {
+		if (build.kind !== "decision_build") return false;
 		const lifecycleState = String(build.data?.lifecycle?.state || build.data?.status || build.status || "").trim() || "unknown";
 		const buildPath = normalizeCodewikiRef(build.path);
+		if (isLifecycleComplete(lifecycleState)) return false;
 		if (supersededByPath.has(buildPath) || historicalColdBuild(build, lifecycleState)) return false;
-		const downstreamDocs = documentationByFeedback.get(buildPath) || [];
-		const downstreamPlanning = downstreamDocs.flatMap((docBuild) => planningByDocumentation.get(normalizeCodewikiRef(docBuild.path)) || []);
-		const downstreamTaskIds = unique([
-			...downstreamDocs.flatMap((docBuild) => producedRefs(docBuild.data, "roadmap")),
-			...downstreamPlanning.flatMap((planningBuild) => buildTaskIds(planningBuild)),
-		].filter((ref) => /^TASK-/.test(ref)));
+		const downstreamPlanning = planningByDecision.get(buildPath) || [];
+		const downstreamTaskIds = unique(downstreamPlanning.flatMap((planningBuild) => buildTaskIds(planningBuild)).filter((ref) => /^TASK-/.test(ref)));
 		const hasOpenDownstreamTask = downstreamTaskIds.some((taskId) => activeRoadmapTaskIds.has(taskId));
-		const needsTraceabilityFollowUp = hasActionableLowerLayerDelta(build) && downstreamDocs.some((docBuild) => !documentationConsumed(docBuild));
-		return !feedbackConsumed(build) || buildLinkedToOpenTask(build) || buildDirty(build) || hasOpenDownstreamTask || needsTraceabilityFollowUp;
+		return !decisionConsumed(build) || buildLinkedToOpenTask(build) || buildDirty(build) || hasOpenDownstreamTask;
 	})) {
-		const feedbackPath = normalizeCodewikiRef(feedback.path);
-		const explicitRequirements = Array.isArray(feedback.data?.requirements) ? feedback.data.requirements : [];
-		const approvedDiffRows = (feedback.data?.diff_table || []).filter((row: any) => String(row?.user_action || "") === "approved" || stringList(feedback.data?.approved_diff_rows).includes(String(row?.id || "")));
-		const acceptedDecisions = feedback.data?.accepted_decisions || [];
+		const decisionPath = normalizeCodewikiRef(decision.path);
+		const explicitRequirements = Array.isArray(decision.data?.requirements) ? decision.data.requirements : [];
+		const approvedDiffRows = (decision.data?.diff_table || []).filter((row: any) => String(row?.user_action || "") === "approved" || stringList(decision.data?.approved_diff_rows).includes(String(row?.id || "")));
+		const acceptedDecisions = decision.data?.accepted_decisions || [];
 		const requirementRows = (explicitRequirements.length > 0
 			? explicitRequirements.map((req: any) => ({ id: String(req.id || "").trim(), text: String(req.text || "").trim() }))
 			: approvedDiffRows.length > 0
 				? approvedDiffRows.map((row: any) => ({ id: String(row.id || "").trim(), text: String(row.desired_state || "").trim() }))
-				: acceptedDecisions.map((decision: any) => ({ id: String(decision.id || "").trim(), text: String(decision.summary || "").trim() })))
+				: acceptedDecisions.map((entry: any) => ({ id: String(entry.id || "").trim(), text: String(entry.summary || "").trim() })))
 			.filter((req: any) => req.id && req.text);
 		for (const requirement of requirementRows) {
-			const docsForFeedback = uniqueBuildsByPath(documentationByFeedback.get(feedbackPath) || []);
-			const documentationPaths = docsForFeedback.map((build) => normalizeCodewikiRef(build.path)).filter(Boolean);
-			const knowledgePaths = unique(docsForFeedback.flatMap((build) => [
-				...producedRefs(build.data, "knowledge"),
-				...stringList(build.data?.knowledge_changes).map(normalizeCodewikiRef),
-			]).filter(Boolean));
-			const planningBuilds = uniqueBuildsByPath(docsForFeedback.flatMap((build) => planningByDocumentation.get(normalizeCodewikiRef(build.path)) || []));
+			const knowledgePaths = unique([
+				...producedRefs(decision.data, "knowledge"),
+				...stringList(decision.data?.knowledge_changes).map(normalizeCodewikiRef),
+				...stringList(decision.data?.row_to_kb_mappings?.flatMap((mapping: any) => mapping?.knowledge_refs ?? [])).map(normalizeCodewikiRef),
+			].filter(Boolean));
+			const planningBuilds = uniqueBuildsByPath(planningByDecision.get(decisionPath) || []);
 			const planningPaths = planningBuilds.map((build) => normalizeCodewikiRef(build.path)).filter(Boolean);
-			const legacyTaskIds = docsForFeedback.flatMap((build) => [
-				...producedRefs(build.data, "roadmap"),
-				...stringList(build.data?.roadmap_changes),
-			]).filter((ref) => /^TASK-\d+$/.test(ref));
-			const planningTaskIds = planningBuilds.flatMap((build) => buildTaskIds(build));
-			const taskIds = unique([...legacyTaskIds, ...planningTaskIds]);
-			const implementationBuilds = unique([
-				...planningBuilds.flatMap((build) => implementationByPlanning.get(normalizeCodewikiRef(build.path)) || []).map((build) => normalizeCodewikiRef(build.path)),
-				...docsForFeedback.flatMap((build) => implementationByDocumentation.get(normalizeCodewikiRef(build.path)) || []).map((build) => normalizeCodewikiRef(build.path)),
-			]);
+			const taskIds = unique(planningBuilds.flatMap((build) => buildTaskIds(build)));
+			const implementationBuilds = unique(planningBuilds.flatMap((build) => implementationByPlanning.get(normalizeCodewikiRef(build.path)) || []).map((build) => normalizeCodewikiRef(build.path)));
 			const implementationArtifacts = implementationBuilds.map((path) => buildsByPath.get(path)).filter(Boolean) as BuildArtifact[];
 			const testPaths = unique(implementationArtifacts.flatMap((build) => [...producedRefs(build.data, "tests"), ...stringList(build.data?.test_files).map(normalizeCodewikiRef)]));
 			const codeRefs = unique(implementationArtifacts.flatMap((build) => [...producedRefs(build.data, "code"), ...stringList(build.data?.code_files).map(normalizeCodewikiRef)]));
@@ -1050,8 +990,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			const contentProofRefsForRequirement = unique(implementationArtifacts.flatMap((build) => contentProofRefs(build.data)));
 			const auditRefsForRequirement = unique(implementationArtifacts.flatMap((build) => auditEvidenceRefs(build.data)));
 			const gaps: string[] = [];
-			if (documentationPaths.length === 0) gaps.push("missing_documentation_build");
-			if (hasActionableLowerLayerDelta(feedback) && planningPaths.length === 0 && taskIds.length === 0) gaps.push("missing_planning_build");
+			if (knowledgePaths.length === 0) gaps.push("missing_knowledge_mapping");
+			if (planningPaths.length === 0 && taskIds.length === 0) gaps.push("missing_planning_build");
 			if (taskIds.length > 0 && implementationBuilds.length === 0) gaps.push("missing_implementation_build");
 			if (implementationBuilds.length > 0 && testPaths.length === 0) gaps.push("missing_test_evidence");
 			if (implementationBuilds.length > 0 && validationPaths.length === 0) gaps.push("missing_validation_evidence");
@@ -1059,8 +999,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			const traceabilityRow = {
 				requirement_id: requirement.id,
 				requirement_text: requirement.text,
-				feedback_build: feedbackPath,
-				documentation_builds: documentationPaths,
+				decision_build: decisionPath,
 				knowledge_paths: knowledgePaths,
 				planning_builds: planningPaths,
 				roadmap_task_ids: taskIds,
@@ -1075,20 +1014,20 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			};
 			traceabilityRows.push(traceabilityRow);
 			if (gaps.length > 0) {
-				const nextLoop = gaps.includes("missing_documentation_build")
-					? "documentation"
-					: gaps.includes("missing_planning_build")
-						? "planning"
-						: gaps.includes("missing_validation_evidence") || gaps.includes("missing_publication_content_proof")
-							? "validation"
+				const nextLoop = gaps.includes("missing_planning_build")
+					? "planning"
+					: gaps.includes("missing_validation_evidence") || gaps.includes("missing_publication_content_proof")
+						? "validation"
+						: gaps.includes("missing_knowledge_mapping")
+							? "decision"
 							: "implementation";
 				reconciliationItems.push({
-					id: `reconcile:traceability:${feedbackPath}:${requirement.id}`,
-					source_id: `build:${feedbackPath}`,
+					id: `reconcile:traceability:${decisionPath}:${requirement.id}`,
+					source_id: `build:${decisionPath}`,
 					state: "drift",
 					direction: "downward",
-					from_layer: "intent",
-					to_layer: gaps.includes("missing_publication_content_proof") ? "content_proof" : gaps.includes("missing_validation_evidence") ? "validation" : gaps.includes("missing_implementation_build") || gaps.includes("missing_test_evidence") ? "code" : "knowledge",
+					from_layer: "decision",
+					to_layer: gaps.includes("missing_publication_content_proof") ? "content_proof" : gaps.includes("missing_validation_evidence") ? "validation" : gaps.includes("missing_implementation_build") || gaps.includes("missing_test_evidence") ? "code" : gaps.includes("missing_planning_build") ? "roadmap" : "knowledge",
 					next_loop: nextLoop,
 					task_id: taskIds[0],
 					reason: `Traceability gap for ${requirement.id}: ${gaps.join(", ")}.`,
@@ -1212,12 +1151,12 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 				state: v.verdict === "block" ? "blocked" : "drift",
 				direction: "gateway",
 				from_layer: "validation",
-				to_layer: v.verdict === "block" ? "feedback" : "documentation",
-				next_loop: v.verdict === "block" ? "feedback" : "documentation",
+				to_layer: "decision",
+				next_loop: "decision",
 				task_id: v.taskId,
 				reason: v.verdict === "block"
-					? "Validation blocked; escalate ambiguous intent to feedback compiler."
-					: "Validation failed; return to documentation compiler to fix knowledge/roadmap gaps.",
+					? "Validation blocked; escalate ambiguous intent to decision compiler."
+					: "Validation failed; return to decision compiler to fix knowledge/roadmap gaps.",
 			});
 		}
 	}
@@ -1245,7 +1184,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			direction: "gateway",
 			from_layer: "knowledge",
 			to_layer: "roadmap",
-			next_loop: "documentation",
+			next_loop: "decision",
 			reason: `Lint ${issue.severity} (${issue.kind}) has no open roadmap coverage; reconcile knowledge or create scoped work.`,
 			doc_paths: [issuePath],
 		});
@@ -1305,8 +1244,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			direction: "upward",
 			from_layer: "code",
 			to_layer: "knowledge",
-			next_loop: "documentation",
-			reason: `Mapped code changed without open roadmap coverage; reconcile upward into knowledge or feedback if intent is unclear.`,
+			next_loop: "decision",
+			reason: `Mapped code changed without open roadmap coverage; reconcile upward into knowledge or decision if intent is unclear.`,
 			doc_paths: relatedDocs,
 		});
 	}
@@ -1372,7 +1311,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		const lifecycleState = String(build.data?.lifecycle?.state || build.data?.status || build.status || "").trim();
 		const validated = hasPassingValidationForBuild(build);
 		const superseded = supersededByPath.has(normalizeCodewikiRef(build.path));
-		const consumed = build.kind === "feedback_build" ? feedbackConsumed(build) : build.kind === "documentation_build" ? documentationConsumed(build) : build.kind === "planning_build" ? planningConsumed(build) : false;
+		const consumed = build.kind === "decision_build" ? decisionConsumed(build) : build.kind === "planning_build" ? planningConsumed(build) : false;
 		return !superseded && !historicalColdBuild(build, lifecycleState) && !isLifecycleComplete(lifecycleState) && !validated && !consumed;
 	}).map((build) => normalizeCodewikiRef(build.path)).filter(Boolean);
 	const passValidationPaths = validations.filter((v) => String(v.verdict || "") === "pass").map((v) => v.path);
@@ -1452,7 +1391,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		active_loop: reconciliationAction.loop,
 		reason: reconciliationAction.reason,
 		input_refs: reconciliationAction.handoff_refs || [],
-		expected_output: reconciliationAction.loop === "feedback" ? "feedback_build" : reconciliationAction.loop === "documentation" ? "documentation_build" : reconciliationAction.loop === "planning" ? "planning_build" : reconciliationAction.loop === "implementation" ? "implementation_build" : reconciliationAction.loop === "validation" ? "validation_report" : "observation",
+		expected_output: reconciliationAction.loop === "decision" ? "decision_build" : reconciliationAction.loop === "planning" ? "planning_build" : reconciliationAction.loop === "implementation" ? "implementation_build" : reconciliationAction.loop === "validation" ? "validation_report" : "observation",
 		exit_gate: reconciliationAction.loop === "observe" ? "no drift" : "validation pass or explicit user decision",
 		scope: cursorScope,
 		isolation: reconciliationAction.isolation,

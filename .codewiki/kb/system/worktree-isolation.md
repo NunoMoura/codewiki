@@ -9,7 +9,8 @@ updated: "2026-05-19"
 code_paths:
   - src/application/claims.ts
   - src/application/tools/artifact-status.ts
-  - src/application/tools/session-handoff.ts
+  - src/application/resume-context.ts
+  - src/adapters/pi/commands/resume.ts
   - src/application/builds.ts
   - src/adapters/pi/tools
 ---
@@ -56,7 +57,7 @@ Wake messages are not stale-context revival. A woken agent must re-read CodeWiki
 
 ## Cleanup sequencing
 
-Compatibility cleanup, including `/wiki-session-handoff` removal or extraction from normal user-facing recovery flow, should run only after role worktree/publisher orchestration is validated. Cleanup should use its own task/role worktree and preserve compatibility/debug behavior only when a migration task explicitly requires it.
+Compatibility cleanup removes legacy session-handoff surfaces from normal user-facing recovery flow after role worktree/publisher orchestration is validated. Any future compatibility/debug behavior must be explicitly scoped to a migration task and must not replace `codewiki_resume_context`, CodeWiki-owned compaction, or `/wiki-resume --new` for fresh-context starts.
 
 ## Related docs
 

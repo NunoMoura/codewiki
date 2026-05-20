@@ -46,8 +46,8 @@ import {
     taskLoopEvidenceLine,
     isTaskBlocked,
     taskBoardColumn,
-    taskIdCandidates
 } from "../../../application/roadmap.ts";
+import { taskIdCandidates } from "../../../domain/roadmap/task-id.ts";
 import { currentTaskLink, setTaskSessionStatusText } from "../session.ts";
 import { maybeReadStatusState, maybeReadRoadmapState } from "../../../application/state-artifacts.ts";
 import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";
@@ -1197,10 +1197,10 @@ export function readDiffTablePanelData(project: WikiProject): {
 			readOnly: false,
 		});
 	}
-	const feedbackDir = resolve(project.root, ".codewiki/builds/feedback");
-	if (rows.length === 0 && existsSync(feedbackDir)) {
-		for (const file of readdirSync(feedbackDir).filter((name) => name.endsWith(".json")).sort().reverse().slice(0, 3)) {
-			const build = maybeReadJsonSync<any>(resolve(feedbackDir, file));
+	const decisionDir = resolve(project.root, ".codewiki/builds/decision");
+	if (rows.length === 0 && existsSync(decisionDir)) {
+		for (const file of readdirSync(decisionDir).filter((name) => name.endsWith(".json")).sort().reverse().slice(0, 3)) {
+			const build = maybeReadJsonSync<any>(resolve(decisionDir, file));
 			for (const row of Array.isArray(build?.diff_table) ? build.diff_table : []) rows.push({
 				tableId: file,
 				rowId: String(row.id || ""),
@@ -1214,7 +1214,7 @@ export function readDiffTablePanelData(project: WikiProject): {
 			});
 		}
 	}
-	return { rows, summary: rows.some((row) => !row.readOnly) ? "Pending feedback diff table" : "Latest accepted feedback diff rows (read-only)" };
+	return { rows, summary: rows.some((row) => !row.readOnly) ? "Pending decision diff table" : "Latest accepted decision diff rows (read-only)" };
 }
 
 export function updateRuntimeDiffRow(project: WikiProject, tableId: string, rowId: string, action: "approved" | "rejected" | "deferred" | "edited", alternative?: string): boolean {

@@ -21,9 +21,9 @@ User-opened sessions and subagents run focused work from CodeWiki refs with fres
 ## Success signals
 
 - Agents start from compact graph-backed status before broad reads.
-- Agents follow compiler artifacts: feedback build, documentation build, planning build, roadmap work item, and implementation build.
+- Agents follow compiler artifacts: decision build, planning build, roadmap work item, and implementation build.
 - Agents can advance roadmap work automatically only inside explicit token, time, risk, validation, policy, and approval gates.
-- Parallel agents can lease narrow documentation, roadmap, build, validation, or code scopes and see overlap warnings or conflicts before work proceeds.
+- Parallel agents can lease narrow decision, roadmap, build, validation, or code scopes and see overlap warnings or conflicts before work proceeds.
 - Subagents return compact structured results rather than mutating canonical truth directly.
 - Ambiguous intent escalates back to the decision loop instead of being guessed.
 

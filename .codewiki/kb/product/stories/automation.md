@@ -9,7 +9,7 @@ owners:
 updated: '2026-05-09'
 code_paths:
 - skills/codewiki-implementation/SKILL.md
-- skills/codewiki-documentation/SKILL.md
+- skills/codewiki-decision/SKILL.md
 ---
 
 # Use Gated Agency

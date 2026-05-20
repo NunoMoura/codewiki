@@ -213,13 +213,13 @@ async function main() {
 		const commandNames = [...extension.commands.keys()];
 		ensureIncludes(
 			commandNames,
-			["audit", "wiki-bootstrap", "wiki-config", "wiki-status", "wiki-ui", "wiki-resume", "wiki-session-handoff"],
+			["audit", "wiki-bootstrap", "wiki-config", "wiki-status", "wiki-ui", "wiki-resume"],
 			"extension commands",
 		);
 		assert.equal(
 			commandNames.length,
-			7,
-			`Expected exactly 7 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`,
+			6,
+			`Expected exactly 6 public commands, got ${commandNames.length}: ${commandNames.join(", ")}`,
 		);
 		for (const legacyCommand of [
 			"wiki-fix",
@@ -232,6 +232,7 @@ async function main() {
 			"wiki-self-drift",
 			"wiki-code-drift",
 			"wiki-task",
+			"wiki-session-handoff",
 		]) {
 			assert.ok(
 				!commandNames.includes(legacyCommand),
@@ -249,6 +250,7 @@ async function main() {
 				"codewiki_setup",
 				"codewiki_bootstrap",
 				"codewiki_state",
+				"codewiki_resume_context",
 				"codewiki_artifact_status",
 				"codewiki_audit",
 				"codewiki_build",
@@ -257,7 +259,6 @@ async function main() {
 				"codewiki_task",
 				"codewiki_diff_table",
 				"codewiki_session",
-				"codewiki_session_handoff",
 				"codewiki_agency",
 			],
 			"extension tools",
@@ -273,8 +274,10 @@ async function main() {
 		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to application tool executor");
+		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
+		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
 		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Bootstrap setup tool should delegate through application tool contract");
-		for (const adapterFile of ["agency", "artifact-status", "session", "session-handoff", "state", "task"]) {
+		for (const adapterFile of ["agency", "artifact-status", "session", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);
 		}
@@ -285,6 +288,7 @@ async function main() {
 			"codewiki_roadmap_update",
 			"codewiki_task_session_link",
 			"codewiki_task_loop_update",
+			"codewiki_session_handoff",
 		]) {
 			assert.ok(
 				!extension.tools.has(removedTool),
@@ -301,7 +305,7 @@ async function main() {
 		const skills = skillResult.skills.filter((skill) =>
 			skill.filePath.startsWith(repoRoot),
 		);
-		const expectedSkillNames = ["codewiki", "codewiki-documentation", "codewiki-feedback", "codewiki-implementation", "codewiki-planning", "codewiki-validation"];
+		const expectedSkillNames = ["codewiki", "codewiki-decision", "codewiki-implementation", "codewiki-planning", "codewiki-validation"];
 		assert.deepEqual(
 			skills.map((skill) => skill.name).sort(),
 			expectedSkillNames,
@@ -484,6 +488,28 @@ async function main() {
 			/open \d+; next/i,
 			"State tool should return compact summary text",
 		);
+		const resumeContextTool = extension.tools.get("codewiki_resume_context");
+		assert.ok(
+			resumeContextTool && typeof resumeContextTool.definition?.execute === "function",
+			"Resume context tool missing execute function",
+		);
+		const resumeContextResult = await resumeContextTool.definition.execute(
+			"resume-context-tool-smoke",
+			{ repoPath: projectDir, taskId: "TASK-001", refresh: true, followUpIntent: "keep context minimal" },
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		assert.match(
+			resumeContextResult.content[0]?.text ?? "",
+			/Implement roadmap task TASK-001/i,
+			"Resume context tool should return the bounded resume prompt to the agent",
+		);
+		assert.equal(
+			resumeContextResult.details.task.id,
+			"TASK-001",
+			"Resume context tool should target requested task",
+		);
 		const agencyTool = extension.tools.get("codewiki_agency");
 		assert.ok(
 			agencyTool && typeof agencyTool.definition?.execute === "function",
@@ -551,64 +577,40 @@ async function main() {
 			"build-tool-smoke",
 			{
 				repoPath: projectDir,
-				kind: "feedback",
-				summary: "Accepted feedback smoke build.",
-				slug: "feedback-smoke",
+				kind: "decision",
+				summary: "Accepted decision smoke build.",
+				slug: "decision-smoke",
 				source: "smoke-test",
 				diff_table: [{
 					id: "DTR-001",
-					current_state: "Feedback intent is not persisted as approved diff rows.",
-					desired_state: "Feedback builds persist approved diff rows as durable handoff payloads.",
-					rationale: "The next compiler loop needs a compact user-approved intent contract.",
-					affected_layers: ["feedback", "builds"],
+					current_state: "Decision intent is not persisted as approved diff rows.",
+					desired_state: "Decision builds persist approved rows and KB mappings as durable handoff payloads.",
+					rationale: "The planning loop needs a compact user-approved intent and knowledge contract.",
+					affected_layers: ["decision", "builds"],
 					risk: "low",
 					user_action: "approved",
 				}],
 				assumptions: ["Smoke fixture can create build artifacts."],
-				lower_layer_delta: {
-					knowledge: ["Document feedback build workflow."],
-					roadmap: ["Create implementation task if code must change."],
-					code: ["Add writer path."],
-				},
+				knowledge_changes: [".codewiki/kb/system/overview.md"],
+				roadmap_changes: ["TASK-001"],
+				row_to_kb_mappings: [{ row_id: "DTR-001", knowledge_refs: [".codewiki/kb/system/overview.md"], diagram_refs: ["component-map:application"], evidence: "Overview captures accepted decision." }],
+				propagation: { direction: "system-first", product_impact: ["User-visible handoff semantics change."], downstream_planning_questions: ["Create implementation task if code must change."] },
+				diagram_refs: ["component-map:application"],
 				lifecycle: { ttl_days: 7 },
 			},
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(buildResult.details.path, /\.codewiki\/builds\/feedback\/.*feedback-smoke\.json$/);
-		const feedbackBuild = JSON.parse(readFileSync(resolve(projectDir, buildResult.details.path), "utf8"));
-		assert.equal(feedbackBuild.kind, "feedback_build");
-		assert.equal(feedbackBuild.status, "accepted");
-		assert.equal(feedbackBuild.lifecycle.ttl_days, 7);
-		assert.equal(feedbackBuild.schema_version, 2);
-		assert.equal(feedbackBuild.diff_table[0].user_action, "approved");
-		assert.equal(feedbackBuild.accepted_decisions[0].id, "D1");
-
-		// Documentation build smoke
-		const docBuildResult = await buildTool.definition.execute(
-			"build-tool-doc-smoke",
-			{
-				repoPath: projectDir,
-				kind: "documentation",
-				summary: "Documentation build from feedback.",
-				slug: "doc-smoke",
-				source_feedback_build: buildResult.details.path,
-				knowledge_changes: [".codewiki/kb/system/overview.md"],
-				roadmap_changes: ["TASK-001"],
-				lifecycle: { ttl_days: 14 },
-			},
-			undefined,
-			undefined,
-			outsideToolCtx,
-		);
-		assert.match(docBuildResult.details.path, /\.codewiki\/builds\/documentation\/.*doc-smoke\.json$/);
-		const docBuild = JSON.parse(readFileSync(resolve(projectDir, docBuildResult.details.path), "utf8"));
-		assert.equal(docBuild.kind, "documentation_build");
-		assert.equal(docBuild.source_feedback_build, buildResult.details.path);
-		assert.equal(docBuild.lifecycle.ttl_days, 14);
-		assert.deepEqual(docBuild.consumes.feedback, [buildResult.details.path]);
-		assert.deepEqual(docBuild.produces.roadmap, ["TASK-001"]);
+		assert.match(buildResult.details.path, /\.codewiki\/builds\/decision\/.*decision-smoke\.json$/);
+		const decisionBuild = JSON.parse(readFileSync(resolve(projectDir, buildResult.details.path), "utf8"));
+		assert.equal(decisionBuild.kind, "decision_build");
+		assert.equal(decisionBuild.status, "accepted");
+		assert.equal(decisionBuild.lifecycle.ttl_days, 7);
+		assert.equal(decisionBuild.schema_version, 2);
+		assert.equal(decisionBuild.diff_table[0].user_action, "approved");
+		assert.equal(decisionBuild.accepted_decisions[0].id, "D1");
+		assert.equal(decisionBuild.propagation.direction, "system-first");
 
 		// Planning build smoke
 		const planBuildResult = await buildTool.definition.execute(
@@ -616,16 +618,16 @@ async function main() {
 			{
 				repoPath: projectDir,
 				kind: "planning",
-				summary: "Planning build from documentation.",
+				summary: "Planning build from decision.",
 				slug: "plan-smoke",
-				source_documentation_build: docBuildResult.details.path,
+				source_decision_build: buildResult.details.path,
 				task_ids: ["TASK-001"],
 				task_changes: ["TASK-001 planned for implementation"],
 				tdd_plan: ["Derive smoke assertions before code changes."],
 				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
 				candidate_code_paths: ["src/index.ts"],
-				requirements: [{ id: "REQ-SMOKE-001", text: "Feedback builds must be durable handoff payloads.", source_refs: [buildResult.details.path] }],
-				evidence_mapping: [{ criterion: "Roadmap task maps to requirement", evidence: "TASK-001 is the implementation target.", requirement_ids: ["REQ-SMOKE-001"], source_refs: [docBuildResult.details.path] }],
+				requirements: [{ id: "REQ-SMOKE-001", text: "Decision builds must be durable handoff payloads.", source_refs: [buildResult.details.path] }],
+				evidence_mapping: [{ criterion: "Roadmap task maps to requirement", evidence: "TASK-001 is the implementation target.", requirement_ids: ["REQ-SMOKE-001"], source_refs: [buildResult.details.path] }],
 				lifecycle: { ttl_days: 14 },
 			},
 			undefined,
@@ -635,7 +637,7 @@ async function main() {
 		assert.match(planBuildResult.details.path, /\.codewiki\/builds\/planning\/.*plan-smoke\.json$/);
 		const planBuild = JSON.parse(readFileSync(resolve(projectDir, planBuildResult.details.path), "utf8"));
 		assert.equal(planBuild.kind, "planning_build");
-		assert.deepEqual(planBuild.consumes.documentation, [docBuildResult.details.path]);
+		assert.deepEqual(planBuild.consumes.decision, [buildResult.details.path]);
 		assert.equal(planBuild.cycle.loop, "planning");
 		assert.equal(planBuild.policy.profile, "planning");
 
@@ -648,19 +650,18 @@ async function main() {
 				summary: "Implementation build for task.",
 				slug: "impl-smoke",
 				task_id: "TASK-001",
-				source_documentation_build: docBuildResult.details.path,
 				source_planning_build: planBuildResult.details.path,
 				test_files: ["tests/smoke/package-smoke.test.mjs"],
 				code_files: ["src/index.ts"],
 				checks_run: ["npm test"],
 				acceptance_mapping: [{ criterion: "Schemas exist", evidence: "npm test pass" }],
-				test_design_evidence: ["Tester derived schema assertions from documentation build before code changes."],
+				test_design_evidence: ["Tester derived schema assertions from planning build before code changes."],
 				code_change_evidence: ["Builder updated extension surface until smoke assertions passed."],
 				tester_notes: ["No implementation changes in tester role."],
 				builder_notes: ["Builder consumed tester evidence and checks."],
 				validation_refs: [".codewiki/validation/smoke-pass.json"],
 				closure_brief: {
-					user_intent: "Feedback builds must be durable handoff payloads.",
+					user_intent: "Decision builds must be durable handoff payloads.",
 					implemented_changes: ["Recorded implementation build smoke evidence."],
 					layers_updated: {
 						roadmap: ["TASK-001"],
@@ -691,15 +692,13 @@ async function main() {
 		assert.equal(implBuild.task.id, "TASK-001");
 		assert.equal(implBuild.acceptance_mapping.length, 1);
 		assert.equal(implBuild.validation_refs[0], ".codewiki/validation/smoke-pass.json");
-		assert.equal(implBuild.closure_brief.user_intent, "Feedback builds must be durable handoff payloads.");
-		assert.deepEqual(implBuild.consumes.documentation, [docBuildResult.details.path]);
+		assert.equal(implBuild.closure_brief.user_intent, "Decision builds must be durable handoff payloads.");
 		assert.deepEqual(implBuild.consumes.planning, [planBuildResult.details.path]);
 		assert.deepEqual(implBuild.produces.closure, ["TASK-001"]);
-		assert.equal(implBuild.test_design_evidence[0], "Tester derived schema assertions from documentation build before code changes.");
+		assert.equal(implBuild.test_design_evidence[0], "Tester derived schema assertions from planning build before code changes.");
 		assert.equal(implBuild.code_change_evidence[0], "Builder updated extension surface until smoke assertions passed.");
 		assert.equal(implBuild.role_evidence.tester.role, "tester");
 		assert.equal(implBuild.role_evidence.builder.role, "builder");
-		assert.equal(implBuild.role_evidence.tester.source_documentation_build, docBuildResult.details.path);
 		assert.equal(implBuild.role_evidence.tester.source_planning_build, planBuildResult.details.path);
 		assert.equal(implBuild.role_evidence.builder.code_files[0], "src/index.ts");
 		assert.equal(implBuild.handoff.resume.source, "implementation_build");
@@ -750,16 +749,16 @@ async function main() {
 			"validation-fail-smoke",
 			{
 				repoPath: projectDir,
-				profile: "documentation",
+				profile: "decision",
 				verdict: "fail",
-				rationale: "Knowledge changes don't match the feedback build.",
+				rationale: "Knowledge changes don't match the decision build.",
 				issues: [{ severity: "high", summary: "Missing spec update." }],
 			},
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(failReport.details.path, /\.codewiki\/validation\/.*documentation-fail.*\.json$/);
+		assert.match(failReport.details.path, /\.codewiki\/validation\/.*decision-fail.*\.json$/);
 		const failVal = JSON.parse(readFileSync(resolve(projectDir, failReport.details.path), "utf8"));
 		assert.equal(failVal.verdict, "fail");
 		assert.equal(failVal.issues.length, 1);
@@ -1272,7 +1271,6 @@ async function main() {
 		const configCommand = extension.commands.get("wiki-config");
 		const statusCommand = extension.commands.get("wiki-status");
 		const resumeCommand = extension.commands.get("wiki-resume");
-		const handoffCommand = extension.commands.get("wiki-session-handoff");
 		const statusShortcut = extension.shortcuts.get("alt+w");
 		assert.ok(
 			auditCommand && typeof auditCommand.handler === "function",
@@ -1289,10 +1287,6 @@ async function main() {
 		assert.ok(
 			resumeCommand && typeof resumeCommand.handler === "function",
 			"wiki-resume command missing handler",
-		);
-		assert.ok(
-			handoffCommand && typeof handoffCommand.handler === "function",
-			"wiki-session-handoff command missing handler",
 		);
 		assert.ok(
 			statusShortcut && typeof statusShortcut.handler === "function",
@@ -1523,6 +1517,40 @@ async function main() {
 			},
 			sessionManager: toolCtx.sessionManager,
 		});
+		const freshResumePrompts = [];
+		await resumeCommand.handler("--new TASK-001 -- keep context clean", {
+			cwd: projectDir,
+			hasUI: true,
+			ui: {
+				notify: (message, level) =>
+					resumeNotifications.push({ message, level }),
+				setStatus: (key, value) => taskStatuses.push({ key, value }),
+			},
+			sessionManager: toolCtx.sessionManager,
+			newSession: async (options) => {
+				assert.equal(options.parentSession, resolve(projectDir, ".pi", "sessions", "session-smoke-1.jsonl"));
+				await options.withSession({
+					ui: { notify: () => {}, setStatus: () => {}, setWidget: () => {} },
+					sessionManager: {
+						...toolCtx.sessionManager,
+						getSessionId: () => "session-smoke-fresh",
+						getSessionFile: () => resolve(projectDir, ".pi", "sessions", "session-smoke-fresh.jsonl"),
+					},
+					sendUserMessage: async (prompt) => freshResumePrompts.push(prompt),
+				});
+				return { cancelled: false };
+			},
+		});
+		assert.match(
+			freshResumePrompts.at(-1) ?? "",
+			/Implement roadmap task TASK-001/i,
+			"wiki-resume --new should seed the replacement session with resume context",
+		);
+		assert.match(
+			resumeNotifications.at(-1)?.message ?? "",
+			/starting fresh session in_progress for TASK-001/i,
+			"wiki-resume --new should announce fresh-session resume",
+		);
 		await taskTool.definition.execute(
 			"task_persisted_focus_validation_smoke",
 			{
@@ -1713,21 +1741,11 @@ async function main() {
 			Array.isArray(graph.views.reconciliation.items) &&
 				!graph.views.reconciliation.items.some(
 					(item) =>
-						item.source_id === `build:${docBuildResult.details.path}` &&
-						item.next_loop === "documentation" &&
-						item.direction === "downward",
-				),
-			"Accepted documentation build with roadmap/implementation evidence should be consumed",
-		);
-		assert.ok(
-			Array.isArray(graph.views.reconciliation.items) &&
-				!graph.views.reconciliation.items.some(
-					(item) =>
 						item.source_id === `build:${buildResult.details.path}` &&
-						item.next_loop === "documentation" &&
+						item.next_loop === "planning" &&
 						item.direction === "downward",
 				),
-			"Accepted feedback build with downstream documentation should be consumed",
+			"Accepted decision build with downstream planning should be consumed",
 		);
 		assert.ok(
 			Array.isArray(graph.nodes) &&
@@ -2392,9 +2410,8 @@ async function main() {
 			/Resume[\s\S]*Block/i,
 			"Board detail window should expose task actions",
 		);
-		assert.match(
-			resumeNotifications.at(-1)?.message ?? "",
-			/queued in_progress for TASK-001/i,
+		assert.ok(
+			resumeNotifications.some((entry) => /queued in_progress for TASK-001/i.test(entry.message)),
 			"wiki-resume should resume the deterministic task status from the focused roadmap task",
 		);
 		assert.ok(

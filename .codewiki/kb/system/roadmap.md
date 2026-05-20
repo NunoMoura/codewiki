@@ -24,7 +24,7 @@ Roadmap garbage collection is post-commit. Task or sprint closure first produces
 
 ## Planning-loop ownership
 
-The planning loop owns roadmap alignment. It consumes a validated `documentation_build` and produces a `planning_build` that creates or refines executable roadmap tasks.
+The planning loop owns roadmap alignment. It consumes a validated `decision_build` and produces a `planning_build` that creates or refines executable roadmap tasks.
 
 A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly.
 
@@ -52,7 +52,7 @@ Task boundaries forbid overlapping ownership, not shared files. Two tasks may to
 
 A roadmap item records id, title, priority, status, owner or role when needed, linked knowledge/build/code/test paths, concise outcome, acceptance summary, blockers, evidence refs, and closure reason.
 
-It should not duplicate full feedback, documentation, planning, or implementation briefs. Refinement should be additive and concise while preserving task id and closure criteria.
+It should not duplicate full decision, planning, or implementation briefs. Refinement should be additive and concise while preserving task id and closure criteria.
 
 Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Worktrees isolate filesystem state; validation isolates judgment.
 
@@ -93,13 +93,13 @@ Default context should hide cold roadmap and archive history unless the user exp
 
 Work closes only when linked intent/spec/evidence is traceable, required checks ran or were deferred by policy, validation passed or policy explains why it is not required, and an implementation build or equivalent evidence brief exists for implemented changes.
 
-Implementation closure should trace through a planning build unless the work is documentation-only, validation-only, or covered by a migration exception.
+Implementation closure should trace through a planning build unless the work is docs-only, validation-only, or covered by a migration exception.
 
 ## Generated task views
 
 Task folders under `.codewiki/roadmap/tasks/**` are generated from `.codewiki/roadmap/queue.json`. They are not requirements briefs and must not be hand-edited. Rebuilds regenerate missing views and prune stale task directories.
 
-Until planning-loop refactor is complete, agents must not treat a green graph or no open tasks as proof that accepted feedback propagated through documentation and planning.
+Until planning-loop refactor is complete, agents must not treat a green graph or no open tasks as proof that accepted decision propagated through decision and planning.
 
 ## Related docs
 

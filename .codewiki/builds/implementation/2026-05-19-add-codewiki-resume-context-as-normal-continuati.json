@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-19T22:30:17Z",
+  "source": "codewiki_build tool",
+  "task_id": "TASK-001",
+  "task": {
+    "id": "TASK-001",
+    "title": "Replace feedback/documentation with decision build orchestration",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Introduce the vNext decision_build path as a clean replacement for routine feedback/documentation compiler code, with direct decision-to-planning handoff and no backwards-compatibility wrappers in package source.",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/api.md"
+    ],
+    "code_paths": [
+      "src/domain/shared/types.ts",
+      "src/domain/shared/session.ts",
+      "src/application/builds.ts",
+      "src/application/lint.ts",
+      "src/application/graph.ts",
+      "src/application/graph/rebuilder.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/index.ts",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki-decision/SKILL.md",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "goal": {
+      "outcome": "CodeWiki uses decision_build as the clean semantic intent-to-knowledge handoff and planning consumes decision_build directly.",
+      "acceptance": [
+        "Decision build kind/schema is represented in domain/application/adapters as the semantic build path.",
+        "Decision orchestration supports proposal and accepted modes with no canonical writes before approval.",
+        "Accepted decision artifacts record approved rows, row-to-KB mappings, product/system propagation direction, assumptions, risks, and downstream planning questions.",
+        "Planning builds consume source_decision_build directly; routine source_documentation_build requirements are removed from package source.",
+        "Feedback/documentation compiler loops are removed from primary package source/tests rather than kept as compatibility wrappers."
+      ],
+      "non_goals": [
+        "Do not implement graph diagram-ref audits or gate fast paths in this task.",
+        "Do not consolidate all public workflow tools in this task.",
+        "Do not implement TASK-002 diagram migration beyond decision_build refs needed by this task."
+      ],
+      "verification": [
+        "Run typecheck and focused build/tool smoke tests.",
+        "Validate decision-build traceability with a new or updated smoke test.",
+        "Run CodeWiki alignment and stale-reference audits."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-05-26T22:30:17.000Z",
+    "purge_after": "2026-06-02T22:30:17.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Add CodeWiki resume context as normal continuation path and fresh-session /wiki-resume --new support while keeping compaction/VCC as recovery fallbacks.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-001"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/application/resume-context.ts",
+      "src/application/tools/resume-context.ts",
+      "src/adapters/pi/tools/resume-context.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/domain/shared/types.ts",
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      "skills/codewiki/prompts/resume-implementation.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/data-model.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-001"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": "",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/api.md"
+    ],
+    "code_paths": [
+      "src/domain/shared/types.ts",
+      "src/domain/shared/session.ts",
+      "src/application/builds.ts",
+      "src/application/lint.ts",
+      "src/application/graph.ts",
+      "src/application/graph/rebuilder.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/index.ts",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki-decision/SKILL.md",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs"
+  ],
+  "code_files": [
+    "src/application/resume-context.ts",
+    "src/application/tools/resume-context.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/domain/shared/types.ts",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-implementation/references/tools.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/change-lifecycle.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/extension.md",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/worktree-isolation.md",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    ".codewiki/kb/system/diagrams/key-flow.yaml"
+  ],
+  "files_changed": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "src/application/resume-context.ts",
+    "src/application/tools/resume-context.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/domain/shared/types.ts",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    "skills/codewiki/prompts/resume-implementation.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-implementation/references/tools.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/change-lifecycle.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/extension.md",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/worktree-isolation.md",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    ".codewiki/kb/system/diagrams/key-flow.yaml"
+  ],
+  "checks_run": [
+    "node ./tests/smoke/prompt-assets.test.mjs",
+    "npm run typecheck",
+    "node ./tests/smoke/package-smoke.test.mjs",
+    "npm run check:architecture",
+    "npm test",
+    "git diff --check",
+    "codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-001",
+      "test_files": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "evidence": [
+        "package-smoke covers codewiki_resume_context tool prompt output and /wiki-resume --new replacement-session seeding.",
+        "prompt-assets covers --new argument parsing and updated skill guidance."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-001",
+      "code_files": [
+        "src/application/resume-context.ts",
+        "src/application/tools/resume-context.ts",
+        "src/adapters/pi/tools/resume-context.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/domain/shared/types.ts",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md",
+        "skills/codewiki/prompts/resume-implementation.md",
+        "skills/codewiki-implementation/SKILL.md",
+        "skills/codewiki-implementation/references/tools.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/data-model.yaml",
+        ".codewiki/kb/system/diagrams/key-flow.yaml"
+      ],
+      "evidence": [
+        "New application resume-context builder centralizes bounded prompt packet construction from generated state and task context.",
+        "New adapter tool exposes internal agent access to the same resume packet without mutating sessions.",
+        "/wiki-resume --new reuses command-context fresh replacement session support recovered from the retired session-handoff pattern."
+      ],
+      "notes": [
+        "Removed npm:@sting8k/pi-vcc from user Pi package settings so VCC no longer loads as normal extension. Pi core compaction remains an emergency overflow safety, not CodeWiki memory."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "package-smoke covers codewiki_resume_context tool prompt output and /wiki-resume --new replacement-session seeding.",
+    "prompt-assets covers --new argument parsing and updated skill guidance."
+  ],
+  "code_change_evidence": [
+    "New application resume-context builder centralizes bounded prompt packet construction from generated state and task context.",
+    "New adapter tool exposes internal agent access to the same resume packet without mutating sessions.",
+    "/wiki-resume --new reuses command-context fresh replacement session support recovered from the retired session-handoff pattern."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Agents can build high-signal resume context from CodeWiki source truth without chat compaction.",
+      "evidence": "Added codewiki_resume_context application/adapter tool using graph, roadmap, task context, artifact status, and source refs."
+    },
+    {
+      "criterion": "Fresh Pi sessions can start from CodeWiki refs without session handoff shim.",
+      "evidence": "Added /wiki-resume --new path using command-context ctx.newSession({ withSession }) and replacementCtx.sendUserMessage(prompt)."
+    },
+    {
+      "criterion": "VCC/Pi compaction are removed from normal workflow semantics.",
+      "evidence": "Updated README, skills, system KB, and diagrams to make CodeWiki resume context normal memory and VCC/Pi compaction recovery/overflow fallbacks."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Replace VCC/Pi compaction as normal CodeWiki memory with source-ref resume context and fresh-session starts.",
+    "implemented_changes": [
+      "Added codewiki_resume_context tool.",
+      "Added /wiki-resume --new command path using Pi replacement session withSession.",
+      "Updated CodeWiki docs/skills/diagrams to make resume context normal continuation and compaction/VCC fallback only.",
+      "Removed pi-vcc from user Pi package list."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/worktree-isolation.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/application/resume-context.ts",
+        "src/application/tools/resume-context.ts",
+        "src/adapters/pi/tools/resume-context.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts"
+      ],
+      "tests": [
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "node ./tests/smoke/prompt-assets.test.mjs passed",
+      "npm run typecheck passed",
+      "node ./tests/smoke/package-smoke.test.mjs passed",
+      "npm run check:architecture passed",
+      "npm test passed",
+      "git diff --check passed"
+    ],
+    "checks": [
+      "node ./tests/smoke/prompt-assets.test.mjs",
+      "npm run typecheck",
+      "node ./tests/smoke/package-smoke.test.mjs",
+      "npm run check:architecture",
+      "npm test",
+      "git diff --check"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "CodeWiki alignment audit red due pre-existing historical planning build source-decision metadata errors."
+    ]
+  },
+  "risks": [
+    "Full CodeWiki alignment audit still fails on pre-existing historical planning builds missing source_decision_build/consumes.decision; no new warnings remain for deleted session-handoff paths."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-001",
+      "task_id": "TASK-001",
+      "next_focus_task_id": "TASK-002",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-001",
+        "title": "Replace feedback/documentation with decision build orchestration",
+        "summary": "Add CodeWiki resume context as normal continuation path and fresh-session /wiki-resume --new support while keeping compaction/VCC as recovery fallbacks.",
+        "spec_paths": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/alignment-model.md",
+          ".codewiki/kb/system/api.md"
+        ],
+        "code_paths": [
+          "src/domain/shared/types.ts",
+          "src/domain/shared/session.ts",
+          "src/application/builds.ts",
+          "src/application/lint.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/index.ts",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki-decision/SKILL.md",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs",
+          "src/application/resume-context.ts",
+          "src/application/tools/resume-context.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "README.md",
+          "skills/codewiki/references/tool-catalog.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-implementation/references/tools.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/data-model.yaml",
+          ".codewiki/kb/system/diagrams/key-flow.yaml"
+        ],
+        "acceptance": [
+          "Decision build kind/schema is represented in domain/application/adapters as the semantic build path.",
+          "Decision orchestration supports proposal and accepted modes with no canonical writes before approval.",
+          "Accepted decision artifacts record approved rows, row-to-KB mappings, product/system propagation direction, assumptions, risks, and downstream planning questions.",
+          "Planning builds consume source_decision_build directly; routine source_documentation_build requirements are removed from package source.",
+          "Feedback/documentation compiler loops are removed from primary package source/tests rather than kept as compatibility wrappers."
+        ],
+        "verification": [
+          "Run typecheck and focused build/tool smoke tests.",
+          "Validate decision-build traceability with a new or updated smoke test.",
+          "Run CodeWiki alignment and stale-reference audits."
+        ],
+        "source_planning_build": "",
+        "checks_run": [
+          "node ./tests/smoke/prompt-assets.test.mjs",
+          "npm run typecheck",
+          "node ./tests/smoke/package-smoke.test.mjs",
+          "npm run check:architecture",
+          "npm test",
+          "git diff --check",
+          "codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)"
+        ],
+        "test_design_evidence": [
+          "package-smoke covers codewiki_resume_context tool prompt output and /wiki-resume --new replacement-session seeding.",
+          "prompt-assets covers --new argument parsing and updated skill guidance."
+        ],
+        "code_change_evidence": [
+          "New application resume-context builder centralizes bounded prompt packet construction from generated state and task context.",
+          "New adapter tool exposes internal agent access to the same resume packet without mutating sessions.",
+          "/wiki-resume --new reuses command-context fresh replacement session support recovered from the retired session-handoff pattern."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-001",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-001",
+      "show_build": "git show refs/codewiki/archive/task/TASK-001:.codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/alignment-model.md",
+        ".codewiki/kb/system/api.md",
+        "src/domain/shared/types.ts",
+        "src/domain/shared/session.ts",
+        "src/application/builds.ts",
+        "src/application/lint.ts",
+        "src/application/graph.ts",
+        "src/application/graph/rebuilder.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/index.ts",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki-decision/SKILL.md",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-001 Replace feedback/documentation with decision build orchestration implementation evidence",
+      "body": "Add CodeWiki resume context as normal continuation path and fresh-session /wiki-resume --new support while keeping compaction/VCC as recovery fallbacks.\n\nChecks: node ./tests/smoke/prompt-assets.test.mjs, npm run typecheck, node ./tests/smoke/package-smoke.test.mjs, npm run check:architecture, npm test, git diff --check, codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-001\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json\nCodeWiki-Checks: node ./tests/smoke/prompt-assets.test.mjs, npm run typecheck, node ./tests/smoke/package-smoke.test.mjs, npm run check:architecture, npm test, git diff --check, codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-001\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-001\nCodeWiki-Digest: sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4\nCodeWiki-Restore: /wiki-restore TASK-001",
+      "trailers": [
+        "CodeWiki-Task: TASK-001",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+        "CodeWiki-Checks: node ./tests/smoke/prompt-assets.test.mjs, npm run typecheck, node ./tests/smoke/package-smoke.test.mjs, npm run check:architecture, npm test, git diff --check, codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-001",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-001",
+        "CodeWiki-Digest: sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
+        "CodeWiki-Restore: /wiki-restore TASK-001"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-001 Replace feedback/documentation with decision build orchestration implementation evidence",
+      "body": "Add CodeWiki resume context as normal continuation path and fresh-session /wiki-resume --new support while keeping compaction/VCC as recovery fallbacks.\n\nChecks: node ./tests/smoke/prompt-assets.test.mjs, npm run typecheck, node ./tests/smoke/package-smoke.test.mjs, npm run check:architecture, npm test, git diff --check, codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-001\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json\nCodeWiki-Checks: node ./tests/smoke/prompt-assets.test.mjs, npm run typecheck, node ./tests/smoke/package-smoke.test.mjs, npm run check:architecture, npm test, git diff --check, codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-001\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-001\nCodeWiki-Digest: sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4\nCodeWiki-Restore: /wiki-restore TASK-001"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-001",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-001"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-001",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-001",
+        "show_build": "git show refs/codewiki/archive/task/TASK-001:.codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/alignment-model.md",
+          ".codewiki/kb/system/api.md",
+          "src/domain/shared/types.ts",
+          "src/domain/shared/session.ts",
+          "src/application/builds.ts",
+          "src/application/lint.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/index.ts",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki-decision/SKILL.md",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-001",
+      "build_path": ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-001",
+      "commit_sha": "",
+      "digest": "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
+      "restore_command": "/wiki-restore TASK-001"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
+          "bytes": 87248
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:e689bd5103b26031097ab155c3c1f2321a08fcf27258bda09be752bdab7505fd",
+          "bytes": 12752
+        },
+        {
+          "path": "src/application/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:4dc7883c5e9dd977f83f354a3d90ccb25505a6ad266f4df895957fc791cb96de",
+          "bytes": 15111
+        },
+        {
+          "path": "src/application/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:49c5f4f0cec50866bd288b97d4162b49cbfe0ef2252255bc25856948411b2242",
+          "bytes": 1464
+        },
+        {
+          "path": "src/adapters/pi/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:6cbb3a1889a0321261b36a071eda188b716a97736b69f9af2c0394798b4943ef",
+          "bytes": 2153
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:99bed9178fd30611a7f46f574ee8bac99d3a0e8cbd93eebd3ee43d96082d1cee",
+          "bytes": 16193
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:fd0cbde9be061dd0e5aea4e11a1048e5367f14327321cb002dc1eee87beb65b9",
+          "bytes": 14068
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:e547b61e4193245d7b139d93bf0fd0b00d5583a5da58ecf53e28afc9faa254eb",
+          "bytes": 31324
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:1cba41a526a4e0fb59452de9d477e4acdb767e06af0e2933f2e8924773a8ff4a",
+          "bytes": 33676
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:2ea97ec87f74f35c05bcaf2656732c8513736b2e8886b90e92f86c4f2adcd497",
+          "bytes": 22551
+        },
+        {
+          "path": "skills/codewiki/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:bec5d6fd34a49ada3931c7c6d55a8f3b8cd03c49d549ce5b28dbf7d03d6b35ab",
+          "bytes": 8710
+        },
+        {
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "role": "code_file",
+          "sha256": "sha256:4d02139072bc9871588d45a7aae5a8a91fbf2dd88edf450b53cee09d5a99153b",
+          "bytes": 4134
+        },
+        {
+          "path": "skills/codewiki/prompts/resume-implementation.md",
+          "role": "code_file",
+          "sha256": "sha256:3dd349affa55ffef2aaf9e13edf63169ca9fae48534aab0aa2366caa1accfe99",
+          "bytes": 3371
+        },
+        {
+          "path": "skills/codewiki-implementation/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:38153f25aa1d555ae07b8b0e44539b29ecbb8aefc7f9565f9665aaeeb3f3cab6",
+          "bytes": 6363
+        },
+        {
+          "path": "skills/codewiki-implementation/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:3836861a84ae6b65d9322453ef5f072d34740511a8171c51a9b009a0e2301eaa",
+          "bytes": 4522
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:f38089257656cf915de3db2eb1a5f7d81fff57d7ab560c7af76ce833c30563f8",
+          "bytes": 11662
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "role": "code_file",
+          "sha256": "sha256:77a1a4ae5d9622f92197a05e7598027ff4dad498d647f646ed8e7b5d682ec7d8",
+          "bytes": 7203
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "role": "code_file",
+          "sha256": "sha256:eac58de0c57b0623cfd3b7756f97011ce83586e5356237b70323c40ff14c9e27",
+          "bytes": 11348
+        },
+        {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "role": "code_file",
+          "sha256": "sha256:ee18e82ef2bcf451a56d81b710dfa009d25078931a5b404468c8db05dbd39af9",
+          "bytes": 3014
+        },
+        {
+          "path": ".codewiki/kb/system/builds.md",
+          "role": "code_file",
+          "sha256": "sha256:a67637d39b1d18109945b6e89fb4b72602157596ace232f27511f21476d2104f",
+          "bytes": 6888
+        },
+        {
+          "path": ".codewiki/kb/system/graph.md",
+          "role": "code_file",
+          "sha256": "sha256:a001af5ea4e9ec5f77eca50d9f9724f1e073a1f93cbaef403ebc1bd73431103e",
+          "bytes": 12381
+        },
+        {
+          "path": ".codewiki/kb/system/extension.md",
+          "role": "code_file",
+          "sha256": "sha256:4505283986b49ea3d713a08a730f0397f494bb7d5433a75707fdfe173c0b3bb4",
+          "bytes": 3576
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "role": "code_file",
+          "sha256": "sha256:cfd3833be5a0d9be5d270c2376db52c8067b1c8e28fee47df5ec3278f5f6cd16",
+          "bytes": 5957
+        },
+        {
+          "path": ".codewiki/kb/system/worktree-isolation.md",
+          "role": "code_file",
+          "sha256": "sha256:40ad0551c5c63369fdb0dbee291ee2f28226c64332d571881553fd62627b1bd9",
+          "bytes": 3161
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/component-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:fdfbc40b69adb56b163d96e00bc8db52701478103b41cdfbc857b8ca81b7670a",
+          "bytes": 5036
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/data-model.yaml",
+          "role": "code_file",
+          "sha256": "sha256:c170ee4f599b87ec6057fda02fdc497234b24e62aaeb78dda8a395f3b7f2a320",
+          "bytes": 4339
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/key-flow.yaml",
+          "role": "code_file",
+          "sha256": "sha256:0358afaecb1da4e16550c64739daf962607bc782bd7c841999b2de6336653877",
+          "bytes": 3010
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-001",
+      "source_build": ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/application/resume-context.ts",
+          "src/application/tools/resume-context.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/domain/shared/types.ts",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki/references/tool-catalog.md",
+          "skills/codewiki/prompts/resume-implementation.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-implementation/references/tools.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/extension.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/data-model.yaml",
+          ".codewiki/kb/system/diagrams/key-flow.yaml",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-001",
+        "restore_command": "/wiki-restore TASK-001"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node ./tests/smoke/prompt-assets.test.mjs",
+        "npm run typecheck",
+        "node ./tests/smoke/package-smoke.test.mjs",
+        "npm run check:architecture",
+        "npm test",
+        "git diff --check",
+        "codewiki_audit profiles=file-structure,package,generated-parity,security,alignment (alignment fails on pre-existing planning-build-missing-decision-source errors)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

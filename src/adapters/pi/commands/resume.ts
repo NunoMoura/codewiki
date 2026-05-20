@@ -14,20 +14,18 @@ import {
 import { 
     maybeReadRoadmapState, 
     maybeReadGraph,
-    maybeReadTaskContext,
     maybeReadStatusState,
     rebuildAndSummarize,
     runRebuild
 } from "../../../application/state-artifacts.ts";
 import {
 	readRoadmapFile,
-    taskLoopEvidenceLine,
     updateRoadmapTask,
-    isRoadmapTaskToken,
     resolveRoadmapTask,
     isClosedRoadmapStatus,
 } from "../../../application/roadmap.ts";
 import { assessRoadmapTaskBoundary } from "../../../domain/roadmap/task-boundary.ts";
+import { isRoadmapTaskToken } from "../../../domain/roadmap/task-id.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
 import { recordSessionTaskAction } from "../../../application/session.ts";
 import {
@@ -43,14 +41,13 @@ import { stableAgentName } from "../../../application/state-builders.ts";
 import { 
     splitCommandArgs, 
     joinCommandArgs,
-    nowIso,
-    unique
+    nowIso
 } from "../../../domain/shared/utils.ts";
 import { 
     statusColor,
     statusLevel
 } from "../ui/theme.ts";
-import { codePrompt } from "../../../application/prompt.ts";
+import { buildResumeContextForTask } from "../../../application/resume-context.ts";
 import type { 
     RoadmapFile, 
     RoadmapTaskRecord, 
@@ -69,7 +66,7 @@ import type {
 export function registerResumeCommand(pi: ExtensionAPI): void {
 	pi.registerCommand(`wiki-resume`, {
 		description:
-			"Resume roadmap work from current task focus or next open task. Usage: /wiki-resume [TASK-###] [repo-path] [-- follow-up intent]",
+			"Resume roadmap work from current task focus or next open task. Usage: /wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]",
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
 				await runResumeCommand(pi, "wiki-resume", args, ctx);
@@ -84,7 +81,7 @@ async function runResumeCommand(
 	args: string,
 	ctx: ExtensionCommandContext,
 ): Promise<void> {
-	const { requestedTaskId, pathArg, followUpIntent } = normalizeCodeArgs(args);
+	const { requestedTaskId, pathArg, followUpIntent, newSession } = normalizeCodeArgs(args);
 	const project = await resolveCommandProject(ctx, pathArg, commandName);
 	const summary = await rebuildAndSummarize(project);
 	const graph = await maybeReadGraph(project.graphPath);
@@ -115,8 +112,6 @@ async function runResumeCommand(
 	}
 	const task = selection.task;
 	let resumedTask = task;
-	let roadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
-	let runtimeTask = roadmapState?.tasks?.[task.id] ?? null;
 	const desiredStatus: RoadmapStatus =
 		task.status === "todo" || task.status === "blocked"
 			? "in_progress"
@@ -128,8 +123,6 @@ async function runResumeCommand(
 				status: desiredStatus,
 			})
 		).task;
-		roadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
-		runtimeTask = roadmapState?.tasks?.[task.id] ?? null;
 	}
 	const selectionReason = describeResumeSelection(
 		roadmap,
@@ -141,6 +134,23 @@ async function runResumeCommand(
 	);
 	const action: TaskSessionAction = "progress";
 	const sessionSummary = `Resumed roadmap work on ${resumedTask.id} through /${commandName}.`;
+	if (newSession) {
+		ctx.ui.notify(
+			`${project.label}: starting fresh session ${resumedTask.status} for ${resumedTask.id} — ${resumedTask.title}. ${selectionReason} Deterministic preflight is ${statusColor(summary.report)}.`,
+			statusLevel(summary.report),
+		);
+		await startFreshResumeSession(pi, ctx, {
+			project,
+			resumedTask,
+			selection,
+			report: summary.report,
+			fallbackGraph: graph,
+			followUpIntent,
+			action,
+			sessionSummary,
+		});
+		return;
+	}
 	await recordSessionTaskAction(project, {
 		taskId: resumedTask.id,
 		action,
@@ -148,65 +158,125 @@ async function runResumeCommand(
 		setSessionName: false,
 	}, piSessionPorts(pi, ctx));
 	const usageSummary = await markResumeArtifactsInUse(project, resumedTask, sessionId);
-	const activeLink: TaskSessionLinkRecord = {
-		taskId: resumedTask.id,
-		action,
-		summary: sessionSummary,
-		filesTouched: [],
-		spawnedTaskIds: [],
-		timestamp: nowIso(),
-	};
-	const evidence = [
-		taskLoopEvidenceLine(runtimeTask),
-		describeArtifactPromptContext(selection.artifact_statuses, usageSummary, selection.skipped),
-	].filter(Boolean).join("\n");
+	const activeLink: TaskSessionLinkRecord = resumeActiveLink(resumedTask.id, action, sessionSummary);
 	await runRebuild(project);
 	const refreshedRoadmapState = await maybeReadRoadmapState(
 		project.roadmapStatePath,
 	);
-	const refreshedRuntimeTask =
-		refreshedRoadmapState?.tasks?.[resumedTask.id] ?? null;
-	const taskContext = await maybeReadTaskContext(
-		project,
-		resumedTask.id,
-		refreshedRuntimeTask,
-	);
 	const refreshedGraph = (await maybeReadGraph(project.graphPath)) ?? graph;
+	const resumeContext = await buildResumeContextForTask(project, {
+		task: resumedTask,
+		selection,
+		report: summary.report,
+		roadmapState: refreshedRoadmapState,
+		graph: refreshedGraph,
+		followUpIntent,
+		usageSummary,
+	});
 	ctx.ui.notify(
 		`${project.label}: queued ${resumedTask.status} for ${resumedTask.id} — ${resumedTask.title}. ${selectionReason} ${usageSummary} Deterministic preflight is ${statusColor(summary.report)}.`,
 		statusLevel(summary.report),
 	);
 	await refreshStatusDock(project, ctx, activeLink);
-	await queueAudit(
-		pi,
-		ctx,
-		codePrompt(
-			project,
-			refreshedGraph,
-			summary.report,
-			resumedTask,
-			evidence,
-			taskContext,
-			followUpIntent,
-		),
-	);
+	await queueAudit(pi, ctx, resumeContext.prompt);
+}
+
+async function startFreshResumeSession(
+	pi: ExtensionAPI,
+	ctx: ExtensionCommandContext,
+	input: {
+		project: WikiProject;
+		resumedTask: RoadmapTaskRecord;
+		selection: ResumeSelection;
+		report: any;
+		fallbackGraph: any;
+		followUpIntent: string;
+		action: TaskSessionAction;
+		sessionSummary: string;
+	},
+): Promise<void> {
+	if (typeof ctx.newSession !== "function") {
+		ctx.ui.notify("Fresh CodeWiki session unavailable in this adapter context; queued resume packet in current session without claiming old-session artifacts.", "warning");
+		const fallbackContext = await buildResumeContextForTask(input.project, {
+			task: input.resumedTask,
+			selection: input.selection,
+			report: input.report,
+			roadmapState: await maybeReadRoadmapState(input.project.roadmapStatePath),
+			graph: (await maybeReadGraph(input.project.graphPath)) ?? input.fallbackGraph,
+			followUpIntent: input.followUpIntent,
+			usageSummary: "fresh session unavailable; no old-session artifact claim marked",
+		});
+		await queueAudit(pi, ctx, fallbackContext.prompt);
+		return;
+	}
+	const parentSession = ctx.sessionManager?.getSessionFile?.();
+	const oldSessionId = String(ctx.sessionManager?.getSessionId?.() || "").trim();
+	if (oldSessionId) {
+		await mutateChangeClaims(input.project, {
+			action: "release",
+			summary: `Transfer resume context for ${input.resumedTask.id} into a fresh replacement session.`,
+		}, { sessionId: oldSessionId, agentName: stableAgentName(oldSessionId) });
+	}
+	const result = await ctx.newSession({
+		parentSession,
+		withSession: async (replacementCtx) => {
+			const replacementSessionId = String(replacementCtx.sessionManager?.getSessionId?.() || "session-unknown").trim() || "session-unknown";
+			await recordSessionTaskAction(input.project, {
+				taskId: input.resumedTask.id,
+				action: input.action,
+				summary: input.sessionSummary,
+				setSessionName: false,
+			}, piSessionPorts(pi, replacementCtx));
+			const usageSummary = await markResumeArtifactsInUse(input.project, input.resumedTask, replacementSessionId);
+			const activeLink = resumeActiveLink(input.resumedTask.id, input.action, input.sessionSummary);
+			await runRebuild(input.project);
+			const resumeContext = await buildResumeContextForTask(input.project, {
+				task: input.resumedTask,
+				selection: input.selection,
+				report: input.report,
+				roadmapState: await maybeReadRoadmapState(input.project.roadmapStatePath),
+				graph: (await maybeReadGraph(input.project.graphPath)) ?? input.fallbackGraph,
+				followUpIntent: input.followUpIntent,
+				usageSummary,
+			});
+			await refreshStatusDock(input.project, replacementCtx, activeLink);
+			await replacementCtx.sendUserMessage(resumeContext.prompt);
+		},
+	});
+	if (result.cancelled) {
+		ctx.ui.notify("Fresh CodeWiki session creation cancelled; resume packet was not sent.", "warning");
+	}
+}
+
+function resumeActiveLink(taskId: string, action: TaskSessionAction, summary: string): TaskSessionLinkRecord {
+	return {
+		taskId,
+		action,
+		summary,
+		filesTouched: [],
+		spawnedTaskIds: [],
+		timestamp: nowIso(),
+	};
 }
 
 export function normalizeCodeArgs(args: string): {
 	requestedTaskId: string | null;
 	pathArg: string | null;
 	followUpIntent: string;
+	newSession: boolean;
 } {
 	const tokens = splitCommandArgs(args);
 	if (tokens.length === 0) {
-		return { requestedTaskId: null, pathArg: null, followUpIntent: "" };
+		return { requestedTaskId: null, pathArg: null, followUpIntent: "", newSession: false };
 	}
 
 	const delimiterIndex = tokens.indexOf("--");
-	const commandTokens = delimiterIndex >= 0 ? tokens.slice(0, delimiterIndex) : tokens;
+	const rawCommandTokens = delimiterIndex >= 0 ? tokens.slice(0, delimiterIndex) : tokens;
 	const explicitIntent = delimiterIndex >= 0 ? joinIntentTokens(tokens.slice(delimiterIndex + 1)) : "";
+	const newSession = rawCommandTokens.includes("--new") || rawCommandTokens.includes("--fresh");
+	const commandTokens = rawCommandTokens.filter((token) => token !== "--new" && token !== "--fresh");
 	if (commandTokens.length === 0) {
-		return { requestedTaskId: null, pathArg: null, followUpIntent: explicitIntent };
+		return { requestedTaskId: null, pathArg: null, followUpIntent: explicitIntent, newSession };
 	}
 
 	const first = commandTokens[0];
@@ -215,20 +285,21 @@ export function normalizeCodeArgs(args: string): {
 		const remainderTokens = commandTokens.slice(1);
 		const remainder = joinCommandArgs(remainderTokens) ?? "";
 		return looksLikePathArg(remainder) || explicitIntent
-			? { requestedTaskId: first, pathArg: remainder || null, followUpIntent: explicitIntent }
-			: { requestedTaskId: first, pathArg: null, followUpIntent: joinIntentTokens(remainderTokens) };
+			? { requestedTaskId: first, pathArg: remainder || null, followUpIntent: explicitIntent, newSession }
+			: { requestedTaskId: first, pathArg: null, followUpIntent: joinIntentTokens(remainderTokens), newSession };
 	}
 	if (commandTokens.length > 1 && isRoadmapTaskToken(last)) {
 		return {
 			requestedTaskId: last,
 			pathArg: joinCommandArgs(commandTokens.slice(0, -1)) || null,
 			followUpIntent: explicitIntent,
+			newSession,
 		};
 	}
 	const remainder = joinCommandArgs(commandTokens) ?? "";
 	return looksLikePathArg(remainder) || explicitIntent
-		? { requestedTaskId: null, pathArg: remainder || null, followUpIntent: explicitIntent }
-		: { requestedTaskId: null, pathArg: null, followUpIntent: joinIntentTokens(commandTokens) };
+		? { requestedTaskId: null, pathArg: remainder || null, followUpIntent: explicitIntent, newSession }
+		: { requestedTaskId: null, pathArg: null, followUpIntent: joinIntentTokens(commandTokens), newSession };
 }
 
 function joinIntentTokens(tokens: string[]): string {
@@ -399,30 +470,4 @@ async function markResumeArtifactsInUse(project: WikiProject, task: RoadmapTaskR
 		ttl_minutes: 240,
 	}, { sessionId, agentName: stableAgentName(sessionId) });
 	return `Artifact status: marked in-use by this session for ${scopes.length} artifact(s).`;
-}
-
-function describeArtifactPromptContext(statuses: ArtifactStatusRecord[], usageSummary: string, skipped: string[]): string {
-	const lines = [
-		"Artifact status preflight:",
-		`- Temporary session usage record: ${usageSummary}`,
-		...statuses.slice(0, 10).map(describeArtifactStatusLine),
-	];
-	if (skipped.length > 0) {
-		lines.push("Skipped artifact conflicts or coordination tasks:", ...unique(skipped).slice(0, 8).map((item) => `- ${item}`));
-	}
-	return lines.join("\n");
-}
-
-function describeArtifactStatusLine(status: ArtifactStatusRecord): string {
-	const holders = status.holders
-		.map((holder) => `${holder.record_id}:${holder.session_id}${holder.agent_name ? `/${holder.agent_name}` : ""}`)
-		.join(", ");
-	const waiters = status.waiters
-		.map((waiter) => `${waiter.record_id}:${waiter.session_id}${waiter.agent_name ? `/${waiter.agent_name}` : ""}`)
-		.join(", ");
-	return [
-		`- ${artifactScopeLabel(status.artifact)}: ${status.status}`,
-		holders ? `holders=[${holders}]` : "holders=[]",
-		waiters ? `waiters=[${waiters}]` : "waiters=[]",
-	].join("; ");
 }

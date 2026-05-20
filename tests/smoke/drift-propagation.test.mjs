@@ -159,14 +159,14 @@ This doc points to missing mapped code.
 	});
 	const items = graph.views?.reconciliation?.items || [];
 	assert.ok(
-		items.some((item) => item.source_id === "lint:missing-code-path:.codewiki/kb/system/actionable.md" && item.next_loop === "documentation"),
+		items.some((item) => item.source_id === "lint:missing-code-path:.codewiki/kb/system/actionable.md" && item.next_loop === "decision"),
 		"Uncovered actionable lint drift should enter graph reconciliation",
 	);
-	assert.equal(graph.views.reconciliation.next_action.loop, "documentation");
+	assert.equal(graph.views.reconciliation.next_action.loop, "decision");
 
 	const roadmapState = buildRoadmapState(lowProject, [], graph, actionableLint, [], []);
 	const status = buildStatusState(lowProject, root, fakeGitCache, [actionableDoc], graph, [], actionableLint, roadmapState, [], {}, claims);
-	assert.equal(status.next_step.kind, "reconciliation:documentation", "Status next action should come from graph reconciliation");
+	assert.equal(status.next_step.kind, "reconciliation:decision", "Status next action should come from graph reconciliation");
 
 	const row = {
 		path: doc.path,

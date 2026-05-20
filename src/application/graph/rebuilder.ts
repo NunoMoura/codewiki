@@ -189,7 +189,7 @@ export class CodewikiRebuilder {
 		const builds: { path: string; kind: string; taskId?: string; status?: string; data: any }[] = [];
 		const buildsRoot = join(this.repoRoot, ".codewiki", "builds");
 		if (existsSync(buildsRoot)) {
-			for (const kind of ["feedback", "documentation", "planning", "implementation"]) {
+			for (const kind of ["decision", "planning", "implementation"]) {
 				const kindDir = join(buildsRoot, kind);
 				if (!existsSync(kindDir)) continue;
 				for (const f of readdirSync(kindDir)) {

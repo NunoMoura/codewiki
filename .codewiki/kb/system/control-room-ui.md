@@ -55,14 +55,14 @@ The CodeWiki UI should use typed CodeWiki API capabilities or thin HTTP endpoint
 - current session/focus summary,
 - roadmap summary, active task/sprint scope, gates, blockers, and closure evidence for Board,
 - KB summary derived from `.codewiki/kb/product/**` and `.codewiki/kb/system/**`, including Product stories/UI surfaces and System components/diagrams,
-- documentation-first Map relationships from generated graph state,
+- docs-first Map relationships from generated graph state,
 - broader generated graph slices only as secondary Map controls,
 - system diagram catalog and selected diagram raw data from `.codewiki/kb/system/diagrams/**`,
 - active sessions derived from session queue leases, waits, focus, and task/build refs,
 - contextual build, validation, diff-table, or source detail only when linked from the active view,
 - repo-backed preference summary and option mapping derived from `.codewiki/config.json` for the header Settings page.
 
-Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as feedback diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations.
+Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as decision diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations.
 
 ## Status contract
 
@@ -111,11 +111,11 @@ The renderer should arrange diagrams with readable spacing, route edges around n
 
 Board is a retro terminal Kanban board with deterministic lanes such as `Now`, `Ready`, `Blocked`, and `Gate/Done recent`. Lane assignment comes from roadmap status, active focus, blockers, validation gates, content-proof gates, and recent closure evidence; the browser must not invent hidden workflow state.
 
-Detailed builds, validation reports, and feedback decisions surface through task/evidence links and value-first source disclosure rather than their own permanent top-level sections.
+Detailed builds, validation reports, and decisions surface through task/evidence links and value-first source disclosure rather than their own permanent top-level sections.
 
 ## Map contract
 
-`Map` is the user-facing name for generated graph navigation. It reads `.codewiki/index_graph.json` but defaults to documentation/KB relationships and current working-set links rather than the entire graph.
+`Map` is the user-facing name for generated graph navigation. It reads `.codewiki/index_graph.json` but defaults to docs/KB relationships and current working-set links rather than the entire graph.
 
 The default Map should emphasize relationships among product docs, system docs, roadmap tasks, builds, validation reports, tests, and code paths. Broader graph data, artifact-kind filters, build DAGs, stale links, drift, and debug records are secondary controls.
 

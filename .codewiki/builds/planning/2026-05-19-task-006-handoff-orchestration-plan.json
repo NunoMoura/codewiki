@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_version": 2,
+  "schema_version": 1,
   "kind": "planning_build",
   "created": "2026-05-19T02:20:32Z",
   "source": "Documentation build for accepted handoff recovery feedback HND-001..HND-005.",

@@ -20,7 +20,7 @@ As a maintainer, I want CodeWiki to detect contradictions between intent, docs, 
 
 - Drift signals distinguish horizontal drift inside a layer from vertical drift across layers.
 - Drift findings identify the affected layer, likely source of truth, affected components, and recommended next loop.
-- Confirmed drift can become roadmap work; unclear drift routes back through feedback before downstream changes.
+- Confirmed drift can become roadmap work; unclear drift routes back through decision before downstream changes.
 - Validation gateways judge handoffs from fresh context before loop exits.
 - Failed, blocked, or policy-kept validation reports remain available for follow-up work.
 - Status, graph, and `codewiki_state` agree on the current next action; users should not see one surface report alignment while another reports unresolved drift.

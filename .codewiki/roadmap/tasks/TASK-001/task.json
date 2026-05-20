@@ -1,10 +1,10 @@
 {
   "id": "TASK-001",
-  "title": "Add decision build and decision compiler orchestration",
+  "title": "Replace feedback/documentation with decision build orchestration",
   "status": "in_progress",
   "priority": "high",
   "kind": "architecture",
-  "summary": "Introduce vNext decision-build support and decision compiler orchestration behind compatibility so routine intent-to-knowledge work can combine semantic approval, KB preflight, KB updates, and row-to-KB evidence.",
+  "summary": "Introduce the vNext decision_build path as a clean replacement for routine feedback/documentation compiler code, with direct decision-to-planning handoff and no backwards-compatibility wrappers in package source.",
   "spec_paths": [
     ".codewiki/kb/system/compilers.md",
     ".codewiki/kb/system/builds.md",
@@ -13,31 +13,39 @@
   ],
   "code_paths": [
     "src/domain/shared/types.ts",
+    "src/domain/shared/session.ts",
     "src/application/builds.ts",
-    "src/application/tools/build.ts",
+    "src/application/lint.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
     "src/adapters/pi/schemas.ts",
-    "skills/codewiki-feedback/SKILL.md",
-    "skills/codewiki-documentation/SKILL.md"
+    "src/adapters/pi/index.ts",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki-decision/SKILL.md",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs"
   ],
   "research_ids": [],
   "labels": [
     "decision-compiler",
     "decision-build",
-    "compatibility"
+    "clean-break"
   ],
   "change_type": "system",
   "goal": {
-    "outcome": "CodeWiki can create and validate decision_build artifacts through compatibility-safe decision orchestration without breaking existing feedback/documentation flows.",
+    "outcome": "CodeWiki uses decision_build as the clean semantic intent-to-knowledge handoff and planning consumes decision_build directly.",
     "acceptance": [
-      "Decision build kind/schema is represented in domain/application/adapters behind compatibility.",
+      "Decision build kind/schema is represented in domain/application/adapters as the semantic build path.",
       "Decision orchestration supports proposal and accepted modes with no canonical writes before approval.",
       "Accepted decision artifacts record approved rows, row-to-KB mappings, product/system propagation direction, assumptions, risks, and downstream planning questions.",
-      "Existing feedback_build and documentation_build flows keep working and tests cover compatibility."
+      "Planning builds consume source_decision_build directly; routine source_documentation_build requirements are removed from package source.",
+      "Feedback/documentation compiler loops are removed from primary package source/tests rather than kept as compatibility wrappers."
     ],
     "non_goals": [
-      "Do not remove feedback_build or documentation_build support.",
-      "Do not migrate all tool-surface consolidation in this task.",
-      "Do not implement graph diagram-ref audits or gate fast paths in this task."
+      "Do not implement graph diagram-ref audits or gate fast paths in this task.",
+      "Do not consolidate all public workflow tools in this task.",
+      "Do not implement TASK-002 diagram migration beyond decision_build refs needed by this task."
     ],
     "verification": [
       "Run typecheck and focused build/tool smoke tests.",
@@ -51,5 +59,5 @@
     "closure": ""
   },
   "created": "2026-05-19",
-  "updated": "2026-05-19T00:47:36Z"
+  "updated": "2026-05-20T02:23:43Z"
 }

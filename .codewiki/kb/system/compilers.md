@@ -2,7 +2,7 @@
 id: spec.system.compilers
 title: Compilers
 state: active
-summary: Alignment loops that create source-backed builds for decisions, knowledge, planning, implementation, and validation.
+summary: Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.
 owners:
   - architecture
   - product
@@ -12,8 +12,7 @@ code_paths:
   - src/application/roadmap.ts
   - src/application/task.ts
   - src/application/tools/build.ts
-  - skills/codewiki-feedback/SKILL.md
-  - skills/codewiki-documentation/SKILL.md
+  - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md
   - skills/codewiki-implementation/SKILL.md
   - skills/codewiki-validation/SKILL.md
@@ -33,22 +32,13 @@ decision loop -> decision_build -> validation gateway
     -> implementation loop -> implementation_build -> validation gateway/publication
 ```
 
-Compatibility flow remains valid while feedback/documentation tools exist:
-
-```text
-compatibility feedback_build -> validation gateway
-  -> documentation loop -> documentation_build -> validation gateway
-    -> planning loop -> planning_build -> validation gateway
-      -> implementation loop -> implementation_build -> validation gateway/publication
-```
-
 The decision loop owns user semantic approval and knowledge updates. Lower-level task creation, code changes, and closure are validated by gateways rather than by asking the user to inspect compiler machinery. A compiler turns one layer of information into the smallest useful source-backed build for the next layer. The state engine routes agents to the next required loop and source paths, but it does not replace direct reads of builds, knowledge, roadmap tasks, validation evidence, tests, code, or content proofs. Every semantic change must trace to an accepted compiler build before it can close, validate, or publish.
 
 ## Alignment cycles
 
 An alignment cycle is one build attempt inside a loop. A cycle starts from upstream source refs, policy, and project state; it ends with a build submitted to the validation gateway.
 
-Each loop starts from CodeWiki source refs, not chat memory. Agents may run `new_session` or `context_refresh` when context becomes noisy, stale, or token-heavy. Validation, task-close, publication, publish, and release still need explicit fresh/content proof. Handoff means transfer to another session, agent, or role.
+Each loop starts from CodeWiki source refs, not chat memory. Agents should use `codewiki_resume_context` for high-signal continuation and CodeWiki-owned compaction for same-session soft context refresh when context becomes noisy, stale, token-heavy, or reaches an approved loop boundary. Hard `new_session` remains available when policy needs replacement-session isolation. VCC recall, generic Pi compaction, and chat-history summaries are not normal compiler memory. Validation, task-close, publication, publish, and release still need explicit fresh/content proof. Handoff means transfer to another session, agent, or role.
 
 Cycle builds should carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, agent assessment, and produced refs for the next loop.
 
@@ -60,7 +50,7 @@ The decision loop captures user intent critically. It helps the agent and user f
 
 It should surface tradeoffs, blind spots, pitfalls, simpler alternatives, conflicts with current truth, affected layers, focused questions, and blunt disagreement when the requested direction harms the project.
 
-The decision loop presents a Change row table before canonical edits. Each Change row shows current state, desired state, rationale, affected layers, risk, and a user action such as approve, edit, reject, or defer. Below the table, the agent should provide a first-principles assessment in the best interest of the project. Approved Change rows and accepted assessment compile into a `decision_build` in the target model, or a `feedback_build` in compatibility mode.
+The decision loop presents a Change row table before canonical edits. Each Change row shows current state, desired state, rationale, affected layers, risk, and a user action such as approve, edit, reject, or defer. Below the table, the agent should provide a first-principles assessment in the best interest of the project. Approved Change rows and accepted assessment compile into a `decision_build`.
 
 Pending, rejected, or deferred Change rows can remain in runtime/session UI state or be summarized as open questions, non-goals, or future candidates. They must not silently become downstream requirements.
 
@@ -80,19 +70,9 @@ The decision loop routes by abstraction entrypoint:
 
 A decision build must record requirement ids, approved rows, row-to-KB mappings, propagation direction, explicit `no product impact` or `no system impact` evidence when applicable, risks, non-goals, and downstream planning questions. User approval is required for semantic decisions and risk escalations; gateways validate KB diffs, diagram/doc alignment, task planning, code, closure, and publication evidence.
 
-## Documentation loop (compatibility)
-
-The documentation loop consumes an accepted `feedback_build` and updates durable product/system knowledge. It produces a `documentation_build` as the knowledge-alignment handoff for planning.
-
-During the vNext migration, documentation remains the current path for feedback-to-knowledge work. New design should target the decision loop, and deprecated wrappers or aliases are removed once a direct replacement exists.
-
-The documentation loop updates owning knowledge files, preserves product/system boundaries, maps approved requirement ids to changed clauses, records deferred requirements or questions, avoids roadmap requirements in the target model, and validates knowledge alignment before handoff.
-
-During migration to the planning loop, the documentation compiler may create a roadmap task for implementing the new planning/gateway/build support. Once `planning_build` is supported, routine roadmap mutation belongs to the planning loop.
-
 ## Planning loop
 
-The planning loop consumes a validated `documentation_build` and aligns roadmap work with the updated knowledge. It produces a `planning_build` as the implementation-context handoff.
+The planning loop consumes a validated `decision_build` and aligns roadmap work with the updated knowledge. It produces a `planning_build` as the implementation-context handoff.
 
 The planning loop identifies executable requirements, creates or refines roadmap tasks without duplicating full briefs, defines outcome/acceptance/non-goals/verification/blockers, proposes candidate code/test paths, outlines TDD or test-design strategy, maps acceptance to requirement ids and knowledge refs, and preserves active task ids when intent refines existing work.
 
@@ -107,7 +87,7 @@ The implementation loop is TDD-aligned where practical:
 - derive tests or test-design evidence from the planning build before code changes,
 - make or update code until the tests and acceptance criteria pass,
 - map tests, code, and checks to requirement ids,
-- explain any justified exception for documentation-only, config-only, or non-testable work.
+- explain any justified exception for docs-only, config-only, or non-testable work.
 
 For bias-sensitive or agent-created test work, implementation may split tester evidence from builder evidence. The split is optional, but the implementation build should identify both roles when used so validation can review the separation without requiring separate agents for every task.
 
@@ -118,15 +98,15 @@ Compilers may run read-only preflight lanes in parallel after a proposal exists.
 
 Parallel lanes produce runtime-only drafts with proposal hashes, source snapshots, and invalidation metadata. They must not write product/system knowledge, roadmap truth, build artifacts, validation reports, tests, or code. Canonical truth promotion remains serial after approved decision rows and assumption-hash validation.
 
-## Self-refactor compatibility mode
+## Self-refactor rule
 
-When CodeWiki uses the current toolchain to refactor CodeWiki itself, it runs in compatibility mode:
+When CodeWiki uses CodeWiki to refactor itself:
 
-- keep current public tool behavior frozen except critical blocker fixes,
+- keep current public tool behavior intentional and test-covered,
 - use current CodeWiki for decision capture, task planning, artifact status, validation, commits, and closure,
 - implement vNext concepts as direct replacements rather than wrappers or aliases,
 - do not switch live compiler semantics mid-task,
-- switch to vNext flows only after documentation, tests, and validation pass.
+- switch to vNext flows only after decision, tests, and validation pass.
 
 ## Gated agency
 
@@ -136,13 +116,13 @@ Compilers remain deterministic build producers. They do not own autonomous sched
 
 ## Propagation
 
-All agent-led semantic changes start with decision classification, even when the observed symptom appears in code, tests, roadmap, documentation, package metadata, or publication. Compatibility feedback builds may carry that classification until decision builds become default. Builds classify the target with `change_type` (`product`, `system`, `task`, or `code`); generated, runtime, or mechanical-only work uses traceability exemption metadata instead of a separate type. After classification, propagation can originate in any layer:
+All agent-led semantic changes start with decision classification, even when the observed symptom appears in code, tests, roadmap, docs, package metadata, or publication. Builds classify the target with `change_type` (`product`, `system`, `task`, or `code`); generated, runtime, or mechanical-only work uses traceability exemption metadata instead of a separate type. After classification, propagation can originate in any layer:
 
 - product intent can refine decision requirements and knowledge,
 - knowledge changes can create planning drift,
 - planning changes can create implementation drift,
-- code changes can create documentation or planning drift,
-- validation failures can route back to implementation, planning, documentation compatibility, or decision,
+- code changes can create decision or planning drift,
+- validation failures can route back to implementation, planning, or decision,
 - audit findings can route to decision before becoming knowledge, planning, or implementation work,
 - missing intent routes to decision.
 
@@ -156,8 +136,9 @@ Propagation is alignment work. The graph should expose the affected loop and sou
 - Any compiler may escalate to the decision loop when intent is unclear.
 - Validation handoffs require a gateway verdict on the submitted build.
 - Gateways may require audit evidence and checked content proof before passing.
-- Agents may run `new_session` or `context_refresh` at loop boundaries when context health needs it; this is agent-owned hygiene, not a handoff.
-- Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new`, `/wiki-session-handoff`, or equivalent manually. If the adapter cannot execute the boundary automatically, record an explicit platform limitation and next safe action rather than making command submission routine user work.
+- Agents may run CodeWiki-owned compaction, `new_session`, or `context_refresh` at loop boundaries when context health needs it; this is agent-owned hygiene, not a handoff.
+- Normal loop continuation should use `codewiki_resume_context` directly or through CodeWiki-owned compaction instead of VCC recall, generic Pi compaction, or chat-history summaries as source truth. Use `/wiki-resume --new` only when hard replacement-session isolation is needed.
+- Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new`, legacy handoff commands, or equivalent manually. If the adapter cannot execute the boundary automatically, record an explicit platform limitation and next safe action rather than making command submission routine user work.
 - Workflow-efficiency evidence matters: compiler/task-close paths should minimize user interrupts and manual command count while preserving validation, content-proof, and publication gates.
 - Automated compiler execution must run through gated agency controls, not through unbounded loops.
 

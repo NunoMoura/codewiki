@@ -84,7 +84,7 @@ export async function executeDiffTableAction(project: WikiProject, input: Codewi
 		const id = String(input.table_id || `DT-${now.slice(0, 10)}-${file.tables.length + 1}`).trim();
 		const table: RuntimeDiffTable = {
 			id,
-			summary: String(input.summary || "Pending feedback diff table").trim(),
+			summary: String(input.summary || "Pending decision diff table").trim(),
 			source: String(input.source || "codewiki_diff_table tool").trim(),
 			status: "pending",
 			...(input.scope ? { scope: input.scope } : {}),

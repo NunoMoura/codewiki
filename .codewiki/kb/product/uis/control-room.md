@@ -97,7 +97,7 @@ Cards should show outcome, status, gate/blocker cues, acceptance target, and nex
 
 ## Map
 
-`Map` replaces user-facing `Graph` language. It visualizes relationships from `.codewiki/index_graph.json`, but should default to documentation and KB relationships rather than the entire generated graph.
+`Map` replaces user-facing `Graph` language. It visualizes relationships from `.codewiki/index_graph.json`, but should default to decision and KB relationships rather than the entire generated graph.
 
 The default Map should emphasize how product docs, system docs, roadmap tasks, builds, validation, tests, and code paths relate to each other for the current working set. Broader graph slices, artifact kinds, build DAGs, stale links, drift, and debug records should be secondary controls.
 

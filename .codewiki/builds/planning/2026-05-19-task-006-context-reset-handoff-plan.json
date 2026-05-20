@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_version": 2,
+  "schema_version": 1,
   "kind": "planning_build",
   "created": "2026-05-19T01:32:17Z",
   "source": "Accepted documentation build for TASK-006 hotfix.",

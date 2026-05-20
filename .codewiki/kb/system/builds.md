@@ -29,9 +29,7 @@ Tracked build files must not be deleted from the working tree until a reachable 
 
 | Build | Produced by | Consumed by | Role |
 | --- | --- | --- | --- |
-| `feedback_build` | Decision-loop compatibility tooling | Documentation loop | Compatibility intent handoff with approved changes. |
-| `documentation_build` | Documentation loop | Planning loop | Compatibility knowledge handoff with requirement-to-KB mapping. |
-| `decision_build` | Decision loop | Planning loop | vNext intent-and-knowledge handoff with approved rows, KB diffs, product/system propagation, and diagram/doc evidence. |
+| `decision_build` | Decision loop | Planning loop | Intent-and-knowledge handoff with approved rows, KB diffs, product/system propagation, and diagram/doc evidence. |
 | `planning_build` | Planning loop | Implementation loop | Roadmap alignment, acceptance, TDD plan, and candidate paths. |
 | `implementation_build` | Implementation loop | Validation/publication/closure | Evidence that code, tests, docs, or roadmap changes were implemented. |
 
@@ -46,17 +44,13 @@ Loop-level builds should include:
 - audit refs, assumptions, open questions, non-goals, risks, and agent assessment;
 - content proof when required, such as working-tree digest, tree SHA, commit SHA, package digest, archive ledger, or remote ref.
 
-Build policy may recommend agent-owned new_session/context_refresh at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
+Build policy may recommend `codewiki_resume_context` plus CodeWiki-owned compaction, context_refresh, or hard new_session at loop start or next-loop boundaries, and require fresh context for validation/task-close/publication gates. Micro-step evidence belongs in the implementation build only when it matters for acceptance.
 
 ## Loop-specific contracts
 
-A feedback build contains the compatibility user-facing intent contract: approved change rows, accepted decisions, assumptions, non-goals, risks, expected lower-layer changes, and requirement ids. New routine semantic work should target decision builds once the decision compiler is active.
+A decision build contains the user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions.
 
-A documentation build contains the compatibility knowledge handoff: source feedback/decision refs, knowledge files changed, requirement-to-knowledge mapping, deferred requirements, planning questions, and validation expectations. It should not duplicate full roadmap tasks.
-
-A decision build contains the vNext user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions. It replaces the routine feedback-build plus documentation-build pair only after compatibility validation passes.
-
-A planning build contains source documentation refs, task ids or task changes, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping.
+A planning build contains source decision refs, task ids or task changes, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping.
 
 An implementation build contains source planning refs, task ids, files changed, checks, tester/builder evidence, acceptance mapping, validation/audit refs, unresolved risks, a closure brief, and recommended commit/PR/release text when useful. The closure brief is the user-facing proof that accepted intent was satisfied.
 
@@ -73,7 +67,7 @@ New builds should expose explicit DAG fields:
 - `propagation`: product-first, system-first, mixed, or no-op evidence for cross-abstraction impact;
 - `diagram_refs`: system diagram node, flow, entity, lifecycle, policy boundary, artifact, adapter, actor, or external system refs when system knowledge changes.
 
-Graph reconciliation should prefer explicit edges over inferred legacy fields. Semantic changes in knowledge, roadmap, code, tests, package metadata, or publication claims need accepted upstream build refs before implementation validation or task closure can pass. Generated, runtime, and mechanical-only changes may set `traceability.exemption` and `semantic=false` when policy allows. Legacy `change_class` is compatibility input only; new builds write `change_type`.
+Graph reconciliation should prefer explicit edges. Semantic changes in knowledge, roadmap, code, tests, package metadata, or publication claims need accepted upstream build refs before implementation validation or task closure can pass. Generated, runtime, and mechanical-only changes may set `traceability.exemption` and `semantic=false` when policy allows. New builds write `change_type`.
 
 ## Lifecycle and consumption
 
@@ -85,8 +79,6 @@ A later cycle build may supersede a failed or blocked build. Superseded builds r
 
 A build is consumed when lower-layer truth or validation evidence references it:
 
-- feedback: downstream documentation, implementation evidence, or passing validation references it;
-- documentation: planning, passing validation, or knowledge-only policy references it;
 - decision: planning, passing validation, or knowledge-only policy references it;
 - planning: roadmap refinement plus implementation evidence or passing validation references it;
 - implementation: passing validation, a passing validation verdict, or safe publication/archive proof references it.

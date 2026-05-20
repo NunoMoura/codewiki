@@ -45,23 +45,17 @@ entities:
       - goal
       - spec_paths
       - code_paths
-  - id: feedback_build
-    label: Feedback build
-    storage: .codewiki/builds/feedback/**
-    role: accepted user intent handoff
+  - id: decision_build
+    label: Decision build
+    storage: .codewiki/builds/decision/**
+    role: accepted intent and knowledge handoff
     key_fields:
       - diff_table
       - approved_diff_rows
-      - decisions
-      - lifecycle
-  - id: documentation_build
-    label: Documentation build
-    storage: .codewiki/builds/documentation/**
-    role: knowledge-to-roadmap handoff
-    key_fields:
+      - row_to_kb_mappings
+      - propagation
       - knowledge_changes
-      - roadmap_changes
-      - assumptions
+      - downstream_planning_questions
       - lifecycle
   - id: implementation_build
     label: Implementation build
@@ -93,6 +87,16 @@ entities:
       - edges
       - lenses
       - reconciliation
+  - id: resume_context_packet
+    label: Resume context packet
+    storage: tool/command output generated from graph and task context
+    role: bounded continuation input for current or fresh sessions; not durable truth
+    key_fields:
+      - task_id
+      - source_refs
+      - preflight
+      - evidence
+      - prompt
   - id: scoped_lease
     label: Session queue scoped lease
     storage: .codewiki/session/queue.json
@@ -107,21 +111,24 @@ entities:
     storage: repository code/test paths
     role: implemented behavior and automated proof
 relationships:
-  - from: feedback_build
-    to: knowledge_doc
-    type: informs
-  - from: documentation_build
+  - from: decision_build
     to: knowledge_doc
     type: records_changes
-  - from: documentation_build
+  - from: decision_build
     to: roadmap_task
-    type: creates_or_updates
+    type: plans_needed_work
   - from: roadmap_task
     to: knowledge_doc
     type: references
   - from: roadmap_task
     to: executable_truth
     type: maps_to
+  - from: state_index
+    to: resume_context_packet
+    type: composes
+  - from: roadmap_task
+    to: resume_context_packet
+    type: seeds
   - from: implementation_build
     to: roadmap_task
     type: closes_or_updates
@@ -141,10 +148,7 @@ relationships:
     to: roadmap_task
     type: derives_from
   - from: state_index
-    to: feedback_build
-    type: derives_from
-  - from: state_index
-    to: documentation_build
+    to: decision_build
     type: derives_from
   - from: state_index
     to: implementation_build

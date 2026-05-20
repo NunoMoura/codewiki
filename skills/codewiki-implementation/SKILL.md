@@ -18,16 +18,16 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 ## Core rules
 
 - Execute one self-contained roadmap task at a time.
-- Start from `codewiki_state`, the selected task, the source `planning_build`, linked knowledge/build refs, validation refs, and candidate code/test paths.
+- Start from `codewiki_state` and, when context is noisy/stale/token-heavy, `codewiki_resume_context` or CodeWiki-owned compaction; then read the selected task, source `planning_build`, linked knowledge/build refs, validation refs, and candidate code/test paths.
 - If the task is an umbrella/container/sprint coordinator, or its acceptance mainly says other tasks must close, stop and route back to planning.
-- If task meaning, product intent, or acceptance needs user approval, stop and route back to feedback.
-- If knowledge or planning is stale/wrong, stop and route back to documentation or planning.
+- If task meaning, product intent, or acceptance needs user approval, stop and route back to decision.
+- If knowledge or planning is stale/wrong, stop and route back to decision or planning.
 - Use `codewiki_session` to record focus when starting/resuming a task.
 - Use `codewiki_artifact_status` for narrow write scopes before non-trivial edits when parallel overlap is possible.
 - Use TDD/test-design first where practical. If tests cannot be added, record why in tester evidence.
 - Change only files required by task acceptance and non-goals.
 - Compile `codewiki_build kind="implementation"` after edits and checks, before implementation validation.
-- Request fresh validation with `codewiki_session_handoff`; do not close the task from builder context when policy requires independent proof.
+- Start validation from CodeWiki refs and a fresh/independent context when policy requires proof; do not close the task from builder context when independent proof is required.
 - Close only after passing task-close validation/content proof when policy requires it.
 - After any task-close, sprint-close, publication, or roadmap-end commit exists, run `codewiki_gc action="dry-run"`; purge eligible artifacts only with archive commit/tree proof or record defer/block evidence.
 
@@ -36,6 +36,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 1. **Start or resume task**
    - Run `codewiki_state` with the task id.
    - Use `codewiki_session action="focus"` for task focus and current loop metadata.
+   - Use `codewiki_resume_context` or CodeWiki-owned soft context refresh if the current chat is not already a clean task-start context.
    - Read the selected task, source `planning_build`, linked knowledge refs, validation refs, and listed code/test paths.
    - Confirm task boundary quality and source alignment before editing.
 
@@ -64,7 +65,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Include publication/commit recommendation text when policy or task-close validation requires commit readiness.
 
 7. **Request fresh validation**
-   - Use `codewiki_session_handoff` with the implementation build ref, task id, changed files, checks, and expected validator output.
+   - Provide the implementation build ref, task id, changed files, checks, and expected validator output to a fresh validation context.
    - The validator must start from artifacts, not builder chat context, and record `fresh_context=true` plus checked content proof.
 
 8. **Record task evidence**
@@ -80,7 +81,7 @@ End implementation mode with:
 - changed files and why they changed;
 - tests/checks run with outcomes;
 - `implementation_build` path;
-- fresh validation boundary path/command when staged;
+- fresh validation source refs and required proof;
 - post-commit GC review status: purged with ledger, deferred, blocked, or not yet eligible;
 - task status recommendation: `in_progress`, `blocked`, or `done after validation`;
 - remaining risks or follow-up routing.
@@ -94,4 +95,4 @@ Stop and route back when:
 - requirements need user approval not present in accepted builds;
 - implementation would violate non-goals or overlap another active task unsafely;
 - checks fail and no scoped fix is available;
-- validation requires fresh context and no handoff path is available.
+- validation requires fresh context and no independent validation path is available.

@@ -6,40 +6,38 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
 
 1. `codewiki_state`
    - First read for repo health, graph/build/task routing, stale generated state, and artifact status.
-   - Use `refresh=true` when validating a handoff, task close, graph/drift audit, or publication gate.
+   - Use `refresh=true` when validating submitted refs, task close, graph/drift audit, or publication gate.
    - Use `taskId` when validating implementation or task-close.
 
 2. Direct reads of submitted refs
-   - Read the build/report/task/source refs named by the handoff or user.
+   - Read the build/report/task/source refs named by the request or user.
    - Do not rely on builder chat context.
    - Treat `.codewiki/index_graph.json` and generated task views as routing/read models, not canonical proof.
 
 3. `codewiki_audit`
    - Run required audit profiles or cite existing audit refs before a pass verdict when policy requires them.
    - Common profile sets:
-     - feedback/documentation/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
+     - decision/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
      - implementation: `alignment`, `changed`;
      - task-close: `alignment`, `changed`, `task`, `generated-parity`;
      - graph/drift: `graph-audit`, `drift-audit`, `generated-parity` or configured equivalents;
      - publication/release: package/security/publication policy profiles when available.
 
 4. `codewiki_validation`
-   - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/publication needs proof, or a handoff expected an explicit report.
+   - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/publication needs proof, or submitted refs expected an explicit report.
    - Required fields: `profile`, `task_id` if any, `source`, `verdict`, `rationale`, `checks`, `issues`, `audit_refs`/`audit_reports`, `failed_criteria`, `blocking_questions`, and `isolation` when required.
    - Implementation pass requires `isolation.fresh_context=true`, explicit `clean` value, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, or equivalent allowed by policy).
    - Task-close/publication/publish/release pass requires `isolation.fresh_context=true`, `clean=true`, and immutable proof (`validated_sha`, `head_sha`, `published_sha`, `tree_sha`, `package_digest`, `archive_ref`, or `remote_ref`).
 - A GC restore ledger is not validation/content proof. Pre-commit tracked GC blocks close/publication readiness; post-commit GC is hygiene that must name the archive commit/tree and preserve restore commands.
 
-## Conditional tool
+## Fresh validator context
 
-- `codewiki_session_handoff`
-  - Use only when the current session is not an acceptable validator context and a fresh validator boundary is required.
-  - Stage or consume a handoff that includes source/build refs, task id, audit expectations, changed paths, checks, and expected `codewiki_validation` output.
+When the current session is not an acceptable validator context, stop and restart validation from the source/build refs, task id, audit expectations, changed paths, checks, and expected `codewiki_validation` output. Do not use builder chat memory as proof.
 
 ## Forbidden tools/actions in validation mode
 
 - Do not call `codewiki_build`; compilers produce builds.
-- Do not call `codewiki_diff_table`; feedback compilers capture semantic proposals.
+- Do not call `codewiki_diff_table`; decision compilers capture semantic proposals.
 - Do not call `codewiki_task action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
 - Do not hand-edit `.codewiki/kb/**`, `.codewiki/roadmap/**`, `.codewiki/builds/**`, source code, tests, or generated views.
 - Do not mark work pass without required audits and proof.

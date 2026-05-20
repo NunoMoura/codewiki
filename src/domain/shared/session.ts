@@ -69,7 +69,7 @@ function normalizeIsolationRequirement(value: unknown): CodewikiIsolationRequire
 }
 
 function isWorkflowLoop(value: string): value is WorkflowLoop {
-	return value === "feedback" || value === "documentation" || value === "planning" || value === "implementation" || value === "validation" || value === "observe";
+	return value === "decision" || value === "planning" || value === "implementation" || value === "validation" || value === "observe";
 }
 
 export function normalizeTaskSessionAction(

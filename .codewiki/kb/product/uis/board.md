@@ -33,7 +33,7 @@ Cards should surface the user's decision-relevant information first: outcome, cu
 - Decision gates are visible when approval or clarification is needed.
 - Board labels remain user-friendly while backend data remains roadmap/work based.
 - Cards show outcome, lane/status, blocker/gate cues, acceptance target, and next safe action before raw metadata.
-- Roadmap items link to documentation builds, specs, outcome, acceptance criteria, non-goals, validation expectations, and implementation evidence.
+- Roadmap items link to decision builds, specs, outcome, acceptance criteria, non-goals, validation expectations, and implementation evidence.
 
 ## Related docs
 

@@ -26,6 +26,7 @@ import {
 import { unique, nowIso, formatError } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import { assertExecutableRoadmapTask, assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
+import { formatTaskId, parseTaskIdSequence, taskIdCandidates } from "../domain/roadmap/task-id.ts";
 import {
 	rebuildTargetPaths,
 	runRebuildUnlocked,
@@ -1245,52 +1246,6 @@ export function isClosedRoadmapStatus(status: RoadmapStatus): boolean {
  */
 export function isActiveLoopRoadmapStatus(status: RoadmapStatus): boolean {
 	return ["in_progress", "blocked"].includes(status);
-}
-
-/**
- * Get a list of potential task ID candidates for a given ID.
- */
-export function taskIdCandidates(taskId: string): string[] {
-	const trimmed = taskId.trim();
-	if (!trimmed) return [];
-	const upper = trimmed.toUpperCase();
-	const sequence = parseTaskIdSequence(upper);
-	if (sequence === null) return unique([trimmed, upper]);
-	return unique([
-		trimmed,
-		upper,
-		formatTaskId(sequence),
-		formatLegacyTaskId(sequence),
-	]);
-}
-
-/**
- * Parse the sequence number from a task ID.
- */
-export function parseTaskIdSequence(taskId: string): number | null {
-	const match = taskId.match(/(?:TASK|ROADMAP)-(\d+)/i);
-	return match ? parseInt(match[1], 10) : null;
-}
-
-/**
- * Format a task ID from a sequence number.
- */
-export function formatTaskId(sequence: number): string {
-	return `TASK-${String(sequence).padStart(3, "0")}`;
-}
-
-/**
- * Check if a token is a roadmap task ID.
- */
-export function isRoadmapTaskToken(value: string): boolean {
-	return /^(TASK|ROADMAP)-\d+$/i.test(value);
-}
-
-/**
- * Format a legacy task ID from a sequence number.
- */
-export function formatLegacyTaskId(sequence: number): string {
-	return `ROADMAP-${String(sequence).padStart(3, "0")}`;
 }
 
 /**

@@ -25,15 +25,14 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | Capability group | Responsibility |
 | --- | --- |
 | `codewiki.state` | Read compact project status, graph state, active work, focused session, and exact linked context. |
-| `codewiki.feedback` | Compatibility capability for proposed intent, diff tables, and accepted feedback builds. |
-| `codewiki.diff_table` | Compatibility runtime surface for pending, editable feedback rows before accepted rows compile into feedback or decision builds. |
-| `codewiki.documentation` | Compatibility capability for applying accepted feedback to product/system knowledge and producing documentation builds. |
-| `codewiki.decision` | vNext capability for user semantic approval, KB preflight, product/system propagation, KB updates, and decision builds. |
+| `codewiki.resume_context` | Build bounded continuation prompts from graph, roadmap, task context shards, source refs, and recent build evidence so agents can restart or compact without chat-history memory. |
+| `codewiki.decision` | User semantic approval, diff tables, KB preflight, product/system propagation, KB updates, and decision builds. |
+| `codewiki.diff_table` | Runtime surface for pending, editable decision rows before accepted rows compile into decision builds. |
 | `codewiki.implementation` | Coordinate implementation work, evidence collection, and implementation builds. |
 | `codewiki.roadmap` | Manage work truth: queue, status, priority, blockers, progress, and closure. |
 | `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, wait/wake, context-boundary metadata, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
 | `codewiki.agency` | Run bounded roadmap, sprint, or task automation through token, time, cost, write, session, risk, validation, policy, and approval gates. |
-| `codewiki.session_boundary` | Request adapter-managed new_session, context_refresh, external-orchestrator, or true handoff boundaries with bounded kickoff context. Existing `codewiki_session_handoff` remains a compatibility tool. |
+| `codewiki.session_boundary` | Request adapter-managed CodeWiki-owned compaction, new_session, context_refresh, external-orchestrator, or true transfer boundaries seeded by bounded CodeWiki resume context. Legacy session-handoff shims are not normal workflow tools. |
 | `codewiki.build` | Read and write accepted compiler build briefs. |
 | `codewiki.validation` | Run validation gateways and persist failed, blocked, or policy-kept reports. |
 | `codewiki.state_engine` | Rebuild and read generated state/graph representations. |
@@ -63,6 +62,7 @@ Preferred agent workflow tools:
 | Tool | Responsibility |
 | --- | --- |
 | `codewiki_state` | Compact state/graph/task/session read. |
+| `codewiki_resume_context` | High-signal continuation packet for current sessions, CodeWiki-owned compaction, or fresh sessions. |
 | `codewiki_decision` | Decision proposal, approval, KB update, and decision-build orchestration. |
 | `codewiki_work` | Planning/implementation/closure orchestration for one bounded work item. |
 | `codewiki_gate` | Preflight, audit, validation, and policy checks. |
@@ -88,11 +88,11 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## Write rules
 
-- Product/system changes flow through feedback and documentation loops in compatibility mode; vNext product/system changes flow through the decision capability after explicit user semantic approval.
+- Product/system changes flow through the decision capability after explicit user semantic approval.
 - Code/test changes flow through implementation loops.
 - Roadmap changes record work truth, not full requirements briefs.
 - Roadmap task creation must check active work for related intent and refine matching tasks before creating duplicates.
-- Parallel sessions should mark affected artifacts in the session queue before non-trivial overlapping documentation, roadmap, build, validation, or code edits.
+- Parallel sessions should mark affected artifacts in the session queue before non-trivial overlapping decision, roadmap, build, validation, or code edits.
 - Artifact status records are temporary coordination records; they do not replace roadmap tasks, builds, validation, git, or code review.
 - Session queue callers may register wait entries when overlapping write artifact status blocks needed scopes. Waits have TTL/heartbeat, can be cancelled through release, and become ready when blockers release or expire. Adapter sessions that own waits should subscribe to queue changes and wake the agent; passive queue state is not enough for parallel work.
 - Ready waits are wake signals, not stale-context revival. Wake messages should name wait id, task/build refs, and scopes, then require current state and artifact-status re-check before writing.
@@ -102,9 +102,9 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Validation callers may provide isolation metadata such as fresh-context status, worktree path, branch, base/head/validated SHA, and clean worktree result when independence matters.
 - Validation callers must provide fresh-context, clean-worktree, and checked-SHA evidence for implementation, task-close, publication, publish, and release profiles; otherwise the API records a `block` verdict.
 - Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, and approval gates.
-- Session-boundary callers must provide reason, source refs, expected output, and mode. `new_session` and `context_refresh` are same-agent context hygiene; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. True separate process isolation needs an explicit external-orchestrator or worker adapter path.
-- Tool-context Pi boundaries stage durable artifacts. Tool-context `sendUserMessage` follow-ups do not execute registered slash commands, so new_session and context_refresh boundaries must not be injected as `/wiki-session-handoff` chat. The normal workflow must not ask the user to paste, submit, or press Enter on the compatibility command. If an adapter cannot automatically enter command context for `ctx.newSession()` or `ctx.compact()`, it records a precise platform-limited fallback or external-orchestrator requirement with a next safe action. `/wiki-session-handoff` is an internal compatibility executor, not a user workflow surface.
-- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth in the target model or feedback build truth in compatibility mode. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
+- Session-boundary callers must provide reason, source refs, expected output, and mode. CodeWiki-owned compaction and `context_refresh` are same-agent soft context hygiene seeded by `codewiki_resume_context`; `new_session` is hard replacement-session hygiene when policy needs it; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. True separate process isolation needs an explicit external-orchestrator or worker adapter path.
+- Tool-context Pi boundaries must return visible results and must not call `ctx.compact()` before the agent sees them. Normal CodeWiki continuation uses `codewiki_resume_context` directly or through CodeWiki-owned compaction, not VCC recall, generic Pi compaction, or injected slash-command chat. Pi `sendUserMessage` follow-ups do not execute registered slash commands, so adapter code must not inject legacy `/wiki-session-handoff` text as a recovery mechanism.
+- Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
 - During CodeWiki self-refactors, deprecated aliases and shim tools are removed when a direct replacement exists; if callers break, fix them at the replacement surface instead of keeping compatibility wrappers.
 - Config schema v4 defines quiet rebuild defaults, scoped agency budgets, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.

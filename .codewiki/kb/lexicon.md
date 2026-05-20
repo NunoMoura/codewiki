@@ -34,17 +34,9 @@ A CodeWiki workflow layer that compiles one abstraction level into the smallest 
 
 The compiler that turns user conversation, grounded reads, and approved semantic rows into durable knowledge updates and a `decision_build`. It validates that user intent, constraints, assumptions, blind spots, and non-goals are mapped before downstream work starts.
 
-## Feedback compiler
-
-Compatibility name for the pre-vNext compiler that turns user conversation and grounded reads into an accepted `feedback_build` before documentation changes are made.
-
-## Documentation compiler
-
-The compiler that turns an accepted `feedback_build` into updated `.codewiki/kb/**` knowledge and a `documentation_build` knowledge-alignment brief. It validates horizontal and vertical knowledge alignment before planning begins.
-
 ## Planning compiler
 
-The compiler that turns a validated `documentation_build` into roadmap alignment. It creates or refines roadmap tasks, acceptance criteria, non-goals, verification, candidate code/test paths, and TDD strategy, then emits a `planning_build`.
+The compiler that turns a validated `decision_build` into roadmap alignment. It creates or refines roadmap tasks, acceptance criteria, non-goals, verification, candidate code/test paths, and TDD strategy, then emits a `planning_build`.
 
 ## Implementation compiler
 
@@ -52,15 +44,11 @@ The compiler that turns a `planning_build` and roadmap work item into tests, cod
 
 ## Diff table
 
-Decision-loop surface that compares current state to desired state before canonical edits. Pending rows can live in runtime/session UI state and be approved, rejected, deferred, or edited with alternatives. Approved rows compile into a `decision_build` in the target model or a `feedback_build` in compatibility mode.
+Decision-loop surface that compares current state to desired state before canonical edits. Pending rows can live in runtime/session UI state and be approved, rejected, deferred, or edited with alternatives. Approved rows compile into a `decision_build`.
 
-## Feedback build
+## Decision build
 
-Compact artifact under `.codewiki/builds/feedback/**` for approved diff rows, accepted intent, decisions, constraints, ambiguities, and downstream changes.
-
-## Documentation build
-
-Compact artifact under `.codewiki/builds/documentation/**` for knowledge patches, requirement-to-KB mapping, alignment checks, open planning questions, and deferred requirements.
+Compact artifact under `.codewiki/builds/decision/**` for approved diff rows, accepted intent, knowledge changes, row-to-KB mapping, propagation evidence, diagram refs, risks, questions, and downstream planning needs.
 
 ## Planning build
 
@@ -100,7 +88,7 @@ Stable identifier for an accepted requirement as it moves from decision to knowl
 
 ## Traceability matrix
 
-Compact generated view that connects requirement ids to decision rows, compatibility feedback rows, knowledge clauses, documentation builds, planning builds, roadmap tasks, tests/code, implementation builds, and validation verdicts. It reports gaps but does not own requirements.
+Compact generated view that connects requirement ids to decision rows, knowledge clauses, decision builds, planning builds, roadmap tasks, tests/code, implementation builds, and validation verdicts. It reports gaps but does not own requirements.
 
 ## Vertical alignment
 
@@ -120,7 +108,7 @@ Primary generated hot state index at `.codewiki/index_graph.json`. Domain langua
 
 ## State propagation
 
-The state engine's ability to index current hot state and, when any source layer changes, expose what drifted downstream or upstream. Changing decision intent triggers knowledge or planning drift. Changing knowledge triggers planning drift. Changing planning triggers implementation drift. Changing code can trigger validation, planning, or documentation drift. Generated state surfaces these as reconciliation items with explicit direction, layer, and next-loop routing so agents know which loop needs to rerun, while source-backed builds and knowledge remain truth.
+The state engine's ability to index current hot state and, when any source layer changes, expose what drifted downstream or upstream. Changing decision intent triggers knowledge or planning drift. Changing knowledge triggers planning drift. Changing planning triggers implementation drift. Changing code can trigger validation, planning, or decision drift. Generated state surfaces these as reconciliation items with explicit direction, layer, and next-loop routing so agents know which loop needs to rerun, while source-backed builds and knowledge remain truth.
 
 ## View
 

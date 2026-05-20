@@ -31,7 +31,7 @@ CodeWiki should expose one audit surface implemented in source, with adapter-fac
 
 | Profile | Purpose | Typical gate use |
 | --- | --- | --- |
-| `alignment` | Check feedback, knowledge, roadmap, tests, code, builds, validation, and publication traceability. | Feedback, documentation, planning, implementation, task-close. |
+| `alignment` | Check decision, knowledge, roadmap, tests, code, builds, validation, and publication traceability. | Decision, planning, implementation, task-close. |
 | `file-structure` | Check path taxonomy, layer ownership, forbidden folders, generated/canonical boundaries, stale architecture references, and that optional scripts do not own authoritative semantics. | Architecture/system changes, task-close, publication. |
 | `stale-reference` | Check active docs/source for deleted paths, legacy command names, stale architecture paths, and obsolete CodeWiki surfaces. | Documentation, implementation, release. |
 | `package` | Check package reachability, tarball contents, missing lockfile, source files included/excluded, and publication metadata. | Publication, release. |

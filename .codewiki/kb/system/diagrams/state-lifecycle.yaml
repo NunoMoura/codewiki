@@ -2,7 +2,7 @@ schema_version: 1
 id: spec.system.diagrams.state-lifecycle
 title: CodeWiki Task and Compiler Lifecycle
 kind: state_lifecycle
-purpose: Show how intent, builds, roadmap tasks, validation, implementation evidence, and publication readiness move through CodeWiki.
+purpose: Show how intent, decision builds, roadmap tasks, validation, implementation evidence, and publication readiness move through CodeWiki.
 source_docs:
   - .codewiki/kb/system/compilers.md
   - .codewiki/kb/system/builds.md
@@ -15,17 +15,17 @@ states:
   - id: user_intent
     label: User intent captured
     kind: input
-  - id: feedback_diff_proposed
-    label: Feedback diff proposed
+  - id: decision_rows_proposed
+    label: Decision rows proposed
     kind: decision_gate
-  - id: feedback_build_accepted
-    label: Feedback build accepted
+  - id: decision_build_accepted
+    label: Decision build accepted
     kind: build
   - id: knowledge_updated
     label: Knowledge updated
     kind: durable_truth
-  - id: documentation_build_accepted
-    label: Documentation build accepted
+  - id: planning_build_accepted
+    label: Planning build accepted
     kind: build
   - id: task_todo
     label: Roadmap task todo
@@ -50,20 +50,20 @@ states:
     kind: work
 transitions:
   - from: user_intent
-    to: feedback_diff_proposed
-    trigger: feedback compiler proposes decision rows
-  - from: feedback_diff_proposed
-    to: feedback_build_accepted
-    trigger: user approves rows
-    gate: user decision
-  - from: feedback_build_accepted
+    to: decision_rows_proposed
+    trigger: decision compiler proposes rows
+  - from: decision_rows_proposed
     to: knowledge_updated
-    trigger: documentation compiler applies accepted intent
+    trigger: user approves rows and decision compiler applies KB changes
+    gate: user decision
   - from: knowledge_updated
-    to: documentation_build_accepted
-    trigger: documentation validation passes
-    gate: documentation validation
-  - from: documentation_build_accepted
+    to: decision_build_accepted
+    trigger: decision build records row-to-KB and propagation evidence
+    gate: decision validation
+  - from: decision_build_accepted
+    to: planning_build_accepted
+    trigger: planning compiler creates or refines roadmap work
+  - from: planning_build_accepted
     to: task_todo
     trigger: roadmap task created or refined
   - from: task_todo
@@ -88,12 +88,9 @@ transitions:
     trigger: new accepted delta appears after closure
   - from: task_blocked
     to: task_in_progress
-    trigger: blocker resolved and implementation resumes
+    trigger: blocker resolved and task resumes
 ui_hints:
-  default_start: user_intent
+  default_state: user_intent
   terminal_states:
     - task_done
     - task_blocked
-  gate_states:
-    - feedback_diff_proposed
-    - task_verify

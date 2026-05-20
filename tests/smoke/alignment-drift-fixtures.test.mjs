@@ -37,33 +37,23 @@ const baseProject = {
 };
 
 const docs = [{ path: ".codewiki/kb/system/alignment.md", title: "Alignment", doc_type: "spec", links: [], code_paths: ["src/application/graph.ts"] }];
-const feedbackPath = ".codewiki/builds/feedback/feedback.json";
-const feedbackBuild = {
-	path: feedbackPath,
-	kind: "feedback_build",
+const decisionPath = ".codewiki/builds/decision/decision.json";
+const decisionBuild = {
+	path: decisionPath,
+	kind: "decision_build",
 	status: "accepted",
 	data: {
-		kind: "feedback_build",
+		kind: "decision_build",
 		status: "accepted",
 		change_type: "system",
 		traceability: { change_type: "system", semantic: true, requires_accepted_build: false },
 		requirements: [{ id: "REQ-001", text: "Alignment proof exists", state: "accepted" }],
-		lower_layer_delta: { knowledge: [".codewiki/kb/system/alignment.md"], roadmap: ["TASK-900"], code: ["src/application/graph.ts"] },
-	},
-};
-const documentationPath = ".codewiki/builds/documentation/documentation.json";
-const documentationBuild = {
-	path: documentationPath,
-	kind: "documentation_build",
-	status: "accepted",
-	data: {
-		kind: "documentation_build",
-		status: "accepted",
-		source_feedback_build: feedbackPath,
-		change_type: "system",
-		traceability: { change_type: "system", semantic: true, requires_accepted_build: true, accepted_build_refs: [feedbackPath] },
+		diff_table: [{ id: "REQ-001", desired_state: "Alignment proof exists", user_action: "approved" }],
+		approved_diff_rows: ["REQ-001"],
 		knowledge_changes: [".codewiki/kb/system/alignment.md"],
-		roadmap_changes: ["TASK-900"],
+		row_to_kb_mappings: [{ row_id: "REQ-001", knowledge_refs: [".codewiki/kb/system/alignment.md"], evidence: "Alignment doc captures requirement." }],
+		propagation: { direction: "system-first", product_impact: ["User-visible alignment semantics change."] },
+		produces: { knowledge: [".codewiki/kb/system/alignment.md"], roadmap: ["TASK-900"] },
 	},
 };
 const planningPath = ".codewiki/builds/planning/planning.json";
@@ -74,9 +64,9 @@ const planningBuild = {
 	data: {
 		kind: "planning_build",
 		status: "accepted",
-		source_documentation_build: documentationPath,
+		source_decision_build: decisionPath,
 		change_type: "task",
-		traceability: { change_type: "task", semantic: true, requires_accepted_build: true, accepted_build_refs: [documentationPath] },
+		traceability: { change_type: "task", semantic: true, requires_accepted_build: true, accepted_build_refs: [decisionPath] },
 		task_ids: ["TASK-900"],
 	},
 };
@@ -113,9 +103,8 @@ function graph(overrides = {}) {
 }
 
 {
-	const g = graph({ builds: [feedbackBuild] });
+	const g = graph({ builds: [decisionBuild] });
 	const row = g.views.traceability.rows.find((entry) => entry.requirement_id === "REQ-001");
-	assert.ok(row?.gaps.includes("missing_documentation_build"), "vertical drift fixture should expose missing documentation build");
 	assert.ok(row?.gaps.includes("missing_planning_build"), "vertical drift fixture should expose missing planning build");
 }
 
@@ -126,7 +115,7 @@ function graph(overrides = {}) {
 }
 
 {
-	const g = graph({ roadmapEntries: [{ id: "TASK-900", title: "Publish", status: "todo", priority: "high", kind: "testing", summary: "Publish proof", spec_paths: [], code_paths: ["src/application/graph.ts"], research_ids: [] }], builds: [feedbackBuild, documentationBuild, planningBuild, implementationBuild] });
+	const g = graph({ roadmapEntries: [{ id: "TASK-900", title: "Publish", status: "todo", priority: "high", kind: "testing", summary: "Publish proof", spec_paths: [], code_paths: ["src/application/graph.ts"], research_ids: [] }], builds: [decisionBuild, planningBuild, implementationBuild] });
 	const row = g.views.traceability.rows.find((entry) => entry.requirement_id === "PUB-001");
 	assert.ok(g.views.reconciliation.items.some((entry) => entry.id === `reconcile:publication-proof:${implementationPath}`), "publication proof fixture should expose missing content proof reconciliation");
 }
@@ -182,7 +171,7 @@ function createAuditFixture({ clean = false } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-alignment-drift-validation-"));
 	try {
 		const project = { ...baseProject, root, configPath: ".codewiki/config.json" };
-		const planning = await writePlanningBuild(project, { kind: "planning", summary: "Plan", source_documentation_build: ".codewiki/builds/documentation/doc.json", task_ids: ["TASK-900"], task_changes: ["Plan"], tdd_plan: ["Test"], candidate_test_files: ["tests/smoke/alignment-drift-fixtures.test.mjs"], candidate_code_paths: ["src/application/graph.ts"] });
+		const planning = await writePlanningBuild(project, { kind: "planning", summary: "Plan", source_decision_build: ".codewiki/builds/decision/decision.json", task_ids: ["TASK-900"], task_changes: ["Plan"], tdd_plan: ["Test"], candidate_test_files: ["tests/smoke/alignment-drift-fixtures.test.mjs"], candidate_code_paths: ["src/application/graph.ts"] });
 		const implementation = await writeImplementationBuild(project, { kind: "implementation", summary: "Implement", source_planning_build: planning.path, task_id: "TASK-900", test_files: ["tests/smoke/alignment-drift-fixtures.test.mjs"], code_files: ["src/application/graph.ts"], checks_run: ["node tests/smoke/alignment-drift-fixtures.test.mjs"], acceptance_mapping: [{ criterion: "fixture", evidence: "test" }], closure_brief: { user_intent: "test", implemented_changes: ["fixture"], acceptance_evidence: ["test"], checks: ["node tests/smoke/alignment-drift-fixtures.test.mjs"] } });
 		const blocked = await writeValidationReport(project, { profile: "implementation", task_id: "TASK-900", verdict: "pass", rationale: "Missing audits", source: implementation.path, isolation: { role: "validator", fresh_context: true, clean: true, validated_sha: "abc123" } });
 		assert.equal(blocked.data.verdict, "block");

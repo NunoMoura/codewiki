@@ -46,7 +46,7 @@ The UI may expose detailed artifacts contextually:
 - Knowledge appears through KB cards, Map nodes, inline detail cards, and source links.
 - Builds appear through Board/Map evidence links and compiler handoff summaries.
 - Validation appears through Board gates, Map relationships, inline warnings, and source links.
-- Diff rows appear only when a pending feedback decision needs explicit action.
+- Diff rows appear only when a pending decision needs explicit action.
 - Settings appear through the header cog, command palette, or maintenance actions.
 
 These details should not create hidden UI-only truth or permanent first-level destinations. Contextual detail should lead with user-value fields such as purpose, alignment, evidence, warnings/gates, and next safe action; source paths and raw payloads should be available but collapsed by default.
@@ -70,7 +70,7 @@ Browser UI and local web-server code under `src/ui/**` must not import Pi SDK/TU
 - Product KB defaults to Stories and UI Surfaces while disclosing users/personas contextually.
 - System KB uses ASCII-like diagrams/cards and avoids stacked or overlapping diagram rendering.
 - Board renders roadmap work as a retro terminal Kanban board backed by roadmap truth.
-- Map defaults to KB/documentation relationships and keeps broader graph data secondary.
+- Map defaults to KB/docs relationships and keeps broader graph data secondary.
 - Sessions presents active-session coordination while keeping lease internals advanced.
 - Settings is available through the header cog and maps repo-backed preferences without hidden UI truth.
 - Detail artifacts stay contextual and do not create first-level navigation noise.

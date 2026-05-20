@@ -8,19 +8,19 @@ owners:
 - product
 updated: '2026-05-09'
 code_paths:
-- skills/codewiki-feedback/SKILL.md
+- skills/codewiki-decision/SKILL.md
 ---
 
 # Maintain Fresh Intent
 
-As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before downstream documentation or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
+As a maintainer or agent, I want CodeWiki to capture and challenge current project intent before downstream decision or code changes, so future work uses agreed solutions instead of rediscovering goals from chat history or raw diffs.
 
 ## Acceptance signals
 
 - Product and system knowledge describe the desired current state.
 - The decision loop surfaces tradeoffs, blind spots, pitfalls, simpler alternatives, and conflicts before intent is accepted.
 - Diff tables show current state, proposed state, rationale, affected layers, risk, and user action before canonical edits are applied.
-- Accepted feedback decisions become feedback builds before documentation changes.
+- Accepted decisions become decision builds with KB mappings before planning.
 - Obsolete details are removed or converted into compact historical summaries.
 - Roadmap work records priority, status, blockers, progress, and closure while linking to accepted builds and specs instead of carrying full requirements briefs.
 

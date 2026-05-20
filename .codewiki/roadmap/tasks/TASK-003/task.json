@@ -12,7 +12,7 @@
   "code_paths": [
     "src/application/gateway",
     "src/application/tools/validation.ts",
-    "src/application/tools/session-handoff.ts",
+    "src/application/tools/resume-context.ts",
     "skills/codewiki-validation/SKILL.md"
   ],
   "research_ids": [],
@@ -45,5 +45,5 @@
     "closure": ""
   },
   "created": "2026-05-19",
-  "updated": "2026-05-19T01:25:28Z"
+  "updated": "2026-05-19T22:27:35Z"
 }

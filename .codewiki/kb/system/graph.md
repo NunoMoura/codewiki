@@ -21,7 +21,7 @@ code_paths:
 
 The graph is the generated representation of CodeWiki state. The domain concept is state; `index_graph.json` is a rebuildable graph-shaped projection over canonical inputs, compiler builds, validation attestations, content proofs, and discoverable code/test facts.
 
-The state engine routes agents to the smallest useful next context, detects drift, reports freshness, exposes scoped roadmap/sprint/task views, and selects the next loop: feedback, documentation, planning, implementation, validation, or observe. It also supplies the agency controller and CodeWiki UI with safe next-action, context-boundary, isolation, and stop-reason signals.
+The state engine routes agents to the smallest useful next context, detects drift, reports freshness, exposes scoped roadmap/sprint/task views, and selects the next loop: decision, planning, implementation, validation, or observe. It also supplies the agency controller and CodeWiki UI with safe next-action, context-boundary, isolation, and stop-reason signals.
 
 The graph does not decide intended behavior and does not replace source-of-truth reads. It points to the relevant cycle builds, knowledge docs, planning builds, roadmap items, validation reports, and code/test paths; agents must read those sources directly before making semantic changes.
 
@@ -34,12 +34,12 @@ The graph is generated from:
 ```text
 .codewiki/config.json
 .codewiki/kb/** frontmatter, paths, explicit refs, and curated Markdown links
-.codewiki/builds/**, including compatibility feedback/documentation builds and vNext decision builds
+.codewiki/builds/**, including decision, planning, and implementation builds
 .codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, and policy boundaries
 .codewiki/roadmap/**
 .codewiki/validation/**
 .codewiki/session/queue.json session queue focus, waits, scoped leases, and isolation metadata
-.codewiki/runtime/diff-tables.json pending feedback change rows
+.codewiki/runtime/diff-tables.json pending decision change rows
 code/test manifests
 Git/source fingerprints, tree SHAs, commit SHAs, package digests, and archive ledgers
 audit evidence required by gateway policy
@@ -85,15 +85,15 @@ The graph should model cross-layer items with:
 - `state`: `aligned`, `drift`, `blocked`, `stale`, or `unknown`,
 - `direction`: `downward`, `upward`, or `gateway`,
 - `from_layer` and `to_layer`,
-- `next_loop`: `feedback`, `documentation`, `planning`, `implementation`, `validation`, or `observe`,
+- `next_loop`: `decision`, `planning`, `implementation`, `validation`, or `observe`,
 - `reason`,
 - source fingerprints for freshness.
 
-Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted feedback, documentation, or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
+Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted decision or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
 
-The graph next action should include context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend agent-owned `new_session` or `context_refresh` when context is noisy, stale, or token-heavy. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
+The graph next action should include context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend `codewiki_resume_context`, CodeWiki-owned compaction, hard `new_session`, or `context_refresh` when context is noisy, stale, token-heavy, or at a loop boundary. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
 
-Hot context should stay small: active tasks/sprints/leases, latest active or superseding builds, unconsumed handoffs, fail/block validation, publication blockers, drift routes, and compact traceability gaps. Warm and cold evidence is available only through explicit archive, restore, audit, or refinement workflows.
+Hot context should stay small: active tasks/sprints/leases, latest active or superseding builds, unconsumed handoffs, fail/block validation, publication blockers, drift routes, compact traceability gaps, and task-local resume packets. Warm and cold evidence is available only through explicit archive, restore, audit, resume-context expansion, or refinement workflows.
 
 For Git-backed archival, the graph should prefer compact cold refs over expanded cold artifact nodes. GC labels are advisory until archive proof exists; tracked purge is safe only after a reachable archive commit/tree and restore ledger exist.
 
@@ -105,9 +105,8 @@ A useful traceability row connects:
 
 ```text
 requirement id
-  -> feedback_build row/decision
-  -> knowledge doc clause
-  -> documentation_build evidence
+  -> decision_build row
+  -> knowledge doc clause / row-to-KB mapping
   -> planning_build task/acceptance mapping
   -> roadmap task
   -> tests/code evidence
@@ -174,7 +173,7 @@ Generated state is valid only when it matches source fingerprints. If generated 
 
 Freshness anchors must ignore generated graph/view artifacts such as `.codewiki/index_graph.json`; otherwise a no-op rebuild would make the graph stale against itself. Source files, knowledge files, roadmap truth, builds, validation reports, and mapped non-generated code remain valid freshness inputs.
 
-Freshness should use deterministic input fingerprints rather than volatile generated timestamps or a final commit SHA that cannot be known before publication. Spec/doc freshness must include source content or a reliable source digest; otherwise documentation changes can avoid stale detection.
+Freshness should use deterministic input fingerprints rather than volatile generated timestamps or a final commit SHA that cannot be known before publication. Spec/doc freshness must include source content or a reliable source digest; otherwise docs changes can avoid stale detection.
 
 Status, `codewiki_state`, and CodeWiki UI views must consume the generated-state reconciliation next action when it is non-observe. They may summarize lint or spec drift, but they must not report a separate unresolved drift action while generated-state reconciliation reports the system is aligned. Actionable deterministic lint drift should enter state reconciliation unless an open roadmap task already covers that spec path. Advisory lint signals, such as large-document token-budget warnings, may keep health yellow without forcing a compiler route.
 

@@ -152,7 +152,7 @@ Legacy system KB paths removed by the flattening migration:
 | Generated state/views | `.codewiki/index_graph.json`, `.codewiki/roadmap/tasks/**` | Rebuilt from roadmap queue and KB inputs; never hand-edit. |
 | Transient handoffs | `.codewiki/builds/**` | Compiler build artifacts that can be archived/purged after downstream truth and publication proof. |
 | Validation/audit evidence | `.codewiki/validation/**` and policy-required audit reports | Attestations and deterministic evidence, not content proof by themselves. |
-| Runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Coordination and pending feedback UI state; not durable product truth unless compiled into builds. |
+| Runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Coordination and pending decision UI state; not durable product truth unless compiled into builds. |
 | Publication proof | Git commits/tree SHAs, package digests, archive ledgers, remote refs | Immutable or external proof of content and publication assertions. |
 
 Architecture and audit checks must understand these classes so dogfood state, generated outputs, and package source cannot drift silently again.
@@ -202,8 +202,7 @@ skills/codewiki/
   bootstrap/
   prompts/
   references/
-skills/codewiki-feedback/SKILL.md
-skills/codewiki-documentation/SKILL.md
+skills/codewiki-decision/SKILL.md
 skills/codewiki-planning/SKILL.md
 skills/codewiki-implementation/SKILL.md
 skills/codewiki-validation/SKILL.md

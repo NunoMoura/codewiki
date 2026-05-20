@@ -24,7 +24,7 @@ The status panel header shows only the repo name or compact repo context. Its us
 - Status — compact health, focus, current-state metrics, gates, blockers, drift/staleness counts, and next action.
 - KB — source-backed summaries of product stories, UI surfaces, users/personas as context, system components, and diagrams.
 - Board — tracked roadmap work, sprint/task scopes, task status/detail navigation, gates, and closure evidence.
-- Map — documentation/KB relationships first, with scoped roadmap/task graph slices, build links, drift, and reconciliation cues as secondary detail.
+- Map — docs/KB relationships first, with scoped roadmap/task graph slices, build links, drift, and reconciliation cues as secondary detail.
 - Sessions — active sessions, scoped coordination, waits/conflicts, and safe resume/unblock cues over raw lease internals.
 
 The panel should not expose Product, System, Graph, Leases, Knowledge, Builds, Validation, Diff, or Settings as permanent first-level tabs. Those details should appear only when relevant to the current selection, pending decision, gate, source detail, or chat workflow. Settings stays in the browser UI header cog or host-specific configuration affordance.
@@ -36,9 +36,9 @@ The panel should not expose Product, System, Graph, Leases, Knowledge, Builds, V
 - Status stays small and does not duplicate the agent chat or standalone browser UI.
 - KB routes to canonical product and system knowledge rather than hidden UI-only truth.
 - Board focuses on roadmap work and closure evidence.
-- Map focuses on KB/documentation relationships before broader graph internals.
+- Map focuses on KB/docs relationships before broader graph internals.
 - Sessions uses active-session language while preserving lease/source detail as advanced context.
-- Feedback diff decisions remain available when pending, but do not become a permanent navigation destination.
+- Decision diff rows remain available when pending, but do not become a permanent navigation destination.
 - The panel can act as a launcher or fallback for the standalone CodeWiki UI.
 - Visual status reads graph-backed relationships, runtime pending diff tables, session queue coordination, and roadmap work truth instead of duplicating them.
 

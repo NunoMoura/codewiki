@@ -17,9 +17,10 @@ import { executeCodewikiGcTool } from "../../application/tools/gc.ts";
 import { executeCodewikiAgency } from "./tools/agency.ts";
 import { registerCodewikiArtifactStatusTool } from "./tools/artifact-status.ts";
 import { registerCodewikiAuditTool } from "./tools/audit.ts";
+import { registerCodewikiResumeContextTool } from "./tools/resume-context.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
-import { registerSessionHandoffCommand, registerCodewikiSessionHandoffTool } from "./tools/session-handoff.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
+import { installCodewikiCompaction, requestCodewikiContextRefresh } from "./compaction.ts";
 import { registerCodewikiStateTool } from "./tools/state.ts";
 import { executeCodewikiTask } from "./tools/task.ts";
 import {
@@ -36,6 +37,7 @@ const COMMAND_PREFIX = "wiki";
 
 export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerBootstrapFeatures(pi);
+	installCodewikiCompaction(pi);
 	let activeStatusPanel: ActiveStatusPanel | null = activeStatusPanelGlobal;
 	let disposeArtifactWake: (() => void) | null = null;
 
@@ -89,7 +91,6 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerStatusCommand(pi);
 	registerUiCommand(pi);
 	registerResumeCommand(pi);
-	registerSessionHandoffCommand(pi);
 
 	pi.registerShortcut("alt+w", {
 		description: "Toggle Codewiki status panel",
@@ -140,9 +141,9 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerCodewikiStateTool(pi);
+	registerCodewikiResumeContextTool(pi);
 	registerCodewikiArtifactStatusTool(pi);
 	registerCodewikiAuditTool(pi);
-	registerCodewikiSessionHandoffTool(pi);
 
 	pi.registerTool({
 		name: "codewiki_gc",
@@ -173,19 +174,24 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		name: "codewiki_build",
 		label: "Codewiki Build",
 		description:
-			"Create transient compiler build artifacts (feedback_build, documentation_build, planning_build, implementation_build) with cycle and lifecycle metadata.",
+			"Create transient compiler build artifacts (decision_build, planning_build, implementation_build) with cycle and lifecycle metadata.",
 		promptSnippet:
 			"Write accepted compiler handoff builds with lifecycle metadata",
 		promptGuidelines: [
-			"Use kind='feedback' as the compatibility decision-loop build after the user accepts semantic rows, kind='documentation' for compatibility knowledge builds, kind='planning' for roadmap alignment, or kind='implementation' for implementation evidence.",
+			"Use kind='decision' after the user accepts semantic rows and KB changes are mapped; use kind='planning' for roadmap alignment; use kind='implementation' to record test/code/check evidence for a task.",
 			"Builds are transient payloads, not long-term truth; canonical truth belongs in knowledge, roadmap, tests, and code.",
 			"Build policy records loop_start, validation, and next_loop isolation requirements so downstream loops can start fresh from artifacts instead of chat memory.",
-			"Use kind='feedback' for accepted decisions. Use kind='documentation' when .codewiki/kb/ changes. Use kind='planning' for roadmap alignment. Use kind='implementation' to record test/code/check evidence for a task.",
+			"Decision builds replace the old split intent/knowledge handoff: record approved rows, row-to-KB mappings, product/system propagation, risks, non-goals, and downstream planning questions.",
 		],
 		parameters: codewikiBuildToolInputSchema,
 		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
 			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_build");
 			const result = await executeCodewikiBuildTool(project, params as any);
+			requestCodewikiContextRefresh({
+				reason: `${params.kind}-build-boundary`,
+				taskId: params.task_id || params.task_ids?.[0] || null,
+				followUpIntent: `Continue after ${params.kind}_build ${result.result?.path ?? ""}`.trim(),
+			});
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
 				content: [{ type: "text", text: result.summary }],
@@ -203,7 +209,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Write validation gateway reports with verdict and rationale",
 		promptGuidelines: [
 			"Use after running a validation gateway. Passing validation can be transient; fail/block/policy-required reports should persist under .codewiki/validation/.",
-			"Profile must match a known validation gateway profile: feedback, documentation, implementation, task-close, drift-audit, or graph-audit.",
+			"Profile must match a known validation gateway profile: decision, planning, implementation, task-close, drift-audit, or graph-audit.",
 			"Pass reports must cite required audit evidence through audit_refs/audit_reports for the profile.",
 			"Implementation profile requires fresh_context=true, clean state, and checked content proof (SHA/tree or working_tree_digest). Task-close/publication/publish/release require clean=true plus immutable commit/tree/package/archive/remote proof."
 		],
@@ -211,6 +217,11 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
 			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_validation");
 			const result = await executeCodewikiValidationTool(project, params as any);
+			requestCodewikiContextRefresh({
+				reason: `validation-${params.verdict}`,
+				taskId: params.task_id || null,
+				followUpIntent: `Continue after ${params.profile} validation ${params.verdict}`,
+			});
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
 				content: [{ type: "text", text: result.summary }],
@@ -243,6 +254,13 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 				"codewiki_task",
 			);
 			const result = await executeCodewikiTask(pi, project, ctx, params);
+			if (params.action === "close" || params.action === "cancel") {
+				requestCodewikiContextRefresh({
+					reason: `task-${params.action}`,
+					taskId: params.taskId || result.canonical_task_ids?.[0] || null,
+					followUpIntent: `Continue after task ${params.action}`,
+				});
+			}
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {
 				content: [{ type: "text", text: result.summary }],
@@ -255,8 +273,8 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	pi.registerTool({
 		name: "codewiki_diff_table",
 		label: "Codewiki Diff Table",
-		description: "Create or update pending feedback diff tables before accepted feedback builds are compiled.",
-		promptSnippet: "Use pending diff tables for interactive feedback approval before writing accepted feedback builds.",
+		description: "Create or update pending decision diff tables before accepted decision builds are compiled.",
+		promptSnippet: "Use pending diff tables for interactive decision approval before writing accepted decision builds.",
 		parameters: codewikiDiffTableToolInputSchema,
 		execute: async (_id: string, params: any, _notify: any, _progress: any, ctx: any) => {
 			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_diff_table");

@@ -60,6 +60,11 @@ nodes:
     group: app_layer
     kind: application
     source: .codewiki/kb/system/graph.md
+  - id: resume_context
+    label: Resume context builder
+    group: app_layer
+    kind: application
+    source: .codewiki/kb/system/api.md
   - id: agency
     label: Agency controller
     group: app_layer
@@ -125,6 +130,12 @@ edges:
   - from: api
     to: state_engine
     label: rebuilds/queries generated state
+  - from: api
+    to: resume_context
+    label: composes high-signal continuation packets
+  - from: resume_context
+    to: state_engine
+    label: reads graph/task context refs
   - from: state_engine
     to: graph
     label: emits representation

@@ -43,7 +43,7 @@ try {
 	const planning = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Plan isolated implementation.",
-		source_documentation_build: ".codewiki/builds/documentation/doc.json",
+		source_decision_build: ".codewiki/builds/decision/decision.json",
 		task_ids: ["TASK-123"],
 		task_changes: ["TASK-123 refined."],
 		tdd_plan: ["Add isolation policy smoke coverage."],
@@ -316,8 +316,7 @@ try {
 		roadmapSprints: [],
 		gitCache: fakeGitCache,
 		builds: [
-			{ path: ".codewiki/builds/feedback/fb.json", kind: "feedback_build", status: "accepted", data: { kind: "feedback_build", lifecycle: { state: "accepted" }, lower_layer_delta: { code: ["src/application/builds.ts"] }, produces: { code: ["src/application/builds.ts"] } } },
-			{ path: ".codewiki/builds/documentation/doc.json", kind: "documentation_build", status: "accepted", data: { kind: "documentation_build", lifecycle: { state: "accepted" }, source_feedback_build: ".codewiki/builds/feedback/fb.json", consumes: { feedback: [".codewiki/builds/feedback/fb.json"] }, produces: { code: ["src/application/builds.ts"] } } },
+			{ path: ".codewiki/builds/decision/decision.json", kind: "decision_build", status: "accepted", data: { kind: "decision_build", lifecycle: { state: "accepted" }, diff_table: [{ id: "DTR-001", desired_state: "Change builds.", user_action: "approved" }], approved_diff_rows: ["DTR-001"], knowledge_changes: [".codewiki/kb/system/builds.md"], row_to_kb_mappings: [{ row_id: "DTR-001", knowledge_refs: [".codewiki/kb/system/builds.md"], evidence: "Builds doc captures decision." }], propagation: { direction: "system-first", no_product_impact: "No product behavior change." }, produces: { code: ["src/application/builds.ts"] } } },
 		],
 		validations: [],
 		testFiles: [],
@@ -327,7 +326,7 @@ try {
 	assert.equal(graph.views.reconciliation.next_action.isolation_required, false);
 	assert.equal(graph.views.reconciliation.next_action.isolation.mode, "agent-owned-new-session");
 	assert.equal(graph.views.workflow_cursor.context_boundary, "none");
-	assert.ok(graph.views.workflow_cursor.handoff_refs.includes("build:.codewiki/builds/documentation/doc.json"));
+	assert.ok(graph.views.workflow_cursor.handoff_refs.includes("build:.codewiki/builds/decision/decision.json"));
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

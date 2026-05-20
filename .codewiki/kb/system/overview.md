@@ -37,9 +37,8 @@ CodeWiki separates truth by role so that agents can reason about the current sta
 | Truth type | Lives in | Role |
 | --- | --- | --- |
 | Repo-local contract truth | `.codewiki/config.json` | Defines project roots, policy, generated files, and runtime settings. |
-| Intent truth | accepted `decision_build` files, or compatibility `feedback_build` files under `.codewiki/builds/feedback/**` | Temporary validated brief of user intent for the next loop. |
+| Intent and knowledge handoff truth | accepted `decision_build` files under `.codewiki/builds/decision/**` | Temporary validated brief of user intent, KB changes, and propagation evidence for planning. |
 | Product and system truth | `.codewiki/kb/**/*.md`, `.codewiki/kb/**/*.yaml`, and `.codewiki/kb/**/*.json` | Durable intended behavior, product decisions, architecture, diagram raw data, workflows, and non-goals. |
-| Knowledge handoff truth | accepted `documentation_build` files under `.codewiki/builds/documentation/**` | Temporary knowledge-alignment brief for the planning loop. |
 | Planning handoff truth | accepted `planning_build` files under `.codewiki/builds/planning/**` | Temporary roadmap, acceptance, verification, and TDD-strategy brief for the implementation loop. |
 | Work truth | `.codewiki/roadmap/**` | Active work items, priority, ownership, progress, status, blockers, and closure state. |
 | Coordination state | `.codewiki/session/queue.json` | Session queue with temporary scoped leases, waits, focus, and isolation metadata; expires/releases and never replaces durable truth. |
@@ -61,7 +60,7 @@ Passing validation does not need a separate durable report by default when the a
 CodeWiki's target alignment model uses four compiler loops and a pure validation gateway:
 
 - [Alignment Model](alignment-model.md) — layer model, graph/gateway/content-proof precedence, and semantic change rules.
-- [Compilers](compilers.md) — feedback, documentation, planning, and implementation loops that produce cycle builds.
+- [Compilers](compilers.md) — decision, planning, and implementation loops that produce cycle builds.
 - [Validation Gateway](validation-gateway.md) — validates a submitted build against policy, source refs, criteria, and evidence.
 - [Audits](audits.md) — deterministic audit profiles and `/audit [flags]` semantics.
 
@@ -75,7 +74,7 @@ A cycle build is one loop attempt. It contains criteria, requirement ids, source
 
 Builds compact one loop for the next; they are not permanent archives. Long-term product/system truth belongs in `.codewiki/kb/**`, work truth in roadmap state, and executable truth in code/tests.
 
-Roadmap items reference accepted builds and knowledge paths, then track priority, state, progress, blockers, and closure. In the target model, planning creates or refines roadmap work from validated documentation builds.
+Roadmap items reference accepted builds and knowledge paths, then track priority, state, progress, blockers, and closure. Planning creates or refines roadmap work from validated decision builds.
 
 Implementation builds also support publication. They can recommend commit, PR, issue, release-note, and push-readiness text, but validation and policy decide whether commit, push, release, or remote updates are allowed.
 
@@ -91,7 +90,7 @@ Gateways check vertical and horizontal alignment, but they do not invent require
 - [Extension](extension.md) owns packaged distribution and the current Pi extension surface.
 - [Adapters](adapters.md) owns harness translation boundaries for Pi today and CLI/MCP/future harnesses later.
 - [Agency Controller](agency.md) owns bounded roadmap automation through agency cycles and explicit gates.
-- [Compilers](compilers.md) owns the feedback, documentation, planning, and implementation loops.
+- [Compilers](compilers.md) owns the decision, planning, and implementation loops.
 - [Validation Gateway](validation-gateway.md) owns pure build-validation semantics.
 - [Audits](audits.md) owns deterministic audit evidence semantics.
 - [Builds](builds.md) owns temporary handoff brief semantics.
@@ -136,7 +135,7 @@ System component docs should stay flat. Each major component should have one mat
 
 ## Change lifecycle
 
-Semantic work starts in the feedback classification path, then propagates through documentation, planning, implementation, validation, and publication as needed. The detailed review and propagation rules live in [Change Lifecycle](change-lifecycle.md).
+Semantic work starts in the decision classification path, then propagates through decision, planning, implementation, validation, and publication as needed. The detailed review and propagation rules live in [Change Lifecycle](change-lifecycle.md).
 
 ## Related docs
 

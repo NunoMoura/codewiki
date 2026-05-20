@@ -40,8 +40,8 @@ The gateway inspects only enough source truth to decide. It may recommend routin
 
 Validation can run at:
 
-- feedback build handoff,
-- documentation build handoff,
+- decision build handoff,
+- decision build handoff,
 - decision build handoff,
 - planning build handoff,
 - implementation build handoff,
@@ -62,9 +62,8 @@ Vertical alignment checks traceability across layers:
 
 ```text
 user intent
-  -> decision_build or compatibility feedback_build
+  -> decision_build
   -> product/system knowledge and system diagrams
-  -> documentation_build when compatibility mode is active
   -> planning_build
   -> roadmap work item
   -> tests/code
@@ -136,7 +135,7 @@ Tracked validation reports are safe to purge only after a reachable archive comm
 - Shared files across tasks are allowed only when ownership and acceptance evidence remain independent; overlapping ownership without an explicit dependency/split rationale blocks validation.
 - Semantic validation should run in a fresh, bounded context when independence matters.
 - Implementation, task-close, publication, publish, and release validation profiles require fresh-context isolation evidence before they can pass.
-- The gateway may recommend next routing: feedback, documentation, planning, implementation, validation, observe, or block.
+- The gateway may recommend next routing: decision, planning, implementation, validation, observe, or block.
 - Gated agency must stop on fail/block verdicts or missing required approval.
 - Commit, push, release, or remote updates require gateway/policy approval when configured and immutable content proof when publication policy requires it.
 - Risk-tiered gates may fast-path low-risk mechanical or docs-cleanup work only when deterministic audits, stale-ref scans, diagram/doc checks, and content proof satisfy policy.

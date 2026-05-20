@@ -1,6 +1,6 @@
 ---
 name: codewiki-validation
-description: Use when validating CodeWiki feedback, documentation, planning, or implementation builds; task close readiness; graph/drift audits; publication/readiness gates; or fresh validator handoffs. Runs the validation gateway as an independent no-mutation reviewer with exact source refs, audit evidence, pass/fail/block semantics, task-boundary checks, and required fresh-context/content proof.
+description: Use when validating CodeWiki decision, planning, or implementation builds; task close readiness; graph/drift audits; publication/readiness gates; or fresh validator handoffs. Runs the validation gateway as an independent no-mutation reviewer with exact source refs, audit evidence, pass/fail/block semantics, task-boundary checks, and required fresh-context/content proof.
 id: skill.codewiki-validation
 title: CodeWiki validation gateway skill
 state: active
@@ -36,7 +36,7 @@ Read only enough source truth to decide:
 - submitted build path and kind;
 - validation profile and policy requirements;
 - requirement ids, exit criteria, accepted upstream build refs, and evidence mapping;
-- relevant `feedback_build`, `documentation_build`, `planning_build`, or `implementation_build` refs;
+- relevant `decision_build`, `planning_build`, or `implementation_build` refs;
 - roadmap task and sibling task context when validating planning, implementation, or task-close;
 - linked `.codewiki/kb/**` specs;
 - touched code/test/docs paths;
@@ -47,8 +47,8 @@ Read only enough source truth to decide:
 ## Workflow
 
 1. **Confirm validation boundary**
-   - Identify profile: `feedback`, `documentation`, `implementation`, `task-close`, `drift-audit`, `graph-audit`, publication/publish/release policy, or configured equivalent.
-   - If current context is not fresh where policy requires it, stop and request/consume `codewiki_session_handoff` instead of judging from builder context.
+   - Identify profile: `decision`, `planning`, `implementation`, `task-close`, `drift-audit`, `graph-audit`, publication/publish/release policy, or configured equivalent.
+   - If current context is not fresh where policy requires it, stop and restart validation from the source refs instead of judging from builder context.
 
 2. **Load state and source refs**
    - Run `codewiki_state refresh=true` when generated routing may be stale.

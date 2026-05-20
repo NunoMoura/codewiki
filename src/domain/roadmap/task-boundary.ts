@@ -52,7 +52,7 @@ function delegatedAcceptanceCriteria(task: TaskBoundaryInput): string[] {
 	const acceptance = asStringList(taskGoal(task).acceptance);
 	return acceptance.filter((criterion) => {
 		const upper = criterion.toUpperCase();
-		const refs = upper.match(/\b(?:TASK|ROADMAP)-\d+\b/g) || [];
+		const refs = upper.match(/\bTASK-\d+\b/g) || [];
 		const otherRefs = refs.filter((ref) => ref !== id);
 		if (otherRefs.length === 0) return false;
 		return /\b(?:clos(?:e|ed|es|ing)|done|pass(?:ed|es|ing)?|evidence|validated?)\b/i.test(criterion);

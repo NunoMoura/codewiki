@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { buildGraph } from "../../src/application/graph.ts";
+import { buildLintReport } from "../../src/application/lint.ts";
 
 const project = {
 	root: "/tmp/codewiki-alignment-graph",
@@ -58,33 +59,25 @@ function baseGraph(overrides = {}) {
 	});
 }
 
-const feedbackPath = ".codewiki/builds/feedback/intent.json";
-const documentationPath = ".codewiki/builds/documentation/docs.json";
+const decisionPath = ".codewiki/builds/decision/decision.json";
 const planningPath = ".codewiki/builds/planning/plan.json";
 const implementationPath = ".codewiki/builds/implementation/impl.json";
 const validationPath = ".codewiki/validation/impl-pass.json";
 const checkedSha = "abc1234def5678abc1234def5678abc1234def5678";
 
-const feedbackBuild = {
-	path: feedbackPath,
-	kind: "feedback_build",
+const decisionBuild = {
+	path: decisionPath,
+	kind: "decision_build",
 	status: "accepted",
 	data: {
-		kind: "feedback_build",
+		kind: "decision_build",
 		lifecycle: { state: "accepted" },
 		diff_table: [{ id: "CHANGE-001", desired_state: "Align all layers.", user_action: "approved" }],
-		lower_layer_delta: { knowledge: ["document"], roadmap: ["plan"], code: ["src/application/graph.ts"] },
-	},
-};
-const documentationBuild = {
-	path: documentationPath,
-	kind: "documentation_build",
-	status: "accepted",
-	data: {
-		kind: "documentation_build",
-		lifecycle: { state: "accepted" },
-		source_feedback_build: feedbackPath,
-		produces: { knowledge: [".codewiki/kb/system/alignment.md"] },
+		approved_diff_rows: ["CHANGE-001"],
+		knowledge_changes: [".codewiki/kb/system/alignment.md"],
+		row_to_kb_mappings: [{ row_id: "CHANGE-001", knowledge_refs: [".codewiki/kb/system/alignment.md"], evidence: "Alignment doc captures change." }],
+		propagation: { direction: "system-first", product_impact: ["User-visible alignment behavior changes."] },
+		produces: { knowledge: [".codewiki/kb/system/alignment.md"], roadmap: ["TASK-900"] },
 	},
 };
 const planningBuild = {
@@ -94,7 +87,7 @@ const planningBuild = {
 	data: {
 		kind: "planning_build",
 		lifecycle: { state: "accepted" },
-		source_documentation_build: documentationPath,
+		source_decision_build: decisionPath,
 		task_ids: ["TASK-900"],
 		produces: { roadmap: ["TASK-900"] },
 	},
@@ -137,7 +130,7 @@ const validationReport = {
 		roadmapEntries: [
 			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
 		],
-		builds: [feedbackBuild, documentationBuild, planningBuild, implementationBuild],
+		builds: [decisionBuild, planningBuild, implementationBuild],
 		validations: [validationReport],
 	});
 	const alignment = graph.views.alignment;
@@ -152,8 +145,8 @@ const validationReport = {
 }
 
 {
-	const graph = baseGraph({ builds: [feedbackBuild] });
-	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === `build:${feedbackPath}` && item.next_loop === "documentation"), "Accepted feedback without docs should route to documentation");
+	const graph = baseGraph({ builds: [decisionBuild] });
+	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === `build:${decisionPath}` && item.next_loop === "planning"), "Accepted decision without planning should route to planning");
 }
 
 {
@@ -176,8 +169,20 @@ const validationReport = {
 }
 
 {
-	const graph = baseGraph({ builds: [feedbackBuild, documentationBuild] });
-	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === `build:${documentationPath}` && item.next_loop === "planning"), "Documentation build with lower-layer delta should route to planning when no planning evidence exists");
+	const graph = baseGraph({ builds: [decisionBuild] });
+	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === `build:${decisionPath}` && item.next_loop === "planning"), "Decision build should route to planning when no planning evidence exists");
+}
+
+{
+	const missingDecisionLint = buildLintReport("/tmp/codewiki-alignment-graph", project, [], [], [], {
+		builds: [{ path: ".codewiki/builds/planning/current-plan.json", kind: "planning_build", data: { schema_version: 2, kind: "planning_build", traceability: { upstream_loop: "decision" }, task_ids: ["TASK-900"], produces: { roadmap: ["TASK-900"] }, tdd_plan: ["Test first."] } }],
+	});
+	assert.ok(missingDecisionLint.issues.some((issue) => issue.kind === "planning-build-missing-decision-source"), "Current planning v2 builds should require a decision source");
+
+	const legacyUpstreamLint = buildLintReport("/tmp/codewiki-alignment-graph", project, [], [], [], {
+		builds: [{ path: ".codewiki/builds/planning/legacy-plan.json", kind: "planning_build", data: { schema_version: 2, kind: "planning_build", traceability: { upstream_loop: "legacy" }, task_ids: ["TASK-900"], produces: { roadmap: ["TASK-900"] }, tdd_plan: ["Test first."] } }],
+	});
+	assert.ok(!legacyUpstreamLint.issues.some((issue) => issue.kind === "planning-build-missing-decision-source"), "Explicit non-decision upstream loops are historical artifacts and should not fail current graph health");
 }
 
 {
@@ -185,7 +190,7 @@ const validationReport = {
 		roadmapEntries: [
 			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
 		],
-		builds: [feedbackBuild, documentationBuild, planningBuild],
+		builds: [decisionBuild, planningBuild],
 	});
 	assert.ok(graph.views.reconciliation.items.some((item) => item.task_id === "TASK-900" && item.next_loop === "implementation"), "Open roadmap task should route to implementation");
 }
@@ -195,7 +200,7 @@ const validationReport = {
 		roadmapEntries: [
 			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
 		],
-		builds: [feedbackBuild, documentationBuild, planningBuild, implementationBuild],
+		builds: [decisionBuild, planningBuild, implementationBuild],
 	});
 	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === `build:${implementationPath}` && item.next_loop === "validation"), "Accepted implementation build without validation should route to validation");
 	assert.ok(graph.views.reconciliation.items.some((item) => item.id === `reconcile:publication-proof:${implementationPath}` && item.next_loop === "validation"), "Publication claim without content proof should route to validation");
@@ -221,20 +226,20 @@ const validationReport = {
 {
 	const graph = baseGraph({
 		validations: [
-			{ path: ".codewiki/validation/unscoped-block.json", verdict: "block", data: { profile: "feedback", verdict: "block", source: ".codewiki/builds/feedback/old.json" } },
-			{ path: ".codewiki/validation/unscoped-pass.json", verdict: "pass", data: { profile: "feedback", verdict: "pass", source: ".codewiki/builds/feedback/old.json" } },
+			{ path: ".codewiki/validation/unscoped-block.json", verdict: "block", data: { profile: "decision", verdict: "block", source: ".codewiki/builds/decision/old.json" } },
+			{ path: ".codewiki/validation/unscoped-pass.json", verdict: "pass", data: { profile: "decision", verdict: "pass", source: ".codewiki/builds/decision/old.json" } },
 		],
 	});
-	assert.ok(!graph.views.reconciliation.items.some((item) => item.source_id === "validation:.codewiki/validation/unscoped-block.json"), "Unscoped superseded block validation should not route current feedback drift");
+	assert.ok(!graph.views.reconciliation.items.some((item) => item.source_id === "validation:.codewiki/validation/unscoped-block.json"), "Unscoped superseded block validation should not route current decision drift");
 }
 
 {
 	const graph = baseGraph({
 		validations: [
-			{ path: ".codewiki/validation/unscoped-fail.json", verdict: "fail", data: { profile: "documentation", verdict: "fail" } },
+			{ path: ".codewiki/validation/unscoped-fail.json", verdict: "fail", data: { profile: "decision", verdict: "fail" } },
 		],
 	});
-	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === "validation:.codewiki/validation/unscoped-fail.json"), "Unscoped fail validation should still route documentation drift");
+	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === "validation:.codewiki/validation/unscoped-fail.json"), "Unscoped fail validation should still route decision drift");
 }
 
 console.log("✓ alignment graph smoke passed");

@@ -78,15 +78,15 @@ The generated graph derives machine relationships from frontmatter, explicit ref
 
 ## Change propagation
 
-A change can originate in any layer. Code changes can create documentation drift. Refactoring ideas can start in feedback, move through documentation, and become implementation work. Product changes can require system and code changes.
+A change can originate in any layer. Code changes can create decision drift. Refactoring ideas can start in decision and become implementation work. Product changes can require system and code changes.
 
-The vNext decision compiler routes by abstraction entrypoint:
+The decision compiler routes by abstraction entrypoint:
 
 - product-first changes update product truth, then preflight system/roadmap/code impact;
 - system-first changes update system diagrams and system truth, then preflight user-visible product impact;
 - mixed changes must name both owning docs and the propagation direction for each requirement.
 
-The decision loop should expose change proposals with diff tables before canonical knowledge edits are applied. Accepted decision rows and knowledge edits compile together into a decision build with row-to-KB and diagram-ref evidence. Compatibility feedback/documentation builds remain valid until the decision compiler fully replaces them.
+The decision loop should expose change proposals with diff tables before canonical knowledge edits are applied. Accepted decision rows and knowledge edits compile together into a decision build with row-to-KB and diagram-ref evidence. Decision builds are the semantic intent-to-knowledge handoff.
 
 ## Related docs
 

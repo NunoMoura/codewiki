@@ -8,7 +8,7 @@ import { readDiffTablePanelData, readGraphPanelData, updateRuntimeDiffRow } from
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-efficiency-ui-"));
 try {
-	await mkdir(join(root, ".codewiki/builds/feedback"), { recursive: true });
+	await mkdir(join(root, ".codewiki/builds/decision"), { recursive: true });
 	await mkdir(join(root, ".codewiki/roadmap"), { recursive: true });
 	await mkdir(join(root, ".codewiki/runtime"), { recursive: true });
 	await writeFile(join(root, ".codewiki/config.json"), JSON.stringify({ project_name: "smoke", schema_version: 4 }, null, 2));

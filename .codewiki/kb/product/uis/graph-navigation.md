@@ -23,13 +23,13 @@ Agent navigation belongs to the system graph/API contract; this document covers 
 Product expectations:
 
 - use `Map` as the user-facing label; keep graph terminology for source/advanced detail when needed,
-- default to documentation and KB relationships rather than the whole generated graph,
+- default to decision and KB relationships rather than the whole generated graph,
 - show product docs, system docs, roadmap tasks, builds, validation, tests, and code paths around the current working set,
 - offer broader graph slices, build DAG edges, stale links, drift, and artifact-kind filters as secondary controls,
 - explain why a node, edge, missing link, or stale link matters,
 - show affected product, system, roadmap, build, validation, test, and code layers,
 - avoid broad context dumps,
-- route from user intent to feedback diff rows, knowledge, roadmap work, builds, validation reports, tests, and code,
+- route from user intent to decision diff rows, knowledge, roadmap work, builds, validation reports, tests, and code,
 - make canonical source links visible through collapsed source disclosure,
 - show sprint/task scoped map slices when agency is bounded to a cohort or single task.
 
@@ -39,7 +39,7 @@ The Map is an inspection surface, not an editor. Selecting a node or edge opens 
 
 - Users can see how KB docs relate to current work without understanding generated graph internals.
 - Users can distinguish generated Map state from durable product/system truth.
-- Map defaults to documentation relationships and only expands to broader graph data by explicit control.
+- Map defaults to docs relationships and only expands to broader graph data by explicit control.
 - UI panels use graph-backed relationships rather than duplicating canonical truth.
 - Visual Map navigation supports horizontal and vertical alignment checks.
 

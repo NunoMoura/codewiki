@@ -285,34 +285,45 @@ function isBuildV2(build: { data?: any }): boolean {
 	return Number(build.data?.schema_version || 0) >= 2;
 }
 
-function lintFeedbackBuildV2(buildPath: string, data: any): LintIssue[] {
+function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
 	const issues: LintIssue[] = [];
 	const rows = list(data?.diff_table);
 	const approved = rows.filter((row) => String(row?.user_action || "").trim() === "approved" || list(data?.approved_diff_rows).includes(row?.id));
+	const mappings = list(data?.row_to_kb_mappings);
+	const mode = String(data?.decision_mode || (String(data?.status || data?.lifecycle?.state || "") === "proposed" ? "proposal" : "accepted"));
 	if (rows.length === 0) {
-		issues.push(createIssue("error", "feedback-build-missing-diff-table", buildPath, "Feedback build v2 requires diff_table rows."));
+		issues.push(createIssue("error", "decision-build-missing-diff-table", buildPath, "Decision build v2 requires diff_table rows."));
 	}
-	if (String(data?.status || data?.lifecycle?.state || "") === "accepted" && approved.length === 0) {
-		issues.push(createIssue("error", "feedback-build-missing-approved-diff-row", buildPath, "Accepted feedback build v2 requires at least one approved diff_table row."));
+	if (mode === "proposal") {
+		if (approved.length || mappings.length || list(data?.knowledge_changes).length) {
+			issues.push(createIssue("error", "decision-build-proposal-mutates", buildPath, "Proposal decision builds must not record approved rows or canonical KB changes."));
+		}
+		return issues;
 	}
-	rows.forEach((row, index) => {
-		const rowId = String(row?.id || `row ${index + 1}`);
-		for (const field of ["current_state", "desired_state", "rationale", "user_action"]) {
-			if (!String(row?.[field] || "").trim()) {
-				issues.push(createIssue("error", "feedback-build-bad-diff-row", buildPath, `${rowId} missing ${field}.`));
-			}
+	if (approved.length === 0) {
+		issues.push(createIssue("error", "decision-build-missing-approved-diff-row", buildPath, "Accepted decision build v2 requires at least one approved diff_table row."));
+	}
+	if (mappings.length === 0) {
+		issues.push(createIssue("error", "decision-build-missing-row-kb-mapping", buildPath, "Accepted decision build v2 requires row_to_kb_mappings."));
+	}
+	const mappedRows = new Set(mappings.map((mapping) => String(mapping?.row_id || "").trim()).filter(Boolean));
+	for (const row of approved) {
+		if (!mappedRows.has(String(row?.id || "").trim())) {
+			issues.push(createIssue("error", "decision-build-unmapped-approved-row", buildPath, `${row?.id || "approved row"} missing row_to_kb_mappings entry.`));
 		}
-		if (!Array.isArray(row?.affected_layers) || row.affected_layers.length === 0) {
-			issues.push(createIssue("warning", "feedback-build-diff-row-unscoped", buildPath, `${rowId} should list affected_layers.`));
-		}
-	});
+	}
+	if (!String(data?.propagation?.direction || "").trim()) {
+		issues.push(createIssue("error", "decision-build-missing-propagation", buildPath, "Accepted decision build v2 requires propagation.direction."));
+	}
 	return issues;
 }
 
 function lintPlanningBuildV2(buildPath: string, data: any): LintIssue[] {
 	const issues: LintIssue[] = [];
-	if (!String(data?.source_documentation_build || "").trim() && !list(data?.consumes?.documentation).length) {
-		issues.push(createIssue("error", "planning-build-missing-documentation-source", buildPath, "Planning build v2 requires source_documentation_build or consumes.documentation."));
+	const upstreamLoop = String(data?.traceability?.upstream_loop || "").trim().toLowerCase();
+	const requiresDecisionSource = !upstreamLoop || upstreamLoop === "decision";
+	if (requiresDecisionSource && !String(data?.source_decision_build || "").trim() && !list(data?.consumes?.decision).length) {
+		issues.push(createIssue("error", "planning-build-missing-decision-source", buildPath, "Planning build v2 requires source_decision_build or consumes.decision."));
 	}
 	if (!list(data?.task_ids).length && !list(data?.task_changes).length && !list(data?.produces?.roadmap).length) {
 		issues.push(createIssue("warning", "planning-build-missing-roadmap-output", buildPath, "Planning build v2 should name task_ids, task_changes, or produces.roadmap."));
@@ -349,10 +360,10 @@ function lintBuildContractV2(build: { path: string; kind: string; data?: any }):
 	if (produceCount === 0) {
 		issues.push(createIssue("warning", "build-v2-missing-produces", build.path, "Build v2 should expose produces edges."));
 	}
-	if (build.kind !== "feedback_build" && consumeCount === 0) {
+	if (build.kind !== "decision_build" && consumeCount === 0) {
 		issues.push(createIssue("warning", "build-v2-missing-consumes", build.path, "Build v2 should expose consumes edges."));
 	}
-	if (build.kind === "feedback_build") issues.push(...lintFeedbackBuildV2(build.path, build.data));
+	if (build.kind === "decision_build") issues.push(...lintDecisionBuildV2(build.path, build.data));
 	if (build.kind === "planning_build") issues.push(...lintPlanningBuildV2(build.path, build.data));
 	if (build.kind === "implementation_build") issues.push(...lintImplementationBuildV2(build.path, build.data));
 	return issues;

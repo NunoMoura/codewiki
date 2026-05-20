@@ -20,13 +20,11 @@ const skillEntries = readdirSync(resolve(repoRoot, "skills"), { withFileTypes: t
 	.filter((entry) => entry.isDirectory())
 	.map((entry) => entry.name)
 	.sort();
-assert.deepEqual(skillEntries, ["codewiki", "codewiki-documentation", "codewiki-feedback", "codewiki-implementation", "codewiki-planning", "codewiki-validation"], "Public CodeWiki skills should include the main entry skill and focused compiler skills completed so far");
+assert.deepEqual(skillEntries, ["codewiki", "codewiki-decision", "codewiki-implementation", "codewiki-planning", "codewiki-validation"], "Public CodeWiki skills should include the main entry skill and focused compiler skills completed so far");
 assert.ok(!existsSync(resolve(repoRoot, "skills", "codewiki", "loops")), "Legacy loop docs should be removed once focused compiler skills own loop contracts");
 assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md")), "Main skill should expose package-local tool catalog");
-assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-feedback", "SKILL.md")), "Feedback compiler should have a focused public skill");
-assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-feedback", "references", "tools.md")), "Feedback compiler should document exact tool usage");
-assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-documentation", "SKILL.md")), "Documentation compiler should have a focused public skill");
-assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-documentation", "references", "tools.md")), "Documentation compiler should document exact tool usage");
+assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-decision", "SKILL.md")), "Decision compiler should have a focused public skill");
+assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-decision", "references", "tools.md")), "Decision compiler should document exact tool usage");
 assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-planning", "SKILL.md")), "Planning compiler should have a focused public skill");
 assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-planning", "references", "tools.md")), "Planning compiler should document exact tool usage");
 assert.ok(existsSync(resolve(repoRoot, "skills", "codewiki-implementation", "SKILL.md")), "Implementation compiler should have a focused public skill");

@@ -36,7 +36,7 @@ Optional shared server mode must be explicit, token-protected, and disabled by d
 - Product KB defaults to Stories and UI Surfaces, with users/personas disclosed contextually.
 - System KB uses ASCII-like diagrams/cards and avoids overlapping labels, arrows, and components.
 - Board remains a Trello-like Kanban board while matching the ASCII-like style.
-- Map defaults to KB/documentation relationships, with broader graph data secondary.
+- Map defaults to KB/docs relationships, with broader graph data secondary.
 - Sessions uses user-friendly active-session language over lease internals.
 - Settings represents repo-backed preferences, with source paths and backend keys in advanced detail only.
 - The UI is local, accessible, source-linked, and does not replace compiler loops or agent chat.

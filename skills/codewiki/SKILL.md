@@ -19,16 +19,15 @@ Use the main skill when the repo needs:
 
 - `.codewiki` setup, bootstrap, onboarding, or starter taxonomy guidance;
 - status/roadmap/session visibility before choosing work;
-- routing between decision, compatibility feedback/documentation, planning, implementation, and validation loops;
+- routing between decision, planning, implementation, and validation loops;
 - CodeWiki invariants for canonical vs generated vs runtime state;
 - artifact-status coordination policy before broad edits;
 - a safe answer about whether a request belongs in a task, sprint metadata, build, validation report, or package source.
 
 For loop-specific work, load the focused skill and only the package-local assets needed for that loop:
 
-- `../codewiki-feedback/SKILL.md` — compatibility decision-loop surface for ambiguous or semantic user intent with `codewiki_diff_table`, accepted rows, and `feedback_build` until `decision_build` is default.
-- `../codewiki-documentation/SKILL.md` — compatibility path that turns accepted feedback into `.codewiki/kb/**` changes and `documentation_build`.
-- `../codewiki-planning/SKILL.md` — shape validated documentation into executable tasks, sprint-aware planning, and `planning_build`.
+- `../codewiki-decision/SKILL.md` — capture semantic intent, approved rows, product/system KB changes, propagation evidence, and `decision_build`.
+- `../codewiki-planning/SKILL.md` — shape validated decisions into executable tasks, sprint-aware planning, and `planning_build`.
 - `../codewiki-implementation/SKILL.md` — execute one atomic task, emit `implementation_build`, and request fresh validation.
 - `../codewiki-validation/SKILL.md` — validate builds, task close, graph/drift, and publication/readiness gates without mutating truth.
 - `bootstrap/onboarding.md` and `bootstrap/starter-taxonomy.md` — repo-local wiki onboarding prompts and path-class starter guidance.
@@ -52,8 +51,7 @@ Public commands:
 - `/audit [flags]`
 - `/wiki-bootstrap [project name] [--force]`
 - `/wiki-config`
-- `/wiki-resume [TASK-###] [repo-path] [-- follow-up intent]`
-- `/wiki-session-handoff [handoff-path]` (internal/compatibility executor)
+- `/wiki-resume [--new] [TASK-###] [repo-path] [-- follow-up intent]`
 - `/wiki-ui [repo-path] [port]`
 - `Alt+W` to toggle the compact live status panel
 
@@ -62,6 +60,7 @@ Internal agent tools:
 - `codewiki_setup`
 - `codewiki_bootstrap`
 - `codewiki_state`
+- `codewiki_resume_context`
 - `codewiki_artifact_status`
 - `codewiki_audit`
 - `codewiki_build`
@@ -70,10 +69,9 @@ Internal agent tools:
 - `codewiki_gc` (post-commit garbage collection with archive proof and restore ledger)
 - `codewiki_diff_table`
 - `codewiki_session`
-- `codewiki_session_handoff`
 - `codewiki_agency`
 
-Daily default flow: `codewiki_state` for routing, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, agent-owned `new_session`/`context_refresh` when context is noisy, policy-required session boundaries for validation gates, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash.
+Daily default flow: `codewiki_state` for routing, `codewiki_resume_context` for high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
 
 ## Core invariants
 
@@ -99,7 +97,7 @@ Sprint metadata is the grouping mechanism for related executable tasks. Route wo
 - shared budget, gates, validation/publication risk, or cross-task sequencing;
 - related work that would otherwise tempt an umbrella/container task.
 
-Do not hand-edit sprint metadata. Until an explicit sprint mutation tool exists, record the need in a feedback/planning build and route the safe mutation path to application tool contract work.
+Do not hand-edit sprint metadata. Use the roadmap mutation tool from planning and keep semantic sprint scope decisions traceable to a decision or planning build.
 
 ## Compiler routing
 
@@ -108,15 +106,12 @@ decision compiler -> decision_build
   -> planning compiler -> planning_build + roadmap tasks / sprint metadata
     -> implementation compiler -> implementation_build
       -> validation gateway -> pass | fail | block
-
-compatibility: feedback_build -> documentation_build -> planning_build
 ```
 
 Routing rules:
 
 - Ambiguous intent, changed requirements, risk approval, or unclear task meaning goes to the decision loop.
-- Accepted semantic intent becomes `decision_build` in the target model, or `feedback_build` in compatibility mode.
-- Knowledge changes go through the decision loop in the target model, or documentation and `documentation_build` in compatibility mode.
+- Accepted semantic intent and knowledge changes become `decision_build`.
 - Roadmap task shaping and sprint-aware cohort decisions go through planning and `planning_build`.
 - Code/test/docs execution happens in implementation and emits `implementation_build` before validation.
 - Independent checks happen in validation from exact refs, audits, and required proof.
@@ -128,8 +123,8 @@ Routing rules:
 - Persist durable intent in knowledge, roadmap tasks/sprints, builds, validation reports, and source code/tests.
 - Use `codewiki_session` for runtime focus; it is not roadmap truth.
 - Use `codewiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
-- Agents may run `new_session`/`context_refresh` when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
-- Use the compatibility `codewiki_session_handoff` tool only for required session boundaries or true role/session transfer. In Pi tool context, `context_refresh`/`context_reset` run through adapter-owned compaction, while `new_session` records platform-limited fallback unless a command-context or external-orchestrator path exists. Do not ask users to paste, press Enter on, or run `/wiki-session-handoff` as routine workflow.
+- Agents may refresh context through CodeWiki-owned compaction or start a new session when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
+- Do not use session-handoff shims for same-agent context hygiene. Reserve handoff language for true transfer between distinct sessions, agents, or roles; use CodeWiki refs plus artifact status/wait-wake coordination for parallel work.
 
 ## Agency policy
 

@@ -2,7 +2,7 @@ schema_version: 1
 id: spec.system.diagrams.key-flow
 title: CodeWiki Intent-to-Implementation Flow
 kind: sequence_flow
-purpose: Show the core workflow from user intent through feedback, documentation, roadmap work, implementation, validation, and evidence.
+purpose: Show the core workflow from user intent through decision, roadmap work, implementation, validation, and evidence.
 source_docs:
   - .codewiki/kb/system/compilers.md
   - .codewiki/kb/system/builds.md
@@ -15,22 +15,22 @@ participants:
   - id: user
     label: User
     kind: actor
-  - id: feedback_compiler
-    label: Feedback compiler
+  - id: decision_compiler
+    label: Decision compiler
     kind: workflow
     source: .codewiki/kb/system/compilers.md
-  - id: feedback_build
-    label: Feedback build
+  - id: decision_build
+    label: Decision build
     kind: build
     source: .codewiki/kb/system/builds.md
-  - id: documentation_compiler
-    label: Documentation compiler
-    kind: workflow
-    source: .codewiki/kb/system/compilers.md
   - id: knowledge
     label: Knowledge
     kind: durable_truth
     source: .codewiki/kb/system/knowledge.md
+  - id: planning_compiler
+    label: Planning compiler
+    kind: workflow
+    source: .codewiki/kb/system/compilers.md
   - id: roadmap
     label: Roadmap
     kind: work_truth
@@ -53,32 +53,32 @@ participants:
 steps:
   - id: capture_intent
     from: user
-    to: feedback_compiler
+    to: decision_compiler
     message: provides intent, constraints, and decisions
   - id: propose_diff
-    from: feedback_compiler
+    from: decision_compiler
     to: user
-    message: proposes diff table for approval
-  - id: accept_feedback
-    from: user
-    to: feedback_build
-    message: accepts approved rows
-  - id: compile_docs
-    from: feedback_build
-    to: documentation_compiler
-    message: handoff accepted intent
-  - id: update_knowledge
-    from: documentation_compiler
+    message: proposes decision rows for approval
+  - id: apply_decision
+    from: decision_compiler
     to: knowledge
-    message: updates product/system truth
+    message: applies approved rows to product/system truth
+  - id: compile_decision
+    from: knowledge
+    to: decision_build
+    message: records approved rows, KB mappings, and propagation evidence
+  - id: plan_work
+    from: decision_build
+    to: planning_compiler
+    message: handoff accepted intent and knowledge changes
   - id: open_work
-    from: documentation_compiler
+    from: planning_compiler
     to: roadmap
     message: creates or refines executable work
-  - id: resume_task
+  - id: resume_context
     from: roadmap
     to: implementation_compiler
-    message: provides task outcome, acceptance, non-goals, checks
+    message: builds bounded resume context from graph, task shard, evidence, and refs
   - id: build_code
     from: implementation_compiler
     to: code_tests
@@ -98,5 +98,4 @@ steps:
 ui_hints:
   default_focus: capture_intent
   show_gate_steps:
-    - propose_diff
     - validate

@@ -12,8 +12,7 @@ code_paths:
   - src/application/builds.ts
   - src/application/lint.ts
   - src/application/gateway
-  - skills/codewiki-feedback/SKILL.md
-  - skills/codewiki-documentation/SKILL.md
+  - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md
   - skills/codewiki-implementation/SKILL.md
   - skills/codewiki-validation/SKILL.md
@@ -23,7 +22,7 @@ code_paths:
 
 ## Intent
 
-CodeWiki's main product promise is context-driven software development through alignment at every stage of the development process. The system must preserve traceability from user-agent interaction through documentation, roadmap, tests, code, validation, commits, and publication.
+CodeWiki's main product promise is context-driven software development through alignment at every stage of the development process. The system must preserve traceability from user-agent interaction through decision, roadmap, tests, code, validation, commits, and publication.
 
 Alignment is not a single artifact. It is the result of canonical sources, compiler builds, state reconciliation, deterministic audits, independent gateway validation, and immutable content proof working together.
 
@@ -31,8 +30,8 @@ Alignment is not a single artifact. It is the result of canonical sources, compi
 
 | Layer | Role | Canonical evidence |
 | --- | --- | --- |
-| User-agent interaction | Captures intent, ambiguity, tradeoffs, and approval. | Approved feedback change rows and `feedback_build` files in compatibility mode; approved decision rows in vNext mode. |
-| Decision | Captures approved semantic intent plus knowledge update evidence. | `decision_build` files after the vNext decision compiler is enabled. |
+| User-agent interaction | Captures intent, ambiguity, tradeoffs, and approval. | Approved decision rows. |
+| Decision | Captures approved semantic intent plus knowledge update evidence. | `decision_build` files. |
 | Product knowledge | Defines users, stories, UI behavior, and product intent. | `.codewiki/kb/product/**`. |
 | System knowledge | Defines architecture, workflows, policies, file ownership, and diagram-backed system ontology. | `.codewiki/kb/system/**` plus `system/diagrams/**`. |
 | Roadmap | Defines executable work, priority, state, acceptance, non-goals, and verification. | `.codewiki/roadmap/queue.json`. |
@@ -79,20 +78,20 @@ Generated files, runtime/session queue state, validation/audit reports, and pure
 
 ## Change type
 
-All agent-led semantic work starts with feedback classification, then routes to the owning loop. Builds and task metadata use `change_type` for the target that changed:
+All agent-led semantic work starts with decision classification, then routes to the owning loop. Builds and task metadata use `change_type` for the target that changed:
 
 | Change type | Primary owner | Required propagation check |
 | --- | --- | --- |
-| `product` | Feedback -> documentation in compatibility mode; decision compiler in vNext mode | Product docs, system impact or no-system-impact evidence, roadmap/tests/code needs. |
-| `system` | Feedback -> documentation in compatibility mode; decision compiler in vNext mode | System diagrams/docs, file ownership, graph/gateway policy, product impact or no-product-impact evidence, roadmap/code needs. |
-| `task` | Planning -> implementation | Existing accepted intent/docs/task links, tests/code evidence. |
-| `code` | Feedback, planning, or implementation | Upward docs/roadmap impact if behavior changes. |
+| `product` | Decision compiler | Product docs, system impact or no-system-impact evidence, roadmap/tests/code needs. |
+| `system` | Decision compiler | System diagrams/docs, file ownership, graph/gateway policy, product impact or no-product-impact evidence, roadmap/code needs. |
+| `task` | Planning -> implementation | Existing accepted decision/task links, tests/code evidence. |
+| `code` | Decision, planning, or implementation | Upward decision/roadmap impact if behavior changes. |
 
 Security, audit, publication, and maintenance describe risk, workflow, or intent. They should be represented as labels, profiles, risk metadata, or publication context rather than primary change types. Generated, runtime, and mechanical-only work should use traceability exemption metadata (`generated`, `runtime`, or `mechanical`) and `semantic=false` when policy allows.
 
-When intent is unclear, work routes back to feedback or the vNext decision proposal phase before canonical docs, roadmap, tests, or code change.
+When intent is unclear, work routes back to the decision proposal phase before canonical docs, roadmap, tests, or code change.
 
-Routine vNext decisions combine user semantic approval and knowledge updates into one decision build. Lower-layer task creation, implementation, closure, and publication are validated by gateways; user approval is reserved for semantic decisions and configured risk escalations.
+Routine decisions combine user semantic approval and knowledge updates into one decision build. Lower-layer task creation, implementation, closure, and publication are validated by gateways; user approval is reserved for semantic decisions and configured risk escalations.
 
 ## Rules
 
@@ -100,7 +99,7 @@ Routine vNext decisions combine user semantic approval and knowledge updates int
 - Gateways decide boundary outcomes, but their reports are attestations over evidence, not content proof.
 - Commits, tree SHAs, and package digests anchor what exists or shipped.
 - Build artifacts carry traceability between loops, not permanent source truth.
-- Decision builds are the vNext semantic root for intent-to-knowledge work; compatibility feedback and documentation builds remain valid until migration completes.
+- Decision builds are the semantic root for intent-to-knowledge work.
 - Implementation validation proves commit-readiness; task closure proves an actual immutable recovery commit exists.
 - Commits are required content-proof checkpoints for task closure; commit bodies should include task id, build refs, validation refs, checks, and recovery/update notes.
 - Publication is an alignment layer and must match accepted builds, validation, and content proof.

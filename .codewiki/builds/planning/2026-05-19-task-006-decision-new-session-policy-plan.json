@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "schema_version": 2,
+  "schema_version": 1,
   "kind": "planning_build",
   "created": "2026-05-19T03:17:06Z",
   "source": "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
