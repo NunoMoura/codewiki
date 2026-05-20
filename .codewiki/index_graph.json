@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T04:16:08.060Z",
+  "generated_at": "2026-05-20T04:16:40.021Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -16280,39 +16280,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -16890,13 +16858,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T04:16:08.040Z",
+      "generated_at": "2026-05-20T04:16:40.004Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T04:16:08Z",
+      "generated_at": "2026-05-20T04:16:40Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -17118,7 +17086,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T04:16:08Z",
+      "generated_at": "2026-05-20T04:16:40Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -18189,7 +18157,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T04:16:08Z",
+        "generated_at": "2026-05-20T04:16:40Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -18217,17 +18185,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T04:16:08Z",
+            "checked_at": "2026-05-20T04:16:40Z",
             "revision": {
               "git": {
-                "head": "23535a3b871eb528b3857868b758fe5a7041734c",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-002/context.json",
-                  ".codewiki/roadmap/tasks/TASK-002/task.json"
-                ],
+                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -18266,7 +18229,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "7fd74779e60913a3cfed8434c84409d2ced9c13b",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "deab4805559c69ddf0016e1062c7b6fc15947776",
+                  ".codewiki/roadmap/queue.json": "9cc7268ecbad6ec27c026103cc29a4c2eb95f997",
                   "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
                   "skills": "",
                   "skills/codewiki": "",
@@ -18314,14 +18277,14 @@
               "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
               "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
               "code_digest": "817379a19fd0f94305ed8bc7908597269f3ab0db4da60048a34b360595903994",
-              "digest": "7f56d56bfd85f8d7984dc681676fa7d4f47219a09b106faf94a74c04f2eaa71d"
+              "digest": "12307da9f33fbad48c5730d07b67343b2fabea4a7a0b93f479d439e3f944b558"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:08Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-20T04:16:40Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18446,17 +18409,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T04:16:08Z",
+            "checked_at": "2026-05-20T04:16:40Z",
             "revision": {
               "git": {
-                "head": "23535a3b871eb528b3857868b758fe5a7041734c",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-002/context.json",
-                  ".codewiki/roadmap/tasks/TASK-002/task.json"
-                ],
+                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -18479,7 +18437,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "7fd74779e60913a3cfed8434c84409d2ced9c13b",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "deab4805559c69ddf0016e1062c7b6fc15947776",
+                  ".codewiki/roadmap/queue.json": "9cc7268ecbad6ec27c026103cc29a4c2eb95f997",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -18522,14 +18480,14 @@
               "spec_digest": "0fc8caaf5af7dfc89b19ee8eb48acba94aff941030a924f79bf7c8af91df7e8f",
               "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
               "code_digest": "684aae2777ba0a07fde9822bb9c88526dd920efa9cf8fb467b65e61f9917b789",
-              "digest": "f947396787568922f9ca534d119de824645f9595e785ccd9a25959acd3824071"
+              "digest": "533c2cb952ddb78b69377ba12986cd970dd0d786d2da406c2687f3cc318bf5f5"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:08Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-20T04:16:40Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/change-lifecycle.md",
@@ -18633,17 +18591,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T04:16:08Z",
+            "checked_at": "2026-05-20T04:16:40Z",
             "revision": {
               "git": {
-                "head": "23535a3b871eb528b3857868b758fe5a7041734c",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-002/context.json",
-                  ".codewiki/roadmap/tasks/TASK-002/task.json"
-                ],
+                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -18682,7 +18635,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "7fd74779e60913a3cfed8434c84409d2ced9c13b",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "deab4805559c69ddf0016e1062c7b6fc15947776",
+                  ".codewiki/roadmap/queue.json": "9cc7268ecbad6ec27c026103cc29a4c2eb95f997",
                   "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
                   "skills": "",
                   "skills/codewiki": "",
@@ -18730,14 +18683,14 @@
               "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
               "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
               "code_digest": "817379a19fd0f94305ed8bc7908597269f3ab0db4da60048a34b360595903994",
-              "digest": "7f56d56bfd85f8d7984dc681676fa7d4f47219a09b106faf94a74c04f2eaa71d"
+              "digest": "12307da9f33fbad48c5730d07b67343b2fabea4a7a0b93f479d439e3f944b558"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:08Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-20T04:16:40Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18863,7 +18816,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T04:16:08Z",
+        "generated_at": "2026-05-20T04:16:40Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
