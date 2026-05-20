@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T02:34:29.979Z",
+  "generated_at": "2026-05-20T02:34:54.830Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -15365,13 +15365,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T02:34:29.952Z",
+      "generated_at": "2026-05-20T02:34:54.804Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T02:34:29Z",
+      "generated_at": "2026-05-20T02:34:54Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -15657,7 +15657,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T02:34:30Z",
+      "generated_at": "2026-05-20T02:34:54Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -16751,7 +16751,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T02:34:30Z",
+        "generated_at": "2026-05-20T02:34:54Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -16779,10 +16779,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T02:34:29Z",
+            "checked_at": "2026-05-20T02:34:54Z",
             "revision": {
               "git": {
-                "head": "507614e656eda2c1b0bc64094e847c8650fca78a",
+                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -16871,12 +16871,12 @@
               "spec_digest": "87c66cdfef3b1a6eb38de23cd9fbd9b84d0378c5305ab6dde46bc08034a1ca8f",
               "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
               "code_digest": "6254bc28a86f699addc8815ee1d19ef74f555be61a71651aefc4e77eb03d6237",
-              "digest": "99e660630e9befd264c68a741b064f13cf2977719d4cb52e0aa1776c5bbf13fa"
+              "digest": "60f435108ca6b360216c9e19df0b192dab3bdf0540dc7e639b5192e06fa35e39"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:29Z",
+              "checked_at": "2026-05-20T02:34:54Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17007,10 +17007,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T02:34:30Z",
+            "checked_at": "2026-05-20T02:34:54Z",
             "revision": {
               "git": {
-                "head": "507614e656eda2c1b0bc64094e847c8650fca78a",
+                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -17078,12 +17078,12 @@
               "spec_digest": "b0d485d01928ed4877ed01f7964fc1afd2f2faa16a35967a8da71fc0c3bc47a4",
               "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
               "code_digest": "c6844fd043164150f4605eae84db8a82dfc5c548e4a022b4102243e3973e4311",
-              "digest": "3231d185093bf687953755bb9b97279a50fdee4aefdc747c4e61dfa923e97003"
+              "digest": "0366f74adb21e486c04e68af5734d8a5362dfa0ebfb737b2259a7beacc8e6bed"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:30Z",
+              "checked_at": "2026-05-20T02:34:54Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17193,10 +17193,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T02:34:30Z",
+            "checked_at": "2026-05-20T02:34:54Z",
             "revision": {
               "git": {
-                "head": "507614e656eda2c1b0bc64094e847c8650fca78a",
+                "head": "bd7ba48b3484a27b5e89e1c7a0d19605dbd72a7e",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -17285,12 +17285,12 @@
               "spec_digest": "87c66cdfef3b1a6eb38de23cd9fbd9b84d0378c5305ab6dde46bc08034a1ca8f",
               "task_digest": "c08f0b6a728739ef6b93f65cc41405cb86debfbd127967059b96dcb54dd4ab2c",
               "code_digest": "6254bc28a86f699addc8815ee1d19ef74f555be61a71651aefc4e77eb03d6237",
-              "digest": "99e660630e9befd264c68a741b064f13cf2977719d4cb52e0aa1776c5bbf13fa"
+              "digest": "60f435108ca6b360216c9e19df0b192dab3bdf0540dc7e639b5192e06fa35e39"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-20T02:34:30Z",
+              "checked_at": "2026-05-20T02:34:54Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -17422,7 +17422,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T02:34:30Z",
+        "generated_at": "2026-05-20T02:34:54Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
