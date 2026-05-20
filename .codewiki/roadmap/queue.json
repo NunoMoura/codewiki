@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-20T05:12:30Z",
+  "updated": "2026-05-20T05:39:01Z",
   "order": [
     "TASK-004"
   ],
@@ -8,7 +8,7 @@
     "TASK-004": {
       "id": "TASK-004",
       "title": "Simplify generated state graph lenses",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "architecture",
       "summary": "Refactor generated state output to expose a compact Decision, Knowledge, Work, Execution, Proof default lens while preserving exact trace/audit expansion for gateways.",
@@ -50,7 +50,7 @@
         "closure": ""
       },
       "created": "2026-05-19",
-      "updated": "2026-05-19"
+      "updated": "2026-05-20T05:39:01Z"
     }
   },
   "sprints": {

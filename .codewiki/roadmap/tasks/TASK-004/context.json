@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-19",
+  "generated_at": "2026-05-20T05:39:01Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-004/context.json",
   "task": {
     "id": "TASK-004",
     "title": "Simplify generated state graph lenses",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "architecture",
     "change_type": "system",

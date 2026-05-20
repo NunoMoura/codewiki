@@ -243,17 +243,22 @@ export async function readCodewikiState(
 		const graph = artifacts.graph;
 		const reconciliation = (graph?.views as any)?.reconciliation || null;
 		const gc = (graph?.views as any)?.gc || null;
+		const defaultLens = (graph?.views as any)?.lenses?.default || null;
 		const hotNodeIds = new Set<string>((gc?.classes?.hot?.task_ids ?? []).map((id: string) => `task:${id}`));
 		for (const path of gc?.classes?.hot?.build_paths ?? []) hotNodeIds.add(`build:${path}`);
 		for (const path of gc?.classes?.hot?.validation_paths ?? []) hotNodeIds.add(`validation:${path}`);
 		for (const id of gc?.classes?.hot?.claim_ids ?? []) hotNodeIds.add(`claim:${id}`);
 		result.graph = {
 			generated_at: graph?.generated_at ?? null,
-			node_count: hotNodeIds.size,
-			edge_count: graph?.edges.filter((edge) => hotNodeIds.has(edge.from) || hotNodeIds.has(edge.to)).length ?? 0,
+			node_count: defaultLens?.families?.length ?? hotNodeIds.size,
+			edge_count: defaultLens?.families ? Math.max(0, defaultLens.families.length - 1) : (graph?.edges.filter((edge) => hotNodeIds.has(edge.from) || hotNodeIds.has(edge.to)).length ?? 0),
 			doc_count: graph?.nodes.filter((n) => n.kind === "doc" && n.default_hidden !== true).length ?? 0,
 			code_path_count: graph?.nodes.filter((n) => n.kind === "code_path" && n.default_hidden !== true).length ?? 0,
-			source: "graph:hot-default",
+			source: defaultLens ? "graph:default-lens" : "graph:hot-default",
+			families: defaultLens?.families ?? null,
+			badges: defaultLens?.badges ?? null,
+			next_action: defaultLens?.next_action ?? null,
+			expands_to: defaultLens?.expands_to ?? null,
 			claims: (graph?.views as any)?.claims ?? null,
 			scope_views: (graph?.views as any)?.scope_views ?? null,
 			workflow_cursor: (graph?.views as any)?.workflow_cursor ?? null,
@@ -272,6 +277,20 @@ export async function readCodewikiState(
 						layer_states: reconciliation.layer_states || {},
 					}
 				: null,
+		};
+	}
+
+	if (include.includes("trace")) {
+		result.trace = {
+			source: "graph:trace-lens",
+			...(artifacts.graph?.views as any)?.lenses?.trace,
+		};
+	}
+
+	if (include.includes("audit")) {
+		result.audit = {
+			source: "graph:audit-lens",
+			...(artifacts.graph?.views as any)?.lenses?.audit,
 		};
 	}
 

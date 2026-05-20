@@ -87,7 +87,8 @@ try {
 		rebuildRunner: { run: async () => {} },
 		sessionStore: { getSessionBranch: () => [] },
 	});
-	assert.equal(state.graph.source, "graph:hot-default");
+	assert.equal(state.graph.source, "graph:default-lens");
+	assert.deepEqual(state.graph.families.map((family) => family.id), ["decision", "knowledge", "work", "execution", "proof"]);
 	assert.equal(state.graph.gc.classes.cold, undefined, "default state graph must not expose cold classes");
 	assert.equal(state.graph.gc.restore_index, undefined, "default state graph must not expose restore index");
 	assert.equal(state.archive, undefined, "archive section must be absent unless requested");
@@ -106,7 +107,7 @@ try {
 	assert.ok(uiGraph.stats.hidden_cold_nodes >= 2);
 
 	const uiState = await buildControlRoomStateModel(project);
-	assert.equal(uiState.graph.nodes, 0, "UI state graph count should use hot visible nodes only");
+	assert.equal(uiState.graph.nodes, 5, "UI state graph count should use default lens families");
 } finally {
 	await rm(root, { recursive: true, force: true });
 }

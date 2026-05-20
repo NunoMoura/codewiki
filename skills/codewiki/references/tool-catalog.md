@@ -6,7 +6,7 @@ Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source
 | --- | --- | --- | --- |
 | `codewiki_setup` | `src/application/tools/bootstrap.ts` | Adopt CodeWiki without overwriting starter files. | Delegates through bootstrap tool contract; root resolution and Pi UI stay adapter-owned. |
 | `codewiki_bootstrap` | `src/application/tools/bootstrap.ts` | Scaffold starter CodeWiki files. | Delegates through bootstrap tool contract; root resolution and Pi UI stay adapter-owned. |
-| `codewiki_state` | `src/application/tools/state.ts` | Read graph-first state. | Read-only except optional generated-state rebuild through ports. |
+| `codewiki_state` | `src/application/tools/state.ts` | Read graph-first state; `graph` uses the compact five-family lens, while explicit `trace`/`audit` includes expand exact refs after adapter reload. | Read-only except optional generated-state rebuild through ports. |
 | `codewiki_resume_context` | `src/application/tools/resume-context.ts` | Build bounded resume packets from graph, roadmap, task context, and source refs. | Read-only except optional generated-state rebuild; Pi may inject this packet through CodeWiki-owned compaction for soft context refresh. |
 | `codewiki_artifact_status` | `src/application/tools/artifact-status.ts` | Manage runtime artifact status. | Runtime coordination only; not roadmap truth. |
 | `codewiki_audit` | `src/application/tools/audit.ts` | Run deterministic audit profiles. | Read-only evidence; validation decides verdict. |

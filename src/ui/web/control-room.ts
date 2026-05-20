@@ -241,6 +241,8 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 	const nextAction = status?.next_action ?? graph?.views?.reconciliation?.next_action ?? {};
 	const claims = status?.claims ?? graph?.views?.coordination?.claims ?? graph?.views?.coordination ?? {};
 	const reconciliationItems = graph?.views?.reconciliation?.items ?? [];
+	const defaultLens = graph?.views?.lenses?.default ?? null;
+	const defaultLensFamilies = Array.isArray(defaultLens?.families) ? defaultLens.families : [];
 	const graphNodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
 	const visibleGraphNodes = graphNodes.filter(isDefaultGraphNodeVisible);
 	const visibleGraphNodeIds = new Set<string>(visibleGraphNodes.map((node: any) => String(node.id ?? "")));
@@ -274,8 +276,8 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 		},
 		graph: {
 			generated_at: stringOrNull(graph?.generated_at),
-			nodes: visibleGraphNodes.length,
-			edges: Array.isArray(graph?.edges) ? graph.edges.filter((edge: any) => isDefaultGraphEdgeVisible(edge, visibleGraphNodeIds)).length : 0,
+			nodes: defaultLensFamilies.length || visibleGraphNodes.length,
+			edges: defaultLensFamilies.length ? Math.max(0, defaultLensFamilies.length - 1) : (Array.isArray(graph?.edges) ? graph.edges.filter((edge: any) => isDefaultGraphEdgeVisible(edge, visibleGraphNodeIds)).length : 0),
 			stale: Array.isArray(graph?.lenses?.freshness?.issues) ? graph.lenses.freshness.issues.length : numberFrom(status?.summary?.stale_count),
 			drift: Array.isArray(reconciliationItems) ? reconciliationItems.length : numberFrom(status?.summary?.drift_count),
 		},
@@ -419,11 +421,19 @@ export async function buildControlRoomGraphModel(
 	const graph = await maybeReadJson<any>(project.graphPath);
 	const allNodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
 	const allEdges = Array.isArray(graph?.edges) ? graph.edges : [];
+	const defaultLens = graph?.views?.lenses?.default ?? null;
+	const familyNodes: Record<string, unknown>[] = Array.isArray(defaultLens?.families) ? defaultLens.families.map(normalizeLensFamilyNode) : [];
+	const familyEdges: Record<string, unknown>[] = familyNodes.slice(0, -1).map((node: Record<string, unknown>, index: number) => ({
+		from: String(node.id),
+		to: String(familyNodes[index + 1]?.id ?? ""),
+		kind: "lens_flow",
+		label: "default lens order",
+	})).filter((edge: Record<string, unknown>) => Boolean(edge.to));
 	const visibleNodes = allNodes.filter(isDefaultGraphNodeVisible);
 	const visibleNodeIds = new Set<string>(visibleNodes.map((node: any) => String(node.id ?? "")));
 	const visibleEdges = allEdges.filter((edge: any) => isDefaultGraphEdgeVisible(edge, visibleNodeIds));
-	const nodes = visibleNodes.map(normalizeGraphNode);
-	const edges = visibleEdges.map(normalizeGraphEdge);
+	const nodes = [...familyNodes, ...visibleNodes.map(normalizeGraphNode)];
+	const edges = [...familyEdges, ...visibleEdges.map(normalizeGraphEdge)];
 	return {
 		generated_at: stringOrNull(graph?.generated_at),
 		stats: {
@@ -431,12 +441,12 @@ export async function buildControlRoomGraphModel(
 			total_edges: allEdges.length,
 			shown_nodes: nodes.length,
 			shown_edges: edges.length,
-			hidden_cold_nodes: allNodes.length - nodes.length,
-			hidden_cold_edges: allEdges.length - edges.length,
+			hidden_cold_nodes: allNodes.length - visibleNodes.length,
+			hidden_cold_edges: allEdges.length - visibleEdges.length,
 			truncated: false,
 		},
-		node_kinds: uniqueSorted(visibleNodes.map((node: any) => String(node.kind ?? "unknown"))),
-		edge_kinds: uniqueSorted(visibleEdges.map((edge: any) => String(edge.kind ?? "edge"))),
+		node_kinds: uniqueSorted(nodes.map((node: any) => String(node.kind ?? "unknown"))),
+		edge_kinds: uniqueSorted(edges.map((edge: any) => String(edge.kind ?? "edge"))),
 		nodes,
 		edges,
 	};
@@ -795,6 +805,22 @@ function normalizeGraphNode(node: any): Record<string, unknown> {
 		path: node.path,
 		layer: node.layer,
 		state: node.state ?? node.status,
+		lens_family: node.lens_family,
+		default_collapsed: node.default_collapsed === true,
+	};
+}
+
+function normalizeLensFamilyNode(family: any): Record<string, unknown> {
+	return {
+		id: `lens:${String(family.id ?? "family")}`,
+		kind: "lens_family",
+		label: String(family.label ?? family.id ?? "Lens family"),
+		path: String(family.id ?? ""),
+		layer: "lens",
+		state: family.state ?? "unknown",
+		lens_family: String(family.id ?? ""),
+		badges: Array.isArray(family.badges) ? family.badges : [],
+		item_count: numberFrom(family.item_count),
 	};
 }
 
@@ -1445,6 +1471,7 @@ function isWorkGraphNode(node) {
   const id = String(node.id || '');
   const kind = String(node.kind || '');
   const path = String(node.path || '');
+  if (kind === 'lens_family') return true;
   return kind.includes('task') || kind.includes('roadmap') || kind.includes('build') || kind.includes('validation') || kind.includes('evidence') || kind.includes('closure') || id.includes('TASK-') || path.includes('/roadmap') || path.includes('/builds/') || path.includes('/validation/');
 }
 
@@ -1482,6 +1509,7 @@ function layoutForGraph(nodes, edges) {
 function isCoreGraphNode(node) {
   const id = String(node.id || '');
   const kind = String(node.kind || '');
+  if (kind === 'lens_family') return true;
   if (kind.includes('code_path') || id.startsWith('code:')) return false;
   if (id.includes('/builds/') && !id.includes('2026-05-')) return false;
   return true;
@@ -1557,6 +1585,7 @@ function inspectArea(id) {
 
 function colorForKind(kind) {
   const value = String(kind || 'unknown');
+  if (value === 'lens_family') return '#8bbf8b';
   if (value.includes('task') || value.includes('roadmap')) return '#c7a35a';
   if (value.includes('build')) return '#a7a06d';
   if (value.includes('validation')) return '#d46a66';

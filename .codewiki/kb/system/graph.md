@@ -5,7 +5,7 @@ state: active
 summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-20"
 code_paths:
   - .codewiki/index_graph.json
   - src/application/graph.ts
@@ -45,7 +45,7 @@ Git/source fingerprints, tree SHAs, commit SHAs, package digests, and archive le
 audit evidence required by gateway policy
 ```
 
-Curated Markdown links are one input, not the full graph. The graph should compute backlinks, stale references, cross-layer traceability, freshness, and routing relationships so humans do not need to maintain exhaustive wiki-link meshes by hand.
+Curated Markdown links are one input. The graph computes backlinks, stale refs, traceability, freshness, and routing relationships.
 
 ## Output
 
@@ -57,8 +57,7 @@ The primary graph output is:
 
 The CodeWiki UI graph view reads this file through CodeWiki API or local UI transport and renders it visually. The visual graph is a generated-state projection; it must not become separate truth.
 
-The graph should serve status, queue-order, and session-queue coordination reads directly. Extra queue files should not be generated unless a future adapter proves a concrete performance need; if such caches exist, they are generated graph queries and never separate truth.
-
+The graph serves status, queue-order, and session-queue coordination reads directly. Extra queue files are generated caches only when a future adapter proves a concrete performance need.
 
 ## vNext graph lenses
 
@@ -68,7 +67,9 @@ Default vNext graph reads should show five families:
 Decision -> Knowledge -> Work -> Execution -> Proof
 ```
 
-Decision covers approved rows and risk state. Knowledge covers product docs plus system diagram-backed docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse build/validation internals into badges when they are not the next action; trace, audit, restore, validation, and publication lenses expand exact refs and content proof.
+Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse non-next-action build/validation internals into badges.
+
+The generated graph exposes these projections under `views.lenses`. `views.lenses.default` serves status, Control Room, and `codewiki_state include=["graph"]`. `views.lenses.trace` expands requirement rows, canonical source refs, semantic change rows, and build source refs. `views.lenses.audit` expands validation reports, isolation, audit refs, content proof refs, reconciliation items, and traceability gaps. These lenses are generated read models only.
 
 ## System diagram nodes
 
@@ -91,9 +92,9 @@ The graph should model cross-layer items with:
 
 Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted decision or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
 
-The graph next action should include context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend `codewiki_resume_context`, CodeWiki-owned compaction, hard `new_session`, or `context_refresh` when context is noisy, stale, token-heavy, or at a loop boundary. Implementation validation may use a dirty pre-commit `working_tree_digest`; task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
+The graph next action includes context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend resume-context refresh or a new session at noisy, stale, token-heavy, or loop-boundary points. Task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
 
-Hot context should stay small: active tasks/sprints/leases, latest active or superseding builds, unconsumed handoffs, fail/block validation, publication blockers, drift routes, compact traceability gaps, and task-local resume packets. Warm and cold evidence is available only through explicit archive, restore, audit, resume-context expansion, or refinement workflows.
+Hot context stays small: active tasks/sprints/leases, unconsumed handoffs, fail/block validation, publication blockers, drift routes, compact traceability gaps, and task-local resume packets. Warm and cold evidence expands only through archive, restore, audit, resume-context, or refinement workflows.
 
 For Git-backed archival, the graph should prefer compact cold refs over expanded cold artifact nodes. GC labels are advisory until archive proof exists; tracked purge is safe only after a reachable archive commit/tree and restore ledger exist.
 
