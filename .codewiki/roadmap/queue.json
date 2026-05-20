@@ -1,58 +1,8 @@
 {
   "version": 2,
-  "updated": "2026-05-20T05:39:01Z",
-  "order": [
-    "TASK-004"
-  ],
-  "tasks": {
-    "TASK-004": {
-      "id": "TASK-004",
-      "title": "Simplify generated state graph lenses",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "architecture",
-      "summary": "Refactor generated state output to expose a compact Decision, Knowledge, Work, Execution, Proof default lens while preserving exact trace/audit expansion for gateways.",
-      "spec_paths": [
-        ".codewiki/kb/system/graph.md"
-      ],
-      "code_paths": [
-        "src/application/state-builders.ts",
-        "src/application/state.ts",
-        "src/domain/state",
-        "src/ui/web"
-      ],
-      "research_ids": [],
-      "labels": [
-        "state-lenses",
-        "graph-lenses"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Default CodeWiki state and graph views are simpler and lower-token while trace/audit lenses still expose full evidence refs.",
-        "acceptance": [
-          "Default state/view groups hot context into Decision, Knowledge, Work, Execution, and Proof families.",
-          "Build and validation internals collapse to badges in default views when not the next action.",
-          "Trace/audit lenses expand exact source refs, requirements, validation reports, and content proof for gateways.",
-          "State/graph output remains generated and does not become canonical truth."
-        ],
-        "non_goals": [
-          "Do not drop any evidence needed by validation, archive, restore, or publication.",
-          "Do not implement diagram_ref auditing in this task."
-        ],
-        "verification": [
-          "Add graph/state tests for default lens and trace/audit expansion.",
-          "Run codewiki_state and generated-parity audit."
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-05-19",
-      "updated": "2026-05-20T05:39:01Z"
-    }
-  },
+  "updated": "2026-05-20T05:41:40Z",
+  "order": [],
+  "tasks": {},
   "sprints": {
     "SPRINT-001": {
       "id": "SPRINT-001",

@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T05:41:28Z",
+  "profile": "task-close",
+  "task_id": "TASK-004",
+  "verdict": "pass",
+  "rationale": "TASK-004 can close. Implementation validation passed, implementation and generated graph proof are committed, the builder claim is released, worktree is clean, archive ref points at validated HEAD, and required CodeWiki audits pass with 0 issues. Acceptance remains satisfied: default graph/state lens uses Decision, Knowledge, Work, Execution, and Proof families; non-next build/validation internals are collapsed into badges; trace/audit lenses retain exact refs/content proof; generated graph remains a read model.",
+  "checks": [
+    "Task-close source implementation build: .codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+    "Implementation validation pass report: .codewiki/validation/2026-05-20-implementation-pass-task-004.json",
+    "Implementation commit: ccdc3737c5f3ee69752febadf338d34d09496260",
+    "Generated graph refresh commit: e7aeda3259872b627a68a4972e42cb3692dfce64",
+    "Claim-release graph refresh commit: e329c1f47deec0f969c834131b017d33dd46e8de",
+    "Archive ref refs/codewiki/archive/task/TASK-004 -> e329c1f47deec0f969c834131b017d33dd46e8de",
+    "git status --short: clean",
+    "git rev-parse HEAD: e329c1f47deec0f969c834131b017d33dd46e8de",
+    "git rev-parse HEAD^{tree}: ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+    "codewiki_state refresh=false include=summary,roadmap,session taskId=TASK-004: health green; artifacts in-use 0",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-004: pass; 0 issues",
+    "Acceptance: default generated lens groups Decision, Knowledge, Work, Execution, Proof",
+    "Acceptance: build/validation internals collapse to badges/default_hidden unless next action",
+    "Acceptance: trace/audit lenses expand requirement/source/validation/audit/content-proof refs",
+    "Acceptance: graph/state output remains generated and non-canonical"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure",
+    "package",
+    "security"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:generated-parity",
+    "profile:package",
+    "profile:security",
+    "profile:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-004 => pass, 0 issues"
+  ],
+  "content_proof_refs": [
+    "e329c1f47deec0f969c834131b017d33dd46e8de",
+    "ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+    "refs/codewiki/archive/task/TASK-004"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+      "refs/codewiki/archive/task/TASK-004"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure",
+      "package",
+      "security"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:package or profile:package",
+      "audit:security or profile:security"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "ed72a7b5e6409156e88e24387c2a201a7a45ceb4",
+    "head_sha": "e329c1f47deec0f969c834131b017d33dd46e8de",
+    "validated_sha": "e329c1f47deec0f969c834131b017d33dd46e8de",
+    "tree_sha": "ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+    "archive_ref": "refs/codewiki/archive/task/TASK-004",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build, implementation validation report, clean graph state, audit pass evidence, and immutable commit/tree/archive proof.",
+    "role": "validator"
+  }
+}
