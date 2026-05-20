@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T09:49:09Z",
+  "profile": "implementation",
+  "task_id": "TASK-007",
+  "verdict": "pass",
+  "rationale": "Implementation build now has accepted decision and planning build traceability, commit-ready publication payload, complete code/test/check evidence, and fresh checked working-tree proof. TASK-007 acceptance is satisfied: stale active session task focus is advisory, stale explicit compaction task ids fall back or no-op, agent_end preflights a CodeWiki summary before ctx.compact and skips when absent, and smoke coverage proves these paths. Non-goals preserved: explicit /wiki-resume errors and task-close/archive semantics unchanged.",
+  "checks": [
+    "Read .codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+    "Read .codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+    "Read .codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+    "Reviewed src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs",
+    "npm run typecheck — pass",
+    "node ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "npm test — pass (22 feature/smoke/package checks)",
+    "git diff --check — pass",
+    "CodewikiRebuilder.rebuildAll() — pass",
+    "codewiki_state refresh=false include=summary,roadmap,session taskId=TASK-007 — green",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-007 — warning only changed/generated-file-changed .codewiki/index_graph.json and TASK-007 generated task views"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:generated-parity",
+    "profile:package",
+    "profile:security",
+    "profile:task",
+    "source_decision_build:.codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+    "source_planning_build:.codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-007 => warning only changed/generated-file-changed .codewiki/index_graph.json and TASK-007 generated task views; alignment/stale-reference/file-structure/generated-parity/package/security/task pass"
+  ],
+  "content_proof_refs": [
+    "sha256:b5e92ce4a1675ba31397aa8b0dd1b469c09c6e3322b508631559d7efc6e02ecf"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "b428366dcb8c7ed33f8344ad9c43826aeda97d89",
+    "working_tree_digest": "sha256:b5e92ce4a1675ba31397aa8b0dd1b469c09c6e3322b508631559d7efc6e02ecf",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh validation consumed source decision, planning, implementation, task, code/test refs, current audit output, and deterministic dirty-tree digest rather than builder chat proof.",
+    "role": "validator"
+  }
+}

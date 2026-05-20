@@ -1,8 +1,60 @@
 {
   "version": 2,
-  "updated": "2026-05-20T05:41:40Z",
-  "order": [],
-  "tasks": {},
+  "updated": "2026-05-20T06:12:11Z",
+  "order": [
+    "TASK-007"
+  ],
+  "tasks": {
+    "TASK-007": {
+      "id": "TASK-007",
+      "title": "Prevent stale-task context refresh failures",
+      "status": "todo",
+      "priority": "high",
+      "kind": "bug",
+      "summary": "Make CodeWiki context refresh ignore closed or archived session-focus task ids and skip compaction when no source-backed resume packet exists.",
+      "spec_paths": [
+        ".codewiki/kb/system/graph.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/compaction.ts",
+        "tests/smoke/codewiki-compaction.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "compaction",
+        "resume-context",
+        "pi-adapter"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Context refresh after task closure no longer tries to resume missing/closed tasks or falls through to fragile generic summarization.",
+        "acceptance": [
+          "Context refresh does not pass stale active session task ids as explicit resume requests.",
+          "Explicit stale task ids during context refresh degrade to open roadmap fallback or no-op skip instead of throwing Roadmap task not found/already closed.",
+          "Agent-end context refresh preflights CodeWiki summary and skips ctx.compact when no CodeWiki packet exists, avoiding generic summarizer fallback.",
+          "Smoke coverage proves stale active task handling and skip behavior."
+        ],
+        "non_goals": [
+          "Do not change explicit /wiki-resume TASK-### error behavior.",
+          "Do not alter task-close/archive semantics."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "node ./tests/smoke/codewiki-compaction.test.mjs",
+          "npm test",
+          "git diff --check",
+          "codewiki_audit generated-parity changed task"
+        ]
+      },
+      "delta": {
+        "desired": "",
+        "current": "",
+        "closure": ""
+      },
+      "created": "2026-05-20",
+      "updated": "2026-05-20"
+    }
+  },
   "sprints": {
     "SPRINT-001": {
       "id": "SPRINT-001",

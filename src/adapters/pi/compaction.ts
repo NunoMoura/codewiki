@@ -17,6 +17,7 @@ export interface CodewikiContextRefreshRequest {
 
 let pendingContextRefresh: CodewikiContextRefreshRequest | null = null;
 let activeContextRefresh: CodewikiContextRefreshRequest | null = null;
+let preparedContextRefreshSummary: { summary: string; details: Record<string, unknown> } | null = null;
 
 export function requestCodewikiContextRefresh(request: CodewikiContextRefreshRequest): void {
 	pendingContextRefresh = {
@@ -55,16 +56,11 @@ export function installCodewikiCompaction(pi: ExtensionAPI): void {
 		try {
 			const resolved = await resolveStatusDockProject(ctx, { allowWhenOff: true });
 			if (!resolved) return undefined;
-			const summary = await buildCodewikiCompactionSummary(resolved.project, ctx, request, event.customInstructions);
+			const summary = activeContextRefresh && preparedContextRefreshSummary
+				? preparedContextRefreshSummary
+				: await buildCodewikiCompactionSummary(resolved.project, ctx, request, event.customInstructions);
 			if (!summary) return undefined;
-			return {
-				compaction: {
-					summary: summary.summary,
-					firstKeptEntryId: event.preparation.firstKeptEntryId,
-					tokensBefore: event.preparation.tokensBefore,
-					details: summary.details,
-				},
-			};
+			return formatPiCompactionResult(summary, event);
 		} catch (error) {
 			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`, "warning");
 			return undefined;
@@ -78,36 +74,61 @@ export function installCodewikiCompaction(pi: ExtensionAPI): void {
 		previousContextPercent = usage?.percent ?? previousContextPercent ?? null;
 		if (!shouldRefresh) return;
 
-		let projectResolved = false;
+		let resolvedProject: { project: WikiProject } | null = null;
 		try {
-			projectResolved = Boolean(await resolveStatusDockProject(ctx, { allowWhenOff: true }));
+			resolvedProject = await resolveStatusDockProject(ctx, { allowWhenOff: true });
 		} catch {
-			projectResolved = false;
+			resolvedProject = null;
 		}
-		if (!projectResolved) return;
+		if (!resolvedProject) return;
 
 		const request = pending ?? {
 			reason: `context-usage-${Math.round(usage?.percent ?? 0)}pct`,
 			requestedAt: nowIso(),
 		};
+		let summary: { summary: string; details: Record<string, unknown> } | null = null;
+		try {
+			summary = await buildCodewikiCompactionSummary(resolvedProject.project, ctx, request, null);
+		} catch (error) {
+			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`, "warning");
+			return;
+		}
+		if (!summary) {
+			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: no source-backed resume packet`, "info");
+			return;
+		}
 		activeContextRefresh = request;
+		preparedContextRefreshSummary = summary;
 		if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} starting`, "info");
 		ctx.compact({
 			customInstructions: formatCodewikiCompactionInstruction(request),
 			onComplete: () => {
 				activeContextRefresh = null;
+				preparedContextRefreshSummary = null;
 				previousContextPercent = null;
 				if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} complete`, "info");
 			},
 			onError: (error) => {
 				activeContextRefresh = null;
+				preparedContextRefreshSummary = null;
 				if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} failed: ${error.message}`, "warning");
 			},
 		});
 	});
 }
 
-async function buildCodewikiCompactionSummary(
+function formatPiCompactionResult(summary: { summary: string; details: Record<string, unknown> }, event: any) {
+	return {
+		compaction: {
+			summary: summary.summary,
+			firstKeptEntryId: event.preparation.firstKeptEntryId,
+			tokensBefore: event.preparation.tokensBefore,
+			details: summary.details,
+		},
+	};
+}
+
+export async function buildCodewikiCompactionSummary(
 	project: WikiProject,
 	ctx: ExtensionContext,
 	request: CodewikiContextRefreshRequest,
@@ -118,13 +139,23 @@ async function buildCodewikiCompactionSummary(
 		.map((item) => item?.trim())
 		.filter(Boolean)
 		.join("\n");
-	const result = await buildCodewikiResumeContext(project, {
-		requestedTaskId: request.taskId || activeLink?.taskId,
+	const resumeInput = {
+		requestedTaskId: request.taskId || undefined,
 		followUpIntent: followUpIntent || undefined,
 		activeLink,
 		sessionId: String(ctx.sessionManager?.getSessionId?.() || "codewiki-compaction"),
 		refresh: true,
-	});
+	};
+	let result;
+	try {
+		result = await buildCodewikiResumeContext(project, resumeInput);
+	} catch (error) {
+		if (!isStaleTaskResumeError(error)) throw error;
+		result = await buildCodewikiResumeContext(project, {
+			...resumeInput,
+			requestedTaskId: undefined,
+		});
+	}
 	if (!result.prompt.trim()) return null;
 	return {
 		summary: [
@@ -145,6 +176,11 @@ async function buildCodewikiCompactionSummary(
 			requestedAt: request.requestedAt ?? null,
 		},
 	};
+}
+
+function isStaleTaskResumeError(error: unknown): boolean {
+	const message = formatError(error);
+	return /Roadmap task (not found|already closed): TASK-\d+/i.test(message);
 }
 
 export function formatCodewikiCompactionInstruction(request: CodewikiContextRefreshRequest): string {
