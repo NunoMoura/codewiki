@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T02:33:00Z",
+  "profile": "task-close",
+  "task_id": "TASK-001",
+  "verdict": "pass",
+  "rationale": "Fresh task-close gate consumed TASK-001 implementation evidence and implementation pass from CodeWiki refs, then verified clean local publisher proof commit, refreshed graph commit, archive ref, deterministic audits, and package checks. TASK-001 acceptance is implemented: decision_build is represented across domain/application/adapters, decision proposal/accepted orchestration is covered, accepted decision payloads carry approved rows/mappings/propagation/risks/questions, planning consumes source_decision_build directly, and feedback/documentation compiler package paths were removed rather than retained as wrappers.",
+  "checks": [
+    "Publisher proof commit: 89b181ac7811619bab15d054894dd787f1abd371",
+    "Publisher proof tree: 301e7f5373522d6371bee8be22af818132f02937",
+    "Archive ref created: refs/codewiki/archive/task/TASK-001 -> 89b181ac7811619bab15d054894dd787f1abd371",
+    "git status --porcelain=v1 before task-close validation: clean",
+    "Consumed implementation build .codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+    "Consumed latest implementation build .codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+    "Consumed implementation validation .codewiki/validation/2026-05-20-implementation-pass-task-001.json",
+    "npm run typecheck: pass",
+    "npm test: pass (19 passed)",
+    "git diff --check: pass",
+    "codewiki_audit profiles=alignment,changed task_id=TASK-001: pass",
+    "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:stale-reference",
+    "audit:file-structure",
+    "audit:package",
+    "audit:security",
+    "task:TASK-001"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; changed pass; task pass",
+    "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass"
+  ],
+  "content_proof_refs": [
+    "89b181ac7811619bab15d054894dd787f1abd371",
+    "301e7f5373522d6371bee8be22af818132f02937",
+    "refs/codewiki/archive/task/TASK-001"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "301e7f5373522d6371bee8be22af818132f02937",
+      "refs/codewiki/archive/task/TASK-001"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "ba00f6ddf166e77f9dd4c6fabe8645d8e04abf4e",
+    "head_sha": "89b181ac7811619bab15d054894dd787f1abd371",
+    "tree_sha": "301e7f5373522d6371bee8be22af818132f02937",
+    "archive_ref": "refs/codewiki/archive/task/TASK-001",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation used CodeWiki task/build/validation refs plus clean local publisher proof. Remote push not performed.",
+    "role": "validator"
+  }
+}
