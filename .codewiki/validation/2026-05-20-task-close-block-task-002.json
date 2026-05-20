@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T04:14:59Z",
+  "profile": "task-close",
+  "task_id": "TASK-002",
+  "verdict": "block",
+  "rationale": "TASK-002 can close. Implementation validation passed, implementation and generated graph proof are committed, worktree is clean, archive ref points at validated HEAD, and required CodeWiki audits pass with 0 issues. Acceptance remains satisfied: diagram YAML parser exposes required categories as graph/audit refs, system docs diagram_refs are validated, requires_doc gaps are audited, and warn/error migration modes are tested. Policy blocks task-close validation until source_implementation_build:not-build-ref are recorded.",
+  "checks": [
+    "Read task TASK-002 state from CodeWiki graph/state",
+    "Implementation validation pass report: .codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+    "Implementation build: .codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+    "Implementation commit: 02ba9763c73817a200ae1faad6c73938bef1a7ff",
+    "Generated graph refresh commit: 66ebf120f458f38aea2112301dd148de4cb7190b",
+    "Archive ref refs/codewiki/archive/task/TASK-002 -> 66ebf120f458f38aea2112301dd148de4cb7190b",
+    "git status --short: clean",
+    "git rev-parse HEAD: 66ebf120f458f38aea2112301dd148de4cb7190b",
+    "git rev-parse HEAD^{tree}: ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002: pass",
+    "changed audit: pass, 0 changed files"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Missing accepted semantic build traceability: source_implementation_build:not-build-ref."
+    }
+  ],
+  "source": ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure",
+    "package",
+    "security"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:stale-reference",
+    "audit:file-structure",
+    "audit:generated-parity",
+    "audit:package",
+    "audit:security",
+    "audit:task",
+    "profile:alignment",
+    "profile:changed",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:generated-parity",
+    "profile:package",
+    "profile:security",
+    "profile:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002 => pass, 0 issues"
+  ],
+  "content_proof_refs": [
+    "66ebf120f458f38aea2112301dd148de4cb7190b",
+    "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
+    "refs/codewiki/archive/task/TASK-002"
+  ],
+  "failed_criteria": [
+    "semantic_build_traceability"
+  ],
+  "blocking_questions": [
+    "Cite an accepted upstream compiler build chain for semantic changes or set a generated/runtime/mechanical traceability exemption when policy allows."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
+      "refs/codewiki/archive/task/TASK-002"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure",
+      "package",
+      "security"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:package or profile:package",
+      "audit:security or profile:security"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [
+      "source_implementation_build:not-build-ref"
+    ],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "f9a49cd7db1231cdfebbb83f0d766ea1b8109a10",
+    "head_sha": "66ebf120f458f38aea2112301dd148de4cb7190b",
+    "validated_sha": "66ebf120f458f38aea2112301dd148de4cb7190b",
+    "tree_sha": "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
+    "archive_ref": "refs/codewiki/archive/task/TASK-002",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build, implementation validation report, graph state, audits, and immutable commit/tree proof rather than dirty builder context.",
+    "role": "validator"
+  }
+}
