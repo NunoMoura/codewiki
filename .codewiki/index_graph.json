@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T05:11:19.633Z",
+  "generated_at": "2026-05-20T05:12:30.268Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -666,29 +666,6 @@
       "kind": "code_path",
       "path": "tests/**",
       "layer": "code"
-    },
-    {
-      "id": "task:TASK-003",
-      "kind": "roadmap_task",
-      "title": "Add validation preflight and risk-tier policy",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift"
-    },
-    {
-      "id": "code:src/application/tools/validation.ts",
-      "kind": "code_path",
-      "path": "src/application/tools/validation.ts",
-      "layer": "code",
-      "alignment_state": "aligned"
-    },
-    {
-      "id": "code:src/application/tools/resume-context.ts",
-      "kind": "code_path",
-      "path": "src/application/tools/resume-context.ts",
-      "layer": "code",
-      "alignment_state": "aligned"
     },
     {
       "id": "task:TASK-004",
@@ -3189,9 +3166,9 @@
       "status": "accepted",
       "layer": "build",
       "lifecycle_state": "accepted",
-      "alignment_state": "drift",
-      "compacted": false,
-      "default_hidden": false,
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-003",
       "superseded_by": [],
       "evidence_summary": {
@@ -3313,11 +3290,6 @@
       "safety_status": "blocked",
       "default_hidden": true,
       "layer": "archive"
-    },
-    {
-      "id": "closure:TASK-003",
-      "kind": "closure_brief",
-      "path": "TASK-003"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
@@ -6606,6 +6578,78 @@
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+        "head_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+        "validated_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+        "tree_sha": "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+        "archive_ref": "refs/codewiki/archive/task/TASK-003",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation consumed committed implementation build, implementation validation report, clean graph state, audit pass evidence, and immutable commit/tree/archive proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:stale-reference",
+          "audit:file-structure",
+          "audit:generated-parity",
+          "audit:package",
+          "audit:security",
+          "audit:task",
+          "profile:alignment",
+          "profile:changed",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:generated-parity",
+          "profile:package",
+          "profile:security",
+          "profile:task",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues"
+        ],
+        "content_proof_refs": [
+          "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+          "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+          "refs/codewiki/archive/task/TASK-003"
+        ]
+      }
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+      "kind": "content_proof",
+      "path": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+      "kind": "content_proof",
+      "path": "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true
     }
   ],
   "edges": [
@@ -8238,36 +8282,6 @@
       "kind": "sprint_code_scope",
       "from": "sprint:SPRINT-001",
       "to": "code:tests/**"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-003",
-      "to": "doc:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-003",
-      "to": "doc:.codewiki/kb/system/change-lifecycle.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-003",
-      "to": "code:src/application/gateway"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-003",
-      "to": "code:src/application/tools/validation.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-003",
-      "to": "code:src/application/tools/resume-context.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-003",
-      "to": "code:skills/codewiki-validation/SKILL.md"
     },
     {
       "kind": "task_spec",
@@ -11256,96 +11270,6 @@
       "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-003",
       "default_hidden": true
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "task:TASK-003"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "source:User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently."
-    },
-    {
-      "kind": "build_produces_knowledge",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "doc:.codewiki/kb/system/api.md"
-    },
-    {
-      "kind": "build_produces_knowledge",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "doc:.codewiki/kb/system/adapters.md"
-    },
-    {
-      "kind": "build_produces_knowledge",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "doc:.codewiki/kb/system/agency.md"
-    },
-    {
-      "kind": "build_produces_knowledge",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "doc:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "build_produces_knowledge",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "doc:skills/codewiki/prompts/resume-implementation.md"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "code:src/application/tools/session-handoff.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "code:src/adapters/pi/tools/session-handoff.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "code:src/adapters/pi/schemas.ts"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "test:tests/smoke/session-handoff.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "test:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "validation:node tests/smoke/session-handoff.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "validation:npm run typecheck"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "validation:npm run check:architecture"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "validation:npm run test:smoke"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "validation:codewiki_audit alignment,changed,file-structure,stale-reference,generated-parity"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-      "to": "closure:TASK-003"
     },
     {
       "kind": "build_references_canonical_source",
@@ -15373,6 +15297,137 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-002.json",
       "to": "task:TASK-002"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "content_proof:12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "content_proof:a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+      "to": "task:TASK-003"
     }
   ],
   "views": {
@@ -15497,16 +15552,12 @@
     },
     "roadmap": {
       "task_ids": [
-        "TASK-003",
         "TASK-004"
       ],
       "open_task_ids": [
-        "TASK-003",
         "TASK-004"
       ],
-      "in_progress_task_ids": [
-        "TASK-003"
-      ],
+      "in_progress_task_ids": [],
       "todo_task_ids": [
         "TASK-004"
       ],
@@ -15514,7 +15565,6 @@
       "done_task_ids": [],
       "cancelled_task_ids": [],
       "status_counts": {
-        "in_progress": 1,
         "todo": 1
       },
       "sprint_ids": [
@@ -15537,7 +15587,6 @@
             "TASK-004"
           ],
           "open_task_ids": [
-            "TASK-003",
             "TASK-004"
           ],
           "budget": {
@@ -15625,8 +15674,6 @@
         "src/application/tools/**",
         "src/application/tools/artifact-status.ts",
         "src/application/tools/build.ts",
-        "src/application/tools/resume-context.ts",
-        "src/application/tools/validation.ts",
         "src/bootstrap.ts",
         "src/domain",
         "src/domain/shared/types.ts",
@@ -15980,6 +16027,30 @@
             "70fe31dfa738406d95b557ade97fa20f3ae5922a",
             "refs/codewiki/archive/task/TASK-002"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+          "task_id": "TASK-003",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+          "head_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+          "validated_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+            "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+            "refs/codewiki/archive/task/TASK-003"
+          ],
+          "publisher_result_refs": [
+            "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+            "refs/codewiki/archive/task/TASK-003"
+          ]
         }
       ]
     },
@@ -16191,6 +16262,7 @@
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
         "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002 => pass, 0 issues",
+        "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass",
         "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
@@ -16279,6 +16351,7 @@
         ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
         ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
         ".codewiki/kb/system/worktree-isolation.md@sha256:40ad0551c5c63369fdb0dbee291ee2f28226c64332d571881553fd62627b1bd9",
+        "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
         "23535a3b871eb528b3857868b758fe5a7041734c",
         "301e7f5373522d6371bee8be22af818132f02937",
         "4c10b340cecee13d5f8446d6540153573c2d2df6",
@@ -16293,6 +16366,7 @@
         "README.md@sha256:beb162f5c083aa879c9337a23ba4c511db95ec59970406149bddc90e96c8e360",
         "README.md@sha256:fd5b87e62318daa870e42e2679e3ac3a398e5b30f57ce89ec712e7bca5c1c29e",
         "a715ee6fcd548519e268bfa01d3f2f44af11cac3",
+        "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
         "b5527b51bece34d670daa246b84d46fc4902eed2",
         "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
@@ -16940,12 +17014,79 @@
             "refs/codewiki/archive/task/TASK-002"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-20-task-close-pass-task-003.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-003",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:stale-reference",
+            "audit:file-structure",
+            "audit:generated-parity",
+            "audit:package",
+            "audit:security",
+            "audit:task",
+            "profile:alignment",
+            "profile:changed",
+            "profile:stale-reference",
+            "profile:file-structure",
+            "profile:generated-parity",
+            "profile:package",
+            "profile:security",
+            "profile:task",
+            "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues"
+          ],
+          "content_proof_refs": [
+            "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+            "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+            "refs/codewiki/archive/task/TASK-003"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -16954,11 +17095,9 @@
       "roadmap": {
         "kind": "roadmap",
         "task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "open_task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "sprint_ids": [
@@ -16980,7 +17119,6 @@
             "TASK-004"
           ],
           "open_task_ids": [
-            "TASK-003",
             "TASK-004"
           ],
           "budget": {
@@ -17018,29 +17156,6 @@
         }
       },
       "tasks": {
-        "TASK-003": {
-          "kind": "task",
-          "id": "TASK-003",
-          "task_ids": [
-            "TASK-003"
-          ],
-          "open_task_ids": [
-            "TASK-003"
-          ],
-          "sprint_ids": [
-            "SPRINT-001"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/validation-gateway.md",
-            ".codewiki/kb/system/change-lifecycle.md"
-          ],
-          "code_paths": [
-            "src/application/gateway",
-            "src/application/tools/validation.ts",
-            "src/application/tools/resume-context.ts",
-            "skills/codewiki-validation/SKILL.md"
-          ]
-        },
         "TASK-004": {
           "kind": "task",
           "id": "TASK-004",
@@ -17105,15 +17220,12 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-003",
             "TASK-004"
           ],
           "sprint_ids": [
             "SPRINT-001"
           ],
-          "build_paths": [
-            ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
-          ],
+          "build_paths": [],
           "validation_paths": [],
           "claim_ids": [],
           "claim_wait_ids": []
@@ -17132,6 +17244,7 @@
             ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
             ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
             ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
             ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -17159,7 +17272,8 @@
             ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
             ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
             ".codewiki/validation/2026-05-20-task-close-pass-task-001.json",
-            ".codewiki/validation/2026-05-20-task-close-pass-task-002.json"
+            ".codewiki/validation/2026-05-20-task-close-pass-task-002.json",
+            ".codewiki/validation/2026-05-20-task-close-pass-task-003.json"
           ]
         },
         "cold": {
@@ -17173,6 +17287,7 @@
             ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
             ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
             ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
             ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
             ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -17457,6 +17572,7 @@
           ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
           ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
           ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+          ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
           ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
           ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
           ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -17480,17 +17596,6 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
-          "id": "reconcile:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-          "source_id": "build:.codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "build",
-          "to_layer": "validation",
-          "next_loop": "validation",
-          "task_id": "TASK-003",
-          "reason": "Accepted implementation build still needs passing validation gateway evidence."
-        },
-        {
           "id": "reconcile:task:TASK-004",
           "source_id": "task:TASK-004",
           "state": "drift",
@@ -17503,7 +17608,6 @@
         }
       ],
       "counts_by_loop": {
-        "validation": 1,
         "implementation": 1
       },
       "next_action": {
@@ -17533,19 +17637,19 @@
         "knowledge": "aligned",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "drift"
+        "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T05:11:19.618Z",
+      "generated_at": "2026-05-20T05:12:30.253Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T05:11:19Z",
+      "generated_at": "2026-05-20T05:12:30Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -17556,30 +17660,25 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 2,
-        "open_count": 2,
+        "task_count": 1,
+        "open_count": 1,
         "sprint_count": 1,
         "active_sprint_count": 1,
         "status_counts": {
-          "in_progress": 1,
           "todo": 1
         },
         "priority_counts": {
-          "high": 1,
           "medium": 1
         }
       },
       "views": {
         "ordered_task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "open_task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "executable_open_task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "container_task_ids": [],
@@ -17603,7 +17702,6 @@
               "TASK-004"
             ],
             "open_task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "budget": {
@@ -17640,12 +17738,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-003"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-003"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [
           "TASK-004"
         ],
@@ -17656,63 +17750,10 @@
         "done_task_ids": [],
         "cancelled_task_ids": [],
         "recent_task_ids": [
-          "TASK-003",
           "TASK-004"
         ]
       },
       "tasks": {
-        "TASK-003": {
-          "id": "TASK-003",
-          "title": "Add validation preflight and risk-tier policy",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "architecture",
-          "change_type": "system",
-          "summary": "Add gateway preflight and risk-tier policy so low-risk mechanical/docs cleanup avoids late metadata blocks while high-risk work escalates to user semantic approval.",
-          "labels": [
-            "validation-preflight",
-            "risk-tier-gates"
-          ],
-          "goal": {
-            "outcome": "Gateways can preflight required metadata/audits/proof before expensive validation and apply risk-tiered user escalation policy.",
-            "acceptance": [
-              "Preflight reports missing upstream builds, audit evidence, task ids, content proof strategy, stale refs, and close/publication blockers before fresh validation handoff.",
-              "Risk tiers distinguish mechanical/docs cleanup, code-local, semantic-system, security/migration/publication, and destructive changes.",
-              "Low-risk fast path remains gateway-validated and records why user approval is not required beyond accepted semantics.",
-              "High-risk categories escalate to user approval before lower-layer promotion."
-            ],
-            "non_goals": [
-              "Do not weaken implementation/task-close/publication content-proof requirements.",
-              "Do not bypass fresh validation where policy requires independence.",
-              "Do not consolidate public tool surface in this task."
-            ],
-            "verification": [
-              "Add gateway/preflight tests for missing metadata, fast path eligibility, and escalation categories.",
-              "Run validation smoke tests and CodeWiki audits."
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/validation-gateway.md",
-            ".codewiki/kb/system/change-lifecycle.md"
-          ],
-          "code_paths": [
-            "src/application/gateway",
-            "src/application/tools/validation.ts",
-            "src/application/tools/resume-context.ts",
-            "skills/codewiki-validation/SKILL.md"
-          ],
-          "updated": "2026-05-20T05:09:52Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-003/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
-        },
         "TASK-004": {
           "id": "TASK-004",
           "title": "Simplify generated state graph lenses",
@@ -17767,7 +17808,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T05:11:19Z",
+      "generated_at": "2026-05-20T05:12:30Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -17782,26 +17823,26 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 32,
-        "tracked_specs": 3,
+        "aligned_specs": 34,
+        "tracked_specs": 1,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 2,
-        "open_task_count": 2,
+        "task_count": 1,
+        "open_task_count": 1,
         "done_task_count": 0
       },
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 3,
-          "total": 3,
+          "value": 1,
+          "total": 1,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 2,
+          "total": 1,
           "percent": 0
         },
         "spec_mapping": {
@@ -17813,17 +17854,12 @@
       },
       "views": {
         "risky_spec_paths": [
-          ".codewiki/kb/system/change-lifecycle.md",
-          ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/validation-gateway.md"
+          ".codewiki/kb/system/graph.md"
         ],
         "top_risky_spec_paths": [
-          ".codewiki/kb/system/change-lifecycle.md",
-          ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/validation-gateway.md"
+          ".codewiki/kb/system/graph.md"
         ],
         "open_task_ids": [
-          "TASK-003",
           "TASK-004"
         ],
         "sprint_ids": [
@@ -17879,15 +17915,12 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "sprint_ids": [
               "SPRINT-001"
             ],
-            "build_paths": [
-              ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
-            ],
+            "build_paths": [],
             "validation_paths": [],
             "claim_ids": [],
             "claim_wait_ids": []
@@ -17906,6 +17939,7 @@
               ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
               ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
               ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
               ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -17933,7 +17967,8 @@
               ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
               ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
               ".codewiki/validation/2026-05-20-task-close-pass-task-001.json",
-              ".codewiki/validation/2026-05-20-task-close-pass-task-002.json"
+              ".codewiki/validation/2026-05-20-task-close-pass-task-002.json",
+              ".codewiki/validation/2026-05-20-task-close-pass-task-003.json"
             ]
           },
           "cold": {
@@ -17947,6 +17982,7 @@
               ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
               ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
               ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json",
               ".codewiki/builds/implementation/2026-05-19-task-005-remove-claim-alias-and-app-tool-catalog.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
               ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
@@ -17980,42 +18016,9 @@
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 3/3."
+        "Tracked drift coverage: 1/1."
       ],
       "specs": [
-        {
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "title": "Change Lifecycle",
-          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-validation/SKILL.md",
-            "src/application/builds.ts",
-            "src/application/graph.ts"
-          ],
-          "code_area": "skills, src",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-003"
-          ],
-          "primary_task": {
-            "id": "TASK-003",
-            "status": "in_progress",
-            "title": "Add validation preflight and risk-tier policy"
-          },
-          "revision": {
-            "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-003"
-        },
         {
           "path": ".codewiki/kb/system/graph.md",
           "title": "Graph",
@@ -18048,36 +18051,6 @@
             "basis": "source_content"
           },
           "note": "tracked by TASK-004"
-        },
-        {
-          "path": ".codewiki/kb/system/validation-gateway.md",
-          "title": "Validation Gateway",
-          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/application/gateway",
-            "skills/codewiki-validation/SKILL.md",
-            "src/application/builds.ts"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-003"
-          ],
-          "primary_task": {
-            "id": "TASK-003",
-            "status": "in_progress",
-            "title": "Add validation preflight and risk-tier policy"
-          },
-          "revision": {
-            "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-003"
         },
         {
           "path": ".codewiki/kb/lexicon.md",
@@ -18593,6 +18566,33 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "title": "Change Lifecycle",
+          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
+            "src/application/builds.ts",
+            "src/application/graph.ts"
+          ],
+          "code_area": "skills, src",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/compilers.md",
           "title": "Compilers",
           "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -18813,6 +18813,30 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "title": "Validation Gateway",
+          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/application/gateway",
+            "skills/codewiki-validation/SKILL.md",
+            "src/application/builds.ts"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/worktree-isolation.md",
           "title": "Role Worktree Isolation",
           "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
@@ -18841,7 +18865,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T05:11:19Z",
+        "generated_at": "2026-05-20T05:12:30Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -18869,12 +18893,17 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T05:11:19Z",
+            "checked_at": "2026-05-20T05:12:30Z",
             "revision": {
               "git": {
-                "head": "a2039572fc498dead920385921e01710bc865512",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -18959,16 +18988,16 @@
                 }
               },
               "spec_digest": "907e51ffd4a8701600773641195c94984f34bc42cf18fda72cf26b4a4785efa4",
-              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
-              "code_digest": "2408be7d921aed18ebbaf007040cd99fe160ef33dbbacf384de91a6db776e21b",
-              "digest": "8be4f09f562715fcd44fc91c462ce2f8bcd1cc414d00864d4f66fe8a25a8a712"
+              "task_digest": "633628bc8e5a2d015cbc3acabd08712fc5bebe423ad32248b8d89638c43d1cf1",
+              "code_digest": "eb18dd434e862f77ea79b75660e82da4f3dbf957419bc32747e64566be82de63",
+              "digest": "de76df61228981fb8a5defbc6155c332ed9b711f48e53df8fa0e5928fd6e9027"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T05:11:19Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:12:30Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18986,15 +19015,14 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -19004,6 +19032,7 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
@@ -19023,20 +19052,20 @@
               "src",
               "src/index.ts",
               "package.json",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/application/builds.ts",
-              "src/application/graph.ts",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
               "src/domain/shared/types.ts",
-              "src/application/gateway",
               "src/adapters",
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
+              "src/application/builds.ts",
+              "src/application/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/domain",
               "src/adapters/pi/schemas.ts",
               "src/application/roadmap.ts",
@@ -19057,18 +19086,15 @@
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/graph.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 31,
-              "tracked_specs": 3,
+              "aligned_specs": 33,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -19093,12 +19119,17 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T05:11:19Z",
+            "checked_at": "2026-05-20T05:12:30Z",
             "revision": {
               "git": {
-                "head": "a2039572fc498dead920385921e01710bc865512",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -19162,27 +19193,26 @@
                 }
               },
               "spec_digest": "0d84f1646efda275a39d68384f5f020fc4d6f8272f01dd5ec6aacfe001150b15",
-              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
-              "code_digest": "0bcc341056194c4f9d1acfa82adcf3b3af922c98dadb08f2876fb695091bb588",
-              "digest": "5d01a321bf80ec34be0df6d8c5706cf45de5b896dd1cfccf27039ee999d24914"
+              "task_digest": "633628bc8e5a2d015cbc3acabd08712fc5bebe423ad32248b8d89638c43d1cf1",
+              "code_digest": "15fd9708f68b0a0b8041191debd6fb854d383066d3469a4c6133d8962255f46e",
+              "digest": "47f82c314f03db330d895dd4967b568393b19fea994932ccd7c6bb11bc4df332"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T05:11:19Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:12:30Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -19192,26 +19222,27 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/application/builds.ts",
-              "src/application/graph.ts",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
               "src/domain/shared/types.ts",
-              "src/application/gateway",
               "src/adapters",
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
+              "src/application/builds.ts",
               "src/application/lint.ts",
+              "src/application/gateway",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/domain",
               "src/adapters/pi/schemas.ts",
               "src/application/roadmap.ts",
@@ -19237,20 +19268,17 @@
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools"
             ],
-            "code_area": "skills, src +2 more",
+            "code_area": ".codewiki, src +2 more",
             "open_task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/graph.md"
             ],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 16,
-              "tracked_specs": 3,
+              "aligned_specs": 18,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -19275,12 +19303,17 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T05:11:19Z",
+            "checked_at": "2026-05-20T05:12:30Z",
             "revision": {
               "git": {
-                "head": "a2039572fc498dead920385921e01710bc865512",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -19365,16 +19398,16 @@
                 }
               },
               "spec_digest": "907e51ffd4a8701600773641195c94984f34bc42cf18fda72cf26b4a4785efa4",
-              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
-              "code_digest": "2408be7d921aed18ebbaf007040cd99fe160ef33dbbacf384de91a6db776e21b",
-              "digest": "8be4f09f562715fcd44fc91c462ce2f8bcd1cc414d00864d4f66fe8a25a8a712"
+              "task_digest": "633628bc8e5a2d015cbc3acabd08712fc5bebe423ad32248b8d89638c43d1cf1",
+              "code_digest": "eb18dd434e862f77ea79b75660e82da4f3dbf957419bc32747e64566be82de63",
+              "digest": "de76df61228981fb8a5defbc6155c332ed9b711f48e53df8fa0e5928fd6e9027"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T05:11:19Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:12:30Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -19392,15 +19425,14 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -19410,6 +19442,7 @@
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
@@ -19429,20 +19462,20 @@
               "src",
               "src/index.ts",
               "package.json",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/application/builds.ts",
-              "src/application/graph.ts",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
               "src/domain/shared/types.ts",
-              "src/application/gateway",
               "src/adapters",
               "src/application",
               "skills/codewiki",
               "src/adapters/pi",
+              "src/application/builds.ts",
+              "src/application/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/domain",
               "src/adapters/pi/schemas.ts",
               "src/application/roadmap.ts",
@@ -19463,18 +19496,15 @@
             ],
             "code_area": ".codewiki, skills +3 more",
             "open_task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/graph.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 31,
-              "tracked_specs": 3,
+              "aligned_specs": 33,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -19489,18 +19519,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-003",
+        "task_id": "TASK-004",
         "lane_id": "",
-        "heading": "TASK-003 — Add validation preflight and risk-tier policy",
-        "command": "/wiki-resume TASK-003",
-        "reason": "Resume roadmap task (in_progress).",
-        "status": "in_progress",
-        "verification": "Add gateway/preflight tests for missing metadata, fast path eligibility, and escalation categories.",
+        "heading": "TASK-004 — Simplify generated state graph lenses",
+        "command": "/wiki-resume TASK-004",
+        "reason": "Resume roadmap task (todo).",
+        "status": "todo",
+        "verification": "Add graph/state tests for default lens and trace/audit expansion.",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T05:11:19Z",
+        "generated_at": "2026-05-20T05:12:30Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -19523,39 +19553,6 @@
       },
       "wiki": {
         "rows": [
-          {
-            "path": ".codewiki/kb/system/change-lifecycle.md",
-            "title": "Change Lifecycle",
-            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/application/builds.ts",
-              "src/application/graph.ts"
-            ],
-            "code_area": "skills, src",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-003"
-            ],
-            "primary_task": {
-              "id": "TASK-003",
-              "status": "in_progress",
-              "title": "Add validation preflight and risk-tier policy"
-            },
-            "revision": {
-              "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-003"
-          },
           {
             "path": ".codewiki/kb/system/graph.md",
             "title": "Graph",
@@ -19588,36 +19585,6 @@
               "basis": "source_content"
             },
             "note": "tracked by TASK-004"
-          },
-          {
-            "path": ".codewiki/kb/system/validation-gateway.md",
-            "title": "Validation Gateway",
-            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/application/gateway",
-              "skills/codewiki-validation/SKILL.md",
-              "src/application/builds.ts"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-003"
-            ],
-            "primary_task": {
-              "id": "TASK-003",
-              "status": "in_progress",
-              "title": "Add validation preflight and risk-tier policy"
-            },
-            "revision": {
-              "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-003"
           },
           {
             "path": ".codewiki/kb/lexicon.md",
@@ -20133,6 +20100,33 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/change-lifecycle.md",
+            "title": "Change Lifecycle",
+            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/application/builds.ts",
+              "src/application/graph.ts"
+            ],
+            "code_area": "skills, src",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/compilers.md",
             "title": "Compilers",
             "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -20348,6 +20342,30 @@
             "primary_task": null,
             "revision": {
               "digest": "5f41ede746120214ca1727250c4e480085f1a966955f4fb410c763fdd62e1469",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/validation-gateway.md",
+            "title": "Validation Gateway",
+            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/application/gateway",
+              "skills/codewiki-validation/SKILL.md",
+              "src/application/builds.ts"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -20733,39 +20751,6 @@
             "label": "System",
             "rows": [
               {
-                "path": ".codewiki/kb/system/change-lifecycle.md",
-                "title": "Change Lifecycle",
-                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "src/application/builds.ts",
-                  "src/application/graph.ts"
-                ],
-                "code_area": "skills, src",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-003"
-                ],
-                "primary_task": {
-                  "id": "TASK-003",
-                  "status": "in_progress",
-                  "title": "Add validation preflight and risk-tier policy"
-                },
-                "revision": {
-                  "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-003"
-              },
-              {
                 "path": ".codewiki/kb/system/graph.md",
                 "title": "Graph",
                 "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -20797,36 +20782,6 @@
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-004"
-              },
-              {
-                "path": ".codewiki/kb/system/validation-gateway.md",
-                "title": "Validation Gateway",
-                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/application/gateway",
-                  "skills/codewiki-validation/SKILL.md",
-                  "src/application/builds.ts"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-003"
-                ],
-                "primary_task": {
-                  "id": "TASK-003",
-                  "status": "in_progress",
-                  "title": "Add validation preflight and risk-tier policy"
-                },
-                "revision": {
-                  "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-003"
               },
               {
                 "path": ".codewiki/kb/lexicon.md",
@@ -20996,6 +20951,33 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "82073f60517e857febd98533de2b14197c89c65f76ce4f40e87321792812c275",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/change-lifecycle.md",
+                "title": "Change Lifecycle",
+                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "src/application/builds.ts",
+                  "src/application/graph.ts"
+                ],
+                "code_area": "skills, src",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -21221,6 +21203,30 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/validation-gateway.md",
+                "title": "Validation Gateway",
+                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/application/gateway",
+                  "skills/codewiki-validation/SKILL.md",
+                  "src/application/builds.ts"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/worktree-isolation.md",
                 "title": "Role Worktree Isolation",
                 "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
@@ -21257,12 +21263,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-003",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-003"
-        ],
-        "next_task_id": "TASK-003",
+        "in_progress_task_ids": [],
+        "next_task_id": "TASK-004",
         "sprint_ids": [
           "SPRINT-001"
         ],
@@ -21283,7 +21287,6 @@
               "TASK-004"
             ],
             "open_task_ids": [
-              "TASK-003",
               "TASK-004"
             ],
             "budget": {
@@ -21331,9 +21334,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-003"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",

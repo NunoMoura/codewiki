@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-20T05:12:14Z",
+  "profile": "task-close",
+  "task_id": "TASK-003",
+  "verdict": "pass",
+  "rationale": "TASK-003 can close. Implementation validation passed, implementation and generated graph proof are committed, the builder claim is released, worktree is clean, archive ref points at validated HEAD, and required CodeWiki audits pass with 0 issues. Acceptance remains satisfied: deterministic preflight reports metadata/proof/ref/readiness gaps, risk tiers distinguish low/high-risk categories, low-risk fast path remains gateway-validated, and high-risk tiers escalate to user approval.",
+  "checks": [
+    "Task-close source implementation build: .codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+    "Implementation validation pass report: .codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+    "Implementation commit: ac327fe0ff1f86568a12945e14db82b88520d830",
+    "Generated graph refresh commit: a2039572fc498dead920385921e01710bc865512",
+    "Claim-release graph refresh commit: 12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "Archive ref refs/codewiki/archive/task/TASK-003 -> 12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "git status --short: clean",
+    "git rev-parse HEAD: 12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "git rev-parse HEAD^{tree}: a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003: pass; 0 issues",
+    "Acceptance: preflight reports missing upstream builds, audit evidence, task ids, content proof, stale refs, and close/publication blockers",
+    "Acceptance: risk tiers classify mechanical-docs, code-local, semantic-system, security-migration-publication, and destructive changes",
+    "Acceptance: low-risk fast path records no extra user approval beyond accepted semantics while retaining gateway proof",
+    "Acceptance: high-risk publication/destructive categories block/escalate without explicit approval evidence"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure",
+    "package",
+    "security"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:stale-reference",
+    "audit:file-structure",
+    "audit:generated-parity",
+    "audit:package",
+    "audit:security",
+    "audit:task",
+    "profile:alignment",
+    "profile:changed",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:generated-parity",
+    "profile:package",
+    "profile:security",
+    "profile:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues"
+  ],
+  "content_proof_refs": [
+    "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+    "refs/codewiki/archive/task/TASK-003"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+      "refs/codewiki/archive/task/TASK-003"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure",
+      "package",
+      "security"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:package or profile:package",
+      "audit:security or profile:security"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+    "head_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "validated_sha": "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+    "tree_sha": "a8bbbe4107c74b1cf9b5a2f4950814c13378d365",
+    "archive_ref": "refs/codewiki/archive/task/TASK-003",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build, implementation validation report, clean graph state, audit pass evidence, and immutable commit/tree/archive proof.",
+    "role": "validator"
+  }
+}
