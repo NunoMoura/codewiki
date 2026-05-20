@@ -11,7 +11,7 @@ Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source
 | `codewiki_artifact_status` | `src/application/tools/artifact-status.ts` | Manage runtime artifact status. | Runtime coordination only; not roadmap truth. |
 | `codewiki_audit` | `src/application/tools/audit.ts` | Run deterministic audit profiles. | Read-only evidence; validation decides verdict. |
 | `codewiki_build` | `src/application/tools/build.ts` | Write compiler build handoffs. | Writes transient build artifacts and optional generated refresh. |
-| `codewiki_validation` | `src/application/tools/validation.ts` | Write validation reports. | Writes gateway reports; validators do not mutate source truth. |
+| `codewiki_validation` | `src/application/tools/validation.ts` | Preflight gateway metadata/risk or write validation reports. | `preflight_only=true` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
 | `codewiki_gc` | `src/application/tools/gc.ts` | Dry-run or purge eligible CodeWiki artifacts after archive proof. | Use post-commit only: tracked purge requires `archive_sha`/`tree_sha`, writes a restore ledger first, and records a separate GC deletion commit; runtime cleanup is limited to ignored session-boundary artifacts. |
 | `codewiki_task` | `src/application/tools/task.ts` | Mutate roadmap task truth and sprint metadata. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"` and `sprint` input. |
 | `codewiki_diff_table` | `src/application/tools/diff-table.ts` | Manage pending decision diff rows. | Pending semantic diff state only; accepted rows compile into decision builds. |

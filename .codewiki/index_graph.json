@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-20T04:16:40.021Z",
+  "generated_at": "2026-05-20T05:09:52.474Z",
   "nodes": [
     {
       "id": "doc:.codewiki/kb/lexicon.md",
@@ -202,14 +202,14 @@
       "kind": "code_path",
       "path": "skills",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src",
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/product/users/external-users.md",
@@ -262,21 +262,21 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application",
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:skills/codewiki",
       "kind": "code_path",
       "path": "skills/codewiki",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/agency.md",
@@ -291,7 +291,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/alignment-model.md",
@@ -313,7 +313,7 @@
       "kind": "code_path",
       "path": "src/application/builds.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application/gateway",
@@ -334,7 +334,7 @@
       "kind": "code_path",
       "path": "skills/codewiki-validation/SKILL.md",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/api.md",
@@ -349,7 +349,7 @@
       "kind": "code_path",
       "path": "src/domain",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/audits.md",
@@ -372,14 +372,14 @@
       "kind": "code_path",
       "path": "src/domain/shared/types.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/adapters/pi/schemas.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/schemas.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "doc:.codewiki/kb/system/change-lifecycle.md",
@@ -681,7 +681,7 @@
       "kind": "code_path",
       "path": "src/application/tools/validation.ts",
       "layer": "code",
-      "alignment_state": "aligned"
+      "alignment_state": "drift"
     },
     {
       "id": "code:src/application/tools/resume-context.ts",
@@ -5318,6 +5318,322 @@
       "default_hidden": true
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-003",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+          ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+          "codewiki_build tool",
+          "src/application/builds.ts",
+          "src/application/tools/validation.ts",
+          "src/domain/shared/types.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/index.ts",
+          "skills/codewiki-validation/SKILL.md",
+          "skills/codewiki-validation/references/tools.md",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/index_graph.json",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "TASK-003"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:generated-parity",
+          "profile:package",
+          "profile:security",
+          "profile:changed",
+          "profile:task",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+          "tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
+          "tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
+          "tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
+          "src/application/builds.ts@sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
+          "src/application/tools/validation.ts@sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
+          "src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
+          "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
+          "src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
+          "skills/codewiki-validation/SKILL.md@sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
+          "skills/codewiki-validation/references/tools.md@sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
+          "skills/codewiki/references/tool-catalog.md@sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
+          ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
+          ".codewiki/kb/system/change-lifecycle.md@sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
+          "refs/codewiki/archive/task/TASK-003",
+          "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89"
+        ],
+        "validation_attestation_refs": []
+      }
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:src/application/tools/validation.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/application/tools/validation.ts",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "source:tests/smoke/validation-preflight.test.mjs",
+      "kind": "canonical_source_ref",
+      "path": "tests/smoke/validation-preflight.test.mjs",
+      "layer": "source",
+      "default_hidden": true
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
+      "kind": "content_proof",
+      "path": "tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
+      "kind": "content_proof",
+      "path": "tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/builds.ts@sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
+      "kind": "content_proof",
+      "path": "src/application/builds.ts@sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/application/tools/validation.ts@sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
+      "kind": "content_proof",
+      "path": "src/application/tools/validation.ts@sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
+      "kind": "content_proof",
+      "path": "src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:skills/codewiki-validation/SKILL.md@sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
+      "kind": "content_proof",
+      "path": "skills/codewiki-validation/SKILL.md@sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:skills/codewiki-validation/references/tools.md@sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
+      "kind": "content_proof",
+      "path": "skills/codewiki-validation/references/tools.md@sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:skills/codewiki/references/tool-catalog.md@sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
+      "kind": "content_proof",
+      "path": "skills/codewiki/references/tool-catalog.md@sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/change-lifecycle.md@sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/change-lifecycle.md@sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+      "kind": "content_proof",
+      "path": "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "claim:CLAIM-126",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-126",
+      "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+      "agent_name": "Otter",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+      "expires_at": "2026-05-20T06:49:39.718Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+        "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+        "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-003"
+        },
+        {
+          "layer": "code",
+          "path": "src/application/builds.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/application/tools/validation.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/domain/shared/types.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/adapters/pi/schemas.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/adapters/pi/index.ts"
+        },
+        {
+          "layer": "source",
+          "path": "tests/smoke/validation-preflight.test.mjs"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/validation-gateway.md"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/change-lifecycle.md"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        },
+        {
+          "layer": "validation",
+          "path": ".codewiki/validation/**"
+        }
+      ]
+    },
+    {
+      "id": "claim_scope:TASK-003",
+      "kind": "change_claim_scope",
+      "path": "TASK-003"
+    },
+    {
+      "id": "claim_scope:src/application/builds.ts",
+      "kind": "change_claim_scope",
+      "path": "src/application/builds.ts"
+    },
+    {
+      "id": "claim_scope:src/application/tools/validation.ts",
+      "kind": "change_claim_scope",
+      "path": "src/application/tools/validation.ts"
+    },
+    {
+      "id": "claim_scope:src/domain/shared/types.ts",
+      "kind": "change_claim_scope",
+      "path": "src/domain/shared/types.ts"
+    },
+    {
+      "id": "claim_scope:src/adapters/pi/schemas.ts",
+      "kind": "change_claim_scope",
+      "path": "src/adapters/pi/schemas.ts"
+    },
+    {
+      "id": "claim_scope:src/adapters/pi/index.ts",
+      "kind": "change_claim_scope",
+      "path": "src/adapters/pi/index.ts"
+    },
+    {
+      "id": "claim_scope:tests/smoke/validation-preflight.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/validation-preflight.test.mjs"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/validation-gateway.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/validation-gateway.md"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/change-lifecycle.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/change-lifecycle.md"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**"
+    },
+    {
+      "id": "claim_scope:.codewiki/validation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/validation/**"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -6128,6 +6444,59 @@
       "id": "content_proof:sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
       "kind": "content_proof",
       "path": "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "base_sha": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+        "working_tree_digest": "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh validation consumed CodeWiki implementation build, task/spec/source refs, tests/check outputs, and deterministic dirty-tree digest rather than builder chat proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "profile:alignment",
+          "profile:changed",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:generated-parity",
+          "profile:package",
+          "profile:security",
+          "profile:task",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass"
+        ],
+        "content_proof_refs": [
+          "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc"
+        ]
+      }
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass",
+      "layer": "audit",
+      "default_hidden": true
+    },
+    {
+      "id": "content_proof:sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
+      "kind": "content_proof",
+      "path": "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true
@@ -13449,6 +13818,335 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:src/application/builds.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:src/application/tools/validation.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:src/domain/shared/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:src/adapters/pi/schemas.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:src/adapters/pi/index.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:skills/codewiki-validation/SKILL.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:skills/codewiki-validation/references/tools.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:skills/codewiki/references/tool-catalog.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:.codewiki/kb/system/validation-gateway.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:.codewiki/kb/system/change-lifecycle.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:.codewiki/index_graph.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:tests/smoke/validation-preflight.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:tests/smoke/loop-isolation-policy.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:tests/smoke/builds.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "source:TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json@sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:src/application/builds.ts@sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:src/application/tools/validation.ts@sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:skills/codewiki-validation/SKILL.md@sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:skills/codewiki-validation/references/tools.md@sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:skills/codewiki/references/tool-catalog.md@sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:.codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:.codewiki/kb/system/change-lifecycle.md@sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "content_proof:sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "task:TASK-003"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-003",
+      "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-126",
+      "to": "task:TASK-003"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:TASK-003"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:src/application/builds.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:src/application/tools/validation.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:src/domain/shared/types.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:src/adapters/pi/schemas.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:src/adapters/pi/index.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:tests/smoke/validation-preflight.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:.codewiki/kb/system/validation-gateway.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:.codewiki/kb/system/change-lifecycle.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-126",
+      "to": "claim_scope:.codewiki/validation/**"
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -14410,6 +15108,89 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "audit:codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "content_proof:sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+      "to": "task:TASK-003"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-20-task-close-block-task-002.json",
       "to": "source:.codewiki/validation/2026-05-20-implementation-pass-task-002.json",
       "default_hidden": true
@@ -15035,28 +15816,710 @@
         "tests/**",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "skills/codewiki-validation/SKILL.md",
+        "skills/codewiki-validation/references/tools.md",
+        "skills/codewiki/references/tool-catalog.md",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/application/builds.ts",
+        "src/application/tools/validation.ts",
+        "src/domain/shared/types.ts",
+        "tests/smoke/loop-isolation-policy.test.mjs"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-126",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-003",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+          "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-126",
+          "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+          "agent_name": "Otter",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+          "task_id": "TASK-003",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+            "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+            "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-003"
+            },
+            {
+              "layer": "code",
+              "path": "src/application/builds.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/application/tools/validation.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/domain/shared/types.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/adapters/pi/schemas.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/adapters/pi/index.ts"
+            },
+            {
+              "layer": "source",
+              "path": "tests/smoke/validation-preflight.test.mjs"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/validation-gateway.md"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/change-lifecycle.md"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            }
+          ],
+          "created_at": "2026-05-20T04:49:39Z",
+          "updated_at": "2026-05-20T04:49:39Z",
+          "expires_at": "2026-05-20T06:49:39.718Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/change-lifecycle.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/validation-gateway.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/index.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/schemas.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/application/builds.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/application/tools/validation.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/domain/shared/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-003"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "tests/smoke/validation-preflight.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/change-lifecycle.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/validation-gateway.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/index.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/schemas.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/application/builds.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/application/tools/validation.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/domain/shared/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-003"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "tests/smoke/validation-preflight.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-126",
+              "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "agent_name": "Otter",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-003",
+              "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+              "expires_at": "2026-05-20T06:49:39.718Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -15291,6 +16754,23 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+          "task_id": "TASK-003",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "base_sha": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-20-task-close-block-task-002.json",
           "task_id": "TASK-002",
           "verdict": "block",
@@ -15398,6 +16878,7 @@
         ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
         ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
         ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+        ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -15504,6 +16985,7 @@
         "src/application/tools/claim.ts (deleted)",
         "src/application/tools/resume-context.ts",
         "src/application/tools/session-handoff.ts",
+        "src/application/tools/validation.ts",
         "src/application/worktree-isolation.ts",
         "src/domain/roadmap/task-boundary.ts",
         "src/domain/roadmap/task-id.ts",
@@ -15529,6 +17011,7 @@
         "tests/smoke/roadmap-task-boundary.test.mjs",
         "tests/smoke/role-worktree-isolation.test.mjs",
         "tests/smoke/session-handoff.test.mjs",
+        "tests/smoke/validation-preflight.test.mjs",
         "tests/tasks/TASK-001/**",
         "tests/tasks/TASK-002/**",
         "tests/tasks/TASK-003/**",
@@ -15568,6 +17051,8 @@
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
         "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002 => pass, 0 issues",
+        "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json",
+        "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass",
         "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
@@ -15636,6 +17121,7 @@
         ".codewiki/kb/system/api.md@sha256:f38089257656cf915de3db2eb1a5f7d81fff57d7ab560c7af76ce833c30563f8",
         ".codewiki/kb/system/builds.md@sha256:a67637d39b1d18109945b6e89fb4b72602157596ace232f27511f21476d2104f",
         ".codewiki/kb/system/builds.md@sha256:cd303da1e6d65973ec5358c421db985a3286d5fc1452fe08e63d9bffc157fd53",
+        ".codewiki/kb/system/change-lifecycle.md@sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
         ".codewiki/kb/system/change-lifecycle.md@sha256:4f22e3a85fc3438268deccdc98da88e07ed02a32d6b5de5d3f5dc4c609ff4ffc",
         ".codewiki/kb/system/change-lifecycle.md@sha256:5a5c1d5fdbeaa4fe034dfb5668c627fac353f9e67c730c1d43a6d1755e6a3308",
         ".codewiki/kb/system/change-lifecycle.md@sha256:ee18e82ef2bcf451a56d81b710dfa009d25078931a5b404468c8db05dbd39af9",
@@ -15651,6 +17137,7 @@
         ".codewiki/kb/system/overview.md@sha256:6fbe39e9ae86ce97b55205c849bb563563aa29d05dc9d111e6b96e3c1965712e",
         ".codewiki/kb/system/validation-gateway.md@sha256:26df5f8efa9404d2927ff04e0479bf413b22cc0886fd2d163ff479f97d974608",
         ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
+        ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
         ".codewiki/kb/system/worktree-isolation.md@sha256:40ad0551c5c63369fdb0dbee291ee2f28226c64332d571881553fd62627b1bd9",
         "23535a3b871eb528b3857868b758fe5a7041734c",
         "301e7f5373522d6371bee8be22af818132f02937",
@@ -15687,6 +17174,7 @@
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
         "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
         "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
+        "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
         "sha256:90920af7b47c41e2daaa91135431a3e533cf6f569f6b098f3cd9fbf531a2b545",
         "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
         "sha256:a686ba16a6e4fe2dd91b2791ac04b24cc9434a6514cdf057308774e7dc935de3",
@@ -15695,6 +17183,7 @@
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
+        "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
         "sha256:edb95c5f2d33018999956cee776cd66455025d9a66e6351b47258d477f78d9c3",
         "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
         "sha256:f5760f9cdd89be57c6b87048e569c23f39bb48a998c79a35892813a7f4771b13",
@@ -15713,7 +17202,9 @@
         "skills/codewiki-implementation/references/tools.md@sha256:3836861a84ae6b65d9322453ef5f072d34740511a8171c51a9b009a0e2301eaa",
         "skills/codewiki-planning/SKILL.md@sha256:b2750da57c593d30100a51504b7762efa33b6acda9d1a158d5cde8c8efd77010",
         "skills/codewiki-planning/references/tools.md@sha256:646a0a299bd09f161bf452093502d4b303c974ddff4bb1dbe2b110d20404349b",
+        "skills/codewiki-validation/SKILL.md@sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
         "skills/codewiki-validation/SKILL.md@sha256:ca70dd3edabcb1331c8e12454feac23444ca83806e4c5bec8657ffc00c8d37ef",
+        "skills/codewiki-validation/references/tools.md@sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
         "skills/codewiki-validation/references/tools.md@sha256:4d83b7b521d4348a79962888d9a21548402e71920dc473c5776e14e05015035e",
         "skills/codewiki/SKILL.md@sha256:4a08a5b0da06c0ab3d8395d71518150fb94eae95c6b23f1dbd6f085871bc6093",
         "skills/codewiki/SKILL.md@sha256:4ae6b26c25a96b128eb2db685cb0761dee6688d10ccbc710a3859cc10f3c135f",
@@ -15725,6 +17216,7 @@
         "skills/codewiki/references/tool-catalog.md@sha256:28df92392c2c0d455f53e7eea552a299198996a238684910786f8b27005cee97",
         "skills/codewiki/references/tool-catalog.md@sha256:4d02139072bc9871588d45a7aae5a8a91fbf2dd88edf450b53cee09d5a99153b",
         "skills/codewiki/references/tool-catalog.md@sha256:6762d067d814937f1a7add41744ea8dacd02ad785a238317c7ce1b3099735316",
+        "skills/codewiki/references/tool-catalog.md@sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
         "skills/codewiki/references/tool-catalog.md@sha256:ede945d677e2c5cfd0d6cad96f1bc067cb73d6ec2e9dcda9dd693b688be9ea48",
         "src/adapters/pi/artifact-wake.ts@sha256:3f8b95bc45fb65e6985a4cd8c05ff97bd0a3d6b15ecce8d710022b58f2201a3b",
         "src/adapters/pi/artifact-wake.ts@sha256:42ec1ca1ab1e7ba4d233ddc409694a3540e0f8ab3a8d9178c2969c657812c1ed",
@@ -15738,6 +17230,7 @@
         "src/adapters/pi/index.ts@sha256:686003b93a889c4cb987dc302dce98c169daadac091184f539a6014e98762ef2",
         "src/adapters/pi/index.ts@sha256:94a765d32bb4710ff4c57ccb979893561ea1b22efa9ff36bece6475a1f4e84a9",
         "src/adapters/pi/index.ts@sha256:9cfdd389e0c9af4ac30627d637a5cd4a95e3fe61f8629c2d4a33565d80bc56e6",
+        "src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
         "src/adapters/pi/index.ts@sha256:fd0cbde9be061dd0e5aea4e11a1048e5367f14327321cb002dc1eee87beb65b9",
         "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
         "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
@@ -15746,6 +17239,7 @@
         "src/adapters/pi/schemas.ts@sha256:7031ad084c9a0c816dcc656151e147bc7e7fd37ed3370cf965cc5cffe79c384d",
         "src/adapters/pi/schemas.ts@sha256:a239609a9f8c88a73d96395e7045b84e4240e0c89e1a8dc47dca554642c788bb",
         "src/adapters/pi/schemas.ts@sha256:bd6c340c0e68ad170a909e38b40a2c5ca5ab76448e2cff55670122e9339ad4f8",
+        "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
         "src/adapters/pi/schemas.ts@sha256:e547b61e4193245d7b139d93bf0fd0b00d5583a5da58ecf53e28afc9faa254eb",
         "src/adapters/pi/schemas.ts@sha256:ef7392c1904a8f0d1451be448dbe6d840430a7581c96e5e75fc1a06807399239",
         "src/adapters/pi/tools/artifact-status.ts@sha256:7c813761f54b5ffe0dbeb11cd3ff61dd9eaef3d34f6bfb49fbe87116263d382f",
@@ -15764,6 +17258,7 @@
         "src/application/builds.ts@sha256:1cb7994bae8faf89bc4863594f108818126df25a5a1a3161d15405ce61b36f5e",
         "src/application/builds.ts@sha256:2749dd82cefe8188a5a521b9d7ba7d2e696dac3118a68c115c32796c3d5db98b",
         "src/application/builds.ts@sha256:8860529f90e40d7cd1d45dc5aa6a1ad74635d088ae6fd2811bc814cc881e9c99",
+        "src/application/builds.ts@sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
         "src/application/claims.ts@sha256:7ca1bd63672cf58c2ae0f112963f66b7a822080a236eb254d562ae393e8b09ad",
         "src/application/claims.ts@sha256:9a5c4778fe61a83447c028371210d90dfae35dce15ffee1d8b6b0eceec0f3ee8",
         "src/application/claims.ts@sha256:d4696eac0f9bc6cfc5376f50c7a8921891151acf4ed4d32f3f8e94c017a1fed5",
@@ -15793,6 +17288,7 @@
         "src/application/tools/session-handoff.ts@sha256:7bca21feb5baadec1f318a6299ffcdd04cea06a0cac29e60eb99998008568e7d",
         "src/application/tools/session-handoff.ts@sha256:8b493063c8c1ad1263e235824ba5835680e5c98ef7b4aee2a2c35f1267aa8699",
         "src/application/tools/session-handoff.ts@sha256:930e6cef41773cff1e1572982dd7844a3352f9f9f9ba2239e4c826c380091eda",
+        "src/application/tools/validation.ts@sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
         "src/application/worktree-isolation.ts@sha256:8a41958d7390591c9849ce5b04332d0f458097281be045c6870b46e280972f03",
         "src/domain/roadmap/task-boundary.ts@sha256:e976f37938ca3cb860d9b95ddd7b22b79fcf906a44c43f4a14b48c1d4b8859ef",
         "src/domain/roadmap/task-id.ts@sha256:9ece66c86939071d0e8edf15048c4b73e2581cd7f25f7cbbd8bd7b6f1c2cd2e3",
@@ -15800,6 +17296,7 @@
         "src/domain/shared/types.ts@sha256:10ea71e6ff93e53229bfc3cf543a5d47ffb684c00cfe59d640ebe33cd64a9767",
         "src/domain/shared/types.ts@sha256:1cba41a526a4e0fb59452de9d477e4acdb767e06af0e2933f2e8924773a8ff4a",
         "src/domain/shared/types.ts@sha256:30842ecebcb9ad0345cc115dcdb26e73f5452cd28f90a7e0dcfbc379ae98311c",
+        "src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
         "src/domain/shared/types.ts@sha256:de6738a6d8484bb34c1fa171977b19040b6cdb92ceb6eda7aa794c32ff38334b",
         "src/domain/shared/types.ts@sha256:eabbba4143659a1377ef32b2462e105a9ef0d8aebc8cb2057879d872f4f7a94a",
         "src/domain/shared/types.ts@sha256:f601428b243f6c98e3e19a6ce7e3da48f87b7279782c9a7c72729027239ab35a",
@@ -15818,6 +17315,7 @@
         "tests/smoke/efficiency-ui.test.mjs@sha256:828ab2c0564f8fa45f3cacd7c3b0e25a86e7d88aa3039b1b49fdc7df74bc92c1",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:01f60f962bdddad06d3f212bd8e8b8282e1f8973adf631fc7621d26ae0549136",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:297a28f608ccb8162d7dab7c35c76afbc5bf86050c31cbee2c1a549c4c8744fe",
+        "tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:d8a52584f372fafabd5d8e1630b68b37181bc76ae34e009e58ef1b9ae8c016e3",
         "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
         "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
@@ -15839,6 +17337,7 @@
         "tests/smoke/session-handoff.test.mjs@sha256:a949410bb4c9f98d079e253f665295795bbe8e023e8059e3680a37bdd0378b1e",
         "tests/smoke/session-handoff.test.mjs@sha256:e960d9cdd5a13faa842f34c3841bb1d641f8ddeaaeefe5d69461d9ca0f6314fd",
         "tests/smoke/session-handoff.test.mjs@sha256:f68c7a0d86fa1de1d9672446be441471b0d0b3f69723920f0888f2df02cd33e4",
+        "tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4"
       ],
       "validation_attestations": [
@@ -16180,6 +17679,32 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-003",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "profile:alignment",
+            "profile:changed",
+            "profile:stale-reference",
+            "profile:file-structure",
+            "profile:generated-parity",
+            "profile:package",
+            "profile:security",
+            "profile:task",
+            "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json; alignment/stale-reference/file-structure/generated-parity/package/security/task pass"
+          ],
+          "content_proof_refs": [
+            "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-20-task-close-block-task-002.json",
           "verdict": "block",
           "profile": "task-close",
@@ -16280,7 +17805,179 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/builds.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/application/tools/validation.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -16450,7 +18147,9 @@
             ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
           ],
           "validation_paths": [],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-126"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -16478,7 +18177,8 @@
             ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
             ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
             ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -16491,6 +18191,7 @@
             ".codewiki/validation/2026-05-19-task-close-pass-task-006.json",
             ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
             ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+            ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
             ".codewiki/validation/2026-05-20-task-close-pass-task-001.json",
             ".codewiki/validation/2026-05-20-task-close-pass-task-002.json"
           ]
@@ -16517,7 +18218,8 @@
             ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
             ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
             ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
           ]
         },
         "purgeable": {
@@ -16724,10 +18426,20 @@
           "digest": "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
           "restore_command": "/wiki-restore TASK-001",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-003",
+          "build_path": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-003",
+          "commit_sha": "",
+          "digest": "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+          "restore_command": "/wiki-restore TASK-003",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 19,
+        "ledger_count": 20,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -16747,7 +18459,8 @@
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-002",
           "refs/codewiki/archive/task/TASK-001",
-          "refs/codewiki/archive/task/TASK-001"
+          "refs/codewiki/archive/task/TASK-001",
+          "refs/codewiki/archive/task/TASK-003"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -16768,7 +18481,8 @@
           ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
           ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
           ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-          ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+          ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -16788,7 +18502,8 @@
           ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
           ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
           ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-          ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+          ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -16858,13 +18573,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-20T04:16:40.004Z",
+      "generated_at": "2026-05-20T05:09:52.446Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-20T04:16:40Z",
+      "generated_at": "2026-05-20T05:09:52Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -17020,7 +18735,7 @@
             "src/application/tools/resume-context.ts",
             "skills/codewiki-validation/SKILL.md"
           ],
-          "updated": "2026-05-19T22:27:35Z",
+          "updated": "2026-05-20T05:09:52Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -17086,7 +18801,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-20T04:16:40Z",
+      "generated_at": "2026-05-20T05:09:52Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -17208,7 +18923,9 @@
               ".codewiki/builds/implementation/2026-05-19-task-003-agent-internal-session-handoff.json"
             ],
             "validation_paths": [],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-126"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -17236,7 +18953,8 @@
               ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
               ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
               ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -17249,6 +18967,7 @@
               ".codewiki/validation/2026-05-19-task-close-pass-task-006.json",
               ".codewiki/validation/2026-05-20-implementation-pass-task-001.json",
               ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
+              ".codewiki/validation/2026-05-20-implementation-pass-task-003.json",
               ".codewiki/validation/2026-05-20-task-close-pass-task-001.json",
               ".codewiki/validation/2026-05-20-task-close-pass-task-002.json"
             ]
@@ -17275,7 +18994,8 @@
               ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
               ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
               ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json"
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
             ]
           },
           "purgeable": {
@@ -17293,7 +19013,7 @@
       },
       "direction": [
         "TASK-004 is open implementation delta below knowledge.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "Tracked drift coverage: 3/3."
@@ -17327,7 +19047,7 @@
             "title": "Add validation preflight and risk-tier policy"
           },
           "revision": {
-            "digest": "3685b3384af93cbfde3d161b5c75500cd0fb2b58f0c212ca305ba10bd50b96d8",
+            "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
             "basis": "source_content"
           },
           "note": "tracked by TASK-003"
@@ -17390,7 +19110,7 @@
             "title": "Add validation preflight and risk-tier policy"
           },
           "revision": {
-            "digest": "b928b3b98c4e2760684bd068bd72a69b17fa3657ded5966ace718d6355dc9ddf",
+            "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
             "basis": "source_content"
           },
           "note": "tracked by TASK-003"
@@ -18157,7 +19877,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-20T04:16:40Z",
+        "generated_at": "2026-05-20T05:09:52Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -18185,12 +19905,26 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T04:16:40Z",
+            "checked_at": "2026-05-20T05:09:52Z",
             "revision": {
               "git": {
-                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/application/builds.ts",
+                  "src/application/tools/validation.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -18274,17 +20008,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
-              "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
-              "code_digest": "817379a19fd0f94305ed8bc7908597269f3ab0db4da60048a34b360595903994",
-              "digest": "12307da9f33fbad48c5730d07b67343b2fabea4a7a0b93f479d439e3f944b558"
+              "spec_digest": "907e51ffd4a8701600773641195c94984f34bc42cf18fda72cf26b4a4785efa4",
+              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
+              "code_digest": "2408be7d921aed18ebbaf007040cd99fe160ef33dbbacf384de91a6db776e21b",
+              "digest": "bdc186e78090aef0430714a9860b9e2c03ee4d2a6765e025bbe63dd77e70b1ee"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:40Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:09:52Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18409,12 +20143,26 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-20T04:16:40Z",
+            "checked_at": "2026-05-20T05:09:52Z",
             "revision": {
               "git": {
-                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/application/builds.ts",
+                  "src/application/tools/validation.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -18477,17 +20225,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "0fc8caaf5af7dfc89b19ee8eb48acba94aff941030a924f79bf7c8af91df7e8f",
-              "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
-              "code_digest": "684aae2777ba0a07fde9822bb9c88526dd920efa9cf8fb467b65e61f9917b789",
-              "digest": "533c2cb952ddb78b69377ba12986cd970dd0d786d2da406c2687f3cc318bf5f5"
+              "spec_digest": "0d84f1646efda275a39d68384f5f020fc4d6f8272f01dd5ec6aacfe001150b15",
+              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
+              "code_digest": "0bcc341056194c4f9d1acfa82adcf3b3af922c98dadb08f2876fb695091bb588",
+              "digest": "241bb6c669a1ef2fb55380f5d89d72b270f03e33f05e816bf41a4da06a96f102"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:40Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:09:52Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/change-lifecycle.md",
@@ -18591,12 +20339,26 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-20T04:16:40Z",
+            "checked_at": "2026-05-20T05:09:52Z",
             "revision": {
               "git": {
-                "head": "6d956293b2e4762c3ad577e907f2a50773804cb4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "900e6b3eeb737715cd996e2cdfdc1f8b4e4eab8f",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-003/context.json",
+                  ".codewiki/roadmap/tasks/TASK-003/task.json",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/application/builds.ts",
+                  "src/application/tools/validation.ts",
+                  "src/domain/shared/types.ts"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -18680,17 +20442,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "640a3214dc5aa6440d47a7ea7f73572bba4fe5ba614cf47d7db026d51b666368",
-              "task_digest": "7149af2be481a7cc96e9cc59a2445c81977c356cfe7f76f745db5a86d81610d9",
-              "code_digest": "817379a19fd0f94305ed8bc7908597269f3ab0db4da60048a34b360595903994",
-              "digest": "12307da9f33fbad48c5730d07b67343b2fabea4a7a0b93f479d439e3f944b558"
+              "spec_digest": "907e51ffd4a8701600773641195c94984f34bc42cf18fda72cf26b4a4785efa4",
+              "task_digest": "4f2ffe8fb993bacd22b7e4b0ece7bc98dfa70e0438fdb4c2ac665ac76d619c09",
+              "code_digest": "2408be7d921aed18ebbaf007040cd99fe160ef33dbbacf384de91a6db776e21b",
+              "digest": "bdc186e78090aef0430714a9860b9e2c03ee4d2a6765e025bbe63dd77e70b1ee"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-20T04:16:40Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-20T05:09:52Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -18816,21 +20578,384 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-20T04:16:40Z",
+        "generated_at": "2026-05-20T05:09:52Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-126",
+            "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+            "agent_name": "Otter",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+            "task_id": "TASK-003",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+              "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-003"
+              },
+              {
+                "layer": "code",
+                "path": "src/application/builds.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/application/tools/validation.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/domain/shared/types.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/adapters/pi/schemas.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/adapters/pi/index.ts"
+              },
+              {
+                "layer": "source",
+                "path": "tests/smoke/validation-preflight.test.mjs"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/validation-gateway.md"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/change-lifecycle.md"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              }
+            ],
+            "created_at": "2026-05-20T04:49:39Z",
+            "updated_at": "2026-05-20T04:49:39Z",
+            "expires_at": "2026-05-20T06:49:39.718Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/change-lifecycle.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/validation-gateway.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/adapters/pi/index.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/adapters/pi/schemas.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/application/builds.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/application/tools/validation.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/domain/shared/types.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-003"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "source",
+              "path": "tests/smoke/validation-preflight.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-126",
+                "session_id": "019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                "agent_name": "Otter",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-003",
+                "summary": "Implement validation preflight and risk-tier policy for TASK-003.",
+                "expires_at": "2026-05-20T06:49:39.718Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "branch": "codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5",
+                  "notes": "factory=role-worktree; task=TASK-003; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-126 release or validated publisher/patch ref for codewiki/TASK-003/builder/019e3f00-09e4-7517-b37b-a918bfcf40c5; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -18867,7 +20992,7 @@
               "title": "Add validation preflight and risk-tier policy"
             },
             "revision": {
-              "digest": "3685b3384af93cbfde3d161b5c75500cd0fb2b58f0c212ca305ba10bd50b96d8",
+              "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
               "basis": "source_content"
             },
             "note": "tracked by TASK-003"
@@ -18930,7 +21055,7 @@
               "title": "Add validation preflight and risk-tier policy"
             },
             "revision": {
-              "digest": "b928b3b98c4e2760684bd068bd72a69b17fa3657ded5966ace718d6355dc9ddf",
+              "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
               "basis": "source_content"
             },
             "note": "tracked by TASK-003"
@@ -20076,7 +22201,7 @@
                   "title": "Add validation preflight and risk-tier policy"
                 },
                 "revision": {
-                  "digest": "3685b3384af93cbfde3d161b5c75500cd0fb2b58f0c212ca305ba10bd50b96d8",
+                  "digest": "03d0e963eef54c6b95280668b04012f577b59c38df1d9c076d0449d36a879db5",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-003"
@@ -20139,7 +22264,7 @@
                   "title": "Add validation preflight and risk-tier policy"
                 },
                 "revision": {
-                  "digest": "b928b3b98c4e2760684bd068bd72a69b17fa3657ded5966ace718d6355dc9ddf",
+                  "digest": "bf8f110a2e455172f104a1fbff4b3c04e8601fa528f1c4e0c9a44d984404ba67",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-003"

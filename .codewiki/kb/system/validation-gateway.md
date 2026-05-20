@@ -16,32 +16,20 @@ code_paths:
 
 ## Responsibility
 
-The validation gateway has one job: validate a submitted cycle build against its policy, source refs, exit criteria, and evidence. It returns `pass`, `fail`, or `block`. Gateway behavior is exposed through the validation tool and focused application modules such as `src/application/builds.ts` and `src/application/gateway/**`; it stays separate from compiler-loop instructions so independent validation does not collapse into build production.
+The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. It is exposed through the validation tool plus focused modules such as `src/application/builds.ts` and `src/application/gateway/**`, staying separate from compiler-loop build production.
 
-The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds. Commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence. For implementation builds, it also verifies commit-readiness: the build must contain enough data to create the task recovery commit after validation.
+The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds; commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence and, for implementation builds, verifies commit-readiness.
 
 ## Build validation contract
 
-A gateway run should receive:
+A gateway run should receive the build path/kind, policy profile, requirement ids, exit criteria, compiler source refs, evidence mapping, graph/state routing context, required audit outputs, checked content proof, mechanical check results, and fresh-context isolation data when policy requires them.
 
-- the build path and build kind,
-- the policy profile embedded in or selected for the build,
-- requirement ids and exit criteria,
-- source refs used by the compiler,
-- evidence mapping supplied by the compiler,
-- relevant graph/state routing context,
-- required audit profile outputs,
-- checked content proof such as working-tree digest, tree SHA, commit SHA, package digest, or archive ledger when policy requires it,
-- any required mechanical checks or fresh-context isolation data.
-
-The gateway inspects only enough source truth to decide. It may recommend routing after fail/block; the next compiler cycle owns the revised build.
+The gateway inspects only enough source truth to decide. It may recommend routing after fail/block; the next compiler cycle owns any revised build.
 
 ## Gate points
 
 Validation can run at:
 
-- decision build handoff,
-- decision build handoff,
 - decision build handoff,
 - planning build handoff,
 - implementation build handoff,
@@ -55,6 +43,20 @@ Validation can run at:
 ## Handoff policy
 
 Fresh context is for independence or context health. Decision may stay in-session; agents may run new_session/context_refresh when chat is noisy. Implementation validation, task-close, publication, publish, and release require fresh/content proof. Artifact wakes are not validation handoffs. Missing boundaries block or record fallback.
+
+## Gateway preflight and risk tiers
+
+Before an expensive fresh validation handoff, deterministic preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/publication blockers, and risk approval gaps without writing a report.
+
+Risk tiers:
+
+- `mechanical-docs`: generated, runtime, mechanical, or docs-only cleanup; low-risk fast path when audits and content proof are complete.
+- `code-local`: localized code/test work with accepted task context; no extra user approval beyond accepted semantics.
+- `semantic-system`: product, system, or task semantics; requires accepted decision/planning evidence before promotion.
+- `security-migration-publication`: security policy, migrations, publication, release, remote updates, or breaking API work; requires explicit user approval evidence.
+- `destructive`: destructive or irreversible operations; requires explicit user approval evidence and cannot be promoted by gateway validation alone.
+
+Low-risk fast paths do not bypass validation. High-risk tiers escalate before lower-layer promotion.
 
 ## Alignment checks
 
@@ -110,19 +112,11 @@ A failed or blocked verdict should name the failed criteria or missing context. 
 
 ## Persistence policy
 
-Passing validation does not need a separate durable report by default when the accepted build records the validation result and required content proof. A validation result is an attestation, not content proof by itself.
+Passing validation does not need a durable report by default when the accepted build records the result and required content proof. A validation result is an attestation, not content proof.
 
-Persist validation reports when:
+Persist reports for `fail`, `block`, policy-required storage, release/audit mode, publication, or remote-update current records. Hot reports live under `.codewiki/validation/**`; pass reports stay hot only while active work, publication, or audit policy needs them. Fail, block, and policy-kept reports remain hot until resolved or archived by policy.
 
-- verdict is `fail`,
-- verdict is `block`,
-- policy requires storage,
-- release/audit mode requires storage,
-- publication or remote update policy requires an explicit current record.
-
-Persistent hot reports live under `.codewiki/validation/**`. Pass reports are hot only while active work, active publication, or audit policy needs them. After safe Git archival/publication, pass reports should be evicted from the working tree and recovered from Git only through explicit archive/restore/audit requests. Fail, block, and policy-kept reports remain hot until resolved or explicitly archived by policy.
-
-Tracked validation reports are safe to purge only after a reachable archive commit contains them and the GC step writes restore evidence for the exact removed paths. The GC ledger is a restoration index, not a validation substitute; current task-close, publication, fail, block, audit-required, and policy-kept reports remain hot until their own lifecycle permits archival.
+Tracked reports are safe to purge only after a reachable archive commit contains them and GC writes restore evidence for exact removed paths. The GC ledger restores files; it does not replace validation or content proof.
 
 ## Rules
 

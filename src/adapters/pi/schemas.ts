@@ -617,6 +617,10 @@ export const codewikiValidationReportSchema = Type.Object({
 	failed_criteria: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	blocking_questions: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	isolation: Type.Optional(validationIsolationSchema),
+	preflight_only: Type.Optional(Type.Boolean({
+		default: false,
+		description: "Return gateway preflight without writing a validation report.",
+	})),
 	refresh: Type.Optional(Type.Boolean({ default: true })),
 });
 export const codewikiDiffTableToolInputSchema = Type.Object({

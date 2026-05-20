@@ -356,9 +356,13 @@ function validationCommitReadinessGaps(project: WikiProject, input: CodewikiVali
 	const taskId = String(build.task_id || build.task?.id || "").trim();
 	if (build.kind !== "implementation_build") gaps.push("source_kind=implementation_build");
 	if (!taskId) gaps.push("task_id");
+	const exemption = normalizeTraceabilityExemption(build?.traceability?.exemption ?? build?.traceability?.change_class ?? build?.change_class);
+	const requiresPlanning = build?.traceability?.requires_accepted_build ?? isSemanticTraceability(build?.traceability?.semantic, exemption);
 	const planningRefs = buildRefsByKind(build, "planning");
-	if (planningRefs.length === 0) gaps.push("source_planning_build");
-	else gaps.push(...acceptedBuildRefGaps(project, planningRefs, "accepted_planning_build_ref"));
+	if (requiresPlanning) {
+		if (planningRefs.length === 0) gaps.push("source_planning_build");
+		else gaps.push(...acceptedBuildRefGaps(project, planningRefs, "accepted_planning_build_ref"));
+	}
 	gaps.push(...semanticTraceabilityGaps(project, build));
 	if (!Array.isArray(build.acceptance_mapping) || build.acceptance_mapping.length === 0) gaps.push("acceptance_mapping");
 	const codeRefs = unique([...trimList(build.code_files), ...trimList(build.produces?.code)]);
@@ -407,6 +411,223 @@ function validationSemanticTraceability(project: WikiProject, input: CodewikiVal
 	if (!isAcceptedBuildData(build)) gaps.push("source_implementation_build_accepted");
 	gaps.push(...semanticTraceabilityGaps(project, build));
 	return { gaps: unique(gaps), warnings: [] };
+}
+
+const VALIDATION_TASK_ID_PROFILES = new Set(["implementation", "task-close", "publication", "publish", "release"]);
+const IMMUTABLE_VALIDATION_PROFILES = new Set(["task-close", "publication", "publish", "release"]);
+const HIGH_RISK_VALIDATION_TIERS = new Set(["semantic-system", "security-migration-publication", "destructive"]);
+
+type ValidationPreflightSource = { source: string; build?: any; stale_refs: string[] };
+
+function readValidationPreflightSource(project: WikiProject, input: CodewikiValidationReportInput): ValidationPreflightSource {
+	const source = (input.source ?? "").trim();
+	if (!source) return { source, stale_refs: [] };
+	const normalized = normalizeBuildPath(source);
+	const absPath = resolve(project.root, normalized);
+	if (!existsSync(absPath)) return { source, stale_refs: [`source:${source}:missing`] };
+	const result = readBuildRef(project, source);
+	if (!result.ok) return { source, stale_refs: [`source:${source}:${result.reason}`] };
+	return { source, build: result.data, stale_refs: [] };
+}
+
+function repoRefMissing(project: WikiProject, ref: string): boolean {
+	const normalized = normalizeRepoPath(ref);
+	if (!normalized || !normalized.includes("/")) return false;
+	if (!normalized.startsWith(".codewiki/") && !normalized.startsWith("src/") && !normalized.startsWith("tests/") && !normalized.startsWith("skills/")) return false;
+	return !existsSync(resolve(project.root, normalized));
+}
+
+function validationStaleRefs(project: WikiProject, input: CodewikiValidationReportInput, source: ValidationPreflightSource): string[] {
+	return unique([
+		...source.stale_refs,
+		...trimList(input.audit_reports).filter((ref) => repoRefMissing(project, ref)).map((ref) => `audit_report:${ref}:missing`),
+	]);
+}
+
+function validationTaskIdGaps(input: CodewikiValidationReportInput, build: any, profile: string): string[] {
+	const normalizedProfile = profile.trim().toLowerCase();
+	if (!VALIDATION_TASK_ID_PROFILES.has(normalizedProfile)) return [];
+	const inputTaskId = String(input.task_id || "").trim();
+	const buildTaskId = String(build?.task_id || build?.task?.id || "").trim();
+	const gaps: string[] = [];
+	if (!inputTaskId && !buildTaskId) gaps.push("task_id");
+	if (inputTaskId && buildTaskId && inputTaskId !== buildTaskId) gaps.push("source_task_id_mismatch");
+	return gaps;
+}
+
+function validationUpstreamBuildGaps(project: WikiProject, input: CodewikiValidationReportInput, build: any, profile: string): string[] {
+	const normalizedProfile = profile.trim().toLowerCase();
+	const gaps: string[] = [];
+	if (!build) {
+		if (["implementation", "task-close", "publication", "publish", "release"].includes(normalizedProfile) && !(input.source ?? "").trim()) gaps.push("source_implementation_build");
+		return gaps;
+	}
+	const kind = String(build.kind || "").trim();
+	if (kind === "implementation_build") {
+		const exemption = normalizeTraceabilityExemption(build?.traceability?.exemption ?? build?.traceability?.change_class ?? build?.change_class);
+		const requiresPlanning = build?.traceability?.requires_accepted_build ?? isSemanticTraceability(build?.traceability?.semantic, exemption);
+		const planningRefs = buildRefsByKind(build, "planning");
+		if (requiresPlanning) {
+			if (planningRefs.length === 0) gaps.push("source_planning_build");
+			else gaps.push(...acceptedBuildRefGaps(project, planningRefs, "accepted_planning_build_ref"));
+		}
+		gaps.push(...semanticTraceabilityGaps(project, build));
+	} else if (kind === "planning_build") {
+		const decisionRefs = buildRefsByKind(build, "decision");
+		if (decisionRefs.length === 0) gaps.push("source_decision_build");
+		else gaps.push(...acceptedBuildRefGaps(project, decisionRefs, "accepted_decision_build_ref"));
+	}
+	return unique(gaps);
+}
+
+function validationPathRefs(build: any): string[] {
+	return unique([
+		...trimList(build?.knowledge_changes),
+		...trimList(build?.roadmap_changes),
+		...trimList(build?.code_files),
+		...trimList(build?.test_files),
+		...trimList(build?.produces?.knowledge),
+		...trimList(build?.produces?.roadmap),
+		...trimList(build?.produces?.code),
+		...trimList(build?.produces?.tests),
+		...trimList(build?.produces?.publication),
+	]);
+}
+
+function isDocsOrMechanicalRef(ref: string): boolean {
+	const normalized = normalizeRepoPath(ref);
+	return normalized.startsWith(".codewiki/kb/") || normalized.endsWith(".md") || normalized.endsWith(".mdx") || normalized.endsWith(".rst") || normalized.endsWith(".adoc") || normalized.endsWith(".txt");
+}
+
+function classifyValidationRisk(input: CodewikiValidationReportInput, build: any) {
+	const profile = input.profile.trim().toLowerCase();
+	const policyProfile = String(input.policy_profile || "").trim().toLowerCase();
+	const exemption = normalizeTraceabilityExemption(build?.traceability?.exemption ?? build?.traceability?.change_class ?? build?.change_class);
+	const changeType = normalizeChangeType(build?.traceability?.change_type ?? build?.change_type ?? build?.traceability?.change_class ?? build?.change_class, "code");
+	const semantic = isSemanticTraceability(build?.traceability?.semantic, exemption);
+	const pathRefs = validationPathRefs(build);
+	const docsOnly = pathRefs.length > 0 && pathRefs.every(isDocsOrMechanicalRef);
+	const haystack = [
+		profile,
+		policyProfile,
+		input.source,
+		...(input.checks ?? []),
+		...(input.audit_refs ?? []),
+		...(input.audit_reports ?? []),
+		build?.summary,
+		build?.change_type,
+		build?.change_class,
+		build?.traceability?.change_type,
+		build?.traceability?.exemption,
+		...pathRefs,
+	].map((value) => String(value || "").toLowerCase()).join(" ");
+	let tier = "code-local";
+	let reason = "Code-local change; gateway audits and content proof still required.";
+	if (/\b(destructive|irreversible|drop\s+table|delete\s+all|rm\s+-rf|force[- ]push|wipe|destroy)\b/.test(haystack)) {
+		tier = "destructive";
+		reason = "Destructive or irreversible wording requires explicit user approval before promotion.";
+	} else if (["publication", "publish", "release"].includes(profile) || /\b(security|migration|publication|publish|release|secret|credential|remote|breaking[- ]api)\b/.test(haystack)) {
+		tier = "security-migration-publication";
+		reason = "Security, migration, publication, or release work requires explicit user approval before promotion.";
+	} else if (exemption || docsOnly || /\b(mechanical|generated|runtime|docs[- ]cleanup|documentation[- ]cleanup)\b/.test(haystack)) {
+		tier = "mechanical-docs";
+		reason = "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.";
+	} else if (semantic && ["product", "system", "task"].includes(String(changeType))) {
+		tier = "semantic-system";
+		reason = "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.";
+	}
+	const approvalRequired = HIGH_RISK_VALIDATION_TIERS.has(tier);
+	return { tier, reason, approval_required: approvalRequired };
+}
+
+function validationApprovalEvidence(input: CodewikiValidationReportInput, build: any, tier: string): string[] {
+	const refs = trimList([...(input.audit_refs ?? []), ...(input.audit_reports ?? []), ...(input.checks ?? [])]);
+	const explicit = refs.filter((ref) => /\b(approval:user|user[-_ ]approval|explicit[-_ ]approval|approved[-_ ]by[-_ ]user|semantic[-_ ]approval)\b/i.test(ref));
+	if (explicit.length > 0) return unique(explicit);
+	if (tier === "semantic-system") {
+		const acceptedRefs = trimList(build?.traceability?.accepted_build_refs);
+		if (acceptedRefs.length > 0) return acceptedRefs.map((ref) => `accepted_semantics:${ref}`);
+		const rows = trimList(build?.approved_diff_rows);
+		if (rows.length > 0) return rows.map((row) => `approved_diff_row:${row}`);
+	}
+	return [];
+}
+
+function validationPreflightIssue(kind: string, severity: "high" | "medium" | "low", items: string[], summary: string) {
+	return items.length ? [{ kind, severity, summary, evidence: items }] : [];
+}
+
+export function buildValidationPreflight(project: WikiProject, input: CodewikiValidationReportInput) {
+	const profile = input.profile.trim();
+	const policyProfile = (input.policy_profile ?? input.profile ?? "").trim() || undefined;
+	const source = readValidationPreflightSource(project, input);
+	const isolation = normalizeValidationIsolation(input.isolation);
+	const isolationReq = validationIsolationRequirement(profile, policyProfile);
+	const isolationGaps = validationIsolationGaps(isolation, isolationReq);
+	const publisherGaps = validationPublisherResultGaps(isolation, isolationReq);
+	const auditReq = auditRequirement(profile, policyProfile, input.required_audits);
+	const auditGaps = auditEvidenceGaps([...unique(trimList(input.audit_refs)), ...unique(trimList(input.audit_reports))], auditReq).map((auditProfile) => `audit:${auditProfile}`);
+	const taskIdGaps = validationTaskIdGaps(input, source.build, profile);
+	const upstreamGaps = validationUpstreamBuildGaps(project, input, source.build, profile);
+	const staleRefs = validationStaleRefs(project, input, source);
+	const closePublicationBlockers = unique([
+		...publisherGaps.map((gap) => `publisher_result:${gap}`),
+		...(IMMUTABLE_VALIDATION_PROFILES.has(profile.toLowerCase()) && isolation?.clean !== true ? ["clean=true"] : []),
+		...(["publication", "publish", "release"].includes(profile.toLowerCase()) && source.build?.publication?.push_readiness?.safe_to_push === false ? ["publication_safe_to_push"] : []),
+	]);
+	const risk = classifyValidationRisk(input, source.build);
+	const approvalEvidence = validationApprovalEvidence(input, source.build, risk.tier);
+	const approvalMissing = risk.approval_required && approvalEvidence.length === 0 ? [`user_approval:${risk.tier}`] : [];
+	const blockingGaps = unique([...upstreamGaps, ...auditGaps, ...taskIdGaps, ...isolationGaps, ...staleRefs, ...closePublicationBlockers]);
+	const status = blockingGaps.length > 0 ? "blocked" : approvalMissing.length > 0 ? "escalate" : "ready";
+	const lowRiskFastPathCandidate = ["mechanical-docs", "code-local"].includes(risk.tier);
+	const missing = {
+		upstream_builds: upstreamGaps,
+		audit_evidence: auditGaps,
+		task_ids: taskIdGaps,
+		content_proof: isolationGaps,
+		stale_refs: staleRefs,
+		close_publication_blockers: closePublicationBlockers,
+		user_approval: approvalMissing,
+	};
+	const issues = [
+		...validationPreflightIssue("upstream-builds", "high", upstreamGaps, "Missing accepted upstream build evidence."),
+		...validationPreflightIssue("audit-evidence", "high", auditGaps, "Missing required audit evidence."),
+		...validationPreflightIssue("task-id", "high", taskIdGaps, "Missing or inconsistent task id evidence."),
+		...validationPreflightIssue("content-proof", "high", isolationGaps, "Missing required content proof strategy."),
+		...validationPreflightIssue("stale-refs", "medium", staleRefs, "Source or report references are missing or unreadable."),
+		...validationPreflightIssue("close-publication-blockers", "high", closePublicationBlockers, "Task-close/publication blockers must clear before validation can pass."),
+		...validationPreflightIssue("risk-approval", "high", approvalMissing, "Risk tier requires explicit user approval before lower-layer promotion."),
+	];
+	return {
+		version: 1,
+		status,
+		profile,
+		task_id: input.task_id || source.build?.task_id || source.build?.task?.id || undefined,
+		checks: [
+			"source refs readable",
+			"accepted upstream builds",
+			"required audit evidence",
+			"task id consistency",
+			"content proof strategy",
+			"close/publication blockers",
+			"risk-tier approval policy",
+		],
+		missing,
+		issues,
+		risk: {
+			...risk,
+			approval_evidence: approvalEvidence,
+			approval_missing: approvalMissing,
+			fast_path: {
+				candidate: lowRiskFastPathCandidate,
+				eligible: lowRiskFastPathCandidate && status === "ready",
+				reason: lowRiskFastPathCandidate
+					? "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+					: "High-risk work must cite approval evidence before lower-layer promotion.",
+			},
+		},
+	};
 }
 
 function trimRefGroups(input?: CodewikiBuildRefsInput): CodewikiBuildRefsInput {
@@ -1158,12 +1379,19 @@ export async function writeValidationReport(
 	const auditReports = unique(trimList(input.audit_reports));
 	const auditReq = auditRequirement(profile, policyProfile, input.required_audits);
 	const auditGaps = input.verdict === "pass" ? auditEvidenceGaps([...auditRefs, ...auditReports], auditReq) : [];
+	const preflight = buildValidationPreflight(project, input);
+	const riskApprovalGaps = input.verdict === "pass" ? preflight.missing.user_approval : [];
+	const publicationReadinessGaps = input.verdict === "pass"
+		? preflight.missing.close_publication_blockers.filter((gap) => gap === "publication_safe_to_push")
+		: [];
 	const policyGaps = unique([
 		...isolationGaps,
 		...publisherResultGaps.map((gap) => `publisher_result:${gap}`),
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
 		...auditGaps.map((profileName) => `audit:${profileName}`),
+		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
+		...publicationReadinessGaps.map((gap) => `publication_readiness:${gap}`),
 	]);
 	const policyBlocked = policyGaps.length > 0;
 	const verdict = policyBlocked ? "block" : input.verdict;
@@ -1184,6 +1412,12 @@ export async function writeValidationReport(
 	const auditIssue = auditGaps.length > 0
 		? [{ severity: "high", summary: `Missing required audit evidence for profiles: ${auditGaps.join(", ")}.` }]
 		: [];
+	const riskApprovalIssue = riskApprovalGaps.length > 0
+		? [{ severity: "high", summary: `Risk tier ${preflight.risk.tier} requires user approval before promotion: ${riskApprovalGaps.join(", ")}.` }]
+		: [];
+	const publicationReadinessIssue = publicationReadinessGaps.length > 0
+		? [{ severity: "high", summary: `Publication readiness blockers remain: ${publicationReadinessGaps.join(", ")}.` }]
+		: [];
 	const traceabilityIssue = traceabilityPolicy.gaps.length > 0
 		? [{ severity: "high", summary: `Missing accepted semantic build traceability: ${traceabilityPolicy.gaps.join(", ")}.` }]
 		: traceabilityPolicy.warnings.map((summary) => ({ severity: "medium", summary }));
@@ -1199,7 +1433,7 @@ export async function writeValidationReport(
 			? `${input.rationale.trim()} Policy blocks ${profile} validation until ${policyGaps.join(", ")} are recorded.`
 			: input.rationale.trim(),
 		checks: (input.checks ?? []).map((v) => v.trim()).filter(Boolean),
-		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...auditIssue],
+		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...auditIssue, ...riskApprovalIssue, ...publicationReadinessIssue],
 		source: (input.source ?? "").trim() || undefined,
 		policy_profile: policyProfile,
 		required_audits: auditReq.profiles,
@@ -1213,6 +1447,8 @@ export async function writeValidationReport(
 			...(commitReadinessGaps.length > 0 ? ["commit_readiness"] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["semantic_build_traceability"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
+			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
+			...(publicationReadinessGaps.length > 0 ? ["publication_readiness"] : []),
 		]),
 		blocking_questions: unique([
 			...trimList(input.blocking_questions),
@@ -1221,6 +1457,8 @@ export async function writeValidationReport(
 			...(commitReadinessGaps.length > 0 ? ["Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["Cite an accepted upstream compiler build chain for semantic changes or set a generated/runtime/mechanical traceability exemption when policy allows."] : []),
 			...(auditGaps.length > 0 ? [`Run or cite audit evidence for required profiles: ${auditGaps.join(", ")}.`] : []),
+			...(riskApprovalGaps.length > 0 ? [`Record explicit user approval for risk tier ${preflight.risk.tier} before lower-layer promotion.`] : []),
+			...(publicationReadinessGaps.length > 0 ? ["Record publication readiness evidence such as safe_to_push=true with passing secret and remote visibility checks before publication validation can pass."] : []),
 		]),
 		isolation_requirement: requirement,
 		publisher_result_requirement: requirement.mode === "fresh-context-clean-immutable-content"
@@ -1235,6 +1473,7 @@ export async function writeValidationReport(
 			...auditReq,
 			gaps: auditGaps,
 		},
+		preflight,
 		commit_readiness_requirement: profile.trim().toLowerCase() === "implementation"
 			? {
 				required: true,

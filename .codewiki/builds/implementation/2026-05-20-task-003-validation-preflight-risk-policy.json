@@ -1,0 +1,693 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-20T05:08:03Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+  "task_id": "TASK-003",
+  "task": {
+    "id": "TASK-003",
+    "title": "Add validation preflight and risk-tier policy",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Add gateway preflight and risk-tier policy so low-risk mechanical/docs cleanup avoids late metadata blocks while high-risk work escalates to user semantic approval.",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/change-lifecycle.md"
+    ],
+    "code_paths": [
+      "src/application/gateway",
+      "src/application/tools/validation.ts",
+      "src/application/tools/resume-context.ts",
+      "skills/codewiki-validation/SKILL.md"
+    ],
+    "goal": {
+      "outcome": "Gateways can preflight required metadata/audits/proof before expensive validation and apply risk-tiered user escalation policy.",
+      "acceptance": [
+        "Preflight reports missing upstream builds, audit evidence, task ids, content proof strategy, stale refs, and close/publication blockers before fresh validation handoff.",
+        "Risk tiers distinguish mechanical/docs cleanup, code-local, semantic-system, security/migration/publication, and destructive changes.",
+        "Low-risk fast path remains gateway-validated and records why user approval is not required beyond accepted semantics.",
+        "High-risk categories escalate to user approval before lower-layer promotion."
+      ],
+      "non_goals": [
+        "Do not weaken implementation/task-close/publication content-proof requirements.",
+        "Do not bypass fresh validation where policy requires independence.",
+        "Do not consolidate public tool surface in this task."
+      ],
+      "verification": [
+        "Add gateway/preflight tests for missing metadata, fast path eligibility, and escalation categories.",
+        "Run validation smoke tests and CodeWiki audits."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-03T05:08:03.000Z",
+    "purge_after": "2026-06-17T05:08:03.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:generated-parity",
+    "profile:package",
+    "profile:security",
+    "profile:changed",
+    "profile:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => warning only changed/generated-file-changed .codewiki/index_graph.json"
+  ],
+  "agent_assessment": "",
+  "summary": "Implement TASK-003 validation preflight and risk-tier policy.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-003"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/application/builds.ts",
+      "src/application/tools/validation.ts",
+      "src/domain/shared/types.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/index.ts",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md",
+      "skills/codewiki/references/tool-catalog.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/index_graph.json"
+    ],
+    "tests": [
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-003"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/change-lifecycle.md"
+    ],
+    "code_paths": [
+      "src/application/gateway",
+      "src/application/tools/validation.ts",
+      "src/application/tools/resume-context.ts",
+      "skills/codewiki-validation/SKILL.md"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/builds.test.mjs"
+  ],
+  "code_files": [
+    "src/application/builds.ts",
+    "src/application/tools/validation.ts",
+    "src/domain/shared/types.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/index.ts",
+    "skills/codewiki-validation/SKILL.md",
+    "skills/codewiki-validation/references/tools.md",
+    "skills/codewiki/references/tool-catalog.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/change-lifecycle.md",
+    ".codewiki/index_graph.json"
+  ],
+  "files_changed": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "src/application/builds.ts",
+    "src/application/tools/validation.ts",
+    "src/domain/shared/types.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/index.ts",
+    "skills/codewiki-validation/SKILL.md",
+    "skills/codewiki-validation/references/tools.md",
+    "skills/codewiki/references/tool-catalog.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/change-lifecycle.md",
+    ".codewiki/index_graph.json"
+  ],
+  "checks_run": [
+    "npm run typecheck — pass",
+    "node ./tests/smoke/validation-preflight.test.mjs — pass",
+    "node ./tests/smoke/loop-isolation-policy.test.mjs — pass",
+    "node ./tests/smoke/builds.test.mjs — pass",
+    "npm test — pass (21 feature/smoke/package checks)",
+    "git diff --check — pass",
+    "CodewikiRebuilder.rebuildAll() — pass",
+    "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+      "roadmap_task_id": "TASK-003",
+      "test_files": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/smoke/builds.test.mjs"
+      ],
+      "evidence": [
+        "TDD coverage added in tests/smoke/validation-preflight.test.mjs for missing metadata, stale source refs, mechanical fast path eligibility, publication approval escalation, approval pass, and destructive escalation.",
+        "Existing loop-isolation and builds smoke tests were rerun to guard validation report behavior and immutable proof policy."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+      "roadmap_task_id": "TASK-003",
+      "code_files": [
+        "src/application/builds.ts",
+        "src/application/tools/validation.ts",
+        "src/domain/shared/types.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/index.ts",
+        "skills/codewiki-validation/SKILL.md",
+        "skills/codewiki-validation/references/tools.md",
+        "skills/codewiki/references/tool-catalog.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/index_graph.json"
+      ],
+      "evidence": [
+        "src/application/builds.ts exports buildValidationPreflight(), embeds preflight data in validation reports, enforces high-risk approval and publication readiness policy, and preserves mechanical exemption from source_planning_build commit-readiness gaps.",
+        "src/application/tools/validation.ts supports preflight_only read-only execution without writing reports or rebuilding state.",
+        "src/adapters/pi/schemas.ts and src/adapters/pi/index.ts expose preflight_only and updated validation guidance.",
+        "skills/codewiki-validation/** and .codewiki/kb/system/* document preflight/risk-tier rules."
+      ],
+      "notes": [
+        "Scope limited to TASK-003 validation preflight/risk policy and linked docs/skills/tests.",
+        "Validation-gateway docs were trimmed while adding preflight policy so graph health stays green.",
+        "Final audit warning is expected for changed generated graph output before commit/publication proof."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TDD coverage added in tests/smoke/validation-preflight.test.mjs for missing metadata, stale source refs, mechanical fast path eligibility, publication approval escalation, approval pass, and destructive escalation.",
+    "Existing loop-isolation and builds smoke tests were rerun to guard validation report behavior and immutable proof policy."
+  ],
+  "code_change_evidence": [
+    "src/application/builds.ts exports buildValidationPreflight(), embeds preflight data in validation reports, enforces high-risk approval and publication readiness policy, and preserves mechanical exemption from source_planning_build commit-readiness gaps.",
+    "src/application/tools/validation.ts supports preflight_only read-only execution without writing reports or rebuilding state.",
+    "src/adapters/pi/schemas.ts and src/adapters/pi/index.ts expose preflight_only and updated validation guidance.",
+    "skills/codewiki-validation/** and .codewiki/kb/system/* document preflight/risk-tier rules."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Preflight reports missing upstream builds, audit evidence, task ids, content proof strategy, stale refs, and close/publication blockers before fresh validation handoff.",
+      "evidence": "Added buildValidationPreflight() in src/application/builds.ts plus preflight_only path in src/application/tools/validation.ts and adapter schema. Smoke tests assert missing audit/content/stale source metadata, publication readiness blockers, and no-report preflight behavior via direct preflight API."
+    },
+    {
+      "criterion": "Risk tiers distinguish mechanical/docs cleanup, code-local, semantic-system, security/migration/publication, and destructive changes.",
+      "evidence": "classifyValidationRisk() distinguishes mechanical-docs, code-local, semantic-system, security-migration-publication, and destructive tiers; validation-preflight smoke asserts mechanical, semantic-system, publication, and destructive paths."
+    },
+    {
+      "criterion": "Low-risk fast path remains gateway-validated and records why user approval is not required beyond accepted semantics.",
+      "evidence": "Mechanical/docs preflight sets fast_path candidate/eligible only after audits and content proof are complete, and writeValidationReport passes mechanical validation with normal audit/isolation proof."
+    },
+    {
+      "criterion": "High-risk categories escalate to user approval before lower-layer promotion.",
+      "evidence": "writeValidationReport now blocks pass verdicts lacking risk approval for high-risk tiers; publication smoke asserts missing approval blocks and approval:user passes with clean immutable proof."
+    },
+    {
+      "criterion": "Do not weaken implementation/task-close/publication content-proof requirements.",
+      "evidence": "Existing isolation/commit-readiness requirements remain; publication readiness safe_to_push is enforced for publication profiles, and loop-isolation/builds smoke tests still pass."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue roadmap with TASK-003: Add validation preflight and risk-tier policy.",
+    "implemented_changes": [
+      "Added deterministic validation preflight with missing metadata/proof/ref/readiness reports.",
+      "Added risk-tier classification and approval gating for semantic-system, security/migration/publication, and destructive work.",
+      "Added read-only preflight_only validation tool path and adapter schema/guidance.",
+      "Added smoke coverage for missing metadata, low-risk fast path, high-risk escalation, and publication approval policy.",
+      "Updated validation gateway knowledge and validation skill docs, and rebuilt generated graph."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md"
+      ],
+      "roadmap": [
+        ".codewiki/index_graph.json"
+      ],
+      "code": [
+        "src/application/builds.ts",
+        "src/application/tools/validation.ts",
+        "src/domain/shared/types.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/index.ts",
+        "skills/codewiki-validation/SKILL.md",
+        "skills/codewiki-validation/references/tools.md",
+        "skills/codewiki/references/tool-catalog.md"
+      ],
+      "tests": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "Preflight reports required missing metadata/proof/ref/readiness categories in tests/smoke/validation-preflight.test.mjs.",
+      "Risk tiers and approval gates covered by tests/smoke/validation-preflight.test.mjs.",
+      "Existing validation proof constraints covered by tests/smoke/loop-isolation-policy.test.mjs and tests/smoke/builds.test.mjs.",
+      "Full npm test passes."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node ./tests/smoke/validation-preflight.test.mjs",
+      "node ./tests/smoke/loop-isolation-policy.test.mjs",
+      "node ./tests/smoke/builds.test.mjs",
+      "npm test",
+      "git diff --check",
+      "CodewikiRebuilder.rebuildAll()",
+      "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003"
+    ],
+    "non_goals_preserved": [
+      "Did not weaken implementation/task-close/publication content-proof requirements.",
+      "Did not bypass fresh validation where policy requires independence.",
+      "Did not consolidate public tool surface; reused existing codewiki_validation with preflight_only."
+    ],
+    "remaining_risks": [
+      "preflight_only live tool availability requires package reload after source update."
+    ]
+  },
+  "risks": [
+    "Risk tier heuristics are deterministic string/path/profile classification; future tasks may refine source-owned policy tables if needed.",
+    "preflight_only is added to source schema; current running harness may need reload after package update to expose it as a live tool parameter."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-003",
+      "task_id": "TASK-003",
+      "next_focus_task_id": "TASK-004",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-003",
+        "title": "Add validation preflight and risk-tier policy",
+        "summary": "Implement TASK-003 validation preflight and risk-tier policy.",
+        "spec_paths": [
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md"
+        ],
+        "code_paths": [
+          "src/application/gateway",
+          "src/application/tools/validation.ts",
+          "src/application/tools/resume-context.ts",
+          "skills/codewiki-validation/SKILL.md",
+          "src/application/builds.ts",
+          "src/domain/shared/types.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/index.ts",
+          "skills/codewiki-validation/references/tools.md",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/index_graph.json"
+        ],
+        "acceptance": [
+          "Preflight reports missing upstream builds, audit evidence, task ids, content proof strategy, stale refs, and close/publication blockers before fresh validation handoff.",
+          "Risk tiers distinguish mechanical/docs cleanup, code-local, semantic-system, security/migration/publication, and destructive changes.",
+          "Low-risk fast path remains gateway-validated and records why user approval is not required beyond accepted semantics.",
+          "High-risk categories escalate to user approval before lower-layer promotion."
+        ],
+        "verification": [
+          "Add gateway/preflight tests for missing metadata, fast path eligibility, and escalation categories.",
+          "Run validation smoke tests and CodeWiki audits."
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+        "checks_run": [
+          "npm run typecheck — pass",
+          "node ./tests/smoke/validation-preflight.test.mjs — pass",
+          "node ./tests/smoke/loop-isolation-policy.test.mjs — pass",
+          "node ./tests/smoke/builds.test.mjs — pass",
+          "npm test — pass (21 feature/smoke/package checks)",
+          "git diff --check — pass",
+          "CodewikiRebuilder.rebuildAll() — pass",
+          "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass"
+        ],
+        "test_design_evidence": [
+          "TDD coverage added in tests/smoke/validation-preflight.test.mjs for missing metadata, stale source refs, mechanical fast path eligibility, publication approval escalation, approval pass, and destructive escalation.",
+          "Existing loop-isolation and builds smoke tests were rerun to guard validation report behavior and immutable proof policy."
+        ],
+        "code_change_evidence": [
+          "src/application/builds.ts exports buildValidationPreflight(), embeds preflight data in validation reports, enforces high-risk approval and publication readiness policy, and preserves mechanical exemption from source_planning_build commit-readiness gaps.",
+          "src/application/tools/validation.ts supports preflight_only read-only execution without writing reports or rebuilding state.",
+          "src/adapters/pi/schemas.ts and src/adapters/pi/index.ts expose preflight_only and updated validation guidance.",
+          "skills/codewiki-validation/** and .codewiki/kb/system/* document preflight/risk-tier rules."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-003",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-003",
+      "show_build": "git show refs/codewiki/archive/task/TASK-003:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        "src/application/gateway",
+        "src/application/tools/validation.ts",
+        "src/application/tools/resume-context.ts",
+        "skills/codewiki-validation/SKILL.md"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-003 Add validation preflight and risk-tier policy implementation evidence",
+      "body": "Implement TASK-003 validation preflight and risk-tier policy.\n\nChecks: npm run typecheck — pass, node ./tests/smoke/validation-preflight.test.mjs — pass, node ./tests/smoke/loop-isolation-policy.test.mjs — pass, node ./tests/smoke/builds.test.mjs — pass, npm test — pass (21 feature/smoke/package checks), git diff --check — pass, CodewikiRebuilder.rebuildAll() — pass, codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-003\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json\nCodeWiki-Checks: npm run typecheck — pass, node ./tests/smoke/validation-preflight.test.mjs — pass, node ./tests/smoke/loop-isolation-policy.test.mjs — pass, node ./tests/smoke/builds.test.mjs — pass, npm test — pass (21 feature/smoke/package checks), git diff --check — pass, CodewikiRebuilder.rebuildAll() — pass, codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-003\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-003\nCodeWiki-Digest: sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89\nCodeWiki-Restore: /wiki-restore TASK-003",
+      "trailers": [
+        "CodeWiki-Task: TASK-003",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+        "CodeWiki-Checks: npm run typecheck — pass, node ./tests/smoke/validation-preflight.test.mjs — pass, node ./tests/smoke/loop-isolation-policy.test.mjs — pass, node ./tests/smoke/builds.test.mjs — pass, npm test — pass (21 feature/smoke/package checks), git diff --check — pass, CodewikiRebuilder.rebuildAll() — pass, codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-003",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-003",
+        "CodeWiki-Digest: sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+        "CodeWiki-Restore: /wiki-restore TASK-003"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-003 Add validation preflight and risk-tier policy implementation evidence",
+      "body": "Implement TASK-003 validation preflight and risk-tier policy.\n\nChecks: npm run typecheck — pass, node ./tests/smoke/validation-preflight.test.mjs — pass, node ./tests/smoke/loop-isolation-policy.test.mjs — pass, node ./tests/smoke/builds.test.mjs — pass, npm test — pass (21 feature/smoke/package checks), git diff --check — pass, CodewikiRebuilder.rebuildAll() — pass, codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-003\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json\nCodeWiki-Checks: npm run typecheck — pass, node ./tests/smoke/validation-preflight.test.mjs — pass, node ./tests/smoke/loop-isolation-policy.test.mjs — pass, node ./tests/smoke/builds.test.mjs — pass, npm test — pass (21 feature/smoke/package checks), git diff --check — pass, CodewikiRebuilder.rebuildAll() — pass, codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-003\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-003\nCodeWiki-Digest: sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89\nCodeWiki-Restore: /wiki-restore TASK-003"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-003",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-003"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-003",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-003",
+        "show_build": "git show refs/codewiki/archive/task/TASK-003:.codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          "src/application/gateway",
+          "src/application/tools/validation.ts",
+          "src/application/tools/resume-context.ts",
+          "skills/codewiki-validation/SKILL.md"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-003",
+      "build_path": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-003",
+      "commit_sha": "",
+      "digest": "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+      "restore_command": "/wiki-restore TASK-003"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:12a635545b4d3819cb241f3b269b4c64a335b9887d848ef0c79a3afe49b8afcd",
+          "bytes": 13653
+        },
+        {
+          "path": "tests/smoke/validation-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
+          "bytes": 8287
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
+          "bytes": 14253
+        },
+        {
+          "path": "tests/smoke/builds.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
+          "bytes": 24300
+        },
+        {
+          "path": "src/application/builds.ts",
+          "role": "code_file",
+          "sha256": "sha256:c1af1bcf2c8c3e097f0205b853dc8146eb074d71678ae7f7a8591280581fb4c4",
+          "bytes": 70516
+        },
+        {
+          "path": "src/application/tools/validation.ts",
+          "role": "code_file",
+          "sha256": "sha256:a7fec998a85da6ff572d0d814a9a695ce58e78dc721e89fa193b55d3b50882d6",
+          "bytes": 784
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
+          "bytes": 34081
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
+          "bytes": 31419
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
+          "bytes": 15336
+        },
+        {
+          "path": "skills/codewiki-validation/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:c170647032dcc5eb1dabdbad8cfca68e90f40cabb12dec81ed86f1e9e301af36",
+          "bytes": 7250
+        },
+        {
+          "path": "skills/codewiki-validation/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:34213a14484217cd433f0ff71fb988d026412291274d084a2cd4a470877ad473",
+          "bytes": 5719
+        },
+        {
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "role": "code_file",
+          "sha256": "sha256:c127018ad6253f5e2dcd3782ce81814020b3e7382d864e91f97ea4e7ade8f003",
+          "bytes": 4266
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "role": "code_file",
+          "sha256": "sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
+          "bytes": 11661
+        },
+        {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "role": "code_file",
+          "sha256": "sha256:3a77c39b50782b2b2b50ddf827ac902799a484b1dbc6dce135b99b9c6b800ce8",
+          "bytes": 3478
+        }
+      ],
+      "skipped": [
+        {
+          "path": ".codewiki/index_graph.json",
+          "role": "code_file",
+          "reason": "too-large"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-003",
+      "source_build": ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/application/builds.ts",
+          "src/application/tools/validation.ts",
+          "src/domain/shared/types.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/index.ts",
+          "skills/codewiki-validation/SKILL.md",
+          "skills/codewiki-validation/references/tools.md",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/index_graph.json",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/builds.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-003",
+        "restore_command": "/wiki-restore TASK-003"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck — pass",
+        "node ./tests/smoke/validation-preflight.test.mjs — pass",
+        "node ./tests/smoke/loop-isolation-policy.test.mjs — pass",
+        "node ./tests/smoke/builds.test.mjs — pass",
+        "npm test — pass (21 feature/smoke/package checks)",
+        "git diff --check — pass",
+        "CodewikiRebuilder.rebuildAll() — pass",
+        "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 — warning only changed/generated-file-changed .codewiki/index_graph.json; all deterministic profiles pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

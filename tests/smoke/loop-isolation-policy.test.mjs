@@ -37,7 +37,7 @@ const project = {
 const fakeGitCache = { getDirtyPaths: () => [] };
 const implementationAuditRefs = ["audit:alignment", "audit:changed"];
 const taskCloseAuditRefs = ["audit:alignment", "audit:changed", "audit:task", "audit:generated-parity"];
-const publicationAuditRefs = ["audit:alignment", "audit:package", "audit:security"];
+const publicationAuditRefs = ["audit:alignment", "audit:package", "audit:security", "approval:user"];
 
 try {
 	const planning = await writePlanningBuild(project, {
@@ -71,6 +71,12 @@ try {
 			implemented_changes: ["Added policy enforcement."],
 			acceptance_evidence: ["Smoke test passes"],
 			checks: ["npm test"],
+		},
+		publication: {
+			safe_to_push: true,
+			secret_scan: "pass",
+			remote_visibility: "pass",
+			private_evidence: "pass",
 		},
 	});
 

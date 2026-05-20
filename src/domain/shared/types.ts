@@ -930,6 +930,7 @@ export interface CodewikiValidationReportInput {
 	failed_criteria?: string[];
 	blocking_questions?: string[];
 	isolation?: CodewikiValidationIsolationInput;
+	preflight_only?: boolean;
 	refresh?: boolean;
 }
 

@@ -1,11 +1,18 @@
 import type { CodewikiValidationReportInput, WikiProject } from "../../domain/shared/types.ts";
-import { writeValidationReport } from "../builds.ts";
+import { buildValidationPreflight, writeValidationReport } from "../builds.ts";
 import { runRebuild } from "../state-artifacts.ts";
 
 export async function executeCodewikiValidationTool(
 	project: WikiProject,
 	input: CodewikiValidationReportInput,
 ) {
+	if (input.preflight_only) {
+		const preflight = buildValidationPreflight(project, input);
+		return {
+			summary: `codewiki validation preflight: ${preflight.status} (${preflight.issues.length} issues)`,
+			result: { preflight },
+		};
+	}
 	const result = await writeValidationReport(project, input);
 	if (input.refresh ?? true) await runRebuild(project);
 	return {

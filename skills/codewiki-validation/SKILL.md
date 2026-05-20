@@ -21,6 +21,7 @@ For exact tool arguments and required fields, read `references/tools.md` when ne
 - Validate one profile and one submitted source/build at a time.
 - Use `codewiki_state` to locate graph/build/task/validation refs, then read canonical sources directly.
 - Use `codewiki_audit` for required deterministic evidence before a pass verdict.
+- Use `codewiki_validation preflight_only=true` before expensive fresh validation when metadata, risk, proof, or publication readiness may block late.
 - Use `codewiki_validation` to record pass/fail/block when policy requires a report, when verdict is not pass, or when publication/task-close/current validation needs durable proof.
 - Do not call compiler tools (`codewiki_build`, `codewiki_diff_table`) in validation mode.
 - Do not create/refine/close roadmap tasks in validation mode.
@@ -55,8 +56,9 @@ Read only enough source truth to decide:
    - Read submitted build/report/task/source refs directly.
    - Treat graph as routing context, not final truth.
 
-3. **Run/review audits**
+3. **Run/review audits and preflight**
    - Run `codewiki_audit` for required profiles or cite existing audit refs.
+   - Run `codewiki_validation preflight_only=true` when source/build metadata, task id, audit evidence, content proof, stale refs, close/publication blockers, or risk approval may block the pass.
    - A pass verdict must include required audit evidence when profile policy requires it.
 
 4. **Check vertical alignment**
@@ -70,10 +72,12 @@ Read only enough source truth to decide:
    - For planning, implementation, and task-close validation, block if a `TASK-###` is really an umbrella/container/sprint coordinator or mainly closes other tasks.
    - Block if shared paths indicate overlapping ownership without explicit dependency/split rationale.
 
-7. **Apply isolation/content-proof gate**
+7. **Apply isolation/content-proof and risk gates**
    - Implementation validation requires `fresh_context=true`, a clean-state value, required audits, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, etc.).
-   - Task-close/publication/publish/release require `fresh_context=true`, `clean=true`, and immutable committed/published/archive proof (`validated_sha`, `head_sha`, `tree_sha`, `package_digest`, `archive_ref`, `remote_ref`, etc.).
+   - Task-close/publication/publish/release require `fresh_context=true`, `clean=true`, immutable committed/published/archive proof (`validated_sha`, `head_sha`, `tree_sha`, `package_digest`, `archive_ref`, `remote_ref`, etc.), and publication readiness when publishing.
    - Working-tree digest alone can support dirty pre-commit implementation validation, not task-close/publication.
+   - Mechanical/docs and code-local changes can use the low-risk fast path only after normal gateway evidence is complete.
+   - Semantic-system changes must cite accepted decision/planning evidence; security, migration, publication, release, and destructive tiers require explicit user approval evidence before promotion.
    - Pre-commit tracked GC blocks close/publication readiness. Post-commit GC may be reviewed as hygiene only after archive commit/tree proof exists and must not erase the proof commit.
 
 8. **Record verdict**
