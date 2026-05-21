@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-21T06:07:27.503Z",
+  "generated_at": "2026-05-21T06:09:21.254Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -2861,7 +2861,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -3006,7 +3006,7 @@
       "kind": "code_path",
       "path": "package.json",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -9566,8 +9566,8 @@
       "status": "accepted",
       "layer": "build",
       "lifecycle_state": "accepted",
-      "alignment_state": "drift",
-      "compacted": false,
+      "alignment_state": "aligned",
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-009",
       "superseded_by": [],
@@ -9917,104 +9917,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "code:tests/setup-env.mjs",
-      "kind": "code_path",
-      "path": "tests/setup-env.mjs",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/builds.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/builds.test.mjs",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/*.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/*.test.mjs",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/setup-env.mjs",
-      "kind": "test_file",
-      "path": "tests/setup-env.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/alignment-drift-fixtures.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/audit-drift.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/audit-drift.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/audit.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/audit.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/control-room.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/control-room.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/diagram-refs.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/diagram-refs.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/drift-propagation.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/drift-propagation.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/efficiency-ui.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/efficiency-ui.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/graph-lenses.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/graph-lenses.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/hot-context.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/hot-context.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/hot-retention.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/hot-retention.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "test:tests/smoke/project-resolution.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/project-resolution.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "closure:TASK-009",
-      "kind": "closure_brief",
-      "path": "TASK-009"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
@@ -12147,6 +12049,74 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "verdict": "block",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+        "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+        "tree_sha": "5c522724fd98b2f796d16162b3e876b03b03beed",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh validation consumed committed implementation build, task context, audit evidence, and package/test checks.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:package",
+          "profile:security",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+        ],
+        "content_proof_refs": [
+          "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "5c522724fd98b2f796d16162b3e876b03b03beed"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:612de699a0763339ff35d0eb02889bd781d52ed5",
+      "kind": "content_proof",
+      "path": "612de699a0763339ff35d0eb02889bd781d52ed5",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:5c522724fd98b2f796d16162b3e876b03b03beed",
+      "kind": "content_proof",
+      "path": "5c522724fd98b2f796d16162b3e876b03b03beed",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-008.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
@@ -12185,6 +12155,48 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+        "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+        "tree_sha": "5c522724fd98b2f796d16162b3e876b03b03beed",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh validation consumed committed implementation build, task context, audit evidence, and package/test checks.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "profile:stale-reference",
+          "profile:file-structure",
+          "profile:package",
+          "profile:security",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+        ],
+        "content_proof_refs": [
+          "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "5c522724fd98b2f796d16162b3e876b03b03beed"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-21-task-close-block-task-008.json",
@@ -22683,161 +22695,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "build:.codewiki/roadmap/tasks/TASK-009/context.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "task:TASK-009"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "build:.codewiki/roadmap/tasks/TASK-009/context.json"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "source:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "build_produces_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "task:TASK-009"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "code:package.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "code:tests/setup-env.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "code:tests/smoke/builds.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "code:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "code:tests/smoke/*.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/setup-env.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/alignment-drift-fixtures.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/audit-drift.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/audit.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/builds.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/claim-wait-queue.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/control-room.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/diagram-refs.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/drift-propagation.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/efficiency-ui.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/graph-lenses.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/hot-context.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/hot-retention.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/loop-isolation-policy.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/project-resolution.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/role-worktree-isolation.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/validation-preflight.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "test:tests/smoke/*.test.mjs"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-      "to": "closure:TASK-009"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
       "to": "source:.codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
@@ -25167,6 +25024,83 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "content_proof:612de699a0763339ff35d0eb02889bd781d52ed5",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "content_proof:5c522724fd98b2f796d16162b3e876b03b03beed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-block-task-009.json",
+      "to": "task:TASK-009"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-008.json",
       "to": "source:.codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
       "default_hidden": true
@@ -25199,6 +25133,83 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-008.json",
       "to": "task:TASK-008"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:profile:security",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "content_proof:612de699a0763339ff35d0eb02889bd781d52ed5",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "content_proof:5c522724fd98b2f796d16162b3e876b03b03beed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+      "to": "task:TASK-009"
     },
     {
       "kind": "validation_attests_source",
@@ -25328,7 +25339,7 @@
               {
                 "id": "semantic_gaps",
                 "label": "semantic gaps",
-                "count": 4
+                "count": 0
               }
             ],
             "hot_refs": [],
@@ -25422,18 +25433,18 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "drift",
-            "item_count": 106,
+            "state": "aligned",
+            "item_count": 91,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 76
+                "count": 73
               },
               {
                 "id": "test_files",
                 "label": "test files",
-                "count": 30
+                "count": 18
               },
               {
                 "id": "implementation_builds",
@@ -25443,16 +25454,7 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 19,
-                "refs": [
-                  "package.json",
-                  "tests/smoke/alignment-drift-fixtures.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/builds.test.mjs",
-                  "tests/smoke/claim-wait-queue.test.mjs"
-                ],
-                "ref_count": 19
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -25479,22 +25481,22 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 29
+                "count": 31
               },
               {
                 "id": "fail_or_block_validation",
                 "label": "fail/block validation",
-                "count": 8
+                "count": 9
               },
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 76
+                "count": 77
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 339
+                "count": 341
               },
               {
                 "id": "traceability_gaps",
@@ -25514,15 +25516,15 @@
             "decision": 1,
             "planning": 8,
             "implementation": 24,
-            "hot": 1,
+            "hot": 0,
             "collapsed": 33
           },
           "validations": {
-            "total": 29,
-            "pass": 21,
-            "fail_or_block": 8,
-            "hot": 0,
-            "collapsed": 29
+            "total": 31,
+            "pass": 22,
+            "fail_or_block": 9,
+            "hot": 1,
+            "collapsed": 31
           }
         },
         "next_action": {
@@ -25543,287 +25545,8 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "package.json",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/audit-drift.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/audit.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/builds.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/claim-wait-queue.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/codewiki-compaction.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/control-room.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/diagram-refs.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/drift-propagation.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/efficiency-ui.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/graph-lenses.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/hot-context.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/hot-retention.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/loop-isolation-policy.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/package-smoke.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/project-resolution.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/role-worktree-isolation.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/validation-preflight.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-            ],
-            "gaps": []
-          }
-        ],
-        "semantic_change_gaps": [
-          {
-            "path": "tests/smoke/audit-drift.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/audit.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/hot-retention.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/project-resolution.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          }
-        ],
+        "semantic_change_rows": [],
+        "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -27564,6 +27287,31 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-21-implementation-block-task-009.json",
+            "verdict": "block",
+            "profile": "implementation",
+            "task_id": "TASK-009",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "profile:stale-reference",
+              "profile:file-structure",
+              "profile:package",
+              "profile:security",
+              "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+            ],
+            "content_proof_refs": [
+              "612de699a0763339ff35d0eb02889bd781d52ed5",
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -27578,6 +27326,31 @@
             ],
             "content_proof_refs": [
               "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-009",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "profile:stale-reference",
+              "profile:file-structure",
+              "profile:package",
+              "profile:security",
+              "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+            ],
+            "content_proof_refs": [
+              "612de699a0763339ff35d0eb02889bd781d52ed5",
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
             ],
             "isolation_status": "isolated"
           },
@@ -28080,6 +27853,27 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-05-21-implementation-block-task-009.json",
+            "task_id": "TASK-009",
+            "verdict": "block",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/home/nunoc/projects/codewiki",
+            "branch": "main",
+            "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "612de699a0763339ff35d0eb02889bd781d52ed5",
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
+            ],
+            "publisher_result_refs": [
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
             "task_id": "TASK-008",
             "verdict": "pass",
@@ -28092,6 +27886,27 @@
               "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56"
             ],
             "publisher_result_refs": []
+          },
+          {
+            "path": ".codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+            "task_id": "TASK-009",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/home/nunoc/projects/codewiki",
+            "branch": "main",
+            "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "612de699a0763339ff35d0eb02889bd781d52ed5",
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
+            ],
+            "publisher_result_refs": [
+              "5c522724fd98b2f796d16162b3e876b03b03beed"
+            ]
           },
           {
             "path": ".codewiki/validation/2026-05-21-task-close-block-task-008.json",
@@ -28164,6 +27979,7 @@
           "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
           "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
           "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
           "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
           "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002 => pass, 0 issues",
           "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
@@ -28282,6 +28098,8 @@
           "4c10b340cecee13d5f8446d6540153573c2d2df6",
           "4cd9a63dc1c78c4d3bda0e27dbfce8f136aae0df",
           "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
+          "5c522724fd98b2f796d16162b3e876b03b03beed",
+          "612de699a0763339ff35d0eb02889bd781d52ed5",
           "66ebf120f458f38aea2112301dd148de4cb7190b",
           "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -28551,73 +28369,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-            "source_id": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "build",
-            "to_layer": "validation",
-            "next_loop": "validation",
-            "task_id": "TASK-009",
-            "reason": "Accepted implementation build still needs passing validation gateway evidence."
-          },
-          {
-            "id": "reconcile:semantic-build:tests/smoke/audit-drift.test.mjs",
-            "source_id": "path:tests/smoke/audit-drift.test.mjs",
-            "state": "drift",
-            "direction": "upward",
-            "from_layer": "code",
-            "to_layer": "build",
-            "next_loop": "implementation",
-            "reason": "Semantic code change tests/smoke/audit-drift.test.mjs lacks accepted compiler build coverage.",
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ],
-            "change_type": "code"
-          },
-          {
-            "id": "reconcile:semantic-build:tests/smoke/audit.test.mjs",
-            "source_id": "path:tests/smoke/audit.test.mjs",
-            "state": "drift",
-            "direction": "upward",
-            "from_layer": "code",
-            "to_layer": "build",
-            "next_loop": "implementation",
-            "reason": "Semantic code change tests/smoke/audit.test.mjs lacks accepted compiler build coverage.",
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ],
-            "change_type": "code"
-          },
-          {
-            "id": "reconcile:semantic-build:tests/smoke/hot-retention.test.mjs",
-            "source_id": "path:tests/smoke/hot-retention.test.mjs",
-            "state": "drift",
-            "direction": "upward",
-            "from_layer": "code",
-            "to_layer": "build",
-            "next_loop": "implementation",
-            "reason": "Semantic code change tests/smoke/hot-retention.test.mjs lacks accepted compiler build coverage.",
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ],
-            "change_type": "code"
-          },
-          {
-            "id": "reconcile:semantic-build:tests/smoke/project-resolution.test.mjs",
-            "source_id": "path:tests/smoke/project-resolution.test.mjs",
-            "state": "drift",
-            "direction": "upward",
-            "from_layer": "code",
-            "to_layer": "build",
-            "next_loop": "implementation",
-            "reason": "Semantic code change tests/smoke/project-resolution.test.mjs lacks accepted compiler build coverage.",
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ],
-            "change_type": "code"
-          },
-          {
             "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
             "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
             "state": "drift",
@@ -28629,47 +28380,21 @@
             "doc_paths": [
               ".codewiki/roadmap/queue.json"
             ]
+          },
+          {
+            "id": "reconcile:task:TASK-009",
+            "source_id": "task:TASK-009",
+            "state": "drift",
+            "direction": "downward",
+            "from_layer": "roadmap",
+            "to_layer": "code",
+            "next_loop": "implementation",
+            "task_id": "TASK-009",
+            "reason": "TASK-009 is open implementation delta below knowledge."
           }
         ],
         "traceability_gaps": [],
-        "semantic_change_gaps": [
-          {
-            "path": "tests/smoke/audit-drift.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/audit.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/hot-retention.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          },
-          {
-            "path": "tests/smoke/project-resolution.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [],
-            "gaps": [
-              "missing_accepted_build_coverage"
-            ]
-          }
-        ]
+        "semantic_change_gaps": []
       }
     },
     "docs": {
@@ -28924,27 +28649,7 @@
         "tests/**",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": [
-        "package.json",
-        "tests/smoke/alignment-drift-fixtures.test.mjs",
-        "tests/smoke/audit-drift.test.mjs",
-        "tests/smoke/audit.test.mjs",
-        "tests/smoke/builds.test.mjs",
-        "tests/smoke/claim-wait-queue.test.mjs",
-        "tests/smoke/codewiki-compaction.test.mjs",
-        "tests/smoke/control-room.test.mjs",
-        "tests/smoke/diagram-refs.test.mjs",
-        "tests/smoke/drift-propagation.test.mjs",
-        "tests/smoke/efficiency-ui.test.mjs",
-        "tests/smoke/graph-lenses.test.mjs",
-        "tests/smoke/hot-context.test.mjs",
-        "tests/smoke/hot-retention.test.mjs",
-        "tests/smoke/loop-isolation-policy.test.mjs",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/project-resolution.test.mjs",
-        "tests/smoke/role-worktree-isolation.test.mjs",
-        "tests/smoke/validation-preflight.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
       "active_claim_count": 0,
@@ -29426,6 +29131,27 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-05-21-implementation-block-task-009.json",
+          "task_id": "TASK-009",
+          "verdict": "block",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
+          ],
+          "publisher_result_refs": [
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
           "task_id": "TASK-008",
           "verdict": "pass",
@@ -29438,6 +29164,27 @@
             "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56"
           ],
           "publisher_result_refs": []
+        },
+        {
+          "path": ".codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+          "task_id": "TASK-009",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "head_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "validated_sha": "612de699a0763339ff35d0eb02889bd781d52ed5",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
+          ],
+          "publisher_result_refs": [
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
+          ]
         },
         {
           "path": ".codewiki/validation/2026-05-21-task-close-block-task-008.json",
@@ -29733,6 +29480,7 @@
         "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
+        "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
         "codewiki_audit profiles=alignment,stale-reference,file-structure task_id=TASK-002 => pass",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-002 => pass, 0 issues",
         "codewiki_audit profiles=alignment,stale-reference,file-structure,generated-parity,package,security,changed task_id=TASK-003 => pass, 0 issues",
@@ -29851,6 +29599,8 @@
         "4c10b340cecee13d5f8446d6540153573c2d2df6",
         "4cd9a63dc1c78c4d3bda0e27dbfce8f136aae0df",
         "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
+        "5c522724fd98b2f796d16162b3e876b03b03beed",
+        "612de699a0763339ff35d0eb02889bd781d52ed5",
         "66ebf120f458f38aea2112301dd148de4cb7190b",
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
@@ -30759,6 +30509,31 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-21-implementation-block-task-009.json",
+          "verdict": "block",
+          "profile": "implementation",
+          "task_id": "TASK-009",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "profile:stale-reference",
+            "profile:file-structure",
+            "profile:package",
+            "profile:security",
+            "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+          ],
+          "content_proof_refs": [
+            "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -30773,6 +30548,31 @@
           ],
           "content_proof_refs": [
             "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-21-implementation-pass-task-009.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-009",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "profile:stale-reference",
+            "profile:file-structure",
+            "profile:package",
+            "profile:security",
+            "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors"
+          ],
+          "content_proof_refs": [
+            "612de699a0763339ff35d0eb02889bd781d52ed5",
+            "5c522724fd98b2f796d16162b3e876b03b03beed"
           ],
           "isolation_status": "isolated"
         },
@@ -31128,326 +30928,10 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "package.json",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/audit-drift.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/audit.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/builds.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/claim-wait-queue.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/codewiki-compaction.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/control-room.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/diagram-refs.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/drift-propagation.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/efficiency-ui.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/graph-lenses.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/hot-context.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/hot-retention.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/loop-isolation-policy.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/package-smoke.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/project-resolution.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/role-worktree-isolation.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/validation-preflight.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json"
-          ],
-          "gaps": []
-        }
-      ],
-      "semantic_change_gaps": [
-        {
-          "path": "tests/smoke/audit-drift.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/audit.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/hot-retention.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/project-resolution.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        }
-      ],
-      "gap_count": 4,
-      "gaps": [
-        {
-          "path": "tests/smoke/audit-drift.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/audit.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/hot-retention.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        },
-        {
-          "path": "tests/smoke/project-resolution.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [],
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ]
-        }
-      ]
+      "semantic_change_rows": [],
+      "semantic_change_gaps": [],
+      "gap_count": 0,
+      "gaps": []
     },
     "scope_views": {
       "roadmap": {
@@ -31578,10 +31062,10 @@
           "sprint_ids": [
             "SPRINT-001"
           ],
-          "build_paths": [
-            ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+          "build_paths": [],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-21-implementation-block-task-009.json"
           ],
-          "validation_paths": [],
           "claim_ids": [],
           "claim_wait_ids": []
         },
@@ -31618,6 +31102,7 @@
             ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
             ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
             ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
             ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json"
           ],
           "validation_paths": [
@@ -31671,6 +31156,7 @@
             ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
             ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
             ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
             ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json"
           ]
         },
@@ -32007,6 +31493,7 @@
           ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
           ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
           ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+          ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
           ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
@@ -32017,73 +31504,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-          "source_id": "build:.codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "build",
-          "to_layer": "validation",
-          "next_loop": "validation",
-          "task_id": "TASK-009",
-          "reason": "Accepted implementation build still needs passing validation gateway evidence."
-        },
-        {
-          "id": "reconcile:semantic-build:tests/smoke/audit-drift.test.mjs",
-          "source_id": "path:tests/smoke/audit-drift.test.mjs",
-          "state": "drift",
-          "direction": "upward",
-          "from_layer": "code",
-          "to_layer": "build",
-          "next_loop": "implementation",
-          "reason": "Semantic code change tests/smoke/audit-drift.test.mjs lacks accepted compiler build coverage.",
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ],
-          "change_type": "code"
-        },
-        {
-          "id": "reconcile:semantic-build:tests/smoke/audit.test.mjs",
-          "source_id": "path:tests/smoke/audit.test.mjs",
-          "state": "drift",
-          "direction": "upward",
-          "from_layer": "code",
-          "to_layer": "build",
-          "next_loop": "implementation",
-          "reason": "Semantic code change tests/smoke/audit.test.mjs lacks accepted compiler build coverage.",
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ],
-          "change_type": "code"
-        },
-        {
-          "id": "reconcile:semantic-build:tests/smoke/hot-retention.test.mjs",
-          "source_id": "path:tests/smoke/hot-retention.test.mjs",
-          "state": "drift",
-          "direction": "upward",
-          "from_layer": "code",
-          "to_layer": "build",
-          "next_loop": "implementation",
-          "reason": "Semantic code change tests/smoke/hot-retention.test.mjs lacks accepted compiler build coverage.",
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ],
-          "change_type": "code"
-        },
-        {
-          "id": "reconcile:semantic-build:tests/smoke/project-resolution.test.mjs",
-          "source_id": "path:tests/smoke/project-resolution.test.mjs",
-          "state": "drift",
-          "direction": "upward",
-          "from_layer": "code",
-          "to_layer": "build",
-          "next_loop": "implementation",
-          "reason": "Semantic code change tests/smoke/project-resolution.test.mjs lacks accepted compiler build coverage.",
-          "gaps": [
-            "missing_accepted_build_coverage"
-          ],
-          "change_type": "code"
-        },
         {
           "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -32096,12 +31516,22 @@
           "doc_paths": [
             ".codewiki/roadmap/queue.json"
           ]
+        },
+        {
+          "id": "reconcile:task:TASK-009",
+          "source_id": "task:TASK-009",
+          "state": "drift",
+          "direction": "downward",
+          "from_layer": "roadmap",
+          "to_layer": "code",
+          "next_loop": "implementation",
+          "task_id": "TASK-009",
+          "reason": "TASK-009 is open implementation delta below knowledge."
         }
       ],
       "counts_by_loop": {
-        "validation": 1,
-        "implementation": 4,
-        "decision": 1
+        "decision": 1,
+        "implementation": 1
       },
       "next_action": {
         "loop": "decision",
@@ -32130,13 +31560,13 @@
         "knowledge": "drift",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "drift"
+        "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-21T06:07:27.355Z",
+      "generated_at": "2026-05-21T06:09:21.209Z",
       "counts": {
         "roadmap-missing-code-path": 1
       },
@@ -32151,7 +31581,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-21T06:07:27Z",
+      "generated_at": "2026-05-21T06:09:21Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -32309,7 +31739,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-21T06:07:27Z",
+      "generated_at": "2026-05-21T06:09:21Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -32421,10 +31851,10 @@
             "sprint_ids": [
               "SPRINT-001"
             ],
-            "build_paths": [
-              ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json"
+            "build_paths": [],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-21-implementation-block-task-009.json"
             ],
-            "validation_paths": [],
             "claim_ids": [],
             "claim_wait_ids": []
           },
@@ -32461,6 +31891,7 @@
               ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
               ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
               ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
               ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json"
             ],
             "validation_paths": [
@@ -32514,6 +31945,7 @@
               ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
               ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
               ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
               ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json"
             ]
           },
@@ -33384,7 +32816,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-21T06:07:27Z",
+        "generated_at": "2026-05-21T06:09:21Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -33412,16 +32844,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-21T06:07:27Z",
+            "checked_at": "2026-05-21T06:09:21Z",
             "revision": {
               "git": {
-                "head": "7af56f6d410bbb50900e37462a2155c0c95d943e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "package.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "612de699a0763339ff35d0eb02889bd781d52ed5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -33460,8 +32888,8 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "60858d0fdd6fb023020db7a1045a4dd1ce39329e",
-                  "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
+                  ".codewiki/roadmap/queue.json": "5d6f8bc5d1f76ebee0a75edfa6f6203e1b819ce6",
+                  "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -33502,18 +32930,18 @@
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
-                  "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
+                  "tests/smoke/package-smoke.test.mjs": "042e1ab81c2404d5b3040427dfe5c040b3df5795"
                 }
               },
               "spec_digest": "2a4d9dfb9f419bad69678ba5a64f13759cfb3ff147a6482e7fdd337b6c9a20ef",
               "task_digest": "0715b4050b0d4e9fd12af7b0455dbf4f715f2a24f77b5e2825294ba30bb07b23",
               "code_digest": "bca35aaec1fe6f31c29c7ea5e655c0559818e6ea68a2674882a2ab3ed25da3f6",
-              "digest": "395979acd457551c3473c77341068d7bf2aadbe48004ed47b2290953a8dbb427"
+              "digest": "1c2de1a61ee8f88608a3475ade7fdfe6565fcadf2703d8cb0d8438c4b2d89bf4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-21T06:07:27Z",
+              "checked_at": "2026-05-21T06:09:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -33637,15 +33065,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-21T06:07:27Z",
+            "checked_at": "2026-05-21T06:09:21Z",
             "revision": {
               "git": {
-                "head": "7af56f6d410bbb50900e37462a2155c0c95d943e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "612de699a0763339ff35d0eb02889bd781d52ed5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -33668,7 +33093,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "60858d0fdd6fb023020db7a1045a4dd1ce39329e",
+                  ".codewiki/roadmap/queue.json": "5d6f8bc5d1f76ebee0a75edfa6f6203e1b819ce6",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -33705,18 +33130,18 @@
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
-                  "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
+                  "tests/smoke/package-smoke.test.mjs": "042e1ab81c2404d5b3040427dfe5c040b3df5795"
                 }
               },
               "spec_digest": "97f17b6af67e48868604e7c28f32bf442f627bd21c9aec0ab05f5e5fb97f26a7",
               "task_digest": "0715b4050b0d4e9fd12af7b0455dbf4f715f2a24f77b5e2825294ba30bb07b23",
               "code_digest": "8d0faf4deb120c11ea82dae8349ff6e1e3d1734f90835708b9d83f9829b2e7a3",
-              "digest": "f69be013c7917f2e9c2ab25a339fbdbcc6f71e799289c4297cd1d341b84f6f7c"
+              "digest": "de32b4af70e530f4b1578be3c65aee961518273ba10ae32c36723e42c7b33bbb"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-21T06:07:27Z",
+              "checked_at": "2026-05-21T06:09:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -33819,16 +33244,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-21T06:07:27Z",
+            "checked_at": "2026-05-21T06:09:21Z",
             "revision": {
               "git": {
-                "head": "7af56f6d410bbb50900e37462a2155c0c95d943e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "package.json",
-                  "tests/smoke/package-smoke.test.mjs"
-                ],
+                "head": "612de699a0763339ff35d0eb02889bd781d52ed5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -33867,8 +33288,8 @@
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "60858d0fdd6fb023020db7a1045a4dd1ce39329e",
-                  "package.json": "c62ee67a317317b2a7964c00667cc0e219e3e458",
+                  ".codewiki/roadmap/queue.json": "5d6f8bc5d1f76ebee0a75edfa6f6203e1b819ce6",
+                  "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -33909,18 +33330,18 @@
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
-                  "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
+                  "tests/smoke/package-smoke.test.mjs": "042e1ab81c2404d5b3040427dfe5c040b3df5795"
                 }
               },
               "spec_digest": "2a4d9dfb9f419bad69678ba5a64f13759cfb3ff147a6482e7fdd337b6c9a20ef",
               "task_digest": "0715b4050b0d4e9fd12af7b0455dbf4f715f2a24f77b5e2825294ba30bb07b23",
               "code_digest": "bca35aaec1fe6f31c29c7ea5e655c0559818e6ea68a2674882a2ab3ed25da3f6",
-              "digest": "395979acd457551c3473c77341068d7bf2aadbe48004ed47b2290953a8dbb427"
+              "digest": "1c2de1a61ee8f88608a3475ade7fdfe6565fcadf2703d8cb0d8438c4b2d89bf4"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-21T06:07:27Z",
+              "checked_at": "2026-05-21T06:09:21Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -34045,7 +33466,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-21T06:07:27Z",
+        "generated_at": "2026-05-21T06:09:21Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
