@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-21T05:41:40Z",
+  "profile": "task-close",
+  "task_id": "TASK-008",
+  "verdict": "pass",
+  "rationale": "TASK-008 can close. Implementation validation passed, implementation proof is committed at bfa17e488debd42fb1cf14e18a8dd36af1c228e3, archive ref refs/codewiki/archive/task/TASK-008 points at the validated commit, tracked worktree proof is clean, required audits have 0 errors, and acceptance remains satisfied: focused domain concept modules now own pure types/rules, application/adapters consume them while keeping orchestration/I/O outside domain, architecture audit confirms domain dependency direction, and public tool schemas remain type-compatible.",
+  "checks": [
+    "approval:user asked to continue/proceed after TASK-008 implementation and after fixing the read-only .git blocker",
+    "Implementation validation pass report: .codewiki/validation/2026-05-21-implementation-pass-task-008.json",
+    "Prior task-close block report superseded by this proof: .codewiki/validation/2026-05-21-task-close-block-task-008.json",
+    "Implementation commit: bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "Archive ref refs/codewiki/archive/task/TASK-008 -> bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "git rev-parse HEAD: bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "git rev-parse HEAD^{tree}: e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+    "Tracked worktree diff/index: clean",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./scripts/check-architecture.mjs: pass",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008: warning; 0 errors; only graph-health warning from existing CodeWiki health"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "stale-reference",
+    "file-structure",
+    "package",
+    "security"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "profile:package",
+    "profile:security"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors"
+  ],
+  "content_proof_refs": [
+    "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+    "refs/codewiki/archive/task/TASK-008"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+      "refs/codewiki/archive/task/TASK-008"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference",
+      "file-structure",
+      "package",
+      "security"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:package or profile:package",
+      "audit:security or profile:security"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-008",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user asked to continue/proceed after TASK-008 implementation and after fixing the read-only .git blocker"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "62ca6d03ef740215472701ba5d865a98240a8d81",
+    "head_sha": "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "validated_sha": "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+    "tree_sha": "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
+    "archive_ref": "refs/codewiki/archive/task/TASK-008",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build, implementation validation report, audit evidence, and immutable commit/tree/archive proof. Unrelated untracked user dotfiles are outside task proof.",
+    "role": "validator"
+  }
+}
