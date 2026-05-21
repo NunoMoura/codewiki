@@ -1,17 +1,17 @@
+import type { WikiProject } from "../../../domain/project/types.ts";
+import type { TaskSessionLinkRecord } from "../../../domain/session/types.ts";
 import type {
-	LintReport,
 	RoadmapStateFile,
 	RoadmapStateTaskSummary,
 	StatusDockDensity,
 	StatusDockMode,
 	StatusStateSpecRow,
-	TaskSessionLinkRecord,
 	StatusDockPrefs,
 	StatusPanelSection,
 	ConfigPanelSection,
-	WikiProject,
 	StatusStateAgentRow,
-} from "../../../domain/shared/types.ts";
+} from "../../../domain/state/types.ts";
+import type { LintReport } from "../../../domain/validation/types.ts";
 import { basename } from "node:path";
 import { padToWidth, truncatePlain } from "./text.ts";
 

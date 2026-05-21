@@ -2,14 +2,17 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput, CodewikiClosureBriefInput, CodewikiDiffTableRowInput, CodewikiValidationReportInput, WikiProject, RoadmapTaskRecord } from "../domain/shared/types.ts";
+import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput, CodewikiClosureBriefInput, CodewikiDiffTableRowInput } from "../domain/build/types.ts";
 import { isAcceptedBuildData } from "../domain/build/lifecycle.ts";
-import type { ChangeType } from "../domain/shared/types.ts";
+import type { ChangeType } from "../domain/change/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { CodewikiValidationReportInput } from "../domain/validation/types.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { normalizeWorktreeIsolation } from "./claims.ts";
 import { readRoadmapTask } from "./roadmap.ts";
-import { hasPublisherResultProof, publisherProofRefs } from "./worktree-isolation.ts";
+import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";
 import { maybeReadGraph } from "./state-artifacts.ts";
 
 // ---------------------------------------------------------------------------

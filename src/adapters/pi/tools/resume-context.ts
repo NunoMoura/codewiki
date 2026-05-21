@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { CodewikiResumeContextToolInput } from "../../../domain/shared/types.ts";
+import type { CodewikiResumeContextToolInput } from "../../../domain/state/types.ts";
 import { executeCodewikiResumeContextTool } from "../../../application/tools/resume-context.ts";
 import { resolveToolProject } from "../../../application/project.ts";
 import { codewikiResumeContextToolInputSchema } from "../schemas.ts";

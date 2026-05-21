@@ -15,8 +15,8 @@ import {
 	clearStatusDock,
 	activeStatusPanelGlobal,
 } from "../ui/manager.ts";
-import { STATUS_DOCK_MODE_VALUES, STATUS_DOCK_DENSITY_VALUES } from "../../../domain/shared/types.ts";
-import type { StatusDockMode } from "../../../domain/shared/types.ts";
+import { STATUS_DOCK_MODE_VALUES, STATUS_DOCK_DENSITY_VALUES } from "../../../domain/state/types.ts";
+import type { StatusDockMode } from "../../../domain/state/types.ts";
 import { currentTaskLink } from "../session.ts";
 import { maybeReadStatusState } from "../../../application/state-artifacts.ts";
 import {

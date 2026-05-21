@@ -26,7 +26,7 @@ CodeWiki maintains the repository-local `.codewiki/` contract and exposes it thr
 - **Audits** produce deterministic alignment, file-structure, stale-reference, package, security, and generated-parity evidence for users and gateways.
 - **CodeWiki UI** owns the standalone local browser command center for humans under `src/ui/**` while delegating all semantics to the CodeWiki API.
 - **Application layer** owns harness-agnostic compilers, validation gateways, the state engine, agent-facing application tools, ports, and built-in local runtime implementations.
-- **Domain layer** owns pure CodeWiki concepts, rules, entities, schemas, transitions, and invariants for task, roadmap, session queue, build, validation, and state.
+- **Domain layer** owns pure CodeWiki concepts, rules, entities, schemas, transitions, and invariants for agency, audits, builds, changes, project contracts, roadmap, session queue, validation, generated state, and GC.
 - **Adapters** own harness-specific or protocol-specific translation. The Pi adapter owns current commands, tools, status panel, session integration, packaged skills, and resource discovery. Browser web code is UI, not an agent adapter. Adapters do not own CodeWiki semantics.
 - **Shared** owns minimal cross-cutting helpers and types that are truly common; it must not become a dumping ground for domain or application behavior.
 

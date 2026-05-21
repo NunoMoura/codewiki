@@ -12,7 +12,8 @@ import {
 import { currentTaskLink } from "../session.ts";
 import { maybeReadStatusState } from "../../../application/state-artifacts.ts";
 import { maybeReadJson } from "../../../application/local/filesystem.ts";
-import type { LintReport, StatusPanelSection } from "../../../domain/shared/types.ts";
+import type { StatusPanelSection } from "../../../domain/state/types.ts";
+import type { LintReport } from "../../../domain/validation/types.ts";
 
 /**
  * Register the wiki-status command.

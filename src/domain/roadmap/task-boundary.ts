@@ -1,4 +1,4 @@
-import type { RoadmapTaskGoal, RoadmapTaskInput, RoadmapTaskRecord } from "../shared/types.ts";
+import type { RoadmapTaskGoal, RoadmapTaskInput, RoadmapTaskRecord } from "./types.ts";
 import { isOpenRoadmapStatus } from "./status.ts";
 
 export interface RoadmapTaskBoundaryAssessment {

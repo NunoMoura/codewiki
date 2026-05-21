@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { CodewikiStateToolInput } from "../../../domain/shared/types.ts";
+import type { CodewikiStateToolInput } from "../../../domain/state/types.ts";
 import { executeCodewikiStateTool } from "../../../application/tools/state.ts";
 import { resolveToolProject } from "../../../application/project.ts";
 import { codewikiStateToolInputSchema } from "../schemas.ts";

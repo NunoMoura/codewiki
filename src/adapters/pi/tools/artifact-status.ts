@@ -1,5 +1,6 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { CodewikiArtifactStatusToolInput, WikiProject } from "../../../domain/shared/types.ts";
+import type { WikiProject } from "../../../domain/project/types.ts";
+import type { CodewikiArtifactStatusToolInput } from "../../../domain/session/types.ts";
 import { executeCodewikiArtifactStatusTool } from "../../../application/tools/artifact-status.ts";
 import { stableAgentName } from "../../../application/state-builders.ts";
 import { resolveToolProject } from "../../../application/project.ts";

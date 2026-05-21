@@ -23,19 +23,16 @@ import {
 import { stableAgentName } from "./state-builders.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 import { unique } from "../domain/shared/utils.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapFile, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type {
 	ArtifactStatusRecord,
 	ChangeClaimScope,
 	ChangeClaimState,
-	GraphFile,
-	LintReport,
-	RoadmapFile,
-	RoadmapStateFile,
-	RoadmapTaskContextPacket,
-	RoadmapTaskRecord,
 	TaskSessionLinkRecord,
-	WikiProject,
-} from "../domain/shared/types.ts";
+} from "../domain/session/types.ts";
+import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "../domain/state/types.ts";
+import type { LintReport } from "../domain/validation/types.ts";
 
 export interface ResumeSelection {
 	task: RoadmapTaskRecord | null;

@@ -1,4 +1,4 @@
-import type { WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
 import { formatError } from "../../domain/shared/utils.ts";
 
 export async function runConfiguredOrDefaultRebuild(

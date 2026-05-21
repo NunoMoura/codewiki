@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import type { AddressInfo } from "node:net";
 import { basename, relative, resolve } from "node:path";
 import { load as loadYaml } from "js-yaml";
-import type { WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
 import { maybeReadGraph, maybeReadRoadmapState, maybeReadStatusState } from "../../application/state-artifacts.ts";
 import { maybeReadJson, pathExists, readText } from "../../application/local/filesystem.ts";
 

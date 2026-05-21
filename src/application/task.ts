@@ -6,7 +6,14 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { WikiProject, RoadmapTaskRecord, RoadmapTaskInput, CodewikiTaskPatchInput, CodewikiTaskEvidenceInput, RoadmapStatus } from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type {
+	RoadmapTaskRecord,
+	RoadmapTaskInput,
+	CodewikiTaskPatchInput,
+	CodewikiTaskEvidenceInput,
+	RoadmapStatus,
+} from "../domain/roadmap/types.ts";
 import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./roadmap.ts";
 import { maybeReadRoadmapState } from "./state-artifacts.ts";
 import type { FileStore, RebuildRunner, MessageBus } from "./ports.ts";

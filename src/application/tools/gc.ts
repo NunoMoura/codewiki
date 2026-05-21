@@ -1,4 +1,5 @@
-import type { CodewikiGcToolInput, WikiProject } from "../../domain/shared/types.ts";
+import type { CodewikiGcToolInput } from "../../domain/gc/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
 import { runCodewikiGc } from "../gc.ts";
 import { runRebuild } from "../state-artifacts.ts";
 

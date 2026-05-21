@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-20T23:44:06Z",
+  "source": "codewiki_build tool",
+  "source_decision_build": ".codewiki/kb/system/file-structure.md",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-03T23:44:06.000Z",
+    "purge_after": "2026-06-17T23:44:06.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "TASK-008-R1",
+      "text": "Organize domain-specific type/value definitions under focused src/domain/<concept> modules where practical.",
+      "source_refs": [
+        "TASK-008",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "TASK-008-R2",
+      "text": "Keep application workflow/use-case orchestration, I/O, graph rebuild, gateway, tools, and local runtime logic in application.",
+      "source_refs": [
+        "TASK-008",
+        ".codewiki/kb/system/overview.md"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "TASK-008-R3",
+      "text": "Preserve public tool behavior and generated artifact shapes while maintaining domain dependency direction.",
+      "source_refs": [
+        "TASK-008",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Domain-specific type/value definitions are organized under src/domain/<concept> instead of one broad shared shim where practical.",
+      "evidence": "Refactor source imports and module placement, then typecheck.",
+      "requirement_ids": [
+        "TASK-008-R1"
+      ],
+      "source_refs": [
+        "src/domain/**",
+        "src/application/**"
+      ]
+    },
+    {
+      "criterion": "No adapter/UI/Node I/O dependencies are introduced into src/domain/**.",
+      "evidence": "Architecture/import checks and source inspection.",
+      "requirement_ids": [
+        "TASK-008-R2",
+        "TASK-008-R3"
+      ],
+      "source_refs": [
+        "src/domain/**"
+      ]
+    },
+    {
+      "criterion": "Existing public tool behavior and generated artifact shapes remain compatible.",
+      "evidence": "Typecheck and smoke tests where baseline runner permits.",
+      "requirement_ids": [
+        "TASK-008-R3"
+      ],
+      "source_refs": [
+        "tests/**"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan TASK-008 domain/application source ownership rebalance.",
+  "task_ids": [
+    "TASK-008"
+  ],
+  "task_changes": [
+    "Created TASK-008 to implement existing system docs requiring domain-led source structure."
+  ],
+  "roadmap_changes": [
+    "Created TASK-008 to implement existing system docs requiring domain-led source structure."
+  ],
+  "tdd_plan": [
+    "Use npm run typecheck as primary mechanical proof because refactor should preserve behavior.",
+    "Use architecture/import checks to prove src/domain/** has no forbidden application/adapter/UI imports.",
+    "Run relevant smoke tests when baseline runner permits; record any pre-existing package-runner failure separately."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/domain/**",
+    "src/application/**",
+    "src/adapters/**",
+    "tests/**"
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Domain-specific type/value definitions are organized under src/domain/<concept> instead of one broad shared shim where practical.",
+      "evidence": "Refactor source imports and module placement, then typecheck.",
+      "requirement_ids": [
+        "TASK-008-R1"
+      ],
+      "source_refs": [
+        "src/domain/**",
+        "src/application/**"
+      ]
+    },
+    {
+      "criterion": "No adapter/UI/Node I/O dependencies are introduced into src/domain/**.",
+      "evidence": "Architecture/import checks and source inspection.",
+      "requirement_ids": [
+        "TASK-008-R2",
+        "TASK-008-R3"
+      ],
+      "source_refs": [
+        "src/domain/**"
+      ]
+    },
+    {
+      "criterion": "Existing public tool behavior and generated artifact shapes remain compatible.",
+      "evidence": "Typecheck and smoke tests where baseline runner permits.",
+      "requirement_ids": [
+        "TASK-008-R3"
+      ],
+      "source_refs": [
+        "tests/**"
+      ]
+    }
+  ],
+  "assumptions": [
+    "The user request implements existing documented file-structure intent, so no new semantic decision build is required."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No public schema rename or artifact shape change.",
+    "No top-level infrastructure layer."
+  ],
+  "risks": [
+    "Large import churn can create type-only cycles or missed re-exports; keep compatibility exports where needed."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "exemption": "mechanical",
+    "semantic": false,
+    "requires_accepted_build": false,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/file-structure.md"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-008"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-008"
+    ],
+    "code": [
+      "src/domain/**",
+      "src/application/**",
+      "src/adapters/**",
+      "tests/**"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

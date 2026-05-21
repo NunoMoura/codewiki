@@ -1,5 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import type { WikiProject } from "../domain/project/types.ts";
 import type {
 	ArtifactStatusHolder,
 	ArtifactStatusRecord,
@@ -14,8 +15,7 @@ import type {
 	ChangeClaimState,
 	ChangeClaimsFile,
 	ChangeClaimMutationInput,
-	WikiProject,
-} from "../domain/shared/types.ts";
+} from "../domain/session/types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import {
@@ -24,7 +24,7 @@ import {
 	nextSafeActionForWaiter,
 	summarizeArtifactBlockers,
 	type ArtifactBlocker,
-} from "./worktree-isolation.ts";
+} from "../domain/session/worktree-isolation.ts";
 
 const DEFAULT_TTL_MINUTES = 120;
 const MAX_TTL_MINUTES = 24 * 60;

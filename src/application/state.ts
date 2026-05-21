@@ -4,16 +4,16 @@
  * "Read CodeWiki state" use case.
  * Accepts ports instead of Pi ExtensionContext so any agent harness can call it.
  */
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { TaskSessionLinkRecord } from "../domain/session/types.ts";
 import type {
-	WikiProject,
 	CodewikiStateSection,
 	RoadmapStateFile,
 	StatusStateFile,
-	RoadmapTaskRecord,
 	RoadmapTaskContextPacket,
 	RoadmapStateTaskSummary,
-	TaskSessionLinkRecord,
-} from "../domain/shared/types.ts";
+} from "../domain/state/types.ts";
 import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./state-artifacts.ts";
 import { readRoadmapTask } from "./roadmap.ts";
 import { findLatestTaskSessionLink } from "../domain/shared/session.ts";

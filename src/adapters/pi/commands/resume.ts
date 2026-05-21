@@ -48,17 +48,15 @@ import {
     statusLevel
 } from "../ui/theme.ts";
 import { buildResumeContextForTask } from "../../../application/resume-context.ts";
-import type { 
-    RoadmapFile, 
-    RoadmapTaskRecord, 
-    TaskSessionLinkRecord,
-    RoadmapStatus,
-    TaskSessionAction,
+import type { WikiProject } from "../../../domain/project/types.ts";
+import type { RoadmapFile, RoadmapTaskRecord, RoadmapStatus } from "../../../domain/roadmap/types.ts";
+import type {
+	TaskSessionLinkRecord,
+	TaskSessionAction,
 	ChangeClaimScope,
 	ChangeClaimState,
 	ArtifactStatusRecord,
-	WikiProject
-} from "../../../domain/shared/types.ts";
+} from "../../../domain/session/types.ts";
 
 /**
  * Register the wiki-resume command.

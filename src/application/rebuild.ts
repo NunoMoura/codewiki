@@ -6,7 +6,7 @@
  * No knowledge of the concrete rebuild engine implementation.
  */
 
-import type { WikiProject } from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
 import type { RebuildRunner } from "./ports.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import { resolve } from "node:path";

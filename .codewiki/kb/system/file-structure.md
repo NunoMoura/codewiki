@@ -165,13 +165,17 @@ The package should be domain-led. Domain concepts define CodeWiki's language and
 src/
   index.ts                 # thin package entrypoint
   domain/
-    task/
-    roadmap/
-    session/               # session queue, artifact statuses, focus, handoff concepts
-    build/
-    validation/
+    agency/                # bounded automation scopes, budgets, roles, and agency value objects
+    audit/                 # deterministic audit profiles, statuses, and report concepts
+    build/                 # compiler build inputs, lifecycle, and handoff value objects
+    change/                # change-type and traceability value objects
+    gc/                    # artifact retention and GC value objects
+    project/               # repo contract and project configuration concepts
+    roadmap/               # task, sprint, status, priority, and boundary concepts
+    session/               # session queue, artifact statuses, focus, handoff, and worktree-isolation concepts
     state/                 # generated-state and reconciliation domain concepts
-    shared/                # tiny primitives only
+    validation/            # validation report, verifier, and lint concepts
+    shared/                # tiny primitives and compatibility barrels only
   application/
     tools/                 # agent-callable use-case API used by adapters, skills, CLI, MCP
     gateway/               # local policy/patch gateway implementation
@@ -235,7 +239,7 @@ Rules:
 - `domain/**` has no Node I/O, no Pi imports, no adapter imports, and no application imports.
 - `application/**` owns concrete use cases: compiler build writing, validation report writing, roadmap/session operations, generated state/graph rebuild and query helpers, agent-callable tool APIs, ports, and built-in local runtime implementations. It must remain agent-agnostic and must not import adapters, UI code, skills, scripts, or Pi SDK/TUI packages.
 - `adapters/**` translate harness APIs or protocol surfaces into application tools and translate results back into commands, tools, protocol messages, sessions, or host-native compact UI. Browser UI source belongs under `src/ui/**`, not `src/adapters/**`.
-- `domain/**` owns product semantics for tasks, roadmap, session queue, builds, validation, and state. `domain/shared/**` stays small and cannot become a dumping ground.
+- `domain/**` owns product semantics for agency, audits, builds, changes, GC, project contracts, roadmap, session queue, validation, and generated state. `domain/shared/**` stays small and cannot become a dumping ground; compatibility barrels may remain only during migrations.
 - `core/**`, `engine/**`, and top-level `infrastructure/**` must not exist in the target implementation; former responsibilities now live under `domain/**`, `application/**`, and `adapters/**`.
 
 ## Current migration warning

@@ -1,5 +1,5 @@
-import type { ChangeType, TraceabilityExemption } from "../shared/types.ts";
-import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "../shared/types.ts";
+import type { ChangeType, TraceabilityExemption } from "./types.ts";
+import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "./types.ts";
 
 export const LEGACY_CHANGE_TYPE_ALIASES = new Map<string, ChangeType>([
 	["code-bugfix", "code"],

@@ -4,7 +4,13 @@
  * "Run agency planning" use case.
  * Plans the next bounded agency action from roadmap state, graph cues, and trigger.
  */
-import type { WikiProject, AgencyMode, AgencyTrigger, AgencyBudget, AgencyScope } from "../domain/shared/types.ts";
+import type {
+	AgencyMode,
+	AgencyTrigger,
+	AgencyBudget,
+	AgencyScope,
+} from "../domain/agency/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
 import { readCodewikiState } from "./state.ts";
 import type { ReadStatePorts } from "./state.ts";
 import type { FileStore, RebuildRunner } from "./ports.ts";

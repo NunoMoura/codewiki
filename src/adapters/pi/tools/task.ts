@@ -1,5 +1,6 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { CodewikiTaskToolInput, WikiProject } from "../../../domain/shared/types.ts";
+import type { WikiProject } from "../../../domain/project/types.ts";
+import type { CodewikiTaskToolInput } from "../../../domain/roadmap/types.ts";
 import { executeCodewikiTaskTool } from "../../../application/tools/task.ts";
 import { piTaskPorts } from "./ports.ts";
 

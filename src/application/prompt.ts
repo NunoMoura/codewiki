@@ -1,13 +1,9 @@
 import { renderSkillAsset } from "./skill-assets.ts";
 import { unique } from "../domain/shared/utils.ts";
-import type { 
-    WikiProject, 
-    GraphFile, 
-    LintReport, 
-    RoadmapTaskRecord, 
-    RoadmapTaskContextPacket,
-    StatusScope
-} from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { GraphFile, RoadmapTaskContextPacket, StatusScope } from "../domain/state/types.ts";
+import type { LintReport } from "../domain/validation/types.ts";
 
 export function statusColor(report: LintReport): "green" | "yellow" | "red" {
 	if (report.counts.error > 0) return "red";

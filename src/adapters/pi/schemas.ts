@@ -1,16 +1,40 @@
 import { Type } from "@sinclair/typebox";
-import * as T from "../../domain/shared/types.ts";
+import {
+	AGENCY_MODE_VALUES,
+	AGENCY_RISK_VALUES,
+	AGENCY_SCOPE_KIND_VALUES,
+	AGENCY_TRIGGER_VALUES,
+	SUBAGENT_PROPOSAL_VALUES,
+	SUBAGENT_ROLE_VALUES,
+	SUBAGENT_VERDICT_VALUES,
+} from "../../domain/agency/types.ts";
+import { AUDIT_PROFILE_VALUES } from "../../domain/audit/types.ts";
+import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "../../domain/change/types.ts";
+import {
+	ROADMAP_PRIORITY_VALUES,
+	SPRINT_STATUS_VALUES,
+	TASK_EVIDENCE_RESULT_VALUES,
+	TOOL_TASK_STATUS_VALUES,
+} from "../../domain/roadmap/types.ts";
+import {
+	ARTIFACT_STATUS_ACTION_VALUES,
+	CHANGE_CLAIM_LAYER_VALUES,
+	CHANGE_CLAIM_MODE_VALUES,
+	CHANGE_CLAIM_ROLE_VALUES,
+	WORKFLOW_LOOP_VALUES,
+} from "../../domain/session/types.ts";
+import { CODEWIKI_STATE_SECTION_VALUES } from "../../domain/state/types.ts";
 
 export const changeTypeSchema = Type.Union(
-	T.CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
+	CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
 );
 export const traceabilityExemptionSchema = Type.Union(
-	T.TRACEABILITY_EXEMPTION_VALUES.map((value) => Type.Literal(value)),
+	TRACEABILITY_EXEMPTION_VALUES.map((value) => Type.Literal(value)),
 );
 /** @deprecated Use change_type plus traceability.exemption. */
 export const changeClassSchema = Type.Union([
-	...T.CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
-	...T.TRACEABILITY_EXEMPTION_VALUES.map((value) => Type.Literal(value)),
+	...CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
+	...TRACEABILITY_EXEMPTION_VALUES.map((value) => Type.Literal(value)),
 	Type.Literal("code-bugfix"),
 	Type.Literal("maintenance"),
 	Type.Literal("audit"),
@@ -19,13 +43,13 @@ export const changeClassSchema = Type.Union([
 ]);
 
 export const subagentRoleSchema = Type.Union(
-	T.SUBAGENT_ROLE_VALUES.map((value) => Type.Literal(value)),
+	SUBAGENT_ROLE_VALUES.map((value) => Type.Literal(value)),
 );
 export const subagentVerdictSchema = Type.Union(
-	T.SUBAGENT_VERDICT_VALUES.map((value) => Type.Literal(value)),
+	SUBAGENT_VERDICT_VALUES.map((value) => Type.Literal(value)),
 );
 export const subagentProposalKindSchema = Type.Union(
-	T.SUBAGENT_PROPOSAL_VALUES.map((value) => Type.Literal(value)),
+	SUBAGENT_PROPOSAL_VALUES.map((value) => Type.Literal(value)),
 );
 export const subagentBriefSchema = Type.Object({
 	role: subagentRoleSchema,
@@ -88,7 +112,7 @@ export const subagentResultSchema = Type.Object({
 });
 
 export const roadmapPrioritySchema = Type.Union(
-	T.ROADMAP_PRIORITY_VALUES.map((value) => Type.Literal(value)),
+	ROADMAP_PRIORITY_VALUES.map((value) => Type.Literal(value)),
 );
 export const roadmapTaskGoalSchema = Type.Object({
 	outcome: Type.Optional(
@@ -139,19 +163,19 @@ export const codewikiTaskCreateSchema = Type.Object({
 	),
 });
 export const toolTaskStatusSchema = Type.Union(
-	T.TOOL_TASK_STATUS_VALUES.map((value) => Type.Literal(value)),
+	TOOL_TASK_STATUS_VALUES.map((value) => Type.Literal(value)),
 );
 export const taskEvidenceResultSchema = Type.Union(
-	T.TASK_EVIDENCE_RESULT_VALUES.map((value) => Type.Literal(value)),
+	TASK_EVIDENCE_RESULT_VALUES.map((value) => Type.Literal(value)),
 );
 export const artifactStatusActionSchema = Type.Union(
-	T.ARTIFACT_STATUS_ACTION_VALUES.map((value) => Type.Literal(value)),
+	ARTIFACT_STATUS_ACTION_VALUES.map((value) => Type.Literal(value)),
 );
 export const changeClaimModeSchema = Type.Union(
-	T.CHANGE_CLAIM_MODE_VALUES.map((value) => Type.Literal(value)),
+	CHANGE_CLAIM_MODE_VALUES.map((value) => Type.Literal(value)),
 );
 export const changeClaimRoleSchema = Type.Union(
-	T.CHANGE_CLAIM_ROLE_VALUES.map((value) => Type.Literal(value)),
+	CHANGE_CLAIM_ROLE_VALUES.map((value) => Type.Literal(value)),
 );
 export const worktreeIsolationSchema = Type.Object({
 	worktree_path: Type.Optional(Type.String({ description: "Filesystem path for the session worktree." })),
@@ -182,7 +206,7 @@ export const validationIsolationSchema = Type.Intersect([
 	}),
 ]);
 export const changeClaimLayerSchema = Type.Union(
-	T.CHANGE_CLAIM_LAYER_VALUES.map((value) => Type.Literal(value)),
+	CHANGE_CLAIM_LAYER_VALUES.map((value) => Type.Literal(value)),
 );
 export const changeClaimScopeSchema = Type.Object({
 	layer: changeClaimLayerSchema,
@@ -192,7 +216,7 @@ export const changeClaimScopeSchema = Type.Object({
 	description: Type.Optional(Type.String({ description: "Short human label when no path/task/ref fits." })),
 });
 export const codewikiStateSectionSchema = Type.Union(
-	T.CODEWIKI_STATE_SECTION_VALUES.map((value) => Type.Literal(value)),
+	CODEWIKI_STATE_SECTION_VALUES.map((value) => Type.Literal(value)),
 );
 export const repoPathToolField = Type.Optional(
 	Type.String({
@@ -201,22 +225,22 @@ export const repoPathToolField = Type.Optional(
 	}),
 );
 export const agencyModeSchema = Type.Union(
-	T.AGENCY_MODE_VALUES.map((value) => Type.Literal(value)),
+	AGENCY_MODE_VALUES.map((value) => Type.Literal(value)),
 );
 export const agencyTriggerSchema = Type.Union(
-	T.AGENCY_TRIGGER_VALUES.map((value) => Type.Literal(value)),
+	AGENCY_TRIGGER_VALUES.map((value) => Type.Literal(value)),
 );
 export const agencyRiskSchema = Type.Union(
-	T.AGENCY_RISK_VALUES.map((value) => Type.Literal(value)),
+	AGENCY_RISK_VALUES.map((value) => Type.Literal(value)),
 );
 export const agencyScopeKindSchema = Type.Union(
-	T.AGENCY_SCOPE_KIND_VALUES.map((value) => Type.Literal(value)),
+	AGENCY_SCOPE_KIND_VALUES.map((value) => Type.Literal(value)),
 );
 export const workflowLoopSchema = Type.Union(
-	T.WORKFLOW_LOOP_VALUES.map((value) => Type.Literal(value)),
+	WORKFLOW_LOOP_VALUES.map((value) => Type.Literal(value)),
 );
 export const auditProfileSchema = Type.Union(
-	T.AUDIT_PROFILE_VALUES.map((value) => Type.Literal(value)),
+	AUDIT_PROFILE_VALUES.map((value) => Type.Literal(value)),
 );
 export const agencyScopeSchema = Type.Object({
 	kind: agencyScopeKindSchema,
@@ -233,7 +257,7 @@ export const agencyBudgetSchema = Type.Object({
 	risk: Type.Optional(agencyRiskSchema),
 });
 export const sprintStatusSchema = Type.Union(
-	T.SPRINT_STATUS_VALUES.map((value) => Type.Literal(value)),
+	SPRINT_STATUS_VALUES.map((value) => Type.Literal(value)),
 );
 export const codewikiSprintSchema = Type.Object({
 	id: Type.Optional(Type.String({ minLength: 1, description: "Existing or desired sprint id, e.g. SPRINT-004." })),

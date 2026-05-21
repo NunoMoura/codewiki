@@ -1,4 +1,5 @@
-import type { CodewikiArtifactStatusToolInput, WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
+import type { CodewikiArtifactStatusToolInput } from "../../domain/session/types.ts";
 import { mutateArtifactStatuses } from "../claims.ts";
 import { runRebuild } from "../state-artifacts.ts";
 

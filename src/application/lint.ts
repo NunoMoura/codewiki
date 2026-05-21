@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve, relative } from "node:path";
-import type { LintIssue, LintReport, RoadmapTaskRecord, WikiProject } from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { LintIssue, LintReport } from "../domain/validation/types.ts";
 import { extractLinks } from "./knowledge/doc-parser.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";

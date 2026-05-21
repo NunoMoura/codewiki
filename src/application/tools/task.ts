@@ -4,7 +4,8 @@ import { appendFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/p
 import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
-import type { CodewikiTaskToolInput, WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
+import type { CodewikiTaskToolInput } from "../../domain/roadmap/types.ts";
 import { nowIso } from "../../domain/shared/utils.ts";
 import { withLockedPaths } from "../../mutation-queue.ts";
 import { buildCodewikiTaskDetail } from "../state.ts";

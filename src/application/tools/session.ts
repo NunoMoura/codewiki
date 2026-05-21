@@ -1,4 +1,5 @@
-import type { CodewikiSessionToolInput, WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
+import type { CodewikiSessionToolInput } from "../../domain/session/types.ts";
 import { nowIso } from "../../domain/shared/utils.ts";
 import { clearSessionFocus, getFocusedTaskLink, recordSessionTaskAction } from "../session.ts";
 

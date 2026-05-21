@@ -1,6 +1,15 @@
 import { isAcceptedBuildData } from "../domain/build/lifecycle.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption } from "../domain/change/traceability.ts";
-import type { ChangeClaimsFile, GraphEdge, GraphFile, GraphNode, GraphViews, LintReport, RoadmapTaskRecord, WikiProject } from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { ChangeClaimsFile } from "../domain/session/types.ts";
+import type {
+	GraphEdge,
+	GraphFile,
+	GraphNode,
+	GraphViews,
+} from "../domain/state/types.ts";
+import type { LintReport } from "../domain/validation/types.ts";
 import { GitCache } from "./local/git-cache.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";

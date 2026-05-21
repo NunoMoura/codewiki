@@ -1,8 +1,62 @@
 {
   "version": 2,
-  "updated": "2026-05-20T21:39:31Z",
-  "order": [],
-  "tasks": {},
+  "updated": "2026-05-21T01:24:35Z",
+  "order": [
+    "TASK-008"
+  ],
+  "tasks": {
+    "TASK-008": {
+      "id": "TASK-008",
+      "title": "Rebalance domain and application source ownership",
+      "status": "blocked",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Move pure CodeWiki concepts, types, value rules, and invariants from application shims into focused domain modules while keeping application code as workflow/use-case orchestration.",
+      "spec_paths": [
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "code_paths": [
+        "src/domain/**",
+        "src/application/**",
+        "src/adapters/**",
+        "tests/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "ddd",
+        "architecture",
+        "refactor"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "The package source reflects the documented domain-led architecture: core concepts live under src/domain, application modules consume them, and behavior stays unchanged.",
+        "acceptance": [
+          "Domain-specific type/value definitions are organized under src/domain/<concept> instead of one broad shared shim where practical.",
+          "Application modules import concept types/rules from domain modules and retain use-case/orchestration, file I/O, graph rebuild, gateway, tool, and local runtime logic.",
+          "No adapter/UI/Node I/O dependencies are introduced into src/domain/**.",
+          "Existing public tool behavior and generated artifact shapes remain compatible."
+        ],
+        "non_goals": [
+          "Do not redesign product behavior, CodeWiki artifact schemas, or public tool contracts.",
+          "Do not introduce a top-level infrastructure layer.",
+          "Do not rewrite unrelated application workflows beyond moving pure domain concepts/rules."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted architecture/import checks for domain dependency direction",
+          "relevant smoke tests if the baseline runner can execute"
+        ]
+      },
+      "delta": {
+        "desired": "Domain concepts define CodeWiki language and invariants; application modules orchestrate workflows over those concepts.",
+        "current": "Many pure concepts and schema/value definitions are concentrated in src/domain/shared/types.ts and application modules, making domain look like a shim.",
+        "closure": "Typecheck and architecture checks pass or any pre-existing runner failure is documented with scope."
+      },
+      "created": "2026-05-20",
+      "updated": "2026-05-21T01:24:35Z"
+    }
+  },
   "sprints": {
     "SPRINT-001": {
       "id": "SPRINT-001",

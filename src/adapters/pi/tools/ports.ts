@@ -1,6 +1,6 @@
 import { appendFile, readFile, writeFile } from "node:fs/promises";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { WikiProject } from "../../../domain/shared/types.ts";
+import type { WikiProject } from "../../../domain/project/types.ts";
 import type { TaskMutationPorts } from "../../../application/task.ts";
 import { piSessionPorts, piSessionStore } from "../session.ts";
 

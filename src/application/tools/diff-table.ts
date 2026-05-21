@@ -1,4 +1,4 @@
-import type { WikiProject } from "../../domain/shared/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
 import { executeDiffTableAction, type CodewikiDiffTableToolInput } from "../diff-table.ts";
 
 export async function executeCodewikiDiffTableTool(

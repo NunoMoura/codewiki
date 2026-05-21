@@ -1,28 +1,25 @@
 import { resolve } from "node:path";
 import { readFile, stat, writeFile } from "node:fs/promises";
+import type { ChangeType } from "../domain/change/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
 import type {
-	WikiProject,
 	RoadmapFile,
 	RoadmapSprintRecord,
 	RoadmapTaskRecord,
 	RoadmapTaskUpdateInput,
 	RoadmapStatus,
 	RoadmapPriority,
-	RoadmapStateTaskSummary,
 	RoadmapTaskGoal,
 	CodewikiTaskPatchInput,
 	CodewikiTaskEvidenceInput,
-	TaskVerifierResult,
 	RoadmapTaskInput,
 	TaskLoopUpdateInput,
-	ChangeType,
 	CodewikiSprintInput,
-} from "../domain/shared/types.ts";
-import {
-	ROADMAP_STATUS_VALUES,
-	ROADMAP_PRIORITY_VALUES,
-	CHANGE_TYPE_VALUES,
-} from "../domain/shared/types.ts";
+} from "../domain/roadmap/types.ts";
+import type { RoadmapStateTaskSummary } from "../domain/state/types.ts";
+import type { TaskVerifierResult } from "../domain/validation/types.ts";
+import { CHANGE_TYPE_VALUES } from "../domain/change/types.ts";
+import { ROADMAP_STATUS_VALUES, ROADMAP_PRIORITY_VALUES } from "../domain/roadmap/types.ts";
 import { unique, nowIso, formatError } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import { assertExecutableRoadmapTask, assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";

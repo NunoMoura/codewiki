@@ -3,7 +3,31 @@ import type {
 	ExtensionContext,
 	ExtensionCommandContext,
 } from "@earendil-works/pi-coding-agent";
-import type { ActiveStatusPanel, ActiveConfigPanel, WikiProject, StatusScope, TaskSessionLinkRecord, ResolvedStatusDockProject, StatusPanelSection, ConfigPanelSection, StatusStateFile, RoadmapStateFile, LintReport, RoadmapStateTaskSummary, StatusStateAgencyLane, StatusStateParallelSession, StatusStateAgentRow, StatusStateRoadmapColumn, StatusStateSpecRow, StatusStateChannelRow, StatusPanelDetail, HomeIssue, StatusDockPrefs, StatusDockDensity, ArchitecturePanelComponent, TaskSessionAction } from "../../../domain/shared/types.ts";
+import type { WikiProject } from "../../../domain/project/types.ts";
+import type { TaskSessionLinkRecord, TaskSessionAction } from "../../../domain/session/types.ts";
+import type {
+	ActiveStatusPanel,
+	ActiveConfigPanel,
+	StatusScope,
+	ResolvedStatusDockProject,
+	StatusPanelSection,
+	ConfigPanelSection,
+	StatusStateFile,
+	RoadmapStateFile,
+	RoadmapStateTaskSummary,
+	StatusStateAgencyLane,
+	StatusStateParallelSession,
+	StatusStateAgentRow,
+	StatusStateRoadmapColumn,
+	StatusStateSpecRow,
+	StatusStateChannelRow,
+	StatusPanelDetail,
+	HomeIssue,
+	StatusDockPrefs,
+	StatusDockDensity,
+	ArchitecturePanelComponent,
+} from "../../../domain/state/types.ts";
+import type { LintReport } from "../../../domain/validation/types.ts";
 import {
 	readStatusDockPrefs,
     resolveStatusDockPrefsPath,
@@ -26,7 +50,7 @@ import {
     padToWidth,
     truncatePlain,
 } from "./text.ts";
-import { STATUS_DOCK_MODE_VALUES } from "../../../domain/shared/types.ts";
+import { STATUS_DOCK_MODE_VALUES } from "../../../domain/state/types.ts";
 import {
 	configSectionTabs,
 	renderChoiceRow,

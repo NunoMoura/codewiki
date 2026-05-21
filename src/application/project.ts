@@ -1,13 +1,9 @@
 import { resolve, dirname, basename } from "node:path";
 import type { CodewikiFileStore } from "./local/file-store.ts";
-import type {
-	WikiProject,
-	ResolvedStatusDockProject,
-	DocsConfig,
-	RoadmapTaskRecord,
-	TaskSessionLinkRecord,
-	StatusDockPrefs,
-} from "../domain/shared/types.ts";
+import type { WikiProject, DocsConfig } from "../domain/project/types.ts";
+import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { TaskSessionLinkRecord } from "../domain/session/types.ts";
+import type { ResolvedStatusDockProject, StatusDockPrefs } from "../domain/state/types.ts";
 import {
 	nowIso,
 	unique,

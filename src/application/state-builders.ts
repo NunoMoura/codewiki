@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto";
 import { readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
-import type { ChangeClaimsFile, GraphFile, LintReport, RoadmapStateFile, RoadmapSprintRecord, RoadmapTaskRecord, StatusStateFile, WikiProject } from "../domain/shared/types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { RoadmapSprintRecord, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { ChangeClaimsFile } from "../domain/session/types.ts";
+import type { GraphFile, RoadmapStateFile, StatusStateFile } from "../domain/state/types.ts";
+import type { LintReport } from "../domain/validation/types.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 import { buildChangeClaimState } from "./claims.ts";

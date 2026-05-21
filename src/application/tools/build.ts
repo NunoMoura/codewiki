@@ -1,4 +1,5 @@
-import type { CodewikiBuildToolInput, WikiProject } from "../../domain/shared/types.ts";
+import type { CodewikiBuildToolInput } from "../../domain/build/types.ts";
+import type { WikiProject } from "../../domain/project/types.ts";
 import { writeBuild } from "../builds.ts";
 import { runRebuild } from "../state-artifacts.ts";
 
