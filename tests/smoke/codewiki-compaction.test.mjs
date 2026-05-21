@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";

@@ -1,10 +1,12 @@
+import "../setup-env.mjs";
 /**
  * tests/smoke/builds.mjs
  *
  * Standalone smoke tests for codewiki_build (decision, planning, implementation)
  * and codewiki_validation. Bootstraps a fresh temp project, runs the tools, asserts.
  */
-import { mkdtempSync, readFileSync, rmSync, statSync, readdirSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, readdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -14,7 +16,7 @@ import assert from "node:assert";
 const REPO_ROOT = resolve(import.meta.dirname, "..", "..");
 
 async function run() {
-	const tmp = mkdtempSync("/tmp/codewiki-build-test-");
+	const tmp = mkdtempSync(resolve(tmpdir(), "codewiki-build-test-"));
 
 	try {
 		// Load the extension
@@ -25,7 +27,9 @@ async function run() {
 		);
 		initTheme("dark", false);
 
-		const extensionPath = resolve(REPO_ROOT, "extensions", "codewiki");
+		mkdirSync(resolve(tmp, ".git"), { recursive: true });
+		mkdirSync(resolve(tmp, ".pi"), { recursive: true });
+		writeFileSync(resolve(tmp, ".pi", "settings.json"), JSON.stringify({ packages: [REPO_ROOT] }, null, 2));
 		const loader = new DefaultResourceLoader({ cwd: tmp, agentDir: getAgentDir() });
 		await loader.reload();
 
