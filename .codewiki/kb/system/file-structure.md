@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-21"
 code_paths:
   - .codewiki/kb
   - src
@@ -40,7 +40,7 @@ Every CodeWiki project should use the same top-level knowledge-base shape:
 
 Product docs define users, user stories, and visual user interfaces. System docs define the technical architecture, API, adapters, distribution mechanisms, component ownership, and diagram raw data that implement product intent.
 
-At the `.codewiki/` root, active contract surfaces are limited to config, knowledge, roadmap queue/tasks, session queue coordination, builds, validation, runtime diff tables, sources/research support, and generated graph state. In this repository, `.codewiki/` is dogfood state for maintaining CodeWiki; it is not package source code. Legacy `.codewiki/index/` and default `.codewiki/evidence/**` surfaces are deprecated: `.codewiki/index_graph.json` is the generated index, implementation builds hold execution evidence, validation reports hold hot gateway decisions, and source/research support belongs under `.codewiki/sources/**` or an explicit `research_root`.
+At the `.codewiki/` root, active surfaces are config, KB, roadmap, session coordination, builds, validation, runtime diff tables, source/research support, and generated graph state. In this repository, `.codewiki/` is dogfood state, not package source. Legacy `.codewiki/index/**` and `.codewiki/evidence/**` are deprecated; use `.codewiki/index_graph.json`, builds, validation reports, and `.codewiki/sources/**` or `research_root`.
 
 System component docs should stay flat. Each major system component should have one matching `.md` file under `system/`. Diagram raw data is the one intended nested system folder and lives under `system/diagrams/**`.
 

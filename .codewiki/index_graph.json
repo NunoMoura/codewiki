@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-21T05:51:48.944Z",
+  "generated_at": "2026-05-21T05:54:01.729Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -30156,27 +30156,18 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-21T05:51:48.898Z",
-      "counts": {
-        "large-doc": 1
-      },
-      "issues": [
-        {
-          "severity": "warning",
-          "kind": "large-doc",
-          "path": ".codewiki/kb/system/file-structure.md",
-          "message": "Live doc has 1625 words; consider split or cut."
-        }
-      ]
+      "generated_at": "2026-05-21T05:54:01.693Z",
+      "counts": {},
+      "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-21T05:51:48Z",
+      "generated_at": "2026-05-21T05:54:01Z",
       "health": {
-        "color": "yellow",
+        "color": "green",
         "errors": 0,
-        "warnings": 1,
-        "total_issues": 1
+        "warnings": 0,
+        "total_issues": 0
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -30261,17 +30252,17 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-21T05:51:48Z",
+      "generated_at": "2026-05-21T05:54:01Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
         "roadmap_path": ".codewiki/roadmap/queue.json"
       },
       "health": {
-        "color": "yellow",
+        "color": "green",
         "errors": 0,
-        "warnings": 1,
-        "total_issues": 1
+        "warnings": 0,
+        "total_issues": 0
       },
       "summary": {
         "total_specs": 17,
@@ -31156,7 +31147,7 @@
           "related_task_ids": [],
           "primary_task": null,
           "revision": {
-            "digest": "0ebc33ac6338e057aa7484403dd211e529394f51470fee7b5f60c99b5fa7d333",
+            "digest": "c8dccca0c173e4064e7277b1108e5542f3c8a138497795d077afca2f283c6c0e",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -31310,7 +31301,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-21T05:51:48Z",
+        "generated_at": "2026-05-21T05:54:01Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -31338,10 +31329,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-21T05:51:48Z",
+            "checked_at": "2026-05-21T05:54:01Z",
             "revision": {
               "git": {
-                "head": "9a29f0a0497f09f609ea7aab40944d62cadbec33",
+                "head": "12f9298084d4462ab0091e0cac3cf4ff4260dc57",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -31427,17 +31418,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "c1f740fe0baddbc04a8188ebd551dcbf39eb8fece86829461f5440f1fccf4048",
+              "spec_digest": "2a4d9dfb9f419bad69678ba5a64f13759cfb3ff147a6482e7fdd337b6c9a20ef",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "cc183302b82328635e7d5140e25ac7de9efac859007793bdb23bdee21a753ab1",
-              "digest": "74be0dd73d61743dfd553c67ccd5b364f50177ee45a00de39fb2147d12fa1b19"
+              "digest": "e22f219d624faa2bd0ce44f7e2622a08dee3c8899c131080e5a0bbbb262ad70b"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-21T05:51:48Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-21T05:54:01Z",
+              "reason": "revision changed: spec",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -31555,10 +31546,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-21T05:51:48Z",
+            "checked_at": "2026-05-21T05:54:01Z",
             "revision": {
               "git": {
-                "head": "9a29f0a0497f09f609ea7aab40944d62cadbec33",
+                "head": "12f9298084d4462ab0091e0cac3cf4ff4260dc57",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -31623,17 +31614,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "8ebaf5d04a1ec548383c414b36fca01b6d8241eafa176cee3880fee09321ede2",
+              "spec_digest": "97f17b6af67e48868604e7c28f32bf442f627bd21c9aec0ab05f5e5fb97f26a7",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "6bb3760c08face1e3150fb6e5aa9a82c8c2dee6dbc94df410de485512e1a9eae",
-              "digest": "3a108a6571a4f2967edc790ca36ed9f181a35b93d27fa43b4a54922255dcb6b3"
+              "digest": "4185ad82a38ffe3ecc7ca3b0a2007e41f8bd1fd73363192f5a48af15ea423bf0"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-21T05:51:48Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-21T05:54:01Z",
+              "reason": "revision changed: spec",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -31730,10 +31721,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-21T05:51:48Z",
+            "checked_at": "2026-05-21T05:54:01Z",
             "revision": {
               "git": {
-                "head": "9a29f0a0497f09f609ea7aab40944d62cadbec33",
+                "head": "12f9298084d4462ab0091e0cac3cf4ff4260dc57",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -31819,17 +31810,17 @@
                   "tests/smoke/package-smoke.test.mjs": "02a998d4e00f7433a800e84f0019a2b395972a2b"
                 }
               },
-              "spec_digest": "c1f740fe0baddbc04a8188ebd551dcbf39eb8fece86829461f5440f1fccf4048",
+              "spec_digest": "2a4d9dfb9f419bad69678ba5a64f13759cfb3ff147a6482e7fdd337b6c9a20ef",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "cc183302b82328635e7d5140e25ac7de9efac859007793bdb23bdee21a753ab1",
-              "digest": "74be0dd73d61743dfd553c67ccd5b364f50177ee45a00de39fb2147d12fa1b19"
+              "digest": "e22f219d624faa2bd0ce44f7e2622a08dee3c8899c131080e5a0bbbb262ad70b"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-21T05:51:48Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-21T05:54:01Z",
+              "reason": "revision changed: spec",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -31936,19 +31927,19 @@
         ]
       },
       "resume": {
-        "source": "next_step",
+        "source": "agency",
         "task_id": "",
-        "lane_id": "",
-        "heading": "Roadmap clear",
-        "command": "Observe — roadmap clear",
-        "reason": "No open deterministic drift requires action right now.",
+        "lane_id": "product_system",
+        "heading": "Product ↔ System",
+        "command": "/wiki-status",
+        "reason": "Resume from stale agency lane.",
         "status": "in_progress",
-        "verification": "No urgent verification cue.",
+        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "All agency lanes currently fresh."
+        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-21T05:51:48Z",
+        "generated_at": "2026-05-21T05:54:01Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -32657,7 +32648,7 @@
             "related_task_ids": [],
             "primary_task": null,
             "revision": {
-              "digest": "0ebc33ac6338e057aa7484403dd211e529394f51470fee7b5f60c99b5fa7d333",
+              "digest": "c8dccca0c173e4064e7277b1108e5542f3c8a138497795d077afca2f283c6c0e",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -33507,7 +33498,7 @@
                 "related_task_ids": [],
                 "primary_task": null,
                 "revision": {
-                  "digest": "0ebc33ac6338e057aa7484403dd211e529394f51470fee7b5f60c99b5fa7d333",
+                  "digest": "c8dccca0c173e4064e7277b1108e5542f3c8a138497795d077afca2f283c6c0e",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
