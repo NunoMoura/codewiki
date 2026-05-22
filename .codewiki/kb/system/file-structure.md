@@ -5,11 +5,16 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-21"
+updated: "2026-05-22"
 code_paths:
   - .codewiki/kb
   - src
   - skills/codewiki
+diagram_refs:
+  - file-structure-map:intended_file_structure
+  - file-structure-map:current_layered_source
+  - file-structure-map:concept_root_target
+  - file-structure-map:structure_drift_lens
 ---
 
 # File Structure
@@ -36,6 +41,7 @@ Every CodeWiki project should use the same top-level knowledge-base shape:
       key-flow.yaml
       data-model.yaml
       state-lifecycle.yaml
+      file-structure-map.yaml
 ```
 
 Product docs define users, user stories, and visual user interfaces. System docs define the technical architecture, API, adapters, distribution mechanisms, component ownership, and diagram raw data that implement product intent.
@@ -52,7 +58,7 @@ Avoid nested component folders and avoid `overview.md` files except `product/ove
 
 `system/diagrams/**` stores canonical, agent-editable raw diagram data. YAML is the default raw format because it is readable, diffable, and easier for agents to edit safely than dense diagram DSL.
 
-The five default diagram families are:
+The default diagram families are:
 
 | File | Diagram kind | Purpose | Renderer target |
 | --- | --- | --- | --- |
@@ -61,6 +67,7 @@ The five default diagram families are:
 | `diagrams/key-flow.yaml` | Key flow sequence | Most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `diagrams/data-model.yaml` | Data/domain model | Durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
 | `diagrams/state-lifecycle.yaml` | State/lifecycle map | Task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
+| `diagrams/file-structure-map.yaml` | File-structure map | Intended source/tree ownership, current implementation shape, approved migration deltas, and drift-lens categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
 Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generated or renderer input unless a later task explicitly promotes a renderer-specific source file to canonical truth.
 
@@ -84,6 +91,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | Roadmap | `roadmap.md` | `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `.codewiki/session/queue.json`, artifact statuses, generated session views |
 | Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
+| File-structure map and drift lens | `file-structure.md` | `.codewiki/kb/system/diagrams/file-structure-map.yaml`, repository tree audit inputs, source-layout migration deltas |
 | Task-linked tests | `file-structure.md` | `tests/tasks/TASK-###/**`, stable smoke/regression tests under `tests/smoke/**` |
 | Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` router/bootstrap/prompt/playbook/reference assets and focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Pi project prompt boundary | `adapters.md`, `file-structure.md` | `.pi/APPEND_SYSTEM.md` clarifies `.codewiki/` dogfood state vs package source |
@@ -120,6 +128,7 @@ The CodeWiki project should use this system set:
     key-flow.yaml
     data-model.yaml
     state-lifecycle.yaml
+    file-structure-map.yaml
 ```
 
 Deprecated `.codewiki/` data paths that must not be recreated by new templates or normal agent writes:
@@ -159,92 +168,49 @@ Architecture and audit checks must understand these classes so dogfood state, ge
 
 ## Package target layout
 
-The package should be domain-led. Domain concepts define CodeWiki's language and invariants; application code runs compiler/gateway/state/tool workflows over those concepts; adapters and UIs expose the workflows without owning semantics. There is no top-level `infrastructure/` layer because filesystem, Git, process, locking, and persistence are implementation details behind application ports or local runtime services.
+The accepted vNext direction is concept-root source ownership. Main concepts should be findable from the `src/` root with model, use cases, tool/API entrypoints, and concept-specific local implementation nearby. Adapters and UIs remain exposure layers; shared code stays primitive-only. No top-level `infrastructure/` layer should exist.
+
+Current implementation remains valid until migration tasks land:
 
 ```text
-src/
-  index.ts                 # thin package entrypoint
-  domain/
-    agency/                # bounded automation scopes, budgets, roles, and agency value objects
-    audit/                 # deterministic audit profiles, statuses, and report concepts
-    build/                 # compiler build inputs, lifecycle, and handoff value objects
-    change/                # change-type and traceability value objects
-    gc/                    # artifact retention and GC value objects
-    project/               # repo contract and project configuration concepts
-    roadmap/               # task, sprint, status, priority, and boundary concepts
-    session/               # session queue, artifact statuses, focus, handoff, and worktree-isolation concepts
-    state/                 # generated-state and reconciliation domain concepts
-    validation/            # validation report, verifier, and lint concepts
-    shared/                # tiny primitives and compatibility barrels only
-  application/
-    tools/                 # agent-callable use-case API used by adapters, skills, CLI, MCP
-    gateway/               # local policy/patch gateway implementation
-    graph/                 # generated graph rebuild orchestration
-    knowledge/             # knowledge parsing and link extraction
-    local/                 # built-in local fs/git/process/persistence implementations
-    state*.ts              # generated state read/rebuild helpers
-    builds.ts              # compiler build writers
-    roadmap.ts             # roadmap use cases
-    task.ts                # task mutation use cases
-    ports.ts
-  adapters/
-    pi/
-      commands/
-      tools/
-      ui/
-  ui/
-    web/
-    tui/
+src/{domain,application,adapters,ui}/
 ```
 
-Skill assets own agent workflow guidance, prompt templates, bootstrap guidance, and optional helper scripts/tools. Source code may execute those workflows through `src/application/tools/**`, but skills remain the asset owner.
+Target concept roots:
 
 ```text
-skills/codewiki/
-  SKILL.md                # router/bootstrap/status invariants
-  playbooks/
-  bootstrap/
-  prompts/
-  references/
-skills/codewiki-decision/SKILL.md
-skills/codewiki-planning/SKILL.md
-skills/codewiki-implementation/SKILL.md
-skills/codewiki-validation/SKILL.md
+src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,state,validation,shared}/
+src/{adapters,ui}/
 ```
 
-`scripts/**`, when present, is optional developer convenience. A script may wrap an application tool for local use, but it must be safe to delete without changing CodeWiki product behavior, gateway policy, tests, or package semantics.
+Primary deltas are `domain/session` + `application/session|claims|worktree-isolation` to `session`, `domain/state` + `application/state*|graph|resume-context` to `state`, roadmap/build/validation/audit pairs to matching roots, `application/knowledge` to `knowledge`, `application/tools` to an `api` facade plus concept-owned tool entrypoints, and `application/local` to concept-owned local implementations or truly cross-cutting shared ports.
 
-Future adapter directories may be introduced only when there is an implementation need:
-
-```text
-src/adapters/claude-code/
-src/adapters/codex/
-src/adapters/cli/
-src/adapters/mcp/
-```
+Skill assets own agent workflow guidance under `skills/codewiki*/**`; source may execute those workflows through API/concept entrypoints, but skills remain the asset owner. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics. Future adapters such as `src/adapters/cli/**` or `src/adapters/mcp/**` require an implementation need.
 
 ## Dependency direction
 
 ```text
-adapters -> application tools/use cases -> domain
-ui -> application read/state services -> domain
-skill helper scripts/tools -> application/tools
-optional scripts -> application/tools
-application/local -> application ports / domain contracts
-domain/shared -> primitives only, no product behavior
+adapters/ui/skills/scripts -> api facade or concept tool entrypoints -> concept use cases -> concept models
+concept local implementations -> concept contracts / shared ports
+shared -> primitives only
 ```
+
+During migration, current paths still obey `adapters -> application -> domain`, `ui -> application -> domain`, and `application/local -> ports/domain contracts`.
 
 Rules:
 
-- `domain/**` has no Node I/O, no Pi imports, no adapter imports, and no application imports.
-- `application/**` owns concrete use cases: compiler build writing, validation report writing, roadmap/session operations, generated state/graph rebuild and query helpers, agent-callable tool APIs, ports, and built-in local runtime implementations. It must remain agent-agnostic and must not import adapters, UI code, skills, scripts, or Pi SDK/TUI packages.
-- `adapters/**` translate harness APIs or protocol surfaces into application tools and translate results back into commands, tools, protocol messages, sessions, or host-native compact UI. Browser UI source belongs under `src/ui/**`, not `src/adapters/**`.
-- `domain/**` owns product semantics for agency, audits, builds, changes, GC, project contracts, roadmap, session queue, validation, and generated state. `domain/shared/**` stays small and cannot become a dumping ground; compatibility barrels may remain only during migrations.
-- `core/**`, `engine/**`, and top-level `infrastructure/**` must not exist in the target implementation; former responsibilities now live under `domain/**`, `application/**`, and `adapters/**`.
+- Concept model code has no Node I/O, Pi, adapter, UI, skill, or script imports.
+- Concept use cases own concrete behavior and may use concept-local runtime implementations behind contracts.
+- Cross-concept APIs must be explicit through the API facade, shared ports, or named contracts; do not recreate a dumping-ground `shared` or `application` under a new name.
+- `adapters/**` translate host/protocol APIs into API/concept calls and translate results back. Browser UI source stays under `src/ui/**`.
+- `src/shared/**` and transitional `src/domain/shared/**` stay small; compatibility barrels may remain only during migrations.
+- `core/**`, `engine/**`, and top-level `infrastructure/**` must not exist in target source.
 
 ## Current migration warning
 
 The repository no longer contains transitional `core/**` or `engine/**` source folders. Generated task shards remain runtime outputs, not target source architecture.
+
+The repository does contain an approved concept-root migration delta from the current `src/domain/**` + `src/application/**` split toward `src/<concept>/**` ownership. Until the deterministic drift lens lands, audits should treat this as planned delta rather than accidental drift. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking throughout the move.
 
 Runtime checks must cover direct Node execution and package loading, not only TypeScript typechecking.
 

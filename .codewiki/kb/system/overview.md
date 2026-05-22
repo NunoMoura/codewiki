@@ -5,7 +5,7 @@ state: active
 summary: Main runtime areas and ownership boundaries for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-16"
+updated: "2026-05-22"
 code_paths:
   - src
   - skills
@@ -23,6 +23,7 @@ CodeWiki maintains the repository-local `.codewiki/` contract and exposes it thr
 - **Roadmap semantics** own work truth: priorities, active work items, status, progress, blockers, and closure state under `.codewiki/roadmap/**`.
 - **Validation gateways** validate submitted cycle builds against policy, source refs, criteria, audit evidence, generated-state context, and content proofs. Hot failed, blocked, policy-kept, current-publication, or audit-required validation reports live under `.codewiki/validation/**`; cold pass reports rely on Git history/archive refs after publication.
 - **State engine** owns generated reconciliation state in `.codewiki/index_graph.json`: drift detection, routing, derived queue order, loop selection, status, and freshness checks. Domain language calls this state; the graph is the generated representation. It is required validation context but never overrides canonical sources or immutable content proof.
+- **File-structure ownership map** owns human-readable intended source/tree ownership, current implementation shape, approved migration deltas, and drift categories through [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
 - **Audits** produce deterministic alignment, file-structure, stale-reference, package, security, and generated-parity evidence for users and gateways.
 - **CodeWiki UI** owns the standalone local browser command center for humans under `src/ui/**` while delegating all semantics to the CodeWiki API.
 - **Application layer** owns harness-agnostic compilers, validation gateways, the state engine, agent-facing application tools, ports, and built-in local runtime implementations.
@@ -84,7 +85,7 @@ Gateways check vertical and horizontal alignment, but they do not invent require
 
 - [Diagram Raw Data](diagrams/README.md) owns the canonical diagram families and agent-editable YAML sources for system visualizations.
 - [Architecture Map](architecture.mmd) is a compatibility component diagram until System UI rendering migrates to `diagrams/component-map.yaml`.
-- [File Structure](file-structure.md) owns the target repository and knowledge-base structure rules.
+- [File Structure](file-structure.md) owns the target repository and knowledge-base structure rules, including the concept-root source migration target and intended-vs-current drift categories.
 - [API](api.md) owns the harness-independent CodeWiki access contract.
 - [CodeWiki UI](control-room-ui.md) owns standalone local web UI hosting and launch semantics.
 - [Extension](extension.md) owns packaged distribution and the current Pi extension surface.
@@ -103,7 +104,9 @@ CodeWiki should not implement a general sandbox, hosted SaaS, or duplicate Pi ob
 
 ## Target package architecture
 
-The package follows the structure owned by [File Structure](file-structure.md): adapters, UI, and skills call focused application use cases and tools, and application code uses domain concepts without placeholder wrapper seams. There is no top-level `infrastructure/` source layer. Built-in local filesystem/Git/process implementations live under `application/local/**` behind application ports. `scripts/**` is optional developer convenience only and must not enforce authoritative CodeWiki semantics.
+The package is moving from layer-first `src/domain/**` plus `src/application/**` toward concept-root `src/<concept>/**` ownership. Session, state, roadmap, build, validation, audit, agency, project, knowledge, gateway, and GC should be navigable from the source root with model, use cases, tool/API entrypoints, and concept-local runtime code nearby. Adapters, UI, and skills call API/concept entrypoints and do not own semantics. No top-level `infrastructure/` layer should exist; `scripts/**` remains optional developer convenience.
+
+Until migration tasks land, the current layer-first tree remains valid and is tracked as an approved migration delta in [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
 
 ## Knowledge-base organization rule
 

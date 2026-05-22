@@ -1,0 +1,275 @@
+schema_version: 1
+id: spec.system.diagrams.file-structure-map
+title: CodeWiki File Structure and Ownership Map
+kind: file_structure_map
+purpose: Show intended repository/source ownership, current implementation shape, approved migration deltas, and drift categories for human-driven structure control.
+source_docs:
+  - .codewiki/kb/system/file-structure.md
+  - .codewiki/kb/system/overview.md
+renderer:
+  preferred: tree_graph
+  fallback: mermaid_flowchart
+groups:
+  - id: root
+    label: Repository root
+  - id: source_current
+    label: Current source layout
+  - id: source_target
+    label: Concept-root target
+  - id: exposure
+    label: Exposure layers
+  - id: codewiki_state
+    label: Dogfood CodeWiki state
+  - id: generated_runtime
+    label: Generated and runtime artifacts
+  - id: assets_tests
+    label: Skills, tests, and helpers
+  - id: proof
+    label: Proof and publication
+  - id: drift
+    label: Drift and delta controls
+nodes:
+  - id: intended_file_structure
+    label: Intended file structure
+    group: root
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    role: canonical_target
+  - id: current_layered_source
+    label: Current src/domain + src/application split
+    group: source_current
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: current_valid_until_migrated
+    paths:
+      - src/domain/**
+      - src/application/**
+  - id: current_adapters
+    label: Current adapters
+    group: exposure
+    kind: adapter
+    source: .codewiki/kb/system/adapters.md
+    paths:
+      - src/adapters/**
+  - id: current_ui
+    label: Current UI
+    group: exposure
+    kind: component
+    source: .codewiki/kb/system/control-room-ui.md
+    paths:
+      - src/ui/**
+  - id: concept_root_target
+    label: Concept-root source ownership target
+    group: source_target
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: accepted_target
+    paths:
+      - src/agency/**
+      - src/audit/**
+      - src/build/**
+      - src/change/**
+      - src/gc/**
+      - src/gateway/**
+      - src/knowledge/**
+      - src/project/**
+      - src/roadmap/**
+      - src/session/**
+      - src/state/**
+      - src/validation/**
+  - id: api_facade
+    label: Stable API facade
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/api.md
+    status: accepted_target
+    paths:
+      - src/api/**
+  - id: shared_primitives
+    label: Shared primitives only
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    status: accepted_target
+    paths:
+      - src/shared/**
+      - src/domain/shared/**
+  - id: dogfood_kb
+    label: Dogfood knowledge base
+    group: codewiki_state
+    kind: durable_truth
+    source: .codewiki/kb/system/knowledge.md
+    paths:
+      - .codewiki/kb/**
+  - id: dogfood_roadmap
+    label: Roadmap work truth
+    group: codewiki_state
+    kind: durable_truth
+    source: .codewiki/kb/system/roadmap.md
+    paths:
+      - .codewiki/roadmap/queue.json
+  - id: dogfood_builds
+    label: Compiler builds
+    group: codewiki_state
+    kind: artifact
+    source: .codewiki/kb/system/builds.md
+    paths:
+      - .codewiki/builds/**
+  - id: dogfood_validation
+    label: Validation reports
+    group: proof
+    kind: evidence
+    source: .codewiki/kb/system/validation-gateway.md
+    paths:
+      - .codewiki/validation/**
+  - id: generated_graph
+    label: Generated graph/state views
+    group: generated_runtime
+    kind: generated_state
+    source: .codewiki/kb/system/graph.md
+    paths:
+      - .codewiki/index_graph.json
+      - .codewiki/roadmap/tasks/**
+  - id: runtime_session
+    label: Runtime session coordination
+    group: generated_runtime
+    kind: artifact
+    source: .codewiki/kb/system/api.md
+    paths:
+      - .codewiki/session/**
+      - .codewiki/runtime/**
+  - id: skills_assets
+    label: Skill workflow assets
+    group: assets_tests
+    kind: component
+    source: .codewiki/kb/system/extension.md
+    paths:
+      - skills/codewiki/**
+      - skills/codewiki-decision/**
+      - skills/codewiki-planning/**
+      - skills/codewiki-implementation/**
+      - skills/codewiki-validation/**
+  - id: tests_and_smoke
+    label: Tests and smoke baselines
+    group: assets_tests
+    kind: executable_truth
+    source: .codewiki/kb/system/file-structure.md
+    paths:
+      - tests/**
+  - id: optional_scripts
+    label: Optional developer helper scripts
+    group: assets_tests
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    paths:
+      - scripts/**
+    rule: removable_without_product_semantic_change
+  - id: publication_proof
+    label: Publication proof
+    group: proof
+    kind: publication
+    source: .codewiki/kb/system/overview.md
+    paths:
+      - git commits and tree SHAs
+      - package digests
+      - archive refs
+      - remote refs
+  - id: structure_drift_lens
+    label: Intended vs current structure drift lens
+    group: drift
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: accepted_target
+    categories:
+      - missing_expected_path
+      - unexpected_path
+      - ownership_mismatch
+      - deprecated_path_present
+      - generated_or_runtime_artifact_in_source_area
+      - approved_migration_delta
+      - compatibility_export_gap
+  - id: human_structure_surface
+    label: Human structure review surface
+    group: drift
+    kind: component
+    source: .codewiki/kb/product/overview.md
+    status: accepted_target
+edges:
+  - id: intended_defines_current
+    from: intended_file_structure
+    to: current_layered_source
+    label: records current implementation shape
+  - id: intended_defines_target
+    from: intended_file_structure
+    to: concept_root_target
+    label: defines accepted target ownership
+  - id: current_to_target_delta
+    from: current_layered_source
+    to: concept_root_target
+    label: approved migration delta
+  - id: concept_target_exposed_by_api
+    from: concept_root_target
+    to: api_facade
+    label: exposes stable tool/API contracts
+  - id: adapters_delegate_to_api
+    from: current_adapters
+    to: api_facade
+    label: delegate semantic work
+  - id: ui_delegates_to_api
+    from: current_ui
+    to: api_facade
+    label: delegates semantic work
+  - id: drift_lens_compares
+    from: structure_drift_lens
+    to: current_layered_source
+    label: compares current tree
+  - id: drift_lens_against_target
+    from: structure_drift_lens
+    to: concept_root_target
+    label: against intended target
+  - id: human_surface_reads_drift
+    from: human_structure_surface
+    to: structure_drift_lens
+    label: presents drift and approved deltas
+  - id: kb_owns_intent
+    from: dogfood_kb
+    to: intended_file_structure
+    label: owns source truth
+  - id: roadmap_plans_migration
+    from: dogfood_roadmap
+    to: concept_root_target
+    label: plans executable migration
+  - id: builds_record_handoffs
+    from: dogfood_builds
+    to: concept_root_target
+    label: compile handoffs for migration
+  - id: validation_checks_migration
+    from: dogfood_validation
+    to: structure_drift_lens
+    label: validates evidence and drift policy
+  - id: graph_indexes_structure
+    from: generated_graph
+    to: structure_drift_lens
+    label: indexes refs and audit results
+  - id: runtime_not_truth
+    from: runtime_session
+    to: intended_file_structure
+    label: coordinates but does not define truth
+  - id: tests_prove_source
+    from: tests_and_smoke
+    to: concept_root_target
+    label: proves behavior through migration
+ui_hints:
+  default_layout: tree_with_delta_overlay
+  edge_style: behind_nodes
+  inspector_fields:
+    - kind
+    - source
+    - group
+    - status
+    - paths
+    - categories

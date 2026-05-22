@@ -6,7 +6,7 @@ summary: Agent-editable raw data contract for project diagrams rendered by CodeW
 owners:
   - architecture
   - design
-updated: "2026-05-12"
+updated: "2026-05-22"
 code_paths:
   - src/ui/web/control-room.ts
   - src/adapters/pi/ui/manager.ts
@@ -56,11 +56,13 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
 | `data-model.yaml` | `data_model` | Show durable entities, generated state, evidence, and ownership. | Mermaid ER/custom ER renderer. |
 | `state-lifecycle.yaml` | `state_lifecycle` | Show task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
+| `file-structure-map.yaml` | `file_structure_map` | Show intended repository/source ownership, current implementation shape, approved migration deltas, and drift categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
 ## Rendering boundaries
 
 - The UI may render a diagram picker from this folder.
-- Selecting a node, edge, entity, state, or sequence step should open source-backed inspector detail.
+- Selecting a node, edge, entity, state, sequence step, or file-structure node should open source-backed inspector detail.
+- File-structure diagrams should show ownership and drift categories without duplicating full component docs.
 - Diagram files should not duplicate full component docs.
 - Generated state/graph output remains `.codewiki/index_graph.json`; diagram files are intended system knowledge.
 - `../architecture.mmd` remains a compatibility component diagram during migration, but new diagram work should target this folder.

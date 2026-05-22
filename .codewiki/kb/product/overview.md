@@ -5,7 +5,7 @@ state: active
 summary: Product intent and navigation for CodeWiki's users, stories, and visual UIs.
 owners:
 - product
-updated: '2026-05-19'
+updated: '2026-05-22'
 code_paths:
 - .codewiki/kb/product
 ---
@@ -25,7 +25,7 @@ Folders do not need `overview.md` files by default. Add a navigation page only w
 
 ## Product boundaries
 
-Product docs own user definitions, user stories, visual UI expectations, value, workflows, and non-goals. They should not own source layout, module boundaries, adapter protocols, runtime packaging, compiler implementation, graph storage mechanics, or distribution details.
+Product docs own user definitions, user stories, visual UI expectations, value, workflows, and non-goals. They should not own source layout, module boundaries, adapter protocols, runtime packaging, compiler implementation, graph storage mechanics, or distribution details. Human-visible structure review is product-relevant when it helps maintainers understand intended structure, current structure, drift, approved migration deltas, and next decisions; the authoritative source-layout rules still belong in system docs.
 
 Product-oriented decisions should update product meaning first, then preflight system impact. Technical/system decisions should update system truth first, then update product docs only when architecture constraints, workflows, or tool surfaces change user-visible behavior or expectations.
 
@@ -39,6 +39,7 @@ Visual UI docs should describe what users see and understand. System docs should
 - Product stories map to system components and roadmap work without duplicating technical design.
 - Visual UI expectations stay separate from adapter, API, and distribution mechanics.
 - Agents and humans can understand current state through trustworthy product surfaces, from compact host panels to the standalone CodeWiki UI.
+- Maintainers can review intended file structure, actual file structure, drift, and approved migration deltas before agents reshape source layout.
 - Historical recovery relies on git, harness session storage, compact semantic summaries, and generated graph context rather than product doc event logs.
 
 ## Related docs

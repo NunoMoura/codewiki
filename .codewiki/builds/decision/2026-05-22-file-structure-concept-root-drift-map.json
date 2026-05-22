@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-22T05:01:34Z",
+  "source": "codewiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-21T05:01:34.000Z",
+    "purge_after": "2026-07-21T05:01:34.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "changed"
+    ],
+    "audit_refs": [
+      "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh_context",
+        "reason": "Planning and implementation must start from accepted build and updated KB, not chat memory.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful",
+          "decision_build file-structure-concept-root-drift-map"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": [
+          "planning",
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "FS-REQ-1",
+      "text": "CodeWiki must maintain source-layout truth as an explicit intended/current/delta map, not prose-only tribal knowledge.",
+      "source_refs": [
+        "DT-2026-05-22-4:FS-DIAGRAM-CANONICAL",
+        "DT-2026-05-22-4:FS-DRIFT-LENS"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "FS-REQ-2",
+      "text": "Main CodeWiki concepts should migrate toward root-level source ownership under src/<concept>/** while preserving adapters/ui as exposure layers and preserving public behavior.",
+      "source_refs": [
+        "DT-2026-05-22-4:FS-ROOT-CONCEPTS"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "FS-REQ-3",
+      "text": "Maintainers should be able to review intended file structure, actual file structure, drift, and approved migration deltas before agents reshape source layout.",
+      "source_refs": [
+        "DT-2026-05-22-4:FS-HUMAN-DRIVEN-SURFACE"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Approved rows are mapped to canonical knowledge and diagram sources.",
+      "evidence": ".codewiki/kb/system/file-structure.md, .codewiki/kb/system/overview.md, .codewiki/kb/system/diagrams/README.md, .codewiki/kb/system/diagrams/file-structure-map.yaml, .codewiki/kb/product/overview.md updated; file-structure/alignment/generated-parity/changed audit passed.",
+      "requirement_ids": [
+        "FS-REQ-1",
+        "FS-REQ-2",
+        "FS-REQ-3"
+      ],
+      "source_refs": [
+        "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "Accepted semantic decision updates KB only. Source migration and audit/UI behavior remain future planning/implementation work. Risk is medium-high for root concept migration, so executable work must be staged with compatibility barrels and full test evidence.",
+  "summary": "Accept concept-root source ownership direction, canonical file-structure diagram, drift lens, and human structure review surface",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "FS-ROOT-CONCEPTS",
+      "current_state": "Target package architecture is layer-first: src/domain/<concept> owns pure concepts, src/application/<workflow> owns use cases/local services/tools, src/adapters/** exposes host surfaces, and src/ui/** owns browser UI. Session, state, roadmap, build, validation, and related concepts are intentionally split between domain and application paths.",
+      "desired_state": "Evaluate and, if approved, move toward concept-root ownership under src/<concept>/** for major CodeWiki concepts such as session, state, roadmap, build, validation, audit, project, and agency, while keeping adapters/ui as exposure layers. Each concept root would own its domain model plus application/use-case code for that concept, instead of splitting the concept across src/domain and src/application.",
+      "rationale": "User wants full human-driven development and easier project navigation: one concept should be findable in one top-level source area instead of mentally joining domain and application files.",
+      "affected_layers": [
+        "system-kb",
+        "source",
+        "tests",
+        "package-api"
+      ],
+      "risk": "medium-high: broad source migration can disturb imports, package exports, public tool behavior, and recent TASK-008 compatibility guarantees.",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep layer-first architecture and add better maps/search only.",
+        "Use hybrid feature folders under src/features/** while keeping existing domain/application internals.",
+        "Only move application files next to domain files for concepts with high churn."
+      ]
+    },
+    {
+      "id": "FS-DIAGRAM-CANONICAL",
+      "current_state": "System diagrams exist for context, component, key flow, data model, and state lifecycle. File structure is documented as Markdown text in .codewiki/kb/system/file-structure.md, but there is no dedicated canonical raw-data diagram for intended repository/source tree ownership.",
+      "desired_state": "Add a canonical file-structure/ownership diagram raw-data file under .codewiki/kb/system/diagrams/**, sourced from file-structure.md, that represents intended source roots, CodeWiki dogfood paths, generated/runtime artifacts, skill assets, tests, and publication proof boundaries.",
+      "rationale": "User wants to always know intended file structure and inspect it visually alongside the system model.",
+      "affected_layers": [
+        "system-kb",
+        "diagram",
+        "graph"
+      ],
+      "risk": "medium: diagram family expansion must remain canonical YAML and avoid duplicating long prose from file-structure.md.",
+      "user_action": "approved",
+      "alternatives": [
+        "Extend component-map.yaml with path ownership nodes only.",
+        "Keep Markdown tree only and improve doc anchors.",
+        "Generate diagram from file-structure.md instead of adding a separate canonical YAML source."
+      ]
+    },
+    {
+      "id": "FS-DRIFT-LENS",
+      "current_state": "Current audits pass file-structure checks and diagram-ref checks, but intended-vs-current file structure drift is not a first-class source-tree lens with explicit delta categories tied to a canonical file-structure diagram.",
+      "desired_state": "Add a deterministic drift/delta lens that compares the intended file-structure map to the current repository tree and reports missing paths, unexpected paths, ownership mismatches, deprecated paths, generated/runtime artifacts in source areas, and migration deltas.",
+      "rationale": "User wants intended structure, current structure, drift, and delta mapped continuously rather than inferred from prose plus ad hoc audits.",
+      "affected_layers": [
+        "system-kb",
+        "source",
+        "audit",
+        "graph",
+        "ui"
+      ],
+      "risk": "medium: requires designing canonical map schema and audit behavior without creating noisy false positives.",
+      "user_action": "approved",
+      "alternatives": [
+        "Add checks only to existing file-structure audit without new graph lens.",
+        "Use CodeWiki UI to render current tree with no audit enforcement.",
+        "Run manual audits until source layout stabilizes."
+      ]
+    },
+    {
+      "id": "FS-HUMAN-DRIVEN-SURFACE",
+      "current_state": "CodeWiki already separates user intent, compilers, validation, audits, graph, and UI, but architecture docs emphasize agent/compiler loops as much as human navigation. File-structure review is mostly through docs/audits rather than a primary human decision surface.",
+      "desired_state": "Make human-driven structure control explicit: docs and UI should present intended structure, actual structure, drift, and approved migration delta as a human-owned decision surface before agents reshape source layout.",
+      "rationale": "This keeps broad architecture moves human-approved and visible, not hidden in implementation tasks or agent-only graph state.",
+      "affected_layers": [
+        "product-kb",
+        "system-kb",
+        "ui",
+        "workflow"
+      ],
+      "risk": "medium: product/system language must avoid promising a full new product mode before scope is planned.",
+      "user_action": "approved",
+      "alternatives": [
+        "Treat this only as system architecture tooling, no product/user-facing language change.",
+        "Document as maintainer workflow only, no UI work yet.",
+        "Defer until after root-concept migration decision."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "FS-ROOT-CONCEPTS",
+    "FS-DIAGRAM-CANONICAL",
+    "FS-DRIFT-LENS",
+    "FS-HUMAN-DRIVEN-SURFACE"
+  ],
+  "approved_rows": [
+    {
+      "id": "FS-ROOT-CONCEPTS",
+      "current_state": "Target package architecture is layer-first: src/domain/<concept> owns pure concepts, src/application/<workflow> owns use cases/local services/tools, src/adapters/** exposes host surfaces, and src/ui/** owns browser UI. Session, state, roadmap, build, validation, and related concepts are intentionally split between domain and application paths.",
+      "desired_state": "Evaluate and, if approved, move toward concept-root ownership under src/<concept>/** for major CodeWiki concepts such as session, state, roadmap, build, validation, audit, project, and agency, while keeping adapters/ui as exposure layers. Each concept root would own its domain model plus application/use-case code for that concept, instead of splitting the concept across src/domain and src/application.",
+      "rationale": "User wants full human-driven development and easier project navigation: one concept should be findable in one top-level source area instead of mentally joining domain and application files.",
+      "affected_layers": [
+        "system-kb",
+        "source",
+        "tests",
+        "package-api"
+      ],
+      "risk": "medium-high: broad source migration can disturb imports, package exports, public tool behavior, and recent TASK-008 compatibility guarantees.",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep layer-first architecture and add better maps/search only.",
+        "Use hybrid feature folders under src/features/** while keeping existing domain/application internals.",
+        "Only move application files next to domain files for concepts with high churn."
+      ]
+    },
+    {
+      "id": "FS-DIAGRAM-CANONICAL",
+      "current_state": "System diagrams exist for context, component, key flow, data model, and state lifecycle. File structure is documented as Markdown text in .codewiki/kb/system/file-structure.md, but there is no dedicated canonical raw-data diagram for intended repository/source tree ownership.",
+      "desired_state": "Add a canonical file-structure/ownership diagram raw-data file under .codewiki/kb/system/diagrams/**, sourced from file-structure.md, that represents intended source roots, CodeWiki dogfood paths, generated/runtime artifacts, skill assets, tests, and publication proof boundaries.",
+      "rationale": "User wants to always know intended file structure and inspect it visually alongside the system model.",
+      "affected_layers": [
+        "system-kb",
+        "diagram",
+        "graph"
+      ],
+      "risk": "medium: diagram family expansion must remain canonical YAML and avoid duplicating long prose from file-structure.md.",
+      "user_action": "approved",
+      "alternatives": [
+        "Extend component-map.yaml with path ownership nodes only.",
+        "Keep Markdown tree only and improve doc anchors.",
+        "Generate diagram from file-structure.md instead of adding a separate canonical YAML source."
+      ]
+    },
+    {
+      "id": "FS-DRIFT-LENS",
+      "current_state": "Current audits pass file-structure checks and diagram-ref checks, but intended-vs-current file structure drift is not a first-class source-tree lens with explicit delta categories tied to a canonical file-structure diagram.",
+      "desired_state": "Add a deterministic drift/delta lens that compares the intended file-structure map to the current repository tree and reports missing paths, unexpected paths, ownership mismatches, deprecated paths, generated/runtime artifacts in source areas, and migration deltas.",
+      "rationale": "User wants intended structure, current structure, drift, and delta mapped continuously rather than inferred from prose plus ad hoc audits.",
+      "affected_layers": [
+        "system-kb",
+        "source",
+        "audit",
+        "graph",
+        "ui"
+      ],
+      "risk": "medium: requires designing canonical map schema and audit behavior without creating noisy false positives.",
+      "user_action": "approved",
+      "alternatives": [
+        "Add checks only to existing file-structure audit without new graph lens.",
+        "Use CodeWiki UI to render current tree with no audit enforcement.",
+        "Run manual audits until source layout stabilizes."
+      ]
+    },
+    {
+      "id": "FS-HUMAN-DRIVEN-SURFACE",
+      "current_state": "CodeWiki already separates user intent, compilers, validation, audits, graph, and UI, but architecture docs emphasize agent/compiler loops as much as human navigation. File-structure review is mostly through docs/audits rather than a primary human decision surface.",
+      "desired_state": "Make human-driven structure control explicit: docs and UI should present intended structure, actual structure, drift, and approved migration delta as a human-owned decision surface before agents reshape source layout.",
+      "rationale": "This keeps broad architecture moves human-approved and visible, not hidden in implementation tasks or agent-only graph state.",
+      "affected_layers": [
+        "product-kb",
+        "system-kb",
+        "ui",
+        "workflow"
+      ],
+      "risk": "medium: product/system language must avoid promising a full new product mode before scope is planned.",
+      "user_action": "approved",
+      "alternatives": [
+        "Treat this only as system architecture tooling, no product/user-facing language change.",
+        "Document as maintainer workflow only, no UI work yet.",
+        "Defer until after root-concept migration decision."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Accept concept-root ownership as the vNext source-structure direction while treating the current layer-first tree as an approved migration delta until planned implementation tasks land."
+    },
+    {
+      "id": "D2",
+      "summary": "Add a canonical file-structure map diagram source for intended/current/delta/drift navigation."
+    },
+    {
+      "id": "D3",
+      "summary": "Add deterministic intended-vs-current file-structure drift lens as future implementation work."
+    },
+    {
+      "id": "D4",
+      "summary": "Make human-driven structure review product-relevant before agents reshape source layout."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/file-structure.md records concept-root target, migration deltas, drift-lens role, and file-structure diagram family.",
+    ".codewiki/kb/system/overview.md records file-structure ownership map and target package architecture direction.",
+    ".codewiki/kb/system/diagrams/README.md adds file-structure-map.yaml to core diagram set.",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml adds canonical raw-data file-structure map.",
+    ".codewiki/kb/product/overview.md records human-visible structure/drift review as a product-relevant success signal."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "FS-ROOT-CONCEPTS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/overview.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:current_layered_source",
+        "file-structure-map:concept_root_target",
+        "file-structure-map:current_to_target_delta"
+      ],
+      "evidence": "System KB now records concept-root target and migration deltas from current layer-first implementation.",
+      "deferred": false
+    },
+    {
+      "row_id": "FS-DIAGRAM-CANONICAL",
+      "knowledge_refs": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/diagrams/README.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:intended_file_structure"
+      ],
+      "evidence": "Canonical YAML diagram added and diagram docs list it as a default family.",
+      "deferred": false
+    },
+    {
+      "row_id": "FS-DRIFT-LENS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "diagram_refs": [
+        "file-structure-map:structure_drift_lens"
+      ],
+      "evidence": "File-structure map defines deterministic drift categories and system KB records future lens intent.",
+      "deferred": false
+    },
+    {
+      "row_id": "FS-HUMAN-DRIVEN-SURFACE",
+      "knowledge_refs": [
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "diagram_refs": [
+        "file-structure-map:human_structure_surface"
+      ],
+      "evidence": "Product overview adds maintainer success signal and diagram includes human structure review surface.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "mixed",
+    "product_impact": [
+      "Maintainers should see intended/current/drift/migration-delta structure before agents reshape layout."
+    ],
+    "system_impact": [
+      "System source ownership target shifts toward concept-root layout.",
+      "Diagram set gains file-structure-map.yaml.",
+      "Future audit/graph/UI work must use intended-vs-current drift categories."
+    ],
+    "downstream_planning_questions": [
+      "Plan deterministic file-structure map schema/audit lens before broad source migration?",
+      "Plan concept-root migration as one sprint with staged tasks and compatibility proof?",
+      "Plan UI rendering/report surface for structure map after audit data exists?"
+    ]
+  },
+  "diagram_refs": [
+    "file-structure-map:intended_file_structure",
+    "file-structure-map:current_layered_source",
+    "file-structure-map:concept_root_target",
+    "file-structure-map:structure_drift_lens",
+    "file-structure-map:human_structure_surface",
+    "file-structure-map:current_to_target_delta"
+  ],
+  "downstream_planning_questions": [
+    "Define execution tasks for file-structure map/drift lens/audit output.",
+    "Define staged concept-root migration tasks with compatibility proof.",
+    "Define optional UI/report surface for human structure review.",
+    "Plan deterministic file-structure map schema/audit lens before broad source migration?",
+    "Plan concept-root migration as one sprint with staged tasks and compatibility proof?",
+    "Plan UI rendering/report surface for structure map after audit data exists?"
+  ],
+  "assumptions": [
+    "Source migration will be staged and validated; no product behavior redesign is included in this decision.",
+    "Compatibility barrels and public tool behavior remain required during any source move.",
+    "Exact implementation task boundaries will be created by planning."
+  ],
+  "open_questions": [
+    "Which concept root should migrate first after the drift lens exists: session, state, roadmap, build, validation, or audit?",
+    "Should the UI render the file-structure map before or after deterministic audit enforcement lands?"
+  ],
+  "non_goals": [
+    "No immediate source-code migration in this decision build.",
+    "No public package API break.",
+    "No generated renderer output promoted to canonical truth."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md records concept-root target, migration deltas, drift-lens role, and file-structure diagram family.",
+      ".codewiki/kb/system/overview.md records file-structure ownership map and target package architecture direction.",
+      ".codewiki/kb/system/diagrams/README.md adds file-structure-map.yaml to core diagram set.",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml adds canonical raw-data file-structure map.",
+      ".codewiki/kb/product/overview.md records human-visible structure/drift review as a product-relevant success signal.",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/product/overview.md"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

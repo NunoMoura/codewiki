@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-22T05:01:44Z",
+  "profile": "decision",
+  "verdict": "block",
+  "rationale": "Accepted file-structure decision rows were approved by user, mapped to KB and canonical diagram sources, and scoped to knowledge/diagram/product intent only. File-structure, alignment, generated-parity, and changed audits passed after edits; source migration remains downstream planning/implementation work with compatibility constraints. Policy blocks decision validation until audit:alignment, audit:stale-reference, audit:file-structure, audit:generated-parity, audit:changed are recorded.",
+  "checks": [
+    "User approval recorded for DT-2026-05-22-4 rows FS-ROOT-CONCEPTS, FS-DIAGRAM-CANONICAL, FS-DRIFT-LENS, FS-HUMAN-DRIVEN-SURFACE.",
+    "KB updates made to product overview, system overview, file-structure doc, diagram README, and file-structure-map.yaml.",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed pass on 2026-05-22; 89 TypeScript source files and 172 diagram refs checked.",
+    "No source-code migration performed in decision loop."
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Missing required audit evidence for profiles: alignment, stale-reference, file-structure, generated-parity, changed."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+  "policy_profile": "decision",
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "file-structure",
+    "generated-parity",
+    "changed"
+  ],
+  "audit_refs": [
+    "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass"
+  ],
+  "audit_reports": [
+    "inline audit output from codewiki_audit 2026-05-22: file-structure pass, alignment pass, generated-parity pass, changed pass"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite audit evidence for required profiles: alignment, stale-reference, file-structure, generated-parity, changed."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "changed"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:stale-reference",
+        "audit:file-structure",
+        "audit:generated-parity",
+        "audit:changed"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required audit evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:stale-reference",
+          "audit:file-structure",
+          "audit:generated-parity",
+          "audit:changed"
+        ]
+      }
+    ],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "User approval recorded for DT-2026-05-22-4 rows FS-ROOT-CONCEPTS, FS-DIAGRAM-CANONICAL, FS-DRIFT-LENS, FS-HUMAN-DRIVEN-SURFACE."
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

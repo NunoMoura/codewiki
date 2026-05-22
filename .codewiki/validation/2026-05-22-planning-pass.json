@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-22T05:10:16Z",
+  "profile": "planning",
+  "verdict": "pass",
+  "rationale": "Planning build consumes the accepted and validated decision build, creates/refines exactly one first executable task, and keeps source migration/UI work deferred until TASK-010 provides deterministic drift data. High-risk migration direction has explicit user approval through approved decision rows; required task/alignment/changed audit refs are cited.",
+  "checks": [
+    "approved_by_user: user approved all DT-2026-05-22-4 file-structure decision rows before planning.",
+    "Source decision build exists: .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json.",
+    "Decision validation pass exists: .codewiki/validation/2026-05-22-decision-pass.json.",
+    "TASK-010 has focused outcome, acceptance, non-goals, verification, and candidate paths.",
+    "Attempted broader cohort was corrected: TASK-010 is not a source-migration umbrella task.",
+    "codewiki_audit task:TASK-010 pass; alignment pass; changed warnings generated-only."
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment",
+    "task",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:task",
+    "audit:alignment",
+    "audit:changed",
+    "approved_by_user:DT-2026-05-22-4"
+  ],
+  "audit_reports": [
+    "profile:task",
+    "profile:alignment",
+    "profile:changed",
+    "approved_by_user: all rows FS-ROOT-CONCEPTS FS-DIAGRAM-CANONICAL FS-DRIFT-LENS FS-HUMAN-DRIVEN-SURFACE"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "task",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:task or profile:task",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approved_by_user:DT-2026-05-22-4",
+        "approved_by_user: all rows FS-ROOT-CONCEPTS FS-DIAGRAM-CANONICAL FS-DRIFT-LENS FS-HUMAN-DRIVEN-SURFACE",
+        "approved_by_user: user approved all DT-2026-05-22-4 file-structure decision rows before planning."
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}
