@@ -262,6 +262,7 @@ export async function readCodewikiState(
 			claims: (graph?.views as any)?.claims ?? null,
 			scope_views: (graph?.views as any)?.scope_views ?? null,
 			workflow_cursor: (graph?.views as any)?.workflow_cursor ?? null,
+			file_structure: (graph?.views as any)?.file_structure ?? null,
 			gc: gc ? {
 				policy: gc.policy,
 				classes: {
@@ -312,6 +313,7 @@ export async function readCodewikiState(
 			untracked_spec_count: artifacts.statusState?.summary.untracked_specs ?? 0,
 			blocked_spec_count: artifacts.statusState?.summary.blocked_specs ?? 0,
 			high_risk_spec_paths: artifacts.statusState?.views.top_risky_spec_paths ?? [],
+			file_structure: (artifacts.statusState as any)?.file_structure ?? (artifacts.graph?.views as any)?.file_structure ?? null,
 		};
 	}
 

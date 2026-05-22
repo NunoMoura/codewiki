@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-22T09:33:30Z",
+  "profile": "implementation",
+  "task_id": "TASK-010",
+  "verdict": "pass",
+  "rationale": "TASK-010 implementation satisfies the file-structure drift-lens task. Fresh validation consumed the implementation build, roadmap task, accepted decision/planning builds, KB file-structure truth, changed source/test paths, reran required checks, and verified the current repository reports 16 approved migration deltas with 0 actionable file-structure drift. Non-goals are preserved: no source files were migrated, no UI surface was added, and public package behavior remains compatible. User approval evidence is recorded for the semantic migration-adjacent risk tier.",
+  "checks": [
+    "approval:user said \"Okay, great. Proceed.\" on 2026-05-22 after validation handoff",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (22 passed, 0 failed)",
+    "npm test: pass (22 passed)",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-010: warning; file-structure/alignment/generated-parity/task pass; changed warnings are generated state/view files only",
+    "buildFileStructureDriftReport: available=true; approved_migration_delta=16; actionable=0; current_rules=2; target_rules=15; intended_rules=34",
+    "git diff working tree digest: sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "approval:user said \"Okay, great. Proceed.\" on 2026-05-22 after validation handoff",
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:generated-parity",
+    "profile:changed",
+    "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
+  ],
+  "audit_reports": [
+    "file-structure pass: 89 TypeScript source files, architecture wrapper boundaries, 172 diagram refs, 16 approved migration deltas, 0 actionable drift",
+    "alignment pass: generated graph health and roadmap queue reachability checked",
+    "generated-parity pass: generated graph presence/freshness and 1 active roadmap task view checked",
+    "changed warning: generated state/view files changed (.codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-010/context.json, .codewiki/roadmap/tasks/TASK-010/task.json); no file-structure failure",
+    "task pass: TASK-010 roadmap task checked"
+  ],
+  "content_proof_refs": [
+    "6254a231266a5acf5ed9bd95c6480bc4a47ed7ea",
+    "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
+    "sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-010",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user said \"Okay, great. Proceed.\" on 2026-05-22 after validation handoff"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "base_sha": "6254a231266a5acf5ed9bd95c6480bc4a47ed7ea",
+    "head_sha": "6254a231266a5acf5ed9bd95c6480bc4a47ed7ea",
+    "tree_sha": "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
+    "working_tree_digest": "sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh validator context was rebuilt from CodeWiki resume/source refs and checked dirty pre-commit content by working-tree digest. Clean immutable proof remains required for task-close/publication.",
+    "role": "validator"
+  }
+}

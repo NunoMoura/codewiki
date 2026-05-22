@@ -47,6 +47,7 @@ export interface AuditProfileResult {
 	issues: AuditIssue[];
 	evidence_refs: string[];
 	fingerprints: AuditFingerprint[];
+	details?: Record<string, unknown>;
 }
 
 export interface AuditReport {

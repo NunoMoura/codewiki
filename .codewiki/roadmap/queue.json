@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-22T05:10:50Z",
+  "updated": "2026-05-22T08:39:26Z",
   "order": [
     "TASK-010"
   ],
@@ -8,7 +8,7 @@
     "TASK-010": {
       "id": "TASK-010",
       "title": "Implement file-structure drift lens",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "architecture",
       "summary": "Parse the canonical file-structure map and add deterministic intended-vs-current drift reporting to audits/graph state.",
@@ -61,7 +61,7 @@
         "closure": ""
       },
       "created": "2026-05-22",
-      "updated": "2026-05-22T05:10:50Z"
+      "updated": "2026-05-22T08:39:26Z"
     }
   },
   "sprints": {

@@ -12,7 +12,7 @@ import type {
 import type { LintReport } from "../domain/validation/types.ts";
 import { GitCache } from "./local/git-cache.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
-import { parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";
+import { buildFileStructureDriftReport, compactFileStructureDriftReport, parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";
 import { buildChangeClaimState, claimScopeLabels } from "./claims.ts";
 import { unique } from "../domain/shared/utils.ts";
 
@@ -557,6 +557,7 @@ function buildGraphLensViews(input: {
 	canonicalSourceRefs: string[];
 	auditEvidenceRefs: string[];
 	contentProofRefs: string[];
+	fileStructureDrift: ReturnType<typeof compactFileStructureDriftReport>;
 	claimState: ReturnType<typeof buildChangeClaimState>;
 	gc: any;
 }) {
@@ -611,6 +612,23 @@ function buildGraphLensViews(input: {
 	const doneTasks = input.roadmapEntries.filter((task) => String(task.status || "") === "done");
 	const semanticGaps = input.semanticChangeRows.filter((row) => Array.isArray(row.gaps) && row.gaps.length > 0);
 	const traceabilityGaps = input.traceabilityRows.filter((row) => Array.isArray(row.gaps) && row.gaps.length > 0);
+	const fileStructureAuditSummary = {
+		version: input.fileStructureDrift.version,
+		source: input.fileStructureDrift.source,
+		map_path: input.fileStructureDrift.map_path,
+		available: input.fileStructureDrift.available,
+		categories: input.fileStructureDrift.categories,
+		counts: input.fileStructureDrift.counts,
+		path_rule_counts: {
+			intended: input.fileStructureDrift.intended_paths.length,
+			current: input.fileStructureDrift.current_paths.length,
+			target: input.fileStructureDrift.target_paths.length,
+		},
+		approved_delta_edges: input.fileStructureDrift.approved_delta_edges,
+		approved_migration_delta_paths: input.fileStructureDrift.approved_migration_deltas.map((entry: any) => entry.path),
+		actionable_entries: input.fileStructureDrift.actionable_entries,
+		parse_issues: input.fileStructureDrift.parse_issues,
+	};
 	const badgesByFamily: Record<GraphLensFamilyId, any[]> = {
 		decision: [
 			graphLensBadge("decision_builds", "decision builds", buildCounts.decision),
@@ -621,6 +639,8 @@ function buildGraphLensViews(input: {
 			graphLensBadge("specs", "specs", input.specPaths.length),
 			graphLensBadge("diagram_refs", "diagram refs", input.diagramRefCount),
 			graphLensBadge("diagram_parse_issues", "diagram parse issues", input.diagramParseIssueCount),
+			graphLensBadge("file_structure_approved_deltas", "approved structure deltas", input.fileStructureDrift.counts.approved_migration_delta, input.fileStructureDrift.approved_migration_deltas.map((entry: any) => entry.path)),
+			graphLensBadge("file_structure_actionable_drift", "structure drift", input.fileStructureDrift.actionable_entries.length),
 		],
 		work: [
 			graphLensBadge("open_tasks", "open tasks", openTasks.length, openTasks.map((task) => task.id)),
@@ -708,6 +728,7 @@ function buildGraphLensViews(input: {
 			reconciliation_items: input.reconciliationItems,
 			traceability_gaps: traceabilityGaps,
 			semantic_change_gaps: semanticGaps,
+			file_structure_drift: fileStructureAuditSummary,
 		},
 	};
 }
@@ -782,6 +803,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	const auditEvidenceRefSet = new Set<string>();
 	const contentProofRefSet = new Set<string>();
 	const diagramInventory = parseSystemDiagrams(project.root, project);
+	const fileStructureDriftReport = buildFileStructureDriftReport(project.root, project);
+	const fileStructureDrift = compactFileStructureDriftReport(fileStructureDriftReport);
 	const docsByDiagramRef = new Map<string, string[]>();
 	const validationAttestations: any[] = [];
 	const researchEntryIds: string[] = [];
@@ -862,6 +885,43 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			} else if (fromRef && toRef) {
 				addEdge("diagram_ref_relation", `diagram_ref:${fromRef}`, `diagram_ref:${toRef}`, { label: edge.label, relation_kind: edge.kind, diagram_path: edge.diagram_path });
 			}
+		}
+	}
+
+	if (fileStructureDrift.available || fileStructureDrift.parse_issues.length > 0) {
+		const actionableEntries = fileStructureDrift.actionable_entries;
+		const fileStructureEntries = [...fileStructureDrift.actionable_entries, ...fileStructureDrift.approved_migration_deltas];
+		const fileStructureNodeId = `file_structure:${fileStructureDrift.map_path}`;
+		addNode(fileStructureNodeId, {
+			kind: "audit_evidence",
+			path: fileStructureDrift.map_path,
+			title: "File-structure drift lens",
+			layer: "audit",
+			alignment_state: actionableEntries.length > 0 || fileStructureDrift.parse_issues.length > 0 ? "drift" : "aligned",
+			issue_kind: "file_structure_drift",
+			summary: {
+				approved_migration_delta: fileStructureDrift.counts.approved_migration_delta,
+				actionable_drift: actionableEntries.length,
+				parse_issues: fileStructureDrift.parse_issues.length,
+			},
+			file_structure_counts: fileStructureDrift.counts,
+		});
+		if (diagramInventory.diagrams.some((diagram) => diagram.path === fileStructureDrift.map_path)) {
+			addEdge("file_structure_source_diagram", fileStructureNodeId, `diagram:${fileStructureDrift.map_path}`);
+		}
+		for (const entry of fileStructureEntries.slice(0, 200)) {
+			const entryNodeId = `file_structure_drift:${entry.category}:${entry.path}`;
+			addNode(entryNodeId, {
+				kind: "audit_evidence",
+				path: entry.path,
+				layer: "audit",
+				severity: entry.severity,
+				issue_kind: entry.category,
+				message: entry.message,
+				alignment_state: entry.category === "approved_migration_delta" ? "aligned" : "drift",
+				default_hidden: entry.category === "approved_migration_delta",
+			});
+			addEdge("file_structure_drift_entry", fileStructureNodeId, entryNodeId, { default_hidden: entry.category === "approved_migration_delta" });
 		}
 	}
 
@@ -1746,6 +1806,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		canonicalSourceRefs: Array.from(canonicalSourceRefs).sort(),
 		auditEvidenceRefs: Array.from(auditEvidenceRefSet).sort(),
 		contentProofRefs: Array.from(contentProofRefSet).sort(),
+		fileStructureDrift,
 		claimState,
 		gc,
 	});
@@ -1821,6 +1882,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			required_refs: diagramInventory.refs.filter((ref) => ref.requires_doc).map((ref) => ref.ref).sort(),
 			parse_issue_count: diagramInventory.parse_issues.length,
 		},
+		file_structure: fileStructureDrift,
 		traceability: {
 			rows: traceabilityRows,
 			semantic_change_rows: semanticChangeRows,

@@ -66,6 +66,570 @@ export interface SystemDiagramValidationResult extends SystemDiagramInventory {
 	issues: SystemDiagramValidationIssue[];
 }
 
+export const FILE_STRUCTURE_DRIFT_CATEGORY_VALUES = [
+	"missing_expected_path",
+	"unexpected_path",
+	"ownership_mismatch",
+	"deprecated_path_present",
+	"generated_or_runtime_artifact_in_source_area",
+	"approved_migration_delta",
+	"compatibility_export_gap",
+] as const;
+
+export type FileStructureDriftCategory = (typeof FILE_STRUCTURE_DRIFT_CATEGORY_VALUES)[number];
+
+export interface ParsedFileStructurePathRule {
+	owner_id: string;
+	owner_label: string;
+	group: string;
+	kind: string;
+	status: string;
+	source?: string;
+	pattern: string;
+	role: "current" | "target" | "intended";
+	approved_delta: boolean;
+}
+
+export interface ParsedFileStructureMapNode {
+	id: string;
+	label: string;
+	group: string;
+	kind: string;
+	status: string;
+	source?: string;
+	paths: string[];
+	categories: FileStructureDriftCategory[];
+	compatibility_exports: FileStructureCompatibilityExport[];
+	metadata: Record<string, unknown>;
+}
+
+export interface FileStructureCompatibilityExport {
+	path: string;
+	target?: string;
+	owner_id: string;
+}
+
+export interface ParsedFileStructureMap {
+	path: string;
+	id: string;
+	title: string;
+	categories: FileStructureDriftCategory[];
+	nodes: ParsedFileStructureMapNode[];
+	intended_path_rules: ParsedFileStructurePathRule[];
+	current_path_rules: ParsedFileStructurePathRule[];
+	target_path_rules: ParsedFileStructurePathRule[];
+	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
+	parse_issues: SystemDiagramValidationIssue[];
+}
+
+export interface FileStructureDriftEntry {
+	category: FileStructureDriftCategory;
+	severity: "info" | "warning" | "error";
+	path: string;
+	message: string;
+	owner_id?: string;
+	owner_label?: string;
+	refs?: string[];
+}
+
+export interface FileStructureDriftReport {
+	version: 1;
+	source: "file-structure-map";
+	map_path: string;
+	available: boolean;
+	categories: FileStructureDriftCategory[];
+	intended_path_rules: ParsedFileStructurePathRule[];
+	current_path_rules: ParsedFileStructurePathRule[];
+	target_path_rules: ParsedFileStructurePathRule[];
+	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
+	entries: FileStructureDriftEntry[];
+	counts: Record<FileStructureDriftCategory, number>;
+	parse_issues: SystemDiagramValidationIssue[];
+}
+
+export interface FileStructureDriftGraphEvidence {
+	version: 1;
+	source: "file-structure-map";
+	map_path: string;
+	available: boolean;
+	categories: FileStructureDriftCategory[];
+	counts: Record<FileStructureDriftCategory, number>;
+	intended_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
+	current_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
+	target_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
+	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
+	approved_migration_deltas: FileStructureDriftEntry[];
+	actionable_entries: FileStructureDriftEntry[];
+	parse_issues: SystemDiagramValidationIssue[];
+}
+
+const FILE_STRUCTURE_MAP_FILE = "file-structure-map.yaml";
+const SOURCE_AREA_PREFIXES = ["src/", "skills/", "tests/", "scripts/", ".codewiki/"];
+const REPOSITORY_WALK_IGNORES = new Set([".git", "node_modules"]);
+const DEFAULT_ROOT_ALLOWED_PATHS = [
+	".gitignore",
+	".pi/**",
+	".pi-lens/**",
+	"AGENTS.md",
+	"LICENSE",
+	"README.md",
+	"package.json",
+	"package-lock.json",
+	"tsconfig.json",
+	"src/*.ts",
+	".codewiki/roadmap/archive.jsonl",
+];
+const DEPRECATED_PATH_PATTERNS = [
+	".codewiki/index/**",
+	".codewiki/evidence/**",
+	".codewiki/kb/system/clients/**",
+	".codewiki/kb/system/compilers/**",
+	".codewiki/kb/system/components/**",
+	".codewiki/kb/system/extensions/**",
+	".codewiki/kb/system/flows/**",
+	".codewiki/kb/system/runtime/**",
+	".codewiki/kb/system/architecture.json",
+	".codewiki/kb/system/v2-operating-model.md",
+	"src/core/**",
+	"src/engine/**",
+	"src/infrastructure/**",
+	"core/**",
+	"engine/**",
+	"infrastructure/**",
+];
+
+function fileStructureMapPath(project: WikiProject): string {
+	return normalizeRel(join(project.docsRoot || ".codewiki/kb", "system", "diagrams", FILE_STRUCTURE_MAP_FILE));
+}
+
+function isDriftCategory(value: string): value is FileStructureDriftCategory {
+	return (FILE_STRUCTURE_DRIFT_CATEGORY_VALUES as readonly string[]).includes(value);
+}
+
+function fileStructureCategories(value: unknown): FileStructureDriftCategory[] {
+	const parsed = stringList(value).filter(isDriftCategory);
+	return parsed.length ? Array.from(new Set(parsed)) : [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES];
+}
+
+function isRepositoryPathPattern(value: string): boolean {
+	const pattern = normalizeRel(value);
+	if (!pattern || /\s/.test(pattern)) return false;
+	if (/^[a-z]+:/i.test(pattern)) return false;
+	return pattern.includes("/") || pattern.startsWith(".") || DEFAULT_ROOT_ALLOWED_PATHS.includes(pattern);
+}
+
+function wildcardPatternToRegex(pattern: string): RegExp {
+	const normalized = normalizeRel(pattern);
+	let escaped = "";
+	for (let i = 0; i < normalized.length; i += 1) {
+		const char = normalized[i];
+		if (char === "*" && normalized[i + 1] === "*") {
+			escaped += ".*";
+			i += 1;
+		} else if (char === "*") {
+			escaped += "[^/]*";
+		} else {
+			escaped += char.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
+		}
+	}
+	return new RegExp(`^${escaped}$`);
+}
+
+function pathMatchesFileStructurePattern(path: string, pattern: string): boolean {
+	const normalizedPath = normalizeRel(path);
+	const normalizedPattern = normalizeRel(pattern);
+	if (!normalizedPath || !normalizedPattern) return false;
+	if (normalizedPattern.endsWith("/**")) {
+		const prefix = normalizedPattern.slice(0, -3);
+		return normalizedPath === prefix || normalizedPath.startsWith(`${prefix}/`);
+	}
+	if (normalizedPattern.includes("*")) return wildcardPatternToRegex(normalizedPattern).test(normalizedPath);
+	return normalizedPath === normalizedPattern || normalizedPath.startsWith(`${normalizedPattern}/`);
+}
+
+function treeHasPathPattern(paths: Set<string>, pattern: string): boolean {
+	const normalizedPattern = normalizeRel(pattern);
+	if (!normalizedPattern) return false;
+	if (normalizedPattern.endsWith("/**")) {
+		const prefix = normalizedPattern.slice(0, -3);
+		return paths.has(prefix) || [...paths].some((path) => path.startsWith(`${prefix}/`));
+	}
+	if (normalizedPattern.includes("*")) return [...paths].some((path) => pathMatchesFileStructurePattern(path, normalizedPattern));
+	return paths.has(normalizedPattern) || [...paths].some((path) => path.startsWith(`${normalizedPattern}/`));
+}
+
+function collectRepositoryStructurePaths(repoRoot: string): Set<string> {
+	const out = new Set<string>();
+	const walk = (absDir: string, relDir: string) => {
+		if (!existsSync(absDir)) return;
+		for (const entry of readdirSync(absDir, { withFileTypes: true })) {
+			if (REPOSITORY_WALK_IGNORES.has(entry.name)) continue;
+			const rel = normalizeRel(relDir ? `${relDir}/${entry.name}` : entry.name);
+			out.add(rel);
+			if (entry.isDirectory()) walk(resolve(repoRoot, rel), rel);
+		}
+	};
+	walk(repoRoot, "");
+	return out;
+}
+
+function compatibilityExports(raw: Record<string, unknown>, ownerId: string): FileStructureCompatibilityExport[] {
+	const fields = [raw.compatibility_exports, raw.compatibilityExports, raw.compatibility_paths, raw.compatibilityPaths];
+	const out: FileStructureCompatibilityExport[] = [];
+	for (const field of fields) {
+		if (Array.isArray(field)) {
+			for (const item of field) {
+				if (typeof item === "string") {
+					const path = normalizeRel(item);
+					if (path) out.push({ path, owner_id: ownerId });
+				} else if (item && typeof item === "object" && !Array.isArray(item)) {
+					const record = item as Record<string, unknown>;
+					const path = normalizeRel(stringValue(record.path || record.from || record.export || record.compatibility_path));
+					const target = normalizeRel(stringValue(record.target || record.to || record.target_path));
+					if (path) out.push({ path, ...(target ? { target } : {}), owner_id: ownerId });
+				}
+			}
+		}
+	}
+	return out;
+}
+
+function parseFileStructureMapNode(raw: Record<string, unknown>): ParsedFileStructureMapNode | null {
+	const id = stringValue(raw.id);
+	if (!id) return null;
+	const categories = stringList(raw.categories).filter(isDriftCategory);
+	const paths = stringList(raw.paths).map(normalizeRel).filter(isRepositoryPathPattern);
+	return {
+		id,
+		label: stringValue(raw.label) || id,
+		group: stringValue(raw.group),
+		kind: stringValue(raw.kind),
+		status: stringValue(raw.status),
+		...(stringValue(raw.source) ? { source: stringValue(raw.source) } : {}),
+		paths,
+		categories,
+		compatibility_exports: compatibilityExports(raw, id),
+		metadata: Object.fromEntries(Object.entries(raw).filter(([key]) => !["id", "label", "group", "kind", "status", "source", "paths", "categories", "compatibility_exports", "compatibilityExports", "compatibility_paths", "compatibilityPaths"].includes(key))),
+	};
+}
+
+function fileStructureRoleForNode(node: ParsedFileStructureMapNode): "current" | "target" | "intended" {
+	const group = node.group.toLowerCase();
+	const status = node.status.toLowerCase();
+	if (group === "source_current" || status.includes("current")) return "current";
+	if (group === "source_target" || status.includes("target")) return "target";
+	return "intended";
+}
+
+function isApprovedDeltaNode(node: ParsedFileStructureMapNode, approvedNodeIds: Set<string>): boolean {
+	const status = node.status.toLowerCase();
+	return approvedNodeIds.has(node.id) || status === "accepted_target" || status === "current_valid_until_migrated";
+}
+
+function pathRulesForNodes(nodes: ParsedFileStructureMapNode[], approvedNodeIds: Set<string>): ParsedFileStructurePathRule[] {
+	return nodes.flatMap((node) => {
+		const role = fileStructureRoleForNode(node);
+		const approved = isApprovedDeltaNode(node, approvedNodeIds);
+		return node.paths.map((pattern) => ({
+			owner_id: node.id,
+			owner_label: node.label,
+			group: node.group,
+			kind: node.kind,
+			status: node.status,
+			...(node.source ? { source: node.source } : {}),
+			pattern,
+			role,
+			approved_delta: approved,
+		}));
+	});
+}
+
+export function parseFileStructureMap(repoRoot: string, project: WikiProject): ParsedFileStructureMap {
+	const relPath = fileStructureMapPath(project);
+	const parseIssues: SystemDiagramValidationIssue[] = [];
+	if (!existsSync(resolve(repoRoot, relPath))) {
+		return {
+			path: relPath,
+			id: "",
+			title: "",
+			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
+			nodes: [],
+			intended_path_rules: [],
+			current_path_rules: [],
+			target_path_rules: [],
+			approved_delta_edges: [],
+			parse_issues: [],
+		};
+	}
+	let loaded: unknown;
+	try {
+		loaded = yaml.load(readFileSync(resolve(repoRoot, relPath), "utf8"));
+	} catch (error) {
+		parseIssues.push({ severity: "error", kind: "file-structure-map-yaml-invalid", path: relPath, message: `Invalid file-structure map YAML: ${error instanceof Error ? error.message : String(error)}` });
+		return {
+			path: relPath,
+			id: "",
+			title: "",
+			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
+			nodes: [],
+			intended_path_rules: [],
+			current_path_rules: [],
+			target_path_rules: [],
+			approved_delta_edges: [],
+			parse_issues: parseIssues,
+		};
+	}
+	const data = plainObject(loaded);
+	if (!data) {
+		parseIssues.push({ severity: "error", kind: "file-structure-map-yaml-invalid", path: relPath, message: "File-structure map YAML must contain an object." });
+		return {
+			path: relPath,
+			id: "",
+			title: "",
+			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
+			nodes: [],
+			intended_path_rules: [],
+			current_path_rules: [],
+			target_path_rules: [],
+			approved_delta_edges: [],
+			parse_issues: parseIssues,
+		};
+	}
+	const nodes = objectList(data.nodes).map(parseFileStructureMapNode).filter((node): node is ParsedFileStructureMapNode => Boolean(node));
+	const driftNodeCategories = nodes.flatMap((node) => node.categories);
+	const approvedDeltaEdges = objectList(data.edges).map((edge) => ({
+		from: stringValue(edge.from),
+		to: stringValue(edge.to),
+		label: stringValue(edge.label || edge.kind || edge.type),
+	})).filter((edge) => edge.from && edge.to && /approved.*(?:migration|delta)|migration.*delta/i.test(edge.label));
+	const approvedNodeIds = new Set(approvedDeltaEdges.flatMap((edge) => [edge.from, edge.to]));
+	const allRules = pathRulesForNodes(nodes, approvedNodeIds);
+	return {
+		path: relPath,
+		id: stringValue(data.id),
+		title: stringValue(data.title),
+		categories: driftNodeCategories.length ? Array.from(new Set(driftNodeCategories)) : fileStructureCategories(undefined),
+		nodes,
+		intended_path_rules: allRules,
+		current_path_rules: allRules.filter((rule) => rule.role === "current"),
+		target_path_rules: allRules.filter((rule) => rule.role === "target"),
+		approved_delta_edges: approvedDeltaEdges,
+		parse_issues: parseIssues,
+	};
+}
+
+function defaultAllowedPathPatterns(project: WikiProject): string[] {
+	return [
+		...DEFAULT_ROOT_ALLOWED_PATHS,
+		`${normalizeRel(project.docsRoot || ".codewiki/kb")}/**`,
+		`${normalizeRel(project.researchRoot || ".codewiki/research")}/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/gc/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/runtime/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/session/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/builds/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/validation/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/roadmap/tasks/**`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/index_graph.json`,
+		`${normalizeRel(project.metaRoot || ".codewiki")}/config.json`,
+		project.roadmapPath,
+	].map(normalizeRel).filter(Boolean);
+}
+
+function countEntries(entries: FileStructureDriftEntry[]): Record<FileStructureDriftCategory, number> {
+	const counts = Object.fromEntries(FILE_STRUCTURE_DRIFT_CATEGORY_VALUES.map((category) => [category, 0])) as Record<FileStructureDriftCategory, number>;
+	for (const entry of entries) counts[entry.category] += 1;
+	return counts;
+}
+
+function compactPathRule(rule: ParsedFileStructurePathRule): Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta"> {
+	return {
+		pattern: rule.pattern,
+		owner_id: rule.owner_id,
+		owner_label: rule.owner_label,
+		group: rule.group,
+		status: rule.status,
+		role: rule.role,
+		approved_delta: rule.approved_delta,
+	};
+}
+
+export function compactFileStructureDriftReport(report: FileStructureDriftReport): FileStructureDriftGraphEvidence {
+	return {
+		version: 1,
+		source: report.source,
+		map_path: report.map_path,
+		available: report.available,
+		categories: report.categories,
+		counts: report.counts,
+		intended_paths: report.intended_path_rules.map(compactPathRule),
+		current_paths: report.current_path_rules.map(compactPathRule),
+		target_paths: report.target_path_rules.map(compactPathRule),
+		approved_delta_edges: report.approved_delta_edges,
+		approved_migration_deltas: report.entries.filter((entry) => entry.category === "approved_migration_delta"),
+		actionable_entries: report.entries.filter((entry) => entry.category !== "approved_migration_delta"),
+		parse_issues: report.parse_issues,
+	};
+}
+
+function isManagedStructurePath(path: string): boolean {
+	return SOURCE_AREA_PREFIXES.some((prefix) => path === prefix.slice(0, -1) || path.startsWith(prefix));
+}
+
+function isParentOfKnownFileStructurePattern(path: string, patterns: string[]): boolean {
+	const normalizedPath = normalizeRel(path);
+	if (!normalizedPath) return false;
+	return patterns.some((pattern) => {
+		const normalizedPattern = normalizeRel(pattern).replace(/\/\*\*$/, "").replace(/\/\*$/, "");
+		return normalizedPattern.startsWith(`${normalizedPath}/`);
+	});
+}
+
+function generatedRuntimeSourcePathKind(path: string): string | null {
+	if (!path.startsWith("src/")) return null;
+	if (path.includes("/.codewiki/") || path.endsWith("/.codewiki")) return ".codewiki artifact nested under src";
+	if (path.endsWith("/index_graph.json") || path === "src/index_graph.json") return "generated graph artifact under src";
+	if (path.startsWith("src/runtime/") || path.includes("/runtime/.codewiki/") || path.endsWith("/session/queue.json")) return "runtime/session artifact under src";
+	return null;
+}
+
+function pushDriftEntry(entries: FileStructureDriftEntry[], entry: FileStructureDriftEntry): void {
+	const key = `${entry.category}:${entry.path}:${entry.owner_id || ""}:${entry.message}`;
+	if (!entries.some((candidate) => `${candidate.category}:${candidate.path}:${candidate.owner_id || ""}:${candidate.message}` === key)) entries.push(entry);
+}
+
+export function buildFileStructureDriftReport(repoRoot: string, project: WikiProject): FileStructureDriftReport {
+	const map = parseFileStructureMap(repoRoot, project);
+	const entries: FileStructureDriftEntry[] = [];
+	const treePaths = collectRepositoryStructurePaths(repoRoot);
+	if (!map.id && map.parse_issues.length === 0) {
+		return {
+			version: 1,
+			source: "file-structure-map",
+			map_path: map.path,
+			available: false,
+			categories: map.categories,
+			intended_path_rules: [],
+			current_path_rules: [],
+			target_path_rules: [],
+			approved_delta_edges: [],
+			entries: [],
+			counts: countEntries([]),
+			parse_issues: [],
+		};
+	}
+	const knownPatterns = [...map.intended_path_rules.map((rule) => rule.pattern), ...defaultAllowedPathPatterns(project)];
+	for (const rule of map.intended_path_rules) {
+		const exists = treeHasPathPattern(treePaths, rule.pattern);
+		if (!exists && rule.approved_delta) {
+			pushDriftEntry(entries, {
+				category: "approved_migration_delta",
+				severity: "info",
+				path: rule.pattern,
+				owner_id: rule.owner_id,
+				owner_label: rule.owner_label,
+				refs: [map.path, ...(rule.source ? [rule.source] : [])],
+				message: `${rule.pattern} is an accepted target path not yet present; migration delta is approved by file-structure map.`,
+			});
+			continue;
+		}
+		if (!exists && !rule.approved_delta) {
+			pushDriftEntry(entries, {
+				category: "missing_expected_path",
+				severity: "warning",
+				path: rule.pattern,
+				owner_id: rule.owner_id,
+				owner_label: rule.owner_label,
+				refs: [map.path, ...(rule.source ? [rule.source] : [])],
+				message: `${rule.pattern} is expected by ${rule.owner_label} but is absent from the repository tree.`,
+			});
+		} else if (exists && rule.approved_delta && rule.role === "current") {
+			pushDriftEntry(entries, {
+				category: "approved_migration_delta",
+				severity: "info",
+				path: rule.pattern,
+				owner_id: rule.owner_id,
+				owner_label: rule.owner_label,
+				refs: [map.path, ...(rule.source ? [rule.source] : [])],
+				message: `${rule.pattern} remains current-valid until concept-root migration lands.`,
+			});
+		}
+	}
+	for (const pattern of DEPRECATED_PATH_PATTERNS) {
+		if (!treeHasPathPattern(treePaths, pattern)) continue;
+		pushDriftEntry(entries, {
+			category: "deprecated_path_present",
+			severity: "error",
+			path: pattern,
+			refs: [map.path, ".codewiki/kb/system/file-structure.md"],
+			message: `${pattern} is deprecated by the file-structure contract and must not be recreated.`,
+		});
+	}
+	for (const path of [...treePaths].sort()) {
+		if (!isManagedStructurePath(path)) continue;
+		const generatedKind = generatedRuntimeSourcePathKind(path);
+		if (generatedKind) {
+			pushDriftEntry(entries, {
+				category: "generated_or_runtime_artifact_in_source_area",
+				severity: "error",
+				path,
+				refs: [map.path],
+				message: `${path} is a ${generatedKind}; generated/runtime artifacts must stay out of package source areas.`,
+			});
+		}
+		if (!knownPatterns.some((pattern) => pathMatchesFileStructurePattern(path, pattern)) && !isParentOfKnownFileStructurePattern(path, knownPatterns)) {
+			pushDriftEntry(entries, {
+				category: "unexpected_path",
+				severity: "warning",
+				path,
+				refs: [map.path],
+				message: `${path} is inside a managed structure area but is not covered by the file-structure map.`,
+			});
+		}
+		if (!path.startsWith("src/")) continue;
+		const strictOwners = map.intended_path_rules.filter((rule) => rule.pattern.startsWith("src/") && !rule.approved_delta && pathMatchesFileStructurePattern(path, rule.pattern));
+		const ownerIds = Array.from(new Set(strictOwners.map((rule) => rule.owner_id)));
+		if (ownerIds.length > 1) {
+			pushDriftEntry(entries, {
+				category: "ownership_mismatch",
+				severity: "warning",
+				path,
+				refs: [map.path, ...strictOwners.flatMap((rule) => rule.source ? [rule.source] : [])],
+				message: `${path} matches multiple strict file-structure owners: ${ownerIds.join(", ")}.`,
+			});
+		}
+	}
+	for (const node of map.nodes) {
+		for (const exportRef of node.compatibility_exports) {
+			if (!treeHasPathPattern(treePaths, exportRef.path)) {
+				pushDriftEntry(entries, {
+					category: "compatibility_export_gap",
+					severity: "warning",
+					path: exportRef.path,
+					owner_id: exportRef.owner_id,
+					owner_label: node.label,
+					refs: [map.path, ...(exportRef.target ? [exportRef.target] : [])],
+					message: `${exportRef.path} compatibility export is required by ${node.label} but is absent.`,
+				});
+			}
+		}
+	}
+	const sortedEntries = entries.sort((a, b) => `${a.category}:${a.path}:${a.owner_id || ""}`.localeCompare(`${b.category}:${b.path}:${b.owner_id || ""}`));
+	return {
+		version: 1,
+		source: "file-structure-map",
+		map_path: map.path,
+		available: true,
+		categories: map.categories,
+		intended_path_rules: map.intended_path_rules,
+		current_path_rules: map.current_path_rules,
+		target_path_rules: map.target_path_rules,
+		approved_delta_edges: map.approved_delta_edges,
+		entries: sortedEntries,
+		counts: countEntries(sortedEntries),
+		parse_issues: map.parse_issues,
+	};
+}
+
 function stringValue(value: unknown): string {
 	return typeof value === "string" ? value.trim() : value === undefined || value === null ? "" : String(value).trim();
 }

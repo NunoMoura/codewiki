@@ -964,6 +964,24 @@ export function buildStatusState(
 	const persistedFocusTaskId = latestPersistedFocusTaskId(events, roadmapState);
 	const resume = buildResumeState(roadmapState, agencyLanes, nextStep, persistedFocusTaskId);
 	const graphViews: any = graph.views || {};
+	const fileStructure = graphViews.file_structure || null;
+	const fileStructureCounts = fileStructure?.counts || {};
+	const fileStructureActionableDrift = Array.isArray(fileStructure?.actionable_entries) ? fileStructure.actionable_entries.length : 0;
+	const fileStructureStatus = fileStructure ? {
+		version: fileStructure.version,
+		source: fileStructure.source,
+		map_path: fileStructure.map_path,
+		available: fileStructure.available,
+		counts: fileStructureCounts,
+		path_rule_counts: {
+			intended: Array.isArray(fileStructure.intended_paths) ? fileStructure.intended_paths.length : 0,
+			current: Array.isArray(fileStructure.current_paths) ? fileStructure.current_paths.length : 0,
+			target: Array.isArray(fileStructure.target_paths) ? fileStructure.target_paths.length : 0,
+		},
+		approved_migration_delta_paths: Array.isArray(fileStructure.approved_migration_deltas) ? fileStructure.approved_migration_deltas.map((entry: any) => String(entry.path || "")).filter(Boolean) : [],
+		actionable_entries: fileStructure.actionable_entries || [],
+		parse_issues: fileStructure.parse_issues || [],
+	} : null;
 	const workflowCursor = graphViews.workflow_cursor || {
 		active_loop: String(nextStep.kind || "observe") === "code" ? "implementation" : "observe",
 		reason: String(nextStep.reason || ""),
@@ -1009,6 +1027,9 @@ export function buildStatusState(
 	} else {
 		direction.push("No tracked spec drift is open.");
 	}
+	if (fileStructure) {
+		direction.push(`File-structure drift: ${fileStructureActionableDrift} actionable item(s), ${fileStructureCounts.approved_migration_delta || 0} approved migration delta(s).`);
+	}
 
 	return {
 		version: 1,
@@ -1030,6 +1051,8 @@ export function buildStatusState(
 			task_count: roadmapEntries.length,
 			open_task_count: (roadmapState.views?.open_task_ids || []).length,
 			done_task_count: (roadmapState.views?.done_task_ids || []).length,
+			file_structure_actionable_drift: fileStructureActionableDrift,
+			file_structure_approved_migration_deltas: fileStructureCounts.approved_migration_delta || 0,
 		},
 		bars: {
 			tracked_drift: barState("Tracked Drift", trackedTotal, driftTotal),
@@ -1047,6 +1070,7 @@ export function buildStatusState(
 		workflow_cursor: workflowCursor,
 		gc: graphViews.gc || {},
 		direction,
+		file_structure: fileStructureStatus,
 		specs: specRows,
 		agency: {
 			generated_at: nowIso(),

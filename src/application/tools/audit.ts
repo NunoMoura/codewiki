@@ -18,7 +18,7 @@ import { formatError, nowIso, unique } from "../../domain/shared/utils.ts";
 import { pathExists } from "../local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../../domain/roadmap/task-boundary.ts";
 import { parseDoc } from "../knowledge/doc-parser.ts";
-import { validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
+import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
 
 const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [
@@ -328,6 +328,18 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 	}
 	evidence.push(".codewiki/kb/system/diagrams", ...diagramValidation.diagrams.map((diagram) => diagram.path));
 
+	const fileStructureDrift = buildFileStructureDriftReport(project.root, project);
+	if (fileStructureDrift.available || fileStructureDrift.parse_issues.length > 0) {
+		evidence.push(fileStructureDrift.map_path);
+	}
+	for (const issue of fileStructureDrift.parse_issues) {
+		issues.push(createIssue(profile, issue.severity, issue.kind, issue.message, issue.path, undefined, issue.refs));
+	}
+	for (const entry of fileStructureDrift.entries) {
+		if (entry.category === "approved_migration_delta") continue;
+		issues.push(createIssue(profile, entry.severity, entry.category, entry.message, entry.path, undefined, entry.refs));
+	}
+
 	const fingerprints = await fingerprintFiles(project, [
 		"src/application/tools/audit.ts",
 		"src/domain/roadmap/types.ts",
@@ -336,15 +348,18 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 		"src/adapters/pi/index.ts",
 		"scripts/check-architecture.mjs",
 		...diagramValidation.diagrams.map((diagram) => diagram.path),
+		fileStructureDrift.map_path,
 	], input.include_fingerprints !== false);
+	const blockingDriftEntries = fileStructureDrift.entries.filter((entry) => entry.category !== "approved_migration_delta").length;
 	return {
 		profile,
 		status: statusForIssues(issues),
-		summary: `Checked ${tsFiles.length} TypeScript source files, architecture wrapper boundaries, and ${diagramValidation.refs.length} diagram refs.`,
+		summary: `Checked ${tsFiles.length} TypeScript source files, architecture wrapper boundaries, ${diagramValidation.refs.length} diagram refs, and file-structure drift lens (${fileStructureDrift.counts.approved_migration_delta} approved migration delta(s), ${blockingDriftEntries} actionable drift item(s)).`,
 		checked_scopes: { root: project.root, files: ["src/**/*.ts", "scripts/**/*.mjs", "scripts/check-architecture.mjs", ".codewiki/kb/system/diagrams/**/*.yaml"] },
 		issues,
-		evidence_refs: evidence,
+		evidence_refs: unique(evidence),
 		fingerprints,
+		details: { file_structure: fileStructureDrift },
 	};
 }
 
