@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-22T05:12:30.506Z",
+  "generated_at": "2026-05-22T05:13:41.798Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -27957,89 +27957,7 @@
             ]
           }
         ],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/kb/product/overview.md",
-            "change_type": "product",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/diagrams/README.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/overview.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -34138,89 +34056,7 @@
           ]
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/kb/product/overview.md",
-          "change_type": "product",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/diagrams/README.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/overview.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 3,
       "gaps": [
@@ -34995,13 +34831,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-22T05:12:30.433Z",
+      "generated_at": "2026-05-22T05:13:41.754Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-22T05:12:30Z",
+      "generated_at": "2026-05-22T05:13:41Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -35169,7 +35005,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-22T05:12:30Z",
+      "generated_at": "2026-05-22T05:13:41Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -36251,7 +36087,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-22T05:12:30Z",
+        "generated_at": "2026-05-22T05:13:41Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -36279,22 +36115,16 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-22T05:12:30Z",
+            "checked_at": "2026-05-22T05:13:41Z",
             "revision": {
               "git": {
-                "head": "f815ae44a60aa3f30c830f3d10d8df1d0f6b278a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/overview.md",
-                  ".codewiki/kb/system/diagrams/README.md",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "06d434639d3cc9d16349f0ca53af97201df509af",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
-                  ".codewiki/kb/product/overview.md": "5bea9b75a0cfd25621af7a988580f90423906242",
+                  ".codewiki/kb/product/overview.md": "5ab1d32aeeb45aa497dca167df997d37d0334103",
                   ".codewiki/kb/product/stories/automation.md": "c37471e1ba3e585eb0c3b75b466439456c505057",
                   ".codewiki/kb/product/stories/drift.md": "f283b0c169affa3efe82a4327abd7c1e942c7a05",
                   ".codewiki/kb/product/stories/intent.md": "1dc3f57a4ca2249b87efdcfe34f93168a544972b",
@@ -36319,17 +36149,17 @@
                   ".codewiki/kb/system/compilers.md": "ddf036844fbe6657ea5f4d42ea8f65e6e252a7d5",
                   ".codewiki/kb/system/control-room-ui-details.md": "2c9be8329369819ced9369f7029491dbbdb174b4",
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
-                  ".codewiki/kb/system/diagrams/README.md": "54377fe4cafd51526415e6ecf539049eca834e46",
+                  ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "001005547322c311aebe6fd5dd3f73c46139b568",
+                  ".codewiki/kb/system/file-structure.md": "176152c99f13f2d8df5647aa4a27c3c778ce903b",
                   ".codewiki/kb/system/graph.md": "cef364d2dd997dafdd7e9385b1419687cb320341",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
-                  ".codewiki/kb/system/overview.md": "57e16bee8df519c7784efdd90dd6d9362220930c",
+                  ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
                   ".codewiki/kb/system/roadmap.md": "e7da051dcae80ddfc23ef9cd0e551665cbfffd0f",
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "90e0f69db3c944d4567315d2f7c20c5237d614d8",
+                  ".codewiki/roadmap/queue.json": "4f2d07b01cad2440faaa303a84e63b596ff04546",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -36377,12 +36207,12 @@
               "spec_digest": "34771b7903e191ccb0780f4fb883d6c39b9f2ed18d23bd134a202cacb4065eaf",
               "task_digest": "c105eec5d8f1845cea14ca4a58a3ebb9c92565099e053eb5fed128bdc85eaa06",
               "code_digest": "9b6715c35440beb7f54f6b43676ff889926f0a36f61bdf8f265b8b28b669cdf2",
-              "digest": "81316b1c3b3bd27fee6738652bbc27219b17fe6ea5b507fe3eeda1dbb2e178fd"
+              "digest": "2079ec50df33c3f2bbb0bd8a9004b7a21ea6ca03751bb3b1e8891e1c10367d22"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-22T05:12:30Z",
+              "checked_at": "2026-05-22T05:13:41Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -36506,18 +36336,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-22T05:12:30Z",
+            "checked_at": "2026-05-22T05:13:41Z",
             "revision": {
               "git": {
-                "head": "f815ae44a60aa3f30c830f3d10d8df1d0f6b278a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/overview.md",
-                  ".codewiki/kb/system/diagrams/README.md",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "06d434639d3cc9d16349f0ca53af97201df509af",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -36530,17 +36354,17 @@
                   ".codewiki/kb/system/compilers.md": "ddf036844fbe6657ea5f4d42ea8f65e6e252a7d5",
                   ".codewiki/kb/system/control-room-ui-details.md": "2c9be8329369819ced9369f7029491dbbdb174b4",
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
-                  ".codewiki/kb/system/diagrams/README.md": "54377fe4cafd51526415e6ecf539049eca834e46",
+                  ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "001005547322c311aebe6fd5dd3f73c46139b568",
+                  ".codewiki/kb/system/file-structure.md": "176152c99f13f2d8df5647aa4a27c3c778ce903b",
                   ".codewiki/kb/system/graph.md": "cef364d2dd997dafdd7e9385b1419687cb320341",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
-                  ".codewiki/kb/system/overview.md": "57e16bee8df519c7784efdd90dd6d9362220930c",
+                  ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
                   ".codewiki/kb/system/roadmap.md": "e7da051dcae80ddfc23ef9cd0e551665cbfffd0f",
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "90e0f69db3c944d4567315d2f7c20c5237d614d8",
+                  ".codewiki/roadmap/queue.json": "4f2d07b01cad2440faaa303a84e63b596ff04546",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -36583,12 +36407,12 @@
               "spec_digest": "607934ee815b5ce130a5f2412455967f657f0e512eb641db9c90414c4d283ed3",
               "task_digest": "c105eec5d8f1845cea14ca4a58a3ebb9c92565099e053eb5fed128bdc85eaa06",
               "code_digest": "13aec81837a9c3dfaf15c7a87311ca7f591dfea9ca50a362c5b3d3edba47ad23",
-              "digest": "9bb16a94720c7de11d959736d95cc90d6360afd3088dcb576b78def93f6a75ad"
+              "digest": "bbc5518fa53467f809b96b533f60b33f679b0fe23b04e44ad0551439549efc70"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-22T05:12:30Z",
+              "checked_at": "2026-05-22T05:13:41Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -36691,22 +36515,16 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-22T05:12:30Z",
+            "checked_at": "2026-05-22T05:13:41Z",
             "revision": {
               "git": {
-                "head": "f815ae44a60aa3f30c830f3d10d8df1d0f6b278a",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/kb/product/overview.md",
-                  ".codewiki/kb/system/diagrams/README.md",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/overview.md",
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "06d434639d3cc9d16349f0ca53af97201df509af",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
-                  ".codewiki/kb/product/overview.md": "5bea9b75a0cfd25621af7a988580f90423906242",
+                  ".codewiki/kb/product/overview.md": "5ab1d32aeeb45aa497dca167df997d37d0334103",
                   ".codewiki/kb/product/stories/automation.md": "c37471e1ba3e585eb0c3b75b466439456c505057",
                   ".codewiki/kb/product/stories/drift.md": "f283b0c169affa3efe82a4327abd7c1e942c7a05",
                   ".codewiki/kb/product/stories/intent.md": "1dc3f57a4ca2249b87efdcfe34f93168a544972b",
@@ -36731,17 +36549,17 @@
                   ".codewiki/kb/system/compilers.md": "ddf036844fbe6657ea5f4d42ea8f65e6e252a7d5",
                   ".codewiki/kb/system/control-room-ui-details.md": "2c9be8329369819ced9369f7029491dbbdb174b4",
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
-                  ".codewiki/kb/system/diagrams/README.md": "54377fe4cafd51526415e6ecf539049eca834e46",
+                  ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "001005547322c311aebe6fd5dd3f73c46139b568",
+                  ".codewiki/kb/system/file-structure.md": "176152c99f13f2d8df5647aa4a27c3c778ce903b",
                   ".codewiki/kb/system/graph.md": "cef364d2dd997dafdd7e9385b1419687cb320341",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
-                  ".codewiki/kb/system/overview.md": "57e16bee8df519c7784efdd90dd6d9362220930c",
+                  ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
                   ".codewiki/kb/system/roadmap.md": "e7da051dcae80ddfc23ef9cd0e551665cbfffd0f",
                   ".codewiki/kb/system/validation-gateway.md": "2e07038c498504441f8b9fdbf678805cba7b8d94",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "90e0f69db3c944d4567315d2f7c20c5237d614d8",
+                  ".codewiki/roadmap/queue.json": "4f2d07b01cad2440faaa303a84e63b596ff04546",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -36789,12 +36607,12 @@
               "spec_digest": "34771b7903e191ccb0780f4fb883d6c39b9f2ed18d23bd134a202cacb4065eaf",
               "task_digest": "c105eec5d8f1845cea14ca4a58a3ebb9c92565099e053eb5fed128bdc85eaa06",
               "code_digest": "9b6715c35440beb7f54f6b43676ff889926f0a36f61bdf8f265b8b28b669cdf2",
-              "digest": "81316b1c3b3bd27fee6738652bbc27219b17fe6ea5b507fe3eeda1dbb2e178fd"
+              "digest": "2079ec50df33c3f2bbb0bd8a9004b7a21ea6ca03751bb3b1e8891e1c10367d22"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-22T05:12:30Z",
+              "checked_at": "2026-05-22T05:13:41Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -36919,7 +36737,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-22T05:12:30Z",
+        "generated_at": "2026-05-22T05:13:41Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
