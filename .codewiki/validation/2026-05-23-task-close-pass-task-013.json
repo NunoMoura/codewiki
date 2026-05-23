@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-23T05:17:26Z",
+  "profile": "task-close",
+  "task_id": "TASK-013",
+  "verdict": "pass",
+  "rationale": "TASK-013 may close. Implementation validation passed, committed content 27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0 contains the UI/test/roadmap/build/validation changes, archive ref refs/codewiki/archive/task/TASK-013 points to that content, and current audits show file-structure/generated-parity/changed/task passing. Remaining alignment graph-health warnings are pre-existing and not TASK-013 blockers.",
+  "checks": [
+    "codewiki_validation preflight_only=true profile=task-close task_id=TASK-013: ready (0 issues)",
+    "git commit 27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0 contains TASK-013 implementation and implementation validation evidence",
+    "git tree beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7 recorded",
+    "git update-ref refs/codewiki/archive/task/TASK-013 27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0 recorded",
+    "git status before task-close report: clean",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning only for graph-health; file-structure/changed/generated-parity/task pass"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due graph-health warnings unrelated to TASK-013."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:changed",
+    "audit:task",
+    "audit:generated-parity"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/changed/task pass; alignment graph-health warning only"
+  ],
+  "content_proof_refs": [
+    "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
+    "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
+    "refs/codewiki/archive/task/TASK-013"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
+      "refs/codewiki/archive/task/TASK-013"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-013",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
+    "validated_sha": "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
+    "tree_sha": "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
+    "archive_ref": "refs/codewiki/archive/task/TASK-013",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation uses committed implementation content with local archive ref; no remote publication attempted.",
+    "role": "validator"
+  }
+}
