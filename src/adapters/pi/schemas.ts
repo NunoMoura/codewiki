@@ -507,6 +507,20 @@ const codewikiEvidenceMappingSchema = Type.Object({
 	requirement_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 });
+const codewikiDecisionPropagationResolutionSchema = Type.Object({
+	row_id: Type.Optional(Type.String({ minLength: 1 })),
+	question_id: Type.Optional(Type.String({ minLength: 1 })),
+	question: Type.Optional(Type.String({ minLength: 1 })),
+	resolution: Type.String({ minLength: 1 }),
+	task_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	sprint_ids: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	knowledge_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
+	owner: Type.Optional(Type.String({ minLength: 1 })),
+	trigger: Type.Optional(Type.String({ minLength: 1 })),
+	rationale: Type.Optional(Type.String({ minLength: 1 })),
+	evidence: Type.String({ minLength: 1 }),
+});
 export const codewikiBuildToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	kind: Type.Union([
@@ -577,6 +591,8 @@ export const codewikiBuildToolInputSchema = Type.Object({
 	source_decision_build: Type.Optional(Type.String()),
 	task_ids: Type.Optional(Type.Array(Type.String())),
 	task_changes: Type.Optional(Type.Array(Type.String())),
+	decision_row_resolutions: Type.Optional(Type.Array(codewikiDecisionPropagationResolutionSchema)),
+	downstream_question_resolutions: Type.Optional(Type.Array(codewikiDecisionPropagationResolutionSchema)),
 	tdd_plan: Type.Optional(Type.Array(Type.String())),
 	candidate_test_files: Type.Optional(Type.Array(Type.String())),
 	candidate_code_paths: Type.Optional(Type.Array(Type.String())),

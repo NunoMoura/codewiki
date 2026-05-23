@@ -50,7 +50,7 @@ Build policy may recommend `codewiki_resume_context` plus CodeWiki-owned compact
 
 A decision build contains the user-and-knowledge contract: approved semantic rows, product/system entrypoint classification, changed knowledge refs, row-to-KB mapping, diagram/doc mapping, propagation direction, explicit no-impact evidence for the opposite abstraction when applicable, risks, non-goals, open questions, and downstream planning questions.
 
-A planning build contains source decision refs, task ids or task changes, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping.
+A planning build contains source decision refs, task ids or task changes, accepted decision row/question resolutions, acceptance criteria, non-goals, blockers, verification, TDD strategy, candidate files, and requirement-to-task/test mapping. Row/question resolutions use `decision_row_resolutions` and `downstream_question_resolutions` with `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` states.
 
 An implementation build contains source planning refs, task ids, files changed, checks, tester/builder evidence, acceptance mapping, validation/audit refs, unresolved risks, a closure brief, and recommended commit/PR/release text when useful. The closure brief is the user-facing proof that accepted intent was satisfied.
 

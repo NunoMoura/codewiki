@@ -1,0 +1,815 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-23T02:21:51Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+  "task_id": "TASK-011",
+  "task": {
+    "id": "TASK-011",
+    "title": "Enforce decision-to-roadmap propagation gates",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Make planning validation, graph/status, and audit evidence fail or route when accepted decision rows are not mapped to roadmap tasks, sprint metadata, knowledge-only completion, or explicit deferred owner/trigger records.",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+      ".codewiki/validation/2026-05-23-planning-fail.json",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json"
+    ],
+    "code_paths": [
+      "src/application/builds.ts",
+      "src/application/graph.ts",
+      "src/application/state.ts",
+      "src/application/state-builders.ts",
+      "src/application/tools/audit.ts",
+      "src/domain/audit/types.ts",
+      "src/domain/build/types.ts",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      "tests/smoke"
+    ],
+    "goal": {
+      "outcome": "CodeWiki prevents accepted semantic decisions from disappearing after partial planning by requiring deterministic decision-row propagation evidence before planning validation, implementation, or roadmap-empty task close can pass.",
+      "acceptance": [
+        "Planning builds can represent accepted decision row resolution as knowledge-only, roadmap task, sprint/cohort metadata, or explicit deferred owner/trigger/rationale, and validation can inspect that evidence deterministically.",
+        "Planning validation fails or blocks incomplete row-to-roadmap propagation and requires a superseding planning build before implementation can consume the plan.",
+        "Graph/status/audit evidence exposes accepted decision builds with unmapped executable rows or downstream planning questions, including the TASK-010/file-structure regression as a fixture.",
+        "Roadmap-empty/task-close readiness routes back to planning when accepted decision residual work is unmapped.",
+        "Knowledge-only and explicitly deferred rows with owner/trigger/rationale do not create false failures.",
+        "Existing decision, planning, implementation, and task-close public tool behavior remains compatible except for the stricter propagation gate."
+      ],
+      "non_goals": [
+        "Do not migrate source files to concept roots in this task.",
+        "Do not build the human file-structure UI surface in this task.",
+        "Do not create umbrella tasks that only coordinate other tasks.",
+        "Do not change public package commands."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm test",
+        "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-06T02:21:51.000Z",
+    "purge_after": "2026-06-20T02:21:51.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implement decision-to-roadmap propagation gates for planning validation and graph/audit routing.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-011"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/domain/build/decision-propagation.ts",
+      "src/domain/build/types.ts",
+      "src/domain/state/types.ts",
+      "src/application/builds.ts",
+      "src/application/graph.ts",
+      "src/application/state-builders.ts",
+      "src/application/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/index_graph.json"
+    ],
+    "tests": [
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-011"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/change-lifecycle.md",
+      ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+      ".codewiki/validation/2026-05-23-planning-fail.json",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json"
+    ],
+    "code_paths": [
+      "src/application/builds.ts",
+      "src/application/graph.ts",
+      "src/application/state.ts",
+      "src/application/state-builders.ts",
+      "src/application/tools/audit.ts",
+      "src/domain/audit/types.ts",
+      "src/domain/build/types.ts",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      "tests/smoke"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs"
+  ],
+  "code_files": [
+    "src/domain/build/decision-propagation.ts",
+    "src/domain/build/types.ts",
+    "src/domain/state/types.ts",
+    "src/application/builds.ts",
+    "src/application/graph.ts",
+    "src/application/state-builders.ts",
+    "src/application/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-validation/SKILL.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/index_graph.json"
+  ],
+  "files_changed": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "src/domain/build/decision-propagation.ts",
+    "src/domain/build/types.ts",
+    "src/domain/state/types.ts",
+    "src/application/builds.ts",
+    "src/application/graph.ts",
+    "src/application/state-builders.ts",
+    "src/application/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-validation/SKILL.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/index_graph.json"
+  ],
+  "checks_run": [
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass",
+    "npm test: pass (Test Results: 22 passed)",
+    "npm run check:architecture: pass",
+    "npm run test:pack: pass",
+    "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference task_id=TASK-011: warning; alignment graph-health warnings existing, generated index graph dirty pre-commit"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      "roadmap_task_id": "TASK-011",
+      "test_files": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs"
+      ],
+      "evidence": [
+        "TDD added targeted preflight failure/positive cases before broad checks.",
+        "Graph fixture models TASK-010 regression: accepted file-structure rows left only in planning open questions produce decision_propagation residuals and route to planning.",
+        "Audit drift fixture asserts alignment audit failure when generated graph exposes propagation residuals."
+      ],
+      "notes": [
+        "Full verification set requested by TASK-011 was run or equivalent package script run was recorded.",
+        "codewiki_audit reports warning only for existing graph-health warnings and dirty generated .codewiki/index_graph.json before publication; no decision_propagation residuals remain in regenerated graph."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      "roadmap_task_id": "TASK-011",
+      "code_files": [
+        "src/domain/build/decision-propagation.ts",
+        "src/domain/build/types.ts",
+        "src/domain/state/types.ts",
+        "src/application/builds.ts",
+        "src/application/graph.ts",
+        "src/application/state-builders.ts",
+        "src/application/tools/audit.ts",
+        "src/adapters/pi/schemas.ts",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-validation/SKILL.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/index_graph.json"
+      ],
+      "evidence": [
+        "Pure helper src/domain/build/decision-propagation.ts normalizes accepted decision rows/questions and validates resolution states.",
+        "src/application/builds.ts adds validation preflight/report blockers for planning, implementation, task-close, and publication paths.",
+        "src/application/graph.ts emits decision_propagation views and reconciliation routes.",
+        "src/application/state-builders.ts exposes decision propagation residuals in status state.",
+        "src/application/tools/audit.ts turns generated residuals into alignment audit failures.",
+        "src/adapters/pi/schemas.ts and src/domain/build/types.ts expose optional public tool fields."
+      ],
+      "notes": [
+        "Generated .codewiki/index_graph.json was rebuilt locally with current source after tool-hosted refresh lag omitted the new decision_propagation view.",
+        "No source-file migration or UI surface work was done; TASK-013 and TASK-014 remain queued."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TDD added targeted preflight failure/positive cases before broad checks.",
+    "Graph fixture models TASK-010 regression: accepted file-structure rows left only in planning open questions produce decision_propagation residuals and route to planning.",
+    "Audit drift fixture asserts alignment audit failure when generated graph exposes propagation residuals."
+  ],
+  "code_change_evidence": [
+    "Pure helper src/domain/build/decision-propagation.ts normalizes accepted decision rows/questions and validates resolution states.",
+    "src/application/builds.ts adds validation preflight/report blockers for planning, implementation, task-close, and publication paths.",
+    "src/application/graph.ts emits decision_propagation views and reconciliation routes.",
+    "src/application/state-builders.ts exposes decision propagation residuals in status state.",
+    "src/application/tools/audit.ts turns generated residuals into alignment audit failures.",
+    "src/adapters/pi/schemas.ts and src/domain/build/types.ts expose optional public tool fields."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Planning builds can represent accepted decision row resolution as knowledge-only, roadmap task, sprint/cohort metadata, or explicit deferred owner/trigger/rationale, and validation can inspect that evidence deterministically.",
+      "evidence": "Added decision_row_resolutions/downstream_question_resolutions tool schema/types/writer support and pure decision-propagation assessment helper; validation-preflight tests cover roadmap-task, knowledge-only, and deferred owner/trigger/rationale cases."
+    },
+    {
+      "criterion": "Planning validation fails or blocks incomplete row-to-roadmap propagation and requires a superseding planning build before implementation can consume the plan.",
+      "evidence": "buildValidationPreflight now emits decision_propagation blockers for planning and implementation/task-close/publication validations; writeValidationReport turns pass attempts into block with failed_criteria=decision_propagation."
+    },
+    {
+      "criterion": "Graph/status/audit evidence exposes accepted decision builds with unmapped executable rows or downstream planning questions, including the TASK-010/file-structure regression as a fixture.",
+      "evidence": "Graph now emits views.decision_propagation and reconciliation items; status exposes residual summary; alignment audit fails on decision-propagation-unmapped; alignment-graph and audit-drift fixtures cover TASK-010-style residuals."
+    },
+    {
+      "criterion": "Roadmap-empty/task-close readiness routes back to planning when accepted decision residual work is unmapped.",
+      "evidence": "Task-close preflight reads graph decision_propagation residuals when closing would leave the roadmap empty and blocks with planning-route evidence."
+    },
+    {
+      "criterion": "Knowledge-only and explicitly deferred rows with owner/trigger/rationale do not create false failures.",
+      "evidence": "validation-preflight smoke creates accepted rows resolved as knowledge-only and deferred; planning preflight status remains ready with empty decision_propagation gaps."
+    },
+    {
+      "criterion": "Existing decision, planning, implementation, and task-close public tool behavior remains compatible except for the stricter propagation gate.",
+      "evidence": "Package smoke/builds/loop-isolation tests updated to provide new optional resolution evidence while existing commands and package scripts stay unchanged; smoke/features/package tests pass."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-011: enforce decision-to-roadmap propagation gates.",
+    "implemented_changes": [
+      "Added planning row/question resolution contract and schema support.",
+      "Added deterministic decision propagation validation blockers.",
+      "Added graph/status/audit residual exposure and planning routing.",
+      "Added regression and positive smoke coverage."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/builds.md",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-validation/SKILL.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/domain/build/decision-propagation.ts",
+        "src/application/builds.ts",
+        "src/application/graph.ts",
+        "src/application/state-builders.ts",
+        "src/application/tools/audit.ts",
+        "src/adapters/pi/schemas.ts"
+      ],
+      "tests": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "Acceptance mapping in this implementation build covers all TASK-011 success signals.",
+      "Regenerated graph decision_propagation residual_count is 0 for current dogfood state.",
+      "Validation-preflight and graph fixtures cover failure and non-failure cases."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm test",
+      "npm run check:architecture",
+      "npm run test:pack",
+      "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference"
+    ],
+    "non_goals_preserved": [
+      "No concept-root source migration.",
+      "No human file-structure UI surface.",
+      "No umbrella task creation.",
+      "No public package command changes."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation still required before task close.",
+      "Existing graph-health warnings remain outside this task."
+    ]
+  },
+  "risks": [
+    "Runtime Pi tool schema in the active session will not show new optional planning fields until package reload; source schema and tests are updated for future sessions.",
+    "Current repo health remains yellow due pre-existing graph-health warnings unrelated to TASK-011."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-011",
+      "task_id": "TASK-011",
+      "next_focus_task_id": "TASK-013",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-011",
+        "title": "Enforce decision-to-roadmap propagation gates",
+        "summary": "Implement decision-to-roadmap propagation gates for planning validation and graph/audit routing.",
+        "spec_paths": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+          ".codewiki/validation/2026-05-23-planning-fail.json",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json"
+        ],
+        "code_paths": [
+          "src/application/builds.ts",
+          "src/application/graph.ts",
+          "src/application/state.ts",
+          "src/application/state-builders.ts",
+          "src/application/tools/audit.ts",
+          "src/domain/audit/types.ts",
+          "src/domain/build/types.ts",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          "tests/smoke",
+          "src/domain/build/decision-propagation.ts",
+          "src/domain/state/types.ts",
+          "src/adapters/pi/schemas.ts",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/index_graph.json"
+        ],
+        "acceptance": [
+          "Planning builds can represent accepted decision row resolution as knowledge-only, roadmap task, sprint/cohort metadata, or explicit deferred owner/trigger/rationale, and validation can inspect that evidence deterministically.",
+          "Planning validation fails or blocks incomplete row-to-roadmap propagation and requires a superseding planning build before implementation can consume the plan.",
+          "Graph/status/audit evidence exposes accepted decision builds with unmapped executable rows or downstream planning questions, including the TASK-010/file-structure regression as a fixture.",
+          "Roadmap-empty/task-close readiness routes back to planning when accepted decision residual work is unmapped.",
+          "Knowledge-only and explicitly deferred rows with owner/trigger/rationale do not create false failures.",
+          "Existing decision, planning, implementation, and task-close public tool behavior remains compatible except for the stricter propagation gate."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm test",
+          "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+        "checks_run": [
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass",
+          "npm test: pass (Test Results: 22 passed)",
+          "npm run check:architecture: pass",
+          "npm run test:pack: pass",
+          "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference task_id=TASK-011: warning; alignment graph-health warnings existing, generated index graph dirty pre-commit"
+        ],
+        "test_design_evidence": [
+          "TDD added targeted preflight failure/positive cases before broad checks.",
+          "Graph fixture models TASK-010 regression: accepted file-structure rows left only in planning open questions produce decision_propagation residuals and route to planning.",
+          "Audit drift fixture asserts alignment audit failure when generated graph exposes propagation residuals."
+        ],
+        "code_change_evidence": [
+          "Pure helper src/domain/build/decision-propagation.ts normalizes accepted decision rows/questions and validates resolution states.",
+          "src/application/builds.ts adds validation preflight/report blockers for planning, implementation, task-close, and publication paths.",
+          "src/application/graph.ts emits decision_propagation views and reconciliation routes.",
+          "src/application/state-builders.ts exposes decision propagation residuals in status state.",
+          "src/application/tools/audit.ts turns generated residuals into alignment audit failures.",
+          "src/adapters/pi/schemas.ts and src/domain/build/types.ts expose optional public tool fields."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-011",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-011",
+      "show_build": "git show refs/codewiki/archive/task/TASK-011:.codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+        ".codewiki/validation/2026-05-23-planning-fail.json",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+        "src/application/builds.ts",
+        "src/application/graph.ts",
+        "src/application/state.ts",
+        "src/application/state-builders.ts",
+        "src/application/tools/audit.ts",
+        "src/domain/audit/types.ts",
+        "src/domain/build/types.ts",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-validation/SKILL.md",
+        "tests/smoke"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "feat(codewiki): enforce decision propagation gates",
+      "body": "Add deterministic planning propagation evidence for accepted decision rows and downstream planning questions. Planning validation, implementation consumption, graph/status routing, and alignment audit now surface unresolved propagation instead of letting accepted work disappear into open questions.\n\nCodeWiki-Task: TASK-011\nCodeWiki-Build: <implementation_build>\nCodeWiki-Validation: <pending-validation>",
+      "trailers": [
+        "CodeWiki-Task: TASK-011",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+        "CodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs: pass, node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm test: pass (Test Results: 22 passed), npm run check:architecture: pass, npm run test:pack: pass, codewiki_audit profiles=alignment,generated-parity,changed,stale-reference task_id=TASK-011: warning; alignment graph-health warnings existing, generated index graph dirty pre-commit",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-011",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-011",
+        "CodeWiki-Digest: sha256:4655643badcc65e8bea320cc900958183be735a2cfb74c160272ec625899fe6b",
+        "CodeWiki-Restore: /wiki-restore TASK-011"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "feat(codewiki): enforce decision propagation gates",
+      "body": "Add deterministic planning propagation evidence for accepted decision rows and downstream planning questions. Planning validation, implementation consumption, graph/status routing, and alignment audit now surface unresolved propagation instead of letting accepted work disappear into open questions.\n\nCodeWiki-Task: TASK-011\nCodeWiki-Build: <implementation_build>\nCodeWiki-Validation: <pending-validation>"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-011",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-011"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-011",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-011",
+        "show_build": "git show refs/codewiki/archive/task/TASK-011:.codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+          ".codewiki/validation/2026-05-23-planning-fail.json",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+          "src/application/builds.ts",
+          "src/application/graph.ts",
+          "src/application/state.ts",
+          "src/application/state-builders.ts",
+          "src/application/tools/audit.ts",
+          "src/domain/audit/types.ts",
+          "src/domain/build/types.ts",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          "tests/smoke"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-011",
+      "build_path": ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-011",
+      "commit_sha": "",
+      "digest": "sha256:4655643badcc65e8bea320cc900958183be735a2cfb74c160272ec625899fe6b",
+      "restore_command": "/wiki-restore TASK-011"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:99523802a9422cfe70fb028f2551ec51aa72e9b5db48d6fa49e307522a66c233",
+          "bytes": 13704
+        },
+        {
+          "path": "tests/smoke/validation-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:02818f90f281edf79df830164a12bfdefe6cecb31c4e5a39aa9eddaa403fd172",
+          "bytes": 13709
+        },
+        {
+          "path": "tests/smoke/alignment-graph.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:14e0e7c098edc45a07db5f38f486bb48e91a557f19359003eebbbc01c03ee5e1",
+          "bytes": 14243
+        },
+        {
+          "path": "tests/smoke/audit-drift.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1e1c55efd197a8eeeb2ce54c930b7cae8a6664d3bbcb7c1df4dcf1773f1161b4",
+          "bytes": 5900
+        },
+        {
+          "path": "tests/smoke/builds.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:05f6a565421ac28f750c0ac1da20f2b68feb0d05d64ab5f8ce5cc7c744d2dcc8",
+          "bytes": 25198
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
+          "bytes": 88276
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:e670076edbe4a05c7c123fb8694b2454252194eab251321fc98cdff178ae1139",
+          "bytes": 15600
+        },
+        {
+          "path": "src/domain/build/decision-propagation.ts",
+          "role": "code_file",
+          "sha256": "sha256:15c095c1ec000047fdc07db21b20fa539bd379ae422de5b99fa42ccfbcd725cb",
+          "bytes": 13121
+        },
+        {
+          "path": "src/domain/build/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:847bf1301f3e9480ad498afa4c82735800d694e502db5a885533156de429a55b",
+          "bytes": 5757
+        },
+        {
+          "path": "src/domain/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:01571df529b79bdf932f2cfd8606f49097adbb3e86483a2da4950cb9c4281d42",
+          "bytes": 9710
+        },
+        {
+          "path": "src/application/builds.ts",
+          "role": "code_file",
+          "sha256": "sha256:15071f8e81cafb63666157d05dfc493850f27152b2b93c8d886ee854400e0673",
+          "bytes": 76410
+        },
+        {
+          "path": "src/application/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:178508294dec328a6e1a44b594cc1189d7a4b6ced38bc364b440a52c03998fb6",
+          "bytes": 92759
+        },
+        {
+          "path": "src/application/state-builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:a8e1bb30694021e79df22b7902d6f23f4eec7b5954da3cc3887cd44e2f1428a7",
+          "bytes": 45810
+        },
+        {
+          "path": "src/application/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:0da84f561044989b4c0c41cd4ebf2293ef288d3145a5c8a84757195c08dd77ea",
+          "bytes": 38935
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:960d97353b52a2f28e3592e01c8a946979d964993b9a55e896955798f2d74c85",
+          "bytes": 33180
+        },
+        {
+          "path": "skills/codewiki-planning/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:2c62376578868fd752bb3f044502b9834dd5be6cafe9fd6c54d2d42d66d5522f",
+          "bytes": 6651
+        },
+        {
+          "path": "skills/codewiki-validation/SKILL.md",
+          "role": "code_file",
+          "sha256": "sha256:d18a1bdf76b661a790445b9f7dbe73d964e66e3e5db27bbb11a2d6c9e0b76774",
+          "bytes": 7684
+        },
+        {
+          "path": ".codewiki/kb/system/builds.md",
+          "role": "code_file",
+          "sha256": "sha256:cfc8dae7d047bff35c249c2d12f70b0c72fbab962ce98747c3f0d2d69c841b5b",
+          "bytes": 7121
+        }
+      ],
+      "skipped": [
+        {
+          "path": ".codewiki/index_graph.json",
+          "role": "code_file",
+          "reason": "too-large"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-011",
+      "source_build": ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/domain/build/decision-propagation.ts",
+          "src/domain/build/types.ts",
+          "src/domain/state/types.ts",
+          "src/application/builds.ts",
+          "src/application/graph.ts",
+          "src/application/state-builders.ts",
+          "src/application/tools/audit.ts",
+          "src/adapters/pi/schemas.ts",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/index_graph.json",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-011",
+        "restore_command": "/wiki-restore TASK-011"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/alignment-graph.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass",
+        "npm test: pass (Test Results: 22 passed)",
+        "npm run check:architecture: pass",
+        "npm run test:pack: pass",
+        "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference task_id=TASK-011: warning; alignment graph-health warnings existing, generated index graph dirty pre-commit"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

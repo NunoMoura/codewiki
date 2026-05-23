@@ -48,7 +48,7 @@ function createFixture() {
 	writeJson(resolve(root, ".codewiki", "roadmap", "queue.json"), { version: 1, order: ["TASK-001"], tasks: { "TASK-001": task } });
 	writeJson(resolve(root, ".codewiki", "roadmap", "tasks", "TASK-001", "task.json"), { ...task, title: "Stale generated task" });
 	writeJson(resolve(root, ".codewiki", "roadmap", "tasks", "TASK-001", "context.json"), { version: 1, task: { ...task, summary: "Stale context summary" } });
-	writeJson(resolve(root, ".codewiki", "index_graph.json"), { version: 1, generated_at: new Date().toISOString(), lenses: { status: { health: { errors: 0, warnings: 0 } } } });
+	writeJson(resolve(root, ".codewiki", "index_graph.json"), { version: 1, generated_at: new Date().toISOString(), lenses: { status: { health: { errors: 0, warnings: 0 } } }, views: { decision_propagation: { version: 1, residual_count: 1, residuals: [{ decision_build: ".codewiki/builds/decision/file-structure.json", kind: "row", id: "FS-HUMAN-DRIVEN-SURFACE", gaps: ["row:FS-HUMAN-DRIVEN-SURFACE:missing_resolution"] }] } } });
 	write(resolve(root, "README.md"), "This stale fixture still points at extensions/codewiki/src. It also says .codewiki/ stores package source and generated task views are canonical truth.\n");
 	write(resolve(root, "src", "index.ts"), "export const ok = true;\n");
 	write(resolve(root, "src", "core", "bad.ts"), "export const bad = true;\n");
@@ -72,6 +72,10 @@ async function main() {
 	const root = createFixture();
 	try {
 		const project = await loadProject(root);
+		const alignment = await executeCodewikiAudit(project, { profiles: ["alignment"], include_fingerprints: false });
+		assert.equal(alignment.status, "fail");
+		assertIssue(alignment, "decision-propagation-unmapped");
+
 		const fileStructure = await executeCodewikiAudit(project, { profiles: ["file-structure"], include_fingerprints: false });
 		assert.equal(fileStructure.status, "fail");
 		assertIssue(fileStructure, "transitional-layer-no-new-files");

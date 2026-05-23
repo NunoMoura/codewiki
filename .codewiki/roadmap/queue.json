@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-23T01:51:02Z",
+  "updated": "2026-05-23T02:54:50Z",
   "order": [
     "TASK-011",
     "TASK-012",
@@ -74,7 +74,7 @@
         "closure": "Task closes when the regression is covered by validation/state/audit checks and the propagation gap can no longer pass planning validation silently."
       },
       "created": "2026-05-23",
-      "updated": "2026-05-23T01:50:39Z"
+      "updated": "2026-05-23T02:54:50Z"
     },
     "TASK-012": {
       "id": "TASK-012",
@@ -316,8 +316,6 @@
         "TASK-013",
         "TASK-014"
       ],
-      "created": "2026-05-23T01:51:02Z",
-      "updated": "2026-05-23T01:51:02Z",
       "scope": {
         "knowledge": [
           ".codewiki/kb/system/compilers.md",
@@ -350,7 +348,9 @@
         "TASK-011 must land before future planning builds can be trusted to enforce complete decision propagation.",
         "TASK-013 and TASK-014 preserve the accepted file-structure decision as durable follow-up work; they may be reprioritized after TASK-011 but must not disappear into open questions.",
         "Each implementation task must produce implementation_build and fresh validation evidence before close."
-      ]
+      ],
+      "created": "2026-05-23T01:51:02Z",
+      "updated": "2026-05-23T01:51:02Z"
     }
   }
 }

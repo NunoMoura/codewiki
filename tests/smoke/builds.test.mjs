@@ -135,7 +135,7 @@ async function run() {
 
 		// codewiki_build: planning
 		const planResult = await buildTool.definition.execute(
-			"build-plan", { repoPath: projectDir, kind: "planning", summary: "Plan implementation.", source_decision_build: decisionResult.details.path, task_ids: ["TASK-001"], task_changes: ["TASK-001 refined for TDD"], tdd_plan: ["Write or update failing test before code change."], candidate_test_files: ["test.js"], candidate_code_paths: ["src/index.ts"], requirements: [{ id: "REQ-001", text: "Document and implement X.", source_refs: [decisionResult.details.path] }], evidence_mapping: [{ criterion: "Task acceptance maps to requirement", evidence: "TASK-001 acceptance covers REQ-001.", requirement_ids: ["REQ-001"], source_refs: [decisionResult.details.path] }], lifecycle: { ttl_days: 14 } },
+			"build-plan", { repoPath: projectDir, kind: "planning", summary: "Plan implementation.", source_decision_build: decisionResult.details.path, task_ids: ["TASK-001"], task_changes: ["TASK-001 refined for TDD"], decision_row_resolutions: [{ row_id: "DTR-001", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 carries accepted DTR-001 into implementation.", source_refs: [decisionResult.details.path, "TASK-001"] }], downstream_question_resolutions: [{ question: "Plan TASK-001 implementation.", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 answers the downstream planning question.", source_refs: [decisionResult.details.path, "TASK-001"] }], tdd_plan: ["Write or update failing test before code change."], candidate_test_files: ["test.js"], candidate_code_paths: ["src/index.ts"], requirements: [{ id: "REQ-001", text: "Document and implement X.", source_refs: [decisionResult.details.path] }], evidence_mapping: [{ criterion: "Task acceptance maps to requirement", evidence: "TASK-001 acceptance covers REQ-001.", requirement_ids: ["REQ-001"], source_refs: [decisionResult.details.path] }], lifecycle: { ttl_days: 14 } },
 			undefined, undefined, ctx,
 		);
 		assert.match(planResult.details.path, /\.codewiki\/builds\/planning\/.*\.json$/);
@@ -146,6 +146,8 @@ async function run() {
 		assert.equal(plan.source_decision_build, decisionResult.details.path);
 		assert.equal(plan.cycle.loop, "planning");
 		assert.equal(plan.policy.profile, "planning");
+		assert.equal(plan.decision_row_resolutions[0].row_id, "DTR-001");
+		assert.equal(plan.downstream_question_resolutions[0].question, "Plan TASK-001 implementation.");
 
 		// codewiki_build: implementation
 		await assert.rejects(

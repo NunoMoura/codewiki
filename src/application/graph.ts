@@ -1,3 +1,4 @@
+import { assessDecisionPropagation } from "../domain/build/decision-propagation.ts";
 import { isAcceptedBuildData } from "../domain/build/lifecycle.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption } from "../domain/change/traceability.ts";
 import type { WikiProject } from "../domain/project/types.ts";
@@ -1293,6 +1294,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 	}
 
 	const traceabilityRows: any[] = [];
+	const decisionPropagationAssessments: any[] = [];
 	const semanticChangeRows = unique(rawDirtyPaths)
 		.map((path) => ({ path, change_type: classifySemanticPath(project, path) }))
 		.filter((row): row is { path: string; change_type: string } => Boolean(row.change_type))
@@ -1410,6 +1412,54 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 					gaps,
 				});
 			}
+		}
+	}
+
+	for (const decision of builds.filter((build) => {
+		if (build.kind !== "decision_build") return false;
+		const lifecycleState = String(build.data?.lifecycle?.state || build.data?.status || build.status || "").trim() || "unknown";
+		const buildPath = normalizeCodewikiRef(build.path);
+		if (isLifecycleComplete(lifecycleState)) return false;
+		return !supersededByPath.has(buildPath) && !historicalColdBuild(build, lifecycleState);
+	})) {
+		const decisionPath = normalizeCodewikiRef(decision.path);
+		const planningBuilds = uniqueBuildsByPath(planningByDecision.get(decisionPath) || [])
+			.filter((planningBuild) => !supersededByPath.has(normalizeCodewikiRef(planningBuild.path)));
+		const assessment = assessDecisionPropagation(decision.data, planningBuilds, {
+			knownTaskIds: unique([...roadmapEntries.map((task) => task.id), ...archivedTaskIds]),
+			knownSprintIds: normalizedSprints.map((sprint) => sprint.id),
+		});
+		if (assessment.rows.length === 0 && assessment.questions.length === 0) continue;
+		const decoratedRows = assessment.rows.map((row) => ({ ...row, decision_build: decisionPath }));
+		const decoratedQuestions = assessment.questions.map((question) => ({ ...question, decision_build: decisionPath }));
+		const decoratedResiduals = [...decoratedRows, ...decoratedQuestions].filter((entry) => entry.gaps.length > 0);
+		decisionPropagationAssessments.push({
+			decision_build: decisionPath,
+			planning_builds: assessment.planning_builds,
+			row_count: decoratedRows.length,
+			question_count: decoratedQuestions.length,
+			residual_count: decoratedResiduals.length,
+			rows: decoratedRows,
+			questions: decoratedQuestions,
+			residuals: decoratedResiduals,
+		});
+		for (const residual of decoratedResiduals) {
+			reconciliationItems.push({
+				id: `reconcile:decision-propagation:${decisionPath}:${residual.kind}:${residual.id}`,
+				source_id: `build:${decisionPath}`,
+				state: "drift",
+				direction: "downward",
+				from_layer: "decision",
+				to_layer: "roadmap",
+				next_loop: "planning",
+				task_id: residual.task_ids[0],
+				reason: `Accepted decision ${residual.kind} ${residual.id} lacks durable planning propagation: ${residual.gaps.join(", ")}.`,
+				gaps: residual.gaps,
+				decision_build: decisionPath,
+				planning_builds: residual.planning_builds,
+				roadmap_task_ids: residual.task_ids,
+				sprint_ids: residual.sprint_ids,
+			});
 		}
 	}
 
@@ -1785,6 +1835,8 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		if (!byGroup[group]) byGroup[group] = [];
 		byGroup[group].push(path);
 	}
+	const decisionPropagationRows = decisionPropagationAssessments.flatMap((assessment) => [...assessment.rows, ...assessment.questions]);
+	const decisionPropagationResiduals = decisionPropagationAssessments.flatMap((assessment) => assessment.residuals);
 	const graphLensViews = buildGraphLensViews({
 		nodes,
 		edges,
@@ -1831,6 +1883,15 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			sprint_ids: sprintViews.map((sprint) => sprint.id),
 			active_sprint_ids: activeSprintIds,
 			sprints: sprintViews,
+		},
+		decision_propagation: {
+			version: 1,
+			model: "accepted-decision-row-to-roadmap-resolution",
+			checked_decision_count: decisionPropagationAssessments.length,
+			row_count: decisionPropagationRows.length,
+			residual_count: decisionPropagationResiduals.length,
+			assessments: decisionPropagationAssessments,
+			residuals: decisionPropagationResiduals,
 		},
 		research: {
 			collection_paths: research.map(c => c.path),

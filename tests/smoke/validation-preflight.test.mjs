@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildValidationPreflight, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { buildValidationPreflight, writeDecisionBuild, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-validation-preflight-"));
 
@@ -38,12 +38,23 @@ const implementationAuditRefs = ["audit:alignment", "audit:changed"];
 const publicationAuditRefs = ["audit:alignment", "audit:package", "audit:security"];
 
 try {
+	const decision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept validation preflight risk policy.",
+		diff_table: [{ id: "VAL-PREFLIGHT", current_state: "Validation preflight is weaker.", desired_state: "Validation preflight enforces semantic metadata.", rationale: "Smoke coverage needs accepted intent.", affected_layers: ["system", "roadmap", "code"], user_action: "approved" }],
+		row_to_kb_mappings: [{ row_id: "VAL-PREFLIGHT", knowledge_refs: [".codewiki/kb/system/validation-gateway.md"], evidence: "Validation gateway docs capture accepted intent." }],
+		propagation: { direction: "system-first", product_impact: ["Agents see stricter validation routes."], downstream_planning_questions: ["Plan TASK-777 implementation."] },
+		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
+		roadmap_changes: ["TASK-777"],
+	});
 	const planning = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Plan validation preflight risk policy.",
-		source_decision_build: ".codewiki/builds/decision/accepted-validation-preflight.json",
+		source_decision_build: decision.path,
 		task_ids: ["TASK-777"],
 		task_changes: ["TASK-777 covers validation preflight."],
+		decision_row_resolutions: [{ row_id: "VAL-PREFLIGHT", resolution: "roadmap-task", task_ids: ["TASK-777"], evidence: "TASK-777 implements accepted validation preflight policy.", source_refs: [decision.path, "TASK-777"] }],
+		downstream_question_resolutions: [{ question: "Plan TASK-777 implementation.", resolution: "roadmap-task", task_ids: ["TASK-777"], evidence: "TASK-777 is the implementation route for the downstream question.", source_refs: [decision.path, "TASK-777"] }],
 		tdd_plan: ["Add gateway/preflight smoke coverage."],
 		candidate_test_files: ["tests/smoke/validation-preflight.test.mjs"],
 		candidate_code_paths: ["src/application/builds.ts"],
@@ -98,6 +109,65 @@ try {
 	});
 	assert.equal(staleSource.status, "blocked");
 	assert.ok(staleSource.missing.stale_refs.some((entry) => entry.includes("missing.json")));
+
+	const unresolvedDecision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept unresolved propagation fixture.",
+		diff_table: [{ id: "UNMAPPED-ROW", current_state: "Question-only planning can pass.", desired_state: "Question-only planning must fail.", rationale: "Regression fixture.", affected_layers: ["roadmap", "code"], user_action: "approved" }],
+		row_to_kb_mappings: [{ row_id: "UNMAPPED-ROW", knowledge_refs: [".codewiki/kb/system/validation-gateway.md"], evidence: "Gateway docs capture the rule." }],
+		propagation: { direction: "system-first", product_impact: ["Planning validates stricter mapping."], downstream_planning_questions: ["Who owns UNMAPPED-ROW?" ] },
+		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
+	});
+	const unresolvedPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Leave propagation unresolved.",
+		source_decision_build: unresolvedDecision.path,
+		open_questions: ["Who owns UNMAPPED-ROW?"],
+		tdd_plan: ["Prove planning validation blocks unmapped rows."],
+	});
+	const propagationBlocked = buildValidationPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Planning cannot pass with unmapped accepted row.",
+		source: unresolvedPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(propagationBlocked.status, "blocked");
+	assert.ok(propagationBlocked.missing.decision_propagation.some((entry) => entry.includes("UNMAPPED-ROW")));
+
+	const deferredDecision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept knowledge-only and deferred propagation fixture.",
+		diff_table: [
+			{ id: "KNOWLEDGE-ONLY", current_state: "Docs are unclear.", desired_state: "Docs are updated only.", rationale: "No executable work.", affected_layers: ["knowledge"], user_action: "approved" },
+			{ id: "EXPLICIT-DEFER", current_state: "Migration target undecided.", desired_state: "Migration can be deferred with owner and trigger.", rationale: "No safe target yet.", affected_layers: ["roadmap"], user_action: "approved" },
+		],
+		row_to_kb_mappings: [
+			{ row_id: "KNOWLEDGE-ONLY", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "Lifecycle docs capture knowledge-only resolution." },
+			{ row_id: "EXPLICIT-DEFER", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "Lifecycle docs capture deferral policy." },
+		],
+		propagation: { direction: "system-first", product_impact: ["Agents can record no-op/deferred planning."], downstream_planning_questions: ["When should EXPLICIT-DEFER resume?"] },
+		knowledge_changes: [".codewiki/kb/system/change-lifecycle.md"],
+	});
+	const deferredPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Resolve knowledge-only and deferred rows.",
+		source_decision_build: deferredDecision.path,
+		decision_row_resolutions: [
+			{ row_id: "KNOWLEDGE-ONLY", resolution: "knowledge-only", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "The accepted row is complete in KB only.", source_refs: [deferredDecision.path] },
+			{ row_id: "EXPLICIT-DEFER", resolution: "deferred", owner: "maintainers", trigger: "first migration target approved", rationale: "Migration target needs a later decision.", evidence: "Deferred record has owner, trigger, and rationale.", source_refs: [deferredDecision.path] },
+		],
+		downstream_question_resolutions: [{ question: "When should EXPLICIT-DEFER resume?", resolution: "deferred", owner: "maintainers", trigger: "first migration target approved", rationale: "Same as EXPLICIT-DEFER row deferral.", evidence: "Question is explicitly deferred with owner and trigger.", source_refs: [deferredDecision.path] }],
+	});
+	const deferredPreflight = buildValidationPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Knowledge-only and deferred rows are fully resolved.",
+		source: deferredPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(deferredPreflight.status, "ready");
+	assert.deepEqual(deferredPreflight.missing.decision_propagation, []);
 
 	const mechanicalImplementation = await writeImplementationBuild(project, {
 		kind: "implementation",

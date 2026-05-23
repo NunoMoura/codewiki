@@ -64,5 +64,5 @@
     "closure": "Task closes when the regression is covered by validation/state/audit checks and the propagation gap can no longer pass planning validation silently."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-23T01:50:39Z"
+  "updated": "2026-05-23T02:54:50Z"
 }

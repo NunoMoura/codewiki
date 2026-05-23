@@ -292,6 +292,7 @@ export interface StatusStateFile {
 	};
 	workflow_cursor?: WorkflowCursor;
 	gc?: any;
+	decision_propagation?: any;
 	direction: string[];
 	specs: StatusStateSpecRow[];
 	agency: {

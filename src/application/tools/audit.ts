@@ -379,6 +379,11 @@ async function auditAlignment(project: WikiProject, input: CodewikiAuditInput): 
 		if (health?.warnings > 0) {
 			issues.push(createIssue(profile, "warning", "graph-health", `Graph health reports ${health.warnings} warnings.`, graphPath));
 		}
+		const decisionPropagation = graph?.views?.decision_propagation;
+		const residualCount = Number(decisionPropagation?.residual_count || 0);
+		if (residualCount > 0) {
+			issues.push(createIssue(profile, "error", "decision-propagation-unmapped", `Accepted decision propagation has ${residualCount} unresolved row/question mappings.`, graphPath));
+		}
 	}
 	const queue = await maybeReadJson(resolve(project.root, queuePath));
 	if (!queue?.tasks) {

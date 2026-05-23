@@ -27,7 +27,8 @@ For exact tool arguments and required fields, read `references/tools.md` when ne
 - Do not create/refine/close roadmap tasks in validation mode.
 - Do not edit `.codewiki/kb/**`, source code, tests, roadmap queue, generated views, or builds.
 - Return `pass`, `fail`, or `block`; never return “probably pass”.
-- Missing required refs, audit evidence, fresh context, content proof, or task-boundary integrity blocks instead of passing.
+- Missing required refs, audit evidence, fresh context, content proof, task-boundary integrity, or decision-row propagation evidence blocks instead of passing.
+- Planning validation must fail/block when accepted decision rows or downstream planning questions are not mapped to knowledge-only completion, roadmap tasks, sprint metadata, or explicit deferred owner/trigger/rationale evidence.
 - A GC restore ledger is restoration evidence only. It never replaces validation, task-close, publication, or content-proof evidence.
 
 ## Inputs to inspect
@@ -58,11 +59,12 @@ Read only enough source truth to decide:
 
 3. **Run/review audits and preflight**
    - Run `codewiki_audit` for required profiles or cite existing audit refs.
-   - Run `codewiki_validation preflight_only=true` when source/build metadata, task id, audit evidence, content proof, stale refs, close/publication blockers, or risk approval may block the pass.
+   - Run `codewiki_validation preflight_only=true` when source/build metadata, decision-row propagation, task id, audit evidence, content proof, stale refs, close/publication blockers, or risk approval may block the pass.
    - A pass verdict must include required audit evidence when profile policy requires it.
 
 4. **Check vertical alignment**
    - Trace user intent and accepted build refs through knowledge, planning, roadmap task, tests/code, implementation build, and closure/publication proof as applicable.
+   - For planning, inspect `decision_row_resolutions` and `downstream_question_resolutions`; accepted work left only as open questions fails.
    - Each requirement/acceptance criterion must map to evidence.
 
 5. **Check horizontal alignment**

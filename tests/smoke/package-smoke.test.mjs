@@ -624,6 +624,8 @@ async function main() {
 				source_decision_build: buildResult.details.path,
 				task_ids: ["TASK-001"],
 				task_changes: ["TASK-001 planned for implementation"],
+				decision_row_resolutions: [{ row_id: "DTR-001", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 carries DTR-001 into implementation.", source_refs: [buildResult.details.path, "TASK-001"] }],
+				downstream_question_resolutions: [{ question: "Create implementation task if code must change.", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 is the implementation task for the downstream planning question.", source_refs: [buildResult.details.path, "TASK-001"] }],
 				tdd_plan: ["Derive smoke assertions before code changes."],
 				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
 				candidate_code_paths: ["src/index.ts"],

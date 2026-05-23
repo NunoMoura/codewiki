@@ -982,6 +982,15 @@ export function buildStatusState(
 		actionable_entries: fileStructure.actionable_entries || [],
 		parse_issues: fileStructure.parse_issues || [],
 	} : null;
+	const decisionPropagation = graphViews.decision_propagation || null;
+	const decisionPropagationStatus = decisionPropagation ? {
+		version: decisionPropagation.version,
+		model: decisionPropagation.model,
+		checked_decision_count: Number(decisionPropagation.checked_decision_count || 0),
+		row_count: Number(decisionPropagation.row_count || 0),
+		residual_count: Number(decisionPropagation.residual_count || 0),
+		residuals: Array.isArray(decisionPropagation.residuals) ? decisionPropagation.residuals.slice(0, 20) : [],
+	} : null;
 	const workflowCursor = graphViews.workflow_cursor || {
 		active_loop: String(nextStep.kind || "observe") === "code" ? "implementation" : "observe",
 		reason: String(nextStep.reason || ""),
@@ -1071,6 +1080,7 @@ export function buildStatusState(
 		gc: graphViews.gc || {},
 		direction,
 		file_structure: fileStructureStatus,
+		decision_propagation: decisionPropagationStatus,
 		specs: specRows,
 		agency: {
 			generated_at: nowIso(),

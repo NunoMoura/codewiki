@@ -25,6 +25,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Create only self-contained executable tasks with direct outcomes, acceptance criteria, non-goals, verification, candidate files, independent validation evidence, and post-commit GC review when the work closes tasks/sprints or publishes artifacts.
 - Reject coordination-only tasks, sprint/umbrella/container tasks, and tasks whose acceptance mainly says other tasks must close.
 - Compile `codewiki_build kind="planning"` after roadmap alignment and before implementation handoff.
+- Every accepted decision row and downstream planning question must have deterministic propagation evidence in the planning build: `decision_row_resolutions` / `downstream_question_resolutions` as `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` with owner/trigger/rationale.
 - Use `codewiki_task action="sprint"` for accepted related executable cohorts; never create umbrella tasks or hand-edit sprint metadata.
 - Validate planning-to-roadmap alignment before routing to implementation.
 
@@ -58,7 +59,13 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 
 6. **Compile planning build**
    - Call `codewiki_build kind="planning"` after task creation/refinement.
-   - Include `source_decision_build`, `task_ids`, `task_changes`, `tdd_plan`, `candidate_test_files`, `candidate_code_paths`, requirements, evidence mapping, assumptions, open questions, non-goals, and risks.
+   - Include `source_decision_build`, `task_ids`, `task_changes`, `decision_row_resolutions`, `downstream_question_resolutions`, `tdd_plan`, `candidate_test_files`, `candidate_code_paths`, requirements, evidence mapping, assumptions, open questions, non-goals, and risks.
+   - Resolve each accepted row/question as one of:
+     - `knowledge-only` with knowledge/source refs;
+     - `roadmap-task` with durable `TASK-###` refs;
+     - `sprint` with durable `SPRINT-###` refs;
+     - `deferred` with owner, trigger, rationale, and evidence.
+   - Do not leave accepted work only in `open_questions`; that must block planning validation.
    - The build is the implementation handoff. It should be compact enough for a fresh implementation session to execute without reading prior chat.
 
 7. **Validate planning**

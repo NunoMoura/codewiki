@@ -101,6 +101,21 @@ export interface CodewikiDecisionPropagationInput {
 	downstream_planning_questions?: string[];
 }
 
+export interface CodewikiDecisionPropagationResolutionInput {
+	row_id?: string;
+	question_id?: string;
+	question?: string;
+	resolution: "knowledge-only" | "roadmap-task" | "sprint" | "deferred" | string;
+	task_ids?: string[];
+	sprint_ids?: string[];
+	knowledge_refs?: string[];
+	source_refs?: string[];
+	owner?: string;
+	trigger?: string;
+	rationale?: string;
+	evidence: string;
+}
+
 export interface CodewikiBuildToolInput {
 	repoPath?: string;
 	kind: "decision" | "planning" | "implementation";
@@ -159,6 +174,8 @@ export interface CodewikiBuildToolInput {
 	source_decision_build?: string;
 	task_ids?: string[];
 	task_changes?: string[];
+	decision_row_resolutions?: CodewikiDecisionPropagationResolutionInput[];
+	downstream_question_resolutions?: CodewikiDecisionPropagationResolutionInput[];
 	tdd_plan?: string[];
 	candidate_test_files?: string[];
 	candidate_code_paths?: string[];

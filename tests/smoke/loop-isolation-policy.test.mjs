@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-loop-isolation-"));
@@ -41,12 +41,22 @@ const taskCloseAuditRefs = ["audit:alignment", "audit:changed", "audit:task", "a
 const publicationAuditRefs = ["audit:alignment", "audit:package", "audit:security", "approval:user"];
 
 try {
+	const decision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept isolated implementation policy.",
+		diff_table: [{ id: "ISOLATION-POLICY", current_state: "Isolation policy is not covered.", desired_state: "Implementation validation has isolation policy coverage.", rationale: "Smoke test needs accepted semantic source.", affected_layers: ["system", "code"], user_action: "approved" }],
+		row_to_kb_mappings: [{ row_id: "ISOLATION-POLICY", knowledge_refs: [".codewiki/kb/system/validation-gateway.md"], evidence: "Validation gateway docs capture isolation policy." }],
+		propagation: { direction: "system-first", product_impact: ["Agents get validation isolation feedback."], downstream_planning_questions: ["Plan TASK-123 isolation implementation."] },
+		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
+	});
 	const planning = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Plan isolated implementation.",
-		source_decision_build: ".codewiki/builds/decision/decision.json",
+		source_decision_build: decision.path,
 		task_ids: ["TASK-123"],
 		task_changes: ["TASK-123 refined."],
+		decision_row_resolutions: [{ row_id: "ISOLATION-POLICY", resolution: "roadmap-task", task_ids: ["TASK-123"], evidence: "TASK-123 implements the accepted isolation policy.", source_refs: [decision.path, "TASK-123"] }],
+		downstream_question_resolutions: [{ question: "Plan TASK-123 isolation implementation.", resolution: "roadmap-task", task_ids: ["TASK-123"], evidence: "TASK-123 answers the downstream planning question.", source_refs: [decision.path, "TASK-123"] }],
 		tdd_plan: ["Add isolation policy smoke coverage."],
 		candidate_test_files: ["tests/smoke/loop-isolation-policy.test.mjs"],
 		candidate_code_paths: ["src/application/builds.ts"],

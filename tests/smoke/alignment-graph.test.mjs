@@ -89,6 +89,7 @@ const planningBuild = {
 		lifecycle: { state: "accepted" },
 		source_decision_build: decisionPath,
 		task_ids: ["TASK-900"],
+		decision_row_resolutions: [{ row_id: "CHANGE-001", resolution: "roadmap-task", task_ids: ["TASK-900"], evidence: "TASK-900 implements CHANGE-001.", source_refs: [decisionPath, "TASK-900"] }],
 		produces: { roadmap: ["TASK-900"] },
 	},
 };
@@ -240,6 +241,48 @@ const validationReport = {
 		],
 	});
 	assert.ok(graph.views.reconciliation.items.some((item) => item.source_id === "validation:.codewiki/validation/unscoped-fail.json"), "Unscoped fail validation should still route decision drift");
+}
+
+{
+	const fileStructureDecisionPath = ".codewiki/builds/decision/file-structure.json";
+	const fileStructurePlanPath = ".codewiki/builds/planning/task-010-plan.json";
+	const fileStructureDecision = {
+		path: fileStructureDecisionPath,
+		kind: "decision_build",
+		status: "accepted",
+		data: {
+			kind: "decision_build",
+			lifecycle: { state: "accepted" },
+			diff_table: [
+				{ id: "FS-HUMAN-DRIVEN-SURFACE", desired_state: "Humans need a file-structure review surface.", affected_layers: ["roadmap", "ui"], user_action: "approved" },
+				{ id: "FS-ROOT-CONCEPTS", desired_state: "Concept-root migration needs a first boundary.", affected_layers: ["roadmap", "source"], user_action: "approved" },
+			],
+			approved_diff_rows: ["FS-HUMAN-DRIVEN-SURFACE", "FS-ROOT-CONCEPTS"],
+			row_to_kb_mappings: [
+				{ row_id: "FS-HUMAN-DRIVEN-SURFACE", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures review surface." },
+				{ row_id: "FS-ROOT-CONCEPTS", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures migration direction." },
+			],
+			propagation: { direction: "system-first", product_impact: ["Maintainers review drift."], downstream_planning_questions: ["Which concept root should migrate first?"] },
+		},
+	};
+	const incompleteFileStructurePlan = {
+		path: fileStructurePlanPath,
+		kind: "planning_build",
+		status: "accepted",
+		data: {
+			kind: "planning_build",
+			lifecycle: { state: "accepted" },
+			source_decision_build: fileStructureDecisionPath,
+			task_ids: ["TASK-010"],
+			open_questions: ["Which concept root should migrate first?"],
+			produces: { roadmap: ["TASK-010"] },
+		},
+	};
+	const graph = baseGraph({ builds: [fileStructureDecision, incompleteFileStructurePlan], roadmapEntries: [] });
+	assert.equal(graph.views.decision_propagation.residual_count, 3, "TASK-010 regression should expose two unmapped rows plus one still-open downstream question");
+	assert.ok(graph.views.decision_propagation.residuals.some((entry) => entry.id === "FS-HUMAN-DRIVEN-SURFACE"));
+	assert.ok(graph.views.decision_propagation.residuals.some((entry) => entry.id === "FS-ROOT-CONCEPTS"));
+	assert.ok(graph.views.reconciliation.items.some((item) => item.id.includes("decision-propagation") && item.next_loop === "planning"), "Residual decision propagation should route back to planning");
 }
 
 console.log("✓ alignment graph smoke passed");

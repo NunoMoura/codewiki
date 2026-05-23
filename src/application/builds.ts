@@ -4,6 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput, CodewikiClosureBriefInput, CodewikiDiffTableRowInput } from "../domain/build/types.ts";
 import { isAcceptedBuildData } from "../domain/build/lifecycle.ts";
+import { assessDecisionPropagation, normalizeDecisionQuestionResolutions, normalizeDecisionRowResolutions } from "../domain/build/decision-propagation.ts";
 import type { ChangeType } from "../domain/change/types.ts";
 import type { WikiProject } from "../domain/project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
@@ -433,6 +434,92 @@ function readValidationPreflightSource(project: WikiProject, input: CodewikiVali
 	return { source, build: result.data, stale_refs: [] };
 }
 
+function readRoadmapPropagationRefs(project: WikiProject): { taskIds: string[]; sprintIds: string[] } {
+	try {
+		const data = JSON.parse(readFileSync(resolve(project.root, project.roadmapPath), "utf8"));
+		let archivedTaskIds: string[] = [];
+		try {
+			const archivePath = resolve(project.root, dirname(project.roadmapPath), "archive.jsonl");
+			archivedTaskIds = readFileSync(archivePath, "utf8").split(/\r?\n/).flatMap((line) => {
+				if (!line.trim()) return [];
+				try {
+					const record = JSON.parse(line);
+					return trimList([record?.id, record?.task?.id]);
+				} catch {
+					return [];
+				}
+			});
+		} catch {
+			archivedTaskIds = [];
+		}
+		return {
+			taskIds: unique([...Object.keys(data?.tasks || {}), ...trimList(data?.order), ...archivedTaskIds]),
+			sprintIds: unique([...Object.keys(data?.sprints || {}), ...trimList(data?.views?.sprint_ids)]),
+		};
+	} catch {
+		return { taskIds: [], sprintIds: [] };
+	}
+}
+
+function planningDecisionPropagationGaps(project: WikiProject, planning: any, planningPath = ""): string[] {
+	const decisionRefs = buildRefsByKind(planning, "decision");
+	if (decisionRefs.length === 0) return [];
+	const known = readRoadmapPropagationRefs(project);
+	const gaps: string[] = [];
+	for (const decisionRef of decisionRefs) {
+		const decision = readBuildRef(project, decisionRef);
+		if (!decision.ok) {
+			gaps.push(`${planningPath || "planning_build"}:${decisionRef}:${decision.reason}`);
+			continue;
+		}
+		if (String(decision.data?.kind || "") !== "decision_build") continue;
+		const assessment = assessDecisionPropagation(decision.data, [{ path: planningPath, data: planning }], { knownTaskIds: known.taskIds, knownSprintIds: known.sprintIds });
+		gaps.push(...assessment.gaps.map((gap) => `${decisionRef}:${gap}`));
+	}
+	return unique(gaps);
+}
+
+function implementationPlanningPropagationGaps(project: WikiProject, build: any): string[] {
+	const gaps: string[] = [];
+	for (const planningRef of buildRefsByKind(build, "planning")) {
+		const planning = readBuildRef(project, planningRef);
+		if (!planning.ok) continue;
+		if (String(planning.data?.kind || "") !== "planning_build") continue;
+		gaps.push(...planningDecisionPropagationGaps(project, planning.data, planningRef).map((gap) => `${planningRef}:${gap}`));
+	}
+	return unique(gaps);
+}
+
+function graphDecisionPropagationResidualGaps(project: WikiProject, input: CodewikiValidationReportInput, profile: string): string[] {
+	if (profile.trim().toLowerCase() !== "task-close") return [];
+	try {
+		const graph = JSON.parse(readFileSync(resolve(project.root, project.graphPath), "utf8"));
+		const residuals = Array.isArray(graph?.views?.decision_propagation?.residuals) ? graph.views.decision_propagation.residuals : [];
+		if (residuals.length === 0) return [];
+		const openTaskIds = Array.isArray(graph?.views?.roadmap?.open_task_ids) ? graph.views.roadmap.open_task_ids.map((id: unknown) => String(id || "").trim()).filter(Boolean) : [];
+		const taskId = String(input.task_id || "").trim();
+		const roadmapWouldBeEmpty = openTaskIds.length === 0 || (taskId && openTaskIds.length === 1 && openTaskIds[0] === taskId);
+		if (!roadmapWouldBeEmpty) return [];
+		return residuals.map((item: any) => `${String(item.decision_build || "decision_build")}:${String(item.kind || "row")}:${String(item.id || "unknown")}:${trimList(item.gaps).join("|") || "missing_resolution"}`);
+	} catch {
+		return [];
+	}
+}
+
+function validationDecisionPropagationGaps(project: WikiProject, input: CodewikiValidationReportInput, build: any, profile: string): string[] {
+	const normalizedProfile = profile.trim().toLowerCase();
+	const gaps: string[] = [];
+	const kind = String(build?.kind || "").trim();
+	if (normalizedProfile === "planning" && kind === "planning_build") {
+		gaps.push(...planningDecisionPropagationGaps(project, build, input.source || ""));
+	}
+	if (["implementation", "task-close", "publication", "publish", "release"].includes(normalizedProfile) && kind === "implementation_build") {
+		gaps.push(...implementationPlanningPropagationGaps(project, build));
+	}
+	gaps.push(...graphDecisionPropagationResidualGaps(project, input, normalizedProfile));
+	return unique(gaps);
+}
+
 function repoRefMissing(project: WikiProject, ref: string): boolean {
 	const normalized = normalizeRepoPath(ref);
 	if (!normalized || !normalized.includes("/")) return false;
@@ -572,6 +659,7 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 	const auditGaps = auditEvidenceGaps([...unique(trimList(input.audit_refs)), ...unique(trimList(input.audit_reports))], auditReq).map((auditProfile) => `audit:${auditProfile}`);
 	const taskIdGaps = validationTaskIdGaps(input, source.build, profile);
 	const upstreamGaps = validationUpstreamBuildGaps(project, input, source.build, profile);
+	const decisionPropagationGaps = validationDecisionPropagationGaps(project, input, source.build, profile);
 	const staleRefs = validationStaleRefs(project, input, source);
 	const closePublicationBlockers = unique([
 		...publisherGaps.map((gap) => `publisher_result:${gap}`),
@@ -581,11 +669,12 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 	const risk = classifyValidationRisk(input, source.build);
 	const approvalEvidence = validationApprovalEvidence(input, source.build, risk.tier);
 	const approvalMissing = risk.approval_required && approvalEvidence.length === 0 ? [`user_approval:${risk.tier}`] : [];
-	const blockingGaps = unique([...upstreamGaps, ...auditGaps, ...taskIdGaps, ...isolationGaps, ...staleRefs, ...closePublicationBlockers]);
+	const blockingGaps = unique([...upstreamGaps, ...decisionPropagationGaps, ...auditGaps, ...taskIdGaps, ...isolationGaps, ...staleRefs, ...closePublicationBlockers]);
 	const status = blockingGaps.length > 0 ? "blocked" : approvalMissing.length > 0 ? "escalate" : "ready";
 	const lowRiskFastPathCandidate = ["mechanical-docs", "code-local"].includes(risk.tier);
 	const missing = {
 		upstream_builds: upstreamGaps,
+		decision_propagation: decisionPropagationGaps,
 		audit_evidence: auditGaps,
 		task_ids: taskIdGaps,
 		content_proof: isolationGaps,
@@ -595,6 +684,7 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 	};
 	const issues = [
 		...validationPreflightIssue("upstream-builds", "high", upstreamGaps, "Missing accepted upstream build evidence."),
+		...validationPreflightIssue("decision-propagation", "high", decisionPropagationGaps, "Accepted decision rows or downstream planning questions are not durably resolved."),
 		...validationPreflightIssue("audit-evidence", "high", auditGaps, "Missing required audit evidence."),
 		...validationPreflightIssue("task-id", "high", taskIdGaps, "Missing or inconsistent task id evidence."),
 		...validationPreflightIssue("content-proof", "high", isolationGaps, "Missing required content proof strategy."),
@@ -610,6 +700,7 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 		checks: [
 			"source refs readable",
 			"accepted upstream builds",
+			"decision-row propagation coverage",
 			"required audit evidence",
 			"task id consistency",
 			"content proof strategy",
@@ -1145,6 +1236,8 @@ export async function writePlanningBuild(
 	const tddPlan = trimList(input.tdd_plan);
 	const candidateTestFiles = trimList(input.candidate_test_files);
 	const candidateCodePaths = trimList(input.candidate_code_paths);
+	const decisionRowResolutions = normalizeDecisionRowResolutions(input);
+	const downstreamQuestionResolutions = normalizeDecisionQuestionResolutions(input);
 	const consumes = trimRefGroups({
 		...input.consumes,
 		decision: unique([sourceDecisionBuild, ...(input.consumes?.decision ?? [])]),
@@ -1173,6 +1266,8 @@ export async function writePlanningBuild(
 		tdd_plan: tddPlan,
 		candidate_test_files: candidateTestFiles,
 		candidate_code_paths: candidateCodePaths,
+		decision_row_resolutions: decisionRowResolutions,
+		downstream_question_resolutions: downstreamQuestionResolutions,
 		acceptance_mapping: normalizeEvidenceMapping(input).length ? normalizeEvidenceMapping(input) : (input.acceptance_mapping ?? []).filter((m) => m.criterion.trim() && m.evidence.trim()),
 		assumptions: trimList(input.assumptions),
 		open_questions: trimList(input.open_questions),
@@ -1383,6 +1478,7 @@ export async function writeValidationReport(
 	const auditReq = auditRequirement(profile, policyProfile, input.required_audits);
 	const auditGaps = input.verdict === "pass" ? auditEvidenceGaps([...auditRefs, ...auditReports], auditReq) : [];
 	const preflight = buildValidationPreflight(project, input);
+	const decisionPropagationGaps = input.verdict === "pass" ? preflight.missing.decision_propagation : [];
 	const riskApprovalGaps = input.verdict === "pass" ? preflight.missing.user_approval : [];
 	const publicationReadinessGaps = input.verdict === "pass"
 		? preflight.missing.close_publication_blockers.filter((gap) => gap === "publication_safe_to_push")
@@ -1392,6 +1488,7 @@ export async function writeValidationReport(
 		...publisherResultGaps.map((gap) => `publisher_result:${gap}`),
 		...commitReadinessGaps,
 		...traceabilityPolicy.gaps,
+		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
 		...auditGaps.map((profileName) => `audit:${profileName}`),
 		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
 		...publicationReadinessGaps.map((gap) => `publication_readiness:${gap}`),
@@ -1415,6 +1512,9 @@ export async function writeValidationReport(
 	const auditIssue = auditGaps.length > 0
 		? [{ severity: "high", summary: `Missing required audit evidence for profiles: ${auditGaps.join(", ")}.` }]
 		: [];
+	const decisionPropagationIssue = decisionPropagationGaps.length > 0
+		? [{ severity: "high", summary: `Accepted decision propagation gaps remain: ${decisionPropagationGaps.join(", ")}.` }]
+		: [];
 	const riskApprovalIssue = riskApprovalGaps.length > 0
 		? [{ severity: "high", summary: `Risk tier ${preflight.risk.tier} requires user approval before promotion: ${riskApprovalGaps.join(", ")}.` }]
 		: [];
@@ -1436,7 +1536,7 @@ export async function writeValidationReport(
 			? `${input.rationale.trim()} Policy blocks ${profile} validation until ${policyGaps.join(", ")} are recorded.`
 			: input.rationale.trim(),
 		checks: (input.checks ?? []).map((v) => v.trim()).filter(Boolean),
-		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...auditIssue, ...riskApprovalIssue, ...publicationReadinessIssue],
+		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...decisionPropagationIssue, ...auditIssue, ...riskApprovalIssue, ...publicationReadinessIssue],
 		source: (input.source ?? "").trim() || undefined,
 		policy_profile: policyProfile,
 		required_audits: auditReq.profiles,
@@ -1449,6 +1549,7 @@ export async function writeValidationReport(
 			...(publisherResultGaps.length > 0 ? ["publisher_result_proof"] : []),
 			...(commitReadinessGaps.length > 0 ? ["commit_readiness"] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["semantic_build_traceability"] : []),
+			...(decisionPropagationGaps.length > 0 ? ["decision_propagation"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
 			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
 			...(publicationReadinessGaps.length > 0 ? ["publication_readiness"] : []),
@@ -1459,6 +1560,7 @@ export async function writeValidationReport(
 			...(publisherResultGaps.length > 0 ? ["Publish through the publisher queue or cite its clean immutable result proof before this profile can pass."] : []),
 			...(commitReadinessGaps.length > 0 ? ["Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."] : []),
 			...(traceabilityPolicy.gaps.length > 0 ? ["Cite an accepted upstream compiler build chain for semantic changes or set a generated/runtime/mechanical traceability exemption when policy allows."] : []),
+			...(decisionPropagationGaps.length > 0 ? ["Create or validate a superseding planning build that maps each accepted decision row/downstream question to knowledge-only, roadmap task, sprint metadata, or explicit deferred owner/trigger/rationale evidence."] : []),
 			...(auditGaps.length > 0 ? [`Run or cite audit evidence for required profiles: ${auditGaps.join(", ")}.`] : []),
 			...(riskApprovalGaps.length > 0 ? [`Record explicit user approval for risk tier ${preflight.risk.tier} before lower-layer promotion.`] : []),
 			...(publicationReadinessGaps.length > 0 ? ["Record publication readiness evidence such as safe_to_push=true with passing secret and remote visibility checks before publication validation can pass."] : []),
