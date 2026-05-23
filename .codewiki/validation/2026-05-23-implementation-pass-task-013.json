@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-23T05:15:30Z",
+  "profile": "implementation",
+  "task_id": "TASK-013",
+  "verdict": "pass",
+  "rationale": "TASK-013 implementation satisfies the accepted task boundary. The Status surface now consumes generated file-structure evidence from graph/status/audit models, presents intended/current structure, approved migration deltas, and actionable drift in separate lanes, exposes source refs for displayed claims, adds no new command, and preserves package compatibility per typecheck/feature/smoke checks. Remaining warnings are generated-file dirty state before commit and pre-existing graph-health warnings.",
+  "checks": [
+    "Read .codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+    "Read .codewiki/roadmap/tasks/TASK-013/task.json",
+    "Reviewed src/ui/web/control-room.ts file_structure model/rendering refs",
+    "Reviewed tests/smoke/control-room.test.mjs coverage",
+    "codewiki_validation preflight_only=true profile=implementation task_id=TASK-013: ready (0 issues)",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass",
+    "npm run test:features: pass",
+    "npm run test:smoke: pass",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning only for dirty generated outputs and graph-health warnings"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Generated-file changed warnings remain until commit captures .codewiki/index_graph.json and TASK-013 generated views."
+    },
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due graph-health warnings unrelated to TASK-013 acceptance."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "generated-parity",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain"
+  ],
+  "content_proof_refs": [
+    "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+    "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "generated-parity",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-013",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+    "working_tree_digest": "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Pre-commit implementation validation uses deterministic dirty working-tree digest including untracked implementation build; task-close still requires clean committed/archive proof.",
+    "role": "validator"
+  }
+}

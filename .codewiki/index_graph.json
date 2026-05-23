@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-23T04:36:26.736Z",
+  "generated_at": "2026-05-23T05:16:30.365Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -3444,222 +3444,6 @@
       "lens_family": "knowledge"
     },
     {
-      "id": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "kind": "audit_evidence",
-      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "title": "File-structure drift lens",
-      "layer": "audit",
-      "alignment_state": "aligned",
-      "issue_kind": "file_structure_drift",
-      "summary": {
-        "approved_migration_delta": 16,
-        "actionable_drift": 0,
-        "parse_issues": 0
-      },
-      "file_structure_counts": {
-        "missing_expected_path": 0,
-        "unexpected_path": 0,
-        "ownership_mismatch": 0,
-        "deprecated_path_present": 0,
-        "generated_or_runtime_artifact_in_source_area": 0,
-        "approved_migration_delta": 16,
-        "compatibility_export_gap": 0
-      },
-      "lens_family": "proof"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/agency/**",
-      "kind": "audit_evidence",
-      "path": "src/agency/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/agency/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/api/**",
-      "kind": "audit_evidence",
-      "path": "src/api/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/api/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/application/**",
-      "kind": "audit_evidence",
-      "path": "src/application/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/application/** remains current-valid until concept-root migration lands.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/audit/**",
-      "kind": "audit_evidence",
-      "path": "src/audit/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/audit/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/build/**",
-      "kind": "audit_evidence",
-      "path": "src/build/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/build/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/change/**",
-      "kind": "audit_evidence",
-      "path": "src/change/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/change/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/domain/**",
-      "kind": "audit_evidence",
-      "path": "src/domain/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/domain/** remains current-valid until concept-root migration lands.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/gateway/**",
-      "kind": "audit_evidence",
-      "path": "src/gateway/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/gateway/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/gc/**",
-      "kind": "audit_evidence",
-      "path": "src/gc/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/gc/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/knowledge/**",
-      "kind": "audit_evidence",
-      "path": "src/knowledge/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/knowledge/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/project/**",
-      "kind": "audit_evidence",
-      "path": "src/project/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/project/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/roadmap/**",
-      "kind": "audit_evidence",
-      "path": "src/roadmap/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/roadmap/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/session/**",
-      "kind": "audit_evidence",
-      "path": "src/session/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/session/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/shared/**",
-      "kind": "audit_evidence",
-      "path": "src/shared/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/shared/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/state/**",
-      "kind": "audit_evidence",
-      "path": "src/state/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/state/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/validation/**",
-      "kind": "audit_evidence",
-      "path": "src/validation/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/validation/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
       "id": "doc:.codewiki/kb/lexicon.md",
       "kind": "doc",
       "path": ".codewiki/kb/lexicon.md",
@@ -4491,10 +4275,18 @@
       "kind": "roadmap_task",
       "title": "Render file-structure drift in CodeWiki UI",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "code",
       "alignment_state": "drift",
       "lens_family": "work"
+    },
+    {
+      "id": "code:tests/smoke/control-room.test.mjs",
+      "kind": "code_path",
+      "path": "tests/smoke/control-room.test.mjs",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
     },
     {
       "id": "task:TASK-014",
@@ -12457,6 +12249,239 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-013",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+          ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/product/overview.md",
+          ".codewiki/index_graph.json",
+          "codewiki_build tool",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-013/task.json",
+          ".codewiki/roadmap/tasks/TASK-013/context.json",
+          "src/ui/web/control-room.ts",
+          "tests/smoke/control-room.test.mjs",
+          "TASK-013"
+        ],
+        "audit_evidence_refs": [
+          "audit:file-structure",
+          "audit:alignment",
+          "audit:generated-parity",
+          "audit:changed",
+          "audit:task",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json@sha256:99523802a9422cfe70fb028f2551ec51aa72e9b5db48d6fa49e307522a66c233",
+          "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+          "src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
+          "refs/codewiki/archive/task/TASK-013",
+          "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5"
+        ],
+        "validation_attestation_refs": [
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:.codewiki/roadmap/tasks/TASK-013/task.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/tasks/TASK-013/task.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:.codewiki/roadmap/tasks/TASK-013/context.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/tasks/TASK-013/context.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+      "kind": "content_proof",
+      "path": "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
+      "kind": "content_proof",
+      "path": "src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-013",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-013",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+      "kind": "content_proof",
+      "path": "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-013",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-013",
+      "task_id": "TASK-013",
+      "digest": "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+      "restore_command": "/wiki-restore TASK-013",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-140",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-140",
+      "session_id": "019e4794-4800-7661-b825-387079d68413",
+      "agent_name": "Mole",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+      "expires_at": "2026-05-23T08:38:28.751Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+        "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+        "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-013"
+        },
+        {
+          "layer": "source",
+          "path": "src/ui/**"
+        },
+        {
+          "layer": "source",
+          "path": "tests/features/**"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        },
+        {
+          "layer": "validation",
+          "path": ".codewiki/validation/**"
+        },
+        {
+          "layer": "roadmap",
+          "path": ".codewiki/roadmap/tasks/TASK-013/**"
+        },
+        {
+          "layer": "roadmap",
+          "path": ".codewiki/roadmap/queue.json"
+        },
+        {
+          "layer": "source",
+          "path": ".codewiki/index_graph.json"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-013",
+      "kind": "change_claim_scope",
+      "path": "TASK-013",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/ui/**",
+      "kind": "change_claim_scope",
+      "path": "src/ui/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/features/**",
+      "kind": "change_claim_scope",
+      "path": "tests/features/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/validation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/validation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/roadmap/tasks/TASK-013/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/roadmap/tasks/TASK-013/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/roadmap/queue.json",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/roadmap/queue.json",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/index_graph.json",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/index_graph.json",
+      "lens_family": "work"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -14853,6 +14878,68 @@
       "id": "content_proof:sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
       "kind": "content_proof",
       "path": "sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+        "working_tree_digest": "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Pre-commit implementation validation uses deterministic dirty working-tree digest including untracked implementation build; task-close still requires clean committed/archive proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:file-structure",
+          "audit:alignment",
+          "audit:generated-parity",
+          "audit:changed",
+          "audit:task",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain"
+        ],
+        "content_proof_refs": [
+          "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+          "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+      "kind": "content_proof",
+      "path": "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
+      "kind": "content_proof",
+      "path": "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true,
@@ -17661,107 +17748,6 @@
       "diagram_path": ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
     },
     {
-      "kind": "file_structure_source_diagram",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "diagram:.codewiki/kb/system/diagrams/file-structure-map.yaml"
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/agency/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/api/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/application/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/audit/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/build/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/change/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/domain/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/gateway/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/gc/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/knowledge/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/project/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/roadmap/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/session/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/shared/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/state/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/validation/**",
-      "default_hidden": true
-    },
-    {
       "kind": "doc_link",
       "from": "doc:.codewiki/kb/lexicon.md",
       "to": "doc:.codewiki/kb/product/overview.md"
@@ -19617,7 +19603,7 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-013",
-      "to": "code:tests/features"
+      "to": "code:tests/smoke/control-room.test.mjs"
     },
     {
       "kind": "task_spec",
@@ -28312,6 +28298,212 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/kb/system/control-room-ui.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/kb/product/overview.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/index_graph.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/roadmap/queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-013/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-013/context.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:src/ui/web/control-room.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:tests/smoke/control-room.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "source:TASK-013",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json@sha256:99523802a9422cfe70fb028f2551ec51aa72e9b5db48d6fa49e307522a66c233",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "content_proof:tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "content_proof:src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-013",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "content_proof:sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "task:TASK-013"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-013",
+      "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-140",
+      "to": "task:TASK-013"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:TASK-013"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:src/ui/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:tests/features/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:.codewiki/validation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:.codewiki/roadmap/tasks/TASK-013/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:.codewiki/roadmap/queue.json"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-140",
+      "to": "claim_scope:.codewiki/index_graph.json"
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -31101,6 +31293,65 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "audit:codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "content_proof:bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "content_proof:sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+      "to": "task:TASK-013"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-23-planning-fail.json",
       "to": "source:.codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
       "default_hidden": true
@@ -31355,25 +31606,6 @@
                 "id": "diagram_parse_issues",
                 "label": "diagram parse issues",
                 "count": 0
-              },
-              {
-                "id": "file_structure_approved_deltas",
-                "label": "approved structure deltas",
-                "count": 16,
-                "refs": [
-                  "src/agency/**",
-                  "src/api/**",
-                  "src/application/**",
-                  "src/audit/**",
-                  "src/build/**",
-                  "src/change/**"
-                ],
-                "ref_count": 16
-              },
-              {
-                "id": "file_structure_actionable_drift",
-                "label": "structure drift",
-                "count": 0
               }
             ],
             "hot_refs": [
@@ -31395,7 +31627,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 5,
+            "item_count": 14,
             "badges": [
               {
                 "id": "open_tasks",
@@ -31425,7 +31657,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -31433,7 +31665,12 @@
               "sprint:SPRINT-002",
               "task:TASK-012",
               "task:TASK-013",
-              "task:TASK-014"
+              "task:TASK-014",
+              "claim:CLAIM-140",
+              "claim_scope:TASK-013",
+              "claim_scope:src/ui/**",
+              "claim_scope:tests/features/**",
+              "claim_scope:.codewiki/builds/implementation/**"
             ],
             "collapsed": true
           },
@@ -31442,12 +31679,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 102,
+            "item_count": 103,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 80
+                "count": 81
               },
               {
                 "id": "test_files",
@@ -31457,7 +31694,7 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 26
+                "count": 27
               },
               {
                 "id": "dirty_paths",
@@ -31484,12 +31721,12 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 2,
+            "item_count": 1,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 42
+                "count": 43
               },
               {
                 "id": "fail_or_block_validation",
@@ -31499,12 +31736,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 122
+                "count": 124
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 382
+                "count": 388
               },
               {
                 "id": "traceability_gaps",
@@ -31513,7 +31750,6 @@
               }
             ],
             "hot_refs": [
-              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
               "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
             ],
             "collapsed": true
@@ -31521,19 +31757,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 40,
+            "total": 41,
             "decision": 3,
             "planning": 11,
-            "implementation": 26,
+            "implementation": 27,
             "hot": 0,
-            "collapsed": 40
+            "collapsed": 41
           },
           "validations": {
-            "total": 42,
-            "pass": 30,
+            "total": 43,
+            "pass": 31,
             "fail_or_block": 12,
             "hot": 3,
-            "collapsed": 42
+            "collapsed": 43
           }
         },
         "next_action": {
@@ -31588,6 +31824,7 @@
           ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
           ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -31641,6 +31878,8 @@
           ".codewiki/roadmap/tasks/TASK-007/context.json",
           ".codewiki/roadmap/tasks/TASK-007/task.json",
           ".codewiki/roadmap/tasks/TASK-009/context.json",
+          ".codewiki/roadmap/tasks/TASK-013/context.json",
+          ".codewiki/roadmap/tasks/TASK-013/task.json",
           ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
           ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
           "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
@@ -32869,6 +33108,28 @@
               "tests/smoke/loop-isolation-policy.test.mjs",
               "TASK-011"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-013"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/kb/system/control-room-ui.md",
+              ".codewiki/kb/product/overview.md",
+              ".codewiki/index_graph.json",
+              "codewiki_build tool",
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap/tasks/TASK-013/task.json",
+              ".codewiki/roadmap/tasks/TASK-013/context.json",
+              "src/ui/web/control-room.ts",
+              "tests/smoke/control-room.test.mjs",
+              "TASK-013"
+            ]
           }
         ]
       },
@@ -33805,6 +34066,28 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-013",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:file-structure",
+              "audit:alignment",
+              "audit:generated-parity",
+              "audit:changed",
+              "audit:task",
+              "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain"
+            ],
+            "content_proof_refs": [
+              "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+              "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-23-planning-fail.json",
             "verdict": "fail",
             "profile": "planning",
@@ -34538,6 +34821,22 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+            "task_id": "TASK-013",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+              "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-23-planning-fail.json",
             "verdict": "fail",
             "status": "isolated",
@@ -34662,6 +34961,8 @@
           "codewiki_audit profiles=alignment,task,changed task_id=TASK-011 warning: graph health warnings from unresolved process report and generated-file changes",
           "codewiki_audit profiles=alignment,task,changed,generated-parity warning: generated-file changes and graph health warnings from hot fail report/active propagation work",
           "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task:TASK-010: file-structure/alignment/generated-parity/task pass; changed warnings generated state/view files only",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
           "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
           "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
           "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
@@ -34817,6 +35118,7 @@
           "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
           "b5527b51bece34d670daa246b84d46fc4902eed2",
           "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+          "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
           "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
           "ccc06de45add0502b691dd440240dc4281b4f026",
           "ccfed3f650ec5fd811cb0375a680fcbf8cdec499",
@@ -34838,6 +35140,7 @@
           "refs/codewiki/archive/task/TASK-009",
           "refs/codewiki/archive/task/TASK-010",
           "refs/codewiki/archive/task/TASK-011",
+          "refs/codewiki/archive/task/TASK-013",
           "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
           "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
           "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
@@ -34853,11 +35156,13 @@
           "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
           "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
           "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+          "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
           "sha256:8095a6c53ccb86cabb22c2c905132322ef4f8a6a694d673f121fb55d1b545472",
           "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56",
           "sha256:90920af7b47c41e2daaa91135431a3e533cf6f569f6b098f3cd9fbf531a2b545",
           "sha256:9263503f7f20648c87634ac1796df5e8e714f1a1a0976cd491dcc8a030c950e0",
           "sha256:96533a80c6b7669194e506442151eabac0e92d288f6139fea50166fac9db5c39",
+          "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
           "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
           "sha256:a686ba16a6e4fe2dd91b2791ac04b24cc9434a6514cdf057308774e7dc935de3",
           "sha256:acd28cf39a0038795d075af553a65d5fda19b0895fc40cf542b8cd984e8ef6e6",
@@ -35031,6 +35336,7 @@
           "src/domain/validation/types.ts@sha256:6c30c3b59f227d2a4a8083f3f81e5ca204f8d0f97c217da0056c3def1528d48f",
           "src/templates.ts@sha256:573b0199d7dbc5ea306265da208e35f18636696e3e7f0e4deb3bdeb54389c032",
           "src/templates.ts@sha256:8bff4cb2988ff7a5fc1feb61734dd60dc19316d1ab6bc45a8d0c2c97894d324e",
+          "src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
           "src/ui/web/control-room.ts@sha256:f0bf8ad4e44385a84c1bc355bb8ab06ac8a59903fabcde7fa02d1d91ee118a3c",
           "tests/setup-env.mjs@sha256:6a697dde436aa2b3d0da64c284fed7ed4a6cab62b525c6972aa0a6edddc00e09",
           "tests/smoke/alignment-drift-fixtures.test.mjs@sha256:2cb61aab1384747716e8fbe23ef33098ebaa25af7d19ec075bd582b197fee5aa",
@@ -35053,6 +35359,7 @@
           "tests/smoke/codewiki-compaction.test.mjs@sha256:fd71c8536f100367b0b07a03aa70e23c5299d910266a4c2b967e49d55f3b966c",
           "tests/smoke/control-room.test.mjs@sha256:6d2cd3e92fcf32ec1db2df22f107a314cc82e31569ff9053da325449ddfc4f7a",
           "tests/smoke/control-room.test.mjs@sha256:ad7474b8c88f94ac7192ad3c991411b764a83e1a39482864ed40f71291fffe24",
+          "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
           "tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
           "tests/smoke/diagram-refs.test.mjs@sha256:54436f35cdee12b54017b5026c3c1a17463d03e190c31e6887d8312146becda5",
           "tests/smoke/diagram-refs.test.mjs@sha256:a98a88955a4320400aa0443d28ce54ccb70e62fc8df94b3471809994b09ae814",
@@ -35115,19 +35422,6 @@
             ]
           },
           {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
             "id": "reconcile:task:TASK-013",
             "source_id": "task:TASK-013",
             "state": "drift",
@@ -35151,68 +35445,7 @@
           }
         ],
         "traceability_gaps": [],
-        "semantic_change_gaps": [],
-        "file_structure_drift": {
-          "version": 1,
-          "source": "file-structure-map",
-          "map_path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-          "available": true,
-          "categories": [
-            "missing_expected_path",
-            "unexpected_path",
-            "ownership_mismatch",
-            "deprecated_path_present",
-            "generated_or_runtime_artifact_in_source_area",
-            "approved_migration_delta",
-            "compatibility_export_gap"
-          ],
-          "counts": {
-            "missing_expected_path": 0,
-            "unexpected_path": 0,
-            "ownership_mismatch": 0,
-            "deprecated_path_present": 0,
-            "generated_or_runtime_artifact_in_source_area": 0,
-            "approved_migration_delta": 16,
-            "compatibility_export_gap": 0
-          },
-          "path_rule_counts": {
-            "intended": 34,
-            "current": 2,
-            "target": 15
-          },
-          "approved_delta_edges": [
-            {
-              "from": "current_layered_source",
-              "to": "concept_root_target",
-              "label": "approved migration delta"
-            },
-            {
-              "from": "human_structure_surface",
-              "to": "structure_drift_lens",
-              "label": "presents drift and approved deltas"
-            }
-          ],
-          "approved_migration_delta_paths": [
-            "src/agency/**",
-            "src/api/**",
-            "src/application/**",
-            "src/audit/**",
-            "src/build/**",
-            "src/change/**",
-            "src/domain/**",
-            "src/gateway/**",
-            "src/gc/**",
-            "src/knowledge/**",
-            "src/project/**",
-            "src/roadmap/**",
-            "src/session/**",
-            "src/shared/**",
-            "src/state/**",
-            "src/validation/**"
-          ],
-          "actionable_entries": [],
-          "parse_issues": []
-        }
+        "semantic_change_gaps": []
       }
     },
     "docs": {
@@ -35344,9 +35577,10 @@
         "TASK-013",
         "TASK-014"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-013"
+      ],
       "todo_task_ids": [
-        "TASK-013",
         "TASK-014"
       ],
       "blocked_task_ids": [],
@@ -35356,7 +35590,8 @@
       ],
       "status_counts": {
         "cancelled": 1,
-        "todo": 2
+        "in_progress": 1,
+        "todo": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -35463,15 +35698,6 @@
         }
       ]
     },
-    "decision_propagation": {
-      "version": 1,
-      "model": "accepted-decision-row-to-roadmap-resolution",
-      "checked_decision_count": 0,
-      "row_count": 0,
-      "residual_count": 0,
-      "assessments": [],
-      "residuals": []
-    },
     "research": {
       "collection_paths": [],
       "entry_ids": []
@@ -35537,30 +35763,529 @@
         "tests/**",
         "tests/features",
         "tests/smoke",
+        "tests/smoke/control-room.test.mjs",
         "tests/smoke/package-smoke.test.mjs"
       ],
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-140",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-013",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+          "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-140",
+          "session_id": "019e4794-4800-7661-b825-387079d68413",
+          "agent_name": "Mole",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+          "task_id": "TASK-013",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+            "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+            "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-013"
+            },
+            {
+              "layer": "source",
+              "path": "src/ui/**"
+            },
+            {
+              "layer": "source",
+              "path": "tests/features/**"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            {
+              "layer": "roadmap",
+              "path": ".codewiki/roadmap/tasks/TASK-013/**"
+            },
+            {
+              "layer": "roadmap",
+              "path": ".codewiki/roadmap/queue.json"
+            },
+            {
+              "layer": "source",
+              "path": ".codewiki/index_graph.json"
+            }
+          ],
+          "created_at": "2026-05-23T04:38:28Z",
+          "updated_at": "2026-05-23T04:38:28Z",
+          "expires_at": "2026-05-23T08:38:28.751Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": ".codewiki/index_graph.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "path": ".codewiki/roadmap/queue.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "path": ".codewiki/roadmap/tasks/TASK-013/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "src/ui/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-013"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "tests/features/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": ".codewiki/index_graph.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "path": ".codewiki/roadmap/queue.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "path": ".codewiki/roadmap/tasks/TASK-013/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "src/ui/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-013"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "source",
+            "path": "tests/features/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-140",
+              "session_id": "019e4794-4800-7661-b825-387079d68413",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-013",
+              "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+              "expires_at": "2026-05-23T08:38:28.751Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -36227,6 +36952,22 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+          "task_id": "TASK-013",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+            "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-23-planning-fail.json",
           "verdict": "fail",
           "status": "isolated",
@@ -36327,6 +37068,7 @@
         ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
         ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
         ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+        ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -36380,6 +37122,8 @@
         ".codewiki/roadmap/tasks/TASK-007/context.json",
         ".codewiki/roadmap/tasks/TASK-007/task.json",
         ".codewiki/roadmap/tasks/TASK-009/context.json",
+        ".codewiki/roadmap/tasks/TASK-013/context.json",
+        ".codewiki/roadmap/tasks/TASK-013/task.json",
         ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
         ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
         "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
@@ -36604,6 +37348,8 @@
         "codewiki_audit profiles=alignment,task,changed task_id=TASK-011 warning: graph health warnings from unresolved process report and generated-file changes",
         "codewiki_audit profiles=alignment,task,changed,generated-parity warning: generated-file changes and graph health warnings from hot fail report/active propagation work",
         "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task:TASK-010: file-structure/alignment/generated-parity/task pass; changed warnings generated state/view files only",
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain.",
         "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
@@ -36759,6 +37505,7 @@
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
         "b5527b51bece34d670daa246b84d46fc4902eed2",
         "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
+        "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
         "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
         "ccc06de45add0502b691dd440240dc4281b4f026",
         "ccfed3f650ec5fd811cb0375a680fcbf8cdec499",
@@ -36780,6 +37527,7 @@
         "refs/codewiki/archive/task/TASK-009",
         "refs/codewiki/archive/task/TASK-010",
         "refs/codewiki/archive/task/TASK-011",
+        "refs/codewiki/archive/task/TASK-013",
         "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
         "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
         "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
@@ -36795,11 +37543,13 @@
         "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
         "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
         "sha256:7becb5e820fce6177abaa8f7f09c5087c49e5cf4450e5b2fccb6269633675e89",
+        "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
         "sha256:8095a6c53ccb86cabb22c2c905132322ef4f8a6a694d673f121fb55d1b545472",
         "sha256:8191ff26b33257eb05560649591e7257b55be963052bcd4a48f4595a58545e56",
         "sha256:90920af7b47c41e2daaa91135431a3e533cf6f569f6b098f3cd9fbf531a2b545",
         "sha256:9263503f7f20648c87634ac1796df5e8e714f1a1a0976cd491dcc8a030c950e0",
         "sha256:96533a80c6b7669194e506442151eabac0e92d288f6139fea50166fac9db5c39",
+        "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
         "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
         "sha256:a686ba16a6e4fe2dd91b2791ac04b24cc9434a6514cdf057308774e7dc935de3",
         "sha256:acd28cf39a0038795d075af553a65d5fda19b0895fc40cf542b8cd984e8ef6e6",
@@ -36973,6 +37723,7 @@
         "src/domain/validation/types.ts@sha256:6c30c3b59f227d2a4a8083f3f81e5ca204f8d0f97c217da0056c3def1528d48f",
         "src/templates.ts@sha256:573b0199d7dbc5ea306265da208e35f18636696e3e7f0e4deb3bdeb54389c032",
         "src/templates.ts@sha256:8bff4cb2988ff7a5fc1feb61734dd60dc19316d1ab6bc45a8d0c2c97894d324e",
+        "src/ui/web/control-room.ts@sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
         "src/ui/web/control-room.ts@sha256:f0bf8ad4e44385a84c1bc355bb8ab06ac8a59903fabcde7fa02d1d91ee118a3c",
         "tests/setup-env.mjs@sha256:6a697dde436aa2b3d0da64c284fed7ed4a6cab62b525c6972aa0a6edddc00e09",
         "tests/smoke/alignment-drift-fixtures.test.mjs@sha256:2cb61aab1384747716e8fbe23ef33098ebaa25af7d19ec075bd582b197fee5aa",
@@ -36995,6 +37746,7 @@
         "tests/smoke/codewiki-compaction.test.mjs@sha256:fd71c8536f100367b0b07a03aa70e23c5299d910266a4c2b967e49d55f3b966c",
         "tests/smoke/control-room.test.mjs@sha256:6d2cd3e92fcf32ec1db2df22f107a314cc82e31569ff9053da325449ddfc4f7a",
         "tests/smoke/control-room.test.mjs@sha256:ad7474b8c88f94ac7192ad3c991411b764a83e1a39482864ed40f71291fffe24",
+        "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
         "tests/smoke/diagram-refs.test.mjs@sha256:2675dfc1ed6b07d344fc28754f7f86a568bc5af4e16dbb449db5bcfe9e025629",
         "tests/smoke/diagram-refs.test.mjs@sha256:54436f35cdee12b54017b5026c3c1a17463d03e190c31e6887d8312146becda5",
         "tests/smoke/diagram-refs.test.mjs@sha256:a98a88955a4320400aa0443d28ce54ccb70e62fc8df94b3471809994b09ae814",
@@ -37971,6 +38723,28 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-23-implementation-pass-task-013.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-013",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:file-structure",
+            "audit:alignment",
+            "audit:generated-parity",
+            "audit:changed",
+            "audit:task",
+            "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain"
+          ],
+          "content_proof_refs": [
+            "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+            "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-23-planning-fail.json",
           "verdict": "fail",
           "profile": "planning",
@@ -38438,703 +39212,6 @@
       ],
       "parse_issue_count": 0
     },
-    "file_structure": {
-      "version": 1,
-      "source": "file-structure-map",
-      "map_path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "available": true,
-      "categories": [
-        "missing_expected_path",
-        "unexpected_path",
-        "ownership_mismatch",
-        "deprecated_path_present",
-        "generated_or_runtime_artifact_in_source_area",
-        "approved_migration_delta",
-        "compatibility_export_gap"
-      ],
-      "counts": {
-        "missing_expected_path": 0,
-        "unexpected_path": 0,
-        "ownership_mismatch": 0,
-        "deprecated_path_present": 0,
-        "generated_or_runtime_artifact_in_source_area": 0,
-        "approved_migration_delta": 16,
-        "compatibility_export_gap": 0
-      },
-      "intended_paths": [
-        {
-          "pattern": "src/domain/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "group": "source_current",
-          "status": "current_valid_until_migrated",
-          "role": "current",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/application/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "group": "source_current",
-          "status": "current_valid_until_migrated",
-          "role": "current",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/adapters/**",
-          "owner_id": "current_adapters",
-          "owner_label": "Current adapters",
-          "group": "exposure",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "src/ui/**",
-          "owner_id": "current_ui",
-          "owner_label": "Current UI",
-          "group": "exposure",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "src/agency/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/audit/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/build/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/change/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gc/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gateway/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/knowledge/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/project/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/roadmap/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/session/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/state/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/validation/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/api/**",
-          "owner_id": "api_facade",
-          "owner_label": "Stable API facade",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/shared/**",
-          "owner_id": "shared_primitives",
-          "owner_label": "Shared primitives only",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/domain/shared/**",
-          "owner_id": "shared_primitives",
-          "owner_label": "Shared primitives only",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": ".codewiki/kb/**",
-          "owner_id": "dogfood_kb",
-          "owner_label": "Dogfood knowledge base",
-          "group": "codewiki_state",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/roadmap/queue.json",
-          "owner_id": "dogfood_roadmap",
-          "owner_label": "Roadmap work truth",
-          "group": "codewiki_state",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/builds/**",
-          "owner_id": "dogfood_builds",
-          "owner_label": "Compiler builds",
-          "group": "codewiki_state",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/validation/**",
-          "owner_id": "dogfood_validation",
-          "owner_label": "Validation reports",
-          "group": "proof",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/index_graph.json",
-          "owner_id": "generated_graph",
-          "owner_label": "Generated graph/state views",
-          "group": "generated_runtime",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/roadmap/tasks/**",
-          "owner_id": "generated_graph",
-          "owner_label": "Generated graph/state views",
-          "group": "generated_runtime",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/session/**",
-          "owner_id": "runtime_session",
-          "owner_label": "Runtime session coordination",
-          "group": "generated_runtime",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": ".codewiki/runtime/**",
-          "owner_id": "runtime_session",
-          "owner_label": "Runtime session coordination",
-          "group": "generated_runtime",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "skills/codewiki/**",
-          "owner_id": "skills_assets",
-          "owner_label": "Skill workflow assets",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "skills/codewiki-decision/**",
-          "owner_id": "skills_assets",
-          "owner_label": "Skill workflow assets",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "skills/codewiki-planning/**",
-          "owner_id": "skills_assets",
-          "owner_label": "Skill workflow assets",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "skills/codewiki-implementation/**",
-          "owner_id": "skills_assets",
-          "owner_label": "Skill workflow assets",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "skills/codewiki-validation/**",
-          "owner_id": "skills_assets",
-          "owner_label": "Skill workflow assets",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "tests/**",
-          "owner_id": "tests_and_smoke",
-          "owner_label": "Tests and smoke baselines",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        },
-        {
-          "pattern": "scripts/**",
-          "owner_id": "optional_scripts",
-          "owner_label": "Optional developer helper scripts",
-          "group": "assets_tests",
-          "status": "",
-          "role": "intended",
-          "approved_delta": false
-        }
-      ],
-      "current_paths": [
-        {
-          "pattern": "src/domain/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "group": "source_current",
-          "status": "current_valid_until_migrated",
-          "role": "current",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/application/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "group": "source_current",
-          "status": "current_valid_until_migrated",
-          "role": "current",
-          "approved_delta": true
-        }
-      ],
-      "target_paths": [
-        {
-          "pattern": "src/agency/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/audit/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/build/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/change/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gc/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gateway/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/knowledge/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/project/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/roadmap/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/session/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/state/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/validation/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/api/**",
-          "owner_id": "api_facade",
-          "owner_label": "Stable API facade",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/shared/**",
-          "owner_id": "shared_primitives",
-          "owner_label": "Shared primitives only",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/domain/shared/**",
-          "owner_id": "shared_primitives",
-          "owner_label": "Shared primitives only",
-          "group": "source_target",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        }
-      ],
-      "approved_delta_edges": [
-        {
-          "from": "current_layered_source",
-          "to": "concept_root_target",
-          "label": "approved migration delta"
-        },
-        {
-          "from": "human_structure_surface",
-          "to": "structure_drift_lens",
-          "label": "presents drift and approved deltas"
-        }
-      ],
-      "approved_migration_deltas": [
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/agency/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/agency/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/api/**",
-          "owner_id": "api_facade",
-          "owner_label": "Stable API facade",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/api.md"
-          ],
-          "message": "src/api/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/application/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/application/** remains current-valid until concept-root migration lands."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/audit/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/audit/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/build/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/build/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/change/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/change/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/domain/**",
-          "owner_id": "current_layered_source",
-          "owner_label": "Current src/domain + src/application split",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/domain/** remains current-valid until concept-root migration lands."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/gateway/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/gateway/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/gc/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/gc/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/knowledge/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/knowledge/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/project/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/project/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/roadmap/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/roadmap/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/session/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/session/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/shared/**",
-          "owner_id": "shared_primitives",
-          "owner_label": "Shared primitives only",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/shared/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/state/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/state/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/validation/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/validation/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        }
-      ],
-      "actionable_entries": [],
-      "parse_issues": []
-    },
     "traceability": {
       "rows": [],
       "semantic_change_rows": [],
@@ -39305,7 +39382,7 @@
           ],
           "code_paths": [
             "src/ui",
-            "tests/features"
+            "tests/smoke/control-room.test.mjs"
           ]
         },
         "TASK-014": {
@@ -39386,7 +39463,9 @@
             ".codewiki/validation/2026-05-22-planning-block.json",
             ".codewiki/validation/2026-05-23-planning-fail.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-140"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -39430,7 +39509,8 @@
             ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
             ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -39491,7 +39571,8 @@
             ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
             ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
           ]
         },
         "purgeable": {
@@ -39768,10 +39849,20 @@
           "digest": "sha256:4655643badcc65e8bea320cc900958183be735a2cfb74c160272ec625899fe6b",
           "restore_command": "/wiki-restore TASK-011",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-013",
+          "build_path": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-013",
+          "commit_sha": "",
+          "digest": "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+          "restore_command": "/wiki-restore TASK-013",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 26,
+        "ledger_count": 27,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -39798,7 +39889,8 @@
           "refs/codewiki/archive/task/TASK-009",
           "refs/codewiki/archive/task/TASK-008",
           "refs/codewiki/archive/task/TASK-010",
-          "refs/codewiki/archive/task/TASK-011"
+          "refs/codewiki/archive/task/TASK-011",
+          "refs/codewiki/archive/task/TASK-013"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -39826,7 +39918,8 @@
           ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
           ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-          ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+          ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -39854,7 +39947,8 @@
           ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
           ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-          ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+          ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -39864,19 +39958,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
         {
           "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -39914,7 +39995,7 @@
         }
       ],
       "counts_by_loop": {
-        "decision": 2,
+        "decision": 1,
         "implementation": 2
       },
       "next_action": {
@@ -39950,10 +40031,10 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-23T04:36:26.633Z",
+      "generated_at": "2026-05-23T05:16:30.310Z",
       "counts": {
         "large-doc": 2,
-        "roadmap-missing-code-path": 2
+        "roadmap-missing-code-path": 1
       },
       "issues": [
         {
@@ -39973,23 +40054,17 @@
           "kind": "roadmap-missing-code-path",
           "path": ".codewiki/roadmap/queue.json",
           "message": "TASK-012 references missing code path: tests/features"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-013 references missing code path: tests/features"
         }
       ]
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-23T04:36:26Z",
+      "generated_at": "2026-05-23T05:16:30Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 4,
-        "total_issues": 4
+        "warnings": 3,
+        "total_issues": 3
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -40001,7 +40076,8 @@
         "active_sprint_count": 2,
         "status_counts": {
           "cancelled": 1,
-          "todo": 2
+          "in_progress": 1,
+          "todo": 1
         },
         "priority_counts": {
           "medium": 3
@@ -40126,14 +40202,16 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-013"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-013"
+        ],
         "todo_task_ids": [
-          "TASK-013",
           "TASK-014"
         ],
         "executable_todo_task_ids": [
-          "TASK-013",
           "TASK-014"
         ],
         "blocked_task_ids": [],
@@ -40142,9 +40220,9 @@
           "TASK-012"
         ],
         "recent_task_ids": [
+          "TASK-013",
           "TASK-012",
-          "TASK-014",
-          "TASK-013"
+          "TASK-014"
         ]
       },
       "tasks": {
@@ -40233,7 +40311,7 @@
         "TASK-013": {
           "id": "TASK-013",
           "title": "Render file-structure drift in CodeWiki UI",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "medium",
           "kind": "feature",
           "change_type": "code",
@@ -40270,9 +40348,9 @@
           ],
           "code_paths": [
             "src/ui",
-            "tests/features"
+            "tests/smoke/control-room.test.mjs"
           ],
-          "updated": "2026-05-23",
+          "updated": "2026-05-23T05:15:46Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -40342,7 +40420,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-23T04:36:26Z",
+      "generated_at": "2026-05-23T05:16:30Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -40351,8 +40429,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 4,
-        "total_issues": 4
+        "warnings": 3,
+        "total_issues": 3
       },
       "summary": {
         "total_specs": 17,
@@ -40364,9 +40442,7 @@
         "unmapped_specs": 0,
         "task_count": 3,
         "open_task_count": 2,
-        "done_task_count": 0,
-        "file_structure_actionable_drift": 0,
-        "file_structure_approved_migration_deltas": 16
+        "done_task_count": 0
       },
       "bars": {
         "tracked_drift": {
@@ -40471,7 +40547,9 @@
               ".codewiki/validation/2026-05-22-planning-block.json",
               ".codewiki/validation/2026-05-23-planning-fail.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-140"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -40515,7 +40593,8 @@
               ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
               ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -40576,7 +40655,8 @@
               ".codewiki/builds/implementation/2026-05-21-stabilized-smoke-feature-test-baseline-for-direc.json",
               ".codewiki/builds/implementation/2026-05-21-task-008-domain-application-rebalance-implementa.json",
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json"
             ]
           },
           "purgeable": {
@@ -40594,60 +40674,11 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 3/3.",
-        "File-structure drift: 0 actionable item(s), 16 approved migration delta(s)."
+        "Tracked drift coverage: 3/3."
       ],
-      "file_structure": {
-        "version": 1,
-        "source": "file-structure-map",
-        "map_path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        "available": true,
-        "counts": {
-          "missing_expected_path": 0,
-          "unexpected_path": 0,
-          "ownership_mismatch": 0,
-          "deprecated_path_present": 0,
-          "generated_or_runtime_artifact_in_source_area": 0,
-          "approved_migration_delta": 16,
-          "compatibility_export_gap": 0
-        },
-        "path_rule_counts": {
-          "intended": 34,
-          "current": 2,
-          "target": 15
-        },
-        "approved_migration_delta_paths": [
-          "src/agency/**",
-          "src/api/**",
-          "src/application/**",
-          "src/audit/**",
-          "src/build/**",
-          "src/change/**",
-          "src/domain/**",
-          "src/gateway/**",
-          "src/gc/**",
-          "src/knowledge/**",
-          "src/project/**",
-          "src/roadmap/**",
-          "src/session/**",
-          "src/shared/**",
-          "src/state/**",
-          "src/validation/**"
-        ],
-        "actionable_entries": [],
-        "parse_issues": []
-      },
-      "decision_propagation": {
-        "version": 1,
-        "model": "accepted-decision-row-to-roadmap-resolution",
-        "checked_decision_count": 0,
-        "row_count": 0,
-        "residual_count": 0,
-        "residuals": []
-      },
       "specs": [
         {
           "path": ".codewiki/kb/product/overview.md",
@@ -40668,7 +40699,7 @@
           ],
           "primary_task": {
             "id": "TASK-013",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Render file-structure drift in CodeWiki UI"
           },
           "revision": {
@@ -40698,7 +40729,7 @@
           ],
           "primary_task": {
             "id": "TASK-013",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Render file-structure drift in CodeWiki UI"
           },
           "revision": {
@@ -41507,7 +41538,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-23T04:36:26Z",
+        "generated_at": "2026-05-23T05:16:30Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -41535,10 +41566,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-23T04:36:26Z",
+            "checked_at": "2026-05-23T05:16:30Z",
             "revision": {
               "git": {
-                "head": "99f7cb973b48cdff45f03b09a4ed591c2c9a9ed3",
+                "head": "36a89bbca54d04b8aa72ec41e077cb33ee38960b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -41579,7 +41610,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a0f8900144b95269d993ac4d30ca389f60edbe44",
+                  ".codewiki/roadmap/queue.json": "a38d040d8a562d2389d57595012de81c85bde0cf",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -41620,19 +41651,19 @@
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
-                  "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
+                  "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
               "spec_digest": "409b8de40fa1c4341088059c2f72f840fc05f498431691c851ccb9ec2ee9621e",
-              "task_digest": "d63e811146c456b84c29ebafa1c0bc47c421d6369a8a677b4f01fc713df166ee",
-              "code_digest": "877fff9396e59b6724f32171a5e3db2295a7c7dc668e1129c82ca1a5cef309c2",
-              "digest": "e390a688d8cc3dd3e7b712c598096f11d7f8981a52f27079009b4675b3acb489"
+              "task_digest": "b91a8631827f9ea7d7dc60ea7748a34c54d13abd345504346e08d3b71a26eab9",
+              "code_digest": "fed88e1cc3a5112847a670cf6cafc691b279580beb30705d87470291e0532b2f",
+              "digest": "5c9e2c0a623e93c586c5715589d0857257bb547147c0557b0a44df9409787f8e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-23T04:36:26Z",
+              "checked_at": "2026-05-23T05:16:30Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -41759,10 +41790,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-23T04:36:26Z",
+            "checked_at": "2026-05-23T05:16:30Z",
             "revision": {
               "git": {
-                "head": "99f7cb973b48cdff45f03b09a4ed591c2c9a9ed3",
+                "head": "36a89bbca54d04b8aa72ec41e077cb33ee38960b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -41787,7 +41818,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a0f8900144b95269d993ac4d30ca389f60edbe44",
+                  ".codewiki/roadmap/queue.json": "a38d040d8a562d2389d57595012de81c85bde0cf",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -41823,19 +41854,19 @@
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
-                  "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
+                  "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
               "spec_digest": "da6e19756f7a384dd6042dbcdb23de88c0198a0d512fe02025b48f1f070185a9",
-              "task_digest": "d63e811146c456b84c29ebafa1c0bc47c421d6369a8a677b4f01fc713df166ee",
-              "code_digest": "73bea3b95747ead0490e9cd0182fabf34d64ca5a567ae8d4c054e9c0c4039b4a",
-              "digest": "940eec52c9678fed4713504eda10e604f6ce555205d65dc4c2a71c442889ca67"
+              "task_digest": "b91a8631827f9ea7d7dc60ea7748a34c54d13abd345504346e08d3b71a26eab9",
+              "code_digest": "5244d93f1b0bd022c229f9d182b2b0706dc4a87112945c736f5f7df54e33a6f6",
+              "digest": "18d9dba6df42ccb4c68cf150b786b9d764a990e6072f7d156c40d225fb69d6b8"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-23T04:36:26Z",
+              "checked_at": "2026-05-23T05:16:30Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -41940,10 +41971,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-23T04:36:26Z",
+            "checked_at": "2026-05-23T05:16:30Z",
             "revision": {
               "git": {
-                "head": "99f7cb973b48cdff45f03b09a4ed591c2c9a9ed3",
+                "head": "36a89bbca54d04b8aa72ec41e077cb33ee38960b",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -41984,7 +42015,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a0f8900144b95269d993ac4d30ca389f60edbe44",
+                  ".codewiki/roadmap/queue.json": "a38d040d8a562d2389d57595012de81c85bde0cf",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -42025,19 +42056,19 @@
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
-                  "src/ui/web/control-room.ts": "637f5c8d14024773fda85a3c43475a60e7fd7a0c",
+                  "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
               "spec_digest": "409b8de40fa1c4341088059c2f72f840fc05f498431691c851ccb9ec2ee9621e",
-              "task_digest": "d63e811146c456b84c29ebafa1c0bc47c421d6369a8a677b4f01fc713df166ee",
-              "code_digest": "877fff9396e59b6724f32171a5e3db2295a7c7dc668e1129c82ca1a5cef309c2",
-              "digest": "e390a688d8cc3dd3e7b712c598096f11d7f8981a52f27079009b4675b3acb489"
+              "task_digest": "b91a8631827f9ea7d7dc60ea7748a34c54d13abd345504346e08d3b71a26eab9",
+              "code_digest": "fed88e1cc3a5112847a670cf6cafc691b279580beb30705d87470291e0532b2f",
+              "digest": "5c9e2c0a623e93c586c5715589d0857257bb547147c0557b0a44df9409787f8e"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-23T04:36:26Z",
+              "checked_at": "2026-05-23T05:16:30Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -42158,28 +42189,298 @@
         "lane_id": "",
         "heading": "TASK-013 — Render file-structure drift in CodeWiki UI",
         "command": "/wiki-resume TASK-013",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-23T04:36:26Z",
+        "generated_at": "2026-05-23T05:16:30Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-140",
+            "session_id": "019e4794-4800-7661-b825-387079d68413",
+            "agent_name": "Mole",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+            "task_id": "TASK-013",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+              "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+              "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-013"
+              },
+              {
+                "layer": "source",
+                "path": "src/ui/**"
+              },
+              {
+                "layer": "source",
+                "path": "tests/features/**"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              },
+              {
+                "layer": "roadmap",
+                "path": ".codewiki/roadmap/tasks/TASK-013/**"
+              },
+              {
+                "layer": "roadmap",
+                "path": ".codewiki/roadmap/queue.json"
+              },
+              {
+                "layer": "source",
+                "path": ".codewiki/index_graph.json"
+              }
+            ],
+            "created_at": "2026-05-23T04:38:28Z",
+            "updated_at": "2026-05-23T04:38:28Z",
+            "expires_at": "2026-05-23T08:38:28.751Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "source",
+              "path": ".codewiki/index_graph.json"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "path": ".codewiki/roadmap/queue.json"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "path": ".codewiki/roadmap/tasks/TASK-013/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "source",
+              "path": "src/ui/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-013"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "source",
+              "path": "tests/features/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-140",
+                "session_id": "019e4794-4800-7661-b825-387079d68413",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-013",
+                "summary": "Implement TASK-013 file-structure drift review surface; claim narrow code/test/build/roadmap scopes.",
+                "expires_at": "2026-05-23T08:38:28.751Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "branch": "codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413",
+                  "notes": "factory=role-worktree; task=TASK-013; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-140 release or validated publisher/patch ref for codewiki/TASK-013/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -42207,7 +42508,7 @@
             ],
             "primary_task": {
               "id": "TASK-013",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Render file-structure drift in CodeWiki UI"
             },
             "revision": {
@@ -42237,7 +42538,7 @@
             ],
             "primary_task": {
               "id": "TASK-013",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Render file-structure drift in CodeWiki UI"
             },
             "revision": {
@@ -43069,7 +43370,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-013",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Render file-structure drift in CodeWiki UI"
                 },
                 "revision": {
@@ -43424,7 +43725,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-013",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Render file-structure drift in CodeWiki UI"
                 },
                 "revision": {
@@ -43922,9 +44223,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-013",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-013"
+        ],
         "next_task_id": "TASK-013",
         "sprint_ids": [
           "SPRINT-001",
@@ -44035,14 +44338,15 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-013",
               "TASK-014"
             ]
           },
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-013"
+            ]
           },
           {
             "id": "done",

@@ -57,12 +57,55 @@ export interface ControlRoomStateModel {
 		blocked: number;
 		validation: number;
 	};
+	file_structure: ControlRoomFileStructureModel | null;
 	latest_signal: string | null;
 	next_action: {
 		kind: string;
 		summary: string;
 		command: string | null;
 	};
+}
+
+export interface ControlRoomFileStructureModel {
+	available: boolean;
+	source: string;
+	map_path: string | null;
+	source_refs: string[];
+	categories: string[];
+	counts: Record<string, number>;
+	path_rule_counts: {
+		intended: number;
+		current: number;
+		target: number;
+	};
+	intended_paths: ControlRoomFileStructurePathRule[];
+	current_paths: ControlRoomFileStructurePathRule[];
+	target_paths: ControlRoomFileStructurePathRule[];
+	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
+	approved_migration_deltas: ControlRoomFileStructureEntry[];
+	actionable_entries: ControlRoomFileStructureEntry[];
+	parse_issues: unknown[];
+}
+
+export interface ControlRoomFileStructurePathRule {
+	pattern: string;
+	owner_id: string | null;
+	owner_label: string | null;
+	group: string | null;
+	status: string | null;
+	role: string | null;
+	approved_delta: boolean;
+	refs: string[];
+}
+
+export interface ControlRoomFileStructureEntry {
+	category: string;
+	severity: string;
+	path: string;
+	message: string;
+	owner_id: string | null;
+	owner_label: string | null;
+	refs: string[];
 }
 
 export interface ControlRoomProductModel {
@@ -250,6 +293,9 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 	const latestValidation = validationNodes.at(-1);
 	const openTasks = Object.values(roadmap?.tasks ?? {}).filter((task: any) => isOpenTaskStatus(task?.status));
 	const blockedTasks = openTasks.filter((task: any) => String(task?.status ?? "") === "blocked" || task?.blocked === true);
+	const fileStructure = buildControlRoomFileStructureModel(
+		graph?.views?.file_structure ?? status?.file_structure ?? graph?.views?.lenses?.audit?.file_structure_drift ?? null,
+	);
 
 	return {
 		project: {
@@ -285,6 +331,7 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 			blocked: blockedTasks.length,
 			validation: validationNodes.length,
 		},
+		file_structure: fileStructure,
 		latest_signal: stringOrNull(latestValidation?.title ?? latestValidation?.path ?? status?.latest_validation?.summary ?? status?.checks?.latest),
 		next_action: {
 			kind: String(nextAction.kind ?? nextAction.type ?? "observe"),
@@ -292,6 +339,90 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 			command: stringOrNull(nextAction.command),
 		},
 	};
+}
+
+function buildControlRoomFileStructureModel(raw: any): ControlRoomFileStructureModel | null {
+	if (!raw || typeof raw !== "object") return null;
+	const mapPath = stringOrNull(raw.map_path);
+	const approvedEntries = normalizeFileStructureEntries(raw.approved_migration_deltas, mapPath);
+	const actionableEntries = normalizeFileStructureEntries(raw.actionable_entries, mapPath);
+	const parseIssues = Array.isArray(raw.parse_issues) ? raw.parse_issues : [];
+	const sourceRefs = fileStructureSourceRefs(raw, mapPath, [...approvedEntries, ...actionableEntries]);
+	return {
+		available: raw.available !== false,
+		source: String(raw.source ?? "file-structure-map"),
+		map_path: mapPath,
+		source_refs: sourceRefs,
+		categories: Array.isArray(raw.categories) ? raw.categories.map((category: unknown) => String(category)).filter(Boolean) : Object.keys(raw.counts ?? {}),
+		counts: normalizeNumberRecord(raw.counts),
+		path_rule_counts: {
+			intended: normalizeArray(raw.intended_paths ?? raw.intended_path_rules).length,
+			current: normalizeArray(raw.current_paths ?? raw.current_path_rules).length,
+			target: normalizeArray(raw.target_paths ?? raw.target_path_rules).length,
+		},
+		intended_paths: normalizeFileStructurePathRules(raw.intended_paths ?? raw.intended_path_rules, sourceRefs),
+		current_paths: normalizeFileStructurePathRules(raw.current_paths ?? raw.current_path_rules, sourceRefs),
+		target_paths: normalizeFileStructurePathRules(raw.target_paths ?? raw.target_path_rules, sourceRefs),
+		approved_delta_edges: normalizeFileStructureDeltaEdges(raw.approved_delta_edges),
+		approved_migration_deltas: approvedEntries,
+		actionable_entries: actionableEntries,
+		parse_issues: parseIssues,
+	};
+}
+
+function normalizeFileStructurePathRules(value: unknown, fallbackRefs: string[]): ControlRoomFileStructurePathRule[] {
+	return normalizeArray(value).map((rule: any) => ({
+		pattern: String(rule.pattern ?? ""),
+		owner_id: stringOrNull(rule.owner_id),
+		owner_label: stringOrNull(rule.owner_label),
+		group: stringOrNull(rule.group),
+		status: stringOrNull(rule.status),
+		role: stringOrNull(rule.role),
+		approved_delta: Boolean(rule.approved_delta),
+		refs: uniqueSorted([...normalizeArray(rule.refs).map((ref: unknown) => String(ref)), stringOrNull(rule.source) ?? "", ...fallbackRefs]),
+	})).filter((rule) => rule.pattern);
+}
+
+function normalizeFileStructureEntries(value: unknown, mapPath: string | null): ControlRoomFileStructureEntry[] {
+	return normalizeArray(value).map((entry: any) => ({
+		category: String(entry.category ?? "unknown"),
+		severity: String(entry.severity ?? "info"),
+		path: String(entry.path ?? ""),
+		message: String(entry.message ?? ""),
+		owner_id: stringOrNull(entry.owner_id),
+		owner_label: stringOrNull(entry.owner_label),
+		refs: uniqueSorted([...normalizeArray(entry.refs).map((ref: unknown) => String(ref)), mapPath ?? ""]),
+	})).filter((entry) => entry.path || entry.message);
+}
+
+function normalizeFileStructureDeltaEdges(value: unknown): Array<{ from: string; to: string; label: string }> {
+	return normalizeArray(value).map((edge: any) => ({
+		from: String(edge.from ?? ""),
+		to: String(edge.to ?? ""),
+		label: String(edge.label ?? "approved migration delta"),
+	})).filter((edge) => edge.from || edge.to || edge.label);
+}
+
+function fileStructureSourceRefs(raw: any, mapPath: string | null, entries: ControlRoomFileStructureEntry[]): string[] {
+	return uniqueSorted([
+		mapPath ?? "",
+		...normalizeArray(raw.source_refs).map((ref: unknown) => String(ref)),
+		...normalizeArray(raw.canonical_refs).map((ref: unknown) => String(ref)),
+		...entries.flatMap((entry) => entry.refs),
+	]);
+}
+
+function normalizeNumberRecord(value: unknown): Record<string, number> {
+	const result: Record<string, number> = {};
+	if (!value || typeof value !== "object") return result;
+	for (const [key, count] of Object.entries(value as Record<string, unknown>)) {
+		result[key] = numberFrom(count);
+	}
+	return result;
+}
+
+function normalizeArray(value: unknown): any[] {
+	return Array.isArray(value) ? value : [];
 }
 
 export async function buildControlRoomProductModel(project: WikiProject): Promise<ControlRoomProductModel> {
@@ -1105,6 +1236,12 @@ a { color: var(--highlight); }
 .settings-path { color: var(--highlight); font-weight: 700; }
 .settings-value { color: var(--accent); word-break: break-word; }
 .settings-meta { color: var(--muted); font-size: 0.82rem; }
+.structure-review { margin-top: 0.75rem; }
+.structure-lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0.75rem; }
+.structure-list { display: flex; flex-direction: column; gap: 0.45rem; }
+.structure-row { border: 1px solid var(--line-dim); background: rgba(0,0,0,0.16); padding: 0.55rem; }
+.structure-row code { color: var(--highlight); }
+.structure-meta { color: var(--muted); font-size: 0.82rem; margin-top: 0.25rem; }
 @media (max-width: 980px) {
   .shell { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr auto auto; }
   .topbar, .status { grid-column: 1; }
@@ -1188,14 +1325,50 @@ function activateView(view) {
 
 function renderStatus() {
   const m = state.model;
+  const fileStructure = m.file_structure;
   $('status').innerHTML = '<div class="section-head"><h2>Status</h2><p>Compact project metrics for second-screen use beside chat.</p></div><div class="grid">'
     + card('Health', '<span class="badge ' + healthClass(m.health.color) + '">' + esc(m.health.color) + '</span><div class="big">' + m.health.errors + '/' + m.health.warnings + '</div><div class="muted">errors / warnings</div>')
     + card('Roadmap work', '<div class="big">' + m.roadmap.open + '</div><div>open tasks</div><div class="muted">done ' + m.roadmap.done + ' · blocked ' + m.roadmap.blocked + '</div>')
     + card('Claims', '<div class="big">' + m.claims.active + '</div><div>active claims</div><div class="muted">conflicts ' + m.claims.conflicts + ' · warnings ' + m.claims.warnings + '</div>')
     + card('Graph', '<div class="big">' + m.graph.nodes + '</div><div>nodes</div><div class="muted">edges ' + m.graph.edges + ' · drift ' + m.graph.drift + ' · stale ' + m.graph.stale + '</div>')
     + card('Gates', '<div class="big">' + m.gates.blocked + '</div><div>blocked gate(s)</div><div class="muted">validation signals ' + m.gates.validation + '</div>')
+    + card('File structure', fileStructure ? '<div class="big">' + fileStructure.actionable_entries.length + '</div><div>actionable drift</div><div class="muted">approved deltas ' + (fileStructure.counts.approved_migration_delta || 0) + ' · current ' + fileStructure.path_rule_counts.current + ' · target ' + fileStructure.path_rule_counts.target + '</div>' : '<div class="big">—</div><div class="muted">no generated lens loaded</div>')
     + card('Focus', '<div class="big">' + esc(m.roadmap.focused || m.roadmap.next || '—') + '</div><div class="muted">next: ' + esc(m.next_action.kind) + '</div>')
-    + '</div><div class="empty-state" style="margin-top:0.75rem"><h2>Next safe action</h2><p><span class="badge">' + esc(m.next_action.kind) + '</span>' + esc(m.next_action.summary) + '</p><pre>' + esc(m.next_action.command || 'Use Product, System, Board, or Graph for context.') + '</pre></div>';
+    + '</div>' + renderFileStructureReview(fileStructure)
+    + '<div class="empty-state" style="margin-top:0.75rem"><h2>Next safe action</h2><p><span class="badge">' + esc(m.next_action.kind) + '</span>' + esc(m.next_action.summary) + '</p><pre>' + esc(m.next_action.command || 'Use Product, System, Board, or Graph for context.') + '</pre></div>';
+}
+
+function renderFileStructureReview(fileStructure) {
+  if (!fileStructure) return '';
+  const actionableCount = fileStructure.actionable_entries?.length || 0;
+  const approvedCount = fileStructure.approved_migration_deltas?.length || 0;
+  return '<section class="structure-review"><div class="section-head"><h2>File-structure review</h2><p>Generated graph/status/audit lens over intended/current paths, accepted migration deltas, and actionable drift. Output is review evidence, not canonical truth.</p></div>'
+    + '<div class="structure-lanes">'
+    + structureLane('Intended structure', fileStructure.intended_paths, structureRuleRow, 'No intended path rules exposed.')
+    + structureLane('Current structure', fileStructure.current_paths, structureRuleRow, 'No current path rules exposed.')
+    + structureLane('Approved migration deltas', fileStructure.approved_migration_deltas, structureEntryRow, 'No approved migration deltas.')
+    + structureLane('Actionable drift', fileStructure.actionable_entries, structureEntryRow, 'No actionable file-structure drift.')
+    + '</div>'
+    + sourceDetails('File-structure source refs', ['generated: .codewiki/index_graph.json views.file_structure', 'audit: codewiki_audit profile=file-structure', ...(fileStructure.source_refs || [])])
+    + '<p class="muted">Counts: intended ' + fileStructure.path_rule_counts.intended + ' · current ' + fileStructure.path_rule_counts.current + ' · target ' + fileStructure.path_rule_counts.target + ' · approved ' + approvedCount + ' · actionable ' + actionableCount + '</p>'
+    + '</section>';
+}
+
+function structureLane(title, rows, rowRenderer, emptyText) {
+  const visibleRows = (rows || []).slice(0, 6);
+  const overflow = (rows || []).length - visibleRows.length;
+  return '<section class="card"><h3>' + esc(title) + ' <span class="badge">' + (rows || []).length + '</span></h3><div class="structure-list">'
+    + (visibleRows.length ? visibleRows.map(rowRenderer).join('') : '<p class="muted">' + esc(emptyText) + '</p>')
+    + (overflow > 0 ? '<p class="muted">+' + overflow + ' more in generated evidence.</p>' : '')
+    + '</div></section>';
+}
+
+function structureRuleRow(rule) {
+  return '<article class="structure-row"><div><code>' + esc(rule.pattern) + '</code></div><div class="structure-meta">' + esc([rule.role, rule.owner_label || rule.owner_id, rule.status].filter(Boolean).join(' · ')) + '</div>' + sourceDetails('source refs', rule.refs || []) + '</article>';
+}
+
+function structureEntryRow(entry) {
+  return '<article class="structure-row"><div><span class="badge ' + (entry.severity === 'error' ? 'red' : entry.severity === 'warning' ? 'yellow' : '') + '">' + esc(entry.category) + '</span><code>' + esc(entry.path) + '</code></div><div class="structure-meta">' + esc(entry.message || entry.owner_label || entry.owner_id || 'generated claim') + '</div>' + sourceDetails('source refs', entry.refs || []) + '</article>';
 }
 
 function card(title, body) { return '<article class="card"><h3>' + esc(title) + '</h3>' + body + '</article>'; }
@@ -1568,10 +1741,13 @@ function nextZoom(current, action, fitValue, resetValue) {
 function inspectStatus() {
   const m = state.model;
   if (!m) return;
+  const fileStructure = m.file_structure;
   $('inspector').innerHTML = '<div class="drawer-eyebrow">Status alignment</div><h2>Current repo signal</h2><p><span class="badge">' + esc(m.health.color) + '</span><span class="badge">local-first</span><span class="badge">second-screen</span></p>'
     + signal('What to watch', '<p>' + esc(m.latest_signal || 'No validation/check signal found.') + '</p>')
+    + signal('File-structure drift', fileStructure ? '<p><span class="badge">actionable ' + fileStructure.actionable_entries.length + '</span><span class="badge">approved ' + fileStructure.approved_migration_deltas.length + '</span></p><p class="muted">Approved migration deltas are reported separately from actionable drift.</p>' : '<p class="muted">No generated file-structure lens loaded.</p>')
     + signal('Next safe action', '<p class="next-action">' + esc(m.next_action?.summary || 'Choose Product, System, Board, or Graph for context.') + '</p>')
-    + sourceDetails('Status sources', ['.codewiki/index_graph.json', '.codewiki/roadmap/queue.json', '.codewiki/session/queue.json']);
+    + sourceDetails('Status sources', ['.codewiki/index_graph.json', '.codewiki/roadmap/queue.json', '.codewiki/session/queue.json', ...(fileStructure?.source_refs || [])])
+    + (fileStructure ? sourceDetails('Generated file-structure evidence', JSON.stringify(fileStructure, null, 2)) : '');
 }
 
 function inspectArea(id) {

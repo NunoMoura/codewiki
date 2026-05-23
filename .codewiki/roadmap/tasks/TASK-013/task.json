@@ -1,7 +1,7 @@
 {
   "id": "TASK-013",
   "title": "Render file-structure drift in CodeWiki UI",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "medium",
   "kind": "feature",
   "summary": "Present TASK-010 intended/current file-structure drift data in an existing CodeWiki UI or status surface for human review.",
@@ -11,7 +11,7 @@
   ],
   "code_paths": [
     "src/ui",
-    "tests/features"
+    "tests/smoke/control-room.test.mjs"
   ],
   "research_ids": [],
   "labels": [
@@ -47,5 +47,5 @@
     "closure": "Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-23"
+  "updated": "2026-05-23T05:15:46Z"
 }

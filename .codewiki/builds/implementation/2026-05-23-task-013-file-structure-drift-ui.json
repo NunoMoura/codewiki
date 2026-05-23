@@ -1,0 +1,535 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-23T05:14:03Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+  "task_id": "TASK-013",
+  "task": {
+    "id": "TASK-013",
+    "title": "Render file-structure drift in CodeWiki UI",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "feature",
+    "summary": "Present TASK-010 intended/current file-structure drift data in an existing CodeWiki UI or status surface for human review.",
+    "spec_paths": [
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/product/overview.md"
+    ],
+    "code_paths": [
+      "src/ui",
+      "tests/smoke/control-room.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Maintainers can review intended structure, current structure, approved migration deltas, and actionable file-structure drift through an existing human-visible CodeWiki surface.",
+      "acceptance": [
+        "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+        "Approved migration deltas are visually/report-wise separate from actionable drift.",
+        "Source paths and canonical refs are available for every displayed claim.",
+        "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+        "Existing public package behavior remains compatible."
+      ],
+      "non_goals": [
+        "Do not migrate source files.",
+        "Do not make generated UI output canonical truth.",
+        "Do not add a broad new product mode beyond the review surface."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:features",
+        "npm run test:smoke",
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-05-30T05:14:03.000Z",
+    "purge_after": "2026-06-06T05:14:03.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain."
+  ],
+  "agent_assessment": "",
+  "summary": "Implement TASK-013 file-structure drift review surface in existing CodeWiki Status UI.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-013",
+      ".codewiki/roadmap/tasks/TASK-013/task.json",
+      ".codewiki/roadmap/tasks/TASK-013/context.json"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/product/overview.md",
+      ".codewiki/index_graph.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-013/task.json",
+      ".codewiki/roadmap/tasks/TASK-013/context.json"
+    ],
+    "code": [
+      "src/ui/web/control-room.ts"
+    ],
+    "tests": [
+      "tests/smoke/control-room.test.mjs"
+    ],
+    "validation": [
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-013"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+    "spec_paths": [
+      ".codewiki/kb/system/control-room-ui.md",
+      ".codewiki/kb/product/overview.md"
+    ],
+    "code_paths": [
+      "src/ui",
+      "tests/smoke/control-room.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/control-room.test.mjs"
+  ],
+  "code_files": [
+    "src/ui/web/control-room.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/control-room.test.mjs",
+    "src/ui/web/control-room.ts"
+  ],
+  "checks_run": [
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass",
+    "npm run test:features: pass (22 passed, 0 failed)",
+    "npm run test:smoke: pass",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      "roadmap_task_id": "TASK-013",
+      "test_files": [
+        "tests/smoke/control-room.test.mjs"
+      ],
+      "evidence": [
+        "Added smoke coverage to tests/smoke/control-room.test.mjs for generated file_structure data in /api/state, row source refs, separate approved/actionable collections, and UI asset strings.",
+        "Targeted control-room smoke ran before broader test:features and test:smoke."
+      ],
+      "notes": [
+        "tests/features path from task metadata did not exist; roadmap task code_paths were updated to existing tests/smoke/control-room.test.mjs, which npm run test:features discovers."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      "roadmap_task_id": "TASK-013",
+      "code_files": [
+        "src/ui/web/control-room.ts"
+      ],
+      "evidence": [
+        "src/ui/web/control-room.ts adds ControlRoomFileStructureModel, normalizes generated graph/status/audit file-structure data into /api/state, and renders a Status review card/lanes without adding commands.",
+        "tests/smoke/control-room.test.mjs fixture now includes graph.views.file_structure evidence and asserts API/UI visibility."
+      ],
+      "notes": [
+        "Generated .codewiki/index_graph.json and TASK-013 task/context views were refreshed through CodeWiki tools after code and roadmap evidence changes.",
+        "Existing graph-health warnings remain but task audit passes."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added smoke coverage to tests/smoke/control-room.test.mjs for generated file_structure data in /api/state, row source refs, separate approved/actionable collections, and UI asset strings.",
+    "Targeted control-room smoke ran before broader test:features and test:smoke."
+  ],
+  "code_change_evidence": [
+    "src/ui/web/control-room.ts adds ControlRoomFileStructureModel, normalizes generated graph/status/audit file-structure data into /api/state, and renders a Status review card/lanes without adding commands.",
+    "tests/smoke/control-room.test.mjs fixture now includes graph.views.file_structure evidence and asserts API/UI visibility."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+      "evidence": "buildControlRoomStateModel reads graph.views.file_structure, status.file_structure, or graph.views.lenses.audit.file_structure_drift and normalizes that generated evidence for /api/state; UI does not embed file-structure rules."
+    },
+    {
+      "criterion": "Approved migration deltas are visually/report-wise separate from actionable drift.",
+      "evidence": "Status surface renders separate lanes for Approved migration deltas and Actionable drift, and inspector reports approved/actionable counts separately."
+    },
+    {
+      "criterion": "Source paths and canonical refs are available for every displayed claim.",
+      "evidence": "Normalized path rules and drift entries carry refs sourced from map_path/entry refs/source refs; UI exposes per-row source refs and section-level .codewiki/index_graph.json/file-structure audit refs."
+    },
+    {
+      "criterion": "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+      "evidence": "No command registration changed; existing CodeWiki UI /api/state Status surface hosts the review."
+    },
+    {
+      "criterion": "Existing public package behavior remains compatible.",
+      "evidence": "npm run typecheck, npm run test:features, and npm run test:smoke passed; control-room smoke verifies existing navigation/assets remain compatible."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue next roadmap task by rendering file-structure drift data in an existing CodeWiki human review surface.",
+    "implemented_changes": [
+      "Added /api/state file_structure model sourced from generated graph/status/audit file-structure evidence.",
+      "Rendered Status surface card and four review lanes for intended structure, current structure, approved migration deltas, and actionable drift.",
+      "Exposed source refs at row and section level so displayed claims link back to generated graph/audit/map refs.",
+      "Added control-room smoke coverage for file-structure model, API response, UI assets, and approved/actionable separation.",
+      "Aligned TASK-013 code_paths from missing tests/features to existing tests/smoke/control-room.test.mjs."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-013/task.json",
+        ".codewiki/roadmap/tasks/TASK-013/context.json"
+      ],
+      "code": [
+        "src/ui/web/control-room.ts"
+      ],
+      "tests": [
+        "tests/smoke/control-room.test.mjs"
+      ],
+      "validation": [
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013"
+      ]
+    },
+    "acceptance_evidence": [
+      "/api/state includes file_structure sourced from graph.views.file_structure.",
+      "Status UI text contains File-structure review, Approved migration deltas, and Actionable drift.",
+      "Control-room smoke asserts approved/actionable arrays remain separate and source refs include file-structure map/doc refs.",
+      "No new command files or adapter command registrations changed."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/smoke/control-room.test.mjs",
+      "npm run test:features",
+      "npm run test:smoke",
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013"
+    ],
+    "non_goals_preserved": [
+      "No source files were migrated.",
+      "Generated UI output is review evidence only; canonical truth remains KB/graph/audit sources.",
+      "No broad new product mode or new user-facing command was added."
+    ],
+    "remaining_risks": [
+      "Pre-existing Control Room shell does not yet fully match newer Status/KB/Board/Map/Sessions product direction.",
+      "Generated-file changed warnings require commit/publication proof before task close."
+    ]
+  },
+  "risks": [
+    "Status UI still sits inside the current pre-existing rail/inspector Control Room shell; TASK-013 did not attempt broader UI navigation redesign because that is outside non-goals.",
+    "Changed/generated-file warnings remain until commit/publication proof captures generated output."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-013",
+      "task_id": "TASK-013",
+      "next_focus_task_id": "TASK-014",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-013",
+        "title": "Render file-structure drift in CodeWiki UI",
+        "summary": "Implement TASK-013 file-structure drift review surface in existing CodeWiki Status UI.",
+        "spec_paths": [
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/product/overview.md"
+        ],
+        "code_paths": [
+          "src/ui",
+          "tests/smoke/control-room.test.mjs",
+          "src/ui/web/control-room.ts"
+        ],
+        "acceptance": [
+          "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+          "Approved migration deltas are visually/report-wise separate from actionable drift.",
+          "Source paths and canonical refs are available for every displayed claim.",
+          "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+          "Existing public package behavior remains compatible."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:features",
+          "npm run test:smoke",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+        "checks_run": [
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass",
+          "npm run test:features: pass (22 passed, 0 failed)",
+          "npm run test:smoke: pass",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain"
+        ],
+        "test_design_evidence": [
+          "Added smoke coverage to tests/smoke/control-room.test.mjs for generated file_structure data in /api/state, row source refs, separate approved/actionable collections, and UI asset strings.",
+          "Targeted control-room smoke ran before broader test:features and test:smoke."
+        ],
+        "code_change_evidence": [
+          "src/ui/web/control-room.ts adds ControlRoomFileStructureModel, normalizes generated graph/status/audit file-structure data into /api/state, and renders a Status review card/lanes without adding commands.",
+          "tests/smoke/control-room.test.mjs fixture now includes graph.views.file_structure evidence and asserts API/UI visibility."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-013",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-013",
+      "show_build": "git show refs/codewiki/archive/task/TASK-013:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/product/overview.md",
+        "src/ui",
+        "tests/smoke/control-room.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-013 Render file-structure drift in CodeWiki UI implementation evidence",
+      "body": "Implement TASK-013 file-structure drift review surface in existing CodeWiki Status UI.\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass, npm run test:features: pass (22 passed, 0 failed), npm run test:smoke: pass, codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-013\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass, npm run test:features: pass (22 passed, 0 failed), npm run test:smoke: pass, codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-013\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-013\nCodeWiki-Digest: sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5\nCodeWiki-Restore: /wiki-restore TASK-013",
+      "trailers": [
+        "CodeWiki-Task: TASK-013",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+        "CodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass, npm run test:features: pass (22 passed, 0 failed), npm run test:smoke: pass, codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-013",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-013",
+        "CodeWiki-Digest: sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+        "CodeWiki-Restore: /wiki-restore TASK-013"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-013 Render file-structure drift in CodeWiki UI implementation evidence",
+      "body": "Implement TASK-013 file-structure drift review surface in existing CodeWiki Status UI.\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass, npm run test:features: pass (22 passed, 0 failed), npm run test:smoke: pass, codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-013\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass, npm run test:features: pass (22 passed, 0 failed), npm run test:smoke: pass, codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-013\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-013\nCodeWiki-Digest: sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5\nCodeWiki-Restore: /wiki-restore TASK-013"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-013",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-013"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-013",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-013",
+        "show_build": "git show refs/codewiki/archive/task/TASK-013:.codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/product/overview.md",
+          "src/ui",
+          "tests/smoke/control-room.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-013",
+      "build_path": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-013",
+      "commit_sha": "",
+      "digest": "sha256:7ccc05c782c4fb44d2af1bcaa2dee8c0fa9d08fcaffae4011d207a3a71da60a5",
+      "restore_command": "/wiki-restore TASK-013"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:99523802a9422cfe70fb028f2551ec51aa72e9b5db48d6fa49e307522a66c233",
+          "bytes": 13704
+        },
+        {
+          "path": "tests/smoke/control-room.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+          "bytes": 12924
+        },
+        {
+          "path": "src/ui/web/control-room.ts",
+          "role": "code_file",
+          "sha256": "sha256:e9f2291aa8cb40f490c97decdeaae7312d307be6d4c5ca0ed3511fa80adb3eed",
+          "bytes": 90589
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-013",
+      "source_build": ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/ui/web/control-room.ts",
+          "tests/smoke/control-room.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-013",
+        "restore_command": "/wiki-restore TASK-013"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/control-room.test.mjs: pass",
+        "npm run test:features: pass (22 passed, 0 failed)",
+        "npm run test:smoke: pass",
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure/generated-parity/task pass; changed warnings are uncommitted generated outputs; alignment graph-health warnings remain"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

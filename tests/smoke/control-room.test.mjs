@@ -156,6 +156,23 @@ edges:
 			status: { health: { color: "green", errors: 0, warnings: 0, total: 0 }, roadmap: { open_task_count: 1, next_task_id: "TASK-001" }, next_action: { kind: "resume", summary: "Resume task", command: "/wiki-resume TASK-001" }, claims: { active_claim_count: 0, warning_count: 0, conflict_count: 0 } },
 			roadmap: { open_task_count: 1, next_task_id: "TASK-001" },
 		},
+		views: {
+			file_structure: {
+				version: 1,
+				source: "file-structure-map",
+				map_path: ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+				available: true,
+				categories: ["missing_expected_path", "approved_migration_delta"],
+				counts: { missing_expected_path: 1, approved_migration_delta: 1 },
+				intended_paths: [{ pattern: "src/ui/**", owner_id: "ui", owner_label: "UI", group: "source", status: "current", role: "current" }, { pattern: "src/surfaces/**", owner_id: "target", owner_label: "Target surface roots", group: "source", status: "accepted_target", role: "target", approved_delta: true }],
+				current_paths: [{ pattern: "src/ui/**", owner_id: "ui", owner_label: "UI", group: "source", status: "current", role: "current" }],
+				target_paths: [{ pattern: "src/surfaces/**", owner_id: "target", owner_label: "Target surface roots", group: "source", status: "accepted_target", role: "target", approved_delta: true }],
+				approved_delta_edges: [{ from: "ui", to: "target", label: "approved migration delta" }],
+				approved_migration_deltas: [{ category: "approved_migration_delta", severity: "info", path: "src/surfaces/**", message: "Target root is accepted but not migrated yet.", refs: [".codewiki/kb/system/diagrams/file-structure-map.yaml", ".codewiki/kb/system/file-structure.md"] }],
+				actionable_entries: [{ category: "missing_expected_path", severity: "warning", path: "src/ui/web/control-room.ts", message: "Fixture actionable drift.", refs: [".codewiki/kb/system/diagrams/file-structure-map.yaml"] }],
+				parse_issues: [],
+			},
+		},
 	}, null, 2));
 
 	const project = await loadProject(root);
@@ -164,6 +181,11 @@ edges:
 	assert.equal(state.health.color, "green");
 	assert.equal(state.roadmap.next, "TASK-001");
 	assert.equal(state.graph.nodes, 2);
+	assert.equal(state.file_structure.counts.approved_migration_delta, 1);
+	assert.equal(state.file_structure.approved_migration_deltas.length, 1);
+	assert.equal(state.file_structure.actionable_entries.length, 1);
+	assert.equal(state.file_structure.current_paths[0].refs.includes(".codewiki/kb/system/diagrams/file-structure-map.yaml"), true);
+	assert.equal(state.file_structure.source_refs.includes(".codewiki/kb/system/file-structure.md"), true);
 
 	const product = await buildControlRoomProductModel(project);
 	assert.equal(product.categories.find((category) => category.id === "users")?.items[0]?.title, "Maintainers");
@@ -224,6 +246,7 @@ edges:
 	assert.match(css, /\.graphmap/);
 	assert.match(css, /\.kanban/);
 	assert.match(css, /\.source-drawer/);
+	assert.match(css, /\.structure-review/);
 	assert.doesNotMatch(css, /42f5ff|--cyan/i);
 	const js = await fetch(new URL("/assets/control-room.js", server.url)).then((res) => res.text());
 	assert.match(js, /CodeWiki map/);
@@ -242,8 +265,13 @@ edges:
 	assert.match(js, /fitGraph\(state\.cy\)/);
 	assert.match(js, /toggleSettings/);
 	assert.match(js, /\/api\/settings/);
+	assert.match(js, /File-structure review/);
+	assert.match(js, /Approved migration deltas/);
+	assert.match(js, /Actionable drift/);
 	const apiState = await fetch(new URL("/api/state", server.url)).then((res) => res.json());
 	assert.equal(apiState.project.label, "control-room-smoke");
+	assert.equal(apiState.file_structure.approved_migration_deltas[0].path, "src/surfaces/**");
+	assert.equal(apiState.file_structure.actionable_entries[0].category, "missing_expected_path");
 	const apiProduct = await fetch(new URL("/api/product", server.url)).then((res) => res.json());
 	assert.equal(apiProduct.categories.length, 3);
 	const apiBoard = await fetch(new URL("/api/board", server.url)).then((res) => res.json());
