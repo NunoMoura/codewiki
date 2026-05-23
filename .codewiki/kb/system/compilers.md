@@ -76,6 +76,10 @@ The planning loop consumes a validated `decision_build` and aligns roadmap work 
 
 The planning loop identifies executable requirements, creates or refines roadmap tasks without duplicating full briefs, defines outcome/acceptance/non-goals/verification/blockers, proposes candidate code/test paths, outlines TDD or test-design strategy, maps acceptance to requirement ids and knowledge refs, and preserves active task ids when intent refines existing work.
 
+Planning must resolve every accepted decision row and downstream planning question into a durable propagation state before implementation consumes the plan. Valid resolution states are: knowledge-only completion, executable roadmap task, sprint/cohort metadata, or explicit deferral with owner, trigger, and rationale. Open questions in a build are not durable propagation by themselves.
+
+Planning builds should include a row-to-roadmap propagation map that names the accepted decision row or requirement, the resolution state, the roadmap task or sprint id when applicable, and the deferral trigger when work is intentionally postponed. If the gateway finds an unmapped accepted row, the planning loop must create a superseding planning build and iterate until validation passes.
+
 Planning is the boundary between knowledge alignment and executable work. It is not an implementation step and should not change code.
 
 ## Implementation loop

@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-23T01:29:41Z",
+  "profile": "planning",
+  "verdict": "fail",
+  "rationale": "Planning did not fully carry the accepted file-structure decision into durable roadmap work. It correctly created one atomic first task (TASK-010) for the drift lens and correctly deferred source migration/UI work until drift evidence existed, but it left the downstream accepted cohort only as open questions in the decision/planning builds. After TASK-010 closed, the roadmap had 0 open tasks, so the accepted concept-root migration direction and human review surface had no queued executable follow-up. This violates the planning compiler expectation that accepted related executable cohorts use roadmap tasks and/or sprint metadata rather than relying on build open questions or chat memory. User explicitly requested this process report on 2026-05-23.",
+  "checks": [
+    "approval:user asked on 2026-05-23 to inspect the decision build, trace whether the flow followed CodeWiki standards, and create a report if not",
+    "Read decision build .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    "Read planning build .codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+    "Read decision validation .codewiki/validation/2026-05-22-decision-pass.json",
+    "Observed planning build task_ids=[TASK-010] and task_changes='Deferred UI surfacing and concept-root source migration tasks until TASK-010 produces graph/audit data.'",
+    "Observed decision downstream_planning_questions include concept-root migration sprint and UI/report surface planning",
+    "Observed current codewiki_state after TASK-010 close: roadmap open 0, next none, health green",
+    "Observed planning_build agent_assessment: create-time de-duplication merged attempted cohort rows into TASK-010; TASK-010 was refined back to first atomic unit"
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Accepted downstream work has no durable roadmap representation after TASK-010 close."
+    },
+    {
+      "severity": "high",
+      "summary": "Planning deferred concept-root migration and human UI/report surface to open questions instead of creating/refining roadmap tasks or sprint metadata once prerequisites were known."
+    },
+    {
+      "severity": "medium",
+      "summary": "Create-time de-duplication merged attempted cohort rows into TASK-010, and the planner did not compensate by using sprint metadata or separate follow-up tasks."
+    },
+    {
+      "severity": "medium",
+      "summary": "Task-close flow did not include a decision-build residual-work gate, so roadmap reached open=0 despite accepted downstream planning questions."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment",
+    "task"
+  ],
+  "audit_refs": [
+    "approval:user asked on 2026-05-23 to create a process report if standards were not followed",
+    "profile:alignment",
+    "profile:task",
+    ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+    ".codewiki/validation/2026-05-22-decision-pass.json"
+  ],
+  "audit_reports": [
+    "Planning trace audit: decision accepted FS-ROOT-CONCEPTS, FS-DIAGRAM-CANONICAL, FS-DRIFT-LENS, FS-HUMAN-DRIVEN-SURFACE; only FS-DRIFT-LENS became TASK-010; no sprint or downstream tasks remain after close."
+  ],
+  "content_proof_refs": [
+    "ccfed3f650ec5fd811cb0375a680fcbf8cdec499"
+  ],
+  "failed_criteria": [
+    "planning_cohort_completeness",
+    "downstream_traceability",
+    "sprint_metadata_routing",
+    "residual_decision_work_gate"
+  ],
+  "blocking_questions": [
+    "Which concept-root migration should be queued first now that TASK-010 created the drift lens: session, state, roadmap, build, validation, audit, or a planned sprint order?",
+    "Should the human structure review surface be a UI task, a report/audit output task, or both?",
+    "Should CodeWiki planning validation require every accepted downstream_planning_question to resolve to task/sprint/deferred-with-owner before implementation begins or task close passes?"
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user asked on 2026-05-23 to create a process report if standards were not followed",
+        "approval:user asked on 2026-05-23 to inspect the decision build, trace whether the flow followed CodeWiki standards, and create a report if not"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "head_sha": "ccfed3f650ec5fd811cb0375a680fcbf8cdec499",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Process audit from source refs and current roadmap state; no code or roadmap mutation performed.",
+    "role": "validator"
+  }
+}

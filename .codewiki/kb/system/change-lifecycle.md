@@ -34,9 +34,12 @@ Findings become one of three things:
 
 - a clarification to owning `.codewiki/kb/**` specs,
 - a roadmap work item with acceptance criteria and validation expectations,
-- an explicit non-goal or deferred decision.
+- sprint or cohort metadata when accepted work contains multiple related executable tasks,
+- an explicit non-goal or deferred decision with owner, trigger, and rationale.
 
-When review exposes ambiguity, hidden risk, or unmapped user intent, the work escalates back to the decision compiler.
+Accepted decisions must continue propagating until each approved row is durably represented in knowledge, roadmap tasks, sprint metadata, implementation evidence, or an explicit deferred state. A build open question is a prompt for the next compiler loop, not a durable holding area for decided work.
+
+When review exposes ambiguity, hidden risk, or unmapped user intent, the work escalates back to the decision compiler. When review exposes unmapped accepted intent, the work escalates to planning and the next planning build must resolve or defer every affected row before implementation proceeds.
 
 ## Related docs
 

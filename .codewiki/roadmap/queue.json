@@ -1,8 +1,263 @@
 {
   "version": 2,
-  "updated": "2026-05-22T09:41:49Z",
-  "order": [],
-  "tasks": {},
+  "updated": "2026-05-23T01:51:02Z",
+  "order": [
+    "TASK-011",
+    "TASK-012",
+    "TASK-013",
+    "TASK-014"
+  ],
+  "tasks": {
+    "TASK-011": {
+      "id": "TASK-011",
+      "title": "Enforce decision-to-roadmap propagation gates",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "architecture",
+      "summary": "Make planning validation, graph/status, and audit evidence fail or route when accepted decision rows are not mapped to roadmap tasks, sprint metadata, knowledge-only completion, or explicit deferred owner/trigger records.",
+      "spec_paths": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md",
+        ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+        ".codewiki/validation/2026-05-23-planning-fail.json",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json"
+      ],
+      "code_paths": [
+        "src/application/builds.ts",
+        "src/application/graph.ts",
+        "src/application/state.ts",
+        "src/application/state-builders.ts",
+        "src/application/tools/audit.ts",
+        "src/domain/audit/types.ts",
+        "src/domain/build/types.ts",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-validation/SKILL.md",
+        "tests/smoke"
+      ],
+      "research_ids": [],
+      "labels": [
+        "propagation",
+        "planning-gateway",
+        "decision-traceability",
+        "drift-prevention"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "CodeWiki prevents accepted semantic decisions from disappearing after partial planning by requiring deterministic decision-row propagation evidence before planning validation, implementation, or roadmap-empty task close can pass.",
+        "acceptance": [
+          "Planning builds can represent accepted decision row resolution as knowledge-only, roadmap task, sprint/cohort metadata, or explicit deferred owner/trigger/rationale, and validation can inspect that evidence deterministically.",
+          "Planning validation fails or blocks incomplete row-to-roadmap propagation and requires a superseding planning build before implementation can consume the plan.",
+          "Graph/status/audit evidence exposes accepted decision builds with unmapped executable rows or downstream planning questions, including the TASK-010/file-structure regression as a fixture.",
+          "Roadmap-empty/task-close readiness routes back to planning when accepted decision residual work is unmapped.",
+          "Knowledge-only and explicitly deferred rows with owner/trigger/rationale do not create false failures.",
+          "Existing decision, planning, implementation, and task-close public tool behavior remains compatible except for the stricter propagation gate."
+        ],
+        "non_goals": [
+          "Do not migrate source files to concept roots in this task.",
+          "Do not build the human file-structure UI surface in this task.",
+          "Do not create umbrella tasks that only coordinate other tasks.",
+          "Do not change public package commands."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm test",
+          "codewiki_audit profiles=alignment,generated-parity,changed,stale-reference"
+        ]
+      },
+      "delta": {
+        "desired": "Accepted decision rows must have durable propagation mappings and gateway enforcement before lower-layer work proceeds.",
+        "current": "TASK-010 planning left accepted source migration and human review surface work in open questions; the roadmap reached open=0 after close.",
+        "closure": "Task closes when the regression is covered by validation/state/audit checks and the propagation gap can no longer pass planning validation silently."
+      },
+      "created": "2026-05-23",
+      "updated": "2026-05-23T01:50:39Z"
+    },
+    "TASK-012": {
+      "id": "TASK-012",
+      "title": "Select first concept-root migration boundary",
+      "status": "cancelled",
+      "priority": "medium",
+      "kind": "architecture",
+      "summary": "Cancelled auto-merged non-atomic file-structure follow-up task produced by over-broad create de-duplication; will recreate split tasks with narrower scopes.",
+      "spec_paths": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/validation/2026-05-23-planning-fail.json",
+        ".codewiki/kb/product/overview.md",
+        ".codewiki/kb/system/control-room-ui.md"
+      ],
+      "code_paths": [
+        "src/application",
+        "src/domain",
+        "src/adapters",
+        "src/ui",
+        "tests",
+        "src/application/state.ts",
+        "src/application/state-builders.ts",
+        "src/application/graph.ts",
+        "src/application/tools/audit.ts",
+        "tests/features"
+      ],
+      "research_ids": [],
+      "labels": [
+        "file-structure",
+        "concept-root",
+        "migration-planning",
+        "human-decision",
+        "ui",
+        "human-review",
+        "drift-lens",
+        "status-surface"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Maintainers have a durable, approved first concept-root migration boundary and staged compatibility plan instead of an unresolved open question.",
+        "acceptance": [
+          "Drift-lens evidence is used to compare candidate first concepts such as session, state, roadmap, build, validation, audit, project, and agency.",
+          "Decision/planning evidence records the chosen first migration target or explicitly defers migration with owner, trigger, and rationale.",
+          "Compatibility constraints are listed, including public package behavior, barrels/exports, tests, and recent compatibility guarantees.",
+          "Resulting implementation task boundaries are created/refined only after the chosen first target is approved.",
+          "No source files are moved during this task.",
+          "The surface consumes generated graph/status/audit drift data from TASK-010 rather than duplicating file-structure truth.",
+          "Approved migration deltas are visually/report-wise separate from actionable drift.",
+          "Source paths and canonical diagram/KB refs are available for every displayed claim.",
+          "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+          "Existing public package behavior and audit behavior remain compatible.",
+          "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+          "Source paths and canonical refs are available for every displayed claim.",
+          "Existing public package behavior remains compatible."
+        ],
+        "non_goals": [
+          "Do not migrate source files.",
+          "Do not create an umbrella task that only closes other tasks.",
+          "Do not change public package behavior.",
+          "Do not make generated UI output canonical truth.",
+          "Do not add a broad new product mode beyond the review surface."
+        ],
+        "verification": [
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+          "decision/planning validation for selected first migration boundary",
+          "npm run typecheck",
+          "npm run test:features",
+          "npm run test:smoke"
+        ]
+      },
+      "delta": {
+        "desired": "The accepted concept-root direction has a durable next-step decision/planning boundary.\nRefinement: Additional outcome: Maintainers can review intended structure, current structure, approved migration deltas, and actionable file-structure drift through an existing human-visible CodeWiki surface.\nRefinement: The accepted human-driven structure review surface has executable UI/status work queued.",
+        "current": "The decision build asks which concept root should migrate first; no durable roadmap item owned that question after TASK-010 closed.\nRefinement: TASK-010 exposed graph/audit data only; no human UI/report surface task remained open.",
+        "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
+      },
+      "created": "2026-05-23",
+      "updated": "2026-05-23T01:49:52Z"
+    },
+    "TASK-013": {
+      "id": "TASK-013",
+      "title": "Render file-structure drift in CodeWiki UI",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "feature",
+      "summary": "Present TASK-010 intended/current file-structure drift data in an existing CodeWiki UI or status surface for human review.",
+      "spec_paths": [
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/product/overview.md"
+      ],
+      "code_paths": [
+        "src/ui",
+        "tests/features"
+      ],
+      "research_ids": [],
+      "labels": [
+        "ui",
+        "human-review",
+        "status-surface"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Maintainers can review intended structure, current structure, approved migration deltas, and actionable file-structure drift through an existing human-visible CodeWiki surface.",
+        "acceptance": [
+          "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+          "Approved migration deltas are visually/report-wise separate from actionable drift.",
+          "Source paths and canonical refs are available for every displayed claim.",
+          "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+          "Existing public package behavior remains compatible."
+        ],
+        "non_goals": [
+          "Do not migrate source files.",
+          "Do not make generated UI output canonical truth.",
+          "Do not add a broad new product mode beyond the review surface."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:features",
+          "npm run test:smoke",
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed"
+        ]
+      },
+      "delta": {
+        "desired": "The accepted human-driven structure review surface has executable UI/status work queued.",
+        "current": "TASK-010 exposed graph/audit data only; no human UI/report surface task remained open.",
+        "closure": "Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
+      },
+      "created": "2026-05-23",
+      "updated": "2026-05-23"
+    },
+    "TASK-014": {
+      "id": "TASK-014",
+      "title": "Select first concept-root migration boundary",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "architecture",
+      "summary": "Resolve the accepted concept-root migration direction into a concrete first migration target and staged compatibility plan using the file-structure drift lens.",
+      "spec_paths": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "code_paths": [
+        "src/domain",
+        "src/application",
+        "src/adapters",
+        "tests/smoke"
+      ],
+      "research_ids": [],
+      "labels": [
+        "concept-root",
+        "migration-planning",
+        "source-ownership"
+      ],
+      "change_type": "task",
+      "goal": {
+        "outcome": "Maintainers have a durable, approved first concept-root migration boundary and staged compatibility plan instead of an unresolved open question.",
+        "acceptance": [
+          "Drift-lens evidence is used to compare candidate first concepts such as session, state, roadmap, build, validation, audit, project, and agency.",
+          "Decision/planning evidence records the chosen first migration target or explicitly defers migration with owner, trigger, and rationale.",
+          "Compatibility constraints are listed, including public package behavior, barrels/exports, tests, and recent compatibility guarantees.",
+          "Resulting implementation task boundaries are created/refined only after the chosen first target is approved.",
+          "No source files are moved during this task."
+        ],
+        "non_goals": [
+          "Do not migrate source files.",
+          "Do not create an umbrella task that only closes other tasks.",
+          "Do not change public package behavior."
+        ],
+        "verification": [
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+          "decision/planning validation for selected first migration boundary"
+        ]
+      },
+      "delta": {
+        "desired": "The accepted concept-root direction has a durable next-step decision/planning boundary.",
+        "current": "The file-structure decision asks which concept root should migrate first; no durable roadmap item owned that question after TASK-010 closed.",
+        "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale."
+      },
+      "created": "2026-05-23",
+      "updated": "2026-05-23"
+    }
+  },
   "sprints": {
     "SPRINT-001": {
       "id": "SPRINT-001",
@@ -50,6 +305,52 @@
       ],
       "created": "2026-05-19T00:47:24Z",
       "updated": "2026-05-19T07:46:57Z"
+    },
+    "SPRINT-002": {
+      "id": "SPRINT-002",
+      "title": "Decision propagation and file-structure follow-through",
+      "status": "active",
+      "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
+      "task_ids": [
+        "TASK-011",
+        "TASK-013",
+        "TASK-014"
+      ],
+      "created": "2026-05-23T01:51:02Z",
+      "updated": "2026-05-23T01:51:02Z",
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/control-room-ui.md",
+          ".codewiki/kb/product/overview.md"
+        ],
+        "code": [
+          "src/application/builds.ts",
+          "src/application/graph.ts",
+          "src/application/state.ts",
+          "src/application/state-builders.ts",
+          "src/application/tools/audit.ts",
+          "src/domain/audit/types.ts",
+          "src/domain/build/types.ts",
+          "src/ui",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          "tests"
+        ]
+      },
+      "budget": {
+        "maxCycles": 6,
+        "maxSessions": 6,
+        "risk": "high"
+      },
+      "gates": [
+        "TASK-011 must land before future planning builds can be trusted to enforce complete decision propagation.",
+        "TASK-013 and TASK-014 preserve the accepted file-structure decision as durable follow-up work; they may be reprioritized after TASK-011 but must not disappear into open questions.",
+        "Each implementation task must produce implementation_build and fresh validation evidence before close."
+      ]
     }
   }
 }

@@ -1,0 +1,51 @@
+{
+  "id": "TASK-013",
+  "title": "Render file-structure drift in CodeWiki UI",
+  "status": "todo",
+  "priority": "medium",
+  "kind": "feature",
+  "summary": "Present TASK-010 intended/current file-structure drift data in an existing CodeWiki UI or status surface for human review.",
+  "spec_paths": [
+    ".codewiki/kb/system/control-room-ui.md",
+    ".codewiki/kb/product/overview.md"
+  ],
+  "code_paths": [
+    "src/ui",
+    "tests/features"
+  ],
+  "research_ids": [],
+  "labels": [
+    "ui",
+    "human-review",
+    "status-surface"
+  ],
+  "change_type": "code",
+  "goal": {
+    "outcome": "Maintainers can review intended structure, current structure, approved migration deltas, and actionable file-structure drift through an existing human-visible CodeWiki surface.",
+    "acceptance": [
+      "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+      "Approved migration deltas are visually/report-wise separate from actionable drift.",
+      "Source paths and canonical refs are available for every displayed claim.",
+      "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+      "Existing public package behavior remains compatible."
+    ],
+    "non_goals": [
+      "Do not migrate source files.",
+      "Do not make generated UI output canonical truth.",
+      "Do not add a broad new product mode beyond the review surface."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:features",
+      "npm run test:smoke",
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,changed"
+    ]
+  },
+  "delta": {
+    "desired": "The accepted human-driven structure review surface has executable UI/status work queued.",
+    "current": "TASK-010 exposed graph/audit data only; no human UI/report surface task remained open.",
+    "closure": "Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
+  },
+  "created": "2026-05-23",
+  "updated": "2026-05-23"
+}

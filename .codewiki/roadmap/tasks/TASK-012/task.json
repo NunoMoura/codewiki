@@ -1,0 +1,79 @@
+{
+  "id": "TASK-012",
+  "title": "Select first concept-root migration boundary",
+  "status": "cancelled",
+  "priority": "medium",
+  "kind": "architecture",
+  "summary": "Cancelled auto-merged non-atomic file-structure follow-up task produced by over-broad create de-duplication; will recreate split tasks with narrower scopes.",
+  "spec_paths": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    ".codewiki/validation/2026-05-23-planning-fail.json",
+    ".codewiki/kb/product/overview.md",
+    ".codewiki/kb/system/control-room-ui.md"
+  ],
+  "code_paths": [
+    "src/application",
+    "src/domain",
+    "src/adapters",
+    "src/ui",
+    "tests",
+    "src/application/state.ts",
+    "src/application/state-builders.ts",
+    "src/application/graph.ts",
+    "src/application/tools/audit.ts",
+    "tests/features"
+  ],
+  "research_ids": [],
+  "labels": [
+    "file-structure",
+    "concept-root",
+    "migration-planning",
+    "human-decision",
+    "ui",
+    "human-review",
+    "drift-lens",
+    "status-surface"
+  ],
+  "change_type": "task",
+  "goal": {
+    "outcome": "Maintainers have a durable, approved first concept-root migration boundary and staged compatibility plan instead of an unresolved open question.",
+    "acceptance": [
+      "Drift-lens evidence is used to compare candidate first concepts such as session, state, roadmap, build, validation, audit, project, and agency.",
+      "Decision/planning evidence records the chosen first migration target or explicitly defers migration with owner, trigger, and rationale.",
+      "Compatibility constraints are listed, including public package behavior, barrels/exports, tests, and recent compatibility guarantees.",
+      "Resulting implementation task boundaries are created/refined only after the chosen first target is approved.",
+      "No source files are moved during this task.",
+      "The surface consumes generated graph/status/audit drift data from TASK-010 rather than duplicating file-structure truth.",
+      "Approved migration deltas are visually/report-wise separate from actionable drift.",
+      "Source paths and canonical diagram/KB refs are available for every displayed claim.",
+      "No new user-facing command is added unless existing UI/status surfaces cannot host the data safely.",
+      "Existing public package behavior and audit behavior remain compatible.",
+      "The surface consumes generated graph/status/audit drift data rather than duplicating file-structure truth.",
+      "Source paths and canonical refs are available for every displayed claim.",
+      "Existing public package behavior remains compatible."
+    ],
+    "non_goals": [
+      "Do not migrate source files.",
+      "Do not create an umbrella task that only closes other tasks.",
+      "Do not change public package behavior.",
+      "Do not make generated UI output canonical truth.",
+      "Do not add a broad new product mode beyond the review surface."
+    ],
+    "verification": [
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+      "decision/planning validation for selected first migration boundary",
+      "npm run typecheck",
+      "npm run test:features",
+      "npm run test:smoke"
+    ]
+  },
+  "delta": {
+    "desired": "The accepted concept-root direction has a durable next-step decision/planning boundary.\nRefinement: Additional outcome: Maintainers can review intended structure, current structure, approved migration deltas, and actionable file-structure drift through an existing human-visible CodeWiki surface.\nRefinement: The accepted human-driven structure review surface has executable UI/status work queued.",
+    "current": "The decision build asks which concept root should migrate first; no durable roadmap item owned that question after TASK-010 closed.\nRefinement: TASK-010 exposed graph/audit data only; no human UI/report surface task remained open.",
+    "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
+  },
+  "created": "2026-05-23",
+  "updated": "2026-05-23T01:49:52Z"
+}
