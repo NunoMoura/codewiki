@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "updated": "2026-05-24T06:55:19Z",
+  "updated": "2026-05-24T07:01:30Z",
   "order": [
     "TASK-012",
-    "TASK-014",
     "TASK-015"
   ],
   "tasks": {
@@ -85,58 +84,6 @@
       },
       "created": "2026-05-23",
       "updated": "2026-05-23T01:49:52Z"
-    },
-    "TASK-014": {
-      "id": "TASK-014",
-      "title": "Select first concept-root migration boundary",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "architecture",
-      "summary": "Resolve the accepted concept-root migration direction into a concrete first migration target and staged compatibility plan using the file-structure drift lens.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
-      ],
-      "code_paths": [
-        "src/domain",
-        "src/application",
-        "src/adapters",
-        "tests/smoke"
-      ],
-      "research_ids": [],
-      "labels": [
-        "concept-root",
-        "migration-planning",
-        "source-ownership"
-      ],
-      "change_type": "task",
-      "goal": {
-        "outcome": "Maintainers have a durable, approved first concept-root migration boundary and staged compatibility plan instead of an unresolved open question.",
-        "acceptance": [
-          "Drift-lens evidence is used to compare candidate first concepts such as session, state, roadmap, build, validation, audit, project, and agency.",
-          "Decision/planning evidence records the chosen first migration target or explicitly defers migration with owner, trigger, and rationale.",
-          "Compatibility constraints are listed, including public package behavior, barrels/exports, tests, and recent compatibility guarantees.",
-          "Resulting implementation task boundaries are created/refined only after the chosen first target is approved.",
-          "No source files are moved during this task."
-        ],
-        "non_goals": [
-          "Do not migrate source files.",
-          "Do not create an umbrella task that only closes other tasks.",
-          "Do not change public package behavior."
-        ],
-        "verification": [
-          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed",
-          "decision/planning validation for selected first migration boundary"
-        ]
-      },
-      "delta": {
-        "desired": "The accepted concept-root direction has a durable next-step decision/planning boundary.",
-        "current": "The file-structure decision asks which concept root should migrate first; no durable roadmap item owned that question after TASK-010 closed.",
-        "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale."
-      },
-      "created": "2026-05-23",
-      "updated": "2026-05-24T06:55:19Z"
     },
     "TASK-015": {
       "id": "TASK-015",
