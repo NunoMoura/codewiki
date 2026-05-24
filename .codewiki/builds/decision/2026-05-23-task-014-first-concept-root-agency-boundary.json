@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-23T20:13:21Z",
+  "source": "TASK-014 decision compiler; user approved all FCB rows in chat after reviewing drift-lens candidate comparison.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-22T20:13:21.000Z",
+    "purge_after": "2026-07-22T20:13:21.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "attempt": "TASK-014 approved first boundary",
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Semantic migration boundary needs independent validation before planning handoff.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": [
+          "decision"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Planning must start from accepted decision build and updated KB.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": [
+          "planning"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "FCB-REQ-1",
+      "text": "Select the first concept-root migration boundary using drift-lens evidence across candidate concepts.",
+      "source_refs": [
+        "TASK-014",
+        "DT-TASK-014-FIRST-CONCEPT-ROOT:FCB-AGENCY-FIRST"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "FCB-REQ-2",
+      "text": "Bind the selected first boundary to compatibility constraints covering package behavior, entrypoints, adapters, tests, direct Node execution, and package loading.",
+      "source_refs": [
+        "TASK-014",
+        "DT-TASK-014-FIRST-CONCEPT-ROOT:FCB-COMPATIBILITY-CONSTRAINTS"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "FCB-REQ-3",
+      "text": "Create/refine implementation task boundaries only after the selected first target is approved, and do not move source files during TASK-014.",
+      "source_refs": [
+        "TASK-014",
+        "DT-TASK-014-FIRST-CONCEPT-ROOT:FCB-STAGE-BOUNDARY"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "FCB-REQ-4",
+      "text": "Explicitly defer heavier concept roots with owner, trigger, and rationale until agency pilot evidence exists.",
+      "source_refs": [
+        "TASK-014",
+        "DT-TASK-014-FIRST-CONCEPT-ROOT:FCB-DEFER-HEAVY-CONCEPTS"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Drift-lens evidence compares candidate first concepts.",
+      "evidence": "Agency has the smallest complete vertical slice among candidates: 3 concept files, 9 incoming import edges, 5 outgoing import edges, and 3 smoke-test touchpoints; state/roadmap/session/project have broader import and test coupling; audit has /audit public-command risk; build/validation are gateway-critical.",
+      "requirement_ids": [
+        "FCB-REQ-1"
+      ],
+      "source_refs": [
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        ".codewiki/kb/system/file-structure.md"
+      ]
+    },
+    {
+      "criterion": "Compatibility constraints are durable.",
+      "evidence": ".codewiki/kb/system/file-structure.md now records package behavior, package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, typecheck, smoke/feature/package checks, and test-backed temporary compatibility shims as agency-pilot gates.",
+      "requirement_ids": [
+        "FCB-REQ-2"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        "file-structure-map:migration_compatibility_constraints"
+      ]
+    },
+    {
+      "criterion": "Implementation boundary waits for approval and excludes source moves in TASK-014.",
+      "evidence": "No source files were moved in TASK-014; only KB/diagram/build/roadmap planning artifacts are produced. Planning may create one agency-pilot implementation task after this accepted decision.",
+      "requirement_ids": [
+        "FCB-REQ-3"
+      ],
+      "source_refs": [
+        "TASK-014",
+        "file-structure-map:first_concept_root_pilot"
+      ]
+    },
+    {
+      "criterion": "Deferrals include owner, trigger, and rationale.",
+      "evidence": "Maintainers own deferred heavy concepts; trigger is closed agency pilot with task-close validation and compatibility evidence; rationale is to learn import/barrel/package cost from the low-blast-radius pilot before moving audit/build/validation/session/roadmap/state/project.",
+      "requirement_ids": [
+        "FCB-REQ-4"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        "file-structure-map:deferred_concept_roots"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Select agency as first concept-root migration boundary",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "FCB-AGENCY-FIRST",
+      "current_state": "The accepted concept-root target names agency as a target root, but agency code remains split across src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts; adapters call these paths directly, and no durable first migration target is selected.",
+      "desired_state": "Select agency as the first concept-root migration boundary: src/agency/** should be the pilot concept root, containing agency model/types, planning use case, and tool/API entrypoint, while adapters/ui continue to call stable exported entrypoints during a staged migration.",
+      "rationale": "Drift-lens comparison favors agency as the smallest complete vertical slice among candidates: 3 concept files, 9 incoming import edges, 5 outgoing import edges, and 3 smoke-test touchpoints. It exercises the target model+use-case+tool shape without moving central graph/state/roadmap/build/validation/project infrastructure first.",
+      "affected_layers": [
+        "system-kb",
+        "roadmap",
+        "source",
+        "tests",
+        "package-api"
+      ],
+      "risk": "medium migration risk; mitigated by pilot size and compatibility gates.",
+      "user_action": "approved",
+      "alternatives": [
+        "Audit first has /audit public-command risk.",
+        "Build/validation first touches compiler/gateway-critical paths.",
+        "Session/state/roadmap/project first have broader coupling."
+      ]
+    },
+    {
+      "id": "FCB-COMPATIBILITY-CONSTRAINTS",
+      "current_state": "The file-structure target already requires preserved public package behavior, compatibility exports, direct Node execution, package loading, and TypeScript checks, but TASK-014 has not yet bound those constraints to the first migration pilot.",
+      "desired_state": "Bind the agency pilot to explicit compatibility gates: no public package behavior change, no package entrypoint change, no adapter schema/tool behavior change, compatibility barrels/re-export shims as needed, direct Node execution preserved, package loading preserved, typecheck plus smoke/feature/package checks run, and no cleanup of old paths until tests and import updates prove parity.",
+      "rationale": "Recent compatibility guarantees and package smoke coverage must survive source moves.",
+      "affected_layers": [
+        "system-kb",
+        "tests",
+        "package-api",
+        "validation"
+      ],
+      "risk": "medium shim-staleness risk; mitigate by time-boxing shims and requiring tests.",
+      "user_action": "approved",
+      "alternatives": [
+        "Atomic import update only.",
+        "Delay until broader API facade exists.",
+        "Rely on package smoke only."
+      ]
+    },
+    {
+      "id": "FCB-STAGE-BOUNDARY",
+      "current_state": "No implementation task currently owns a concept-root source move after TASK-014; creating one before approval would violate TASK-014 acceptance.",
+      "desired_state": "After approval, create one implementation task for the agency pilot only. Boundary: move/introduce src/agency/**, update imports/barrels/adapters/tests for agency, preserve compatibility, run typecheck/smoke/feature/package checks, and do not migrate audit/build/validation/session/state/roadmap/project in the same task.",
+      "rationale": "A single pilot task is executable and independently validatable.",
+      "affected_layers": [
+        "roadmap",
+        "source",
+        "tests",
+        "validation"
+      ],
+      "risk": "medium; pilot may not expose all issues but provides evidence for next ordering.",
+      "user_action": "approved",
+      "alternatives": [
+        "All-concept sprint now.",
+        "No task/defer all migration.",
+        "Migrate agency and audit together."
+      ]
+    },
+    {
+      "id": "FCB-DEFER-HEAVY-CONCEPTS",
+      "current_state": "State, roadmap, session, build, validation, audit, and project are all target concepts, but their current import/test coupling varies widely and no staged order is recorded.",
+      "desired_state": "Defer heavier concepts until after the agency pilot closes. Proposed second-wave decision trigger: agency migration validates compatibility gates and reveals import/barrel cleanup cost. Candidate next targets after pilot: audit if /audit compatibility risk is understood, then build/validation, then session/roadmap/state/project only after shared API/import patterns stabilize.",
+      "rationale": "Unmigrated roots remain approved migration deltas when owner, trigger, and rationale are recorded.",
+      "affected_layers": [
+        "system-kb",
+        "roadmap",
+        "validation"
+      ],
+      "risk": "low-medium stall risk; mitigated by maintainer owner and pilot-close trigger.",
+      "user_action": "approved",
+      "alternatives": [
+        "Audit first now.",
+        "Defer all indefinitely.",
+        "Set full order now."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "FCB-AGENCY-FIRST",
+    "FCB-COMPATIBILITY-CONSTRAINTS",
+    "FCB-STAGE-BOUNDARY",
+    "FCB-DEFER-HEAVY-CONCEPTS"
+  ],
+  "approved_rows": [
+    {
+      "id": "FCB-AGENCY-FIRST",
+      "current_state": "The accepted concept-root target names agency as a target root, but agency code remains split across src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts; adapters call these paths directly, and no durable first migration target is selected.",
+      "desired_state": "Select agency as the first concept-root migration boundary: src/agency/** should be the pilot concept root, containing agency model/types, planning use case, and tool/API entrypoint, while adapters/ui continue to call stable exported entrypoints during a staged migration.",
+      "rationale": "Drift-lens comparison favors agency as the smallest complete vertical slice among candidates: 3 concept files, 9 incoming import edges, 5 outgoing import edges, and 3 smoke-test touchpoints. It exercises the target model+use-case+tool shape without moving central graph/state/roadmap/build/validation/project infrastructure first.",
+      "affected_layers": [
+        "system-kb",
+        "roadmap",
+        "source",
+        "tests",
+        "package-api"
+      ],
+      "risk": "medium migration risk; mitigated by pilot size and compatibility gates.",
+      "user_action": "approved",
+      "alternatives": [
+        "Audit first has /audit public-command risk.",
+        "Build/validation first touches compiler/gateway-critical paths.",
+        "Session/state/roadmap/project first have broader coupling."
+      ]
+    },
+    {
+      "id": "FCB-COMPATIBILITY-CONSTRAINTS",
+      "current_state": "The file-structure target already requires preserved public package behavior, compatibility exports, direct Node execution, package loading, and TypeScript checks, but TASK-014 has not yet bound those constraints to the first migration pilot.",
+      "desired_state": "Bind the agency pilot to explicit compatibility gates: no public package behavior change, no package entrypoint change, no adapter schema/tool behavior change, compatibility barrels/re-export shims as needed, direct Node execution preserved, package loading preserved, typecheck plus smoke/feature/package checks run, and no cleanup of old paths until tests and import updates prove parity.",
+      "rationale": "Recent compatibility guarantees and package smoke coverage must survive source moves.",
+      "affected_layers": [
+        "system-kb",
+        "tests",
+        "package-api",
+        "validation"
+      ],
+      "risk": "medium shim-staleness risk; mitigate by time-boxing shims and requiring tests.",
+      "user_action": "approved",
+      "alternatives": [
+        "Atomic import update only.",
+        "Delay until broader API facade exists.",
+        "Rely on package smoke only."
+      ]
+    },
+    {
+      "id": "FCB-STAGE-BOUNDARY",
+      "current_state": "No implementation task currently owns a concept-root source move after TASK-014; creating one before approval would violate TASK-014 acceptance.",
+      "desired_state": "After approval, create one implementation task for the agency pilot only. Boundary: move/introduce src/agency/**, update imports/barrels/adapters/tests for agency, preserve compatibility, run typecheck/smoke/feature/package checks, and do not migrate audit/build/validation/session/state/roadmap/project in the same task.",
+      "rationale": "A single pilot task is executable and independently validatable.",
+      "affected_layers": [
+        "roadmap",
+        "source",
+        "tests",
+        "validation"
+      ],
+      "risk": "medium; pilot may not expose all issues but provides evidence for next ordering.",
+      "user_action": "approved",
+      "alternatives": [
+        "All-concept sprint now.",
+        "No task/defer all migration.",
+        "Migrate agency and audit together."
+      ]
+    },
+    {
+      "id": "FCB-DEFER-HEAVY-CONCEPTS",
+      "current_state": "State, roadmap, session, build, validation, audit, and project are all target concepts, but their current import/test coupling varies widely and no staged order is recorded.",
+      "desired_state": "Defer heavier concepts until after the agency pilot closes. Proposed second-wave decision trigger: agency migration validates compatibility gates and reveals import/barrel cleanup cost. Candidate next targets after pilot: audit if /audit compatibility risk is understood, then build/validation, then session/roadmap/state/project only after shared API/import patterns stabilize.",
+      "rationale": "Unmigrated roots remain approved migration deltas when owner, trigger, and rationale are recorded.",
+      "affected_layers": [
+        "system-kb",
+        "roadmap",
+        "validation"
+      ],
+      "risk": "low-medium stall risk; mitigated by maintainer owner and pilot-close trigger.",
+      "user_action": "approved",
+      "alternatives": [
+        "Audit first now.",
+        "Defer all indefinitely.",
+        "Set full order now."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Select agency as the first concept-root migration boundary: src/agency/** should be the pilot concept root, containing agency model/types, planning use case, and tool/API entrypoint, while adapters/ui continue to call stable exported entrypoints during a staged migration."
+    },
+    {
+      "id": "D2",
+      "summary": "Bind the agency pilot to explicit compatibility gates: no public package behavior change, no package entrypoint change, no adapter schema/tool behavior change, compatibility barrels/re-export shims as needed, direct Node execution preserved, package loading preserved, typecheck plus smoke/feature/package checks run, and no cleanup of old paths until tests and import updates prove parity."
+    },
+    {
+      "id": "D3",
+      "summary": "After approval, create one implementation task for the agency pilot only. Boundary: move/introduce src/agency/**, update imports/barrels/adapters/tests for agency, preserve compatibility, run typecheck/smoke/feature/package checks, and do not migrate audit/build/validation/session/state/roadmap/project in the same task."
+    },
+    {
+      "id": "D4",
+      "summary": "Defer heavier concepts until after the agency pilot closes. Proposed second-wave decision trigger: agency migration validates compatibility gates and reveals import/barrel cleanup cost. Candidate next targets after pilot: audit if /audit compatibility risk is understood, then build/validation, then session/roadmap/state/project only after shared API/import patterns stabilize."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "FCB-AGENCY-FIRST",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:first_concept_root_pilot"
+      ],
+      "evidence": "File-structure KB and diagram now record agency as approved first concept-root pilot.",
+      "deferred": false
+    },
+    {
+      "row_id": "FCB-COMPATIBILITY-CONSTRAINTS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:migration_compatibility_constraints"
+      ],
+      "evidence": "File-structure KB and diagram now record compatibility gates for the agency pilot.",
+      "deferred": false
+    },
+    {
+      "row_id": "FCB-STAGE-BOUNDARY",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:first_concept_root_pilot"
+      ],
+      "evidence": "File-structure KB records one-pilot-only boundary; planning will create one implementation task after decision approval.",
+      "deferred": false
+    },
+    {
+      "row_id": "FCB-DEFER-HEAVY-CONCEPTS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        "file-structure-map:deferred_concept_roots"
+      ],
+      "evidence": "File-structure KB and diagram record maintainer-owned deferral with agency-pilot-close trigger and rationale.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "Agency is the first concept-root migration boundary.",
+      "Compatibility gates for concept-root migrations are explicit.",
+      "Heavier concept roots are deferred with maintainer owner and agency-pilot-close trigger."
+    ],
+    "no_product_impact": "No public package behavior or product UX changes are approved; decision only selects internal migration ordering and compatibility constraints.",
+    "downstream_planning_questions": [
+      "Create one agency-pilot implementation task with compatibility gates.",
+      "Defer later concept-root ordering until agency pilot validation evidence exists."
+    ]
+  },
+  "diagram_refs": [
+    "file-structure-map:first_concept_root_pilot",
+    "file-structure-map:migration_compatibility_constraints",
+    "file-structure-map:deferred_concept_roots"
+  ],
+  "downstream_planning_questions": [
+    "Create one agency-pilot implementation task with compatibility gates.",
+    "Defer later concept-root ordering until agency pilot validation evidence exists."
+  ],
+  "assumptions": [
+    "Agency remains lower blast radius than audit/build/validation/session/state/roadmap/project for the first pilot.",
+    "Later root order should use agency pilot evidence rather than being fully precommitted now."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No source files moved during TASK-014.",
+    "No public package behavior change.",
+    "No umbrella migration task.",
+    "No migration of non-agency concept roots in the pilot."
+  ],
+  "risks": [
+    "Concept-root migration remains medium risk and must be implemented by a later task with compatibility proof.",
+    "Compatibility shims can become stale unless the implementation task keeps them temporary and test-backed."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": null,
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-014"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "src/domain/agency/types.ts",
+      "src/application/agency.ts",
+      "src/application/tools/agency.ts"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [
+      "TASK-014"
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

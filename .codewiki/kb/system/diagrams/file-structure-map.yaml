@@ -80,6 +80,18 @@ nodes:
       - src/session/**
       - src/state/**
       - src/validation/**
+  - id: first_concept_root_pilot
+    label: Agency concept-root pilot
+    group: source_target
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: approved_first_migration_boundary
+    paths:
+      - src/agency/**
+      - src/domain/agency/types.ts
+      - src/application/agency.ts
+      - src/application/tools/agency.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -198,6 +210,38 @@ nodes:
     kind: component
     source: .codewiki/kb/product/overview.md
     status: accepted_target
+  - id: migration_compatibility_constraints
+    label: Migration compatibility constraints
+    group: drift
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: required_for_migration
+    constraints:
+      - preserve_public_package_behavior
+      - preserve_package_entrypoints
+      - preserve_adapter_schema_and_tool_behavior
+      - preserve_direct_node_execution
+      - preserve_package_loading
+      - require_typecheck_smoke_feature_package_checks
+      - keep_compatibility_shims_test_backed_and_temporary
+  - id: deferred_concept_roots
+    label: Deferred concept roots after agency pilot
+    group: drift
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: deferred_until_agency_pilot_closes
+    owner: maintainers
+    trigger: agency pilot task-close validation and compatibility evidence
+    paths:
+      - src/audit/**
+      - src/build/**
+      - src/validation/**
+      - src/session/**
+      - src/roadmap/**
+      - src/state/**
+      - src/project/**
 edges:
   - id: intended_defines_current
     from: intended_file_structure
@@ -211,6 +255,18 @@ edges:
     from: current_layered_source
     to: concept_root_target
     label: approved migration delta
+  - id: agency_selected_first
+    from: concept_root_target
+    to: first_concept_root_pilot
+    label: first approved migration boundary
+  - id: pilot_uses_compatibility_constraints
+    from: migration_compatibility_constraints
+    to: first_concept_root_pilot
+    label: gates source move
+  - id: heavy_roots_wait_for_pilot
+    from: deferred_concept_roots
+    to: first_concept_root_pilot
+    label: deferred until pilot evidence exists
   - id: concept_target_exposed_by_api
     from: concept_root_target
     to: api_facade

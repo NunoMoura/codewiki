@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-24T04:12:34Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-015/context.json",
+  "task": {
+    "id": "TASK-015",
+    "title": "Implement agency pilot source root",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "migration",
+    "change_type": "code",
+    "summary": "Implement the approved agency source-root pilot under src/agency/** with compatibility checks before any other concept-root moves.",
+    "labels": [
+      "concept-root",
+      "agency-pilot",
+      "compatibility",
+      "migration"
+    ],
+    "goal": {
+      "outcome": "Agency becomes the validated pilot source root under src/agency/** while existing package and adapter behavior remain compatible.",
+      "acceptance": [
+        "src/agency/** owns the agency model/types, agency planning use case, and agency tool/API entrypoint or equivalent temporary facade.",
+        "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+        "Any old-path compatibility shim is temporary, test-backed, and limited to agency parity.",
+        "No non-agency concept root is moved in this task.",
+        "File-structure audit has no new actionable drift after the pilot."
+      ],
+      "non_goals": [
+        "Do not move audit, build, validation, session, state, roadmap, project, knowledge, gateway, GC, adapters, UI, or skills.",
+        "Do not change public commands, tool schemas, package entrypoints, or product behavior.",
+        "Do not remove compatibility shims before validation proves parity."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed"
+      ]
+    },
+    "delta": {
+      "desired": "Agency is reachable through src/agency/** as the first approved source-root pilot while compatibility remains intact.",
+      "current": "Agency behavior is split across layer-first source paths and imported through current application/domain paths.",
+      "closure": "Task closes after implementation validation and task-close proof show agency pilot parity with required compatibility checks."
+    }
+  }
+}

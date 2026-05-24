@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-23",
+  "generated_at": "2026-05-24T04:14:54Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-014/context.json",
   "task": {
     "id": "TASK-014",
     "title": "Select first concept-root migration boundary",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "architecture",
     "change_type": "task",
@@ -30,7 +30,7 @@
         "Do not change public package behavior."
       ],
       "verification": [
-        "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed",
         "decision/planning validation for selected first migration boundary"
       ]
     },

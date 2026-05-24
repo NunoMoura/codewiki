@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-22"
+updated: "2026-05-23"
 code_paths:
   - .codewiki/kb
   - src
@@ -15,6 +15,9 @@ diagram_refs:
   - file-structure-map:current_layered_source
   - file-structure-map:concept_root_target
   - file-structure-map:structure_drift_lens
+  - file-structure-map:first_concept_root_pilot
+  - file-structure-map:migration_compatibility_constraints
+  - file-structure-map:deferred_concept_roots
 ---
 
 # File Structure
@@ -185,6 +188,12 @@ src/{adapters,ui}/
 
 Primary deltas are `domain/session` + `application/session|claims|worktree-isolation` to `session`, `domain/state` + `application/state*|graph|resume-context` to `state`, roadmap/build/validation/audit pairs to matching roots, `application/knowledge` to `knowledge`, `application/tools` to an `api` facade plus concept-owned tool entrypoints, and `application/local` to concept-owned local implementations or truly cross-cutting shared ports.
 
+The first approved concept-root migration boundary is `agency`. The pilot should move or introduce the agency concept root under `src/agency/**`, covering the current agency model/types, agency planning use case, and agency tool/API entrypoint now split across `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts`. The pilot must not migrate audit, build, validation, session, state, roadmap, project, knowledge, gateway, GC, adapters, UI, or skills in the same implementation task.
+
+The agency pilot must preserve public package behavior, package entrypoints, adapter schema/tool behavior, direct Node execution, package loading, TypeScript typechecking, and smoke/feature/package test coverage. Compatibility barrels or re-export shims may exist during the pilot only when they preserve existing imports and are backed by tests; cleanup of old agency paths must wait until parity evidence passes. The pilot is the compatibility pattern for later concept-root migrations, not a license to create a broad compatibility layer.
+
+Heavier concept roots remain explicitly deferred, not accidental drift. Maintainers own the deferral. The trigger for selecting the next root is a closed agency pilot with task-close validation and compatibility evidence. After that trigger, candidate next roots should be reconsidered with pilot evidence: audit if `/audit` compatibility risk is understood, then build/validation, then session/roadmap/state/project only after shared API/import patterns are stable.
+
 Skill assets own agent workflow guidance under `skills/codewiki*/**`; source may execute those workflows through API/concept entrypoints, but skills remain the asset owner. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics. Future adapters such as `src/adapters/cli/**` or `src/adapters/mcp/**` require an implementation need.
 
 ## Dependency direction
@@ -210,7 +219,7 @@ Rules:
 
 The repository no longer contains transitional `core/**` or `engine/**` source folders. Generated task shards remain runtime outputs, not target source architecture.
 
-The repository does contain an approved concept-root migration delta from the current `src/domain/**` + `src/application/**` split toward `src/<concept>/**` ownership. Until the deterministic drift lens lands, audits should treat this as planned delta rather than accidental drift. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking throughout the move.
+The repository does contain an approved concept-root migration delta from the current `src/domain/**` + `src/application/**` split toward `src/<concept>/**` ownership. The deterministic drift lens should treat unmigrated concept roots as planned deltas when they have an approved boundary, owner, trigger, and rationale. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking throughout the move.
 
 Runtime checks must cover direct Node execution and package loading, not only TypeScript typechecking.
 

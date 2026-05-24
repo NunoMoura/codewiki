@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-24T04:14:38Z",
+  "profile": "planning",
+  "task_id": "TASK-014",
+  "verdict": "pass",
+  "rationale": "TASK-014 planning passes. The planning build consumes the validated agency-boundary decision, maps every approved FCB row either to knowledge-only completion, TASK-015 implementation work, or explicit maintainer-owned deferral, and keeps TASK-014 as a decision/planning task with no source moves. TASK-015 is a single executable agency-pilot migration task rather than an umbrella task, with compatibility acceptance and verification gates.",
+  "checks": [
+    "Read .codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+    "Read .codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+    "Read .codewiki/roadmap/tasks/TASK-014/task.json",
+    "Read .codewiki/roadmap/tasks/TASK-015/task.json",
+    "Read .codewiki/kb/system/file-structure.md and file-structure-map.yaml",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014",
+    "codewiki_validation preflight_only=true profile=planning task_id=TASK-014: ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due graph-health warnings unrelated to TASK-014 planning."
+    },
+    {
+      "severity": "low",
+      "summary": "Changed generated view warnings remain until final rebuild/commit captures generated state."
+    },
+    {
+      "severity": "low",
+      "summary": "Initial codewiki_task create attempted to refine TASK-014; subsequent update restored TASK-014 scope and created TASK-015 as separate executable follow-up."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment",
+    "file-structure",
+    "stale-reference",
+    "generated-parity",
+    "changed",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task",
+    "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warnings generated dirty state; alignment graph-health warnings remain"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "changed",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "task_id": "TASK-014",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Planning validation checks source refs and roadmap task boundary before commit; no source files moved.",
+    "role": "validator"
+  }
+}

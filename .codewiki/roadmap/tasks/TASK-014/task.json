@@ -1,13 +1,14 @@
 {
   "id": "TASK-014",
   "title": "Select first concept-root migration boundary",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "medium",
   "kind": "architecture",
   "summary": "Resolve the accepted concept-root migration direction into a concrete first migration target and staged compatibility plan using the file-structure drift lens.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
-    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
   ],
   "code_paths": [
     "src/domain",
@@ -37,7 +38,7 @@
       "Do not change public package behavior."
     ],
     "verification": [
-      "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed",
       "decision/planning validation for selected first migration boundary"
     ]
   },
@@ -47,5 +48,5 @@
     "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-23"
+  "updated": "2026-05-24T04:14:54Z"
 }
