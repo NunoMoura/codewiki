@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-24T07:07:45.148Z",
+  "generated_at": "2026-05-24T20:46:19.875Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -3695,7 +3695,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3797,7 +3797,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3857,7 +3857,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3865,7 +3865,7 @@
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3890,7 +3890,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3956,7 +3956,7 @@
       "kind": "code_path",
       "path": "src/domain",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -3990,7 +3990,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/schemas.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4251,7 +4251,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/tools",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4413,7 +4413,7 @@
       "kind": "code_path",
       "path": "src/domain/agency/types.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4421,7 +4421,7 @@
       "kind": "code_path",
       "path": "src/application/agency.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4429,7 +4429,7 @@
       "kind": "code_path",
       "path": "src/application/tools/agency.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4437,7 +4437,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/tools/agency.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -12957,6 +12957,260 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "title": "TASK-015 implementation from validated TASK-014 planning build.",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-015",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "src/domain/agency/types.ts",
+          "src/application/agency.ts",
+          "src/application/tools/agency.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/schemas.ts",
+          "TASK-015 implementation from validated TASK-014 planning build.",
+          "src/agency/types.ts",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/control-room.test.mjs",
+          "TASK-015"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:file-structure",
+          "profile:stale-reference",
+          "profile:generated-parity",
+          "profile:task"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+          "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+          "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+          "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+          "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+          "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+          "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+          "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+          "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+          "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+          "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+          ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+          "refs/codewiki/archive/task/TASK-015",
+          "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+        ],
+        "validation_attestation_refs": [
+          "implementation validation pending"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-015 implementation from validated TASK-014 planning build.",
+      "kind": "canonical_source_ref",
+      "path": "TASK-015 implementation from validated TASK-014 planning build.",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:src/agency/types.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/agency/types.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "source:src/agency/planning.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/agency/planning.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "source:src/agency/tool.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/agency/tool.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "source:tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "kind": "canonical_source_ref",
+      "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+      "kind": "content_proof",
+      "path": "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+      "kind": "content_proof",
+      "path": "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+      "kind": "content_proof",
+      "path": "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+      "kind": "content_proof",
+      "path": "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+      "kind": "content_proof",
+      "path": "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+      "kind": "content_proof",
+      "path": "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+      "kind": "content_proof",
+      "path": "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+      "kind": "content_proof",
+      "path": "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-015",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-015",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+      "kind": "content_proof",
+      "path": "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-015",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-015",
+      "task_id": "TASK-015",
+      "digest": "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+      "restore_command": "/wiki-restore TASK-015",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -15824,6 +16078,78 @@
       "id": "content_proof:sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
       "kind": "content_proof",
       "path": "sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+        "working_tree_digest": "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Pre-commit implementation validation uses deterministic dirty working-tree digest after implementation build and audits.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:file-structure",
+          "audit:alignment",
+          "audit:stale-reference",
+          "audit:generated-parity",
+          "audit:changed",
+          "audit:task",
+          "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain"
+        ],
+        "content_proof_refs": [
+          "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+          "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "kind": "audit_evidence",
+      "path": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+      "kind": "content_proof",
+      "path": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
+      "kind": "content_proof",
+      "path": "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true,
@@ -30003,6 +30329,257 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:.codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/domain/agency/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/application/agency.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/application/tools/agency.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/adapters/pi/tools/agency.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/adapters/pi/schemas.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:TASK-015 implementation from validated TASK-014 planning build.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/agency/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/agency/planning.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:src/agency/tool.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:tests/smoke/control-room.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "source:TASK-015",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:.codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-015",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "content_proof:sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "task:TASK-015"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-015",
+      "default_hidden": true
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -33242,6 +33819,77 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "audit:codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "content_proof:b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "content_proof:sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+      "to": "task:TASK-015"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-24-planning-pass-task-014.json",
       "to": "source:.codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
       "default_hidden": true
@@ -33578,7 +34226,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 110,
             "badges": [
               {
@@ -33594,12 +34242,21 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 28
+                "count": 29
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 6,
+                "refs": [
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/agency.ts",
+                  "src/application/agency.ts",
+                  "src/application/tools/agency.ts",
+                  "src/domain/agency/types.ts",
+                  "tests/smoke/package-smoke.test.mjs"
+                ],
+                "ref_count": 6
               }
             ],
             "hot_refs": [
@@ -33626,7 +34283,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 49
+                "count": 50
               },
               {
                 "id": "fail_or_block_validation",
@@ -33636,17 +34293,17 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 129
+                "count": 131
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 408
+                "count": 424
               },
               {
                 "id": "traceability_gaps",
                 "label": "trace gaps",
-                "count": 4
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -33657,19 +34314,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 44,
+            "total": 45,
             "decision": 4,
             "planning": 12,
-            "implementation": 28,
+            "implementation": 29,
             "hot": 0,
-            "collapsed": 44
+            "collapsed": 45
           },
           "validations": {
-            "total": 49,
-            "pass": 36,
+            "total": 50,
+            "pass": 37,
             "fail_or_block": 13,
             "hot": 3,
-            "collapsed": 49
+            "collapsed": 50
           }
         },
         "next_action": {
@@ -33707,7 +34364,11 @@
               "TASK-014",
               "TASK-015"
             ],
-            "test_paths": [],
+            "test_paths": [
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/smoke/control-room.test.mjs"
+            ],
             "code_paths": [
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -33715,16 +34376,27 @@
               ".codewiki/roadmap/tasks/TASK-014/task.json",
               ".codewiki/roadmap/tasks/TASK-014/context.json",
               ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
+              ".codewiki/roadmap/tasks/TASK-015/context.json",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/agency/tool.ts",
+              "src/domain/agency/types.ts",
+              "src/application/agency.ts",
+              "src/application/tools/agency.ts",
+              "src/adapters/pi/tools/agency.ts",
+              "src/adapters/pi/schemas.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+              "implementation validation pending",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+              ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
             ],
             "audit_evidence_refs": [
@@ -33749,11 +34421,24 @@
               ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
               ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
               "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+              "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+              "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+              "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+              "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+              "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+              "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+              "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+              "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+              "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+              "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+              ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+              "refs/codewiki/archive/task/TASK-015",
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
             ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
+            "gaps": []
           },
           {
             "requirement_id": "FCB-REQ-2",
@@ -33772,7 +34457,11 @@
               "TASK-014",
               "TASK-015"
             ],
-            "test_paths": [],
+            "test_paths": [
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/smoke/control-room.test.mjs"
+            ],
             "code_paths": [
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -33780,16 +34469,27 @@
               ".codewiki/roadmap/tasks/TASK-014/task.json",
               ".codewiki/roadmap/tasks/TASK-014/context.json",
               ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
+              ".codewiki/roadmap/tasks/TASK-015/context.json",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/agency/tool.ts",
+              "src/domain/agency/types.ts",
+              "src/application/agency.ts",
+              "src/application/tools/agency.ts",
+              "src/adapters/pi/tools/agency.ts",
+              "src/adapters/pi/schemas.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+              "implementation validation pending",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+              ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
             ],
             "audit_evidence_refs": [
@@ -33814,11 +34514,24 @@
               ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
               ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
               "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+              "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+              "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+              "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+              "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+              "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+              "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+              "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+              "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+              "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+              "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+              ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+              "refs/codewiki/archive/task/TASK-015",
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
             ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
+            "gaps": []
           },
           {
             "requirement_id": "FCB-REQ-3",
@@ -33837,7 +34550,11 @@
               "TASK-014",
               "TASK-015"
             ],
-            "test_paths": [],
+            "test_paths": [
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/smoke/control-room.test.mjs"
+            ],
             "code_paths": [
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -33845,16 +34562,27 @@
               ".codewiki/roadmap/tasks/TASK-014/task.json",
               ".codewiki/roadmap/tasks/TASK-014/context.json",
               ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
+              ".codewiki/roadmap/tasks/TASK-015/context.json",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/agency/tool.ts",
+              "src/domain/agency/types.ts",
+              "src/application/agency.ts",
+              "src/application/tools/agency.ts",
+              "src/adapters/pi/tools/agency.ts",
+              "src/adapters/pi/schemas.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+              "implementation validation pending",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+              ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
             ],
             "audit_evidence_refs": [
@@ -33879,11 +34607,24 @@
               ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
               ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
               "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+              "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+              "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+              "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+              "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+              "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+              "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+              "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+              "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+              "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+              "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+              ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+              "refs/codewiki/archive/task/TASK-015",
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
             ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
+            "gaps": []
           },
           {
             "requirement_id": "FCB-REQ-4",
@@ -33902,7 +34643,11 @@
               "TASK-014",
               "TASK-015"
             ],
-            "test_paths": [],
+            "test_paths": [
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/smoke/control-room.test.mjs"
+            ],
             "code_paths": [
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -33910,16 +34655,27 @@
               ".codewiki/roadmap/tasks/TASK-014/task.json",
               ".codewiki/roadmap/tasks/TASK-014/context.json",
               ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
+              ".codewiki/roadmap/tasks/TASK-015/context.json",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/agency/tool.ts",
+              "src/domain/agency/types.ts",
+              "src/application/agency.ts",
+              "src/application/tools/agency.ts",
+              "src/adapters/pi/tools/agency.ts",
+              "src/adapters/pi/schemas.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+              "implementation validation pending",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+              ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
             ],
             "audit_evidence_refs": [
@@ -33944,14 +34700,193 @@
               ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
               ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
               "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+              "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+              "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+              "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+              "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+              "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+              "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+              "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+              "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+              "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+              "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+              ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+              "refs/codewiki/archive/task/TASK-015",
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
             ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
+            "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/kb/system/file-structure.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/adapters/pi/schemas.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/adapters/pi/tools/agency.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/application/agency.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/application/tools/agency.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/domain/agency/types.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/package-smoke.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -33988,6 +34923,7 @@
           ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
           ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
           ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -34083,6 +35019,7 @@
           "TASK-014 builder evidence after task-close gateway required an implementation_build source for semantic task closure.",
           "TASK-014 decision compiler; user approved all FCB rows in chat after reviewing drift-lens candidate comparison.",
           "TASK-015",
+          "TASK-015 implementation from validated TASK-014 planning build.",
           "User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
           "User approved process fix on 2026-05-23 after TASK-010 downstream planning gap report.",
           "User rule: avoid shims/SIMs, remove deprecated code/documentation, and fix breakage at the direct replacement surface.",
@@ -34120,6 +35057,9 @@
           "src/adapters/pi/tools/session-handoff.ts",
           "src/adapters/pi/ui/manager.ts",
           "src/agency/**",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/agency/types.ts",
           "src/application/**",
           "src/application/agency.ts",
           "src/application/builds.ts",
@@ -34207,6 +35147,7 @@
           "tests/tasks/TASK-003/**",
           "tests/tasks/TASK-004/**",
           "tests/tasks/TASK-005/**",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
           "tests/tasks/TASK-076/restructure.test.mjs",
           "user cleanup directive after repository audit",
           "user:reported context refresh failure"
@@ -35381,6 +36322,34 @@
               ".codewiki/roadmap/tasks/TASK-015/context.json",
               "TASK-014"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-015"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/domain/agency/types.ts",
+              "src/application/agency.ts",
+              "src/application/tools/agency.ts",
+              "src/adapters/pi/tools/agency.ts",
+              "src/adapters/pi/schemas.ts",
+              "TASK-015 implementation from validated TASK-014 planning build.",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/agency/tool.ts",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/smoke/control-room.test.mjs",
+              "TASK-015"
+            ]
           }
         ]
       },
@@ -36476,6 +37445,30 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-015",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:file-structure",
+              "audit:alignment",
+              "audit:stale-reference",
+              "audit:generated-parity",
+              "audit:changed",
+              "audit:task",
+              "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain"
+            ],
+            "content_proof_refs": [
+              "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+              "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             "verdict": "pass",
             "profile": "planning",
@@ -37330,6 +38323,22 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+            "task_id": "TASK-015",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+              "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             "task_id": "TASK-014",
             "verdict": "pass",
@@ -37423,6 +38432,7 @@
           "audit:security",
           "audit:stale-reference",
           "audit:task",
+          "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           "changed",
           "changed warning: generated state/view files changed (.codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-010/context.json, .codewiki/roadmap/tasks/TASK-010/task.json); no file-structure failure",
           "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass",
@@ -37461,6 +38471,7 @@
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/changed/task pass; alignment graph-health warning only",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
           "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
           "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
           "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
@@ -37565,10 +38576,12 @@
           ".codewiki/kb/system/compilers.md@sha256:eac58de0c57b0623cfd3b7756f97011ce83586e5356237b70323c40ff14c9e27",
           ".codewiki/kb/system/diagrams/component-map.yaml@sha256:fdfbc40b69adb56b163d96e00bc8db52701478103b41cdfbc857b8ca81b7670a",
           ".codewiki/kb/system/diagrams/data-model.yaml@sha256:c170ee4f599b87ec6057fda02fdc497234b24e62aaeb78dda8a395f3b7f2a320",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
           ".codewiki/kb/system/diagrams/key-flow.yaml@sha256:0358afaecb1da4e16550c64739daf962607bc782bd7c841999b2de6336653877",
           ".codewiki/kb/system/extension.md@sha256:4505283986b49ea3d713a08a730f0397f494bb7d5433a75707fdfe173c0b3bb4",
           ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
+          ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
           ".codewiki/kb/system/file-structure.md@sha256:f7ace60d69684c08c571d053d48b82c7c997834cca86f8b3215560d106e1f562",
           ".codewiki/kb/system/graph.md@sha256:0a1a6ac022b204d18397740bb6f14d1e87b8324ab9f8105fb13543375b276612",
           ".codewiki/kb/system/graph.md@sha256:a001af5ea4e9ec5f77eca50d9f9724f1e073a1f93cbaef403ebc1bd73431103e",
@@ -37629,6 +38642,7 @@
           "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
           "af9fa72cef338813a4d128375d4e8db15ad18c9e",
           "b5527b51bece34d670daa246b84d46fc4902eed2",
+          "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
           "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
           "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
           "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
@@ -37657,6 +38671,7 @@
           "refs/codewiki/archive/task/TASK-011",
           "refs/codewiki/archive/task/TASK-013",
           "refs/codewiki/archive/task/TASK-014",
+          "refs/codewiki/archive/task/TASK-015",
           "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
           "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
           "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
@@ -37666,6 +38681,7 @@
           "sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
           "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
           "sha256:4655643badcc65e8bea320cc900958183be735a2cfb74c160272ec625899fe6b",
+          "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
           "sha256:4b4bbddd1fc1a4b378e3253bd710fd06ba376552c2a99eb38fb3ce08eda72980",
           "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
           "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
@@ -37689,6 +38705,7 @@
           "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
           "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
           "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
+          "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
           "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
           "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
           "sha256:edb95c5f2d33018999956cee776cd66455025d9a66e6351b47258d477f78d9c3",
@@ -37749,6 +38766,7 @@
           "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
           "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
           "src/adapters/pi/schemas.ts@sha256:59c31d0e75bc0b42346bf7cfd6a64aaf67faa017867478f16311d67d2802e698",
+          "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
           "src/adapters/pi/schemas.ts@sha256:6dfe469b58ba04c79cbb27e06ad467fc2bc6b68c034364256ab9dbabc1df11b6",
           "src/adapters/pi/schemas.ts@sha256:7031ad084c9a0c816dcc656151e147bc7e7fd37ed3370cf965cc5cffe79c384d",
           "src/adapters/pi/schemas.ts@sha256:960d97353b52a2f28e3592e01c8a946979d964993b9a55e896955798f2d74c85",
@@ -37757,6 +38775,7 @@
           "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
           "src/adapters/pi/schemas.ts@sha256:e547b61e4193245d7b139d93bf0fd0b00d5583a5da58ecf53e28afc9faa254eb",
           "src/adapters/pi/schemas.ts@sha256:ef7392c1904a8f0d1451be448dbe6d840430a7581c96e5e75fc1a06807399239",
+          "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
           "src/adapters/pi/tools/artifact-status.ts@sha256:7c813761f54b5ffe0dbeb11cd3ff61dd9eaef3d34f6bfb49fbe87116263d382f",
           "src/adapters/pi/tools/resume-context.ts@sha256:6cbb3a1889a0321261b36a071eda188b716a97736b69f9af2c0394798b4943ef",
           "src/adapters/pi/tools/resume-context.ts@sha256:d69894f87ef5779fa56b08092f81e3055039d39e724bbde4715f6fdc6b6a57cc",
@@ -37769,6 +38788,10 @@
           "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
           "src/adapters/pi/ui/manager.ts@sha256:2587bf9b2a508663908be7cb18cfff7b7d1d7555eece958f06184b42ba307af5",
           "src/adapters/pi/ui/manager.ts@sha256:48536d897914efa9d0ae127050f14e38ee0460d641fab64949ba7ca01f2960c3",
+          "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+          "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+          "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+          "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
           "src/application/agency.ts@sha256:7fedf14e3c7e407dd9c4825c78f1597ed915857f35ec2f8e85be7863005f6b95",
           "src/application/builds.ts@sha256:15071f8e81cafb63666157d05dfc493850f27152b2b93c8d886ee854400e0673",
           "src/application/builds.ts@sha256:1cb7994bae8faf89bc4863594f108818126df25a5a1a3161d15405ce61b36f5e",
@@ -37804,6 +38827,7 @@
           "src/application/state.ts@sha256:1a1dcf10b09338b9c3d02853457a9af9f2e212fa5bdf5b1f86bbf429c13f5606",
           "src/application/state.ts@sha256:6e8518ca3f266e2eb832fe58ccfc07d68721e20389007c582a13b7534a89a29a",
           "src/application/task.ts@sha256:0474d476dc43aecf70711afeeaa8fce7dd2d53cbe76df61c5749cef96853b73d",
+          "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
           "src/application/tools/audit.ts@sha256:007cadf7027ccc5feb693f11536fd3797e0b99705c2a0abe6b92739c109319f6",
           "src/application/tools/audit.ts@sha256:0da84f561044989b4c0c41cd4ebf2293ef288d3145a5c8a84757195c08dd77ea",
           "src/application/tools/audit.ts@sha256:524aada0c6f81674b5367c324cfed85ca47b01021166edb6317be7d581cf402c",
@@ -37821,6 +38845,7 @@
           "src/application/worktree-isolation.ts@sha256:6006259e72f7ed4f8fddf2926ef11ff43d50a17d38b2935f346b6b171a7b6105",
           "src/application/worktree-isolation.ts@sha256:8a41958d7390591c9849ce5b04332d0f458097281be045c6870b46e280972f03",
           "src/domain/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+          "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
           "src/domain/audit/types.ts@sha256:01bdb29e216ee519e86b14076b93c6a7b89a8008ab9047d43506e9cbb173eaf5",
           "src/domain/audit/types.ts@sha256:4089f53c6b9d228c0e3937516aaae682a39714fa8dcbe53bff446c540c43590a",
           "src/domain/build/decision-propagation.ts@sha256:15c095c1ec000047fdc07db21b20fa539bd379ae422de5b99fa42ccfbcd725cb",
@@ -37896,6 +38921,7 @@
           "tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
           "tests/smoke/loop-isolation-policy.test.mjs@sha256:d8a52584f372fafabd5d8e1630b68b37181bc76ae34e009e58ef1b9ae8c016e3",
           "tests/smoke/loop-isolation-policy.test.mjs@sha256:e670076edbe4a05c7c123fb8694b2454252194eab251321fc98cdff178ae1139",
+          "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
           "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
           "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
           "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
@@ -37923,65 +38949,10 @@
           "tests/smoke/validation-preflight.test.mjs@sha256:02818f90f281edf79df830164a12bfdefe6cecb31c4e5a39aa9eddaa403fd172",
           "tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
           "tests/smoke/validation-preflight.test.mjs@sha256:a64a2df9445dbe07d10389db518ce00d3126c0e151d2392e9bde6370bab56e26",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4"
         ],
         "reconciliation_items": [
-          {
-            "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-1",
-            "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "decision",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-014",
-            "reason": "Traceability gap for FCB-REQ-1: missing_test_evidence.",
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-2",
-            "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "decision",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-014",
-            "reason": "Traceability gap for FCB-REQ-2: missing_test_evidence.",
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-3",
-            "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "decision",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-014",
-            "reason": "Traceability gap for FCB-REQ-3: missing_test_evidence.",
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-4",
-            "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "decision",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-014",
-            "reason": "Traceability gap for FCB-REQ-4: missing_test_evidence.",
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
           {
             "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
             "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -38020,268 +38991,7 @@
             "reason": "TASK-015 is open implementation delta below knowledge."
           }
         ],
-        "traceability_gaps": [
-          {
-            "requirement_id": "FCB-REQ-1",
-            "requirement_text": "Select the first concept-root migration boundary using drift-lens evidence across candidate concepts.",
-            "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-014",
-              "TASK-015"
-            ],
-            "test_paths": [],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-014/task.json",
-              ".codewiki/roadmap/tasks/TASK-014/context.json",
-              ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-              ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-              ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-              ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-              ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-              ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-              ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-              ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-              "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-            ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "requirement_id": "FCB-REQ-2",
-            "requirement_text": "Bind the selected first boundary to compatibility constraints covering package behavior, entrypoints, adapters, tests, direct Node execution, and package loading.",
-            "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-014",
-              "TASK-015"
-            ],
-            "test_paths": [],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-014/task.json",
-              ".codewiki/roadmap/tasks/TASK-014/context.json",
-              ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-              ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-              ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-              ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-              ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-              ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-              ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-              ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-              "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-            ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "requirement_id": "FCB-REQ-3",
-            "requirement_text": "Create/refine implementation task boundaries only after the selected first target is approved, and do not move source files during TASK-014.",
-            "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-014",
-              "TASK-015"
-            ],
-            "test_paths": [],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-014/task.json",
-              ".codewiki/roadmap/tasks/TASK-014/context.json",
-              ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-              ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-              ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-              ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-              ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-              ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-              ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-              ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-              "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-            ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          },
-          {
-            "requirement_id": "FCB-REQ-4",
-            "requirement_text": "Explicitly defer heavier concept roots with owner, trigger, and rationale until agency pilot evidence exists.",
-            "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-014",
-              "TASK-015"
-            ],
-            "test_paths": [],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap/tasks/TASK-014/task.json",
-              ".codewiki/roadmap/tasks/TASK-014/context.json",
-              ".codewiki/roadmap/tasks/TASK-015/task.json",
-              ".codewiki/roadmap/tasks/TASK-015/context.json"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-              ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-              ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-              ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-              ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-              ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-              ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-              ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-              ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-              ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-              ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-              "refs/codewiki/archive/task/TASK-014",
-              "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-            ],
-            "gaps": [
-              "missing_test_evidence"
-            ]
-          }
-        ],
+        "traceability_gaps": [],
         "semantic_change_gaps": []
       }
     },
@@ -38599,7 +39309,14 @@
         "tests/smoke/control-room.test.mjs",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        "src/domain/agency/types.ts",
+        "tests/smoke/package-smoke.test.mjs"
+      ]
     },
     "claims": {
       "active_claim_count": 0,
@@ -39406,6 +40123,22 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+          "task_id": "TASK-015",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+            "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
           "task_id": "TASK-014",
           "verdict": "pass",
@@ -39509,6 +40242,7 @@
         ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
         ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
         ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -39604,6 +40338,7 @@
         "TASK-014 builder evidence after task-close gateway required an implementation_build source for semantic task closure.",
         "TASK-014 decision compiler; user approved all FCB rows in chat after reviewing drift-lens candidate comparison.",
         "TASK-015",
+        "TASK-015 implementation from validated TASK-014 planning build.",
         "User approved making wiki-session-handoff an internal agent command and warned another session is working concurrently.",
         "User approved process fix on 2026-05-23 after TASK-010 downstream planning gap report.",
         "User rule: avoid shims/SIMs, remove deprecated code/documentation, and fix breakage at the direct replacement surface.",
@@ -39641,6 +40376,9 @@
         "src/adapters/pi/tools/session-handoff.ts",
         "src/adapters/pi/ui/manager.ts",
         "src/agency/**",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/agency/types.ts",
         "src/application/**",
         "src/application/agency.ts",
         "src/application/builds.ts",
@@ -39728,6 +40466,7 @@
         "tests/tasks/TASK-003/**",
         "tests/tasks/TASK-004/**",
         "tests/tasks/TASK-005/**",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
         "tests/tasks/TASK-076/restructure.test.mjs",
         "user cleanup directive after repository audit",
         "user:reported context refresh failure"
@@ -39771,6 +40510,7 @@
         "audit:security",
         "audit:stale-reference",
         "audit:task",
+        "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
         "changed",
         "changed warning: generated state/view files changed (.codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-010/context.json, .codewiki/roadmap/tasks/TASK-010/task.json); no file-structure failure",
         "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass",
@@ -39809,6 +40549,7 @@
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/changed/task pass; alignment graph-health warning only",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
         "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference: pass",
@@ -39913,10 +40654,12 @@
         ".codewiki/kb/system/compilers.md@sha256:eac58de0c57b0623cfd3b7756f97011ce83586e5356237b70323c40ff14c9e27",
         ".codewiki/kb/system/diagrams/component-map.yaml@sha256:fdfbc40b69adb56b163d96e00bc8db52701478103b41cdfbc857b8ca81b7670a",
         ".codewiki/kb/system/diagrams/data-model.yaml@sha256:c170ee4f599b87ec6057fda02fdc497234b24e62aaeb78dda8a395f3b7f2a320",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
         ".codewiki/kb/system/diagrams/key-flow.yaml@sha256:0358afaecb1da4e16550c64739daf962607bc782bd7c841999b2de6336653877",
         ".codewiki/kb/system/extension.md@sha256:4505283986b49ea3d713a08a730f0397f494bb7d5433a75707fdfe173c0b3bb4",
         ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
+        ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
         ".codewiki/kb/system/file-structure.md@sha256:f7ace60d69684c08c571d053d48b82c7c997834cca86f8b3215560d106e1f562",
         ".codewiki/kb/system/graph.md@sha256:0a1a6ac022b204d18397740bb6f14d1e87b8324ab9f8105fb13543375b276612",
         ".codewiki/kb/system/graph.md@sha256:a001af5ea4e9ec5f77eca50d9f9724f1e073a1f93cbaef403ebc1bd73431103e",
@@ -39977,6 +40720,7 @@
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
         "af9fa72cef338813a4d128375d4e8db15ad18c9e",
         "b5527b51bece34d670daa246b84d46fc4902eed2",
+        "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
         "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
         "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
         "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
@@ -40005,6 +40749,7 @@
         "refs/codewiki/archive/task/TASK-011",
         "refs/codewiki/archive/task/TASK-013",
         "refs/codewiki/archive/task/TASK-014",
+        "refs/codewiki/archive/task/TASK-015",
         "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
         "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
         "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
@@ -40014,6 +40759,7 @@
         "sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
         "sha256:3b36a2247d74311b207605f6447cbb34127a50b4f5a929e72b3e6eb019fa6a94",
         "sha256:4655643badcc65e8bea320cc900958183be735a2cfb74c160272ec625899fe6b",
+        "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
         "sha256:4b4bbddd1fc1a4b378e3253bd710fd06ba376552c2a99eb38fb3ce08eda72980",
         "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
         "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
@@ -40037,6 +40783,7 @@
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
+        "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
         "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
         "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
         "sha256:edb95c5f2d33018999956cee776cd66455025d9a66e6351b47258d477f78d9c3",
@@ -40097,6 +40844,7 @@
         "src/adapters/pi/schemas.ts@sha256:3d61edd2955a56494276399ae5a5c454dec5db0701a57d34702e82d413cb4862",
         "src/adapters/pi/schemas.ts@sha256:470d06475e0ae9e5e8485cd479cf77e099f01b295ab70edd3ffc1c33ef16ec03",
         "src/adapters/pi/schemas.ts@sha256:59c31d0e75bc0b42346bf7cfd6a64aaf67faa017867478f16311d67d2802e698",
+        "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
         "src/adapters/pi/schemas.ts@sha256:6dfe469b58ba04c79cbb27e06ad467fc2bc6b68c034364256ab9dbabc1df11b6",
         "src/adapters/pi/schemas.ts@sha256:7031ad084c9a0c816dcc656151e147bc7e7fd37ed3370cf965cc5cffe79c384d",
         "src/adapters/pi/schemas.ts@sha256:960d97353b52a2f28e3592e01c8a946979d964993b9a55e896955798f2d74c85",
@@ -40105,6 +40853,7 @@
         "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
         "src/adapters/pi/schemas.ts@sha256:e547b61e4193245d7b139d93bf0fd0b00d5583a5da58ecf53e28afc9faa254eb",
         "src/adapters/pi/schemas.ts@sha256:ef7392c1904a8f0d1451be448dbe6d840430a7581c96e5e75fc1a06807399239",
+        "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
         "src/adapters/pi/tools/artifact-status.ts@sha256:7c813761f54b5ffe0dbeb11cd3ff61dd9eaef3d34f6bfb49fbe87116263d382f",
         "src/adapters/pi/tools/resume-context.ts@sha256:6cbb3a1889a0321261b36a071eda188b716a97736b69f9af2c0394798b4943ef",
         "src/adapters/pi/tools/resume-context.ts@sha256:d69894f87ef5779fa56b08092f81e3055039d39e724bbde4715f6fdc6b6a57cc",
@@ -40117,6 +40866,10 @@
         "src/adapters/pi/tools/session-handoff.ts@sha256:bee65d48a5944c30dd9db701d81a460390e2b3c08e2b95bd1c3dad4a3914edbe",
         "src/adapters/pi/ui/manager.ts@sha256:2587bf9b2a508663908be7cb18cfff7b7d1d7555eece958f06184b42ba307af5",
         "src/adapters/pi/ui/manager.ts@sha256:48536d897914efa9d0ae127050f14e38ee0460d641fab64949ba7ca01f2960c3",
+        "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+        "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+        "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+        "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
         "src/application/agency.ts@sha256:7fedf14e3c7e407dd9c4825c78f1597ed915857f35ec2f8e85be7863005f6b95",
         "src/application/builds.ts@sha256:15071f8e81cafb63666157d05dfc493850f27152b2b93c8d886ee854400e0673",
         "src/application/builds.ts@sha256:1cb7994bae8faf89bc4863594f108818126df25a5a1a3161d15405ce61b36f5e",
@@ -40152,6 +40905,7 @@
         "src/application/state.ts@sha256:1a1dcf10b09338b9c3d02853457a9af9f2e212fa5bdf5b1f86bbf429c13f5606",
         "src/application/state.ts@sha256:6e8518ca3f266e2eb832fe58ccfc07d68721e20389007c582a13b7534a89a29a",
         "src/application/task.ts@sha256:0474d476dc43aecf70711afeeaa8fce7dd2d53cbe76df61c5749cef96853b73d",
+        "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
         "src/application/tools/audit.ts@sha256:007cadf7027ccc5feb693f11536fd3797e0b99705c2a0abe6b92739c109319f6",
         "src/application/tools/audit.ts@sha256:0da84f561044989b4c0c41cd4ebf2293ef288d3145a5c8a84757195c08dd77ea",
         "src/application/tools/audit.ts@sha256:524aada0c6f81674b5367c324cfed85ca47b01021166edb6317be7d581cf402c",
@@ -40169,6 +40923,7 @@
         "src/application/worktree-isolation.ts@sha256:6006259e72f7ed4f8fddf2926ef11ff43d50a17d38b2935f346b6b171a7b6105",
         "src/application/worktree-isolation.ts@sha256:8a41958d7390591c9849ce5b04332d0f458097281be045c6870b46e280972f03",
         "src/domain/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+        "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
         "src/domain/audit/types.ts@sha256:01bdb29e216ee519e86b14076b93c6a7b89a8008ab9047d43506e9cbb173eaf5",
         "src/domain/audit/types.ts@sha256:4089f53c6b9d228c0e3937516aaae682a39714fa8dcbe53bff446c540c43590a",
         "src/domain/build/decision-propagation.ts@sha256:15c095c1ec000047fdc07db21b20fa539bd379ae422de5b99fa42ccfbcd725cb",
@@ -40244,6 +40999,7 @@
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:8dbff75eef94998d86c9e90d8f340cf999b85212bfa25c3512fa2fee04b93071",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:d8a52584f372fafabd5d8e1630b68b37181bc76ae34e009e58ef1b9ae8c016e3",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:e670076edbe4a05c7c123fb8694b2454252194eab251321fc98cdff178ae1139",
+        "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
         "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
         "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
         "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
@@ -40271,6 +41027,7 @@
         "tests/smoke/validation-preflight.test.mjs@sha256:02818f90f281edf79df830164a12bfdefe6cecb31c4e5a39aa9eddaa403fd172",
         "tests/smoke/validation-preflight.test.mjs@sha256:10088e86f885302d66ed5cab8e849b1e76d2cb39075c6747513cf980c764fb99",
         "tests/smoke/validation-preflight.test.mjs@sha256:a64a2df9445dbe07d10389db518ce00d3126c0e151d2392e9bde6370bab56e26",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4"
       ],
       "validation_attestations": [
@@ -41361,6 +42118,30 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-015",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:file-structure",
+            "audit:alignment",
+            "audit:stale-reference",
+            "audit:generated-parity",
+            "audit:changed",
+            "audit:task",
+            "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain"
+          ],
+          "content_proof_refs": [
+            "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+            "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
           "verdict": "pass",
           "profile": "planning",
@@ -41873,7 +42654,11 @@
             "TASK-014",
             "TASK-015"
           ],
-          "test_paths": [],
+          "test_paths": [
+            "tests/tasks/TASK-015/agency-source-root.test.mjs",
+            "tests/smoke/package-smoke.test.mjs",
+            "tests/smoke/control-room.test.mjs"
+          ],
           "code_paths": [
             ".codewiki/kb/system/file-structure.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -41881,16 +42666,27 @@
             ".codewiki/roadmap/tasks/TASK-014/task.json",
             ".codewiki/roadmap/tasks/TASK-014/context.json",
             ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
+            ".codewiki/roadmap/tasks/TASK-015/context.json",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/agency/tool.ts",
+            "src/domain/agency/types.ts",
+            "src/application/agency.ts",
+            "src/application/tools/agency.ts",
+            "src/adapters/pi/tools/agency.ts",
+            "src/adapters/pi/schemas.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+            "implementation validation pending",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+            ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
           ],
           "audit_evidence_refs": [
@@ -41915,11 +42711,24 @@
             ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
             ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
             "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+            "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+            "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+            "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+            "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+            "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+            "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+            "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+            "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+            "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+            "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+            ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+            "refs/codewiki/archive/task/TASK-015",
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
           ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
           "requirement_id": "FCB-REQ-2",
@@ -41938,7 +42747,11 @@
             "TASK-014",
             "TASK-015"
           ],
-          "test_paths": [],
+          "test_paths": [
+            "tests/tasks/TASK-015/agency-source-root.test.mjs",
+            "tests/smoke/package-smoke.test.mjs",
+            "tests/smoke/control-room.test.mjs"
+          ],
           "code_paths": [
             ".codewiki/kb/system/file-structure.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -41946,16 +42759,27 @@
             ".codewiki/roadmap/tasks/TASK-014/task.json",
             ".codewiki/roadmap/tasks/TASK-014/context.json",
             ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
+            ".codewiki/roadmap/tasks/TASK-015/context.json",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/agency/tool.ts",
+            "src/domain/agency/types.ts",
+            "src/application/agency.ts",
+            "src/application/tools/agency.ts",
+            "src/adapters/pi/tools/agency.ts",
+            "src/adapters/pi/schemas.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+            "implementation validation pending",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+            ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
           ],
           "audit_evidence_refs": [
@@ -41980,11 +42804,24 @@
             ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
             ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
             "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+            "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+            "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+            "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+            "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+            "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+            "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+            "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+            "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+            "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+            "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+            ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+            "refs/codewiki/archive/task/TASK-015",
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
           ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
           "requirement_id": "FCB-REQ-3",
@@ -42003,7 +42840,11 @@
             "TASK-014",
             "TASK-015"
           ],
-          "test_paths": [],
+          "test_paths": [
+            "tests/tasks/TASK-015/agency-source-root.test.mjs",
+            "tests/smoke/package-smoke.test.mjs",
+            "tests/smoke/control-room.test.mjs"
+          ],
           "code_paths": [
             ".codewiki/kb/system/file-structure.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -42011,16 +42852,27 @@
             ".codewiki/roadmap/tasks/TASK-014/task.json",
             ".codewiki/roadmap/tasks/TASK-014/context.json",
             ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
+            ".codewiki/roadmap/tasks/TASK-015/context.json",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/agency/tool.ts",
+            "src/domain/agency/types.ts",
+            "src/application/agency.ts",
+            "src/application/tools/agency.ts",
+            "src/adapters/pi/tools/agency.ts",
+            "src/adapters/pi/schemas.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+            "implementation validation pending",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+            ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
           ],
           "audit_evidence_refs": [
@@ -42045,11 +42897,24 @@
             ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
             ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
             "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+            "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+            "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+            "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+            "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+            "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+            "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+            "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+            "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+            "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+            "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+            ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+            "refs/codewiki/archive/task/TASK-015",
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
           ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
           "requirement_id": "FCB-REQ-4",
@@ -42068,7 +42933,11 @@
             "TASK-014",
             "TASK-015"
           ],
-          "test_paths": [],
+          "test_paths": [
+            "tests/tasks/TASK-015/agency-source-root.test.mjs",
+            "tests/smoke/package-smoke.test.mjs",
+            "tests/smoke/control-room.test.mjs"
+          ],
           "code_paths": [
             ".codewiki/kb/system/file-structure.md",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -42076,16 +42945,27 @@
             ".codewiki/roadmap/tasks/TASK-014/task.json",
             ".codewiki/roadmap/tasks/TASK-014/context.json",
             ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
+            ".codewiki/roadmap/tasks/TASK-015/context.json",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/agency/tool.ts",
+            "src/domain/agency/types.ts",
+            "src/application/agency.ts",
+            "src/application/tools/agency.ts",
+            "src/adapters/pi/tools/agency.ts",
+            "src/adapters/pi/schemas.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
+            "implementation validation pending",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
+            ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
           ],
           "audit_evidence_refs": [
@@ -42110,278 +42990,196 @@
             ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
             ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
             "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
+            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+            "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+            "tests/smoke/control-room.test.mjs@sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+            "src/agency/types.ts@sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+            "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+            "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+            "src/domain/agency/types.ts@sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+            "src/application/agency.ts@sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+            "src/application/tools/agency.ts@sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+            "src/adapters/pi/tools/agency.ts@sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+            "src/adapters/pi/schemas.ts@sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+            ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+            "refs/codewiki/archive/task/TASK-015",
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
           ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         }
       ],
-      "semantic_change_rows": [],
-      "semantic_change_gaps": [],
-      "gap_count": 4,
-      "gaps": [
+      "semantic_change_rows": [
         {
-          "requirement_id": "FCB-REQ-1",
-          "requirement_text": "Select the first concept-root migration boundary using drift-lens evidence across candidate concepts.",
-          "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-014",
-            "TASK-015"
-          ],
-          "test_paths": [],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-014/task.json",
-            ".codewiki/roadmap/tasks/TASK-014/context.json",
-            ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-            ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-            ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-            ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-            ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-            ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-            ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-            ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-            "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-          ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "FCB-REQ-2",
-          "requirement_text": "Bind the selected first boundary to compatibility constraints covering package behavior, entrypoints, adapters, tests, direct Node execution, and package loading.",
-          "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          "path": ".codewiki/kb/system/file-structure.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-014",
-            "TASK-015"
-          ],
-          "test_paths": [],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-014/task.json",
-            ".codewiki/roadmap/tasks/TASK-014/context.json",
-            ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-            ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-            ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-            ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-            ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-            ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-            ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-            ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-            "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-          ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "FCB-REQ-3",
-          "requirement_text": "Create/refine implementation task boundaries only after the selected first target is approved, and do not move source files during TASK-014.",
-          "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-014",
-            "TASK-015"
-          ],
-          "test_paths": [],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-014/task.json",
-            ".codewiki/roadmap/tasks/TASK-014/context.json",
-            ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-            ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-            ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-            ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-            ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-            ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-            ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-            ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-            "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-          ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         },
         {
-          "requirement_id": "FCB-REQ-4",
-          "requirement_text": "Explicitly defer heavier concept roots with owner, trigger, and rationale until agency pilot evidence exists.",
-          "decision_build": ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency as first approved concept-root migration boundary, compatibility constraints, and deferred heavier roots.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds first_concept_root_pilot, migration_compatibility_constraints, and deferred_concept_roots nodes and edges.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+          "path": "src/adapters/pi/schemas.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/tools/agency.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "roadmap_task_ids": [
-            "TASK-014",
-            "TASK-015"
+          "gaps": []
+        },
+        {
+          "path": "src/application/agency.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "test_paths": [],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap/tasks/TASK-014/task.json",
-            ".codewiki/roadmap/tasks/TASK-014/context.json",
-            ".codewiki/roadmap/tasks/TASK-015/task.json",
-            ".codewiki/roadmap/tasks/TASK-015/context.json"
+          "gaps": []
+        },
+        {
+          "path": "src/application/tools/agency.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+          "gaps": []
+        },
+        {
+          "path": "src/domain/agency/types.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
-            ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-014.json"
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
-            ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
-            ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
-            ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
-            ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
-            ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
-            ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
-            ".codewiki/roadmap/tasks/TASK-014/context.json@sha256:945f33e040eb9a1214b5b6ece6ffa9c392d590c419bfd2e3092816d480e28da3",
-            ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
-            ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
-            "refs/codewiki/archive/task/TASK-014",
-            "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2"
-          ],
-          "gaps": [
-            "missing_test_evidence"
-          ]
+          "gaps": []
         }
-      ]
+      ],
+      "semantic_change_gaps": [],
+      "gap_count": 0,
+      "gaps": []
     },
     "scope_views": {
       "roadmap": {
@@ -42651,7 +43449,8 @@
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
             ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
             ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -42716,7 +43515,8 @@
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
             ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
             ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
           ]
         },
         "purgeable": {
@@ -43013,10 +43813,20 @@
           "digest": "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
           "restore_command": "/wiki-restore TASK-014",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-015",
+          "build_path": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-015",
+          "commit_sha": "",
+          "digest": "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+          "restore_command": "/wiki-restore TASK-015",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 28,
+        "ledger_count": 29,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -43045,7 +43855,8 @@
           "refs/codewiki/archive/task/TASK-010",
           "refs/codewiki/archive/task/TASK-011",
           "refs/codewiki/archive/task/TASK-013",
-          "refs/codewiki/archive/task/TASK-014"
+          "refs/codewiki/archive/task/TASK-014",
+          "refs/codewiki/archive/task/TASK-015"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -43075,7 +43886,8 @@
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
           ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
           ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-          ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+          ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -43105,7 +43917,8 @@
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
           ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
           ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-          ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+          ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -43115,62 +43928,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-1",
-          "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "decision",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-014",
-          "reason": "Traceability gap for FCB-REQ-1: missing_test_evidence.",
-          "gaps": [
-            "missing_test_evidence"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-2",
-          "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "decision",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-014",
-          "reason": "Traceability gap for FCB-REQ-2: missing_test_evidence.",
-          "gaps": [
-            "missing_test_evidence"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-3",
-          "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "decision",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-014",
-          "reason": "Traceability gap for FCB-REQ-3: missing_test_evidence.",
-          "gaps": [
-            "missing_test_evidence"
-          ]
-        },
-        {
-          "id": "reconcile:traceability:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json:FCB-REQ-4",
-          "source_id": "build:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "decision",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-014",
-          "reason": "Traceability gap for FCB-REQ-4: missing_test_evidence.",
-          "gaps": [
-            "missing_test_evidence"
-          ]
-        },
         {
           "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -43210,8 +43967,8 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 5,
-        "decision": 2
+        "decision": 2,
+        "implementation": 1
       },
       "next_action": {
         "loop": "decision",
@@ -43246,7 +44003,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-24T07:07:45.089Z",
+      "generated_at": "2026-05-24T20:46:19.603Z",
       "counts": {
         "large-doc": 3,
         "roadmap-missing-code-path": 2
@@ -43262,7 +44019,7 @@
           "severity": "warning",
           "kind": "large-doc",
           "path": ".codewiki/kb/system/file-structure.md",
-          "message": "Live doc has 1697 words; consider split or cut."
+          "message": "Live doc has 1716 words; consider split or cut."
         },
         {
           "severity": "warning",
@@ -43286,7 +44043,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-24T07:07:45Z",
+      "generated_at": "2026-05-24T20:46:19Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -43575,7 +44332,7 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/control-room.test.mjs"
           ],
-          "updated": "2026-05-24T04:12:34Z",
+          "updated": "2026-05-24T20:46:19Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -43591,7 +44348,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-24T07:07:45Z",
+      "generated_at": "2026-05-24T20:46:19Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -43760,7 +44517,8 @@
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
               ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
               ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -43825,7 +44583,8 @@
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
               ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
               ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json"
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
             ]
           },
           "purgeable": {
@@ -43874,7 +44633,7 @@
             "title": "Implement agency pilot source root"
           },
           "revision": {
-            "digest": "d7603710eda9ac32dc7d46c3f8f65d0d881b23bcb3141fbb84c5c4afb9aa06cf",
+            "digest": "5a0eb4cb3277b660fda647454cf0b4c56a9be374c5f7b07a6a32dd65dc4e3f7e",
             "basis": "source_content"
           },
           "note": "tracked by TASK-015"
@@ -44695,7 +45454,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-24T07:07:45Z",
+        "generated_at": "2026-05-24T20:46:19Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -44723,12 +45482,24 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-24T07:07:45Z",
+            "checked_at": "2026-05-24T20:46:19Z",
             "revision": {
               "git": {
-                "head": "c8533147a0a6496f52c39cc1956a77a21c530550",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-015/context.json",
+                  ".codewiki/roadmap/tasks/TASK-015/task.json",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/agency.ts",
+                  "src/application/agency.ts",
+                  "src/application/tools/agency.ts",
+                  "src/domain/agency/types.ts",
+                  "tests/smoke/package-smoke.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -44812,17 +45583,17 @@
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
-              "spec_digest": "bf0e51df5dac2ed7761834c8f08852fbf026a5cdf07cc3697684f8063a182364",
-              "task_digest": "1ee2540c2e29a98813a59cf24ec0c8afa3d278c97189d4a88648664bd92cff2a",
-              "code_digest": "1712669f6344153699ccbfbef54af9522ef4a26ee650a00f8b66a0bbbfa02472",
-              "digest": "2018f6a651e0f049bd05783237f3ddebf47dfe25efb4738a75b2885e8129c155"
+              "spec_digest": "45967be84ff7f086988b3c2c1bbcf8939ba9d011ea42f235b7ca309dc520bac3",
+              "task_digest": "db40e4b567010ca2310aac0e3108f4a34a4552231e5548762a07c2d59b7a4784",
+              "code_digest": "e760827307efca7522699f3bf5c8ef0e3d2e8cf38ff49ec415b198e997294840",
+              "digest": "6e064d23a6f7154dfc5c2a5406b179d17744b13c08b96f64162c8fd304f23f53"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-24T07:07:45Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-24T20:46:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -44944,12 +45715,24 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-24T07:07:45Z",
+            "checked_at": "2026-05-24T20:46:19Z",
             "revision": {
               "git": {
-                "head": "c8533147a0a6496f52c39cc1956a77a21c530550",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-015/context.json",
+                  ".codewiki/roadmap/tasks/TASK-015/task.json",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/agency.ts",
+                  "src/application/agency.ts",
+                  "src/application/tools/agency.ts",
+                  "src/domain/agency/types.ts",
+                  "tests/smoke/package-smoke.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -45012,17 +45795,17 @@
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
-              "spec_digest": "0091432697d412f070748770e8c83e85a1039850969546c176f1f4e36259eede",
-              "task_digest": "1ee2540c2e29a98813a59cf24ec0c8afa3d278c97189d4a88648664bd92cff2a",
-              "code_digest": "9243ee7c6a75332c00b09c3f32e0f3c125b357e4df242659673cb60905d6bed7",
-              "digest": "64732366cbc913d30d07a83d8597a6702534b88bf401805f538d5c702769b356"
+              "spec_digest": "e06fe4140b433e0ca80b86f657f00d699c3c026c5c0c32657fdaf43681743f6f",
+              "task_digest": "db40e4b567010ca2310aac0e3108f4a34a4552231e5548762a07c2d59b7a4784",
+              "code_digest": "8ba44ec3a820bd9a33a262a825b7464c9047a65078c3de5be7c78f90aea21b11",
+              "digest": "b6dfc2b8bddb3be52d5baa9053b21b35ff182ea6bd4eb7a8c03db39b144f1397"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-24T07:07:45Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-24T20:46:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/file-structure.md",
@@ -45123,12 +45906,24 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-24T07:07:45Z",
+            "checked_at": "2026-05-24T20:46:19Z",
             "revision": {
               "git": {
-                "head": "c8533147a0a6496f52c39cc1956a77a21c530550",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-015/context.json",
+                  ".codewiki/roadmap/tasks/TASK-015/task.json",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/tools/agency.ts",
+                  "src/application/agency.ts",
+                  "src/application/tools/agency.ts",
+                  "src/domain/agency/types.ts",
+                  "tests/smoke/package-smoke.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -45212,17 +46007,17 @@
                   "tests/smoke/package-smoke.test.mjs": "3c6db9b0291dc2def7001f7bac70183c3c0584f2"
                 }
               },
-              "spec_digest": "bf0e51df5dac2ed7761834c8f08852fbf026a5cdf07cc3697684f8063a182364",
-              "task_digest": "1ee2540c2e29a98813a59cf24ec0c8afa3d278c97189d4a88648664bd92cff2a",
-              "code_digest": "1712669f6344153699ccbfbef54af9522ef4a26ee650a00f8b66a0bbbfa02472",
-              "digest": "2018f6a651e0f049bd05783237f3ddebf47dfe25efb4738a75b2885e8129c155"
+              "spec_digest": "45967be84ff7f086988b3c2c1bbcf8939ba9d011ea42f235b7ca309dc520bac3",
+              "task_digest": "db40e4b567010ca2310aac0e3108f4a34a4552231e5548762a07c2d59b7a4784",
+              "code_digest": "e760827307efca7522699f3bf5c8ef0e3d2e8cf38ff49ec415b198e997294840",
+              "digest": "6e064d23a6f7154dfc5c2a5406b179d17744b13c08b96f64162c8fd304f23f53"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-24T07:07:45Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-24T20:46:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -45345,7 +46140,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-24T07:07:45Z",
+        "generated_at": "2026-05-24T20:46:19Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -45393,7 +46188,7 @@
               "title": "Implement agency pilot source root"
             },
             "revision": {
-              "digest": "d7603710eda9ac32dc7d46c3f8f65d0d881b23bcb3141fbb84c5c4afb9aa06cf",
+              "digest": "5a0eb4cb3277b660fda647454cf0b4c56a9be374c5f7b07a6a32dd65dc4e3f7e",
               "basis": "source_content"
             },
             "note": "tracked by TASK-015"
@@ -46590,7 +47385,7 @@
                   "title": "Implement agency pilot source root"
                 },
                 "revision": {
-                  "digest": "d7603710eda9ac32dc7d46c3f8f65d0d881b23bcb3141fbb84c5c4afb9aa06cf",
+                  "digest": "5a0eb4cb3277b660fda647454cf0b4c56a9be374c5f7b07a6a32dd65dc4e3f7e",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-015"

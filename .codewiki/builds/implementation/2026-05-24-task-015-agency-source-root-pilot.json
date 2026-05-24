@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-24T20:45:31Z",
+  "source": "TASK-015 implementation from validated TASK-014 planning build.",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+  "task_id": "TASK-015",
+  "task": {
+    "id": "TASK-015",
+    "title": "Implement agency pilot source root",
+    "status": "in_progress",
+    "priority": "medium",
+    "kind": "migration",
+    "summary": "Implement the approved agency source-root pilot under src/agency/** with compatibility checks before any other concept-root moves.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "code_paths": [
+      "src/agency/**",
+      "src/domain/agency/types.ts",
+      "src/application/agency.ts",
+      "src/application/tools/agency.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/schemas.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/control-room.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Agency becomes the validated pilot source root under src/agency/** while existing package and adapter behavior remain compatible.",
+      "acceptance": [
+        "src/agency/** owns the agency model/types, agency planning use case, and agency tool/API entrypoint or equivalent temporary facade.",
+        "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+        "Any old-path compatibility shim is temporary, test-backed, and limited to agency parity.",
+        "No non-agency concept root is moved in this task.",
+        "File-structure audit has no new actionable drift after the pilot."
+      ],
+      "non_goals": [
+        "Do not move audit, build, validation, session, state, roadmap, project, knowledge, gateway, GC, adapters, UI, or skills.",
+        "Do not change public commands, tool schemas, package entrypoints, or product behavior.",
+        "Do not remove compatibility shims before validation proves parity."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-07T20:45:31.000Z",
+    "purge_after": "2026-06-21T20:45:31.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "agency source-root pilot implementation",
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "fresh-context-with-artifact-status",
+        "reason": "Migration task touches source paths and compatibility surface.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "codewiki_resume_context taskId=TASK-015",
+          "codewiki_artifact_status mark CLAIM-144"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-with-working-tree-digest",
+        "reason": "Implementation validation must verify source-root ownership and compatibility evidence from artifacts, not builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-clean-immutable-content",
+        "reason": "Task close must use committed content proof and archive ref.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation",
+          "task-close"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "IMPL-T015-1",
+      "text": "src/agency/** owns the agency model/types, agency planning use case, and agency tool/API entrypoint.",
+      "source_refs": [
+        "src/agency/types.ts",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "TASK-015"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T015-2",
+      "text": "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+      "source_refs": [
+        "src/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T015-3",
+      "text": "Old agency paths remain temporary, test-backed compatibility shims limited to agency parity.",
+      "source_refs": [
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T015-4",
+      "text": "No non-agency concept root is moved in this task.",
+      "source_refs": [
+        "git diff --name-only",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T015-5",
+      "text": "File-structure audit has no new actionable drift after the pilot.",
+      "source_refs": [
+        "npm run check:architecture",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015"
+      ],
+      "state": "implemented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "src/agency/** owns agency model/types, planning use case, and tool/API entrypoint or equivalent temporary facade.",
+      "evidence": "Added src/agency/types.ts, src/agency/planning.ts, and src/agency/tool.ts; old layer-first agency files are deprecated re-export shims.",
+      "requirement_ids": [
+        "IMPL-T015-1",
+        "IMPL-T015-3"
+      ],
+      "source_refs": [
+        "src/agency/types.ts",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts"
+      ]
+    },
+    {
+      "criterion": "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+      "evidence": "src/index.ts unchanged; Pi agency adapter and schema import source-root agency exports; package smoke loads extension and runs codewiki_agency; direct package-smoke command passes.",
+      "requirement_ids": [
+        "IMPL-T015-2"
+      ],
+      "source_refs": [
+        "src/index.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/adapters/pi/schemas.ts",
+        "tests/smoke/package-smoke.test.mjs"
+      ]
+    },
+    {
+      "criterion": "Any old-path compatibility shim is temporary, test-backed, and limited to agency parity.",
+      "evidence": "Deprecated re-export-only shims remain only at src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts; tests/tasks/TASK-015/agency-source-root.test.mjs verifies old and new exports are identical and adapter imports avoid old shim paths.",
+      "requirement_ids": [
+        "IMPL-T015-3"
+      ],
+      "source_refs": [
+        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+      ]
+    },
+    {
+      "criterion": "No non-agency concept root is moved in this task.",
+      "evidence": "Changed source roots are limited to src/agency/** plus agency compatibility shims/adapters/schema imports; no audit/build/validation/session/state/roadmap/project/knowledge/gateway/GC/UI/skills source roots were moved.",
+      "requirement_ids": [
+        "IMPL-T015-4"
+      ],
+      "source_refs": [
+        "git diff --name-only"
+      ]
+    },
+    {
+      "criterion": "File-structure audit has no new actionable drift after the pilot.",
+      "evidence": "npm run check:architecture passes; codewiki_audit file-structure passes with only existing graph-health/generated-dirty warnings outside file-structure.",
+      "requirement_ids": [
+        "IMPL-T015-5"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implement TASK-015 agency source-root pilot with compatibility shims and parity tests",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-015"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "src/domain/agency/types.ts",
+      "src/application/agency.ts",
+      "src/application/tools/agency.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/schemas.ts"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/agency/types.ts",
+      "src/agency/planning.ts",
+      "src/agency/tool.ts",
+      "src/domain/agency/types.ts",
+      "src/application/agency.ts",
+      "src/application/tools/agency.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/schemas.ts",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "tests": [
+      "tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/control-room.test.mjs"
+    ],
+    "validation": [
+      "implementation validation pending"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-015",
+      "TASK-015 task close after implementation validation, commit proof, and task-close proof"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "code_paths": [
+      "src/agency/**",
+      "src/domain/agency/types.ts",
+      "src/application/agency.ts",
+      "src/application/tools/agency.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/schemas.ts",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/control-room.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/control-room.test.mjs"
+  ],
+  "code_files": [
+    "src/agency/types.ts",
+    "src/agency/planning.ts",
+    "src/agency/tool.ts",
+    "src/domain/agency/types.ts",
+    "src/application/agency.ts",
+    "src/application/tools/agency.ts",
+    "src/adapters/pi/tools/agency.ts",
+    "src/adapters/pi/schemas.ts",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/control-room.test.mjs",
+    "src/agency/types.ts",
+    "src/agency/planning.ts",
+    "src/agency/tool.ts",
+    "src/domain/agency/types.ts",
+    "src/application/agency.ts",
+    "src/application/tools/agency.ts",
+    "src/adapters/pi/tools/agency.ts",
+    "src/adapters/pi/schemas.ts",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "checks_run": [
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+    "npm run check:architecture: pass",
+    "npm run test:features: pass (23 passed, 0 failed)",
+    "npm run test:smoke: pass",
+    "npm run test:pack: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+      "roadmap_task_id": "TASK-015",
+      "test_files": [
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/control-room.test.mjs"
+      ],
+      "evidence": [
+        "Added task-specific shim parity test before broad validation to prove old and new agency exports are identical.",
+        "Kept package smoke coverage to prove package loading, extension registration, and codewiki_agency behavior still work.",
+        "Used typecheck, smoke, features, pack, direct package-smoke, and CodeWiki audits as compatibility gates from TASK-015."
+      ],
+      "notes": [
+        "TASK-015 did not change public command names, tool schemas, package entrypoint, or package metadata.",
+        "The smoke suite and direct package smoke verified package loading through DefaultResourceLoader and codewiki_agency execution."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+      "roadmap_task_id": "TASK-015",
+      "code_files": [
+        "src/agency/types.ts",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/adapters/pi/schemas.ts",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": [
+        "Introduced src/agency/types.ts as owner for agency values and input contracts.",
+        "Introduced src/agency/planning.ts as owner for planAgency implementation.",
+        "Introduced src/agency/tool.ts as owner for executeCodewikiAgencyTool and ThinkCode context helper.",
+        "Converted src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts into deprecated re-export compatibility shims.",
+        "Updated Pi agency adapter and Pi schemas to import source-root agency modules directly.",
+        "Updated file-structure KB/diagram to record implemented agency pilot and test-backed shims."
+      ],
+      "notes": [
+        "Implementation stayed inside agency pilot boundary; non-agency roots were not moved.",
+        "Generated .codewiki/index_graph.json is dirty because CodeWiki tools refreshed generated state during the implementation loop and should be committed with evidence."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added task-specific shim parity test before broad validation to prove old and new agency exports are identical.",
+    "Kept package smoke coverage to prove package loading, extension registration, and codewiki_agency behavior still work.",
+    "Used typecheck, smoke, features, pack, direct package-smoke, and CodeWiki audits as compatibility gates from TASK-015."
+  ],
+  "code_change_evidence": [
+    "Introduced src/agency/types.ts as owner for agency values and input contracts.",
+    "Introduced src/agency/planning.ts as owner for planAgency implementation.",
+    "Introduced src/agency/tool.ts as owner for executeCodewikiAgencyTool and ThinkCode context helper.",
+    "Converted src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts into deprecated re-export compatibility shims.",
+    "Updated Pi agency adapter and Pi schemas to import source-root agency modules directly.",
+    "Updated file-structure KB/diagram to record implemented agency pilot and test-backed shims."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "src/agency/** owns the agency model/types, agency planning use case, and agency tool/API entrypoint or equivalent temporary facade.",
+      "evidence": "New agency source root contains types.ts, planning.ts, and tool.ts; compatibility shims only re-export."
+    },
+    {
+      "criterion": "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+      "evidence": "src/index.ts unchanged; package smoke and package pack pass; adapter/schemas import source-root exports with identical enum/function behavior."
+    },
+    {
+      "criterion": "Any old-path compatibility shim is temporary, test-backed, and limited to agency parity.",
+      "evidence": "Deprecated old-path shims are re-export-only and covered by tests/tasks/TASK-015/agency-source-root.test.mjs plus package-smoke static assertion."
+    },
+    {
+      "criterion": "No non-agency concept root is moved in this task.",
+      "evidence": "Diff touches only agency root/shims, adapter agency imports, schema import, tests, and file-structure docs/generated state."
+    },
+    {
+      "criterion": "File-structure audit has no new actionable drift after the pilot.",
+      "evidence": "check:architecture/file-structure audit passes; broader audit warns only on existing graph-health and dirty generated index before commit."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue after TASK-014 close by implementing TASK-015 agency source-root pilot while preserving compatibility.",
+    "implemented_changes": [
+      "Added src/agency/types.ts, src/agency/planning.ts, and src/agency/tool.ts as agency source-root owner files.",
+      "Converted old agency paths under src/domain and src/application into deprecated re-export-only compatibility shims.",
+      "Updated Pi agency adapter and schemas to use source-root agency modules.",
+      "Added TASK-015 parity test and adjusted package smoke static assertion.",
+      "Updated file-structure KB and diagram with implemented pilot/shim evidence."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [
+        "TASK-015"
+      ],
+      "code": [
+        "src/agency/types.ts",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/adapters/pi/schemas.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "Agency source-root files own contracts/planning/tool executor.",
+      "Deprecated agency compatibility shims are re-export-only and test-backed.",
+      "npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, and direct package-smoke pass.",
+      "File-structure audit passes with zero actionable drift."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "npm run check:architecture",
+      "npm run test:features",
+      "npm run test:smoke",
+      "npm run test:pack",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015"
+    ],
+    "non_goals_preserved": [
+      "No non-agency concept root moved.",
+      "No public command, tool schema, package entrypoint, package metadata, adapter behavior, or product behavior changed.",
+      "Compatibility shims were not removed."
+    ],
+    "remaining_risks": [
+      "Old agency shims remain until future cleanup validation.",
+      "Existing graph-health warnings remain unrelated."
+    ]
+  },
+  "risks": [
+    "Legacy agency shims remain and should be removed only after future parity validation permits cleanup.",
+    "Repository alignment remains yellow due existing graph-health warnings unrelated to TASK-015."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-015",
+      "task_id": "TASK-015",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-015",
+        "title": "Implement agency pilot source root",
+        "summary": "Implement TASK-015 agency source-root pilot with compatibility shims and parity tests",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+        ],
+        "code_paths": [
+          "src/agency/**",
+          "src/domain/agency/types.ts",
+          "src/application/agency.ts",
+          "src/application/tools/agency.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/schemas.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/control-room.test.mjs",
+          "src/agency/types.ts",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        ],
+        "acceptance": [
+          "src/agency/** owns the agency model/types, agency planning use case, and agency tool/API entrypoint or equivalent temporary facade.",
+          "Existing package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, and public behavior remain unchanged.",
+          "Any old-path compatibility shim is temporary, test-backed, and limited to agency parity.",
+          "No non-agency concept root is moved in this task.",
+          "File-structure audit has no new actionable drift after the pilot."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+        "checks_run": [
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+          "npm run check:architecture: pass",
+          "npm run test:features: pass (23 passed, 0 failed)",
+          "npm run test:smoke: pass",
+          "npm run test:pack: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state"
+        ],
+        "test_design_evidence": [
+          "Added task-specific shim parity test before broad validation to prove old and new agency exports are identical.",
+          "Kept package smoke coverage to prove package loading, extension registration, and codewiki_agency behavior still work.",
+          "Used typecheck, smoke, features, pack, direct package-smoke, and CodeWiki audits as compatibility gates from TASK-015."
+        ],
+        "code_change_evidence": [
+          "Introduced src/agency/types.ts as owner for agency values and input contracts.",
+          "Introduced src/agency/planning.ts as owner for planAgency implementation.",
+          "Introduced src/agency/tool.ts as owner for executeCodewikiAgencyTool and ThinkCode context helper.",
+          "Converted src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts into deprecated re-export compatibility shims.",
+          "Updated Pi agency adapter and Pi schemas to import source-root agency modules directly.",
+          "Updated file-structure KB/diagram to record implemented agency pilot and test-backed shims."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-015",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-015",
+      "show_build": "git show refs/codewiki/archive/task/TASK-015:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+        "src/agency/**",
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/adapters/pi/schemas.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/control-room.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-015 Implement agency pilot source root implementation evidence",
+      "body": "Implement TASK-015 agency source-root pilot with compatibility shims and parity tests\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, npm run check:architecture: pass, npm run test:features: pass (23 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-015\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, npm run check:architecture: pass, npm run test:features: pass (23 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-015\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-015\nCodeWiki-Digest: sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e\nCodeWiki-Restore: /wiki-restore TASK-015",
+      "trailers": [
+        "CodeWiki-Task: TASK-015",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+        "CodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, npm run check:architecture: pass, npm run test:features: pass (23 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-015",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-015",
+        "CodeWiki-Digest: sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+        "CodeWiki-Restore: /wiki-restore TASK-015"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-015 Implement agency pilot source root implementation evidence",
+      "body": "Implement TASK-015 agency source-root pilot with compatibility shims and parity tests\n\nChecks: npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, npm run check:architecture: pass, npm run test:features: pass (23 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-015\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json\nCodeWiki-Checks: npm run typecheck: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, npm run check:architecture: pass, npm run test:features: pass (23 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-015\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-015\nCodeWiki-Digest: sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e\nCodeWiki-Restore: /wiki-restore TASK-015"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-015",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-015"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-015",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-015",
+        "show_build": "git show refs/codewiki/archive/task/TASK-015:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          "src/agency/**",
+          "src/domain/agency/types.ts",
+          "src/application/agency.ts",
+          "src/application/tools/agency.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/schemas.ts",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/control-room.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-015",
+      "build_path": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-015",
+      "commit_sha": "",
+      "digest": "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+      "restore_command": "/wiki-restore TASK-015"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
+          "bytes": 12191
+        },
+        {
+          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
+          "bytes": 4200
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
+          "bytes": 88661
+        },
+        {
+          "path": "tests/smoke/control-room.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:b71c92f0ec05d1330017545f8baec72802c0285dc4051943af331fe5fdad29d8",
+          "bytes": 12924
+        },
+        {
+          "path": "src/agency/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:2252bab57849346b1bd82ebb19fee3841e8a174fedf13fb58d141ef366a53a6d",
+          "bytes": 1608
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "role": "code_file",
+          "sha256": "sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
+          "bytes": 9970
+        },
+        {
+          "path": "src/agency/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
+          "bytes": 2255
+        },
+        {
+          "path": "src/domain/agency/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:d241f5d16e698a2cf43139a2cb280cb9843d1e1cbcbba489245a95af7dc1a1c6",
+          "bytes": 169
+        },
+        {
+          "path": "src/application/agency.ts",
+          "role": "code_file",
+          "sha256": "sha256:1e34c2c1d7c22c27168b4790110363938dd62e2525f15ecf8ae1e57732cf05de",
+          "bytes": 170
+        },
+        {
+          "path": "src/application/tools/agency.ts",
+          "role": "code_file",
+          "sha256": "sha256:d305d53bd540a43f75dd5ae4e338a47fe1eb3633d89298470991344fdb60ea23",
+          "bytes": 171
+        },
+        {
+          "path": "src/adapters/pi/tools/agency.ts",
+          "role": "code_file",
+          "sha256": "sha256:5be9172c9f290b499fc1fdc8f554aea91472cd98d9694c6ef5133788326acd18",
+          "bytes": 794
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:5e75751e6dd023cb15d315ab25dc49b8736955f07f1eb207142276b3af7d30be",
+          "bytes": 33173
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
+          "bytes": 15162
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
+          "bytes": 9786
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-015",
+      "source_build": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/agency/types.ts",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/domain/agency/types.ts",
+          "src/application/agency.ts",
+          "src/application/tools/agency.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/schemas.ts",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/control-room.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-015",
+        "restore_command": "/wiki-restore TASK-015"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+        "npm run check:architecture: pass",
+        "npm run test:features: pass (23 passed, 0 failed)",
+        "npm run test:smoke: pass",
+        "npm run test:pack: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health and generated index dirty state"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

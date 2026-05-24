@@ -86,12 +86,13 @@ nodes:
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: approved_first_migration_boundary
+    status: implemented_pilot_pending_validation
     paths:
       - src/agency/**
       - src/domain/agency/types.ts
       - src/application/agency.ts
       - src/application/tools/agency.ts
+      - tests/tasks/TASK-015/agency-source-root.test.mjs
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -231,7 +232,8 @@ nodes:
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: deferred_until_agency_pilot_closes
+    status: accepted_target
+    defer_status: deferred_until_agency_pilot_closes
     owner: maintainers
     trigger: agency pilot task-close validation and compatibility evidence
     paths:

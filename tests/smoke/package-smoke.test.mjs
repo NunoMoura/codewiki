@@ -278,7 +278,10 @@ async function main() {
 		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
 		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
 		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Bootstrap setup tool should delegate through application tool contract");
-		for (const adapterFile of ["agency", "artifact-status", "session", "state", "task"]) {
+		const agencyAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "agency.ts"), "utf8");
+		assert.match(agencyAdapterSource, /agency\/tool/, "Pi agency tool should delegate to the agency source-root tool module");
+		assert.doesNotMatch(agencyAdapterSource, /application\/tools\/agency/, "Pi agency tool should not delegate through the old agency application shim");
+		for (const adapterFile of ["artifact-status", "session", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);
 		}
