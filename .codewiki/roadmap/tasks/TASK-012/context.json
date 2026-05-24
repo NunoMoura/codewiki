@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-23T01:49:52Z",
+  "generated_at": "2026-05-24T23:40:41Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-012/context.json",
   "task": {
     "id": "TASK-012",
@@ -9,7 +9,7 @@
     "priority": "medium",
     "kind": "architecture",
     "change_type": "task",
-    "summary": "Cancelled auto-merged non-atomic file-structure follow-up task produced by over-broad create de-duplication; will recreate split tasks with narrower scopes.",
+    "summary": "TASK-012 remains cancelled after stale code path reconciliation.",
     "labels": [
       "file-structure",
       "concept-root",

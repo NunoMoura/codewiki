@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "medium",
   "kind": "architecture",
-  "summary": "Cancelled auto-merged non-atomic file-structure follow-up task produced by over-broad create de-duplication; will recreate split tasks with narrower scopes.",
+  "summary": "TASK-012 remains cancelled after stale code path reconciliation.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -22,8 +22,7 @@
     "src/application/state.ts",
     "src/application/state-builders.ts",
     "src/application/graph.ts",
-    "src/application/tools/audit.ts",
-    "tests/features"
+    "src/application/tools/audit.ts"
   ],
   "research_ids": [],
   "labels": [
@@ -75,5 +74,5 @@
     "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-23T01:49:52Z"
+  "updated": "2026-05-24T23:40:41Z"
 }

@@ -23,6 +23,40 @@ function assertIssue(report, kind) {
 	assert.ok(report.issues.some((issue) => issue.kind === kind), `expected ${kind}, got ${report.issues.map((issue) => issue.kind).join(", ")}`);
 }
 
+function assertNoIssue(report, kind) {
+	assert.ok(!report.issues.some((issue) => issue.kind === kind), `unexpected ${kind}: ${report.issues.map((issue) => `${issue.kind}:${issue.message}`).join(" | ")}`);
+}
+
+function createThinkCodeStylePackageFixture({ includeSkillsInFiles = true } = {}) {
+	const root = mkdtempSync(resolve(tmpdir(), "codewiki-package-neutral-"));
+	mkdir(resolve(root, ".codewiki"));
+	mkdir(resolve(root, "src"));
+	mkdir(resolve(root, "scripts"));
+	mkdir(resolve(root, "skills", "think-code", "references"));
+	writeJson(resolve(root, ".codewiki", "config.json"), { project_name: "package-neutral-fixture" });
+	write(resolve(root, "src", "index.ts"), "export const extension = true;\n");
+	write(resolve(root, "scripts", "check-architecture.mjs"), "console.log('ok');\n");
+	write(resolve(root, "skills", "think-code", "SKILL.md"), "---\nname: think-code\ndescription: Fixture skill for package-neutral audit tests.\n---\n# Think Code\n");
+	write(resolve(root, "skills", "think-code", "references", "usage.md"), "# Usage\n");
+	write(resolve(root, "README.md"), "# Think Code Fixture\n");
+	write(resolve(root, "LICENSE"), "MIT\n");
+	writeJson(resolve(root, "package-lock.json"), {
+		name: "think-code-audit-fixture",
+		version: "0.0.0",
+		lockfileVersion: 3,
+		packages: { "": { name: "think-code-audit-fixture", version: "0.0.0" } },
+	});
+	writeJson(resolve(root, "package.json"), {
+		name: "think-code-audit-fixture",
+		version: "0.0.0",
+		type: "module",
+		files: ["src", ...(includeSkillsInFiles ? ["skills"] : []), "scripts", "README.md", "LICENSE", "package.json"],
+		pi: { extensions: ["./src/index.ts"], skills: ["./skills"] },
+		scripts: { "check:architecture": "node ./scripts/check-architecture.mjs" },
+	});
+	return root;
+}
+
 function createFixture() {
 	const root = mkdtempSync(resolve(tmpdir(), "codewiki-audit-drift-"));
 	mkdir(resolve(root, ".codewiki", "kb", "system"));
@@ -101,6 +135,29 @@ async function main() {
 		assertIssue(packageAudit, "missing-lockfile");
 	} finally {
 		rmSync(root, { recursive: true, force: true });
+	}
+
+	const neutralRoot = createThinkCodeStylePackageFixture();
+	try {
+		const neutralProject = await loadProject(neutralRoot);
+		const neutralAudit = await executeCodewikiAudit(neutralProject, { profiles: ["package"], include_fingerprints: true });
+		assert.equal(neutralAudit.status, "pass", `package-neutral fixture should pass: ${neutralAudit.issues.map((issue) => `${issue.kind}:${issue.message}`).join(" | ")}`);
+		assertNoIssue(neutralAudit, "skill-asset-unreachable");
+		assertNoIssue(neutralAudit, "package-dry-run-missing");
+		assert.ok(neutralAudit.fingerprints.some((item) => item.path === "skills/think-code/SKILL.md"), "package audit should fingerprint discovered skill manifest");
+		assert.ok(neutralAudit.fingerprints.some((item) => item.path === "skills/think-code/references/usage.md"), "package audit should fingerprint discovered skill asset files");
+		assert.ok(!neutralAudit.issues.some((issue) => `${issue.path ?? ""} ${issue.message}`.includes("skills/codewiki")), "package audit must not require CodeWiki skill paths for other packages");
+	} finally {
+		rmSync(neutralRoot, { recursive: true, force: true });
+	}
+
+	const omittedSkillRoot = createThinkCodeStylePackageFixture({ includeSkillsInFiles: false });
+	try {
+		const omittedProject = await loadProject(omittedSkillRoot);
+		const omittedAudit = await executeCodewikiAudit(omittedProject, { profiles: ["package"], include_fingerprints: false });
+		assert.ok(omittedAudit.issues.some((issue) => issue.kind === "package-dry-run-missing" && issue.message.includes("skills/think-code/SKILL.md")), "package audit should require discovered package skill assets in npm pack output");
+	} finally {
+		rmSync(omittedSkillRoot, { recursive: true, force: true });
 	}
 }
 

@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-24T23:47:43Z",
+  "profile": "implementation",
+  "task_id": "TASK-016",
+  "verdict": "pass",
+  "rationale": "TASK-016 implementation passes. Package audit now derives skill asset requirements from package.json pi.skills entries instead of hardcoded skills/codewiki paths, verifies discovered skill assets exist, and requires them to appear in npm pack --dry-run output. Smoke tests cover a ThinkCode-style non-CodeWiki skill package and an omitted-pack-file negative case. Direct edited-source package audit against /home/nunoc/projects/think-code passes with 0 issues; the injected codewiki_audit tool in this running session still fails against ThinkCode because it uses the pre-change loaded extension until reload. Approved RMD-001 TASK-012 stale tests/features reconciliation was also applied without creating source work.",
+  "checks": [
+    "Read .codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+    "Confirmed superseded first implementation build .codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json had unnecessary planning-build traceability",
+    "Confirmed auditPackage derives skill roots from packageJson.pi.skills and no longer hardcodes skills/codewiki artifacts",
+    "Confirmed tests/smoke/audit-drift.test.mjs covers ThinkCode-style skills/think-code/SKILL.md and omitted npm pack output",
+    "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+    "npm run typecheck: pass",
+    "git diff --check: pass",
+    "npm run test:smoke: pass",
+    "codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass",
+    "direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues",
+    "codewiki_validation preflight_only=true profile=implementation task_id=TASK-016: ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due graph-health warnings unrelated to TASK-016."
+    },
+    {
+      "severity": "low",
+      "summary": "Generated state warnings remain until commit captures task/build/validation artifacts."
+    },
+    {
+      "severity": "low",
+      "summary": "The currently loaded injected codewiki_audit tool still uses stale package audit code for external repos until extension reload."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "stale-reference",
+    "generated-parity",
+    "package",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:package",
+    "audit:task",
+    "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/package/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
+    "direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code: pass with 0 issues",
+    "injected codewiki_audit tool package on /home/nunoc/projects/think-code: fail from stale loaded tool still hardcoding skills/codewiki until extension reload"
+  ],
+  "content_proof_refs": [
+    "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+    "sha256:a31b784da8a8ff9a8535ef8be768d3acc7ac3e8c4d334e95f64eaee569b02518"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "package",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:package or profile:package",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-016",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+    "working_tree_digest": "sha256:a31b784da8a8ff9a8535ef8be768d3acc7ac3e8c4d334e95f64eaee569b02518",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Pre-commit implementation validation uses deterministic dirty working-tree digest including TASK-016 implementation/build, approved TASK-012 reconciliation metadata, and generated views.",
+    "role": "validator"
+  }
+}

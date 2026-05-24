@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-24T23:47:59Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-016/context.json",
+  "task": {
+    "id": "TASK-016",
+    "title": "Make package audit discover skill assets from pi.skills",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "bug",
+    "change_type": "code",
+    "summary": "Patch the package audit to inspect package-declared Pi skill assets instead of requiring CodeWiki-specific skills/codewiki paths.",
+    "labels": [
+      "package-audit",
+      "pi-skills",
+      "bugfix"
+    ],
+    "goal": {
+      "outcome": "Package audit is package-neutral for Pi skills and no longer emits CodeWiki skill false positives against packages such as ThinkCode.",
+      "acceptance": [
+        "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+        "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+        "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+        "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md."
+      ],
+      "non_goals": [
+        "Change ThinkCode source.",
+        "Redesign all package manifest checks unrelated to skill assets."
+      ],
+      "verification": [
+        "Run targeted smoke audit tests.",
+        "Run package audit against /home/nunoc/projects/think-code."
+      ]
+    },
+    "delta": {
+      "desired": "Package audit derives required skill assets from package.json pi.skills and discovered skill directories/files.",
+      "current": "Package audit hardcodes skills/codewiki skill assets and reports false positives for other Pi packages.",
+      "closure": ""
+    }
+  }
+}

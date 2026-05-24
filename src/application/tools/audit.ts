@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
-import { relative, resolve } from "node:path";
+import { dirname, relative, resolve } from "node:path";
 import { promisify } from "node:util";
 import type {
 	AuditFingerprint,
@@ -451,7 +451,7 @@ async function auditStaleReference(project: WikiProject, input: CodewikiAuditInp
 			}
 		}
 	}
-	const fingerprints = await fingerprintFiles(project, [project.docsRoot, "skills/codewiki/SKILL.md", "README.md", ...(input.paths || [])], input.include_fingerprints !== false);
+	const fingerprints = await fingerprintFiles(project, [...activeTextFiles.map((file) => normalizeRel(relative(project.root, file))), ...(input.paths || [])], input.include_fingerprints !== false);
 	return {
 		profile,
 		status: statusForIssues(issues),
@@ -461,6 +461,59 @@ async function auditStaleReference(project: WikiProject, input: CodewikiAuditInp
 		evidence_refs: [project.docsRoot, "skills", "README.md"],
 		fingerprints,
 	};
+}
+
+function normalizePackageEntry(entry: string): string {
+	return normalizeRel(entry.trim()).replace(/\/+$/, "");
+}
+
+function isPackageManifestExclusion(entry: string): boolean {
+	return entry.trim().startsWith("!");
+}
+
+function hasPackageGlobPattern(entry: string): boolean {
+	return /[*?[\]{}]/.test(entry);
+}
+
+async function maybeStatPath(path: string): Promise<Awaited<ReturnType<typeof stat>> | null> {
+	try {
+		return await stat(path);
+	} catch {
+		return null;
+	}
+}
+
+async function discoverSkillAssetFiles(project: WikiProject, skillEntries: string[]): Promise<string[]> {
+	const assets: string[] = [];
+	for (const rawEntry of skillEntries) {
+		if (isPackageManifestExclusion(rawEntry) || hasPackageGlobPattern(rawEntry)) continue;
+		const entry = normalizePackageEntry(rawEntry);
+		if (!entry) continue;
+		const absolute = resolve(project.root, entry);
+		const entryStat = await maybeStatPath(absolute);
+		if (!entryStat) continue;
+		if (entryStat.isFile()) {
+			assets.push(absolute);
+			continue;
+		}
+		if (!entryStat.isDirectory()) continue;
+
+		const skillDirs = new Set<string>();
+		if (await pathExists(resolve(absolute, "SKILL.md"))) skillDirs.add(absolute);
+		for (const manifest of await walkFiles(absolute, (path) => normalizeRel(path).endsWith("/SKILL.md"))) {
+			skillDirs.add(dirname(manifest));
+		}
+		for (const skillDir of skillDirs) {
+			assets.push(...(await walkFiles(skillDir)));
+		}
+		for (const rootMarkdown of await walkFiles(absolute, (path) => {
+			const rel = normalizeRel(relative(absolute, path));
+			return rel.endsWith(".md") && !rel.includes("/");
+		})) {
+			assets.push(rootMarkdown);
+		}
+	}
+	return unique(assets.map((asset) => normalizeRel(relative(project.root, asset))).sort());
 }
 
 async function npmPackDryRunFiles(project: WikiProject): Promise<string[] | null> {
@@ -480,6 +533,7 @@ async function auditPackage(project: WikiProject, input: CodewikiAuditInput): Pr
 	const issues: AuditIssue[] = [];
 	const packageJsonPath = "package.json";
 	const packageJson = await maybeReadJson(resolve(project.root, packageJsonPath));
+	let requiredSkillAssets: string[] = [];
 	if (!packageJson) {
 		issues.push(createIssue(profile, "warning", "missing-package-json", "No package.json found; package audit has no package surface to inspect.", packageJsonPath));
 	} else {
@@ -507,27 +561,24 @@ async function auditPackage(project: WikiProject, input: CodewikiAuditInput): Pr
 			}
 		}
 		const skills = Array.isArray(packageJson.pi?.skills) ? packageJson.pi.skills.map(String) : [];
-		if (!skills.includes("./skills")) {
-			issues.push(createIssue(profile, "error", "pi-skill-entry", "Pi skill entry must resolve from ./skills.", packageJsonPath));
+		if (skills.length === 0 && files.map(normalizePackageEntry).includes("skills")) {
+			issues.push(createIssue(profile, "error", "pi-skill-entry", "package.json files include skills but pi.skills declares no skill entries.", packageJsonPath));
 		}
 		for (const entry of skills) {
-			if (!(await pathExists(resolve(project.root, entry.replace(/^\.\//, ""))))) {
+			if (isPackageManifestExclusion(entry) || hasPackageGlobPattern(entry)) continue;
+			const normalizedEntry = normalizePackageEntry(entry);
+			if (normalizedEntry && !(await pathExists(resolve(project.root, normalizedEntry)))) {
 				issues.push(createIssue(profile, "error", "pi-skill-unreachable", `Pi skill entry is unreachable: ${entry}.`, packageJsonPath));
 			}
 		}
-		if (!packageJson.scripts?.["check:architecture"]) {
-			issues.push(createIssue(profile, "warning", "package-checks", "package.json should expose check:architecture wrapper for CI/package smoke.", packageJsonPath));
-		}
-		const requiredSkillAssets = [
-			"skills/codewiki/SKILL.md",
-			"skills/codewiki/prompts/resume-implementation.md",
-			"skills/codewiki/bootstrap/onboarding.md",
-			"skills/codewiki/bootstrap/starter-taxonomy.md",
-		];
+		requiredSkillAssets = await discoverSkillAssetFiles(project, skills);
 		for (const asset of requiredSkillAssets) {
 			if (!(await pathExists(resolve(project.root, asset)))) {
 				issues.push(createIssue(profile, "error", "skill-asset-unreachable", `Skill asset is unreachable: ${asset}.`, asset));
 			}
+		}
+		if (!packageJson.scripts?.["check:architecture"]) {
+			issues.push(createIssue(profile, "warning", "package-checks", "package.json should expose check:architecture wrapper for CI/package smoke.", packageJsonPath));
 		}
 		const packedFiles = await npmPackDryRunFiles(project);
 		if (packedFiles) {
@@ -548,7 +599,7 @@ async function auditPackage(project: WikiProject, input: CodewikiAuditInput): Pr
 	if (packageJson && !(await pathExists(resolve(project.root, "package-lock.json")))) {
 		issues.push(createIssue(profile, "error", "missing-lockfile", "package-lock.json is absent; publication reproducibility is not anchored.", "package-lock.json"));
 	}
-	const fingerprints = await fingerprintFiles(project, ["package.json", "package-lock.json", "src/index.ts", "skills/codewiki/SKILL.md", "skills/codewiki/prompts/resume-implementation.md", "skills/codewiki/bootstrap/onboarding.md", "skills/codewiki/bootstrap/starter-taxonomy.md"], input.include_fingerprints !== false);
+	const fingerprints = await fingerprintFiles(project, ["package.json", "package-lock.json", "src/index.ts", ...requiredSkillAssets], input.include_fingerprints !== false);
 	return {
 		profile,
 		status: statusForIssues(issues),

@@ -1,0 +1,699 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-24T23:47:00Z",
+  "source": "TASK-016 code-local bugfix implementation boundary accepted by roadmap task and user carry-on; supersedes earlier implementation build that required unnecessary planning-build traceability.",
+  "task_id": "TASK-016",
+  "task": {
+    "id": "TASK-016",
+    "title": "Make package audit discover skill assets from pi.skills",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "bug",
+    "summary": "Patch the package audit to inspect package-declared Pi skill assets instead of requiring CodeWiki-specific skills/codewiki paths.",
+    "spec_paths": [
+      "README.md",
+      "skills/codewiki/SKILL.md"
+    ],
+    "code_paths": [
+      "src/application/tools/audit.ts",
+      "tests/smoke/audit-drift.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Package audit is package-neutral for Pi skills and no longer emits CodeWiki skill false positives against packages such as ThinkCode.",
+      "acceptance": [
+        "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+        "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+        "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+        "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md."
+      ],
+      "non_goals": [
+        "Change ThinkCode source.",
+        "Redesign all package manifest checks unrelated to skill assets."
+      ],
+      "verification": [
+        "Run targeted smoke audit tests.",
+        "Run package audit against /home/nunoc/projects/think-code."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-07T23:47:00.000Z",
+    "purge_after": "2026-06-21T23:47:00.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 2,
+    "attempt": "supersede TASK-016 implementation build with code-local traceability",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json"
+    ],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "package",
+      "task"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status-resume",
+        "reason": "TASK-016 was already staged in dirty worktree and resumed after WAIT-002 completed.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "codewiki_resume_context taskId=TASK-016",
+          "codewiki_artifact_status mark for TASK-016"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-with-working-tree-digest",
+        "reason": "Implementation validation must verify package-neutral skill discovery and compatibility checks from source/build evidence.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-clean-immutable-content",
+        "reason": "Task close must use committed content proof and archive ref.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation",
+          "task-close"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "IMPL-T016-1",
+      "text": "Package audit reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+      "source_refs": [
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T016-2",
+      "text": "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+      "source_refs": [
+        "src/application/tools/audit.ts"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T016-3",
+      "text": "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+      "source_refs": [
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T016-4",
+      "text": "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md.",
+      "source_refs": [
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T016-5",
+      "text": "Approved RMD-001 reconciliation removes stale tests/features path from cancelled TASK-012 without creating source work.",
+      "source_refs": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-012/task.json",
+        ".codewiki/index_graph.json"
+      ],
+      "state": "implemented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+      "evidence": "audit.ts derives skill roots from packageJson.pi.skills entries and walks each root for package files.",
+      "requirement_ids": [
+        "IMPL-T016-1"
+      ],
+      "source_refs": [
+        "src/application/tools/audit.ts"
+      ]
+    },
+    {
+      "criterion": "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+      "evidence": "Hardcoded skills/codewiki required artifacts were removed; smoke fixture proves package-neutral ThinkCode-style skill paths pass.",
+      "requirement_ids": [
+        "IMPL-T016-2",
+        "IMPL-T016-4"
+      ],
+      "source_refs": [
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ]
+    },
+    {
+      "criterion": "Discovered real skill assets are required to exist and appear in npm pack --dry-run output.",
+      "evidence": "Audit requires discovered pi.skills SKILL.md/support assets to exist and emits package-dry-run-missing when npm pack output omits skills/think-code/SKILL.md.",
+      "requirement_ids": [
+        "IMPL-T016-3"
+      ],
+      "source_refs": [
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ]
+    },
+    {
+      "criterion": "Run package audit against /home/nunoc/projects/think-code.",
+      "evidence": "Direct edited-source executeCodewikiAudit package profile against /home/nunoc/projects/think-code passed with 0 issues. Injected codewiki_audit tool remains stale until extension reload and still reports old skills/codewiki false positives, proving reload boundary rather than source failure.",
+      "requirement_ids": [
+        "IMPL-T016-1",
+        "IMPL-T016-2",
+        "IMPL-T016-4"
+      ],
+      "source_refs": [
+        "src/application/tools/audit.ts"
+      ]
+    },
+    {
+      "criterion": "RMD-001 accepted reconciliation is applied safely.",
+      "evidence": "Cancelled TASK-012 no longer references missing tests/features; task lifecycle restored to cancelled; health warning count dropped from 4 to 3.",
+      "requirement_ids": [
+        "IMPL-T016-5"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-012/task.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implement TASK-016 package-neutral Pi skill asset discovery in package audit",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json"
+    ],
+    "roadmap": [
+      "TASK-016",
+      "TASK-012"
+    ],
+    "validation": [],
+    "source": [
+      "src/application/tools/audit.ts",
+      "tests/smoke/audit-drift.test.mjs"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-016",
+      "TASK-012"
+    ],
+    "code": [
+      "src/application/tools/audit.ts",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-012/task.json",
+      ".codewiki/roadmap/tasks/TASK-012/context.json",
+      ".codewiki/index_graph.json"
+    ],
+    "tests": [
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/audit.test.mjs"
+    ],
+    "validation": [
+      "implementation validation pending"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-016",
+      "TASK-016 task close after implementation validation, commit proof, and task-close proof"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": "",
+    "spec_paths": [
+      "README.md",
+      "skills/codewiki/SKILL.md"
+    ],
+    "code_paths": [
+      "src/application/tools/audit.ts",
+      "tests/smoke/audit-drift.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/audit.test.mjs"
+  ],
+  "code_files": [
+    "src/application/tools/audit.ts",
+    ".codewiki/roadmap/queue.json",
+    ".codewiki/roadmap/tasks/TASK-012/task.json",
+    ".codewiki/roadmap/tasks/TASK-012/context.json",
+    ".codewiki/index_graph.json"
+  ],
+  "files_changed": [
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "src/application/tools/audit.ts",
+    ".codewiki/roadmap/queue.json",
+    ".codewiki/roadmap/tasks/TASK-012/task.json",
+    ".codewiki/roadmap/tasks/TASK-012/context.json",
+    ".codewiki/index_graph.json"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+    "npm run typecheck: pass",
+    "git diff --check: pass",
+    "npm run test:smoke: pass",
+    "codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass",
+    "direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state",
+    "injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-016",
+      "test_files": [
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/audit.test.mjs"
+      ],
+      "evidence": [
+        "Added a ThinkCode-style package fixture with pi.skills pointing to skills/think-code and verified package audit passes without CodeWiki skill asset requirements.",
+        "Added a negative fixture omitting skills from package files to verify discovered skill assets still must be present in npm pack output.",
+        "Ran direct edited-source package audit on /home/nunoc/projects/think-code to cover the real external package case."
+      ],
+      "notes": [
+        "The injected codewiki_audit tool in this running Pi session still reports old ThinkCode false positives because it uses the pre-change loaded extension; direct edited-source audit passes and package audit for this repo passes. Reload after commit will pick up the patched source."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-016",
+      "code_files": [
+        "src/application/tools/audit.ts",
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-012/task.json",
+        ".codewiki/roadmap/tasks/TASK-012/context.json",
+        ".codewiki/index_graph.json"
+      ],
+      "evidence": [
+        "Updated auditPackage to derive skill asset requirements from package.json pi.skills rather than static skills/codewiki paths.",
+        "Updated audit drift smoke tests with package-neutral skill fixture and dry-run omission coverage.",
+        "Applied approved RMD-001 roadmap reconciliation for cancelled TASK-012 stale tests/features code path."
+      ],
+      "notes": [
+        "This build supersedes .codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json because that first build carried default semantic planning-build requirements despite TASK-016 being a code-local bugfix task.",
+        "No ThinkCode source was changed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added a ThinkCode-style package fixture with pi.skills pointing to skills/think-code and verified package audit passes without CodeWiki skill asset requirements.",
+    "Added a negative fixture omitting skills from package files to verify discovered skill assets still must be present in npm pack output.",
+    "Ran direct edited-source package audit on /home/nunoc/projects/think-code to cover the real external package case."
+  ],
+  "code_change_evidence": [
+    "Updated auditPackage to derive skill asset requirements from package.json pi.skills rather than static skills/codewiki paths.",
+    "Updated audit drift smoke tests with package-neutral skill fixture and dry-run omission coverage.",
+    "Applied approved RMD-001 roadmap reconciliation for cancelled TASK-012 stale tests/features code path."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+      "evidence": "Source and smoke fixture cover pi.skills-driven discovery for skills/think-code/SKILL.md."
+    },
+    {
+      "criterion": "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+      "evidence": "Code removes CodeWiki-specific required skill asset list; non-CodeWiki package fixture passes."
+    },
+    {
+      "criterion": "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+      "evidence": "Omitted-skills fixture asserts package-dry-run-missing for skills/think-code/SKILL.md."
+    },
+    {
+      "criterion": "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md.",
+      "evidence": "tests/smoke/audit-drift.test.mjs includes ThinkCode-style fixture and omitted pack-file negative case."
+    },
+    {
+      "criterion": "Run package audit against /home/nunoc/projects/think-code.",
+      "evidence": "Direct edited-source package audit passes with 0 issues; stale injected tool failure recorded as reload-boundary risk."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Carry on after TASK-015 by applying approved RMD-001 reconciliation and finishing TASK-016 package-neutral skill asset package audit fix.",
+    "implemented_changes": [
+      "Updated package audit skill asset discovery to use package.json pi.skills entries instead of hardcoded skills/codewiki assets.",
+      "Added package-neutral ThinkCode-style smoke fixture and omitted-pack-file negative coverage.",
+      "Verified edited-source package audit passes against /home/nunoc/projects/think-code.",
+      "Applied RMD-001 by removing stale tests/features from cancelled TASK-012 metadata and restoring cancelled lifecycle."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        "TASK-016",
+        "TASK-012"
+      ],
+      "code": [
+        "src/application/tools/audit.ts"
+      ],
+      "tests": [
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "tests/smoke/audit-drift.test.mjs passes",
+      "tests/smoke/audit.test.mjs passes",
+      "npm run typecheck passes",
+      "npm run test:smoke passes",
+      "direct edited-source package audit on /home/nunoc/projects/think-code passes with 0 issues",
+      "codewiki package audit passes"
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/audit.test.mjs",
+      "npm run typecheck",
+      "git diff --check",
+      "npm run test:smoke",
+      "codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki",
+      "direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016"
+    ],
+    "non_goals_preserved": [
+      "ThinkCode source was not changed.",
+      "Unrelated package manifest checks were not redesigned."
+    ],
+    "remaining_risks": [
+      "Reload needed before running injected codewiki_audit tool against ThinkCode reflects patched source.",
+      "Existing graph-health warnings remain unrelated."
+    ]
+  },
+  "risks": [
+    "Current Pi session must reload the extension before the codewiki_audit tool reflects the patched package audit on external repositories.",
+    "Existing graph-health warnings remain unrelated.",
+    "RMD-001 roadmap reconciliation is included in the same dirty set and should be committed with generated graph/task views."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-016",
+      "task_id": "TASK-016",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-016",
+        "title": "Make package audit discover skill assets from pi.skills",
+        "summary": "Implement TASK-016 package-neutral Pi skill asset discovery in package audit",
+        "spec_paths": [
+          "README.md",
+          "skills/codewiki/SKILL.md"
+        ],
+        "code_paths": [
+          "src/application/tools/audit.ts",
+          "tests/smoke/audit-drift.test.mjs",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-012/task.json",
+          ".codewiki/roadmap/tasks/TASK-012/context.json",
+          ".codewiki/index_graph.json"
+        ],
+        "acceptance": [
+          "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+          "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+          "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+          "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md."
+        ],
+        "verification": [
+          "Run targeted smoke audit tests.",
+          "Run package audit against /home/nunoc/projects/think-code."
+        ],
+        "source_planning_build": "",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+          "npm run typecheck: pass",
+          "git diff --check: pass",
+          "npm run test:smoke: pass",
+          "codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass",
+          "direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state",
+          "injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload"
+        ],
+        "test_design_evidence": [
+          "Added a ThinkCode-style package fixture with pi.skills pointing to skills/think-code and verified package audit passes without CodeWiki skill asset requirements.",
+          "Added a negative fixture omitting skills from package files to verify discovered skill assets still must be present in npm pack output.",
+          "Ran direct edited-source package audit on /home/nunoc/projects/think-code to cover the real external package case."
+        ],
+        "code_change_evidence": [
+          "Updated auditPackage to derive skill asset requirements from package.json pi.skills rather than static skills/codewiki paths.",
+          "Updated audit drift smoke tests with package-neutral skill fixture and dry-run omission coverage.",
+          "Applied approved RMD-001 roadmap reconciliation for cancelled TASK-012 stale tests/features code path."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-016",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-016",
+      "show_build": "git show refs/codewiki/archive/task/TASK-016:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-016 Make package audit discover skill assets from pi.skills implementation evidence",
+      "body": "Implement TASK-016 package-neutral Pi skill asset discovery in package audit\n\nChecks: node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, npm run typecheck: pass, git diff --check: pass, npm run test:smoke: pass, codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass, direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state, injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-016\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, npm run typecheck: pass, git diff --check: pass, npm run test:smoke: pass, codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass, direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state, injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-016\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-016\nCodeWiki-Digest: sha256:8d70ceb7d6894f3dea94ae1c9210268d3265edf4d4ab61a9d83433426a31e043\nCodeWiki-Restore: /wiki-restore TASK-016",
+      "trailers": [
+        "CodeWiki-Task: TASK-016",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, npm run typecheck: pass, git diff --check: pass, npm run test:smoke: pass, codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass, direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state, injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-016",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-016",
+        "CodeWiki-Digest: sha256:8d70ceb7d6894f3dea94ae1c9210268d3265edf4d4ab61a9d83433426a31e043",
+        "CodeWiki-Restore: /wiki-restore TASK-016"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-016 Make package audit discover skill assets from pi.skills implementation evidence",
+      "body": "Implement TASK-016 package-neutral Pi skill asset discovery in package audit\n\nChecks: node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, npm run typecheck: pass, git diff --check: pass, npm run test:smoke: pass, codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass, direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state, injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-016\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, npm run typecheck: pass, git diff --check: pass, npm run test:smoke: pass, codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass, direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state, injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-016\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-016\nCodeWiki-Digest: sha256:8d70ceb7d6894f3dea94ae1c9210268d3265edf4d4ab61a9d83433426a31e043\nCodeWiki-Restore: /wiki-restore TASK-016"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-016",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-016"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-016",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-016",
+        "show_build": "git show refs/codewiki/archive/task/TASK-016:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+          "README.md",
+          "skills/codewiki/SKILL.md",
+          "src/application/tools/audit.ts",
+          "tests/smoke/audit-drift.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-016",
+      "build_path": ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-016",
+      "commit_sha": "",
+      "digest": "sha256:8d70ceb7d6894f3dea94ae1c9210268d3265edf4d4ab61a9d83433426a31e043",
+      "restore_command": "/wiki-restore TASK-016"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": "tests/smoke/audit-drift.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c13e9064383b6e4e30bdc5e70d80b027edde781365fe245c10ff8d2bab230ec6",
+          "bytes": 9381
+        },
+        {
+          "path": "tests/smoke/audit.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:43c33603afccec47efee4a47d46a24bdcab47e1ce26d43c8a2aae9b8b9ab6a82",
+          "bytes": 4929
+        },
+        {
+          "path": "src/application/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:921b2f9ebf9d8ebe9277a1329b5ddef30e098ae3b676d1dada1dbdbc197666b0",
+          "bytes": 40656
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "role": "code_file",
+          "sha256": "sha256:55c0d3ed555fa59f892b4773c170292524fa71369e3ff3cd57f10f7dca1aaa65",
+          "bytes": 10493
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-012/task.json",
+          "role": "code_file",
+          "sha256": "sha256:5ce1ceb0f6f6df51b98b11a5626a01c34fd182fcd9b5f19db86b743237519270",
+          "bytes": 4260
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-012/context.json",
+          "role": "code_file",
+          "sha256": "sha256:2b55bcf375d0e891aa74ed67fc934b32e90ba6a0121603dea7837ad38782f3f8",
+          "bytes": 3812
+        }
+      ],
+      "skipped": [
+        {
+          "path": ".codewiki/index_graph.json",
+          "role": "code_file",
+          "reason": "too-large"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-016",
+      "source_build": ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/application/tools/audit.ts",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-012/task.json",
+          ".codewiki/roadmap/tasks/TASK-012/context.json",
+          ".codewiki/index_graph.json",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/audit.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-016",
+        "restore_command": "/wiki-restore TASK-016"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+        "npm run typecheck: pass",
+        "git diff --check: pass",
+        "npm run test:smoke: pass",
+        "codewiki_audit profiles=package repoPath=/home/nunoc/projects/codewiki: pass",
+        "direct edited-source executeCodewikiAudit package profile repoPath=/home/nunoc/projects/think-code: pass with 0 issues",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning only graph-health/generated dirty state",
+        "injected codewiki_audit profiles=package repoPath=/home/nunoc/projects/think-code: fail from stale loaded tool hardcoding old skills/codewiki paths until reload"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

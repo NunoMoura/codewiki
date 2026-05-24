@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-24T20:47:29Z",
+  "updated": "2026-05-24T23:47:59Z",
   "order": [
-    "TASK-012"
+    "TASK-012",
+    "TASK-016"
   ],
   "tasks": {
     "TASK-012": {
@@ -11,7 +12,7 @@
       "status": "cancelled",
       "priority": "medium",
       "kind": "architecture",
-      "summary": "Cancelled auto-merged non-atomic file-structure follow-up task produced by over-broad create de-duplication; will recreate split tasks with narrower scopes.",
+      "summary": "TASK-012 remains cancelled after stale code path reconciliation.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -29,8 +30,7 @@
         "src/application/state.ts",
         "src/application/state-builders.ts",
         "src/application/graph.ts",
-        "src/application/tools/audit.ts",
-        "tests/features"
+        "src/application/tools/audit.ts"
       ],
       "research_ids": [],
       "labels": [
@@ -82,7 +82,54 @@
         "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
       },
       "created": "2026-05-23",
-      "updated": "2026-05-23T01:49:52Z"
+      "updated": "2026-05-24T23:40:41Z"
+    },
+    "TASK-016": {
+      "id": "TASK-016",
+      "title": "Make package audit discover skill assets from pi.skills",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "bug",
+      "summary": "Patch the package audit to inspect package-declared Pi skill assets instead of requiring CodeWiki-specific skills/codewiki paths.",
+      "spec_paths": [
+        "README.md",
+        "skills/codewiki/SKILL.md"
+      ],
+      "code_paths": [
+        "src/application/tools/audit.ts",
+        "tests/smoke/audit-drift.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "package-audit",
+        "pi-skills",
+        "bugfix"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Package audit is package-neutral for Pi skills and no longer emits CodeWiki skill false positives against packages such as ThinkCode.",
+        "acceptance": [
+          "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
+          "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
+          "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
+          "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md."
+        ],
+        "non_goals": [
+          "Change ThinkCode source.",
+          "Redesign all package manifest checks unrelated to skill assets."
+        ],
+        "verification": [
+          "Run targeted smoke audit tests.",
+          "Run package audit against /home/nunoc/projects/think-code."
+        ]
+      },
+      "delta": {
+        "desired": "Package audit derives required skill assets from package.json pi.skills and discovered skill directories/files.",
+        "current": "Package audit hardcodes skills/codewiki skill assets and reports false positives for other Pi packages.",
+        "closure": ""
+      },
+      "created": "2026-05-24",
+      "updated": "2026-05-24T23:47:59Z"
     }
   },
   "sprints": {
