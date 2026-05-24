@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-24T20:47:15Z",
+  "profile": "task-close",
+  "task_id": "TASK-015",
+  "verdict": "pass",
+  "rationale": "TASK-015 may close. Commit 2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5 records the agency source-root pilot: src/agency/types.ts, src/agency/planning.ts, and src/agency/tool.ts own agency contracts/planning/tool execution; old agency paths are deprecated re-export-only compatibility shims; adapter/schema imports use the source-root modules; TASK-015 shim parity and package smoke coverage pass. Required typecheck, smoke, features, pack, direct package-smoke, implementation validation, and file-structure audit all pass. No non-agency concept root was moved, and current audits show only existing graph-health warnings.",
+  "checks": [
+    "codewiki_validation preflight_only=true profile=task-close task_id=TASK-015: ready (0 issues)",
+    "git commit 2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5 contains TASK-015 implementation and validation evidence",
+    "git tree 155f2a4c762a2e8f945c83e0f35674acc74e5d51 recorded",
+    "git update-ref refs/codewiki/archive/task/TASK-015 2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5 recorded",
+    "git status before task-close report: clean",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning only for graph-health",
+    "npm run typecheck: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass",
+    "npm run test:pack: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due graph-health warnings unrelated to TASK-015 closure."
+    },
+    {
+      "severity": "low",
+      "summary": "Deprecated agency compatibility shims remain intentionally and require future cleanup validation before removal."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "file-structure",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:file-structure",
+    "audit:alignment",
+    "audit:stale-reference",
+    "audit:generated-parity",
+    "audit:changed",
+    "audit:task",
+    "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+    "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/changed/task pass; alignment graph-health warning only"
+  ],
+  "content_proof_refs": [
+    "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
+    "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
+    "refs/codewiki/archive/task/TASK-015"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
+      "refs/codewiki/archive/task/TASK-015"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "file-structure",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-015",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
+    "validated_sha": "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
+    "tree_sha": "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
+    "archive_ref": "refs/codewiki/archive/task/TASK-015",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation uses committed implementation build and local archive ref; no remote publication attempted.",
+    "role": "validator"
+  }
+}
