@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-24T23:47:59.624Z",
+  "generated_at": "2026-05-24T23:49:48.921Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -3797,7 +3797,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -3865,7 +3865,7 @@
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4381,24 +4381,6 @@
       "change_type": "task",
       "alignment_state": "aligned",
       "lens_family": "work"
-    },
-    {
-      "id": "task:TASK-016",
-      "kind": "roadmap_task",
-      "title": "Make package audit discover skill assets from pi.skills",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "code",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:tests/smoke/audit-drift.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/audit-drift.test.mjs",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
     },
     {
       "id": "test:scripts/check-architecture.mjs",
@@ -12710,7 +12692,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-016",
       "superseded_by": [
@@ -12803,17 +12785,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "test:tests/smoke/audit-drift.test.mjs",
-      "kind": "test_file",
-      "path": "tests/smoke/audit-drift.test.mjs",
-      "lens_family": "execution"
-    },
-    {
-      "id": "closure:TASK-016",
-      "kind": "closure_brief",
-      "path": "TASK-016"
     },
     {
       "id": "build:.codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
@@ -13441,96 +13412,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-147",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-147",
-      "session_id": "019e4794-4800-7661-b825-387079d68413",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-      "expires_at": "2026-05-25T03:41:37.590Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-        "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-        "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-016"
-        },
-        {
-          "layer": "source",
-          "path": "src/application/tools/audit.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/smoke/audit-drift.test.mjs"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        },
-        {
-          "layer": "roadmap",
-          "path": ".codewiki/roadmap/queue.json"
-        },
-        {
-          "layer": "graph",
-          "path": ".codewiki/index_graph.json"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-016",
-      "kind": "change_claim_scope",
-      "path": "TASK-016",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/application/tools/audit.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/tools/audit.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/audit-drift.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/audit-drift.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/roadmap/queue.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/roadmap/queue.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/index_graph.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/index_graph.json",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -16797,6 +16678,84 @@
       "id": "content_proof:155f2a4c762a2e8f945c83e0f35674acc74e5d51",
       "kind": "content_proof",
       "path": "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+        "validated_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+        "tree_sha": "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+        "archive_ref": "refs/codewiki/archive/task/TASK-016",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation uses committed implementation build and local archive ref; no remote publication attempted.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:file-structure",
+          "audit:alignment",
+          "audit:stale-reference",
+          "audit:generated-parity",
+          "audit:changed",
+          "audit:package",
+          "audit:task",
+          "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+          "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+          "direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code: pass with 0 issues"
+        ],
+        "content_proof_refs": [
+          "d075790ef0a80df4587777c64cbdde62911aecc9",
+          "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+          "refs/codewiki/archive/task/TASK-016"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:d075790ef0a80df4587777c64cbdde62911aecc9",
+      "kind": "content_proof",
+      "path": "d075790ef0a80df4587777c64cbdde62911aecc9",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+      "kind": "content_proof",
+      "path": "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
@@ -21295,26 +21254,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-012",
       "to": "code:src/application/tools/audit.ts"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-016",
-      "to": "doc:README.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-016",
-      "to": "doc:skills/codewiki/SKILL.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-016",
-      "to": "code:src/application/tools/audit.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-016",
-      "to": "code:tests/smoke/audit-drift.test.mjs"
     },
     {
       "kind": "build_references_canonical_source",
@@ -30637,26 +30576,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-      "to": "task:TASK-016"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-      "to": "code:src/application/tools/audit.ts"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-      "to": "test:tests/smoke/audit-drift.test.mjs"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-      "to": "closure:TASK-016"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
       "to": "source:.codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
@@ -31292,46 +31211,6 @@
       "from": "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-016",
       "default_hidden": true
-    },
-    {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-147",
-      "to": "task:TASK-016"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:TASK-016"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:src/application/tools/audit.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:tests/smoke/audit-drift.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:.codewiki/roadmap/queue.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-147",
-      "to": "claim_scope:.codewiki/index_graph.json"
     },
     {
       "kind": "validation_attests_source",
@@ -35026,6 +34905,101 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-015.json",
       "to": "task:TASK-015"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:package",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "audit:direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code: pass with 0 issues",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "content_proof:d075790ef0a80df4587777c64cbdde62911aecc9",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "content_proof:2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-016",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+      "to": "task:TASK-016"
     }
   ],
   "views": {
@@ -35103,16 +35077,12 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 12,
+            "item_count": 3,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 1,
-                "refs": [
-                  "TASK-016"
-                ],
-                "ref_count": 1
+                "count": 0
               },
               {
                 "id": "done_tasks",
@@ -35132,20 +35102,13 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
               "sprint:SPRINT-001",
               "sprint:SPRINT-002",
-              "task:TASK-012",
-              "task:TASK-016",
-              "claim:CLAIM-147",
-              "claim_scope:TASK-016",
-              "claim_scope:src/application/tools/audit.ts",
-              "claim_scope:tests/smoke/audit-drift.test.mjs",
-              "claim_scope:.codewiki/builds/implementation/**",
-              "claim_scope:.codewiki/validation/**"
+              "task:TASK-012"
             ],
             "collapsed": true
           },
@@ -35153,18 +35116,18 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "drift",
-            "item_count": 110,
+            "state": "aligned",
+            "item_count": 108,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 84
+                "count": 83
               },
               {
                 "id": "test_files",
                 "label": "test files",
-                "count": 26
+                "count": 25
               },
               {
                 "id": "implementation_builds",
@@ -35174,12 +35137,7 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 2,
-                "refs": [
-                  "src/application/tools/audit.ts",
-                  "tests/smoke/audit-drift.test.mjs"
-                ],
-                "ref_count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -35206,7 +35164,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 52
+                "count": 53
               },
               {
                 "id": "fail_or_block_validation",
@@ -35216,12 +35174,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 137
+                "count": 139
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 436
+                "count": 438
               },
               {
                 "id": "traceability_gaps",
@@ -35243,11 +35201,11 @@
             "collapsed": 47
           },
           "validations": {
-            "total": 52,
-            "pass": 39,
+            "total": 53,
+            "pass": 40,
             "fail_or_block": 13,
             "hot": 3,
-            "collapsed": 52
+            "collapsed": 53
           }
         },
         "next_action": {
@@ -35268,85 +35226,7 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/application/tools/audit.ts",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/audit-drift.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -38096,6 +37976,34 @@
               "refs/codewiki/archive/task/TASK-015"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-016",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:file-structure",
+              "audit:alignment",
+              "audit:stale-reference",
+              "audit:generated-parity",
+              "audit:changed",
+              "audit:package",
+              "audit:task",
+              "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+              "direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code: pass with 0 issues"
+            ],
+            "content_proof_refs": [
+              "d075790ef0a80df4587777c64cbdde62911aecc9",
+              "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+              "refs/codewiki/archive/task/TASK-016"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -38986,6 +38894,27 @@
               "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
               "refs/codewiki/archive/task/TASK-015"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+            "task_id": "TASK-016",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+            "validated_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "d075790ef0a80df4587777c64cbdde62911aecc9",
+              "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+              "refs/codewiki/archive/task/TASK-016"
+            ],
+            "publisher_result_refs": [
+              "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+              "refs/codewiki/archive/task/TASK-016"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -39069,6 +38998,7 @@
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/changed/task pass; alignment graph-health warning only",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/package/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
           "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
           "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
@@ -39125,6 +39055,7 @@
           "task:TASK-005",
           "task:TASK-006",
           "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+          "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
           "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
         ],
         "content_proof_refs": [
@@ -39220,6 +39151,7 @@
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
           "23535a3b871eb528b3857868b758fe5a7041734c",
           "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
+          "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
           "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
           "301e7f5373522d6371bee8be22af818132f02937",
           "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
@@ -39256,6 +39188,7 @@
           "ccc06de45add0502b691dd440240dc4281b4f026",
           "ccfed3f650ec5fd811cb0375a680fcbf8cdec499",
           "ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+          "d075790ef0a80df4587777c64cbdde62911aecc9",
           "d955591e18840527f42a864f2734c7dc08c514b6",
           "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
           "e329c1f47deec0f969c834131b017d33dd46e8de",
@@ -39691,15 +39624,10 @@
     },
     "roadmap": {
       "task_ids": [
-        "TASK-012",
-        "TASK-016"
+        "TASK-012"
       ],
-      "open_task_ids": [
-        "TASK-016"
-      ],
-      "in_progress_task_ids": [
-        "TASK-016"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [],
@@ -39707,8 +39635,7 @@
         "TASK-012"
       ],
       "status_counts": {
-        "cancelled": 1,
-        "in_progress": 1
+        "cancelled": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -39875,474 +39802,30 @@
         "src/ui/web/control-room.ts",
         "tests",
         "tests/**",
-        "tests/smoke/audit-drift.test.mjs",
         "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": [
-        "src/application/tools/audit.ts",
-        "tests/smoke/audit-drift.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-147",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-016",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-          "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-147",
-          "session_id": "019e4794-4800-7661-b825-387079d68413",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-          "task_id": "TASK-016",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-            "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-            "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-016"
-            },
-            {
-              "layer": "source",
-              "path": "src/application/tools/audit.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/smoke/audit-drift.test.mjs"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/queue.json"
-            },
-            {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            }
-          ],
-          "created_at": "2026-05-24T23:41:37Z",
-          "updated_at": "2026-05-24T23:41:37Z",
-          "expires_at": "2026-05-25T03:41:37.590Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/queue.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/tools/audit.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-016"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/audit-drift.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "graph",
-            "path": ".codewiki/index_graph.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "path": ".codewiki/roadmap/queue.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/tools/audit.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-016"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/audit-drift.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-147",
-              "session_id": "019e4794-4800-7661-b825-387079d68413",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-016",
-              "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-              "expires_at": "2026-05-25T03:41:37.590Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -41233,6 +40716,27 @@
             "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
             "refs/codewiki/archive/task/TASK-015"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+          "task_id": "TASK-016",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+          "validated_sha": "d075790ef0a80df4587777c64cbdde62911aecc9",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "d075790ef0a80df4587777c64cbdde62911aecc9",
+            "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+            "refs/codewiki/archive/task/TASK-016"
+          ],
+          "publisher_result_refs": [
+            "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+            "refs/codewiki/archive/task/TASK-016"
+          ]
         }
       ]
     },
@@ -41601,6 +41105,7 @@
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-014: warning; file-structure/stale-reference/generated-parity/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/changed/task pass; alignment graph-health warning only",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed task_id=TASK-015: warning; file-structure/stale-reference/generated-parity/task pass; changed warning only generated index dirty; alignment graph-health warnings remain",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/package/task pass; changed warnings generated dirty state; alignment graph-health warnings remain",
         "codewiki_audit profiles=generated-parity,changed task_id=TASK-002 => pass, 0 issues after persisting task-close preflight block",
         "codewiki_audit profiles=generated-parity,file-structure,package,security,stale-reference",
@@ -41657,6 +41162,7 @@
         "task:TASK-005",
         "task:TASK-006",
         "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
+        "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
         "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
       ],
       "content_proof_refs": [
@@ -41752,6 +41258,7 @@
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
         "23535a3b871eb528b3857868b758fe5a7041734c",
         "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
+        "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
         "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
         "301e7f5373522d6371bee8be22af818132f02937",
         "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
@@ -41788,6 +41295,7 @@
         "ccc06de45add0502b691dd440240dc4281b4f026",
         "ccfed3f650ec5fd811cb0375a680fcbf8cdec499",
         "ce36e1d5436839f9055ddca2a50bd5ea8ad740e4",
+        "d075790ef0a80df4587777c64cbdde62911aecc9",
         "d955591e18840527f42a864f2734c7dc08c514b6",
         "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
         "e329c1f47deec0f969c834131b017d33dd46e8de",
@@ -43331,6 +42839,34 @@
             "refs/codewiki/archive/task/TASK-015"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-24-task-close-pass-task-016.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-016",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:file-structure",
+            "audit:alignment",
+            "audit:stale-reference",
+            "audit:generated-parity",
+            "audit:changed",
+            "audit:package",
+            "audit:task",
+            "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
+            "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,package task_id=TASK-016: warning; file-structure/stale-reference/generated-parity/changed/package/task pass; alignment graph-health warning only",
+            "direct edited-source executeCodewikiAudit package on /home/nunoc/projects/think-code: pass with 0 issues"
+          ],
+          "content_proof_refs": [
+            "d075790ef0a80df4587777c64cbdde62911aecc9",
+            "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
+            "refs/codewiki/archive/task/TASK-016"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -43757,85 +43293,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/tools/audit.ts",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/audit-drift.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -43844,12 +43302,9 @@
       "roadmap": {
         "kind": "roadmap",
         "task_ids": [
-          "TASK-012",
-          "TASK-016"
+          "TASK-012"
         ],
-        "open_task_ids": [
-          "TASK-016"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -43978,25 +43433,6 @@
             "src/application/graph.ts",
             "src/application/tools/audit.ts"
           ]
-        },
-        "TASK-016": {
-          "kind": "task",
-          "id": "TASK-016",
-          "task_ids": [
-            "TASK-016"
-          ],
-          "open_task_ids": [
-            "TASK-016"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            "README.md",
-            "skills/codewiki/SKILL.md"
-          ],
-          "code_paths": [
-            "src/application/tools/audit.ts",
-            "tests/smoke/audit-drift.test.mjs"
-          ]
         }
       }
     },
@@ -44030,9 +43466,7 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-016"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-001",
             "SPRINT-002"
@@ -44043,9 +43477,7 @@
             ".codewiki/validation/2026-05-22-planning-block.json",
             ".codewiki/validation/2026-05-23-planning-fail.json"
           ],
-          "claim_ids": [
-            "CLAIM-147"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -44161,6 +43593,7 @@
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
             ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
             ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
             ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
             ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
             ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
@@ -44588,6 +44021,7 @@
           ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
           ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
           ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+          ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
           ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
           ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
@@ -44627,7 +44061,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-24T23:47:59.524Z",
+      "generated_at": "2026-05-24T23:49:48.852Z",
       "counts": {
         "large-doc": 3
       },
@@ -44654,7 +44088,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-24T23:47:59Z",
+      "generated_at": "2026-05-24T23:49:48Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -44665,30 +44099,23 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 2,
-        "open_count": 1,
+        "task_count": 1,
+        "open_count": 0,
         "sprint_count": 2,
         "active_sprint_count": 2,
         "status_counts": {
-          "cancelled": 1,
-          "in_progress": 1
+          "cancelled": 1
         },
         "priority_counts": {
-          "medium": 1,
-          "high": 1
+          "medium": 1
         }
       },
       "views": {
         "ordered_task_ids": [
-          "TASK-012",
-          "TASK-016"
+          "TASK-012"
         ],
-        "open_task_ids": [
-          "TASK-016"
-        ],
-        "executable_open_task_ids": [
-          "TASK-016"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -44791,12 +44218,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-016"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-016"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -44805,7 +44228,6 @@
           "TASK-012"
         ],
         "recent_task_ids": [
-          "TASK-016",
           "TASK-012"
         ]
       },
@@ -44890,62 +44312,12 @@
             "updated_at": "",
             "evidence": null
           }
-        },
-        "TASK-016": {
-          "id": "TASK-016",
-          "title": "Make package audit discover skill assets from pi.skills",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "bug",
-          "change_type": "code",
-          "summary": "Patch the package audit to inspect package-declared Pi skill assets instead of requiring CodeWiki-specific skills/codewiki paths.",
-          "labels": [
-            "package-audit",
-            "pi-skills",
-            "bugfix"
-          ],
-          "goal": {
-            "outcome": "Package audit is package-neutral for Pi skills and no longer emits CodeWiki skill false positives against packages such as ThinkCode.",
-            "acceptance": [
-              "auditPackage reads package.json pi.skills entries and discovers actual skill assets under those entries.",
-              "Package audit no longer hardcodes skills/codewiki/** as required package artifacts.",
-              "Discovered real skill assets are required to exist and to appear in npm pack --dry-run output.",
-              "A smoke test covers a non-CodeWiki skill package with skills/think-code/SKILL.md."
-            ],
-            "non_goals": [
-              "Change ThinkCode source.",
-              "Redesign all package manifest checks unrelated to skill assets."
-            ],
-            "verification": [
-              "Run targeted smoke audit tests.",
-              "Run package audit against /home/nunoc/projects/think-code."
-            ]
-          },
-          "spec_paths": [
-            "README.md",
-            "skills/codewiki/SKILL.md"
-          ],
-          "code_paths": [
-            "src/application/tools/audit.ts",
-            "tests/smoke/audit-drift.test.mjs"
-          ],
-          "updated": "2026-05-24T23:47:59Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-016/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-24T23:47:59Z",
+      "generated_at": "2026-05-24T23:49:48Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -44965,8 +44337,8 @@
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 2,
-        "open_task_count": 1,
+        "task_count": 1,
+        "open_task_count": 0,
         "done_task_count": 0
       },
       "bars": {
@@ -44979,7 +44351,7 @@
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 2,
+          "total": 1,
           "percent": 0
         },
         "spec_mapping": {
@@ -44992,9 +44364,7 @@
       "views": {
         "risky_spec_paths": [],
         "top_risky_spec_paths": [],
-        "open_task_ids": [
-          "TASK-016"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -45005,9 +44375,9 @@
         ]
       },
       "next_step": {
-        "kind": "code",
-        "command": "/wiki-resume TASK-016",
-        "reason": "Roadmap already covers current executable delta; continue in-progress implementation."
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
         "active_loop": "observe",
@@ -45039,9 +44409,7 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-016"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-001",
               "SPRINT-002"
@@ -45052,9 +44420,7 @@
               ".codewiki/validation/2026-05-22-planning-block.json",
               ".codewiki/validation/2026-05-23-planning-fail.json"
             ],
-            "claim_ids": [
-              "CLAIM-147"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -45170,6 +44536,7 @@
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
               ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
               ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
               ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
               ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
               ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json"
@@ -45189,8 +44556,8 @@
         ]
       },
       "direction": [
-        "Roadmap already covers current executable delta; continue in-progress implementation.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "No open deterministic drift requires action right now.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "No tracked spec drift is open."
@@ -46036,7 +45403,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-24T23:47:59Z",
+        "generated_at": "2026-05-24T23:49:48Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -46064,17 +45431,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-24T23:47:59Z",
+            "checked_at": "2026-05-24T23:49:48Z",
             "revision": {
               "git": {
-                "head": "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-012/context.json",
-                  ".codewiki/roadmap/tasks/TASK-012/task.json",
-                  "src/application/tools/audit.ts"
-                ],
+                "head": "98501cc9e1bce487af3a49578a8116d80717a40e",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -46113,7 +45475,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "77b2e8d864bcf19c132fb76f3506d26496539e4c",
+                  ".codewiki/roadmap/queue.json": "bd52ed993f369709f81bfafa8e0848ac689c78a7",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -46160,15 +45522,15 @@
               },
               "spec_digest": "45967be84ff7f086988b3c2c1bbcf8939ba9d011ea42f235b7ca309dc520bac3",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "e4f9b15fd39299e9d331c095ae9cc4d7c6919aca17cdc01b81ce230670a0bc31",
-              "digest": "e8d80a7ee7c36d67c2ba19c8bb1a84c7c8afec1cce7b3db9c89754067c9e88a0"
+              "code_digest": "881caff3e9ec7fad8cc2aaf5a6cbb7446577e4c8b19cef15df996729a7172e93",
+              "digest": "19571666a7c80153b46aaf660342a8b587a792802219c2c2e43c35214b9fc1b5"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-24T23:47:59Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-24T23:49:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -46286,17 +45648,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-24T23:47:59Z",
+            "checked_at": "2026-05-24T23:49:48Z",
             "revision": {
               "git": {
-                "head": "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-012/context.json",
-                  ".codewiki/roadmap/tasks/TASK-012/task.json",
-                  "src/application/tools/audit.ts"
-                ],
+                "head": "98501cc9e1bce487af3a49578a8116d80717a40e",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -46319,7 +45676,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "77b2e8d864bcf19c132fb76f3506d26496539e4c",
+                  ".codewiki/roadmap/queue.json": "bd52ed993f369709f81bfafa8e0848ac689c78a7",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -46361,15 +45718,15 @@
               },
               "spec_digest": "e06fe4140b433e0ca80b86f657f00d699c3c026c5c0c32657fdaf43681743f6f",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "f25fc417991e5f545790cc40553260cbf4059636d2bf2fa80b550b7cb08d77bb",
-              "digest": "32ddf26a78cc282a0d2d451a97ef5f5dd4a051d11603899980bef811c5848fad"
+              "code_digest": "bd950986b30bcf2ad87949efc980ed4579ff937ee7801138fa3953fff3d027c6",
+              "digest": "c08049935d692531a12b998201f439cf9693d90e4331a9fc7079404d6d08752c"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-24T23:47:59Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-24T23:49:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -46466,17 +45823,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-24T23:47:59Z",
+            "checked_at": "2026-05-24T23:49:48Z",
             "revision": {
               "git": {
-                "head": "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-012/context.json",
-                  ".codewiki/roadmap/tasks/TASK-012/task.json",
-                  "src/application/tools/audit.ts"
-                ],
+                "head": "98501cc9e1bce487af3a49578a8116d80717a40e",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -46515,7 +45867,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "9e99137425519d294dad6806aaa71128e3227dbc",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "77b2e8d864bcf19c132fb76f3506d26496539e4c",
+                  ".codewiki/roadmap/queue.json": "bd52ed993f369709f81bfafa8e0848ac689c78a7",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -46562,15 +45914,15 @@
               },
               "spec_digest": "45967be84ff7f086988b3c2c1bbcf8939ba9d011ea42f235b7ca309dc520bac3",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "e4f9b15fd39299e9d331c095ae9cc4d7c6919aca17cdc01b81ce230670a0bc31",
-              "digest": "e8d80a7ee7c36d67c2ba19c8bb1a84c7c8afec1cce7b3db9c89754067c9e88a0"
+              "code_digest": "881caff3e9ec7fad8cc2aaf5a6cbb7446577e4c8b19cef15df996729a7172e93",
+              "digest": "19571666a7c80153b46aaf660342a8b587a792802219c2c2e43c35214b9fc1b5"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-24T23:47:59Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-24T23:49:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -46677,272 +46029,33 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-016",
+        "source": "next_step",
+        "task_id": "",
         "lane_id": "",
-        "heading": "TASK-016 — Make package audit discover skill assets from pi.skills",
-        "command": "/wiki-resume TASK-016",
-        "reason": "Resume roadmap task (in_progress).",
+        "heading": "Roadmap clear",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now.",
         "status": "in_progress",
-        "verification": "Run targeted smoke audit tests.",
+        "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-05-24T23:47:59Z",
+        "generated_at": "2026-05-24T23:49:48Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-147",
-            "session_id": "019e4794-4800-7661-b825-387079d68413",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-            "task_id": "TASK-016",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-              "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-              "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-016"
-              },
-              {
-                "layer": "source",
-                "path": "src/application/tools/audit.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/smoke/audit-drift.test.mjs"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              },
-              {
-                "layer": "roadmap",
-                "path": ".codewiki/roadmap/queue.json"
-              },
-              {
-                "layer": "graph",
-                "path": ".codewiki/index_graph.json"
-              }
-            ],
-            "created_at": "2026-05-24T23:41:37Z",
-            "updated_at": "2026-05-24T23:41:37Z",
-            "expires_at": "2026-05-25T03:41:37.590Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "graph",
-              "path": ".codewiki/index_graph.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "path": ".codewiki/roadmap/queue.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/application/tools/audit.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-016"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/smoke/audit-drift.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-147",
-                "session_id": "019e4794-4800-7661-b825-387079d68413",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-016",
-                "summary": "Resume available TASK-016 dirty implementation for package-neutral skill asset discovery; preserve already-applied RMD-001 reconciliation and validate before commit.",
-                "expires_at": "2026-05-25T03:41:37.590Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "branch": "codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413",
-                  "notes": "factory=role-worktree; task=TASK-016; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-147 release or validated publisher/patch ref for codewiki/TASK-016/builder/019e4794-4800-7661-b825-387079d68413; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -48649,12 +47762,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-016",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-016"
-        ],
-        "next_task_id": "TASK-016",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -48765,9 +47876,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-016"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
