@@ -1,4 +1,4 @@
-import type { AgencyBudget } from "../agency/types.ts";
+import type { AgencyBudget } from "../../agency/types.ts";
 import type { ChangeType, LegacyChangeClass } from "../change/types.ts";
 
 export const ROADMAP_STATUS_VALUES = [

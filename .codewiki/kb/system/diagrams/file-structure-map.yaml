@@ -89,22 +89,26 @@ nodes:
     status: implemented_pilot_validated
     paths:
       - src/agency/**
+      - tests/tasks/TASK-015/agency-source-root.test.mjs
+    former_compatibility_paths:
       - src/domain/agency/types.ts
       - src/application/agency.ts
       - src/application/tools/agency.ts
-      - tests/tasks/TASK-015/agency-source-root.test.mjs
   - id: agency_shim_cleanup_boundary
     label: Agency shim cleanup follow-up
     group: drift
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: selected_next_boundary
+    status: cleanup_validated_by_task_020
     task_id: TASK-020
-    paths:
+    cleanup_state: shims_removed
+    removed_paths:
       - src/domain/agency/types.ts
       - src/application/agency.ts
       - src/application/tools/agency.ts
+    paths:
+      - src/agency/**
       - tests/tasks/TASK-015/agency-source-root.test.mjs
       - tests/smoke/package-smoke.test.mjs
   - id: api_facade

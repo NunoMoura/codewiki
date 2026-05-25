@@ -1,41 +1,84 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const repoRoot = resolve(import.meta.dirname, "..", "..", "..");
 const source = (...parts) => resolve(repoRoot, "src", ...parts);
+const removedAgencyShimPaths = [
+	"src/domain/agency/types.ts",
+	"src/application/agency.ts",
+	"src/application/tools/agency.ts",
+];
+const removedAgencyShimAbsPaths = removedAgencyShimPaths.map((relPath) =>
+	resolve(repoRoot, relPath),
+);
 
 assert.ok(existsSync(source("agency", "types.ts")), "Agency types should be owned by src/agency/types.ts");
 assert.ok(existsSync(source("agency", "planning.ts")), "Agency planning use case should be owned by src/agency/planning.ts");
 assert.ok(existsSync(source("agency", "tool.ts")), "Agency tool entrypoint should be owned by src/agency/tool.ts");
 
-const newTypes = await import(pathToFileURL(source("agency", "types.ts")).href);
-const oldTypes = await import(pathToFileURL(source("domain", "agency", "types.ts")).href);
-assert.equal(oldTypes.AGENCY_MODE_VALUES, newTypes.AGENCY_MODE_VALUES, "Old agency type path should re-export source-root values");
-assert.equal(oldTypes.AGENCY_TRIGGER_VALUES, newTypes.AGENCY_TRIGGER_VALUES, "Old agency trigger path should re-export source-root values");
-assert.equal(oldTypes.AGENCY_RISK_VALUES, newTypes.AGENCY_RISK_VALUES, "Old agency risk path should re-export source-root values");
+for (const relPath of removedAgencyShimPaths) {
+	assert.ok(!existsSync(resolve(repoRoot, relPath)), `${relPath} should be removed after TASK-020 cleanup`);
+}
 
-const newPlanning = await import(pathToFileURL(source("agency", "planning.ts")).href);
-const oldPlanning = await import(pathToFileURL(source("application", "agency.ts")).href);
-assert.equal(oldPlanning.planAgency, newPlanning.planAgency, "Old application agency path should re-export source-root planner");
+const agencyTypes = await import(pathToFileURL(source("agency", "types.ts")).href);
+assert.deepEqual(agencyTypes.AGENCY_MODE_VALUES, ["auto", "dry-run", "manual", "observe", "maintain", "work"], "Agency modes should remain source-root owned");
+assert.deepEqual(agencyTypes.AGENCY_TRIGGER_VALUES, ["manual", "task_end", "sprint_end", "roadmap_end", "budget_end"], "Agency triggers should remain source-root owned");
+assert.deepEqual(agencyTypes.AGENCY_RISK_VALUES, ["low", "medium", "high"], "Agency risks should remain source-root owned");
 
-const newTool = await import(pathToFileURL(source("agency", "tool.ts")).href);
-const oldTool = await import(pathToFileURL(source("application", "tools", "agency.ts")).href);
-assert.equal(oldTool.executeCodewikiAgencyTool, newTool.executeCodewikiAgencyTool, "Old application tool path should re-export source-root tool executor");
-assert.equal(oldTool.buildThinkCodeContextPlan, newTool.buildThinkCodeContextPlan, "Old application tool path should re-export source-root context helper");
+const agencyPlanning = await import(pathToFileURL(source("agency", "planning.ts")).href);
+assert.equal(typeof agencyPlanning.planAgency, "function", "Agency planner should remain exported from source-root owner");
 
-const typeShim = readFileSync(source("domain", "agency", "types.ts"), "utf8");
-assert.match(typeShim, /@deprecated Compatibility shim/, "Old agency type path should be marked as a temporary compatibility shim");
-assert.match(typeShim, /export \* from "\.\.\/\.\.\/agency\/types\.ts";/, "Old agency type path should be re-export-only");
+const agencyTool = await import(pathToFileURL(source("agency", "tool.ts")).href);
+assert.equal(typeof agencyTool.executeCodewikiAgencyTool, "function", "Agency tool executor should remain exported from source-root owner");
+assert.equal(typeof agencyTool.buildThinkCodeContextPlan, "function", "Agency context helper should remain exported from source-root owner");
 
-const planningShim = readFileSync(source("application", "agency.ts"), "utf8");
-assert.match(planningShim, /@deprecated Compatibility shim/, "Old agency planning path should be marked as a temporary compatibility shim");
-assert.match(planningShim, /export \* from "\.\.\/agency\/planning\.ts";/, "Old agency planning path should be re-export-only");
+function* walkCodeFiles(dir) {
+	for (const entry of readdirSync(dir, { withFileTypes: true })) {
+		if (["node_modules", ".git", "dist"].includes(entry.name)) continue;
+		const entryPath = resolve(dir, entry.name);
+		if (entry.isDirectory()) {
+			yield* walkCodeFiles(entryPath);
+		} else if (/\.(?:ts|mts|cts|js|mjs|cjs)$/.test(entry.name)) {
+			yield entryPath;
+		}
+	}
+}
 
-const toolShim = readFileSync(source("application", "tools", "agency.ts"), "utf8");
-assert.match(toolShim, /@deprecated Compatibility shim/, "Old agency tool path should be marked as a temporary compatibility shim");
-assert.match(toolShim, /export \* from "\.\.\/\.\.\/agency\/tool\.ts";/, "Old agency tool path should be re-export-only");
+function importSpecifiers(sourceText) {
+	const patterns = [
+		/\bimport\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']/g,
+		/\bexport\s+[^"']+?\s+from\s+["']([^"']+)["']/g,
+		/\bimport\s*\(\s*["']([^"']+)["']\s*\)/g,
+	];
+	return patterns.flatMap((pattern) => [...sourceText.matchAll(pattern)].map((match) => match[1]));
+}
+
+function pointsAtRemovedAgencyShim(filePath, specifier) {
+	if (specifier.startsWith(".")) {
+		const resolved = resolve(dirname(filePath), specifier);
+		return removedAgencyShimAbsPaths.some((removedPath) =>
+			resolved === removedPath || resolved === removedPath.replace(/\.ts$/, ""),
+		);
+	}
+	return removedAgencyShimPaths.some((removedPath) =>
+		specifier === removedPath || specifier.endsWith(`/${removedPath}`),
+	);
+}
+
+const importViolations = [];
+for (const codeRoot of [resolve(repoRoot, "src"), resolve(repoRoot, "tests")]) {
+	for (const filePath of walkCodeFiles(codeRoot)) {
+		const specs = importSpecifiers(readFileSync(filePath, "utf8"));
+		for (const specifier of specs) {
+			if (pointsAtRemovedAgencyShim(filePath, specifier)) {
+				importViolations.push(`${filePath}: ${specifier}`);
+			}
+		}
+	}
+}
+assert.deepEqual(importViolations, [], "Source and tests should not import removed agency shim paths");
 
 const adapterSource = readFileSync(source("adapters", "pi", "tools", "agency.ts"), "utf8");
 assert.match(adapterSource, /from "\.\.\/\.\.\/\.\.\/agency\/types\.ts"/, "Pi agency adapter should consume source-root agency types");

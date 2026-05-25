@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-25T04:54:21Z",
+  "updated": "2026-05-25T07:23:19Z",
   "order": [
     "TASK-012",
     "TASK-020"
@@ -90,7 +90,7 @@
       "status": "in_progress",
       "priority": "high",
       "kind": "migration",
-      "summary": "Complete the agency concept-root pilot lifecycle by removing deprecated agency old-path re-export shims after validated planning, without changing public package or adapter behavior.",
+      "summary": "Complete the agency concept-root pilot lifecycle by removing deprecated agency old-path re-export shims after validated planning, updating remaining internal references to the source-root owner, and preserving public package or adapter behavior.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -99,12 +99,15 @@
         ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
       ],
       "code_paths": [
-        "src/domain/agency/types.ts",
-        "src/application/agency.ts",
-        "src/application/tools/agency.ts",
         "src/agency/types.ts",
         "src/agency/planning.ts",
         "src/agency/tool.ts",
+        "src/domain/project/types.ts",
+        "src/domain/roadmap/types.ts",
+        "src/domain/session/links.ts",
+        "src/domain/session/types.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/validation/types.ts",
         "src/adapters/pi/tools/agency.ts",
         "src/adapters/pi/schemas.ts",
         "tests/tasks/TASK-015/agency-source-root.test.mjs",
@@ -148,7 +151,7 @@
         "closure": "Implementation build and validation prove shim cleanup, updated tests/KB/diagram, and no non-agency source migration."
       },
       "created": "2026-05-25",
-      "updated": "2026-05-25T04:00:39Z"
+      "updated": "2026-05-25T07:23:19Z"
     }
   },
   "sprints": {

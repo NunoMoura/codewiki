@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-25T04:00:39Z",
+  "generated_at": "2026-05-25T07:23:19Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-020/context.json",
   "task": {
     "id": "TASK-020",
@@ -9,7 +9,7 @@
     "priority": "high",
     "kind": "migration",
     "change_type": "code",
-    "summary": "Complete the agency concept-root pilot lifecycle by removing deprecated agency old-path re-export shims after validated planning, without changing public package or adapter behavior.",
+    "summary": "Complete the agency concept-root pilot lifecycle by removing deprecated agency old-path re-export shims after validated planning, updating remaining internal references to the source-root owner, and preserving public package or adapter behavior.",
     "labels": [
       "agency-shim-cleanup"
     ],
