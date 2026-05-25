@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-25T07:25:03.361Z",
+  "generated_at": "2026-05-25T07:26:00.313Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -15316,168 +15316,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-156",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-156",
-      "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-      "agent_name": "Robin",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-      "expires_at": "2026-05-25T09:06:31.706Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/codewiki",
-        "branch": "main",
-        "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-        "clean": false,
-        "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-020"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/file-structure.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-        },
-        {
-          "layer": "source",
-          "path": "src/domain/agency/types.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/application/agency.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/application/tools/agency.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/agency/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/adapters/pi/tools/agency.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/adapters/pi/schemas.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-        },
-        {
-          "layer": "source",
-          "path": "tests/tasks/TASK-020/**"
-        },
-        {
-          "layer": "source",
-          "path": "tests/smoke/package-smoke.test.mjs"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-020",
-      "kind": "change_claim_scope",
-      "path": "TASK-020",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/file-structure.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/file-structure.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/domain/agency/types.ts",
-      "kind": "change_claim_scope",
-      "path": "src/domain/agency/types.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/application/agency.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/agency.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/application/tools/agency.ts",
-      "kind": "change_claim_scope",
-      "path": "src/application/tools/agency.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/agency/**",
-      "kind": "change_claim_scope",
-      "path": "src/agency/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/tools/agency.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/tools/agency.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/schemas.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/schemas.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/tasks/TASK-015/agency-source-root.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/tasks/TASK-020/**",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/TASK-020/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/package-smoke.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -37515,81 +37353,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-156",
-      "to": "task:TASK-020"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:TASK-020"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/domain/agency/types.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/application/agency.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/application/tools/agency.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/agency/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/adapters/pi/tools/agency.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:src/adapters/pi/schemas.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:tests/tasks/TASK-015/agency-source-root.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:tests/tasks/TASK-020/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-156",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -42887,7 +42650,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 18,
+            "item_count": 3,
             "badges": [
               {
                 "id": "open_tasks",
@@ -42912,20 +42675,13 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
               "sprint:SPRINT-001",
               "sprint:SPRINT-002",
-              "task:TASK-012",
-              "claim:CLAIM-156",
-              "claim_scope:TASK-020",
-              "claim_scope:.codewiki/kb/system/file-structure.md",
-              "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "claim_scope:src/domain/agency/types.ts",
-              "claim_scope:src/application/agency.ts",
-              "claim_scope:src/application/tools/agency.ts"
+              "task:TASK-012"
             ],
             "collapsed": true
           },
@@ -43045,67 +42801,7 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -48923,931 +48619,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-156",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-020",
-          "worktree_path": "/home/nunoc/projects/codewiki",
-          "branch": "main",
-          "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-          "clean": false
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-156",
-          "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-          "agent_name": "Robin",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-          "task_id": "TASK-020",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/codewiki",
-            "branch": "main",
-            "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-            "clean": false,
-            "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-020"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/file-structure.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            },
-            {
-              "layer": "source",
-              "path": "src/domain/agency/types.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/application/agency.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/application/tools/agency.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/agency/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/adapters/pi/tools/agency.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-            },
-            {
-              "layer": "source",
-              "path": "tests/tasks/TASK-020/**"
-            },
-            {
-              "layer": "source",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            }
-          ],
-          "created_at": "2026-05-25T05:06:31Z",
-          "updated_at": "2026-05-25T05:06:31Z",
-          "expires_at": "2026-05-25T09:06:31.706Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/file-structure.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/tools/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/agency/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/tools/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/domain/agency/types.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-020"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-020/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/file-structure.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/tools/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/agency/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/application/tools/agency.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/domain/agency/types.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-020"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/tasks/TASK-020/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-156",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-020",
-              "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-              "expires_at": "2026-05-25T09:06:31.706Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki",
-                "branch": "main",
-                "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                "clean": false,
-                "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-              },
-              "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -55115,67 +53905,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -55360,9 +54090,7 @@
             ".codewiki/validation/2026-05-23-planning-fail.json",
             ".codewiki/validation/2026-05-24-decision-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-156"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -56020,7 +54748,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-25T07:25:03.254Z",
+      "generated_at": "2026-05-25T07:26:00.203Z",
       "counts": {
         "large-doc": 4
       },
@@ -56053,7 +54781,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-25T07:25:03Z",
+      "generated_at": "2026-05-25T07:26:00Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -56282,7 +55010,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-25T07:25:03Z",
+      "generated_at": "2026-05-25T07:26:00Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -56388,9 +55116,7 @@
               ".codewiki/validation/2026-05-23-planning-fail.json",
               ".codewiki/validation/2026-05-24-decision-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-156"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -56549,7 +55275,7 @@
       },
       "direction": [
         "No open deterministic drift requires action right now.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "No tracked spec drift is open.",
@@ -57450,7 +56176,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-25T07:25:03Z",
+        "generated_at": "2026-05-25T07:26:00Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -57478,17 +56204,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T07:25:03Z",
+            "checked_at": "2026-05-25T07:26:00Z",
             "revision": {
               "git": {
-                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json"
-                ],
+                "head": "ddc1230fb54935aa741854973fec7efe566e90fe",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -57527,7 +56248,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
+                  ".codewiki/roadmap/queue.json": "2bcbaff9c6ceb4c93652d2807194accdd74fe681",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -57575,14 +56296,14 @@
               "spec_digest": "f9b9b47c3a2a3a9ad818b0d05fe6915f9c7bb4f4df5c02f44ed8240610f96a75",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "878d25f9813b4fac07d101ea1b7c2c15ee1ddbd9a05770cc40da1ef7e9b11643",
-              "digest": "f4fca24864a8157f11828b9f712b2659501b9ab4d3e19c59f50d511a7b7c1a72"
+              "digest": "ad875448960ee6426e89938034e8d31ff3ab242cd7f082802d01f76c8e87de15"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:25:03Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-25T07:26:00Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -57700,17 +56421,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-25T07:25:03Z",
+            "checked_at": "2026-05-25T07:26:00Z",
             "revision": {
               "git": {
-                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json"
-                ],
+                "head": "ddc1230fb54935aa741854973fec7efe566e90fe",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -57733,7 +56449,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
+                  ".codewiki/roadmap/queue.json": "2bcbaff9c6ceb4c93652d2807194accdd74fe681",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -57776,14 +56492,14 @@
               "spec_digest": "98a1f6a8f5545819524a8afe94701838b6f954cc3d874c259cbf36b2c0eb8ea6",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "75339fd0e85437aab01e46c443ca5aadd2b57e1b303719d19efecce5d4cd4e45",
-              "digest": "812d31c94afd1c20d8f2b10352635e769821b4b633b0bf605fa6abe3cc85754b"
+              "digest": "0f3e6677b38a506c91a0074d34641d0dc919906a5da0cb4d027a2828282fa70f"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:25:03Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-25T07:26:00Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -57880,17 +56596,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T07:25:03Z",
+            "checked_at": "2026-05-25T07:26:00Z",
             "revision": {
               "git": {
-                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/archive.jsonl",
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json"
-                ],
+                "head": "ddc1230fb54935aa741854973fec7efe566e90fe",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -57929,7 +56640,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
+                  ".codewiki/roadmap/queue.json": "2bcbaff9c6ceb4c93652d2807194accdd74fe681",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -57977,14 +56688,14 @@
               "spec_digest": "f9b9b47c3a2a3a9ad818b0d05fe6915f9c7bb4f4df5c02f44ed8240610f96a75",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
               "code_digest": "878d25f9813b4fac07d101ea1b7c2c15ee1ddbd9a05770cc40da1ef7e9b11643",
-              "digest": "f4fca24864a8157f11828b9f712b2659501b9ab4d3e19c59f50d511a7b7c1a72"
+              "digest": "ad875448960ee6426e89938034e8d31ff3ab242cd7f082802d01f76c8e87de15"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:25:03Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-25T07:26:00Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -58091,519 +56802,33 @@
         ]
       },
       "resume": {
-        "source": "agency",
+        "source": "next_step",
         "task_id": "",
-        "lane_id": "product_system",
-        "heading": "Product ↔ System",
-        "command": "/wiki-status",
-        "reason": "Resume from stale agency lane.",
+        "lane_id": "",
+        "heading": "Roadmap clear",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now.",
         "status": "in_progress",
-        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
+        "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
+        "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-05-25T07:25:03Z",
+        "generated_at": "2026-05-25T07:26:00Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-156",
-            "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-            "agent_name": "Robin",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-            "task_id": "TASK-020",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/codewiki",
-              "branch": "main",
-              "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-              "clean": false,
-              "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-020"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/file-structure.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-              },
-              {
-                "layer": "source",
-                "path": "src/domain/agency/types.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/application/agency.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/application/tools/agency.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/agency/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/adapters/pi/tools/agency.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/adapters/pi/schemas.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-              },
-              {
-                "layer": "source",
-                "path": "tests/tasks/TASK-020/**"
-              },
-              {
-                "layer": "source",
-                "path": "tests/smoke/package-smoke.test.mjs"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              }
-            ],
-            "created_at": "2026-05-25T05:06:31Z",
-            "updated_at": "2026-05-25T05:06:31Z",
-            "expires_at": "2026-05-25T09:06:31.706Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/file-structure.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/adapters/pi/tools/agency.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/agency/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/application/agency.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/application/tools/agency.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/domain/agency/types.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-020"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/tasks/TASK-015/agency-source-root.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/tasks/TASK-020/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-156",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-020",
-                "summary": "Implement TASK-020 agency shim cleanup: remove old agency re-export shims, update cleanup tests and file-structure KB/diagram, run required checks.",
-                "expires_at": "2026-05-25T09:06:31.706Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki",
-                  "branch": "main",
-                  "base_sha": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
-                  "clean": false,
-                  "notes": "factory=role-worktree; task=TASK-020; role=builder; base_ref=45b2aa401099ea7cc483b8d8ef07a02046583cf5; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove; Initial codewiki_state/session refresh dirtied generated index graph before source edits."
-                },
-                "next_safe_action": "Wait for CLAIM-156 release or validated publisher/patch ref for main; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
