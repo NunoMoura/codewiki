@@ -22,9 +22,9 @@ The gateway does not define requirements, write canonical truth, create plans, c
 
 ## Build validation contract
 
-A gateway run should receive the build path/kind, policy profile, requirement ids, exit criteria, compiler source refs, evidence mapping, graph/state routing context, required audit outputs, checked content proof, mechanical check results, and fresh-context isolation data when policy requires them.
+A gateway run should receive the build path/kind, policy profile, requirement ids, exit criteria, source refs, evidence mapping, graph/state routing context, required audits, content proof, check results, and required isolation data.
 
-When a gateway returns `fail` or `block`, it should classify the failure and recommend the smallest safe next loop when possible. The gateway inspects only enough source truth to decide. It may recommend routing after fail/block; the next compiler cycle owns any revised build.
+When a gateway returns `fail` or `block`, it classifies the failure and recommends the smallest safe next loop. The gateway inspects only enough source truth to decide; the next compiler cycle owns any revised build.
 
 ## Gate points
 
@@ -46,44 +46,27 @@ Fresh context is for independence or context health. Decision may stay in-sessio
 
 ## Gateway preflight and risk tiers
 
-Before an expensive fresh validation handoff, deterministic preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/publication blockers, and risk approval gaps without writing a report.
+Preflight reports missing upstream builds, audits, task ids, content proof, stale refs, close/publication blockers, and risk approval gaps before expensive validation.
 
 Risk tiers:
 
-- `mechanical-docs`: generated, runtime, mechanical, or docs-only cleanup; low-risk fast path when audits and content proof are complete.
-- `code-local`: localized code/test work with accepted task context; no extra user approval beyond accepted semantics.
-- `semantic-system`: product, system, or task semantics; requires accepted decision/planning evidence before promotion.
-- `security-migration-publication`: security policy, migrations, publication, release, remote updates, or breaking API work; requires explicit user approval evidence.
-- `destructive`: destructive or irreversible operations; requires explicit user approval evidence and cannot be promoted by gateway validation alone.
+- `mechanical-docs`: generated, runtime, mechanical, or docs cleanup with audits and content proof.
+- `code-local`: localized code/test work with accepted task context.
+- `semantic-system`: product, system, or task semantics; requires accepted decision/planning evidence.
+- `security-migration-publication`: security, migration, publication, release, remote update, or breaking API work; requires explicit user approval.
+- `destructive`: irreversible work; requires explicit approval and cannot be promoted by gateway validation alone.
 
-Low-risk fast paths do not bypass validation. High-risk tiers escalate before lower-layer promotion.
+Low-risk paths still validate. High-risk tiers escalate before lower-layer promotion.
 
 ## Alignment checks
 
-Vertical alignment checks traceability across layers:
+Vertical alignment traces work across layers:
 
 ```text
-user intent
-  -> decision_build
-  -> product/system knowledge and system diagrams
-  -> planning_build
-  -> roadmap work item
-  -> tests/code
-  -> implementation_build
+user intent -> decision_build -> knowledge/diagrams -> planning_build -> roadmap task -> tests/code -> implementation_build
 ```
 
-Horizontal alignment checks coherence inside a layer:
-
-```text
-knowledge docs agree with knowledge docs
-planning builds agree with roadmap tasks
-roadmap items agree with roadmap items
-code components agree with code components
-tests agree with intended behavior
-builds agree with their source layer and policy
-```
-
-Requirement ids and evidence mapping should make this trace explicit. The gateway should use explicit refs over prose similarity. Graph context supports routing, missing-edge detection, and freshness, but canonical sources and content proof remain authoritative.
+Horizontal alignment checks coherence inside one layer: docs with docs, planning with roadmap, tasks with tasks, code with code, tests with intended behavior, and builds with their source layer/policy. Requirement ids and evidence mappings should use explicit refs over prose similarity. Graph context helps routing and freshness; canonical sources and content proof remain authoritative.
 
 ## Planning validation
 
@@ -119,27 +102,17 @@ A failed or blocked verdict should name the failed criteria or missing context. 
 
 ## Failure routing vocabulary
 
-Gateway routing should distinguish local retry from upstream escalation. Verdict remains `pass`, `fail`, or `block`; routing metadata explains what kind of transition should happen next.
-
-Target metadata:
-
-- `failure_class`: compact reason for the failed or blocked transition.
-- `recommended_next_loop`: `decision`, `planning`, `implementation`, `validation`, or `observe` when a compiler/gateway loop is the right next step.
-- `stop_reason` or equivalent policy text when the correct action is not a compiler loop, such as waiting on a scoped lease, user approval, or external publication proof.
-
-Initial failure classes:
+Verdict remains `pass`, `fail`, or `block`; routing metadata names the smallest safe next action.
 
 | Failure class | Meaning | Typical route |
 | --- | --- | --- |
-| `evidence_missing` | Submitted build lacks required mapping, checks, audits, or refs. | Same compiler loop or validation preflight. |
-| `compiler_incomplete` | Compiler output is internally incomplete or inconsistent. | Same compiler loop with a superseding build. |
-| `planning_gap` | Accepted intent is not represented by durable roadmap/sprint/deferral state. | Planning. |
-| `decision_ambiguity` | Source truth or user intent is ambiguous, contradictory, or unapproved. | Decision. |
-| `risk_approval_missing` | Policy requires explicit semantic or high-risk user approval. | Decision or user approval before promotion. |
-| `content_proof_missing` | Commit/tree/package/archive/remote proof is absent or stale. | Validation, task-close, publication, or publisher proof step. |
-| `runtime_conflict` | Scoped lease, worktree, or parallel role conflict blocks safe progress. | Wait/release coordination, not semantic compiler work. |
-
-The implementation may refine enum names, but it should preserve the distinction between local retry, upstream semantic escalation, proof collection, and runtime waiting.
+| `evidence_missing` | Required mapping, checks, audits, or refs are missing. | Same compiler loop or validation preflight. |
+| `compiler_incomplete` | Compiler output is inconsistent or incomplete. | Same compiler loop with superseding build. |
+| `planning_gap` | Accepted intent lacks durable task, sprint, knowledge-only, or deferral state. | Planning. |
+| `decision_ambiguity` | Intent or source truth is ambiguous, contradictory, or unapproved. | Decision. |
+| `risk_approval_missing` | Policy needs explicit semantic/high-risk approval. | Decision or user approval. |
+| `content_proof_missing` | Commit/tree/package/archive/remote proof is absent or stale. | Validation, task-close, publication, or publisher proof. |
+| `runtime_conflict` | Lease, worktree, or role conflict blocks safe progress. | Wait/release coordination. |
 
 ## Persistence policy
 
@@ -168,27 +141,15 @@ Tracked reports are safe to purge only after a reachable archive commit contains
 
 ## Isolation evidence
 
-Implementation, task-close, publication, publish, and release validation must be independently reproducible when the work changes code, tests, publication metadata, or release state. The required validation posture is:
+Implementation, task-close, publication, publish, and release validation must be independently reproducible when work changes code, tests, publication metadata, or release state.
 
-- validator runs in a separate clean worktree from the builder when parallel write work or independence policy requires it,
-- validator starts from artifacts rather than builder chat context,
-- validation report records the exact Git commit SHA, tree SHA, package digest, archive/remote ref, or working-tree digest it checked as required by policy,
-- validation report records whether the worktree was clean,
-- validation report records the validator role and any builder session, worktree, branch, or scoped lease it intentionally did not reuse.
+Validation records the checked Git commit, tree, package digest, archive/remote ref, or working-tree digest required by policy; clean-state value; validator role; and any builder/publisher session, worktree, branch, or lease it intentionally did not reuse. Parallel write work follows [Role Worktree Isolation](worktree-isolation.md): prefer immutable refs over shared-root dirtiness. Dirty implementation validation may use a working-tree digest; task-close/publication boundaries require `clean=true` plus immutable proof.
 
-For parallel write work, the gateway follows [Role Worktree Isolation](worktree-isolation.md): prefer immutable builder/publisher refs over shared-root dirtiness. Dirty implementation validation may use a working-tree digest, but task-close, publication, publish, and release validation must evaluate a clean immutable publisher or validated ref.
+SHA fields make proof exact: `base_sha` is session start, `head_sha` builder/publisher result, `validated_sha` checked commit, and `published_sha` pushed/released commit. New independent validation should include these fields.
 
-CodeWiki SHA fields make validation exact: `base_sha` names the session start commit, `head_sha` the builder/publisher result, `validated_sha` the checked commit, and `published_sha` the pushed/released commit. Legacy reports can remain valid without these fields; new independent validation should include them.
+Implementation validation requires `fresh_context=true`, explicit clean-state value, checked content proof, and a commit-ready implementation build. Task-close/publication/publish/release are stricter: working-tree digest alone cannot pass because close and publication records must be recoverable from committed or published content. These proofs also gate tracked CodeWiki GC.
 
-Implementation validation requires `fresh_context=true`, an explicit clean-state value, checked content proof, and a commit-ready implementation build. A clean worktree can use `validated_sha`, `head_sha`, `published_sha`, or `tree_sha`; a dirty pre-commit worktree must use `working_tree_digest` or `worktree_digest` that identifies the checked dirty content.
-
-A commit-ready implementation build must include task id, upstream refs, acceptance mapping, touched code/test evidence, checks, closure brief, commit title/body draft, and CodeWiki trailers for task, build, checks, validation placeholder/refs, and recovery. The implementation gateway validates readiness before passing; the commit need not already exist.
-
-Task-close, publication, publish, and release profiles are stricter. They require `fresh_context=true`, `clean=true`, and immutable proof such as `published_sha`, `head_sha`, `validated_sha`, `tree_sha`, `package_digest`, `archive_ref`, or `remote_ref`. Working-tree digest alone cannot pass a task-close or publication boundary because the close record must be recoverable from committed/published content. The `codewiki_task close` path must block unless a passing `task-close` validation report with this proof already exists for the task.
-
-Those immutable close/publication proofs also gate tracked CodeWiki GC. GC runs after the archive/close commit, names that proof in its restore ledger, and produces a separate deletion commit without removing the proof commit.
-
-When a required validation boundary needs new context, the producing session should request a session boundary with the submitted build, task id, checks, and expected validation output. If another validator session or worker owns the review, that is a handoff; otherwise the current adapter may run new_session and continue from CodeWiki refs instead of builder chat.
+When validation needs new context, the producing session supplies the build, task id, checks, and expected output. Another worker may validate as a handoff, or the adapter may start a fresh context and continue from CodeWiki refs.
 
 ## Related docs
 

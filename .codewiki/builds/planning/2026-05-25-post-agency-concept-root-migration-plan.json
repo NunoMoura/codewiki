@@ -1,0 +1,817 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-25T10:02:42Z",
+  "source": "Superseding planning compiler output for accepted FS-ROOT-CONCEPTS after TASK-020 close. Clears graph-health doc-size warnings, maps the broad domain/application concept-root decision to TASK-021 audit migration, and resolves upstream TASK-014/TASK-019 propagation rows/questions.",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-08T10:02:42.000Z",
+    "purge_after": "2026-06-22T10:02:42.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "generated-parity",
+      "stale-reference",
+      "file-structure",
+      "task",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status",
+        "reason": "Planning writes roadmap/KB/build state.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "post-agency planning artifact-status write claim"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Planning validation must verify accepted FS decision maps to executable work and graph-health warnings are gone.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required",
+          "planning_build path",
+          "decision_build path",
+          "audit refs"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "TASK-021 implementation must start fresh from planning/task refs.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful",
+          "planning_build path",
+          "TASK-021"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "PLAN-ROOT-1",
+      "text": "Use accepted FS-ROOT-CONCEPTS as source truth for broader src/domain and src/application concept-root migration; planning must not reopen that accepted direction.",
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        "user clarification 2026-05-25"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PLAN-ROOT-2",
+      "text": "After TASK-020 cleanup, create executable roadmap work for the next concept-root boundary.",
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PLAN-ROOT-3",
+      "text": "Keep migration staged and behavior-preserving; no broad src/domain or src/application deletion without task-specific validation.",
+      "source_refs": [
+        "TASK-021 non-goals",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PLAN-ROOT-4",
+      "text": "Clear current graph-health warnings from large live system docs without changing product behavior.",
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "state": "implemented"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Accepted broader concept-root decision is routed to planning, not reopened as future decision.",
+      "evidence": "Planning build uses the 2026-05-22 file-structure decision as source_decision_build and resolves FS-ROOT-CONCEPTS to TASK-021 plus deferred later roots.",
+      "requirement_ids": [
+        "PLAN-ROOT-1",
+        "PLAN-ROOT-2"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ]
+    },
+    {
+      "criterion": "Post-TASK-020 deferral trigger is satisfied and produces next work.",
+      "evidence": "TASK-020 task-close validation exists; file-structure map marks trigger_state satisfied_by_TASK_020_task_close and next_task_id TASK-021.",
+      "requirement_ids": [
+        "PLAN-ROOT-2"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "Migration remains staged and behavior-preserving.",
+      "evidence": "TASK-021 is audit-only with non-goals excluding build/validation/session/roadmap/state/project, public behavior changes, and non-audit source movement.",
+      "requirement_ids": [
+        "PLAN-ROOT-3"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ]
+    },
+    {
+      "criterion": "Graph-health warnings cleared.",
+      "evidence": "Trimmed compilers, file-structure, graph, and validation-gateway docs below configured lint threshold; codewiki_state refresh reports health green with 0 warnings.",
+      "requirement_ids": [
+        "PLAN-ROOT-4"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan post-agency concept-root migration wave with full decision propagation",
+  "task_ids": [
+    "TASK-021"
+  ],
+  "task_changes": [
+    "Created TASK-021 Migrate audit concept root as the next executable post-agency concept-root migration task.",
+    "Corrected automatic roadmap reuse so TASK-021 remains audit-only; build and validation roots are deferred, not part of TASK-021 acceptance.",
+    "Updated file-structure KB/diagram to record TASK-020 trigger satisfaction and TASK-021 audit as next boundary.",
+    "Trimmed large live system docs to clear graph-health lint warnings."
+  ],
+  "roadmap_changes": [
+    "Created TASK-021 Migrate audit concept root as the next executable post-agency concept-root migration task.",
+    "Corrected automatic roadmap reuse so TASK-021 remains audit-only; build and validation roots are deferred, not part of TASK-021 acceptance.",
+    "Updated file-structure KB/diagram to record TASK-020 trigger satisfaction and TASK-021 audit as next boundary.",
+    "Trimmed large live system docs to clear graph-health lint warnings."
+  ],
+  "tdd_plan": [
+    "For TASK-021, first add/adjust tests that assert audit adapter/command/tool imports avoid old audit domain/application owner paths and preserve /audit/codewiki_audit behavior.",
+    "Use audit smoke tests and package smoke as compatibility proof before deleting old audit paths.",
+    "Only after TASK-021 passes task-close validation should planning create a build/validation wave or sprint."
+  ],
+  "candidate_test_files": [
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/domain/audit/types.ts",
+    "src/application/tools/audit.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "scripts/check-architecture.mjs",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "FS-ROOT-CONCEPTS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json"
+      ],
+      "rationale": "The concept-root target is accepted. Post-agency planning advances to audit as the first non-agency boundary and keeps broader domain/application removal staged.",
+      "evidence": "TASK-021 has acceptance, non-goals, verification, code paths, and compatibility constraints for src/audit/** migration.",
+      "inferred": false
+    },
+    {
+      "row_id": "FS-DIAGRAM-CANONICAL",
+      "question_id": "",
+      "question": "",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        "file-structure-map:intended_file_structure",
+        "file-structure-map:concept_root_target",
+        "file-structure-map:deferred_concept_roots"
+      ],
+      "rationale": "Canonical diagram exists and now reflects TASK-020 completion plus TASK-021 next boundary.",
+      "evidence": "file-structure-map records trigger_state satisfied_by_TASK_020_task_close, next_task_id TASK-021, and later roots gated by TASK-021.",
+      "inferred": false
+    },
+    {
+      "row_id": "FS-DRIFT-LENS",
+      "question_id": "",
+      "question": "",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-010"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-010",
+        "codewiki_audit profile:file-structure"
+      ],
+      "rationale": "Drift lens implementation is complete; current file-structure audit passes.",
+      "evidence": "TASK-010 closed; file-structure audit reports 0 actionable drift.",
+      "inferred": false
+    },
+    {
+      "row_id": "FS-HUMAN-DRIVEN-SURFACE",
+      "question_id": "",
+      "question": "",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-013"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-013"
+      ],
+      "rationale": "Human review surface is complete; no new UI work is needed for this planning step.",
+      "evidence": "TASK-013 archived as done.",
+      "inferred": false
+    },
+    {
+      "row_id": "FCB-AGENCY-FIRST",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-015"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+        ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+      ],
+      "rationale": "Agency was selected and implemented as the first concept-root pilot.",
+      "evidence": "TASK-015 closed with task-close validation; file-structure docs mark agency pilot validated.",
+      "inferred": false
+    },
+    {
+      "row_id": "FCB-COMPATIBILITY-CONSTRAINTS",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-015",
+        "TASK-020",
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "rationale": "TASK-015/TASK-020 proved agency compatibility; TASK-021 carries the same compatibility proof pattern for audit.",
+      "evidence": "TASK-021 acceptance preserves /audit/codewiki_audit behavior, package smoke, direct Node execution, and file-structure audit evidence.",
+      "inferred": false
+    },
+    {
+      "row_id": "FCB-STAGE-BOUNDARY",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-015",
+        "TASK-020",
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "rationale": "Stage one agency completed and cleanup closed; next stage is one audit-only task, not a broad all-domain/application migration.",
+      "evidence": "TASK-021 non-goals exclude build, validation, session, roadmap, state, project, knowledge, GC, adapters, UI, and skills.",
+      "inferred": false
+    },
+    {
+      "row_id": "FCB-DEFER-HEAVY-CONCEPTS",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-021",
+        "TASK-020"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-021 audit migration task-close validation and file-structure audit evidence",
+      "rationale": "The original agency deferral trigger is satisfied; heavier roots remain gated until the next non-agency boundary proves compatibility cost.",
+      "evidence": "file-structure-map deferred_concept_roots records TASK-020 trigger satisfied, next_task_id TASK-021, and downstream_deferred_until TASK-021 evidence.",
+      "inferred": false
+    },
+    {
+      "row_id": "T019-SHIM-CLEANUP-NEXT",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-020"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json"
+      ],
+      "rationale": "Agency shim cleanup was executed and closed before selecting the next non-agency boundary.",
+      "evidence": "TASK-020 task-close validation passed and old agency shims are removed.",
+      "inferred": false
+    },
+    {
+      "row_id": "T019-RENEW-HEAVY-ROOT-DEFERRAL",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "rationale": "The renewed deferral trigger has now fired; planning advances to audit and keeps later roots gated by TASK-021 validation.",
+      "evidence": "file-structure-map records trigger_state satisfied_by_TASK_020_task_close and next_task_id TASK-021.",
+      "inferred": false
+    },
+    {
+      "row_id": "T019-NO-SOURCE-MOVE",
+      "question_id": "",
+      "question": "",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-019",
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
+      ],
+      "rationale": "TASK-019 performed decision/planning only; source cleanup occurred in TASK-020 and future source movement is isolated to TASK-021 implementation.",
+      "evidence": "TASK-019 task-close validation passed; TASK-021 is separate implementation work.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Define execution tasks for file-structure map/drift lens/audit output.",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-010"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-010",
+        "codewiki_audit profile:file-structure"
+      ],
+      "rationale": "The deterministic file-structure map/drift lens/audit output work is closed.",
+      "evidence": "TASK-010 closed; current file-structure audit has 0 actionable drift.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Define staged concept-root migration tasks with compatibility proof.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "rationale": "TASK-021 is the next staged migration task and includes compatibility proof requirements.",
+      "evidence": "TASK-021 acceptance, non-goals, and verification define the audit boundary.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Define optional UI/report surface for human structure review.",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-013"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-013"
+      ],
+      "rationale": "Human structure review surface already landed.",
+      "evidence": "TASK-013 closed.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Plan deterministic file-structure map schema/audit lens before broad source migration?",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-010"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-010",
+        "codewiki_audit profile:file-structure"
+      ],
+      "rationale": "Deterministic schema/audit lens exists before broad migration continues.",
+      "evidence": "TASK-010 closed and current audit passes.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Plan concept-root migration as one sprint with staged tasks and compatibility proof?",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [],
+      "owner": "maintainers",
+      "trigger": "TASK-021 audit migration task-close validation and file-structure audit evidence",
+      "rationale": "Do not create an umbrella sprint before the first non-agency migration proves compatibility cost. If audit succeeds, create a sprint for build/validation or later roots with TASK-021 evidence.",
+      "evidence": "TASK-021 is atomic audit-only; build/validation/session/roadmap/state/project remain gated.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Plan UI rendering/report surface for structure map after audit data exists?",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-013"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-013"
+      ],
+      "rationale": "Structure review surface exists; future UI refinements need separate product intent.",
+      "evidence": "TASK-013 closed.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which concept root should migrate first after the drift lens exists: session, state, roadmap, build, validation, or audit?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-014",
+        "TASK-015",
+        "TASK-020",
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ],
+      "rationale": "Agency was first and cleanup is complete; audit is next because it has a bounded public command/tool surface with smoke coverage.",
+      "evidence": "TASK-021 selects audit; later roots remain gated until TASK-021 validation.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Should the UI render the file-structure map before or after deterministic audit enforcement lands?",
+      "resolution": "knowledge-only",
+      "task_ids": [
+        "TASK-010",
+        "TASK-013"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/archive.jsonl: TASK-010",
+        ".codewiki/roadmap/archive.jsonl: TASK-013"
+      ],
+      "rationale": "Both deterministic audit enforcement and UI review surface have landed.",
+      "evidence": "TASK-010 and TASK-013 are archived as done.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Create one agency-pilot implementation task with compatibility gates.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-015"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+      ],
+      "rationale": "TASK-015 was the agency-pilot implementation task.",
+      "evidence": "TASK-015 closed with compatibility validation.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Defer later concept-root ordering until agency pilot validation evidence exists.",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-020",
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [],
+      "owner": "maintainers",
+      "trigger": "TASK-021 audit migration task-close validation and file-structure audit evidence",
+      "rationale": "Agency pilot and cleanup evidence now exist; next ordering advances to audit while later roots remain gated by TASK-021.",
+      "evidence": "TASK-020 closed; TASK-021 created as next boundary.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Create/refine one agency shim cleanup implementation task with acceptance, non-goals, verification, and compatibility constraints.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-020"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json"
+      ],
+      "rationale": "TASK-020 was the agency shim cleanup task and is closed.",
+      "evidence": "TASK-020 task-close validation passed.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Resolve T019 deferral rows so planning validation has no open approved boundary questions.",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-021"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json"
+      ],
+      "rationale": "This planning build resolves T019 deferral rows by consuming TASK-020 evidence and creating TASK-021 audit migration work.",
+      "evidence": "Decision row resolutions include T019 rows and file-structure map records next boundary.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Accepted broader concept-root decision is routed to planning, not reopened as future decision.",
+      "evidence": "Planning build uses the 2026-05-22 file-structure decision as source_decision_build and resolves FS-ROOT-CONCEPTS to TASK-021 plus deferred later roots.",
+      "requirement_ids": [
+        "PLAN-ROOT-1",
+        "PLAN-ROOT-2"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ]
+    },
+    {
+      "criterion": "Post-TASK-020 deferral trigger is satisfied and produces next work.",
+      "evidence": "TASK-020 task-close validation exists; file-structure map marks trigger_state satisfied_by_TASK_020_task_close and next_task_id TASK-021.",
+      "requirement_ids": [
+        "PLAN-ROOT-2"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "Migration remains staged and behavior-preserving.",
+      "evidence": "TASK-021 is audit-only with non-goals excluding build/validation/session/roadmap/state/project, public behavior changes, and non-audit source movement.",
+      "requirement_ids": [
+        "PLAN-ROOT-3"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json"
+      ]
+    },
+    {
+      "criterion": "Graph-health warnings cleared.",
+      "evidence": "Trimmed compilers, file-structure, graph, and validation-gateway docs below configured lint threshold; codewiki_state refresh reports health green with 0 warnings.",
+      "requirement_ids": [
+        "PLAN-ROOT-4"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/validation-gateway.md"
+      ]
+    }
+  ],
+  "assumptions": [
+    "Audit is the safest next non-agency boundary because it has a compact public command/tool surface and dedicated smoke tests.",
+    "Build and validation should not be merged into TASK-021; doing so would recreate a broad migration task and weaken atomic validation."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No source migration is implemented in this planning step.",
+    "No broad deletion of src/domain or src/application occurs in this planning step.",
+    "No public command, tool schema, package entrypoint, or product behavior change is planned outside task-specific migration acceptance."
+  ],
+  "risks": [
+    "codewiki_task auto-reuse initially merged build/validation acceptance into TASK-021 due shared file-structure refs; corrected by patching TASK-021 back to audit-only and resolving later roots as deferred.",
+    "TASK-021 may discover audit implementation is less isolated than expected; implementation validation must block or route back to planning if scope expands.",
+    "Large-doc warning cleanup trimmed docs; validation should confirm no stale references or file-structure drift."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+      ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+    ],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+    ],
+    "roadmap": [
+      "TASK-021"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+      ".codewiki/validation/2026-05-25-task-close-pass-task-019.json",
+      ".codewiki/validation/2026-05-25-task-close-pass-task-020.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "roadmap": [
+      "TASK-021"
+    ],
+    "code": [
+      "src/domain/audit/types.ts",
+      "src/application/tools/audit.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "scripts/check-architecture.mjs",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "tests": [
+      "tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "validation": [
+      "pending planning validation"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}

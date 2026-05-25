@@ -71,7 +71,7 @@ Decision -> Knowledge -> Work -> Execution -> Proof
 
 Decision covers approved rows and risk state. Knowledge covers product docs and diagram-backed system docs. Work covers planning and roadmap. Execution covers code, tests, checks, and implementation evidence. Proof covers validation, commits, publication, and archive evidence. Default views collapse non-next-action build/validation internals into badges.
 
-The generated graph exposes these projections under `views.lenses`. `views.lenses.default` serves status, Control Room, and `codewiki_state include=["graph"]`. `views.lenses.trace` expands requirement rows, canonical source refs, semantic change rows, and build source refs. `views.lenses.audit` expands validation reports, isolation, audit refs, content proof refs, reconciliation items, and traceability gaps. These lenses are generated read models only.
+Generated graph projections live under `views.lenses`: `default` serves status/Control Room, `trace` expands requirement and source refs, and `audit` expands validation, isolation, audit, proof, reconciliation, and traceability gaps. These lenses are generated read models only.
 
 ## System diagram nodes
 
@@ -83,13 +83,9 @@ The graph should model abstraction propagation separately from compiler sequence
 
 ## Operational state and transition analytics
 
-The full graph snapshot, `G_t`, is the source-backed operational state at a point in time. A compact transition state, `S_t`, may be derived from `G_t` for analytics and routing summaries. The compact state can include active loop, scope, lifecycle state, reconciliation status, failure class, recommended next loop, risk tier, policy profile, proof status, freshness, and runtime availability.
+The full graph snapshot, `G_t`, is the source-backed operational state. A compact transition state, `S_t`, may be derived for routing analytics with active loop, scope, lifecycle, reconciliation status, failure class, next loop, risk, policy, proof status, freshness, and runtime availability.
 
-The Markov property only applies to the compact projection when that projection includes enough source-backed context to make the next transition independent of chat history. A loop label by itself is not enough state: the same `implementation` label can mean missing test evidence, a planning gap, ambiguous intent, missing content proof, or a runtime conflict.
-
-Transition analytics may estimate `P(S_t+1 | S_t)` for passive observation, or `P(S_t+1 | S_t, action, policy)` when gated agency chooses actions. These metrics are derived from builds, validation reports, graph snapshots, source fingerprints, and Git history. They are generated analytics, not canonical requirements, not raw event logs, and not a reason to duplicate history in hot CodeWiki state.
-
-Use transition analytics to find retry traps, expected loop counts, frequent gateway failure classes, and agency stop/escalation hints. Use the graph and canonical sources to decide what exists, which refs matter, and which loop must run next.
+The Markov property applies only when the compact projection includes enough source-backed context to make the next transition independent of chat history. A loop label alone is insufficient. Transition analytics are generated from builds, validation, graph snapshots, source fingerprints, and Git history. They help identify retry traps and stop/escalation hints; they never replace canonical sources.
 
 ## Hot state machine
 
@@ -116,41 +112,17 @@ For Git-backed archival, the graph should prefer compact cold refs over expanded
 
 ## Requirement traceability
 
-The graph should expose a compact requirement traceability matrix derived from source truth. It should not store requirements as new truth.
+The graph exposes a compact traceability matrix derived from source truth; it does not store requirements as new truth.
 
-A useful traceability row connects:
+A useful row connects:
 
 ```text
-requirement id
-  -> decision_build row
-  -> knowledge doc clause / row-to-KB mapping
-  -> planning_build task/acceptance mapping
-  -> roadmap task
-  -> tests/code evidence
-  -> implementation_build
-  -> validation verdict
+requirement id -> decision row -> knowledge/diagram mapping -> planning task mapping -> roadmap task -> tests/code evidence -> implementation_build -> validation verdict
 ```
 
-The graph should report gaps such as:
+The graph reports gaps such as missing KB mapping, missing impact evidence, unresolved diagram refs, executable knowledge with no plan, planning without task/acceptance mapping, implementation without tests or justified test design, code without upstream coverage, validation without required audits/proof, task-close without immutable proof, or publication without matching commit/tree/package proof.
 
-- accepted requirement has no knowledge mapping,
-- decision build has no row-to-KB mapping,
-- product-first change lacks system-impact or no-system-impact evidence,
-- system-first change lacks product-impact or no-product-impact evidence,
-- system doc lacks required diagram refs,
-- diagram ref points to a missing diagram node or flow,
-- diagram node marked `requires_doc` has no owning system doc,
-- knowledge change has no planning build when executable work is needed,
-- planning build has no roadmap task or acceptance mapping,
-- implementation work has no test or justified test-design evidence,
-- code changed without upstream requirement/task coverage,
-- validation pass does not reference the submitted build or requirement ids,
-- implementation build lacks commit-readiness fields required for a recovery commit,
-- validation report lacks required audit evidence or checked content proof,
-- task-close lacks immutable commit/tree proof,
-- publication assertion lacks matching commit/tree/package proof.
-
-Traceability should be compact in the default graph. Full historical rows, superseded cycles, and cold pass validation should be expanded only for explicit archive, restore, or audit requests.
+Default views keep traceability compact. Full historical rows, superseded cycles, and cold pass validation expand only for archive, restore, or audit requests.
 
 ## Edges
 
@@ -197,17 +169,15 @@ Status, `codewiki_state`, and CodeWiki UI views must consume the generated-state
 ## Invariants
 
 - `.codewiki/index_graph.json` is generated and must not be hand-edited.
-- The graph must be reproducible from canonical inputs and source fingerprints.
-- The graph should route to exact files instead of inlining large docs, code, logs, or old task history.
-- Default graph/status/state consumers should receive hot working-set context only; archive refs, closed task bodies, old pass validation, superseded cycle detail, and restore indexes require an explicit archive/restore/audit request.
-- Post-commit GC next actions require archive commit/tree proof and must produce restore-ledger refs before tracked purge operations are applied.
-- The graph should flag deterministic file-contract drift, including deprecated `.codewiki/index/**`, deprecated default `.codewiki/evidence/**`, and legacy dot-wiki path references in active contract/source files.
-- Generated state does not replace builds, knowledge, roadmap work items, validation reports, commits, package digests, or code/tests; those remain the evidence sources for truth and content proof.
-- Markov/MDP-style transition analytics do not replace the graph; they are derived generated views over graph-backed reconciliation transitions.
-- Generated state should make gated agency and CodeWiki UI stop reasons explicit when state is stale, blocked, unsafe, missing approval, missing required fresh-session isolation, or blocked by overlapping write leases.
-- The graph should expose active session lease counts, read/write warnings, write/write conflicts, pending waiters, and ready waiters, while scoped leases remain temporary coordination state rather than source-of-truth behavior.
-- The graph should surface session queue role/worktree metadata, wait entry blockers, wait readiness, and validation isolation evidence so CodeWiki UI, status, and audits can distinguish builder, validator, publisher, blocked, and ready-to-resume contexts.
-- The graph should own machine backlinks and exhaustive relationship discovery; knowledge docs should keep only intentional human-facing links.
+- The graph is reproducible from canonical inputs and source fingerprints.
+- Default graph/status reads show hot working-set context only; archives, closed task bodies, old pass validation, and restore indexes need explicit archive/restore/audit requests.
+- Generated state points to source files; it does not replace builds, knowledge, roadmap work, validation reports, commits, package digests, or code/tests.
+- Graph reconciliation flags deterministic file-contract drift, including deprecated `.codewiki/index/**`, deprecated `.codewiki/evidence/**`, and legacy dot-wiki refs.
+- Freshness ignores generated graph/view artifacts as inputs, but checks source, knowledge, roadmap, builds, validation, code, tests, and content proof.
+- Markov/MDP analytics are generated views over graph-backed transitions, not requirements.
+- Gated agency and UI stop reasons must be explicit for stale state, blockers, unsafe actions, missing approval, missing isolation, or overlapping write leases.
+- Session lease and wait metadata is temporary coordination evidence, not source-of-truth behavior.
+- Machine backlinks belong in the graph; knowledge docs keep intentional human-facing links.
 
 ## Related docs
 

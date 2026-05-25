@@ -103,56 +103,16 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 
 ## CodeWiki system docs
 
-The CodeWiki project should use this system set:
+The CodeWiki project keeps one flat system doc per major component under `.codewiki/kb/system/`, plus `overview.md`, `architecture.mmd` during renderer migration, and canonical diagram raw data under `diagrams/**`. The component-doc map above is the source list for expected owners and primary paths.
 
-```text
-.codewiki/kb/system/
-  overview.md
-  file-structure.md
-  api.md
-  extension.md
-  adapters.md
-  agency.md
-  compilers.md
-  validation-gateway.md
-  builds.md
-  graph.md
-  alignment-model.md
-  change-lifecycle.md
-  audits.md
-  knowledge.md
-  roadmap.md
-  control-room-ui.md
-  architecture.mmd        # compatibility during diagram migration
-  diagrams/
-    README.md
-    context-map.yaml
-    component-map.yaml
-    key-flow.yaml
-    data-model.yaml
-    state-lifecycle.yaml
-    file-structure-map.yaml
-```
-
-Deprecated `.codewiki/` data paths that must not be recreated by new templates or normal agent writes:
+Deprecated `.codewiki/` paths must not be recreated by templates or normal agent writes:
 
 ```text
 .codewiki/index/**
 .codewiki/evidence/**
 ```
 
-Legacy system KB paths removed by the flattening migration:
-
-```text
-.codewiki/kb/system/clients/**
-.codewiki/kb/system/compilers/**
-.codewiki/kb/system/components/**
-.codewiki/kb/system/extensions/**
-.codewiki/kb/system/flows/**
-.codewiki/kb/system/runtime/**
-.codewiki/kb/system/architecture.json
-.codewiki/kb/system/v2-operating-model.md
-```
+Legacy nested system KB folders removed by the flattening migration remain invalid: `clients/**`, `compilers/**`, `components/**`, `extensions/**`, `flows/**`, `runtime/**`, `architecture.json`, and `v2-operating-model.md`.
 
 ## Path taxonomy
 
@@ -171,7 +131,7 @@ Architecture and audit checks must understand these classes so dogfood state, ge
 
 ## Package target layout
 
-The accepted vNext direction is concept-root source ownership. Main concepts should be findable from the `src/` root with model, use cases, tool/API entrypoints, and concept-specific local implementation nearby. Adapters and UIs remain exposure layers; shared code stays primitive-only. No top-level `infrastructure/` layer should exist.
+The accepted vNext direction is concept-root source ownership: main concepts should be findable from `src/<concept>/**` with model, use cases, tool/API entrypoints, and concept-local implementation nearby. Adapters and UI remain exposure layers; shared code stays primitive-only; no top-level `infrastructure/` layer should exist.
 
 Current implementation remains valid until migration tasks land:
 
@@ -179,22 +139,20 @@ Current implementation remains valid until migration tasks land:
 src/{domain,application,adapters,ui}/
 ```
 
-Target concept roots:
+Target roots:
 
 ```text
 src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,state,validation,shared}/
 src/{adapters,ui}/
 ```
 
-Primary deltas are `domain/session` + `application/session|claims|worktree-isolation` to `session`, `domain/state` + `application/state*|graph|resume-context` to `state`, roadmap/build/validation/audit pairs to matching roots, `application/knowledge` to `knowledge`, `application/tools` to an `api` facade plus concept-owned tool entrypoints, and `application/local` to concept-owned local implementations or truly cross-cutting shared ports.
+Primary deltas move domain/application pairs into concept roots: session, state/graph/resume, roadmap, build, validation/gateway, audit, project, knowledge, GC, change, and concept-owned tool entrypoints behind an API facade.
 
-The first approved concept-root migration boundary was `agency`. The pilot introduced `src/agency/**` as the agency source-root owner: `src/agency/types.ts` owns agency model/tool input contracts, `src/agency/planning.ts` owns the bounded agency planning use case, and `src/agency/tool.ts` owns the agency tool/API executor used by adapters. TASK-015 closed with task-close validation and compatibility evidence, so the pilot is validated. TASK-020 completes the post-pilot agency shim cleanup by removing the deprecated re-export-only compatibility shims at `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts`; those layer-first agency paths are no longer package source owners or compatibility surfaces.
+`agency` is the validated pilot. TASK-015 introduced `src/agency/**`; TASK-020 removed the old `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts` shims. Old agency shims must not be recreated.
 
-The agency pilot preserved public package behavior, package entrypoints, adapter schema/tool behavior, direct Node execution, package loading, TypeScript typechecking, and smoke/feature/package test coverage. After TASK-020, agency compatibility barrels or re-export shims at the old layer-first paths must not be recreated. Cleanup evidence must prove internal imports no longer need the shims and must keep public commands, package entrypoints, adapter schemas/tool behavior, direct Node execution, package loading, and product behavior unchanged. `tests/tasks/TASK-015/agency-source-root.test.mjs` now proves source-root ownership and absence of old-path imports rather than old/new shim equivalence.
+Post-TASK-020 planning maps the accepted FS-ROOT-CONCEPTS decision into staged executable work. TASK-021 is the first non-agency boundary: migrate audit to `src/audit/**`. Build and validation remain next-wave candidates after TASK-021 task-close evidence; session, roadmap, state, and project wait until shared import patterns stabilize.
 
-Heavier concept roots remain explicitly deferred, not accidental drift. Maintainers own the deferral. The original deferral trigger—closed agency pilot with task-close validation and compatibility evidence—is satisfied, and the deferral is renewed until TASK-020 agency shim cleanup closes with task-close validation plus file-structure audit evidence. TASK-020 does not select a second concept-root boundary. Candidate next roots should be reconsidered after cleanup evidence: audit if `/audit` compatibility risk is understood, then build/validation, then session/roadmap/state/project only after shared API/import patterns are stable.
-
-Skill assets own agent workflow guidance under `skills/codewiki*/**`; source may execute those workflows through API/concept entrypoints, but skills remain the asset owner. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics. Future adapters such as `src/adapters/cli/**` or `src/adapters/mcp/**` require an implementation need.
+Skills own agent workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
 ## Dependency direction
 

@@ -251,10 +251,13 @@ nodes:
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
     status: accepted_target
-    defer_status: renewed_until_agency_shim_cleanup_validation
+    defer_status: first_wave_planned_after_agency_cleanup
     owner: maintainers
     trigger: TASK-020 agency shim cleanup task-close validation and file-structure audit evidence
-    trigger_state: pending_TASK_020_task_close
+    trigger_state: satisfied_by_TASK_020_task_close
+    next_task_id: TASK-021
+    next_boundary: audit
+    downstream_deferred_until: TASK-021 audit migration task-close validation and file-structure audit evidence
     paths:
       - src/audit/**
       - src/build/**

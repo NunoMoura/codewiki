@@ -1,0 +1,66 @@
+{
+  "id": "TASK-021",
+  "title": "Migrate audit concept root",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "migration",
+  "summary": "Move audit domain/application ownership into a source-root audit concept while preserving /audit, codewiki_audit tool behavior, package smoke, and file-structure audit evidence.",
+  "spec_paths": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+  ],
+  "code_paths": [
+    "src/domain/audit/types.ts",
+    "src/application/tools/audit.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "tests/smoke/audit.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "scripts/check-architecture.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "file-structure",
+    "concept-root",
+    "audit",
+    "migration"
+  ],
+  "change_type": "code",
+  "goal": {
+    "outcome": "Audit code has a source-root owner under src/audit/**, with old audit domain/application paths removed or retained only as explicitly justified temporary shims.",
+    "acceptance": [
+      "Create src/audit/** owner modules for audit types, use case/tool execution, and any audit-specific helpers moved from domain/application audit paths.",
+      "Update adapters, commands, schemas, tests, and package smoke paths to import audit behavior from source-root audit modules or stable public API paths, not old audit layer-first paths.",
+      "Preserve /audit command behavior, codewiki_audit tool schema/result behavior, check:architecture behavior, package loading, direct Node execution, and audit smoke coverage.",
+      "Add or update TASK-specific tests proving old audit layer-first imports are gone or temporary shims are explicit/test-backed.",
+      "Update file-structure KB/diagram to mark audit migration status and keep later roots gated until audit task-close evidence exists."
+    ],
+    "non_goals": [
+      "Do not migrate build, validation, session, roadmap, state, project, knowledge, GC, adapters, UI, or skills in this task.",
+      "Do not change public commands, tool schemas, package metadata, package entrypoints, or audit product behavior.",
+      "Do not remove source paths outside the audit boundary except import updates required by audit migration."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "node --experimental-strip-types ./tests/smoke/audit.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+    ]
+  },
+  "delta": {
+    "desired": "Audit concept has source-root ownership under src/audit/** with public behavior preserved.",
+    "current": "Audit code remains split across src/domain/audit/types.ts and src/application/tools/audit.ts with adapters/commands delegating through layer-first paths.",
+    "closure": "Implementation build and validation prove audit migration, updated tests/KB/diagram, and no non-audit source migration."
+  },
+  "created": "2026-05-25",
+  "updated": "2026-05-25T10:08:50Z"
+}

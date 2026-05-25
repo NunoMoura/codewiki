@@ -22,29 +22,25 @@ code_paths:
 
 ## Responsibility
 
-CodeWiki compilers move information through context-driven development boundaries. Each compiler creates a build for one alignment cycle. Build-writing code lives in focused application modules such as `src/application/builds.ts`, while compiler-loop instructions live in focused `skills/codewiki-*` skills. Validation reports are written through the application validation tool and evaluated as a gateway step; validation does not define requirements or do the compiler's work.
+CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Build-writing code lives in application modules such as `src/application/builds.ts`; compiler-loop instructions live in `skills/codewiki-*`; validation reports are gateway attestations, not compiler output.
 
-The target alignment flow uses the decision loop as the user semantic boundary:
+Target flow:
 
 ```text
-decision loop -> decision_build -> validation gateway
-  -> planning loop -> planning_build -> validation gateway
-    -> implementation loop -> implementation_build -> validation gateway/publication
+decision -> decision_build -> validation
+  -> planning -> planning_build -> validation
+    -> implementation -> implementation_build -> validation/publication
 ```
 
-This is a nested loop sequence with selective back-propagation, not one monolithic restart loop. A failed or blocked gateway verdict should retry locally when the issue is local to the submitted build, and should route upstream only when the failure class shows a planning gap, decision ambiguity, missing risk approval, missing content proof, or runtime coordination block.
-
-The decision loop owns user semantic approval and knowledge updates. Lower-level task creation, code changes, and closure are validated by gateways rather than by asking the user to inspect compiler machinery. A compiler turns one layer of information into the smallest useful source-backed build for the next layer. The state engine routes agents to the next required loop and source paths, but it does not replace direct reads of builds, knowledge, roadmap tasks, validation evidence, tests, code, or content proofs. Every semantic change must trace to an accepted compiler build before it can close, validate, or publish.
+The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Gateway verdicts validate each handoff and route failures to the smallest loop that can fix them. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
 
 ## Alignment cycles
 
-An alignment cycle is one build attempt inside a loop. A cycle starts from upstream source refs, policy, and project state; it ends with a build submitted to the validation gateway.
+An alignment cycle is one build attempt in a loop. It starts from upstream source refs, policy, and project state, then ends with a build submitted to the gateway.
 
-Each loop starts from CodeWiki source refs, not chat memory. Agents should use `codewiki_resume_context` for high-signal continuation and CodeWiki-owned compaction for same-session soft context refresh when context becomes noisy, stale, token-heavy, or reaches an approved loop boundary. Hard `new_session` remains available when policy needs replacement-session isolation. VCC recall, generic Pi compaction, and chat-history summaries are not normal compiler memory. Validation, task-close, publication, publish, and release still need explicit fresh/content proof. Handoff means transfer to another session, agent, or role.
+Each loop starts from CodeWiki source refs, not chat memory. Agents use `codewiki_resume_context` or CodeWiki-owned compaction when context is noisy, stale, token-heavy, or at an approved boundary. Hard session replacement remains available when policy requires it. Validation, task-close, publication, publish, and release still require explicit fresh/content proof.
 
-Cycle builds should carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, agent assessment, and produced refs for the next loop.
-
-A failed or blocked gateway verdict should not mutate lower layers directly. The gateway should classify the failure and recommend the smallest safe next loop. Local evidence or compiler-output failures return to the same loop with a later superseding cycle build. Planning gaps route to planning, decision ambiguity or missing risk approval routes to decision, content-proof gaps route to validation or publication proof, and runtime conflicts route to wait/release coordination. Cycle metadata belongs in builds; CodeWiki should not create a separate `.codewiki/cycles/**` tree unless future evidence proves builds are insufficient.
+Cycle builds carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, assessment, and produced refs. Failed or blocked gateway verdicts do not mutate lower layers; they classify the failure and route to local retry, planning, decision, validation/proof, or runtime coordination.
 
 ## Decision loop
 
@@ -58,19 +54,14 @@ Pending, rejected, or deferred Change rows can remain in runtime/session UI stat
 
 ## Decision loop target contract
 
-The decision loop combines user interaction, knowledge preflight, accepted semantic rows, and durable product/system knowledge updates. It produces a `decision_build` for routine intent-to-knowledge work.
+The decision loop combines user interaction, knowledge preflight, approved semantic rows, and durable product/system knowledge updates. It produces a `decision_build`.
 
-The decision loop has two modes:
+Modes:
 
-- `proposal`: read-only context loading, tradeoff surfacing, draft rows, product/system impact preflight, and diagram impact preflight. It must not mutate canonical knowledge.
-- `accepted`: applies only user-approved semantic rows to product/system knowledge, records row-to-KB evidence, and emits a `decision_build`.
+- `proposal`: read-only context loading, tradeoffs, draft rows, product/system impact preflight, and diagram impact preflight.
+- `accepted`: applies user-approved rows to product/system knowledge, records row-to-KB evidence, and emits a `decision_build`.
 
-The decision loop routes by abstraction entrypoint:
-
-- Product-oriented intent updates product knowledge first, then preflights system impact and downstream work.
-- Technical/system intent updates system diagrams and system knowledge first, then preflights user-visible product impact.
-
-A decision build must record requirement ids, approved rows, row-to-KB mappings, propagation direction, explicit `no product impact` or `no system impact` evidence when applicable, risks, non-goals, and downstream planning questions. User approval is required for semantic decisions and risk escalations; gateways validate KB diffs, diagram/doc alignment, task planning, code, closure, and publication evidence.
+Product intent updates product knowledge first, then system impact. System intent updates system knowledge and diagrams first, then product impact. A decision build records requirement ids, approved rows, KB mappings, propagation direction, explicit no-impact evidence when applicable, risks, non-goals, and downstream planning questions.
 
 ## Planning loop
 
@@ -122,17 +113,9 @@ Compilers remain deterministic build producers. They do not own autonomous sched
 
 ## Propagation
 
-All agent-led semantic changes start with decision classification, even when the observed symptom appears in code, tests, roadmap, docs, package metadata, or publication. Builds classify the target with `change_type` (`product`, `system`, `task`, or `code`); generated, runtime, or mechanical-only work uses traceability exemption metadata instead of a separate type. After classification, propagation can originate in any layer:
+All agent-led semantic changes start with decision classification unless a build records a mechanical/generated/runtime exemption. Propagation can originate in any layer: product intent, knowledge drift, planning drift, code changes, validation failures, audit findings, or missing intent.
 
-- product intent can refine decision requirements and knowledge,
-- knowledge changes can create planning drift,
-- planning changes can create implementation drift,
-- code changes can create decision or planning drift,
-- validation failures can route back to implementation, planning, or decision using failure classification and recommended-next-loop metadata,
-- audit findings can route to decision before becoming knowledge, planning, or implementation work,
-- missing intent routes to decision.
-
-Propagation is alignment work. The graph should expose the affected loop and source refs, while compilers produce the next cycle build.
+The graph exposes affected loops and refs; compilers produce the next cycle build. Failures route by class: evidence gaps retry locally, planning gaps route to planning, ambiguous or unapproved intent routes to decision, content-proof gaps route to validation/publication proof, and runtime conflicts route to wait/release coordination.
 
 ## Rules
 
