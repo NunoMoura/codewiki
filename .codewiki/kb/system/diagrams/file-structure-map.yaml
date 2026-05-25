@@ -93,6 +93,20 @@ nodes:
       - src/application/agency.ts
       - src/application/tools/agency.ts
       - tests/tasks/TASK-015/agency-source-root.test.mjs
+  - id: agency_shim_cleanup_boundary
+    label: Agency shim cleanup follow-up
+    group: drift
+    kind: policy
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: selected_next_boundary
+    task_id: TASK-020
+    paths:
+      - src/domain/agency/types.ts
+      - src/application/agency.ts
+      - src/application/tools/agency.ts
+      - tests/tasks/TASK-015/agency-source-root.test.mjs
+      - tests/smoke/package-smoke.test.mjs
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -233,10 +247,10 @@ nodes:
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
     status: accepted_target
-    defer_status: trigger_satisfied_needs_followup_planning
+    defer_status: renewed_until_agency_shim_cleanup_validation
     owner: maintainers
-    trigger: agency pilot task-close validation and compatibility evidence
-    trigger_state: satisfied_by_TASK_015_task_close
+    trigger: TASK-020 agency shim cleanup task-close validation and file-structure audit evidence
+    trigger_state: pending_TASK_020_task_close
     paths:
       - src/audit/**
       - src/build/**
@@ -269,7 +283,15 @@ edges:
   - id: heavy_roots_wait_for_pilot
     from: deferred_concept_roots
     to: first_concept_root_pilot
-    label: deferred until pilot evidence exists
+    label: original deferral trigger satisfied by pilot evidence
+  - id: agency_cleanup_follows_pilot
+    from: first_concept_root_pilot
+    to: agency_shim_cleanup_boundary
+    label: selected post-pilot cleanup boundary
+  - id: heavy_roots_wait_for_cleanup
+    from: deferred_concept_roots
+    to: agency_shim_cleanup_boundary
+    label: renewed deferral until cleanup validation
   - id: concept_target_exposed_by_api
     from: concept_root_target
     to: api_facade

@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-25T04:34:42Z",
+  "profile": "planning",
+  "task_id": "TASK-019",
+  "verdict": "pass",
+  "rationale": "TASK-019 planning is valid. Planning creates TASK-020 as the separate executable agency shim cleanup implementation task, restores TASK-019 to decision/planning-only scope, renews heavier-root deferral with owner/trigger/rationale pending TASK-020 close, and repairs upstream TASK-014 propagation so accepted rows/questions are not left open. No source movement or shim removal happened in TASK-019.",
+  "checks": [
+    "Read TASK-019 planning build",
+    "TASK-020 created and refined as executable agency shim cleanup task",
+    "TASK-019 restored to boundary-only scope",
+    "Upstream FCB rows/questions mapped to TASK-015/TASK-020/renewed deferral",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only graph-health/generated dirty files",
+    "approval:user: user requested proceed after TASK-019 resume"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due existing graph-health warnings."
+    },
+    {
+      "severity": "low",
+      "summary": "TASK-020 implementation must start from the planning build and validate deletion behavior; no source cleanup is validated yet."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+  "policy_profile": "planning",
+  "required_audits": [
+    "alignment",
+    "file-structure",
+    "generated-parity",
+    "stale-reference",
+    "task"
+  ],
+  "audit_refs": [
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:generated-parity",
+    "profile:stale-reference",
+    "profile:task",
+    "approval:user: user requested proceed after TASK-019 resume",
+    "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed"
+  ],
+  "audit_reports": [
+    "decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+    "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+    "generated-parity pass",
+    "stale-reference pass",
+    "task TASK-019 pass"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "file-structure",
+      "generated-parity",
+      "stale-reference",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "task_id": "TASK-019",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: user requested proceed after TASK-019 resume"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh planning validation consumed planning/decision builds, TASK-019/TASK-020 roadmap refs, KB/diagram, and audit evidence.",
+    "role": "validator"
+  }
+}

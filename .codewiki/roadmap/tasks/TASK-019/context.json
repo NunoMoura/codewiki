@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-25",
+  "generated_at": "2026-05-25T04:35:04Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-019/context.json",
   "task": {
     "id": "TASK-019",
     "title": "Select post-agency concept-root follow-up boundary",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "architecture",
     "change_type": "system",
@@ -37,7 +37,7 @@
     },
     "delta": {
       "desired": "Maintainers choose or explicitly defer the next concept-root migration boundary with durable roadmap/build evidence.",
-      "current": "Agency pilot and TASK-018 trigger guardrail are validated; deferred-root trigger is satisfied; no next boundary has been selected.",
+      "current": "Agency pilot and TASK-018 trigger guardrail are validated; TASK-019 decision build selected agency shim cleanup as the next boundary; follow-up roadmap task/planning validation are pending.",
       "closure": "A decision_build/planning_build maps the post-agency follow-up to executable tasks or renewed deferral."
     }
   }
