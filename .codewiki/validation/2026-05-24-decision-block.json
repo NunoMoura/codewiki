@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-24T23:55:21Z",
+  "profile": "decision",
+  "verdict": "block",
+  "rationale": "Accepted decision build maps all approved rows MC-001..MC-004 to system knowledge and state-lifecycle diagram updates, records system-first propagation, no immediate product impact, downstream planning questions, requirements, evidence mapping, and audit context. No code/source implementation was changed in the decision loop. Policy blocks decision validation until audit:alignment, audit:stale-reference are recorded.",
+  "checks": [
+    "User approved all rows in DT-2026-05-24-9.",
+    "KB updates applied to graph.md, validation-gateway.md, compilers.md, alignment-model.md, and state-lifecycle.yaml.",
+    "Decision build .codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json created with row-to-KB mappings and propagation evidence.",
+    "codewiki_audit profiles=[alignment] scoped to changed docs returned warning only for existing graph-health warnings, no errors.",
+    "codewiki_state refresh=true returned health yellow with 0 errors and 4 warnings."
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Repository still has pre-existing graph-health warnings; this decision did not introduce audit errors."
+    },
+    {
+      "severity": "high",
+      "summary": "Missing required audit evidence for profiles: alignment, stale-reference."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+  "policy_profile": "semantic-system",
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "codewiki_audit profiles=[alignment] paths=[.codewiki/kb/system/graph.md,.codewiki/kb/system/validation-gateway.md,.codewiki/kb/system/compilers.md,.codewiki/kb/system/alignment-model.md,.codewiki/kb/system/diagrams/state-lifecycle.yaml]",
+    "codewiki_state refresh=true"
+  ],
+  "audit_reports": [
+    "alignment audit warning: graph-health reports existing warnings; no audit errors"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite audit evidence for required profiles: alignment, stale-reference."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "stale-reference"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:stale-reference"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required audit evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:stale-reference"
+        ]
+      }
+    ],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": false,
+    "notes": "Decision validation can remain in-session; no code/test implementation validation boundary required.",
+    "role": "validator"
+  }
+}

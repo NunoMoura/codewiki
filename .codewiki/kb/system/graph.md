@@ -5,7 +5,7 @@ state: active
 summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
 owners:
   - architecture
-updated: "2026-05-20"
+updated: "2026-05-24"
 code_paths:
   - .codewiki/index_graph.json
   - src/application/graph.ts
@@ -24,6 +24,8 @@ The graph is the generated representation of CodeWiki state. The domain concept 
 The state engine routes agents to the smallest useful next context, detects drift, reports freshness, exposes scoped roadmap/sprint/task views, and selects the next loop: decision, planning, implementation, validation, or observe. It also supplies the agency controller and CodeWiki UI with safe next-action, context-boundary, isolation, and stop-reason signals.
 
 The graph does not decide intended behavior and does not replace source-of-truth reads. It points to the relevant cycle builds, knowledge docs, planning builds, roadmap items, validation reports, and code/test paths; agents must read those sources directly before making semantic changes.
+
+The graph is the operational state machine for CodeWiki. Markov-chain or Markov Decision Process language is an analytical lens over graph-derived transitions, not a replacement for the graph, because the graph must retain source refs, traceability, evidence ownership, and proof relationships.
 
 Alignment is sourced from cycle builds, KB docs, planning builds, roadmap tasks, tests/code, implementation builds, validation attestations, audit evidence, commits, and publication content proofs. The graph reports alignment gaps; it does not own requirements or solve alignment by itself.
 
@@ -79,6 +81,16 @@ System diagrams are first-class inputs. The graph parses diagram data into refs 
 
 The graph should model abstraction propagation separately from compiler sequence with edges such as `product_drives_system`, `system_constrains_product`, `product_requires_system`, `system_impacts_product`, `no_product_impact`, and `no_system_impact`.
 
+## Operational state and transition analytics
+
+The full graph snapshot, `G_t`, is the source-backed operational state at a point in time. A compact transition state, `S_t`, may be derived from `G_t` for analytics and routing summaries. The compact state can include active loop, scope, lifecycle state, reconciliation status, failure class, recommended next loop, risk tier, policy profile, proof status, freshness, and runtime availability.
+
+The Markov property only applies to the compact projection when that projection includes enough source-backed context to make the next transition independent of chat history. A loop label by itself is not enough state: the same `implementation` label can mean missing test evidence, a planning gap, ambiguous intent, missing content proof, or a runtime conflict.
+
+Transition analytics may estimate `P(S_t+1 | S_t)` for passive observation, or `P(S_t+1 | S_t, action, policy)` when gated agency chooses actions. These metrics are derived from builds, validation reports, graph snapshots, source fingerprints, and Git history. They are generated analytics, not canonical requirements, not raw event logs, and not a reason to duplicate history in hot CodeWiki state.
+
+Use transition analytics to find retry traps, expected loop counts, frequent gateway failure classes, and agency stop/escalation hints. Use the graph and canonical sources to decide what exists, which refs matter, and which loop must run next.
+
 ## Hot state machine
 
 The graph should model cross-layer items with:
@@ -88,9 +100,13 @@ The graph should model cross-layer items with:
 - `from_layer` and `to_layer`,
 - `next_loop`: `decision`, `planning`, `implementation`, `validation`, or `observe`,
 - `reason`,
+- optional `failure_class` for fail/block routing,
+- optional `recommended_next_loop` when a gateway or reconciliation item can route more precisely than the default loop,
 - source fingerprints for freshness.
 
 Reconciliation items should represent actionable, unconsumed handoffs and traceability gaps. Accepted decision or planning builds are not drift once explicit consumes/produces build DAG edges, downstream builds, roadmap changes, implementation evidence, or passing validation link back to them. This keeps the graph as a generated map over evidence instead of making lifecycle metadata the only source of completion truth.
+
+Selective back-propagation should prefer the smallest upstream loop that can resolve the issue. Evidence or compiler-output gaps usually retry locally. Planning gaps route to planning. Ambiguous intent, unapproved semantic changes, or missing risk approval route to decision. Content-proof gaps route to validation or task-close proof. Runtime conflicts route to wait/release coordination rather than semantic compiler work.
 
 The graph next action includes context-boundary guidance. Compiler-loop actions start from CodeWiki source refs and may recommend resume-context refresh or a new session at noisy, stale, token-heavy, or loop-boundary points. Task-close, publication, publish, and release require fresh validator context, required audits, `clean=true`, and immutable proof.
 
@@ -187,6 +203,7 @@ Status, `codewiki_state`, and CodeWiki UI views must consume the generated-state
 - Post-commit GC next actions require archive commit/tree proof and must produce restore-ledger refs before tracked purge operations are applied.
 - The graph should flag deterministic file-contract drift, including deprecated `.codewiki/index/**`, deprecated default `.codewiki/evidence/**`, and legacy dot-wiki path references in active contract/source files.
 - Generated state does not replace builds, knowledge, roadmap work items, validation reports, commits, package digests, or code/tests; those remain the evidence sources for truth and content proof.
+- Markov/MDP-style transition analytics do not replace the graph; they are derived generated views over graph-backed reconciliation transitions.
 - Generated state should make gated agency and CodeWiki UI stop reasons explicit when state is stale, blocked, unsafe, missing approval, missing required fresh-session isolation, or blocked by overlapping write leases.
 - The graph should expose active session lease counts, read/write warnings, write/write conflicts, pending waiters, and ready waiters, while scoped leases remain temporary coordination state rather than source-of-truth behavior.
 - The graph should surface session queue role/worktree metadata, wait entry blockers, wait readiness, and validation isolation evidence so CodeWiki UI, status, and audits can distinguish builder, validator, publisher, blocked, and ready-to-resume contexts.

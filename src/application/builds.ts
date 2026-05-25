@@ -8,7 +8,9 @@ import { assessDecisionPropagation, normalizeDecisionQuestionResolutions, normal
 import type { ChangeType } from "../domain/change/types.ts";
 import type { WikiProject } from "../domain/project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
-import type { CodewikiValidationReportInput } from "../domain/validation/types.ts";
+import type { WorkflowLoop } from "../domain/session/types.ts";
+import type { CodewikiValidationFailureClass, CodewikiValidationReportInput } from "../domain/validation/types.ts";
+import { VALIDATION_FAILURE_CLASS_VALUES } from "../domain/validation/types.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { normalizeWorktreeIsolation } from "./claims.ts";
@@ -647,6 +649,64 @@ function validationPreflightIssue(kind: string, severity: "high" | "medium" | "l
 	return items.length ? [{ kind, severity, summary, evidence: items }] : [];
 }
 
+const VALIDATION_ROUTE_LOOP_VALUES: WorkflowLoop[] = ["decision", "planning", "implementation", "validation", "observe"];
+
+function normalizeValidationFailureClass(value: unknown): CodewikiValidationFailureClass | undefined {
+	const normalized = String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+	return (VALIDATION_FAILURE_CLASS_VALUES as readonly string[]).includes(normalized)
+		? normalized as CodewikiValidationFailureClass
+		: undefined;
+}
+
+function normalizeValidationRouteLoop(value: unknown): WorkflowLoop | undefined {
+	const normalized = String(value || "").trim().toLowerCase().replace(/_/g, "-");
+	return (VALIDATION_ROUTE_LOOP_VALUES as readonly string[]).includes(normalized)
+		? normalized as WorkflowLoop
+		: undefined;
+}
+
+function routeForFailureClass(failureClass: CodewikiValidationFailureClass): WorkflowLoop {
+	if (failureClass === "planning_gap") return "planning";
+	if (failureClass === "compiler_incomplete") return "implementation";
+	if (failureClass === "content_proof_missing" || failureClass === "evidence_missing") return "validation";
+	if (failureClass === "runtime_conflict") return "observe";
+	return "decision";
+}
+
+function inferValidationRouting(input: CodewikiValidationReportInput, signals: string[]): {
+	failure_class?: CodewikiValidationFailureClass;
+	recommended_next_loop?: WorkflowLoop;
+	stop_reason?: string;
+} {
+	const explicitClass = normalizeValidationFailureClass(input.failure_class);
+	const joined = unique([
+		...signals,
+		...trimList(input.failed_criteria),
+		...trimList(input.blocking_questions),
+		...trimList(input.issues?.map((issue) => issue.summary)),
+		input.stop_reason || "",
+	]).join("\n").toLowerCase();
+	const failureClass = explicitClass
+		|| (joined.includes("decision_propagation") || joined.includes("planning gap") ? "planning_gap" : undefined)
+		|| (joined.includes("risk_approval") || joined.includes("user_approval") || joined.includes("approval required") ? "risk_approval_missing" : undefined)
+		|| (joined.includes("commit_readiness") || joined.includes("compiler output") || joined.includes("compiler incomplete") ? "compiler_incomplete" : undefined)
+		|| (joined.includes("publisher_result") || joined.includes("validation_isolation") || joined.includes("content_proof") || joined.includes("publication_readiness") || joined.includes("clean=true") || joined.includes("immutable") ? "content_proof_missing" : undefined)
+		|| (joined.includes("runtime_conflict") || joined.includes("artifact conflict") || joined.includes("lease") ? "runtime_conflict" : undefined)
+		|| (joined.includes("semantic_build_traceability") || joined.includes("ambiguous intent") || joined.includes("decision ambiguity") ? "decision_ambiguity" : undefined)
+		|| (joined.includes("audit") || joined.includes("stale") || joined.includes("source refs") || joined.includes("task_id") || joined.includes("upstream") || joined.includes("evidence") ? "evidence_missing" : undefined)
+		|| (input.verdict === "fail" || input.verdict === "block" ? "decision_ambiguity" : undefined);
+	const recommendedLoop = normalizeValidationRouteLoop(input.recommended_next_loop)
+		|| (failureClass ? routeForFailureClass(failureClass) : undefined);
+	const stopReason = String(input.stop_reason || "").trim()
+		|| (failureClass === "runtime_conflict" ? "Wait for scoped runtime coordination to clear before retrying." : undefined)
+		|| (failureClass === "content_proof_missing" ? "Collect or cite required validation/publication content proof before promotion." : undefined);
+	return {
+		...(failureClass ? { failure_class: failureClass } : {}),
+		...(recommendedLoop ? { recommended_next_loop: recommendedLoop } : {}),
+		...(stopReason ? { stop_reason: stopReason } : {}),
+	};
+}
+
 export function buildValidationPreflight(project: WikiProject, input: CodewikiValidationReportInput) {
 	const profile = input.profile.trim();
 	const policyProfile = (input.policy_profile ?? input.profile ?? "").trim() || undefined;
@@ -692,6 +752,17 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 		...validationPreflightIssue("close-publication-blockers", "high", closePublicationBlockers, "Task-close/publication blockers must clear before validation can pass."),
 		...validationPreflightIssue("risk-approval", "high", approvalMissing, "Risk tier requires explicit user approval before lower-layer promotion."),
 	];
+	const routingSignals = [
+		...upstreamGaps.map((gap) => `upstream:${gap}`),
+		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
+		...auditGaps.map((gap) => `audit:${gap}`),
+		...taskIdGaps.map((gap) => `task_id:${gap}`),
+		...isolationGaps.map((gap) => `content_proof:${gap}`),
+		...staleRefs.map((gap) => `stale_refs:${gap}`),
+		...closePublicationBlockers.map((gap) => `close_publication:${gap}`),
+		...approvalMissing.map((gap) => `risk_approval:${gap}`),
+	];
+	const routing = inferValidationRouting(input, routingSignals);
 	return {
 		version: 1,
 		status,
@@ -709,6 +780,7 @@ export function buildValidationPreflight(project: WikiProject, input: CodewikiVa
 		],
 		missing,
 		issues,
+		routing,
 		risk: {
 			...risk,
 			approval_evidence: approvalEvidence,
@@ -1495,6 +1567,7 @@ export async function writeValidationReport(
 	]);
 	const policyBlocked = policyGaps.length > 0;
 	const verdict = policyBlocked ? "block" : input.verdict;
+	const routing = inferValidationRouting(input, policyGaps.length ? policyGaps : input.verdict === "pass" ? [] : [input.verdict]);
 	const taskPart = input.task_id?.trim() ? `-${input.task_id.trim()}` : "";
 	const slug = buildSlug(`${profile}-${verdict}${taskPart}`, "validation-report");
 	const day = created.slice(0, 10);
@@ -1539,6 +1612,10 @@ export async function writeValidationReport(
 		issues: [...inputIssues, ...isolationIssue, ...publisherResultIssue, ...commitReadinessIssue, ...traceabilityIssue, ...decisionPropagationIssue, ...auditIssue, ...riskApprovalIssue, ...publicationReadinessIssue],
 		source: (input.source ?? "").trim() || undefined,
 		policy_profile: policyProfile,
+		failure_class: routing.failure_class,
+		recommended_next_loop: routing.recommended_next_loop,
+		stop_reason: routing.stop_reason,
+		routing,
 		required_audits: auditReq.profiles,
 		audit_refs: auditRefs,
 		audit_reports: auditReports,

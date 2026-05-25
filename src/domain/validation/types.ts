@@ -1,7 +1,19 @@
 import type { SubagentVerdict } from "../agency/types.ts";
-import type { ChangeClaimRole, WorktreeIsolationMetadata } from "../session/types.ts";
+import type { ChangeClaimRole, WorkflowLoop, WorktreeIsolationMetadata } from "../session/types.ts";
 
 export type TaskVerifierVerdict = SubagentVerdict;
+
+export const VALIDATION_FAILURE_CLASS_VALUES = [
+	"evidence_missing",
+	"compiler_incomplete",
+	"planning_gap",
+	"decision_ambiguity",
+	"risk_approval_missing",
+	"content_proof_missing",
+	"runtime_conflict",
+] as const;
+
+export type CodewikiValidationFailureClass = (typeof VALIDATION_FAILURE_CLASS_VALUES)[number];
 
 export interface CodewikiValidationIsolationInput extends WorktreeIsolationMetadata {
 	role?: ChangeClaimRole;
@@ -22,6 +34,9 @@ export interface CodewikiValidationReportInput {
 	audit_reports?: string[];
 	failed_criteria?: string[];
 	blocking_questions?: string[];
+	failure_class?: CodewikiValidationFailureClass | string;
+	recommended_next_loop?: WorkflowLoop | string;
+	stop_reason?: string;
 	isolation?: CodewikiValidationIsolationInput;
 	preflight_only?: boolean;
 	refresh?: boolean;

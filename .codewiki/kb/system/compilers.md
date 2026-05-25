@@ -6,7 +6,7 @@ summary: Alignment loops that create source-backed builds for decision, planning
 owners:
   - architecture
   - product
-updated: "2026-05-19"
+updated: "2026-05-24"
 code_paths:
   - src/application/builds.ts
   - src/application/roadmap.ts
@@ -32,6 +32,8 @@ decision loop -> decision_build -> validation gateway
     -> implementation loop -> implementation_build -> validation gateway/publication
 ```
 
+This is a nested loop sequence with selective back-propagation, not one monolithic restart loop. A failed or blocked gateway verdict should retry locally when the issue is local to the submitted build, and should route upstream only when the failure class shows a planning gap, decision ambiguity, missing risk approval, missing content proof, or runtime coordination block.
+
 The decision loop owns user semantic approval and knowledge updates. Lower-level task creation, code changes, and closure are validated by gateways rather than by asking the user to inspect compiler machinery. A compiler turns one layer of information into the smallest useful source-backed build for the next layer. The state engine routes agents to the next required loop and source paths, but it does not replace direct reads of builds, knowledge, roadmap tasks, validation evidence, tests, code, or content proofs. Every semantic change must trace to an accepted compiler build before it can close, validate, or publish.
 
 ## Alignment cycles
@@ -42,7 +44,7 @@ Each loop starts from CodeWiki source refs, not chat memory. Agents should use `
 
 Cycle builds should carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, agent assessment, and produced refs for the next loop.
 
-A failed or blocked gateway verdict should not mutate lower layers directly. The same loop creates a later superseding cycle build after the user, agent, or project state resolves the issue. Cycle metadata belongs in builds; CodeWiki should not create a separate `.codewiki/cycles/**` tree unless future evidence proves builds are insufficient.
+A failed or blocked gateway verdict should not mutate lower layers directly. The gateway should classify the failure and recommend the smallest safe next loop. Local evidence or compiler-output failures return to the same loop with a later superseding cycle build. Planning gaps route to planning, decision ambiguity or missing risk approval routes to decision, content-proof gaps route to validation or publication proof, and runtime conflicts route to wait/release coordination. Cycle metadata belongs in builds; CodeWiki should not create a separate `.codewiki/cycles/**` tree unless future evidence proves builds are insufficient.
 
 ## Decision loop
 
@@ -126,7 +128,7 @@ All agent-led semantic changes start with decision classification, even when the
 - knowledge changes can create planning drift,
 - planning changes can create implementation drift,
 - code changes can create decision or planning drift,
-- validation failures can route back to implementation, planning, or decision,
+- validation failures can route back to implementation, planning, or decision using failure classification and recommended-next-loop metadata,
 - audit findings can route to decision before becoming knowledge, planning, or implementation work,
 - missing intent routes to decision.
 

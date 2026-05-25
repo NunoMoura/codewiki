@@ -5,7 +5,7 @@ state: active
 summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-24"
 code_paths:
   - src/application/gateway
   - skills/codewiki-validation/SKILL.md
@@ -24,7 +24,7 @@ The gateway does not define requirements, write canonical truth, create plans, c
 
 A gateway run should receive the build path/kind, policy profile, requirement ids, exit criteria, compiler source refs, evidence mapping, graph/state routing context, required audit outputs, checked content proof, mechanical check results, and fresh-context isolation data when policy requires them.
 
-The gateway inspects only enough source truth to decide. It may recommend routing after fail/block; the next compiler cycle owns any revised build.
+When a gateway returns `fail` or `block`, it should classify the failure and recommend the smallest safe next loop when possible. The gateway inspects only enough source truth to decide. It may recommend routing after fail/block; the next compiler cycle owns any revised build.
 
 ## Gate points
 
@@ -115,7 +115,31 @@ The gateway validates task creation, implementation, closure, diagram/doc alignm
 | `fail` | A requirement, criterion, alignment assertion, or evidence mapping is proven wrong or incomplete. |
 | `block` | The gateway cannot safely decide because context, checks, policy, source refs, intent, or task boundary integrity is insufficient. |
 
-A failed or blocked verdict should name the failed criteria or missing context. The producing loop then creates a superseding cycle build after revision.
+A failed or blocked verdict should name the failed criteria or missing context. The producing loop or the recommended upstream loop then creates a superseding cycle build after revision.
+
+## Failure routing vocabulary
+
+Gateway routing should distinguish local retry from upstream escalation. Verdict remains `pass`, `fail`, or `block`; routing metadata explains what kind of transition should happen next.
+
+Target metadata:
+
+- `failure_class`: compact reason for the failed or blocked transition.
+- `recommended_next_loop`: `decision`, `planning`, `implementation`, `validation`, or `observe` when a compiler/gateway loop is the right next step.
+- `stop_reason` or equivalent policy text when the correct action is not a compiler loop, such as waiting on a scoped lease, user approval, or external publication proof.
+
+Initial failure classes:
+
+| Failure class | Meaning | Typical route |
+| --- | --- | --- |
+| `evidence_missing` | Submitted build lacks required mapping, checks, audits, or refs. | Same compiler loop or validation preflight. |
+| `compiler_incomplete` | Compiler output is internally incomplete or inconsistent. | Same compiler loop with a superseding build. |
+| `planning_gap` | Accepted intent is not represented by durable roadmap/sprint/deferral state. | Planning. |
+| `decision_ambiguity` | Source truth or user intent is ambiguous, contradictory, or unapproved. | Decision. |
+| `risk_approval_missing` | Policy requires explicit semantic or high-risk user approval. | Decision or user approval before promotion. |
+| `content_proof_missing` | Commit/tree/package/archive/remote proof is absent or stale. | Validation, task-close, publication, or publisher proof step. |
+| `runtime_conflict` | Scoped lease, worktree, or parallel role conflict blocks safe progress. | Wait/release coordination, not semantic compiler work. |
+
+The implementation may refine enum names, but it should preserve the distinction between local retry, upstream semantic escalation, proof collection, and runtime waiting.
 
 ## Persistence policy
 
@@ -136,7 +160,7 @@ Tracked reports are safe to purge only after a reachable archive commit contains
 - Shared files across tasks are allowed only when ownership and acceptance evidence remain independent; overlapping ownership without an explicit dependency/split rationale blocks validation.
 - Semantic validation should run in a fresh, bounded context when independence matters.
 - Implementation, task-close, publication, publish, and release validation profiles require fresh-context isolation evidence before they can pass.
-- The gateway may recommend next routing: decision, planning, implementation, validation, observe, or block.
+- The gateway may recommend next routing: decision, planning, implementation, validation, observe, or block, and should include failure classification when a fail/block verdict needs selective back-propagation.
 - Gated agency must stop on fail/block verdicts or missing required approval.
 - Commit, push, release, or remote updates require gateway/policy approval when configured and immutable content proof when publication policy requires it.
 - Risk-tiered gates may fast-path low-risk mechanical or docs-cleanup work only when deterministic audits, stale-ref scans, diagram/doc checks, and content proof satisfy policy.

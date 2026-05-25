@@ -121,6 +121,29 @@ function graph(overrides = {}) {
 	assert.ok(g.views.reconciliation.items.some((entry) => entry.id === `reconcile:publication-proof:${implementationPath}`), "publication proof fixture should expose missing content proof reconciliation");
 }
 
+{
+	const validationPath = ".codewiki/validation/planning-gap-block.json";
+	const g = graph({
+		roadmapEntries: [{ id: "TASK-900", title: "Route failure", status: "in_progress", priority: "high", kind: "testing", summary: "Route failed validation", spec_paths: [], code_paths: ["src/application/graph.ts"], research_ids: [] }],
+		validations: [{
+			path: validationPath,
+			taskId: "TASK-900",
+			verdict: "block",
+			data: {
+				profile: "implementation",
+				verdict: "block",
+				task_id: "TASK-900",
+				failure_class: "planning_gap",
+				recommended_next_loop: "planning",
+				source: implementationPath,
+			},
+		}],
+	});
+	const item = g.views.reconciliation.items.find((entry) => entry.id === `reconcile:validation:${validationPath}`);
+	assert.equal(item?.next_loop, "planning", "validation route metadata should choose planning next loop");
+	assert.equal(item?.failure_class, "planning_gap");
+}
+
 function writeJson(path, value) { writeFileSync(path, JSON.stringify(value, null, 2)); }
 function writeText(path, value) { writeFileSync(path, value); }
 function ensure(path) { mkdirSync(path, { recursive: true }); }

@@ -24,6 +24,7 @@ import {
 	WORKFLOW_LOOP_VALUES,
 } from "../../domain/session/types.ts";
 import { CODEWIKI_STATE_SECTION_VALUES } from "../../domain/state/types.ts";
+import { VALIDATION_FAILURE_CLASS_VALUES } from "../../domain/validation/types.ts";
 
 export const changeTypeSchema = Type.Union(
 	CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
@@ -238,6 +239,9 @@ export const agencyScopeKindSchema = Type.Union(
 );
 export const workflowLoopSchema = Type.Union(
 	WORKFLOW_LOOP_VALUES.map((value) => Type.Literal(value)),
+);
+export const validationFailureClassSchema = Type.Union(
+	VALIDATION_FAILURE_CLASS_VALUES.map((value) => Type.Literal(value)),
 );
 export const auditProfileSchema = Type.Union(
 	AUDIT_PROFILE_VALUES.map((value) => Type.Literal(value)),
@@ -656,6 +660,9 @@ export const codewikiValidationReportSchema = Type.Object({
 	audit_reports: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 	failed_criteria: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	blocking_questions: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
+	failure_class: Type.Optional(validationFailureClassSchema),
+	recommended_next_loop: Type.Optional(workflowLoopSchema),
+	stop_reason: Type.Optional(Type.String({ minLength: 1 })),
 	isolation: Type.Optional(validationIsolationSchema),
 	preflight_only: Type.Optional(Type.Boolean({
 		default: false,

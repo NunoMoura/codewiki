@@ -1,0 +1,450 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-24T23:55:06Z",
+  "source": "DT-2026-05-24-9; user approved MC-001..MC-004 in chat on 2026-05-24.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-23T23:55:06.000Z",
+    "purge_after": "2026-07-23T23:55:06.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-MC-001",
+      "text": "The graph remains CodeWiki's operational state machine; Markov/MDP framing is only a derived analytics lens.",
+      "source_refs": [
+        "MC-001"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-MC-002",
+      "text": "A compact transition state must be derived from the full graph and include enough source-backed context to avoid relying on chat history.",
+      "source_refs": [
+        "MC-002"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-MC-003",
+      "text": "Gateway fail/block routing should classify failure and recommend the smallest safe next loop or stop/wait state.",
+      "source_refs": [
+        "MC-003"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "REQ-MC-004",
+      "text": "Transition metrics should be generated analytics from existing source-backed artifacts and Git history, not a new canonical raw event log.",
+      "source_refs": [
+        "MC-004"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Approved rows map to system knowledge.",
+      "evidence": "Rows MC-001..MC-004 are approved in DT-2026-05-24-9 and mapped to updated graph, alignment, compiler, validation-gateway, and state-lifecycle docs.",
+      "requirement_ids": [
+        "REQ-MC-001",
+        "REQ-MC-002",
+        "REQ-MC-003",
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        "DT-2026-05-24-9"
+      ]
+    },
+    {
+      "criterion": "System-first propagation records product impact.",
+      "evidence": "Propagation records no immediate product impact and downstream planning questions for possible future UI/agency work.",
+      "requirement_ids": [
+        "REQ-MC-001",
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ]
+    },
+    {
+      "criterion": "Gateway routing vocabulary is captured for planning.",
+      "evidence": ".codewiki/kb/system/validation-gateway.md defines failure_class, recommended_next_loop, stop_reason, and initial failure classes; downstream planning questions request implementation scoping.",
+      "requirement_ids": [
+        "REQ-MC-003"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "codewiki_audit profiles=[alignment] paths=[graph,validation-gateway,compilers,alignment-model,state-lifecycle] -> warning only: existing graph-health warnings; no audit errors.",
+    "codewiki_state refresh=true -> health yellow, 0 errors, 4 warnings."
+  ],
+  "audit_reports": [
+    "alignment audit warning: .codewiki/index_graph.json graph health reports existing warnings."
+  ],
+  "agent_assessment": "Good direction. The graph must remain the operational state because it preserves source refs and traceability. Markov/MDP framing is valuable as generated transition analytics and future agency policy input, especially after gateway failures are classified.",
+  "summary": "Accept graph-backed transition model with Markov/MDP analytics as a derived lens.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "MC-001",
+      "current_state": "CodeWiki docs describe a graph-backed state machine and reconciliation next actions, but Markov/MDP framing is implicit or absent.",
+      "desired_state": "Keep the graph as the operational state machine and describe Markov-chain or MDP framing as an analytical projection over graph-derived reconciliation transitions, not as a replacement for the graph.",
+      "rationale": "The graph preserves traceability across intent, knowledge, roadmap, builds, validation, tests, code, and content proof; a Markov chain is too lossy for operational state but useful for measuring transition behavior.",
+      "affected_layers": [
+        "system-knowledge",
+        "graph",
+        "alignment-model"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Replace graph state with a Markov-chain model, rejected because it loses source refs and traceability.",
+        "Avoid Markov vocabulary entirely, rejected because transition analytics can help diagnose loop traps and agency policy."
+      ]
+    },
+    {
+      "id": "MC-002",
+      "current_state": "Loop names such as decision, planning, implementation, validation, and observe are used as routing labels, but docs do not explicitly say that a loop label alone is insufficient state.",
+      "desired_state": "Define the Markov-style state as a compact projection derived from the full graph snapshot and canonical source refs, including loop, scope, lifecycle, risk/policy, failure class, and proof status where relevant.",
+      "rationale": "The Markov property only holds when the state vector contains enough source-backed context; otherwise identical loop labels can require different transitions.",
+      "affected_layers": [
+        "system-knowledge",
+        "graph",
+        "validation-gateway"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Use only stage labels as states, rejected because they cannot distinguish missing evidence, planning flaws, ambiguity, or runtime conflicts."
+      ]
+    },
+    {
+      "id": "MC-003",
+      "current_state": "Gateway verdicts provide pass, fail, or block, and graph reconciliation often routes fail/block cases broadly, with several paths escalating to decision.",
+      "desired_state": "Add an explicit future-facing transition vocabulary for gateway failures, such as failure_class and recommended_next_loop, to distinguish local retry from escalation to planning, decision, validation proof, or runtime wait states.",
+      "rationale": "Selective back-propagation is the practical benefit of the state-machine framing; implementation failures should not always escalate to decision when the real issue is missing test evidence, content proof, or a planning gap.",
+      "affected_layers": [
+        "validation-gateway",
+        "graph",
+        "compilers",
+        "builds"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep only pass/fail/block routing, rejected because it hides why a transition should retry locally or escalate upstream."
+      ]
+    },
+    {
+      "id": "MC-004",
+      "current_state": "CodeWiki avoids using chat history as durable memory and relies on canonical sources, builds, validation, graph state, and Git for recovery; no Markov transition metrics are defined.",
+      "desired_state": "Treat transition metrics as generated or derived analytics from existing artifacts and Git-backed history, not as a new canonical event log; use them to detect trap states, expected retries, and agency stop/escalation hints.",
+      "rationale": "This preserves the no-raw-history principle while allowing empirical improvement of compiler prompts, gateway criteria, and gated agency policies.",
+      "affected_layers": [
+        "graph",
+        "agency",
+        "validation-gateway",
+        "sanitation"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Add a permanent raw transition log under .codewiki, rejected because it conflicts with sanitation and Git-as-history policy.",
+        "Skip transition metrics entirely, accepted as possible short-term defer but loses diagnostic value."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "MC-001",
+    "MC-002",
+    "MC-003",
+    "MC-004"
+  ],
+  "approved_rows": [
+    {
+      "id": "MC-001",
+      "current_state": "CodeWiki docs describe a graph-backed state machine and reconciliation next actions, but Markov/MDP framing is implicit or absent.",
+      "desired_state": "Keep the graph as the operational state machine and describe Markov-chain or MDP framing as an analytical projection over graph-derived reconciliation transitions, not as a replacement for the graph.",
+      "rationale": "The graph preserves traceability across intent, knowledge, roadmap, builds, validation, tests, code, and content proof; a Markov chain is too lossy for operational state but useful for measuring transition behavior.",
+      "affected_layers": [
+        "system-knowledge",
+        "graph",
+        "alignment-model"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Replace graph state with a Markov-chain model, rejected because it loses source refs and traceability.",
+        "Avoid Markov vocabulary entirely, rejected because transition analytics can help diagnose loop traps and agency policy."
+      ]
+    },
+    {
+      "id": "MC-002",
+      "current_state": "Loop names such as decision, planning, implementation, validation, and observe are used as routing labels, but docs do not explicitly say that a loop label alone is insufficient state.",
+      "desired_state": "Define the Markov-style state as a compact projection derived from the full graph snapshot and canonical source refs, including loop, scope, lifecycle, risk/policy, failure class, and proof status where relevant.",
+      "rationale": "The Markov property only holds when the state vector contains enough source-backed context; otherwise identical loop labels can require different transitions.",
+      "affected_layers": [
+        "system-knowledge",
+        "graph",
+        "validation-gateway"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Use only stage labels as states, rejected because they cannot distinguish missing evidence, planning flaws, ambiguity, or runtime conflicts."
+      ]
+    },
+    {
+      "id": "MC-003",
+      "current_state": "Gateway verdicts provide pass, fail, or block, and graph reconciliation often routes fail/block cases broadly, with several paths escalating to decision.",
+      "desired_state": "Add an explicit future-facing transition vocabulary for gateway failures, such as failure_class and recommended_next_loop, to distinguish local retry from escalation to planning, decision, validation proof, or runtime wait states.",
+      "rationale": "Selective back-propagation is the practical benefit of the state-machine framing; implementation failures should not always escalate to decision when the real issue is missing test evidence, content proof, or a planning gap.",
+      "affected_layers": [
+        "validation-gateway",
+        "graph",
+        "compilers",
+        "builds"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Keep only pass/fail/block routing, rejected because it hides why a transition should retry locally or escalate upstream."
+      ]
+    },
+    {
+      "id": "MC-004",
+      "current_state": "CodeWiki avoids using chat history as durable memory and relies on canonical sources, builds, validation, graph state, and Git for recovery; no Markov transition metrics are defined.",
+      "desired_state": "Treat transition metrics as generated or derived analytics from existing artifacts and Git-backed history, not as a new canonical event log; use them to detect trap states, expected retries, and agency stop/escalation hints.",
+      "rationale": "This preserves the no-raw-history principle while allowing empirical improvement of compiler prompts, gateway criteria, and gated agency policies.",
+      "affected_layers": [
+        "graph",
+        "agency",
+        "validation-gateway",
+        "sanitation"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": [
+        "Add a permanent raw transition log under .codewiki, rejected because it conflicts with sanitation and Git-as-history policy.",
+        "Skip transition metrics entirely, accepted as possible short-term defer but loses diagnostic value."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "CodeWiki remains a graph-backed operational state machine; Markov/MDP concepts are derived analytics over graph transitions, not a replacement for the graph."
+    },
+    {
+      "id": "D2",
+      "summary": "A Markov-style state must be a compact projection from the full graph and source refs, not a bare loop label."
+    },
+    {
+      "id": "D3",
+      "summary": "Gateway fail/block routing should gain explicit failure classification and recommended next-loop metadata for selective back-propagation."
+    },
+    {
+      "id": "D4",
+      "summary": "Transition metrics should be generated analytics from existing artifacts, graph snapshots, and Git-backed history rather than a new canonical raw event log."
+    }
+  ],
+  "knowledge_changes": [
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/alignment-model.md",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "MC-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Graph and alignment docs now state that the graph is the operational state machine and Markov/MDP framing is a derived analytics lens rather than a replacement.",
+      "deferred": false
+    },
+    {
+      "row_id": "MC-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Graph and alignment docs now define full graph snapshot G_t and compact transition projection S_t, and explain why loop labels alone are insufficient.",
+      "deferred": false
+    },
+    {
+      "row_id": "MC-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Validation gateway docs now define failure_class/recommended_next_loop target metadata and initial failure classes; compiler and graph docs now describe selective back-propagation.",
+      "deferred": false
+    },
+    {
+      "row_id": "MC-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+      ],
+      "evidence": "Graph and alignment docs now define transition metrics as generated analytics from builds, validation, graph snapshots, source fingerprints, and Git history, not canonical raw event logs.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "Graph knowledge now distinguishes operational graph state from derived Markov/MDP transition analytics.",
+      "Validation gateway knowledge now defines future failure routing metadata and initial failure classes.",
+      "Compiler knowledge now describes nested loops with selective back-propagation.",
+      "State lifecycle diagram now records back edges and transition policy fields."
+    ],
+    "no_product_impact": "No immediate user-visible product workflow or UI behavior changes are introduced. Future planning may propose a product-facing metrics view only if transition analytics becomes a UI feature.",
+    "downstream_planning_questions": [
+      "Plan the first implementation task for failure_class/recommended_next_loop metadata across validation reports, gateway preflight/output, graph reconciliation, and skills.",
+      "Decide whether transition analytics should be deferred until failure routing metadata exists, or implemented as coarse generated metrics first.",
+      "Define how generated transition metrics avoid becoming a canonical raw event log while remaining useful to gated agency and UI surfaces."
+    ]
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+  ],
+  "downstream_planning_questions": [
+    "Plan the first implementation task for failure_class/recommended_next_loop metadata across validation reports, gateway preflight/output, graph reconciliation, and skills.",
+    "Decide whether transition analytics should be deferred until failure routing metadata exists, or implemented as coarse generated metrics first.",
+    "Define how generated transition metrics avoid becoming a canonical raw event log while remaining useful to gated agency and UI surfaces."
+  ],
+  "assumptions": [
+    "The operational graph remains the traceability source for intent, knowledge, roadmap, builds, validation, tests, code, and proof relationships.",
+    "Concrete enum names and storage shape for failure routing and transition analytics will be finalized during planning/implementation."
+  ],
+  "open_questions": [
+    "Which validation report/build schemas should first carry failure_class and recommended_next_loop?",
+    "Should transition analytics wait until failure classification exists, or start with coarse loop transition counts?"
+  ],
+  "non_goals": [
+    "Do not replace the graph with a Markov chain.",
+    "Do not add a canonical raw transition event log.",
+    "Do not implement source-code schema or UI changes in the decision loop."
+  ],
+  "risks": [
+    "If implemented as a replacement model, Markov framing would lose traceability and source-proof relationships.",
+    "If transition metrics are stored as a raw hot event log, they could conflict with sanitation and Git-as-history policy.",
+    "Failure-class enum design can sprawl; planning should keep the first implementation small."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      "DT-2026-05-24-9",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

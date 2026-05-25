@@ -52,6 +52,34 @@ function reconciliationPriority(loop: ReconciliationLoop): number {
 	return { decision: 0, planning: 1, implementation: 2, validation: 3, observe: 4 }[loop];
 }
 
+function normalizeReconciliationLoop(value: unknown): ReconciliationLoop | undefined {
+	const loop = String(value || "").trim().toLowerCase().replace(/_/g, "-");
+	return ["decision", "planning", "implementation", "validation", "observe"].includes(loop)
+		? loop as ReconciliationLoop
+		: undefined;
+}
+
+function layerForReconciliationLoop(loop: ReconciliationLoop): string {
+	return loop === "planning"
+		? "roadmap"
+		: loop === "implementation"
+			? "code"
+			: loop === "validation"
+				? "validation"
+				: loop === "observe"
+					? "runtime"
+					: "decision";
+}
+
+function validationRouting(data: any): { failure_class?: string; recommended_next_loop?: ReconciliationLoop; stop_reason?: string } {
+	const routing = data?.routing || {};
+	return {
+		failure_class: String(data?.failure_class || routing?.failure_class || "").trim() || undefined,
+		recommended_next_loop: normalizeReconciliationLoop(data?.recommended_next_loop || routing?.recommended_next_loop),
+		stop_reason: String(data?.stop_reason || routing?.stop_reason || "").trim() || undefined,
+	};
+}
+
 function loopIsolationRequirement(loop: ReconciliationLoop) {
 	if (loop === "observe") {
 		return {
@@ -1539,10 +1567,14 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			content_proof_refs: validationContentProofRefs,
 			isolation_status: isolation.status,
 		});
+		const route = validationRouting(v.data);
 		addNode(valNodeId, {
 			kind: "validation_report",
 			path: v.path,
 			verdict: v.verdict,
+			failure_class: route.failure_class,
+			recommended_next_loop: route.recommended_next_loop,
+			stop_reason: route.stop_reason,
 			isolation_status: isolation.status,
 			isolation: v.data?.isolation,
 			evidence_summary: {
@@ -1571,18 +1603,26 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		});
 		const unscopedBlock = v.verdict === "block" && validationTargetsNoTask;
 		if ((v.verdict === "fail" || v.verdict === "block") && !validationTargetsClosedTask && !unscopedBlock && !validationHasSupersedingPass) {
+			const nextLoop = route.recommended_next_loop || "decision";
+			const routeLabel = route.failure_class ? ` (${route.failure_class})` : "";
+			const stopReason = route.stop_reason ? ` ${route.stop_reason}` : "";
 			reconciliationItems.push({
 				id: `reconcile:validation:${v.path}`,
 				source_id: valNodeId,
 				state: v.verdict === "block" ? "blocked" : "drift",
 				direction: "gateway",
 				from_layer: "validation",
-				to_layer: "decision",
-				next_loop: "decision",
+				to_layer: layerForReconciliationLoop(nextLoop),
+				next_loop: nextLoop,
+				failure_class: route.failure_class,
+				recommended_next_loop: route.recommended_next_loop,
+				stop_reason: route.stop_reason,
 				task_id: v.taskId,
-				reason: v.verdict === "block"
-					? "Validation blocked; escalate ambiguous intent to decision compiler."
-					: "Validation failed; return to decision compiler to fix knowledge/roadmap gaps.",
+				reason: route.recommended_next_loop
+					? `Validation ${v.verdict}${routeLabel}; route to ${nextLoop}.${stopReason}`
+					: v.verdict === "block"
+						? "Validation blocked; escalate ambiguous intent to decision compiler."
+						: "Validation failed; return to decision compiler to fix knowledge/roadmap gaps.",
 			});
 		}
 	}

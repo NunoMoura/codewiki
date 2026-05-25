@@ -1,0 +1,434 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-25T00:02:24Z",
+  "source": "Validated decision .codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json and pass report .codewiki/validation/2026-05-24-decision-pass.json.",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-08T00:02:24.000Z",
+    "purge_after": "2026-06-22T00:02:24.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-MC-001",
+      "text": "The graph remains CodeWiki's operational state machine; Markov/MDP framing is only a derived analytics lens.",
+      "source_refs": [
+        "MC-001"
+      ],
+      "state": "knowledge-only"
+    },
+    {
+      "id": "REQ-MC-002",
+      "text": "A compact transition state must be derived from the full graph and include enough source-backed context to avoid relying on chat history.",
+      "source_refs": [
+        "MC-002"
+      ],
+      "state": "knowledge-only-deferred-analytics"
+    },
+    {
+      "id": "REQ-MC-003",
+      "text": "Gateway fail/block routing should classify failure and recommend the smallest safe next loop or stop/wait state.",
+      "source_refs": [
+        "MC-003"
+      ],
+      "state": "roadmap-task:TASK-017"
+    },
+    {
+      "id": "REQ-MC-004",
+      "text": "Transition metrics should be generated analytics from existing source-backed artifacts and Git history, not a new canonical raw event log.",
+      "source_refs": [
+        "MC-004"
+      ],
+      "state": "deferred-until-TASK-017"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "All approved decision rows have durable propagation states.",
+      "evidence": "MC-001 and MC-002 are knowledge-only, MC-003 maps to TASK-017, MC-004 is deferred with owner/trigger/rationale.",
+      "requirement_ids": [
+        "REQ-MC-001",
+        "REQ-MC-002",
+        "REQ-MC-003",
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Executable work is atomic and independently validatable.",
+      "evidence": "TASK-017 has one outcome: validation routing metadata through report writing and graph reconciliation, with non-goals excluding transition metrics and Markov dashboards.",
+      "requirement_ids": [
+        "REQ-MC-003"
+      ],
+      "source_refs": [
+        "TASK-017"
+      ]
+    },
+    {
+      "criterion": "Transition analytics remain deferred and non-canonical.",
+      "evidence": "MC-004 and downstream questions Q-MC-002/Q-MC-003 defer metrics until TASK-017 closes and require generated analytics from existing artifacts only.",
+      "requirement_ids": [
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan gateway failure routing metadata implementation after graph-backed transition decision.",
+  "task_ids": [
+    "TASK-017"
+  ],
+  "task_changes": [
+    "Created TASK-017 Implement gateway failure routing metadata with outcome, acceptance, non-goals, verification, spec refs, and candidate code/test paths."
+  ],
+  "roadmap_changes": [
+    "Created TASK-017 Implement gateway failure routing metadata with outcome, acceptance, non-goals, verification, spec refs, and candidate code/test paths."
+  ],
+  "tdd_plan": [
+    "Add or update a focused smoke/feature test that creates fail/block validation reports with routing metadata and verifies persisted JSON fields.",
+    "Add graph/reconciliation fixture or smoke coverage proving a fail/block validation report with planning_gap or risk_approval_missing routes to planning or decision as expected.",
+    "Update TypeScript types and Pi schema first enough for tests to compile, then implement report persistence/default derivation and graph routing fallback behavior.",
+    "Run typecheck and smoke tests; add changed/alignment/stale-reference audits before implementation validation."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/alignment-drift-fixtures.test.mjs",
+    "tests/features"
+  ],
+  "candidate_code_paths": [
+    "src/domain/validation/types.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/application/builds.ts",
+    "src/application/tools/validation.ts",
+    "src/application/graph.ts",
+    "skills/codewiki-validation/SKILL.md",
+    "skills/codewiki-implementation/SKILL.md"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "MC-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "unknown",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "none",
+      "rationale": "The row is a semantic model clarification already captured in canonical system knowledge.",
+      "evidence": "Decision build row-to-KB mapping and decision validation pass.",
+      "inferred": false
+    },
+    {
+      "row_id": "MC-002",
+      "question_id": "",
+      "question": "",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-017 closes and failure routing metadata exists in validation reports/graph reconciliation.",
+      "rationale": "Loop-label insufficiency is documented now; durable analytics implementation needs failure routing metadata first.",
+      "evidence": "Graph docs define G_t/S_t projection and state vector; TASK-017 covers the prerequisite route metadata.",
+      "inferred": false
+    },
+    {
+      "row_id": "MC-003",
+      "question_id": "",
+      "question": "",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "Immediate implementation handoff after planning validation passes.",
+      "rationale": "This row has executable code/schema/graph/test impact and is prerequisite for precise selective back-propagation.",
+      "evidence": "TASK-017 created with acceptance criteria and candidate code/test paths.",
+      "inferred": false
+    },
+    {
+      "row_id": "MC-004",
+      "question_id": "",
+      "question": "",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "After TASK-017 closes and maintainers decide whether coarse generated metrics are valuable enough for a new planning task.",
+      "rationale": "Metrics need stable route metadata to be meaningful and must be designed as generated analytics, not canonical history.",
+      "evidence": "TASK-017 non-goals explicitly exclude transition probability metrics, Markov dashboards, agency optimization, and raw event logs.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "Q-MC-001",
+      "question": "Plan the first implementation task for failure_class/recommended_next_loop metadata across validation reports, gateway preflight/output, graph reconciliation, and skills.",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "Immediate implementation handoff after planning validation.",
+      "rationale": "This is the smallest executable prerequisite for selective back-propagation.",
+      "evidence": "TASK-017 created.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q-MC-002",
+      "question": "Decide whether transition analytics should be deferred until failure routing metadata exists, or implemented as coarse generated metrics first.",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md"
+      ],
+      "source_refs": [
+        "TASK-017"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-017 passes implementation validation and closes.",
+      "rationale": "Failure routing metadata gives metrics meaningful dimensions; coarse loop counts now would be low signal and risk event-log creep.",
+      "evidence": "TASK-017 non-goals and MC-004 deferral.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "Q-MC-003",
+      "question": "Define how generated transition metrics avoid becoming a canonical raw event log while remaining useful to gated agency and UI surfaces.",
+      "resolution": "unknown",
+      "task_ids": [
+        "TASK-017"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "Any future task proposing transition metrics, agency optimization, or UI metrics.",
+      "rationale": "The invariant is canonical knowledge now; no metrics implementation is needed before route metadata exists.",
+      "evidence": "Updated graph and alignment docs plus TASK-017 non-goals.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "All approved decision rows have durable propagation states.",
+      "evidence": "MC-001 and MC-002 are knowledge-only, MC-003 maps to TASK-017, MC-004 is deferred with owner/trigger/rationale.",
+      "requirement_ids": [
+        "REQ-MC-001",
+        "REQ-MC-002",
+        "REQ-MC-003",
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Executable work is atomic and independently validatable.",
+      "evidence": "TASK-017 has one outcome: validation routing metadata through report writing and graph reconciliation, with non-goals excluding transition metrics and Markov dashboards.",
+      "requirement_ids": [
+        "REQ-MC-003"
+      ],
+      "source_refs": [
+        "TASK-017"
+      ]
+    },
+    {
+      "criterion": "Transition analytics remain deferred and non-canonical.",
+      "evidence": "MC-004 and downstream questions Q-MC-002/Q-MC-003 defer metrics until TASK-017 closes and require generated analytics from existing artifacts only.",
+      "requirement_ids": [
+        "REQ-MC-004"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/alignment-model.md"
+      ]
+    }
+  ],
+  "assumptions": [
+    "Existing validation report writer and graph reconciliation can be extended without changing pass/fail/block verdict semantics.",
+    "TASK-017 is small enough for one implementation cycle if metrics and UI work remain out of scope."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement transition probability metrics in TASK-017.",
+    "Do not add a raw transition log.",
+    "Do not replace graph state-machine behavior.",
+    "Do not create a coordination-only or umbrella task."
+  ],
+  "risks": [
+    "Graph routing defaults are broad today; implementation must preserve current behavior when metadata is absent.",
+    "Adding route metadata to validation schema may require adapter/tool schema updates to keep Pi calls valid.",
+    "Existing graph-health warnings are unrelated but may keep audits yellow."
+  ],
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-017"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-24-decision-pass.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/alignment-model.md",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-017"
+    ],
+    "code": [
+      "src/domain/validation/types.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/application/builds.ts",
+      "src/application/tools/validation.ts",
+      "src/application/graph.ts",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md"
+    ],
+    "tests": [
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/alignment-drift-fixtures.test.mjs",
+      "tests/features",
+      "tests/smoke"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

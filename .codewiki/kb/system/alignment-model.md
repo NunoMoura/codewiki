@@ -6,7 +6,7 @@ summary: Core CodeWiki model for context-driven development alignment across int
 owners:
   - architecture
   - product
-updated: "2026-05-19"
+updated: "2026-05-24"
 code_paths:
   - src/application/graph.ts
   - src/application/builds.ts
@@ -49,6 +49,14 @@ Vertical alignment means changes propagate through the development stack without
 Product-first and system-first decisions may enter different abstraction layers. Product-first decisions update product meaning before system impact is checked. System-first decisions update system diagrams/knowledge before user-visible product impact is checked. Both paths require explicit propagation or no-impact evidence.
 
 Generated state is the derived vertical state machine. It encodes expected layer edges and reconciliation gaps, but it is not canonical truth. The state engine routes the next loop and points to source refs; agents and gateways must read canonical sources directly before changing or validating semantics.
+
+## Graph-backed transition model
+
+CodeWiki's operational transition model is graph-backed, not chat-backed. Each compiler or gateway cycle starts from canonical sources and graph-derived routing context, produces a build, validation verdict, task update, proof, or reconciliation item, then the graph is regenerated from source truth.
+
+A Markov-chain view can be useful only as a compact projection over this graph-backed state. The projected state must include enough source-backed context, such as loop, scope, lifecycle, failure class, risk tier, policy, proof status, and freshness, for the next transition to be independent of chat history. Loop names alone are not sufficient state.
+
+Markov-style transition metrics and future MDP-style agency policies are generated analytics. They can help detect retry traps, expected cycle counts, and escalation policy quality, but they do not replace the graph, canonical source reads, gateway policy, or immutable content proof.
 
 ## Horizontal alignment
 
@@ -96,6 +104,7 @@ Routine decisions combine user semantic approval and knowledge updates into one 
 ## Rules
 
 - Graph routes and summarizes; it never overrides canonical sources or immutable content proof.
+- Markov/MDP-style transition analytics are derived views over graph-backed reconciliation transitions; they never replace graph traceability or canonical evidence.
 - Gateways decide boundary outcomes, but their reports are attestations over evidence, not content proof.
 - Commits, tree SHAs, and package digests anchor what exists or shipped.
 - Build artifacts carry traceability between loops, not permanent source truth.

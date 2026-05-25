@@ -134,6 +134,30 @@ try {
 	});
 	assert.equal(propagationBlocked.status, "blocked");
 	assert.ok(propagationBlocked.missing.decision_propagation.some((entry) => entry.includes("UNMAPPED-ROW")));
+	assert.equal(propagationBlocked.routing.failure_class, "planning_gap");
+	assert.equal(propagationBlocked.routing.recommended_next_loop, "planning");
+	const propagationBlockedReport = await writeValidationReport(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Planning cannot pass with unmapped accepted row.",
+		source: unresolvedPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(propagationBlockedReport.data.verdict, "block");
+	assert.equal(propagationBlockedReport.data.failure_class, "planning_gap");
+	assert.equal(propagationBlockedReport.data.recommended_next_loop, "planning");
+
+	const explicitRouteReport = await writeValidationReport(project, {
+		profile: "decision",
+		verdict: "fail",
+		rationale: "Validator found a planning-only gap.",
+		failure_class: "planning_gap",
+		recommended_next_loop: "planning",
+		stop_reason: "Planner must refine roadmap work before retry.",
+	});
+	assert.equal(explicitRouteReport.data.failure_class, "planning_gap");
+	assert.equal(explicitRouteReport.data.recommended_next_loop, "planning");
+	assert.equal(explicitRouteReport.data.stop_reason, "Planner must refine roadmap work before retry.");
 
 	const deferredDecision = await writeDecisionBuild(project, {
 		kind: "decision",
@@ -235,6 +259,8 @@ try {
 	});
 	assert.equal(publicationBlocked.data.verdict, "block");
 	assert.ok(publicationBlocked.data.failed_criteria.includes("risk_approval"));
+	assert.equal(publicationBlocked.data.failure_class, "risk_approval_missing");
+	assert.equal(publicationBlocked.data.recommended_next_loop, "decision");
 
 	const publicationPassed = await writeValidationReport(project, {
 		profile: "publication",

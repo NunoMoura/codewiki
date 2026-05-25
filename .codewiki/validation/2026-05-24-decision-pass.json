@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-24T23:55:49Z",
+  "profile": "decision",
+  "verdict": "pass",
+  "rationale": "Accepted decision build maps all approved rows MC-001..MC-004 to updated system knowledge, state-lifecycle diagram refs, propagation evidence, requirements, and downstream planning questions. Required alignment and stale-reference audits were run; only existing graph-health warnings remain and no audit errors were reported.",
+  "checks": [
+    "User approved all rows in DT-2026-05-24-9.",
+    "KB updates applied to graph.md, validation-gateway.md, compilers.md, alignment-model.md, and state-lifecycle.yaml.",
+    "Decision build .codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json created with row-to-KB mappings and propagation evidence.",
+    "audit:alignment ran scoped to changed docs/build and returned warning only for existing graph-health warnings.",
+    "audit:stale-reference ran scoped to changed docs/build and passed.",
+    "codewiki_state refresh=true returned health yellow with 0 errors and 4 warnings."
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Repository still has pre-existing graph-health warnings; this decision did not introduce audit errors."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
+  "policy_profile": "semantic-system",
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "audit:alignment codewiki_audit profiles=[alignment,stale-reference] paths=[.codewiki/kb/system/graph.md,.codewiki/kb/system/validation-gateway.md,.codewiki/kb/system/compilers.md,.codewiki/kb/system/alignment-model.md,.codewiki/kb/system/diagrams/state-lifecycle.yaml,.codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json]",
+    "audit:stale-reference codewiki_audit profiles=[alignment,stale-reference] paths=[.codewiki/kb/system/graph.md,.codewiki/kb/system/validation-gateway.md,.codewiki/kb/system/compilers.md,.codewiki/kb/system/alignment-model.md,.codewiki/kb/system/diagrams/state-lifecycle.yaml,.codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json]",
+    "profile:alignment",
+    "profile:stale-reference"
+  ],
+  "audit_reports": [
+    "alignment audit warning: graph-health reports existing warnings; no audit errors",
+    "stale-reference audit pass"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": false,
+    "notes": "Decision validation can remain in-session; no code/test implementation validation boundary required.",
+    "role": "validator"
+  }
+}
