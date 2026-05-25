@@ -522,6 +522,7 @@ const codewikiDecisionPropagationResolutionSchema = Type.Object({
 	source_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 	owner: Type.Optional(Type.String({ minLength: 1 })),
 	trigger: Type.Optional(Type.String({ minLength: 1 })),
+	trigger_state: Type.Optional(Type.String({ minLength: 1 })),
 	rationale: Type.Optional(Type.String({ minLength: 1 })),
 	evidence: Type.String({ minLength: 1 }),
 });

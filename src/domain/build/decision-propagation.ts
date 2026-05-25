@@ -13,6 +13,7 @@ export interface DecisionPropagationResolutionInput {
 	source_refs?: string[];
 	owner?: string;
 	trigger?: string;
+	trigger_state?: string;
 	rationale?: string;
 	evidence?: string;
 }
@@ -28,6 +29,7 @@ export interface NormalizedDecisionPropagationResolution {
 	source_refs: string[];
 	owner?: string;
 	trigger?: string;
+	trigger_state?: string;
 	rationale?: string;
 	evidence?: string;
 	inferred?: boolean;
@@ -47,6 +49,7 @@ export interface DecisionPropagationQuestion {
 export interface DecisionPropagationAssessmentOptions {
 	knownTaskIds?: string[];
 	knownSprintIds?: string[];
+	satisfiedDeferredTriggers?: string[];
 }
 
 export interface DecisionPropagationAssessmentEntry {
@@ -64,6 +67,7 @@ export interface DecisionPropagationAssessmentEntry {
 	source_refs: string[];
 	owner?: string;
 	trigger?: string;
+	trigger_state?: string;
 	rationale?: string;
 	evidence?: string;
 	inferred?: boolean;
@@ -128,6 +132,7 @@ function normalizeResolutionEntry(raw: any): NormalizedDecisionPropagationResolu
 		source_refs: stringList(raw?.source_refs),
 		owner: text(raw?.owner) || undefined,
 		trigger: text(raw?.trigger) || undefined,
+		trigger_state: text(raw?.trigger_state ?? raw?.triggerState ?? raw?.defer_status ?? raw?.deferStatus) || undefined,
 		rationale: text(raw?.rationale) || undefined,
 		evidence: text(raw?.evidence) || undefined,
 		inferred: raw?.inferred === true,
@@ -223,7 +228,30 @@ function questionStillOpen(question: DecisionPropagationQuestion, planningBuilds
 	}));
 }
 
-function validateResolution(entry: NormalizedDecisionPropagationResolution, knownTaskIds: Set<string>, knownSprintIds: Set<string>): string[] {
+function triggerStateSatisfied(value: string | undefined): boolean {
+	const normalized = text(value).toLowerCase();
+	return Boolean(normalized && normalized.includes("satisfied") && !normalized.includes("not_satisfied") && !normalized.includes("not satisfied") && !normalized.includes("unsatisfied"));
+}
+
+function deferredTriggerSatisfied(entry: NormalizedDecisionPropagationResolution, satisfiedDeferredTriggers: string[]): boolean {
+	if (triggerStateSatisfied(entry.trigger_state)) return true;
+	if (satisfiedDeferredTriggers.length === 0) return false;
+	const haystack = [
+		entry.row_id,
+		entry.question_id,
+		entry.question,
+		entry.trigger,
+		entry.trigger_state,
+		entry.evidence,
+		...entry.source_refs,
+	].map((value) => text(value).toLowerCase()).filter(Boolean).join("\n");
+	return satisfiedDeferredTriggers.some((trigger) => {
+		const normalized = text(trigger).toLowerCase();
+		return normalized && haystack.includes(normalized);
+	});
+}
+
+function validateResolution(entry: NormalizedDecisionPropagationResolution, knownTaskIds: Set<string>, knownSprintIds: Set<string>, satisfiedDeferredTriggers: string[]): string[] {
 	const gaps: string[] = [];
 	if (entry.resolution === "unknown") gaps.push("unknown_resolution");
 	if (entry.resolution !== "covered-by-row-resolutions" && !entry.evidence) gaps.push("missing_evidence");
@@ -244,12 +272,13 @@ function validateResolution(entry: NormalizedDecisionPropagationResolution, know
 		if (!entry.owner) gaps.push("missing_owner");
 		if (!entry.trigger) gaps.push("missing_trigger");
 		if (!entry.rationale) gaps.push("missing_rationale");
+		if (deferredTriggerSatisfied(entry, satisfiedDeferredTriggers)) gaps.push("trigger_satisfied");
 	}
 	return gaps;
 }
 
-function buildEntry(kind: "row" | "question", id: string, textValue: string, resolution: NormalizedDecisionPropagationResolution | null, planningBuilds: any[], knownTaskIds: Set<string>, knownSprintIds: Set<string>, prefix: string): DecisionPropagationAssessmentEntry {
-	const gaps = resolution ? validateResolution(resolution, knownTaskIds, knownSprintIds).map((gap) => `${prefix}:${id}:${gap}`) : [`${prefix}:${id}:missing_resolution`];
+function buildEntry(kind: "row" | "question", id: string, textValue: string, resolution: NormalizedDecisionPropagationResolution | null, planningBuilds: any[], knownTaskIds: Set<string>, knownSprintIds: Set<string>, satisfiedDeferredTriggers: string[], prefix: string): DecisionPropagationAssessmentEntry {
+	const gaps = resolution ? validateResolution(resolution, knownTaskIds, knownSprintIds, satisfiedDeferredTriggers).map((gap) => `${prefix}:${id}:${gap}`) : [`${prefix}:${id}:missing_resolution`];
 	return {
 		kind,
 		id,
@@ -264,6 +293,7 @@ function buildEntry(kind: "row" | "question", id: string, textValue: string, res
 		source_refs: resolution?.source_refs || [],
 		owner: resolution?.owner,
 		trigger: resolution?.trigger,
+		trigger_state: resolution?.trigger_state,
 		rationale: resolution?.rationale,
 		evidence: resolution?.evidence,
 		inferred: resolution?.inferred,
@@ -273,13 +303,14 @@ function buildEntry(kind: "row" | "question", id: string, textValue: string, res
 export function assessDecisionPropagation(decision: any, planningBuilds: any[], options: DecisionPropagationAssessmentOptions = {}): DecisionPropagationAssessment {
 	const knownTaskIds = new Set(options.knownTaskIds || []);
 	const knownSprintIds = new Set(options.knownSprintIds || []);
+	const satisfiedDeferredTriggers = stringList(options.satisfiedDeferredTriggers);
 	const rows = acceptedDecisionRows(decision);
 	const questions = downstreamPlanningQuestions(decision);
 	const rowResolutions = planningBuilds.flatMap((planning) => normalizeDecisionRowResolutions(planningData(planning)));
 	const questionResolutions = planningBuilds.flatMap((planning) => normalizeDecisionQuestionResolutions(planningData(planning)));
 	const rowEntries = rows.map((row) => {
 		const resolution = rowResolutions.find((entry) => entry.row_id === row.id) || inferRowResolution(row, planningBuilds);
-		return buildEntry("row", row.id, row.text, resolution, planningBuilds, knownTaskIds, knownSprintIds, "row");
+		return buildEntry("row", row.id, row.text, resolution, planningBuilds, knownTaskIds, knownSprintIds, satisfiedDeferredTriggers, "row");
 	});
 	const allRowsResolved = rowEntries.every((entry) => entry.gaps.length === 0);
 	const questionEntries = questions.map((question) => {
@@ -296,7 +327,7 @@ export function assessDecisionPropagation(decision: any, planningBuilds: any[], 
 				inferred: true,
 			}
 			: null);
-		return buildEntry("question", question.id, question.question, resolution, planningBuilds, knownTaskIds, knownSprintIds, "question");
+		return buildEntry("question", question.id, question.question, resolution, planningBuilds, knownTaskIds, knownSprintIds, satisfiedDeferredTriggers, "question");
 	});
 	const residuals = [...rowEntries, ...questionEntries].filter((entry) => entry.gaps.length > 0);
 	return {

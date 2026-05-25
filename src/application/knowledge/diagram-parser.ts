@@ -144,6 +144,7 @@ export interface FileStructureDriftReport {
 	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
 	entries: FileStructureDriftEntry[];
 	counts: Record<FileStructureDriftCategory, number>;
+	satisfied_deferred_triggers: string[];
 	parse_issues: SystemDiagramValidationIssue[];
 }
 
@@ -160,6 +161,7 @@ export interface FileStructureDriftGraphEvidence {
 	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
 	approved_migration_deltas: FileStructureDriftEntry[];
 	actionable_entries: FileStructureDriftEntry[];
+	satisfied_deferred_triggers: string[];
 	parse_issues: SystemDiagramValidationIssue[];
 }
 
@@ -453,6 +455,29 @@ function compactPathRule(rule: ParsedFileStructurePathRule): Pick<ParsedFileStru
 	};
 }
 
+function isSatisfiedTriggerState(value: unknown): boolean {
+	const normalized = stringValue(value).toLowerCase();
+	return Boolean(normalized && normalized.includes("satisfied") && !normalized.includes("not_satisfied") && !normalized.includes("not satisfied") && !normalized.includes("unsatisfied"));
+}
+
+function satisfiedDeferredTriggerRefs(nodes: ParsedFileStructureMapNode[]): string[] {
+	return Array.from(new Set(nodes.filter((node) => {
+		const triggerState = node.metadata.trigger_state ?? node.metadata.triggerState ?? node.metadata.defer_status ?? node.metadata.deferStatus ?? node.status;
+		return isSatisfiedTriggerState(triggerState);
+	}).flatMap((node) => [
+		node.id,
+		`file-structure-map:${node.id}`,
+		node.label,
+		stringValue(node.metadata.trigger),
+		stringValue(node.metadata.trigger_state ?? node.metadata.triggerState),
+		stringValue(node.metadata.defer_status ?? node.metadata.deferStatus),
+	]).map((value) => stringValue(value)).filter(Boolean)));
+}
+
+export function fileStructureSatisfiedDeferredTriggerRefs(repoRoot: string, project: WikiProject): string[] {
+	return satisfiedDeferredTriggerRefs(parseFileStructureMap(repoRoot, project).nodes);
+}
+
 export function compactFileStructureDriftReport(report: FileStructureDriftReport): FileStructureDriftGraphEvidence {
 	return {
 		version: 1,
@@ -467,6 +492,7 @@ export function compactFileStructureDriftReport(report: FileStructureDriftReport
 		approved_delta_edges: report.approved_delta_edges,
 		approved_migration_deltas: report.entries.filter((entry) => entry.category === "approved_migration_delta"),
 		actionable_entries: report.entries.filter((entry) => entry.category !== "approved_migration_delta"),
+		satisfied_deferred_triggers: report.satisfied_deferred_triggers,
 		parse_issues: report.parse_issues,
 	};
 }
@@ -514,6 +540,7 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 			approved_delta_edges: [],
 			entries: [],
 			counts: countEntries([]),
+			satisfied_deferred_triggers: [],
 			parse_issues: [],
 		};
 	}
@@ -626,6 +653,7 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 		approved_delta_edges: map.approved_delta_edges,
 		entries: sortedEntries,
 		counts: countEntries(sortedEntries),
+		satisfied_deferred_triggers: satisfiedDeferredTriggerRefs(map.nodes),
 		parse_issues: map.parse_issues,
 	};
 }

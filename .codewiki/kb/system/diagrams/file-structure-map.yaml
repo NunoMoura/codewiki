@@ -86,7 +86,7 @@ nodes:
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: implemented_pilot_pending_validation
+    status: implemented_pilot_validated
     paths:
       - src/agency/**
       - src/domain/agency/types.ts
@@ -233,9 +233,10 @@ nodes:
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
     status: accepted_target
-    defer_status: deferred_until_agency_pilot_closes
+    defer_status: trigger_satisfied_needs_followup_planning
     owner: maintainers
     trigger: agency pilot task-close validation and compatibility evidence
+    trigger_state: satisfied_by_TASK_015_task_close
     paths:
       - src/audit/**
       - src/build/**

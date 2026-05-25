@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-25T01:11:02Z",
+  "profile": "decision",
+  "task_id": "TASK-018",
+  "verdict": "pass",
+  "rationale": "TASK-018 recovery decision passes. The decision records the historical planning-gateway failure, updates canonical file-structure KB/diagram state to reflect that TASK-015 validated the agency pilot and satisfied the deferred-root trigger, and routes executable work to TASK-018 while explicitly deferring post-agency boundary selection until the guardrail exists. Source migration and shim removal remain out of scope.",
+  "checks": [
+    "Read .codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+    "Read .codewiki/kb/system/file-structure.md and .codewiki/kb/system/diagrams/file-structure-map.yaml edits",
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-018",
+    "codewiki_validation preflight_only=true profile=decision task_id=TASK-018: ready"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Alignment audit still reports existing graph-health warnings; no decision acceptance blocker."
+    },
+    {
+      "severity": "low",
+      "summary": "Post-agency boundary selection remains deferred until TASK-018 guardrail validation."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+  "policy_profile": "decision",
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:file-structure",
+    "codewiki_audit:2026-05-25:TASK-018:file-structure,alignment,generated-parity,stale-reference,task,changed",
+    "approval:user: planning gateway failure diagnosis approved with proceed request"
+  ],
+  "audit_reports": [
+    "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+    "alignment warning only: existing graph-health warnings",
+    "generated-parity pass",
+    "stale-reference pass",
+    "task TASK-018 pass",
+    "changed warning only: generated files dirty after refresh"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "task_id": "TASK-018",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: planning gateway failure diagnosis approved with proceed request"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Decision validation over working-tree KB/roadmap/build changes; clean immutable proof not required for decision profile.",
+    "role": "validator"
+  }
+}

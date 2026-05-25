@@ -1,6 +1,6 @@
 import "../setup-env.mjs";
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { buildValidationPreflight, writeDecisionBuild, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
@@ -192,6 +192,34 @@ try {
 	});
 	assert.equal(deferredPreflight.status, "ready");
 	assert.deepEqual(deferredPreflight.missing.decision_propagation, []);
+
+	await mkdir(join(root, ".codewiki/kb/system/diagrams"), { recursive: true });
+	await writeFile(join(root, ".codewiki/kb/system/diagrams/file-structure-map.yaml"), `version: 1\nid: file-structure-map\ntitle: File structure\ncategories: [approved_migration_delta]\nnodes:\n  - id: deferred_concept_roots\n    label: Deferred concept roots after agency pilot\n    group: drift\n    kind: policy\n    status: accepted_target\n    defer_status: trigger_satisfied_needs_followup_planning\n    trigger_state: satisfied_by_TASK_015_task_close\n    trigger: agency pilot task-close validation and compatibility evidence\n    paths: [src/audit/**]\nedges: []\n`);
+	const triggerSatisfiedDecision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept trigger-satisfied deferred propagation fixture.",
+		diff_table: [{ id: "TRIGGER-DEFER", current_state: "Deferred work can remain hidden after trigger.", desired_state: "Satisfied deferral trigger routes to planning.", rationale: "Regression fixture.", affected_layers: ["roadmap"], user_action: "approved" }],
+		row_to_kb_mappings: [{ row_id: "TRIGGER-DEFER", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "File-structure docs capture deferred trigger policy." }],
+		propagation: { direction: "system-first", product_impact: ["Agents see triggered deferred work."], downstream_planning_questions: ["When should TRIGGER-DEFER resume?"] },
+		knowledge_changes: [".codewiki/kb/system/file-structure.md"],
+	});
+	const triggerSatisfiedPlan = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "Resolve trigger-satisfied row as deferred fixture.",
+		source_decision_build: triggerSatisfiedDecision.path,
+		decision_row_resolutions: [{ row_id: "TRIGGER-DEFER", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Wait for pilot close.", evidence: "Deferred root waits on agency pilot.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
+		downstream_question_resolutions: [{ question: "When should TRIGGER-DEFER resume?", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Same deferral as row.", evidence: "Deferred question points at the same trigger.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
+	});
+	const triggerSatisfiedPreflight = buildValidationPreflight(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Satisfied deferral triggers must not pass as resolved.",
+		source: triggerSatisfiedPlan.path,
+		audit_refs: ["audit:alignment"],
+	});
+	assert.equal(triggerSatisfiedPreflight.status, "blocked");
+	assert.ok(triggerSatisfiedPreflight.missing.decision_propagation.some((entry) => entry.includes("TRIGGER-DEFER") && entry.includes("trigger_satisfied")));
+	assert.equal(triggerSatisfiedPreflight.routing.failure_class, "planning_gap");
 
 	const mechanicalImplementation = await writeImplementationBuild(project, {
 		kind: "implementation",

@@ -1456,6 +1456,7 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 		const assessment = assessDecisionPropagation(decision.data, planningBuilds, {
 			knownTaskIds: unique([...roadmapEntries.map((task) => task.id), ...archivedTaskIds]),
 			knownSprintIds: normalizedSprints.map((sprint) => sprint.id),
+			satisfiedDeferredTriggers: fileStructureDrift.satisfied_deferred_triggers || [],
 		});
 		if (assessment.rows.length === 0 && assessment.questions.length === 0) continue;
 		const decoratedRows = assessment.rows.map((row) => ({ ...row, decision_build: decisionPath }));

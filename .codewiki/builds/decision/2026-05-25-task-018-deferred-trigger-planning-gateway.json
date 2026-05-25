@@ -1,0 +1,379 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-25T01:09:05Z",
+  "source": "User approved planning-gateway failure recovery and file-structure continuation after TASK-015.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-24T01:09:05.000Z",
+    "purge_after": "2026-07-24T01:09:05.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "DEC-T018-1",
+      "text": "Planning propagation must not treat a deferral as resolved after its trigger is satisfied unless renewed resolution evidence exists.",
+      "source_refs": [
+        "T018-PLANNING-GATE-FAILURE",
+        ".codewiki/validation/2026-05-23-planning-fail.json"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "DEC-T018-2",
+      "text": "File-structure canonical truth must reflect that TASK-015 validated the agency pilot and satisfied the deferred concept-root trigger.",
+      "source_refs": [
+        "T018-FILE-STRUCTURE-STATUS",
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "DEC-T018-3",
+      "text": "Post-agency migration continuation must route through explicit planning before any further source movement.",
+      "source_refs": [
+        "T018-FOLLOW-UP-BOUNDARIES",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Historical planning-gateway failure recovered.",
+      "evidence": "Decision cites .codewiki/validation/2026-05-22-planning-pass.json as wrong and .codewiki/validation/2026-05-23-planning-fail.json/TASK-011 as existing partial fix.",
+      "requirement_ids": [
+        "DEC-T018-1"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-22-planning-pass.json",
+        ".codewiki/validation/2026-05-23-planning-fail.json",
+        ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json"
+      ]
+    },
+    {
+      "criterion": "File-structure state updated from pilot pending to trigger satisfied.",
+      "evidence": "KB and diagram edits mark agency pilot validated and deferred root trigger satisfied.",
+      "requirement_ids": [
+        "DEC-T018-2"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "No source migration happens in recovery decision.",
+      "evidence": "Decision routes executable work to TASK-018 and defers post-agency boundary selection until guardrail validation or renewed planning.",
+      "requirement_ids": [
+        "DEC-T018-3"
+      ],
+      "source_refs": [
+        "TASK-018"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Recover TASK-018 deferred-trigger planning gateway decision",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "T018-PLANNING-GATE-FAILURE",
+      "current_state": "Historical planning pass allowed accepted file-structure decisions to remain as open questions/prose deferrals, and current gates validate explicit deferral fields without checking whether the deferral trigger has become true.",
+      "desired_state": "Treat the 2026-05-22 planning pass as a known gateway failure and require future planning/validation/reconciliation to route trigger-satisfied deferred decisions back to planning until tasks, sprint metadata, knowledge-only completion, or renewed deferral exists.",
+      "rationale": "Approved decisions should not disappear after planning, and deferral is only safe while its trigger has not fired.",
+      "affected_layers": [
+        "system",
+        "roadmap",
+        "validation",
+        "graph"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "T018-FILE-STRUCTURE-STATUS",
+      "current_state": "File-structure KB/diagram still describe agency as a pilot with deferred heavy roots waiting for agency pilot closure, even though TASK-015 is closed with validation and compatibility evidence.",
+      "desired_state": "Update file-structure KB/diagram to mark the agency pilot as validated and the deferred-root trigger as satisfied, requiring follow-up planning before further source movement.",
+      "rationale": "Canonical structure truth must reflect that the trigger fired; otherwise agents can miss remaining approved migration work.",
+      "affected_layers": [
+        "system",
+        "diagram",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "T018-FOLLOW-UP-BOUNDARIES",
+      "current_state": "Roadmap has a recovery task but no durable follow-up implementation task for trigger-materialization gates and no explicit next concept-root decision/planning task after agency pilot evidence.",
+      "desired_state": "Create follow-up roadmap work: one task to implement deferred-trigger propagation/reconciliation gates, and one task to select the next concept-root boundary or agency-shim cleanup path from pilot evidence before any source move.",
+      "rationale": "The smallest safe next steps are process guardrail first, then explicit migration-boundary decision/planning; no direct source migration should occur inside recovery.",
+      "affected_layers": [
+        "roadmap",
+        "system",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "T018-PLANNING-GATE-FAILURE",
+    "T018-FILE-STRUCTURE-STATUS",
+    "T018-FOLLOW-UP-BOUNDARIES"
+  ],
+  "approved_rows": [
+    {
+      "id": "T018-PLANNING-GATE-FAILURE",
+      "current_state": "Historical planning pass allowed accepted file-structure decisions to remain as open questions/prose deferrals, and current gates validate explicit deferral fields without checking whether the deferral trigger has become true.",
+      "desired_state": "Treat the 2026-05-22 planning pass as a known gateway failure and require future planning/validation/reconciliation to route trigger-satisfied deferred decisions back to planning until tasks, sprint metadata, knowledge-only completion, or renewed deferral exists.",
+      "rationale": "Approved decisions should not disappear after planning, and deferral is only safe while its trigger has not fired.",
+      "affected_layers": [
+        "system",
+        "roadmap",
+        "validation",
+        "graph"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "T018-FILE-STRUCTURE-STATUS",
+      "current_state": "File-structure KB/diagram still describe agency as a pilot with deferred heavy roots waiting for agency pilot closure, even though TASK-015 is closed with validation and compatibility evidence.",
+      "desired_state": "Update file-structure KB/diagram to mark the agency pilot as validated and the deferred-root trigger as satisfied, requiring follow-up planning before further source movement.",
+      "rationale": "Canonical structure truth must reflect that the trigger fired; otherwise agents can miss remaining approved migration work.",
+      "affected_layers": [
+        "system",
+        "diagram",
+        "roadmap"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "T018-FOLLOW-UP-BOUNDARIES",
+      "current_state": "Roadmap has a recovery task but no durable follow-up implementation task for trigger-materialization gates and no explicit next concept-root decision/planning task after agency pilot evidence.",
+      "desired_state": "Create follow-up roadmap work: one task to implement deferred-trigger propagation/reconciliation gates, and one task to select the next concept-root boundary or agency-shim cleanup path from pilot evidence before any source move.",
+      "rationale": "The smallest safe next steps are process guardrail first, then explicit migration-boundary decision/planning; no direct source migration should occur inside recovery.",
+      "affected_layers": [
+        "roadmap",
+        "system",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "The 2026-05-22 planning pass is treated as a known gateway failure because accepted file-structure work remained only in open questions/prose deferrals."
+    },
+    {
+      "id": "D2",
+      "summary": "Future planning/validation/graph/audit paths must distinguish safe explicit deferral from trigger-satisfied deferred work that needs planning."
+    },
+    {
+      "id": "D3",
+      "summary": "File-structure source truth now records the agency pilot as validated and deferred concept-root trigger as satisfied by TASK-015 task-close validation."
+    },
+    {
+      "id": "D4",
+      "summary": "Before any further source migration, the next loop must implement deferred-trigger reconciliation, then plan either agency shim cleanup, a second concept-root boundary, or renewed deferral."
+    }
+  ],
+  "knowledge_changes": [
+    "Updated .codewiki/kb/system/file-structure.md to mark agency pilot validated, legacy agency shims as temporary until dedicated cleanup, and deferred concept-root trigger as satisfied.",
+    "Updated .codewiki/kb/system/diagrams/file-structure-map.yaml first_concept_root_pilot status to implemented_pilot_validated and deferred_concept_roots defer_status to trigger_satisfied_needs_followup_planning."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "T018-PLANNING-GATE-FAILURE",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "File-structure KB now states satisfied deferral must route to explicit follow-up work; validation/graph/compilers refs remain implementation targets for TASK-018.",
+      "deferred": false
+    },
+    {
+      "row_id": "T018-FILE-STRUCTURE-STATUS",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml:first_concept_root_pilot",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml:deferred_concept_roots"
+      ],
+      "evidence": "KB and YAML diagram record pilot validated and deferred-root trigger satisfied.",
+      "deferred": false
+    },
+    {
+      "row_id": "T018-FOLLOW-UP-BOUNDARIES",
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "diagram_refs": [
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml:deferred_concept_roots"
+      ],
+      "evidence": "Recovered follow-up is routed first to TASK-018 deferred-trigger reconciliation; post-agency boundary selection remains a downstream planning question after the guardrail exists.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Status/UI/audit surfaces should stop showing no-action-needed when a deferred decision trigger has fired."
+    ],
+    "system_impact": [
+      "Planning propagation model needs trigger-state/residual handling.",
+      "Graph/status/audit/validation need route metadata for trigger-satisfied deferrals."
+    ],
+    "downstream_planning_questions": [
+      "Map T018-PLANNING-GATE-FAILURE to TASK-018 implementation acceptance.",
+      "Map T018-FILE-STRUCTURE-STATUS as knowledge-only completion plus TASK-018 fixture evidence.",
+      "Defer or task post-agency boundary selection with owner/trigger/rationale after TASK-018 guardrail is validated."
+    ]
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml:first_concept_root_pilot",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml:deferred_concept_roots"
+  ],
+  "downstream_planning_questions": [
+    "How should trigger_state be represented in planning builds or source-derived graph evidence without breaking existing callers?",
+    "Should post-agency boundary selection wait until TASK-018 closes, or should a separate decision task be created immediately despite current roadmap de-duplication overlap?",
+    "Should agency compatibility shim cleanup be the next migration boundary or just one candidate in the post-TASK-018 boundary decision?",
+    "Map T018-PLANNING-GATE-FAILURE to TASK-018 implementation acceptance.",
+    "Map T018-FILE-STRUCTURE-STATUS as knowledge-only completion plus TASK-018 fixture evidence.",
+    "Defer or task post-agency boundary selection with owner/trigger/rationale after TASK-018 guardrail is validated."
+  ],
+  "assumptions": [
+    "User approval in this conversation covers the semantic recovery rows and high-risk planning-gateway correction.",
+    "TASK-011 should remain credited for unmapped-row propagation gates; TASK-018 handles the narrower trigger-satisfied deferral gap.",
+    "Roadmap task auto-deduplication currently prevents creating overlapping follow-up migration tasks while TASK-018 is active, so post-agency boundary selection is explicitly deferred to after TASK-018 validation."
+  ],
+  "open_questions": [
+    "Best representation for trigger_state may be source-derived from KB/diagram rather than required in all planning_build callers.",
+    "Post-agency next boundary choice remains pending after TASK-018."
+  ],
+  "non_goals": [
+    "Do not move source files in this decision.",
+    "Do not remove agency compatibility shims in this decision.",
+    "Do not change public commands, package entrypoints, adapter schemas, or product behavior."
+  ],
+  "risks": [
+    "If trigger_state handling is too broad, old deferred rows may become false positives.",
+    "If trigger materialization is only source-derived, stale KB/diagram values could under-report satisfied deferrals."
+  ],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+      ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
+    ],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+      ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+    ],
+    "roadmap": [],
+    "validation": [
+      ".codewiki/validation/2026-05-22-planning-pass.json",
+      ".codewiki/validation/2026-05-23-planning-fail.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "Updated .codewiki/kb/system/file-structure.md to mark agency pilot validated, legacy agency shims as temporary until dedicated cleanup, and deferred concept-root trigger as satisfied.",
+      "Updated .codewiki/kb/system/diagrams/file-structure-map.yaml first_concept_root_pilot status to implemented_pilot_validated and deferred_concept_roots defer_status to trigger_satisfied_needs_followup_planning.",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [
+      "TASK-018"
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

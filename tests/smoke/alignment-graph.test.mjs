@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { buildGraph } from "../../src/application/graph.ts";
 import { buildLintReport } from "../../src/application/lint.ts";
 
@@ -283,6 +285,43 @@ const validationReport = {
 	assert.ok(graph.views.decision_propagation.residuals.some((entry) => entry.id === "FS-HUMAN-DRIVEN-SURFACE"));
 	assert.ok(graph.views.decision_propagation.residuals.some((entry) => entry.id === "FS-ROOT-CONCEPTS"));
 	assert.ok(graph.views.reconciliation.items.some((item) => item.id.includes("decision-propagation") && item.next_loop === "planning"), "Residual decision propagation should route back to planning");
+}
+
+{
+	rmSync(project.root, { recursive: true, force: true });
+	mkdirSync(join(project.root, ".codewiki/kb/system/diagrams"), { recursive: true });
+	writeFileSync(join(project.root, ".codewiki/kb/system/diagrams/file-structure-map.yaml"), `version: 1\nid: file-structure-map\ntitle: File structure\ncategories: [approved_migration_delta]\nnodes:\n  - id: deferred_concept_roots\n    label: Deferred concept roots after agency pilot\n    group: drift\n    kind: policy\n    status: accepted_target\n    defer_status: trigger_satisfied_needs_followup_planning\n    trigger_state: satisfied_by_TASK_015_task_close\n    trigger: agency pilot task-close validation and compatibility evidence\n    paths: [src/audit/**]\nedges: []\n`);
+	const deferredDecisionPath = ".codewiki/builds/decision/deferred-trigger.json";
+	const deferredPlanPath = ".codewiki/builds/planning/deferred-trigger-plan.json";
+	const deferredDecision = {
+		path: deferredDecisionPath,
+		kind: "decision_build",
+		status: "accepted",
+		data: {
+			kind: "decision_build",
+			lifecycle: { state: "accepted" },
+			diff_table: [{ id: "TRIGGER-DEFER", desired_state: "Satisfied deferred roots route to planning.", affected_layers: ["roadmap"], user_action: "approved" }],
+			approved_diff_rows: ["TRIGGER-DEFER"],
+			row_to_kb_mappings: [{ row_id: "TRIGGER-DEFER", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "KB captures deferral." }],
+			propagation: { direction: "system-first", product_impact: ["Deferred trigger is visible."], downstream_planning_questions: ["When should TRIGGER-DEFER resume?"] },
+		},
+	};
+	const deferredPlan = {
+		path: deferredPlanPath,
+		kind: "planning_build",
+		status: "accepted",
+		data: {
+			kind: "planning_build",
+			lifecycle: { state: "accepted" },
+			source_decision_build: deferredDecisionPath,
+			decision_row_resolutions: [{ row_id: "TRIGGER-DEFER", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Wait for pilot close.", evidence: "Deferred root waits on agency pilot.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
+			downstream_question_resolutions: [{ question: "When should TRIGGER-DEFER resume?", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Same deferral as row.", evidence: "Deferred question points at the same trigger.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
+		},
+	};
+	const graph = baseGraph({ builds: [deferredDecision, deferredPlan] });
+	assert.equal(graph.views.decision_propagation.residual_count, 2, "Satisfied deferred row and downstream question should route back to planning");
+	assert.ok(graph.views.decision_propagation.residuals.every((entry) => entry.gaps.some((gap) => gap.includes("trigger_satisfied"))));
+	assert.ok(graph.views.reconciliation.items.some((item) => item.id.includes("decision-propagation") && item.next_loop === "planning" && item.reason.includes("trigger_satisfied")), "Trigger-satisfied deferral should route to planning");
 }
 
 console.log("✓ alignment graph smoke passed");

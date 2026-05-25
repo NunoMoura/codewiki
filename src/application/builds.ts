@@ -17,6 +17,7 @@ import { normalizeWorktreeIsolation } from "./claims.ts";
 import { readRoadmapTask } from "./roadmap.ts";
 import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";
 import { maybeReadGraph } from "./state-artifacts.ts";
+import { fileStructureSatisfiedDeferredTriggerRefs } from "./knowledge/diagram-parser.ts";
 
 // ---------------------------------------------------------------------------
 // Shared helpers
@@ -467,6 +468,7 @@ function planningDecisionPropagationGaps(project: WikiProject, planning: any, pl
 	const decisionRefs = buildRefsByKind(planning, "decision");
 	if (decisionRefs.length === 0) return [];
 	const known = readRoadmapPropagationRefs(project);
+	const satisfiedDeferredTriggers = fileStructureSatisfiedDeferredTriggerRefs(project.root, project);
 	const gaps: string[] = [];
 	for (const decisionRef of decisionRefs) {
 		const decision = readBuildRef(project, decisionRef);
@@ -475,7 +477,7 @@ function planningDecisionPropagationGaps(project: WikiProject, planning: any, pl
 			continue;
 		}
 		if (String(decision.data?.kind || "") !== "decision_build") continue;
-		const assessment = assessDecisionPropagation(decision.data, [{ path: planningPath, data: planning }], { knownTaskIds: known.taskIds, knownSprintIds: known.sprintIds });
+		const assessment = assessDecisionPropagation(decision.data, [{ path: planningPath, data: planning }], { knownTaskIds: known.taskIds, knownSprintIds: known.sprintIds, satisfiedDeferredTriggers });
 		gaps.push(...assessment.gaps.map((gap) => `${decisionRef}:${gap}`));
 	}
 	return unique(gaps);

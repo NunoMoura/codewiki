@@ -112,6 +112,7 @@ export interface CodewikiDecisionPropagationResolutionInput {
 	source_refs?: string[];
 	owner?: string;
 	trigger?: string;
+	trigger_state?: string;
 	rationale?: string;
 	evidence: string;
 }

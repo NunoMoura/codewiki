@@ -1,0 +1,400 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-25T01:10:19Z",
+  "source": "Planning compiler consumed TASK-018 decision build and refined recovery into one executable implementation task.",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-08T01:10:19.000Z",
+    "purge_after": "2026-06-22T01:10:19.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "PLAN-T018-1",
+      "text": "Implement trigger-satisfied deferral detection in decision propagation, validation, graph/status, and audit paths.",
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json:T018-PLANNING-GATE-FAILURE",
+        "TASK-018"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PLAN-T018-2",
+      "text": "Use updated file-structure KB/diagram and TASK-014/TASK-015 evidence as the regression fixture for satisfied deferral trigger.",
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "PLAN-T018-3",
+      "text": "Keep source migration and agency shim cleanup out of TASK-018; route post-agency boundary selection after guardrail validation.",
+      "source_refs": [
+        "TASK-018",
+        ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json:T018-FOLLOW-UP-BOUNDARIES"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Accepted planning-gateway failure maps to executable work.",
+      "evidence": "TASK-018 acceptance requires trigger-state support, planning preflight blockers, graph/status/audit residuals, and TASK-014/TASK-015 regression coverage.",
+      "requirement_ids": [
+        "PLAN-T018-1",
+        "PLAN-T018-2"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-018/task.json"
+      ]
+    },
+    {
+      "criterion": "File-structure status row is durable knowledge truth.",
+      "evidence": "KB/diagram now mark agency pilot validated and deferred-root trigger satisfied; implementation uses these refs as fixture evidence.",
+      "requirement_ids": [
+        "PLAN-T018-2"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "Post-agency migration remains explicit, not lost.",
+      "evidence": "Downstream question resolutions defer boundary selection to maintainers after TASK-018 task-close validation, preserving owner/trigger/rationale and avoiding source moves in TASK-018.",
+      "requirement_ids": [
+        "PLAN-T018-3"
+      ],
+      "source_refs": [
+        "TASK-018"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Plan TASK-018 deferred-trigger reconciliation implementation",
+  "task_ids": [
+    "TASK-018"
+  ],
+  "task_changes": [
+    "Refined TASK-018 from broad recovery into one executable implementation task: deferred-decision trigger reconciliation.",
+    "Recorded file-structure KB/diagram status updates as knowledge-only completion for agency pilot validation and satisfied deferral trigger.",
+    "Deferred post-agency boundary selection until TASK-018 guardrail validation, with maintainer owner and TASK-018 close trigger."
+  ],
+  "roadmap_changes": [
+    "Refined TASK-018 from broad recovery into one executable implementation task: deferred-decision trigger reconciliation.",
+    "Recorded file-structure KB/diagram status updates as knowledge-only completion for agency pilot validation and satisfied deferral trigger.",
+    "Deferred post-agency boundary selection until TASK-018 guardrail validation, with maintainer owner and TASK-018 close trigger."
+  ],
+  "tdd_plan": [
+    "Add/extend validation-preflight fixture where a planning build has a deferred row with trigger_state satisfied and no renewed resolution; assert pass preflight/report blocks with decision_propagation/planning_gap.",
+    "Add graph/status/alignment fixture for file-structure deferred_concept_roots trigger_state satisfied by TASK-015; assert reconciliation routes to planning and alignment audit reports residual.",
+    "Add positive fixture where deferred trigger is not satisfied; assert no residual/preflight gap.",
+    "Run full smoke after targeted tests."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/builds.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/domain/build/decision-propagation.ts",
+    "src/application/builds.ts",
+    "src/application/graph.ts",
+    "src/application/state-builders.ts",
+    "src/application/tools/audit.ts",
+    "src/adapters/pi/schemas.ts"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "T018-PLANNING-GATE-FAILURE",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-018"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-018/task.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "immediate implementation after planning validation",
+      "rationale": "This row requires code/test/graph/audit gateway work, so it maps to the executable TASK-018 implementation task.",
+      "evidence": "TASK-018 acceptance covers trigger-state support, residual surfacing, validation blockers, and tests.",
+      "inferred": false
+    },
+    {
+      "row_id": "T018-FILE-STRUCTURE-STATUS",
+      "question_id": "",
+      "question": "",
+      "resolution": "knowledge-only",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-015 task-close validation exists",
+      "rationale": "The canonical state update is complete in KB/diagram and becomes fixture input for TASK-018.",
+      "evidence": "KB/diagram record agency pilot validated and deferred-root trigger satisfied.",
+      "inferred": false
+    },
+    {
+      "row_id": "T018-FOLLOW-UP-BOUNDARIES",
+      "question_id": "",
+      "question": "",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-018"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-018/task.json",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-018 task-close validation passes and deferred-trigger reconciliation can reliably surface remaining post-agency work",
+      "rationale": "Post-agency boundary selection is approved direction, but source movement must wait until the guardrail that detects satisfied deferrals exists; TASK-018 is that guardrail.",
+      "evidence": "TASK-018 non-goals exclude source migration and shim removal; downstream question resolutions preserve boundary selection after TASK-018.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "How should trigger_state be represented in planning builds or source-derived graph evidence without breaking existing callers?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-018"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        "src/domain/build/decision-propagation.ts",
+        "src/application/builds.ts",
+        "src/application/graph.ts"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-018 implementation",
+      "rationale": "This is the main implementation design question for TASK-018.",
+      "evidence": "TASK-018 acceptance requires additive trigger-state/equivalent source evidence without breaking callers.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Should post-agency boundary selection wait until TASK-018 closes, or should a separate decision task be created immediately despite current roadmap de-duplication overlap?",
+      "resolution": "deferred",
+      "task_ids": [
+        "TASK-018"
+      ],
+      "sprint_ids": [],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-018/task.json"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-018 task-close validation passes",
+      "rationale": "Current roadmap de-duplication merged overlapping follow-up proposals into TASK-018; boundary selection should wait until the guardrail is implemented and then be planned explicitly.",
+      "evidence": "codewiki_task create reused/refined TASK-018 twice; TASK-018 evidence records the merge and corrected boundary.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Should agency compatibility shim cleanup be the next migration boundary or just one candidate in the post-TASK-018 boundary decision?",
+      "resolution": "deferred",
+      "task_ids": [],
+      "sprint_ids": [],
+      "knowledge_refs": [
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        "src/domain/agency/types.ts",
+        "src/application/agency.ts",
+        "src/application/tools/agency.ts"
+      ],
+      "owner": "maintainers",
+      "trigger": "TASK-018 closes and post-agency boundary decision begins",
+      "rationale": "Shim cleanup may be the smallest source move, but choosing it now would violate TASK-018 non-goals and skip the new trigger reconciliation guardrail.",
+      "evidence": "File-structure KB states agency shims remain until a dedicated cleanup task proves direct/package imports no longer need them.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Accepted planning-gateway failure maps to executable work.",
+      "evidence": "TASK-018 acceptance requires trigger-state support, planning preflight blockers, graph/status/audit residuals, and TASK-014/TASK-015 regression coverage.",
+      "requirement_ids": [
+        "PLAN-T018-1",
+        "PLAN-T018-2"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-018/task.json"
+      ]
+    },
+    {
+      "criterion": "File-structure status row is durable knowledge truth.",
+      "evidence": "KB/diagram now mark agency pilot validated and deferred-root trigger satisfied; implementation uses these refs as fixture evidence.",
+      "requirement_ids": [
+        "PLAN-T018-2"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "Post-agency migration remains explicit, not lost.",
+      "evidence": "Downstream question resolutions defer boundary selection to maintainers after TASK-018 task-close validation, preserving owner/trigger/rationale and avoiding source moves in TASK-018.",
+      "requirement_ids": [
+        "PLAN-T018-3"
+      ],
+      "source_refs": [
+        "TASK-018"
+      ]
+    }
+  ],
+  "assumptions": [
+    "Existing TASK-011 propagation gates are retained and extended rather than replaced.",
+    "Trigger-state support should be additive and should not require every existing planning build to add new fields.",
+    "Post-agency boundary selection should happen after TASK-018 closes."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No source-file migration.",
+    "No agency shim removal.",
+    "No public command/schema behavior change unless optional schema fields are needed for trigger-state evidence.",
+    "No umbrella task creation."
+  ],
+  "risks": [
+    "Auto-deduplication may continue to merge related file-structure planning tasks; TASK-018 should record explicit downstream deferral to avoid disappearing work.",
+    "False positives could block historical deferrals; tests need unsatisfied-trigger positive coverage."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json"
+    ],
+    "implementation": [
+      ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+      ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+    ],
+    "roadmap": [
+      "TASK-018"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-018"
+    ],
+    "code": [
+      "src/domain/build/decision-propagation.ts",
+      "src/application/builds.ts",
+      "src/application/graph.ts",
+      "src/application/state-builders.ts",
+      "src/application/tools/audit.ts",
+      "src/adapters/pi/schemas.ts"
+    ],
+    "tests": [
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}
