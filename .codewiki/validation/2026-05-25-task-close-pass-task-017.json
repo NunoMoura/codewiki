@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-25T00:29:26Z",
+  "profile": "task-close",
+  "task_id": "TASK-017",
+  "verdict": "pass",
+  "rationale": "TASK-017 can close. The committed implementation at 3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33 satisfies accepted scope, has implementation validation pass evidence, preserves non-goals, and has clean immutable commit/tree proof for task-close.",
+  "checks": [
+    "npm run typecheck",
+    "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/alignment-drift-fixtures.test.mjs",
+    "npm run test:smoke",
+    "codewiki_audit profiles=[alignment,changed,stale-reference,task,generated-parity] task_id=TASK-017",
+    "git rev-parse HEAD=3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+    "git rev-parse HEAD^{tree}=29fa4d712229e29e1a7d531994beacb8ffde3332",
+    "git status --short clean"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Alignment audit still reports existing graph-health warnings, but generated-parity passed and no TASK-017 acceptance blocker remains."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+  "policy_profile": "task-close",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "codewiki_audit:2026-05-25:TASK-017:alignment,changed,stale-reference,task,generated-parity"
+  ],
+  "audit_reports": [
+    "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-017.json",
+    "alignment warning only: generated graph health reports existing warnings",
+    "changed warning only before final graph refresh/amend; generated-parity pass",
+    "stale-reference pass",
+    "task TASK-017 pass",
+    "generated-parity pass"
+  ],
+  "content_proof_refs": [
+    "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+    "29fa4d712229e29e1a7d531994beacb8ffde3332"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+      "29fa4d712229e29e1a7d531994beacb8ffde3332"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-017",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+    "validated_sha": "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+    "published_sha": "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
+    "tree_sha": "29fa4d712229e29e1a7d531994beacb8ffde3332",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build and implementation validation refs with clean immutable commit/tree publisher proof.",
+    "role": "validator"
+  }
+}

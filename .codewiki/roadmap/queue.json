@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "updated": "2026-05-25T00:25:14Z",
+  "updated": "2026-05-25T00:29:35Z",
   "order": [
-    "TASK-012",
-    "TASK-017"
+    "TASK-012"
   ],
   "tasks": {
     "TASK-012": {
@@ -83,72 +82,6 @@
       },
       "created": "2026-05-23",
       "updated": "2026-05-24T23:40:41Z"
-    },
-    "TASK-017": {
-      "id": "TASK-017",
-      "title": "Implement gateway failure routing metadata",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "architecture",
-      "summary": "Add failure_class, recommended_next_loop, and stop/wait routing metadata so gateway fail/block outcomes retry locally or escalate to the smallest safe upstream loop.",
-      "spec_paths": [
-        ".codewiki/kb/system/validation-gateway.md",
-        ".codewiki/kb/system/graph.md",
-        ".codewiki/kb/system/compilers.md",
-        ".codewiki/kb/system/alignment-model.md",
-        ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
-        ".codewiki/builds/decision/2026-05-24-graph-backed-transition-markov-analytics.json",
-        ".codewiki/validation/2026-05-24-decision-pass.json"
-      ],
-      "code_paths": [
-        "src/domain/validation/types.ts",
-        "src/adapters/pi/schemas.ts",
-        "src/application/builds.ts",
-        "src/application/tools/validation.ts",
-        "src/application/graph.ts",
-        "skills/codewiki-validation/SKILL.md",
-        "skills/codewiki-implementation/SKILL.md",
-        "tests/smoke"
-      ],
-      "research_ids": [],
-      "labels": [
-        "validation-gateway",
-        "graph",
-        "transition-routing",
-        "state-machine",
-        "selective-back-propagation"
-      ],
-      "change_type": "code",
-      "goal": {
-        "outcome": "Gateway fail/block reports and graph reconciliation carry explicit routing metadata so failures can retry locally, escalate to planning/decision, collect proof, or wait on runtime coordination without defaulting to broad decision-loop reroutes.",
-        "acceptance": [
-          "Validation tool input, domain types, and Pi schema accept documented routing metadata such as failure_class, recommended_next_loop, and stop_reason without breaking existing callers.",
-          "Validation reports persist the routing metadata for explicit inputs and derive safe defaults for known policy/preflight gaps, including decision_propagation -> planning, risk_approval -> decision, content_proof/immutable proof gaps -> validation or publication proof, commit_readiness/compiler output gaps -> implementation, and audit/evidence gaps -> validation retry/preflight.",
-          "Graph reconciliation reads validation routing metadata for fail/block reports and uses it to choose next_loop and reason before falling back to existing default routing.",
-          "At least one smoke or feature test proves validation report persistence and graph next-loop selection for a planning_gap or risk_approval_missing route.",
-          "Skills or system docs that instruct validators mention the new metadata and preserve pass/fail/block as the verdict contract."
-        ],
-        "non_goals": [
-          "Do not implement transition probability metrics, Markov dashboards, or agency optimization in this task.",
-          "Do not add a canonical raw transition event log.",
-          "Do not replace graph state-machine behavior with a Markov chain.",
-          "Do not redesign validation policy or risk tiers beyond adding routing metadata."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "Targeted smoke test covering validation routing metadata and graph reconciliation",
-          "codewiki_audit profiles=alignment,stale-reference,changed",
-          "implementation validation with fresh context and checked content proof"
-        ]
-      },
-      "delta": {
-        "desired": "Fail/block validation reports carry route metadata and graph reconciliation uses it for selective back-propagation.",
-        "current": "Gateway fail/block verdicts name criteria and graph routing often falls back to broad decision-loop reconciliation.",
-        "closure": ""
-      },
-      "created": "2026-05-25",
-      "updated": "2026-05-25T00:25:14Z"
     }
   },
   "sprints": {
