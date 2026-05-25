@@ -5,7 +5,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { loadProject } from "../../src/application/project.ts";
-import { executeCodewikiAudit } from "../../src/application/tools/audit.ts";
+import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 
 function writeJson(path, value) {
 	writeFileSync(path, JSON.stringify(value, null, 2));
@@ -88,7 +88,7 @@ function createFixture() {
 	write(resolve(root, "src", "core", "bad.ts"), "export const bad = true;\n");
 	write(resolve(root, "src", "domain", "bad", "imports-application.ts"), "import { bad } from '../../application/bad/imports-adapter.ts';\nexport const domainBad = bad;\n");
 	write(resolve(root, "src", "application", "bad", "imports-adapter.ts"), "import { adapterBad } from '../../adapters/pi/nope.ts';\nexport const bad = adapterBad;\n");
-	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/application/tools/audit.ts';\nvoid executeCodewikiAudit;\n");
+	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
 	write(resolve(root, "scripts", "rogue.mjs"), "const checks = ['audit'];\nconsole.log('.codewiki/roadmap/queue.json', checks);\n");
 	write(resolve(root, "skills", "codewiki", "SKILL.md"), "---\nname: codewiki\ndescription: fixture\n---\n# Skill\n");
 	writeJson(resolve(root, "package.json"), {

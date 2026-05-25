@@ -8,7 +8,7 @@ import {
 	SUBAGENT_ROLE_VALUES,
 	SUBAGENT_VERDICT_VALUES,
 } from "../../agency/types.ts";
-import { AUDIT_PROFILE_VALUES } from "../../domain/audit/types.ts";
+import { AUDIT_PROFILE_VALUES } from "../../audit/types.ts";
 import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "../../domain/change/types.ts";
 import {
 	ROADMAP_PRIORITY_VALUES,

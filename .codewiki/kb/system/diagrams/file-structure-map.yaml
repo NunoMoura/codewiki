@@ -111,6 +111,22 @@ nodes:
       - src/agency/**
       - tests/tasks/TASK-015/agency-source-root.test.mjs
       - tests/smoke/package-smoke.test.mjs
+  - id: audit_concept_root_boundary
+    label: Audit concept-root migration
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implemented_pending_validation
+    task_id: TASK-021
+    cleanup_state: old_audit_paths_removed_pending_task_close
+    paths:
+      - src/audit/**
+      - tests/tasks/TASK-021/audit-source-root.test.mjs
+      - tests/smoke/package-smoke.test.mjs
+    removed_paths:
+      - src/domain/audit/types.ts
+      - src/application/tools/audit.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -245,21 +261,20 @@ nodes:
       - require_typecheck_smoke_feature_package_checks
       - keep_compatibility_shims_test_backed_and_temporary
   - id: deferred_concept_roots
-    label: Deferred concept roots after agency pilot
+    label: Deferred concept roots after audit boundary
     group: drift
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
     status: accepted_target
-    defer_status: first_wave_planned_after_agency_cleanup
+    defer_status: awaiting_audit_task_close_evidence
     owner: maintainers
-    trigger: TASK-020 agency shim cleanup task-close validation and file-structure audit evidence
-    trigger_state: satisfied_by_TASK_020_task_close
+    trigger: TASK-021 audit migration task-close validation and file-structure audit evidence
+    trigger_state: waiting_for_TASK_021_task_close
     next_task_id: TASK-021
     next_boundary: audit
     downstream_deferred_until: TASK-021 audit migration task-close validation and file-structure audit evidence
     paths:
-      - src/audit/**
       - src/build/**
       - src/validation/**
       - src/session/**
@@ -299,6 +314,18 @@ edges:
     from: deferred_concept_roots
     to: agency_shim_cleanup_boundary
     label: renewed deferral until cleanup validation
+  - id: audit_selected_after_cleanup
+    from: concept_root_target
+    to: audit_concept_root_boundary
+    label: next approved migration boundary
+  - id: audit_uses_compatibility_constraints
+    from: migration_compatibility_constraints
+    to: audit_concept_root_boundary
+    label: gates audit source move
+  - id: heavier_roots_wait_for_audit
+    from: deferred_concept_roots
+    to: audit_concept_root_boundary
+    label: current deferral gate waits for audit task-close validation
   - id: concept_target_exposed_by_api
     from: concept_root_target
     to: api_facade

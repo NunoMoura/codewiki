@@ -8,7 +8,7 @@ import { join, resolve } from "node:path";
 import { buildGraph } from "../../src/application/graph.ts";
 import { loadProject } from "../../src/application/project.ts";
 import { writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
-import { executeCodewikiAudit } from "../../src/application/tools/audit.ts";
+import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 
 const matrix = JSON.parse(readFileSync("tests/fixtures/alignment-drift/matrix.json", "utf8"));
 const caseIds = new Set(matrix.cases.map((entry) => entry.id));
@@ -165,7 +165,7 @@ function createAuditFixture({ clean = false } = {}) {
 	writeJson(resolve(root, ".codewiki", "index_graph.json"), { version: 1, generated_at: new Date().toISOString(), lenses: { status: { health: { errors: 0, warnings: 0 } } } });
 	writeText(resolve(root, "README.md"), clean ? "Clean fixture.\n" : "This stale fixture points at extensions/codewiki/src and says .codewiki/ stores package source. Generated task views are canonical truth.\n");
 	writeText(resolve(root, "src", "index.ts"), "export const ok = true;\n");
-	writeText(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/application/tools/audit.ts';\nvoid executeCodewikiAudit;\n");
+	writeText(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
 	writeText(resolve(root, "skills", "codewiki", "SKILL.md"), "---\nname: codewiki\ndescription: fixture\n---\n# Skill\n");
 	writeJson(resolve(root, "package.json"), { name: "alignment-drift-fixture", version: "0.0.0", type: "module", files: ["src", "skills", "scripts", "README.md", "package.json"], pi: { extensions: ["./src/index.ts"], skills: ["./skills"] }, scripts: { "check:architecture": "node ./scripts/check-architecture.mjs" } });
 	return root;

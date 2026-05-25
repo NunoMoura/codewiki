@@ -289,6 +289,24 @@ async function main() {
 		assert.match(agencyAdapterSource, /agency\/tool/, "Pi agency tool should delegate to the agency source-root tool module");
 		assert.match(agencyAdapterSource, /agency\/types/, "Pi agency tool should read types from the agency source-root module");
 		assert.doesNotMatch(agencyAdapterSource, /application\/tools\/agency|application\/agency|domain\/agency\/types/, "Pi agency tool should not delegate through old agency shims");
+		for (const removedAuditShim of [
+			"src/domain/audit/types.ts",
+			"src/application/tools/audit.ts",
+		]) {
+			assert.ok(!existsSync(resolve(repoRoot, removedAuditShim)), `${removedAuditShim} should not be packaged after audit migration`);
+		}
+		const auditAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "audit.ts"), "utf8");
+		const auditCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "audit.ts"), "utf8");
+		const schemaSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "schemas.ts"), "utf8");
+		const architectureScriptSource = readFileSync(resolve(repoRoot, "scripts", "check-architecture.mjs"), "utf8");
+		assert.match(auditAdapterSource, /audit\/tool/, "Pi audit tool should delegate to the audit source-root tool module");
+		assert.match(auditCommandSource, /audit\/tool/, "Pi audit command should delegate to the audit source-root tool module");
+		assert.match(auditCommandSource, /audit\/types/, "Pi audit command should read types from the audit source-root module");
+		assert.match(schemaSource, /audit\/types/, "Pi schemas should read audit values from the audit source-root module");
+		assert.match(architectureScriptSource, /src\/audit\/tool\.ts/, "Architecture script should delegate to the audit source-root tool module");
+		for (const oldAuditPathSource of [auditAdapterSource, auditCommandSource, schemaSource, architectureScriptSource]) {
+			assert.doesNotMatch(oldAuditPathSource, /application\/tools\/audit|domain\/audit\/types/, "Audit package paths should not delegate through old audit shims");
+		}
 		for (const adapterFile of ["artifact-status", "session", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);

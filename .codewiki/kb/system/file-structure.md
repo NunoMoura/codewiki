@@ -90,7 +90,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | Knowledge | `knowledge.md` | `.codewiki/kb/**` |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |
-| Audits | `audits.md` | audit engine, `/audit [flags]`, gateway-required audit profiles |
+| Audits | `audits.md` | `src/audit/**`, `/audit [flags]`, `codewiki_audit`, gateway-required audit profiles |
 | Roadmap | `roadmap.md` | `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `.codewiki/session/queue.json`, artifact statuses, generated session views |
 | Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
@@ -150,7 +150,7 @@ Primary deltas move domain/application pairs into concept roots: session, state/
 
 `agency` is the validated pilot. TASK-015 introduced `src/agency/**`; TASK-020 removed the old `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts` shims. Old agency shims must not be recreated.
 
-Post-TASK-020 planning maps the accepted FS-ROOT-CONCEPTS decision into staged executable work. TASK-021 is the first non-agency boundary: migrate audit to `src/audit/**`. Build and validation remain next-wave candidates after TASK-021 task-close evidence; session, roadmap, state, and project wait until shared import patterns stabilize.
+Post-TASK-020 planning maps the accepted FS-ROOT-CONCEPTS decision into staged executable work. TASK-021 is the first non-agency boundary: migrate audit to `src/audit/**`. TASK-021 implementation moves audit types and tool execution to `src/audit/types.ts` and `src/audit/tool.ts`, removes old `src/domain/audit/types.ts` and `src/application/tools/audit.ts` paths, and keeps later roots gated until TASK-021 task-close validation plus file-structure audit evidence. Build and validation remain next-wave candidates after TASK-021 evidence; session, roadmap, state, and project wait until shared import patterns stabilize.
 
 Skills own agent workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 

@@ -6,7 +6,7 @@
  * Existing application/adapters may keep this barrel during migration.
  */
 export * from "../../agency/types.ts";
-export * from "../audit/types.ts";
+export * from "../../audit/types.ts";
 export * from "../build/types.ts";
 export * from "../change/types.ts";
 export * from "../gc/types.ts";

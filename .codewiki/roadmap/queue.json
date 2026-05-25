@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-25T10:08:50Z",
+  "updated": "2026-05-25T22:56:39Z",
   "order": [
     "TASK-012",
     "TASK-021"
@@ -12,7 +12,7 @@
       "status": "cancelled",
       "priority": "medium",
       "kind": "architecture",
-      "summary": "TASK-012 remains cancelled after stale code path reconciliation.",
+      "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -30,7 +30,7 @@
         "src/application/state.ts",
         "src/application/state-builders.ts",
         "src/application/graph.ts",
-        "src/application/tools/audit.ts"
+        "src/audit/tool.ts"
       ],
       "research_ids": [],
       "labels": [
@@ -82,7 +82,7 @@
         "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
       },
       "created": "2026-05-23",
-      "updated": "2026-05-24T23:40:41Z"
+      "updated": "2026-05-25T22:40:57Z"
     },
     "TASK-021": {
       "id": "TASK-021",
@@ -94,19 +94,26 @@
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/audits.md",
         ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
         ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
       ],
       "code_paths": [
-        "src/domain/audit/types.ts",
-        "src/application/tools/audit.ts",
+        "src/audit/types.ts",
+        "src/audit/tool.ts",
         "src/adapters/pi/commands/audit.ts",
         "src/adapters/pi/tools/audit.ts",
         "src/adapters/pi/schemas.ts",
+        "src/domain/shared/types.ts",
+        "src/application/graph.ts",
+        "scripts/check-architecture.mjs",
+        "skills/codewiki/references/tool-catalog.md",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs",
         "tests/smoke/audit.test.mjs",
         "tests/smoke/audit-drift.test.mjs",
         "tests/smoke/package-smoke.test.mjs",
-        "scripts/check-architecture.mjs"
+        "tests/smoke/alignment-drift-fixtures.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs"
       ],
       "research_ids": [],
       "labels": [
@@ -148,7 +155,7 @@
         "closure": "Implementation build and validation prove audit migration, updated tests/KB/diagram, and no non-audit source migration."
       },
       "created": "2026-05-25",
-      "updated": "2026-05-25T10:08:50Z"
+      "updated": "2026-05-25T22:56:39Z"
     }
   },
   "sprints": {

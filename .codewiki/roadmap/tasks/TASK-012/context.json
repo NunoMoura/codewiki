@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-24T23:40:41Z",
+  "generated_at": "2026-05-25T22:40:57Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-012/context.json",
   "task": {
     "id": "TASK-012",
@@ -9,7 +9,7 @@
     "priority": "medium",
     "kind": "architecture",
     "change_type": "task",
-    "summary": "TASK-012 remains cancelled after stale code path reconciliation.",
+    "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
     "labels": [
       "file-structure",
       "concept-root",

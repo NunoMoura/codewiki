@@ -6,12 +6,13 @@ summary: Audit engine and user command model for deterministic alignment, securi
 owners:
   - architecture
   - security
-updated: "2026-05-16"
+updated: "2026-05-25"
 code_paths:
-  - src/application/lint.ts
-  - src/application/graph.ts
-  - src/application/builds.ts
-  - src/adapters/pi
+  - src/audit
+  - src/adapters/pi/commands/audit.ts
+  - src/adapters/pi/tools/audit.ts
+  - src/adapters/pi/schemas.ts
+  - scripts/check-architecture.mjs
 ---
 
 # Audits
@@ -22,7 +23,7 @@ Audits produce evidence for CodeWiki alignment. They do not decide product inten
 
 CodeWiki should expose one audit surface implemented in source, with adapter-facing entrypoints:
 
-- internal application tool for gateways, agency, and agent workflows,
+- source-root audit tool `src/audit/tool.ts` for gateways, agency, and agent workflows,
 - user command `/audit [flags]` as a human wrapper around the same source-owned engine.
 
 `/audit` without flags runs the full audit profile. Flags select narrower profiles so users and gateways do not need to audit the entire system every time.
@@ -61,7 +62,7 @@ The command prints a concise human report and stores or links machine-readable e
 
 ## Gateway use
 
-Gateways call the internal audit engine directly. Gateway policy selects required profiles by build kind, change type, and publication risk.
+Gateways call the source-root audit engine directly. Gateway policy selects required profiles by build kind, change type, and publication risk.
 
 Examples:
 

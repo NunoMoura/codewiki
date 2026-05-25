@@ -8,7 +8,7 @@ import { buildGraph } from "../../src/application/graph.ts";
 import { buildLintReport } from "../../src/application/lint.ts";
 import { parseDoc } from "../../src/application/knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport } from "../../src/application/knowledge/diagram-parser.ts";
-import { executeCodewikiAudit } from "../../src/application/tools/audit.ts";
+import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 import { buildRoadmapState, buildStatusState } from "../../src/application/state-builders.ts";
 
 function mkdir(path) {
@@ -116,7 +116,7 @@ function writeFixture(root, options = {}) {
 	write(resolve(root, "src", "domain", "shared", "types.ts"), `export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`);
 	write(resolve(root, "src", "adapters", "pi", "schemas.ts"), "export const schemas = {};\n");
 	write(resolve(root, "src", "adapters", "pi", "index.ts"), "export const pi = {};\n");
-	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/application/tools/audit.ts';\nvoid executeCodewikiAudit;\n");
+	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
 	write(resolve(root, ".codewiki", "kb", "system", "overview.md"), `---
 id: spec.system.overview
 title: Overview
@@ -317,7 +317,7 @@ edges:
 	write(resolve(driftRoot, "src", "runtime", "index_graph.json"), "{}\n");
 	write(resolve(driftRoot, "src", "unmapped", "file.ts"), "export const stray = 1;\n");
 	write(resolve(driftRoot, ".codewiki", "index", "legacy.json"), "{}\n");
-	write(resolve(driftRoot, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/application/tools/audit.ts';\nvoid executeCodewikiAudit;\n");
+	write(resolve(driftRoot, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
 
 	const drift = buildFileStructureDriftReport(driftRoot, project);
 	assert.equal(drift.available, true);

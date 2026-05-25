@@ -169,7 +169,7 @@ function classifySemanticPath(project: WikiProject, path: string): string | null
 	if (normalized.startsWith(".codewiki/kb/system/") || normalized === ".codewiki/kb/lexicon.md") return "system";
 	if (normalized === ".codewiki/roadmap/queue.json") return "task";
 	if (normalized === "package.json" || normalized === "package-lock.json") return "system";
-	if (normalized.startsWith("skills/codewiki/") || normalized.startsWith("src/application/tools/audit") || normalized.startsWith("scripts/check-architecture")) return "system";
+	if (normalized.startsWith("skills/codewiki/") || normalized.startsWith("src/audit/") || normalized.startsWith("scripts/check-architecture")) return "system";
 	if (normalized.startsWith("tests/") || normalized.startsWith("src/") || normalized.startsWith("scripts/")) return "code";
 	if (normalized === "README.md" || normalized.startsWith("docs/")) return "system";
 	return null;

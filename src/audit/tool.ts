@@ -11,14 +11,14 @@ import type {
 	AuditReport,
 	AuditScope,
 	AuditStatus,
-} from "../../domain/audit/types.ts";
-import type { WikiProject } from "../../domain/project/types.ts";
-import { AUDIT_PROFILE_VALUES } from "../../domain/audit/types.ts";
-import { formatError, nowIso, unique } from "../../domain/shared/utils.ts";
-import { pathExists } from "../local/filesystem.ts";
-import { assessRoadmapTaskBoundary } from "../../domain/roadmap/task-boundary.ts";
-import { parseDoc } from "../knowledge/doc-parser.ts";
-import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
+} from "./types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import { AUDIT_PROFILE_VALUES } from "./types.ts";
+import { formatError, nowIso, unique } from "../domain/shared/utils.ts";
+import { pathExists } from "../application/local/filesystem.ts";
+import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
+import { parseDoc } from "../application/knowledge/doc-parser.ts";
+import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../application/knowledge/diagram-parser.ts";
 
 const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [
@@ -237,7 +237,7 @@ function pushArrayEqualsIssue(issues: AuditIssue[], actual: string[] | null, exp
 async function auditFileStructure(project: WikiProject, input: CodewikiAuditInput): Promise<AuditProfileResult> {
 	const profile: AuditProfile = "file-structure";
 	const issues: AuditIssue[] = [];
-	const evidence = ["src/application/tools/audit.ts", "scripts/check-architecture.mjs"];
+	const evidence = ["src/audit/tool.ts", "scripts/check-architecture.mjs"];
 	const srcRoot = resolve(project.root, "src");
 	const tsFiles = await walkFiles(srcRoot, (path) => path.endsWith(".ts"));
 	if (tsFiles.length === 0) {
@@ -341,7 +341,7 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 	}
 
 	const fingerprints = await fingerprintFiles(project, [
-		"src/application/tools/audit.ts",
+		"src/audit/tool.ts",
 		"src/domain/roadmap/types.ts",
 		"src/domain/shared/types.ts",
 		"src/adapters/pi/schemas.ts",

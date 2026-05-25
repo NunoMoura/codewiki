@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-25T22:43:26Z",
+  "source": "TASK-021 implementation from validated planning build .codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json.",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+  "task_id": "TASK-021",
+  "task": {
+    "id": "TASK-021",
+    "title": "Migrate audit concept root",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Move audit domain/application ownership into a source-root audit concept while preserving /audit, codewiki_audit tool behavior, package smoke, and file-structure audit evidence.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+    ],
+    "code_paths": [
+      "src/audit/types.ts",
+      "src/audit/tool.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/domain/shared/types.ts",
+      "src/application/graph.ts",
+      "scripts/check-architecture.mjs",
+      "skills/codewiki/references/tool-catalog.md",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/alignment-drift-fixtures.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Audit code has a source-root owner under src/audit/**, with old audit domain/application paths removed or retained only as explicitly justified temporary shims.",
+      "acceptance": [
+        "Create src/audit/** owner modules for audit types, use case/tool execution, and any audit-specific helpers moved from domain/application audit paths.",
+        "Update adapters, commands, schemas, tests, and package smoke paths to import audit behavior from source-root audit modules or stable public API paths, not old audit layer-first paths.",
+        "Preserve /audit command behavior, codewiki_audit tool schema/result behavior, check:architecture behavior, package loading, direct Node execution, and audit smoke coverage.",
+        "Add or update TASK-specific tests proving old audit layer-first imports are gone or temporary shims are explicit/test-backed.",
+        "Update file-structure KB/diagram to mark audit migration status and keep later roots gated until audit task-close evidence exists."
+      ],
+      "non_goals": [
+        "Do not migrate build, validation, session, roadmap, state, project, knowledge, GC, adapters, UI, or skills in this task.",
+        "Do not change public commands, tool schemas, package metadata, package entrypoints, or audit product behavior.",
+        "Do not remove source paths outside the audit boundary except import updates required by audit migration."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/audit.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-01T22:43:26.000Z",
+    "purge_after": "2026-06-08T22:43:26.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status",
+        "reason": "Implementation touched audit source/tests/docs/roadmap/build scopes.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "CLAIM-158",
+          "CLAIM-159",
+          "TASK-012 stale path reconciliation claim"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-with-working-tree-digest",
+        "reason": "Implementation validation must start from artifacts and checked dirty content, not builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation_build",
+          ".codewiki/roadmap/tasks/TASK-021/task.json",
+          "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493",
+          "checks_run",
+          "codewiki_audit refs"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "task-close-after-validation",
+        "reason": "Builder should not close TASK-021 until independent validation passes and task-close proof exists.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation validation pass",
+          "clean commit/tree proof"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Migrate audit domain/application ownership into source-root audit concept modules while preserving audit command/tool behavior.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-25-planning-pass-task-021.json",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-021"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-25-planning-pass-task-021.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-021/task.json",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/audits.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/audits.md"
+    ],
+    "roadmap": [
+      "TASK-021",
+      "TASK-012 stale code path reconciliation"
+    ],
+    "code": [
+      "src/audit/types.ts",
+      "src/audit/tool.ts",
+      "src/application/tools/audit.ts (deleted)",
+      "src/domain/audit/types.ts (deleted)",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/domain/shared/types.ts",
+      "src/application/graph.ts",
+      "scripts/check-architecture.mjs",
+      "skills/codewiki/references/tool-catalog.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/roadmap/tasks/TASK-021/task.json",
+      ".codewiki/roadmap/tasks/TASK-012/task.json"
+    ],
+    "tests": [
+      "tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/alignment-drift-fixtures.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs"
+    ],
+    "validation": [
+      "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+      "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493",
+      "pending fresh implementation validation"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-021"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+    ],
+    "code_paths": [
+      "src/audit/types.ts",
+      "src/audit/tool.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/domain/shared/types.ts",
+      "src/application/graph.ts",
+      "scripts/check-architecture.mjs",
+      "skills/codewiki/references/tool-catalog.md",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/alignment-drift-fixtures.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/alignment-drift-fixtures.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs"
+  ],
+  "code_files": [
+    "src/audit/types.ts",
+    "src/audit/tool.ts",
+    "src/application/tools/audit.ts (deleted)",
+    "src/domain/audit/types.ts (deleted)",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/domain/shared/types.ts",
+    "src/application/graph.ts",
+    "scripts/check-architecture.mjs",
+    "skills/codewiki/references/tool-catalog.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/audits.md",
+    ".codewiki/roadmap/tasks/TASK-021/task.json",
+    ".codewiki/roadmap/tasks/TASK-012/task.json"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/alignment-drift-fixtures.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "src/audit/types.ts",
+    "src/audit/tool.ts",
+    "src/application/tools/audit.ts (deleted)",
+    "src/domain/audit/types.ts (deleted)",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/domain/shared/types.ts",
+    "src/application/graph.ts",
+    "scripts/check-architecture.mjs",
+    "skills/codewiki/references/tool-catalog.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/kb/system/audits.md",
+    ".codewiki/roadmap/tasks/TASK-021/task.json",
+    ".codewiki/roadmap/tasks/TASK-012/task.json"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: initial TDD failure on missing src/audit/types.ts, then pass after migration",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass after migration; file-structure checked 90 TypeScript files, 191 diagram refs, 20 approved migration deltas, 0 actionable drift",
+    "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "npm run test:features: pass (24 passed, 0 failed)",
+    "npm run test:smoke: pass",
+    "npm run test:pack: pass; tarball contains src/audit/tool.ts and src/audit/types.ts, not old audit owner files",
+    "codewiki_state refresh=true taskId=TASK-021: health green, 0 errors, 0 warnings, open 1 next TASK-021",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021: file-structure/alignment/stale-reference/generated-parity/task pass; changed warnings generated state/view files only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+      "roadmap_task_id": "TASK-021",
+      "test_files": [
+        "tests/tasks/TASK-021/audit-source-root.test.mjs",
+        "tests/smoke/audit.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/alignment-drift-fixtures.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs"
+      ],
+      "evidence": [
+        "TDD probe added tests/tasks/TASK-021/audit-source-root.test.mjs before migration; first run failed because src/audit/types.ts did not exist.",
+        "Task-specific test covers existence, deleted old owner paths, direct exports, source/test/script import scan, adapter command/tool/schema import paths, architecture script path, and source-root self-containment.",
+        "Package smoke assertions cover packaged absence of old audit owner files and source-root delegation for audit adapter/command/schema/architecture wrapper."
+      ],
+      "notes": [
+        "Initial TASK-specific test failed as expected before src/audit/** existed.",
+        "All required task verification commands were run; changed-profile warnings are limited to generated CodeWiki state/task view files in dirty pre-commit worktree.",
+        "Historical builds/validation reports still cite old audit paths as immutable evidence; active source/tests/scripts/docs no longer import old audit layer-first paths."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+      "roadmap_task_id": "TASK-021",
+      "code_files": [
+        "src/audit/types.ts",
+        "src/audit/tool.ts",
+        "src/application/tools/audit.ts (deleted)",
+        "src/domain/audit/types.ts (deleted)",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/domain/shared/types.ts",
+        "src/application/graph.ts",
+        "scripts/check-architecture.mjs",
+        "skills/codewiki/references/tool-catalog.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/roadmap/tasks/TASK-021/task.json",
+        ".codewiki/roadmap/tasks/TASK-012/task.json"
+      ],
+      "evidence": [
+        "No compatibility shim was retained: src/domain/audit/types.ts and src/application/tools/audit.ts are deleted.",
+        "Audit use-case imports were adjusted for new source-root depth while preserving project, shared utils, filesystem, roadmap boundary, and knowledge parser dependencies.",
+        "src/domain/shared/types.ts compatibility barrel now re-exports audit types from ../../audit/types.ts, matching existing agency source-root barrel pattern.",
+        "src/application/graph.ts classifies src/audit/** as system-owned graph/audit source, replacing old src/application/tools/audit path classification.",
+        "TASK-012 cancelled task stale code_path was reconciled to src/audit/tool.ts so graph health stays green after old audit path removal."
+      ],
+      "notes": [
+        "Implementation stayed audit-only. No build, validation, session, roadmap, state, project, knowledge, GC, adapters, UI, or skills concept-root migration was performed.",
+        "skills/codewiki/references/tool-catalog.md was updated only as a reference path from src/application/tools/audit.ts to src/audit/tool.ts, not as a skill migration.",
+        "Working-tree content proof before implementation validation: sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TDD probe added tests/tasks/TASK-021/audit-source-root.test.mjs before migration; first run failed because src/audit/types.ts did not exist.",
+    "Task-specific test covers existence, deleted old owner paths, direct exports, source/test/script import scan, adapter command/tool/schema import paths, architecture script path, and source-root self-containment.",
+    "Package smoke assertions cover packaged absence of old audit owner files and source-root delegation for audit adapter/command/schema/architecture wrapper."
+  ],
+  "code_change_evidence": [
+    "No compatibility shim was retained: src/domain/audit/types.ts and src/application/tools/audit.ts are deleted.",
+    "Audit use-case imports were adjusted for new source-root depth while preserving project, shared utils, filesystem, roadmap boundary, and knowledge parser dependencies.",
+    "src/domain/shared/types.ts compatibility barrel now re-exports audit types from ../../audit/types.ts, matching existing agency source-root barrel pattern.",
+    "src/application/graph.ts classifies src/audit/** as system-owned graph/audit source, replacing old src/application/tools/audit path classification.",
+    "TASK-012 cancelled task stale code_path was reconciled to src/audit/tool.ts so graph health stays green after old audit path removal."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Create src/audit/** owner modules for audit types, use case/tool execution, and audit-specific helpers moved from domain/application audit paths.",
+      "evidence": "Moved src/domain/audit/types.ts to src/audit/types.ts and src/application/tools/audit.ts to src/audit/tool.ts; src/audit/tool.ts imports local audit types and contains executeCodewikiAudit/formatAuditReport/normalizeAuditProfiles; old audit owner paths are deleted."
+    },
+    {
+      "criterion": "Update adapters, commands, schemas, tests, and package smoke paths to import audit behavior from source-root audit modules or stable public API paths, not old audit layer-first paths.",
+      "evidence": "src/adapters/pi/commands/audit.ts and tools/audit.ts import ../../../audit/tool.ts; schemas import ../../audit/types.ts; scripts/check-architecture.mjs imports ../src/audit/tool.ts; audit smoke fixtures and package-smoke use source-root audit path and assert old paths are absent."
+    },
+    {
+      "criterion": "Preserve /audit command behavior, codewiki_audit tool schema/result behavior, check:architecture behavior, package loading, direct Node execution, and audit smoke coverage.",
+      "evidence": "Direct smoke tests, npm run check:architecture, npm run test:smoke, npm run test:features, and npm run test:pack all pass. Package smoke loads extension commands/tools including /audit and codewiki_audit."
+    },
+    {
+      "criterion": "Add or update TASK-specific tests proving old audit layer-first imports are gone or temporary shims are explicit/test-backed.",
+      "evidence": "tests/tasks/TASK-021/audit-source-root.test.mjs asserts src/audit/types.ts and src/audit/tool.ts exist, old audit owner files are removed, source/tests/scripts imports do not target old audit shims, and adapters/schemas/scripts delegate to source-root audit modules."
+    },
+    {
+      "criterion": "Update file-structure KB/diagram to mark audit migration status and keep later roots gated until audit task-close evidence exists.",
+      "evidence": ".codewiki/kb/system/file-structure.md and file-structure-map.yaml now record TASK-021 audit concept-root implementation pending validation, removed old audit paths, and deferred build/validation/session/roadmap/state/project roots until TASK-021 task-close validation plus file-structure audit evidence."
+    }
+  ],
+  "validation_refs": [
+    "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+    "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493"
+  ],
+  "closure_brief": {
+    "user_intent": "Continue TASK-021 after planning validation pass by implementing the audit source-root concept migration.",
+    "implemented_changes": [
+      "Moved audit types and executor/formatter/profile normalization into src/audit/types.ts and src/audit/tool.ts.",
+      "Removed old src/domain/audit/types.ts and src/application/tools/audit.ts owner paths without temporary shims.",
+      "Updated Pi command/tool/schema adapters, architecture script, smoke fixtures, package smoke, graph classification, shared barrel, KB/diagram, and task refs.",
+      "Added TASK-021 source-root import absence test and package smoke assertions for audit migration."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/audits.md"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/tasks/TASK-021/task.json",
+        ".codewiki/roadmap/tasks/TASK-012/task.json"
+      ],
+      "code": [
+        "src/audit/types.ts",
+        "src/audit/tool.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/domain/shared/types.ts",
+        "src/application/graph.ts",
+        "scripts/check-architecture.mjs",
+        "skills/codewiki/references/tool-catalog.md"
+      ],
+      "tests": [
+        "tests/tasks/TASK-021/audit-source-root.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/alignment-drift-fixtures.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "validation": [
+        "pending",
+        "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+        "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493"
+      ]
+    },
+    "acceptance_evidence": [
+      "Task-specific source-root test passes.",
+      "All required Node smoke tests, typecheck, check:architecture, test:smoke, test:features, test:pack pass.",
+      "CodeWiki file-structure/alignment/stale-reference/generated-parity/task audits pass; changed warnings are generated-only."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "node --experimental-strip-types ./tests/smoke/audit.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021"
+    ],
+    "non_goals_preserved": [
+      "No public command/tool schema/package entrypoint behavior was changed.",
+      "No non-audit concept-root migration was performed.",
+      "No source paths outside audit boundary were removed."
+    ],
+    "remaining_risks": [
+      "Fresh independent implementation validation still required before task close.",
+      "Clean immutable commit/tree proof still required for task-close/publication after validation."
+    ]
+  },
+  "risks": [
+    "Pre-commit worktree is dirty; implementation validation should use working_tree_digest and task-close/publication should require clean immutable commit/tree proof.",
+    "Historical build/validation artifacts still mention removed old audit paths by design; stale-reference profile passed for active markdown/source text.",
+    "Later concept roots remain gated; do not start build/validation/root migrations until TASK-021 validation and close evidence exist."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-021",
+      "task_id": "TASK-021",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-021",
+        "title": "Migrate audit concept root",
+        "summary": "Migrate audit domain/application ownership into source-root audit concept modules while preserving audit command/tool behavior.",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json"
+        ],
+        "code_paths": [
+          "src/audit/types.ts",
+          "src/audit/tool.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/domain/shared/types.ts",
+          "src/application/graph.ts",
+          "scripts/check-architecture.mjs",
+          "skills/codewiki/references/tool-catalog.md",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs",
+          "src/application/tools/audit.ts (deleted)",
+          "src/domain/audit/types.ts (deleted)",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/roadmap/tasks/TASK-021/task.json",
+          ".codewiki/roadmap/tasks/TASK-012/task.json"
+        ],
+        "acceptance": [
+          "Create src/audit/** owner modules for audit types, use case/tool execution, and any audit-specific helpers moved from domain/application audit paths.",
+          "Update adapters, commands, schemas, tests, and package smoke paths to import audit behavior from source-root audit modules or stable public API paths, not old audit layer-first paths.",
+          "Preserve /audit command behavior, codewiki_audit tool schema/result behavior, check:architecture behavior, package loading, direct Node execution, and audit smoke coverage.",
+          "Add or update TASK-specific tests proving old audit layer-first imports are gone or temporary shims are explicit/test-backed.",
+          "Update file-structure KB/diagram to mark audit migration status and keep later roots gated until audit task-close evidence exists."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "node --experimental-strip-types ./tests/smoke/audit.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: initial TDD failure on missing src/audit/types.ts, then pass after migration",
+          "npm run typecheck: pass",
+          "npm run check:architecture: pass after migration; file-structure checked 90 TypeScript files, 191 diagram refs, 20 approved migration deltas, 0 actionable drift",
+          "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+          "npm run test:features: pass (24 passed, 0 failed)",
+          "npm run test:smoke: pass",
+          "npm run test:pack: pass; tarball contains src/audit/tool.ts and src/audit/types.ts, not old audit owner files",
+          "codewiki_state refresh=true taskId=TASK-021: health green, 0 errors, 0 warnings, open 1 next TASK-021",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021: file-structure/alignment/stale-reference/generated-parity/task pass; changed warnings generated state/view files only"
+        ],
+        "test_design_evidence": [
+          "TDD probe added tests/tasks/TASK-021/audit-source-root.test.mjs before migration; first run failed because src/audit/types.ts did not exist.",
+          "Task-specific test covers existence, deleted old owner paths, direct exports, source/test/script import scan, adapter command/tool/schema import paths, architecture script path, and source-root self-containment.",
+          "Package smoke assertions cover packaged absence of old audit owner files and source-root delegation for audit adapter/command/schema/architecture wrapper."
+        ],
+        "code_change_evidence": [
+          "No compatibility shim was retained: src/domain/audit/types.ts and src/application/tools/audit.ts are deleted.",
+          "Audit use-case imports were adjusted for new source-root depth while preserving project, shared utils, filesystem, roadmap boundary, and knowledge parser dependencies.",
+          "src/domain/shared/types.ts compatibility barrel now re-exports audit types from ../../audit/types.ts, matching existing agency source-root barrel pattern.",
+          "src/application/graph.ts classifies src/audit/** as system-owned graph/audit source, replacing old src/application/tools/audit path classification.",
+          "TASK-012 cancelled task stale code_path was reconciled to src/audit/tool.ts so graph health stays green after old audit path removal."
+        ],
+        "validation_refs": [
+          "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+          "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-021",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-021",
+      "show_build": "git show refs/codewiki/archive/task/TASK-021:.codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+        "src/audit/types.ts",
+        "src/audit/tool.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/domain/shared/types.ts",
+        "src/application/graph.ts",
+        "scripts/check-architecture.mjs",
+        "skills/codewiki/references/tool-catalog.md",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs",
+        "tests/smoke/audit.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/alignment-drift-fixtures.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "Migrate audit concept root",
+      "body": "Migrate audit ownership from layer-first domain/application paths into src/audit/** while preserving /audit, codewiki_audit, package smoke, direct Node execution, and file-structure audit behavior.\n\nChecks:\n- node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs\n- npm run typecheck\n- npm run check:architecture\n- npm run test:smoke\n- npm run test:features\n- npm run test:pack\n- node --experimental-strip-types ./tests/smoke/audit.test.mjs\n- node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs\n- node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs\n- codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021\n\nCodeWiki-Task: TASK-021\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json\nCodeWiki-Validation: pending implementation validation\nCodeWiki-Checks: typecheck, check:architecture, test:smoke, test:features, test:pack, direct audit/package smoke, CodeWiki audit\nCodeWiki-Recover: /wiki-restore TASK-021",
+      "trailers": [
+        "CodeWiki-Task: TASK-021",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: initial TDD failure on missing src/audit/types.ts, then pass after migration, npm run typecheck: pass, npm run check:architecture: pass after migration; file-structure checked 90 TypeScript files, 191 diagram refs, 20 approved migration deltas, 0 actionable drift, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:features: pass (24 passed, 0 failed), npm run test:smoke: pass, npm run test:pack: pass; tarball contains src/audit/tool.ts and src/audit/types.ts, not old audit owner files, codewiki_state refresh=true taskId=TASK-021: health green, 0 errors, 0 warnings, open 1 next TASK-021, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021: file-structure/alignment/stale-reference/generated-parity/task pass; changed warnings generated state/view files only",
+        "CodeWiki-Validation: pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json, working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493",
+        "CodeWiki-Recover: /wiki-restore TASK-021",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-021",
+        "CodeWiki-Digest: sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
+        "CodeWiki-Restore: /wiki-restore TASK-021"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "Migrate audit concept root",
+      "body": "Migrate audit ownership from layer-first domain/application paths into src/audit/** while preserving /audit, codewiki_audit, package smoke, direct Node execution, and file-structure audit behavior.\n\nChecks:\n- node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs\n- npm run typecheck\n- npm run check:architecture\n- npm run test:smoke\n- npm run test:features\n- npm run test:pack\n- node --experimental-strip-types ./tests/smoke/audit.test.mjs\n- node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs\n- node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs\n- codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021\n\nCodeWiki-Task: TASK-021\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json\nCodeWiki-Validation: pending implementation validation\nCodeWiki-Checks: typecheck, check:architecture, test:smoke, test:features, test:pack, direct audit/package smoke, CodeWiki audit\nCodeWiki-Recover: /wiki-restore TASK-021"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-021",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-021"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-021",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-021",
+        "show_build": "git show refs/codewiki/archive/task/TASK-021:.codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+          "src/audit/types.ts",
+          "src/audit/tool.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/domain/shared/types.ts",
+          "src/application/graph.ts",
+          "scripts/check-architecture.mjs",
+          "skills/codewiki/references/tool-catalog.md",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-021",
+      "build_path": ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-021",
+      "commit_sha": "",
+      "digest": "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
+      "restore_command": "/wiki-restore TASK-021"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:bd014a8008a38024fed09782a61c7cda7bf2bd9aef387151ecc158fbb5f4a8e7",
+          "bytes": 31718
+        },
+        {
+          "path": "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:54028486d9a54a80b79f0ef721f04c31cc159cca45179b2b3c536bcd1dfb827d",
+          "bytes": 5235
+        },
+        {
+          "path": "tests/smoke/audit.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:43c33603afccec47efee4a47d46a24bdcab47e1ce26d43c8a2aae9b8b9ab6a82",
+          "bytes": 4929
+        },
+        {
+          "path": "tests/smoke/audit-drift.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0847ffbd7bda6a2c704a393d8585abf2800b51b59777e0f76607efc4e3b0846a",
+          "bytes": 9355
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1f02a7cafa03cb56323c8e6a3a548f7ce223294951c9c934761a7176a91f5adc",
+          "bytes": 90708
+        },
+        {
+          "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:8f3733aa733f587a6e0876e2998f66b161009c70790f9ef05d900516d6235103",
+          "bytes": 11740
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:98945ca37723910534df2a4650adf0843861e1e2237c8a2c69e20fc91ec994a4",
+          "bytes": 14296
+        },
+        {
+          "path": "src/audit/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:4089f53c6b9d228c0e3937516aaae682a39714fa8dcbe53bff446c540c43590a",
+          "bytes": 1475
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:5d5e7117f9f69d3228872ae2f35df1445675a56051b26995b673a2a389cd52cc",
+          "bytes": 40623
+        },
+        {
+          "path": "src/adapters/pi/commands/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:0a53ec6a2dbe68f1900676f2707bbe9584bcc50c4ede980a8981e87d4a6ce9d7",
+          "bytes": 3992
+        },
+        {
+          "path": "src/adapters/pi/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:512e4ef4e03952914db6c3750f8e8248d1ca1a8ed28bc62b3d2dd8631b75c87b",
+          "bytes": 1900
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:dea80cf438976fd925500b98554ee42d7b4fbeae9a0428ce3a2e5511052619b9",
+          "bytes": 33621
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:2c44c695ab32ab76b9753d470dd862b02f689fbefd575ea49adfbb7037036156",
+          "bytes": 628
+        },
+        {
+          "path": "src/application/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:b97db6662c13f5738908c29bdadccc84145a12fcba62fcaa41404d9e466e085b",
+          "bytes": 94550
+        },
+        {
+          "path": "scripts/check-architecture.mjs",
+          "role": "code_file",
+          "sha256": "sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
+          "bytes": 540
+        },
+        {
+          "path": "skills/codewiki/references/tool-catalog.md",
+          "role": "code_file",
+          "sha256": "sha256:c42763ac379d1bed6308aa41ad48f28a1a57f2bf782f72eb0ce17eb34fa00d5c",
+          "bytes": 4376
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:4ceb3ec5c2ef7535463eda7d7728dd6db5c9051b882022bcf7bf6a356059746f",
+          "bytes": 13499
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:b7621f7814ec48a5ddf48e196eb6eff1fb21ef770d9f772e82653ab7e17bde64",
+          "bytes": 11931
+        },
+        {
+          "path": ".codewiki/kb/system/audits.md",
+          "role": "code_file",
+          "sha256": "sha256:b2db5176b42424c2512e5fc65a962bef323dc8d5bc46186dacd4856a7d06311e",
+          "bytes": 5448
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-021/task.json",
+          "role": "code_file",
+          "sha256": "sha256:404447b2aaab39828af82d55e10b8c78e6caf8d687ec6c8181a4d0a1b07c229a",
+          "bytes": 3835
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-012/task.json",
+          "role": "code_file",
+          "sha256": "sha256:fd852ea4dee215307a44696b98c5f36f1969811b2bb3068d2e1b52ea0ca682a2",
+          "bytes": 4303
+        }
+      ],
+      "skipped": [
+        {
+          "path": "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+          "role": "validation_ref",
+          "reason": "missing"
+        },
+        {
+          "path": "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493",
+          "role": "validation_ref",
+          "reason": "missing"
+        },
+        {
+          "path": "src/application/tools/audit.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/domain/audit/types.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-021",
+      "source_build": ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/audit/types.ts",
+          "src/audit/tool.ts",
+          "src/application/tools/audit.ts (deleted)",
+          "src/domain/audit/types.ts (deleted)",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/domain/shared/types.ts",
+          "src/application/graph.ts",
+          "scripts/check-architecture.mjs",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/roadmap/tasks/TASK-021/task.json",
+          ".codewiki/roadmap/tasks/TASK-012/task.json",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/smoke/audit-drift.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs"
+        ],
+        "validation_refs": [
+          "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+          "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-021",
+        "restore_command": "/wiki-restore TASK-021"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: initial TDD failure on missing src/audit/types.ts, then pass after migration",
+        "npm run typecheck: pass",
+        "npm run check:architecture: pass after migration; file-structure checked 90 TypeScript files, 191 diagram refs, 20 approved migration deltas, 0 actionable drift",
+        "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/audit-drift.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+        "npm run test:features: pass (24 passed, 0 failed)",
+        "npm run test:smoke: pass",
+        "npm run test:pack: pass; tarball contains src/audit/tool.ts and src/audit/types.ts, not old audit owner files",
+        "codewiki_state refresh=true taskId=TASK-021: health green, 0 errors, 0 warnings, open 1 next TASK-021",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-021: file-structure/alignment/stale-reference/generated-parity/task pass; changed warnings generated state/view files only"
+      ],
+      "validation_refs": [
+        "pending fresh implementation validation from .codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+        "working_tree_digest:sha256:2d35713002285984098e189fe7c4fa8b60e5423e726abd40c3d20a8b414f6493"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
