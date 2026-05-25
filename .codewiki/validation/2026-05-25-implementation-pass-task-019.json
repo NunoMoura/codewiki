@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-25T04:47:50Z",
+  "profile": "implementation",
+  "task_id": "TASK-019",
+  "verdict": "pass",
+  "rationale": "TASK-019 implementation evidence is valid. The implementation_build records the completed boundary-selection task, consumes the accepted decision/planning chain, resolves the prior task-close block by providing source_kind=implementation_build traceability, and preserves no-source-movement. No package source changed; TASK-020 carries future shim removal implementation and compatibility validation.",
+  "checks": [
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated index dirty",
+    "codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    "codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+    "codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; resolved by source implementation build",
+    "approval:user: user requested proceed after TASK-019 resume",
+    "working_tree_digest=sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Repository health remains yellow due existing graph-health warnings."
+    },
+    {
+      "severity": "low",
+      "summary": "TASK-020 implementation still must validate agency shim removal; TASK-019 did not remove shims."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+  "policy_profile": "implementation",
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "task"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:file-structure",
+    "profile:task",
+    "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+    "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+    "approval:user: user requested proceed after TASK-019 resume",
+    "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed"
+  ],
+  "audit_reports": [
+    "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+    "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+    "generated-parity pass",
+    "stale-reference pass",
+    "task TASK-019 pass",
+    "changed warning only: generated index dirty"
+  ],
+  "content_proof_refs": [
+    "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-019",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user: user requested proceed after TASK-019 resume"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Implementation validation consumed implementation build and prior decision/planning validation; dirty pre-commit digest covers implementation build, generated graph, and task-close block report.",
+    "role": "validator"
+  }
+}

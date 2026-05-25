@@ -1,0 +1,684 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-25T04:41:58Z",
+  "source": "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+  "task_id": "TASK-019",
+  "task": {
+    "id": "TASK-019",
+    "title": "Select post-agency concept-root follow-up boundary",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Use validated agency pilot and deferred-trigger guardrail evidence to choose the next file-structure follow-up before any source movement.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+      ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
+    ],
+    "code_paths": [],
+    "goal": {
+      "outcome": "Post-agency file-structure work has an approved next boundary or renewed deferral before additional source movement happens.",
+      "acceptance": [
+        "Review agency pilot closure evidence, compatibility shims, file-structure audit output, TASK-018 guardrail behavior, and deferred concept roots.",
+        "Decide whether the next step is agency shim cleanup, a second concept-root migration boundary, or renewed deferral with owner/trigger/rationale.",
+        "If source work is needed, produce executable follow-up task(s) with acceptance, non-goals, verification, and compatibility constraints; do not perform source movement in this task.",
+        "Update file-structure KB/diagram only when the accepted boundary changes canonical structure intent.",
+        "Planning validation must fail/block if any approved boundary decision is left only as an open question."
+      ],
+      "non_goals": [
+        "Do not move non-agency concept roots in this task.",
+        "Do not remove agency shims in this task unless a separate implementation task is created and validated later.",
+        "Do not change public commands, package entrypoints, adapter schemas, or product behavior."
+      ],
+      "verification": [
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task",
+        "decision/planning validation before implementation handoff"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-01T04:41:58.000Z",
+    "purge_after": "2026-06-08T04:41:58.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "IMPL-T019-1",
+      "text": "Select and record the post-agency follow-up boundary with no source movement in TASK-019.",
+      "source_refs": [
+        ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T019-2",
+      "text": "Create an executable follow-up task for selected source work with acceptance, non-goals, verification, and compatibility constraints.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-020/task.json"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T019-3",
+      "text": "Renew heavier concept-root deferral with owner, trigger, rationale, and pending trigger state.",
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        "file-structure-map:deferred_concept_roots"
+      ],
+      "state": "implemented"
+    },
+    {
+      "id": "IMPL-T019-4",
+      "text": "No src/** files are moved, deleted, or changed in TASK-019.",
+      "source_refs": [
+        "git diff --name-only",
+        "TASK-019 non-goals"
+      ],
+      "state": "preserved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "TASK-019 decision/planning closure evidence exists.",
+      "evidence": "Decision and planning validation reports pass; planning build has no open approved rows/questions and creates TASK-020.",
+      "requirement_ids": [
+        "IMPL-T019-1",
+        "IMPL-T019-2"
+      ],
+      "source_refs": [
+        ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+        ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+        ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+      ]
+    },
+    {
+      "criterion": "Non-agency deferral renewed durably.",
+      "evidence": "KB and diagram set deferred_concept_roots defer_status=renewed_until_agency_shim_cleanup_validation and trigger_state=pending_TASK_020_task_close.",
+      "requirement_ids": [
+        "IMPL-T019-3"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ]
+    },
+    {
+      "criterion": "No source movement occurred.",
+      "evidence": "Dirty/committed TASK-019 diff is limited to .codewiki artifacts and no src/** files.",
+      "requirement_ids": [
+        "IMPL-T019-4"
+      ],
+      "source_refs": [
+        "git diff --name-only"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Record TASK-019 boundary selection implementation evidence",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-019"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/roadmap/tasks/TASK-019/task.json",
+      ".codewiki/roadmap/tasks/TASK-020/task.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [
+      "TASK-020"
+    ],
+    "code": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/roadmap/tasks/TASK-019/task.json",
+      ".codewiki/roadmap/tasks/TASK-020/task.json"
+    ],
+    "tests": [],
+    "validation": [
+      ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "pending implementation validation"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-019",
+      "TASK-019 after task-close validation"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+      ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+      ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+      ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
+    ],
+    "code_paths": []
+  },
+  "test_files": [],
+  "code_files": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/roadmap/tasks/TASK-019/task.json",
+    ".codewiki/roadmap/tasks/TASK-020/task.json"
+  ],
+  "files_changed": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/roadmap/tasks/TASK-019/task.json",
+    ".codewiki/roadmap/tasks/TASK-020/task.json"
+  ],
+  "checks_run": [
+    "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files",
+    "codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    "codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+    "codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap",
+    "git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+      "roadmap_task_id": "TASK-019",
+      "test_files": [],
+      "evidence": [
+        "No runtime/source tests were changed in TASK-019 because no package source moved; verification relies on CodeWiki file-structure/alignment/generated-parity/stale-reference/task audits and decision/planning validation.",
+        "TASK-020 carries the future test plan for shim removal: update TASK-015 parity test or create successor cleanup test, keep package smoke, run typecheck/check:architecture/smoke/features/pack/package-smoke."
+      ],
+      "notes": [
+        "No src/** file changed in TASK-019.",
+        "Audit warning is existing graph-health/generated dirty state only; file-structure/generated-parity/stale-reference/task passed."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+      "roadmap_task_id": "TASK-019",
+      "code_files": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/roadmap/tasks/TASK-019/task.json",
+        ".codewiki/roadmap/tasks/TASK-020/task.json"
+      ],
+      "evidence": [
+        "Updated .codewiki/kb/system/file-structure.md to select TASK-020 agency shim cleanup and renew heavier-root deferral.",
+        "Updated .codewiki/kb/system/diagrams/file-structure-map.yaml with agency_shim_cleanup_boundary, TASK-020 trigger, and renewed deferred_concept_roots state.",
+        "Created TASK-020 Remove agency compatibility shims as the future implementation task.",
+        "Created decision/planning builds and validation reports for TASK-019."
+      ],
+      "notes": [
+        "A first planning build lacked upstream TASK-014 propagation repair; superseding planning build maps upstream FCB rows/questions and clears decision-propagation residuals.",
+        "A task-close block report required implementation_build traceability for TASK-019; this build exists to satisfy that policy source_kind."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "No runtime/source tests were changed in TASK-019 because no package source moved; verification relies on CodeWiki file-structure/alignment/generated-parity/stale-reference/task audits and decision/planning validation.",
+    "TASK-020 carries the future test plan for shim removal: update TASK-015 parity test or create successor cleanup test, keep package smoke, run typecheck/check:architecture/smoke/features/pack/package-smoke."
+  ],
+  "code_change_evidence": [
+    "Updated .codewiki/kb/system/file-structure.md to select TASK-020 agency shim cleanup and renew heavier-root deferral.",
+    "Updated .codewiki/kb/system/diagrams/file-structure-map.yaml with agency_shim_cleanup_boundary, TASK-020 trigger, and renewed deferred_concept_roots state.",
+    "Created TASK-020 Remove agency compatibility shims as the future implementation task.",
+    "Created decision/planning builds and validation reports for TASK-019."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Review evidence and decide next step.",
+      "evidence": "Decision build reviews TASK-015 task-close validation, TASK-015 shim evidence, TASK-018 guardrail, and file-structure docs; selects agency shim cleanup as next boundary."
+    },
+    {
+      "criterion": "If source work is needed, produce follow-up task(s), no source movement in TASK-019.",
+      "evidence": "TASK-020 created with complete acceptance/non-goals/verification; TASK-019 changed no src/** files."
+    },
+    {
+      "criterion": "Update KB/diagram only when accepted boundary changes canonical intent.",
+      "evidence": "File-structure KB/diagram now record TASK-020 agency shim cleanup boundary and renewed non-agency deferral trigger."
+    },
+    {
+      "criterion": "Planning validation must fail/block if approved boundary remains open.",
+      "evidence": "Planning validation passed only after upstream TASK-014 and TASK-019 rows/questions were mapped to TASK-015/TASK-020/renewed deferral/knowledge-only evidence."
+    }
+  ],
+  "validation_refs": [
+    ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+    ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+    ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+  ],
+  "closure_brief": {
+    "user_intent": "Continue after TASK-018 close by selecting the next post-agency concept-root follow-up boundary.",
+    "implemented_changes": [
+      "Selected agency shim cleanup as next post-pilot boundary.",
+      "Renewed heavier concept-root deferral until TASK-020 task-close validation and file-structure audit evidence.",
+      "Created TASK-020 as separate executable implementation task with compatibility constraints.",
+      "Updated file-structure KB/diagram and validated decision/planning."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [
+        "TASK-019",
+        "TASK-020"
+      ],
+      "code": [],
+      "tests": [],
+      "validation": [
+        ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+        ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+        ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+      ]
+    },
+    "acceptance_evidence": [
+      "file-structure audit passed with zero actionable drift",
+      "decision validation passed",
+      "planning validation passed",
+      "TASK-020 created with acceptance/non-goals/verification",
+      "no src/** files changed"
+    ],
+    "checks": [
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019",
+      "codewiki_validation profile=decision",
+      "codewiki_validation profile=planning"
+    ],
+    "non_goals_preserved": [
+      "No non-agency concept roots moved.",
+      "Agency shims were not removed in TASK-019.",
+      "No public commands, package entrypoints, adapter schemas, or product behavior changed."
+    ],
+    "remaining_risks": [
+      "TASK-020 implementation must prove shim removal compatibility."
+    ]
+  },
+  "risks": [
+    "TASK-020 may expose undocumented deep import dependence; implementation validation must block or adapt if cleanup breaks package/public behavior.",
+    "Repository health remains yellow due existing graph-health warnings."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-019",
+      "task_id": "TASK-019",
+      "next_focus_task_id": "TASK-020",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-019",
+        "title": "Select post-agency concept-root follow-up boundary",
+        "summary": "Record TASK-019 boundary selection implementation evidence",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+          ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+          ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+          ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
+        ],
+        "code_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/roadmap/tasks/TASK-019/task.json",
+          ".codewiki/roadmap/tasks/TASK-020/task.json"
+        ],
+        "acceptance": [
+          "Review agency pilot closure evidence, compatibility shims, file-structure audit output, TASK-018 guardrail behavior, and deferred concept roots.",
+          "Decide whether the next step is agency shim cleanup, a second concept-root migration boundary, or renewed deferral with owner/trigger/rationale.",
+          "If source work is needed, produce executable follow-up task(s) with acceptance, non-goals, verification, and compatibility constraints; do not perform source movement in this task.",
+          "Update file-structure KB/diagram only when the accepted boundary changes canonical structure intent.",
+          "Planning validation must fail/block if any approved boundary decision is left only as an open question."
+        ],
+        "verification": [
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task",
+          "decision/planning validation before implementation handoff"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+        "checks_run": [
+          "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files",
+          "codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap",
+          "git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write"
+        ],
+        "test_design_evidence": [
+          "No runtime/source tests were changed in TASK-019 because no package source moved; verification relies on CodeWiki file-structure/alignment/generated-parity/stale-reference/task audits and decision/planning validation.",
+          "TASK-020 carries the future test plan for shim removal: update TASK-015 parity test or create successor cleanup test, keep package smoke, run typecheck/check:architecture/smoke/features/pack/package-smoke."
+        ],
+        "code_change_evidence": [
+          "Updated .codewiki/kb/system/file-structure.md to select TASK-020 agency shim cleanup and renew heavier-root deferral.",
+          "Updated .codewiki/kb/system/diagrams/file-structure-map.yaml with agency_shim_cleanup_boundary, TASK-020 trigger, and renewed deferred_concept_roots state.",
+          "Created TASK-020 Remove agency compatibility shims as the future implementation task.",
+          "Created decision/planning builds and validation reports for TASK-019."
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-019",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-019",
+      "show_build": "git show refs/codewiki/archive/task/TASK-019:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+        ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+        ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+        ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+        ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+        ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-019 Select post-agency concept-root follow-up boundary implementation evidence",
+      "body": "Record TASK-019 boundary selection implementation evidence\n\nChecks: codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files, codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json, codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json, codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap, git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write\nValidation: .codewiki/validation/2026-05-25-decision-pass-task-019.json, .codewiki/validation/2026-05-25-planning-pass-task-019.json, .codewiki/validation/2026-05-25-task-close-block-task-019.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-019\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json\nCodeWiki-Checks: codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files, codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json, codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json, codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap, git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write\nCodeWiki-Validation: .codewiki/validation/2026-05-25-decision-pass-task-019.json, .codewiki/validation/2026-05-25-planning-pass-task-019.json, .codewiki/validation/2026-05-25-task-close-block-task-019.json\nCodeWiki-Recover: /wiki-restore TASK-019\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-019\nCodeWiki-Digest: sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac\nCodeWiki-Restore: /wiki-restore TASK-019",
+      "trailers": [
+        "CodeWiki-Task: TASK-019",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+        "CodeWiki-Checks: codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files, codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json, codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json, codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap, git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write",
+        "CodeWiki-Validation: .codewiki/validation/2026-05-25-decision-pass-task-019.json, .codewiki/validation/2026-05-25-planning-pass-task-019.json, .codewiki/validation/2026-05-25-task-close-block-task-019.json",
+        "CodeWiki-Recover: /wiki-restore TASK-019",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-019",
+        "CodeWiki-Digest: sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+        "CodeWiki-Restore: /wiki-restore TASK-019"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-019 Select post-agency concept-root follow-up boundary implementation evidence",
+      "body": "Record TASK-019 boundary selection implementation evidence\n\nChecks: codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files, codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json, codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json, codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap, git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write\nValidation: .codewiki/validation/2026-05-25-decision-pass-task-019.json, .codewiki/validation/2026-05-25-planning-pass-task-019.json, .codewiki/validation/2026-05-25-task-close-block-task-019.json\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-019\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json\nCodeWiki-Checks: codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files, codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json, codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json, codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap, git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write\nCodeWiki-Validation: .codewiki/validation/2026-05-25-decision-pass-task-019.json, .codewiki/validation/2026-05-25-planning-pass-task-019.json, .codewiki/validation/2026-05-25-task-close-block-task-019.json\nCodeWiki-Recover: /wiki-restore TASK-019\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-019\nCodeWiki-Digest: sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac\nCodeWiki-Restore: /wiki-restore TASK-019"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-019",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-019"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-019",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-019",
+        "show_build": "git show refs/codewiki/archive/task/TASK-019:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+          ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+          ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+          ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-019",
+      "build_path": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-019",
+      "commit_sha": "",
+      "digest": "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+      "restore_command": "/wiki-restore TASK-019"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+          "bytes": 22846
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "role": "validation_ref",
+          "sha256": "sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+          "bytes": 4958
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "role": "validation_ref",
+          "sha256": "sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+          "bytes": 5111
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "role": "validation_ref",
+          "sha256": "sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+          "bytes": 6861
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+          "bytes": 15400
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+          "bytes": 10653
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-019/task.json",
+          "role": "code_file",
+          "sha256": "sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+          "bytes": 3161
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-020/task.json",
+          "role": "code_file",
+          "sha256": "sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+          "bytes": 3840
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-019",
+      "source_build": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/roadmap/tasks/TASK-019/task.json",
+          ".codewiki/roadmap/tasks/TASK-020/task.json"
+        ],
+        "validation_refs": [
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-019",
+        "restore_command": "/wiki-restore TASK-019"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task,changed task_id=TASK-019: warning only existing graph-health/generated dirty files",
+        "codewiki_validation profile=decision -> pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+        "codewiki_validation profile=planning -> pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+        "codewiki_validation profile=task-close -> block .codewiki/validation/2026-05-25-task-close-block-task-019.json due missing implementation_build traceability; this build resolves that policy gap",
+        "git status clean at committed planning proof eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c before this implementation_build write"
+      ],
+      "validation_refs": [
+        ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+        ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+        ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

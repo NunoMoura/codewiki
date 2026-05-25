@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-25T04:35:04.304Z",
+  "generated_at": "2026-05-25T04:47:59.590Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -14934,6 +14934,181 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "title": "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-019",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+          ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+          ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+          ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/roadmap/tasks/TASK-019/task.json",
+          ".codewiki/roadmap/tasks/TASK-020/task.json",
+          "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+          "TASK-020",
+          "TASK-019"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+          ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+          ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+          ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+          "refs/codewiki/archive/task/TASK-019",
+          "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+        ],
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "pending implementation validation"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+      "kind": "canonical_source_ref",
+      "path": "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+      "kind": "content_proof",
+      "path": ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+      "kind": "content_proof",
+      "path": ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+      "kind": "content_proof",
+      "path": ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+      "kind": "content_proof",
+      "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+      "kind": "content_proof",
+      "path": ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+      "kind": "content_proof",
+      "path": ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-019",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-019",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+      "kind": "content_proof",
+      "path": "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-019",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-019",
+      "task_id": "TASK-019",
+      "digest": "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+      "restore_command": "/wiki-restore TASK-019",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "claim:CLAIM-155",
       "kind": "change_claim",
       "claim_id": "CLAIM-155",
@@ -18772,6 +18947,98 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Implementation validation consumed implementation build and prior decision/planning validation; dirty pre-commit digest covers implementation build, generated graph, and task-close block report.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:file-structure",
+          "profile:task",
+          "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "approval:user: user requested proceed after TASK-019 resume",
+          "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+          "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+          "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+          "generated-parity pass",
+          "stale-reference pass",
+          "task TASK-019 pass",
+          "changed warning only: generated index dirty"
+        ],
+        "content_proof_refs": [
+          "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "kind": "audit_evidence",
+      "path": "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:changed warning only: generated index dirty",
+      "kind": "audit_evidence",
+      "path": "changed warning only: generated index dirty",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
+      "kind": "content_proof",
+      "path": "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-25-planning-pass-task-017.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-25-planning-pass-task-017.json",
@@ -18916,14 +19183,6 @@
       "default_collapse_reason": "badge_in_default_lens"
     },
     {
-      "id": "audit:validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
-      "kind": "audit_evidence",
-      "path": "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
-      "layer": "audit",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
       "id": "audit:decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
       "kind": "audit_evidence",
       "path": "decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
@@ -18932,10 +19191,75 @@
       "lens_family": "proof"
     },
     {
-      "id": "audit:alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "id": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "verdict": "block",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+        "validated_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+        "published_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+        "tree_sha": "11b76ed63996785ba5fb12e77933963f075425ac",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation consumed committed decision/planning artifacts and clean immutable commit/tree proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:file-structure",
+          "profile:alignment",
+          "profile:generated-parity",
+          "profile:stale-reference",
+          "profile:task",
+          "profile:changed",
+          "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "approval:user: user requested proceed after TASK-019 resume",
+          "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+          "decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+          "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+          "generated-parity pass",
+          "stale-reference pass",
+          "task TASK-019 pass"
+        ],
+        "content_proof_refs": [
+          "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+          "11b76ed63996785ba5fb12e77933963f075425ac"
+        ]
+      },
+      "lens_family": "proof",
+      "default_next_action": true
+    },
+    {
+      "id": "audit:planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
       "kind": "audit_evidence",
-      "path": "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "path": "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
       "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+      "kind": "content_proof",
+      "path": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:11b76ed63996785ba5fb12e77933963f075425ac",
+      "kind": "content_proof",
+      "path": "11b76ed63996785ba5fb12e77933963f075425ac",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
     },
@@ -36298,6 +36622,160 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-019/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-020/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:TASK-020",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "source:TASK-019",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:.codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-019",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "content_proof:sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "task:TASK-019"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "task:TASK-020"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-019",
+      "default_hidden": true
+    },
+    {
       "kind": "claim_task",
       "from": "claim:CLAIM-155",
       "to": "task:TASK-019"
@@ -40503,6 +40981,113 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:approval:user: user requested proceed after TASK-019 resume",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:file-structure pass: 22 approved migration deltas, 0 actionable drift",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:generated-parity pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:stale-reference pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:task TASK-019 pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "audit:changed warning only: generated index dirty",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "content_proof:sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+      "to": "task:TASK-019"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-25-planning-pass-task-017.json",
       "to": "source:.codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
       "default_hidden": true
@@ -40758,6 +41343,131 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "source:.codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:approval:user: user requested proceed after TASK-019 resume",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:file-structure pass: 22 approved migration deltas, 0 actionable drift",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:generated-parity pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:stale-reference pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "audit:task TASK-019 pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "content_proof:eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "content_proof:11b76ed63996785ba5fb12e77933963f075425ac",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+      "to": "task:TASK-019"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-017.json",
       "to": "source:.codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
       "default_hidden": true
@@ -40958,7 +41668,7 @@
             "id": "decision",
             "label": "Decision",
             "summary": "Approved intent, requirement rows, risk state, and semantic direction.",
-            "state": "drift",
+            "state": "blocked",
             "item_count": 0,
             "badges": [
               {
@@ -41108,7 +41818,7 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 33
+                "count": 34
               },
               {
                 "id": "dirty_paths",
@@ -41135,27 +41845,27 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 1,
+            "item_count": 2,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 64
+                "count": 66
               },
               {
                 "id": "fail_or_block_validation",
                 "label": "fail/block validation",
-                "count": 14
+                "count": 15
               },
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 177
+                "count": 181
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 470
+                "count": 483
               },
               {
                 "id": "traceability_gaps",
@@ -41164,33 +41874,34 @@
               }
             ],
             "hot_refs": [
-              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml"
+              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json"
             ],
             "collapsed": true
           }
         ],
         "badges": {
           "builds": {
-            "total": 57,
+            "total": 58,
             "decision": 7,
             "planning": 17,
-            "implementation": 33,
+            "implementation": 34,
             "hot": 0,
-            "collapsed": 57
+            "collapsed": 58
           },
           "validations": {
-            "total": 64,
-            "pass": 50,
-            "fail_or_block": 14,
-            "hot": 4,
-            "collapsed": 64
+            "total": 66,
+            "pass": 51,
+            "fail_or_block": 15,
+            "hot": 5,
+            "collapsed": 65
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-019",
-          "source_id": "task:TASK-019",
-          "loop": "implementation",
-          "reason": "TASK-019 is open implementation delta below knowledge."
+          "item_id": "reconcile:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "source_id": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "loop": "decision",
+          "reason": "Validation blocked; escalate ambiguous intent to decision compiler."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -41637,21 +42348,29 @@
               "src/application/agency.ts",
               "src/application/tools/agency.ts",
               "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
+              "src/adapters/pi/schemas.ts",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
               "implementation validation pending",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
               ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -41690,7 +42409,17 @@
               ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
               "refs/codewiki/archive/task/TASK-015",
-              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
             ],
             "gaps": []
           },
@@ -41734,21 +42463,29 @@
               "src/application/agency.ts",
               "src/application/tools/agency.ts",
               "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
+              "src/adapters/pi/schemas.ts",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
               "implementation validation pending",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
               ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -41787,7 +42524,17 @@
               ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
               "refs/codewiki/archive/task/TASK-015",
-              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
             ],
             "gaps": []
           },
@@ -41831,21 +42578,29 @@
               "src/application/agency.ts",
               "src/application/tools/agency.ts",
               "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
+              "src/adapters/pi/schemas.ts",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
               "implementation validation pending",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
               ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -41884,7 +42639,17 @@
               ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
               "refs/codewiki/archive/task/TASK-015",
-              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
             ],
             "gaps": []
           },
@@ -41928,21 +42693,29 @@
               "src/application/agency.ts",
               "src/application/tools/agency.ts",
               "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
+              "src/adapters/pi/schemas.ts",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
               ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
               ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
               "implementation validation pending",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
               ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
               ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
               ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+              ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -41981,7 +42754,17 @@
               ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
               ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
               "refs/codewiki/archive/task/TASK-015",
-              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+              "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
             ],
             "gaps": []
           },
@@ -42005,14 +42788,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -42035,14 +42845,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -42065,14 +42902,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -42095,55 +42959,45 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           }
         ],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
-            ],
-            "gaps": []
-          },
           {
             "path": ".codewiki/roadmap/queue.json",
             "change_type": "task",
@@ -42197,7 +43051,8 @@
               ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
               ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
               ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "gaps": []
           }
@@ -42246,6 +43101,7 @@
           ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
           ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
           ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -42366,6 +43222,7 @@
           "TASK-018 implementation from validated planning build.",
           "TASK-019",
           "TASK-019 decision compiler; user requested proceed after TASK-018 close. Grounded in TASK-015 agency pilot task-close validation and TASK-018 deferred-trigger guardrail evidence.",
+          "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
           "TASK-019 planning compiler consumed TASK-019 and TASK-014 decision refs, created TASK-020 as executable agency shim cleanup task, and renewed heavier-root deferral until cleanup validation.",
           "TASK-019 planning compiler consumed accepted decision build and created TASK-020 as the executable agency shim cleanup implementation boundary.",
           "TASK-020",
@@ -44020,6 +44877,28 @@
               "tests/smoke/audit-drift.test.mjs",
               "TASK-018"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-019",
+              "TASK-020"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json",
+              "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
+              "TASK-020",
+              "TASK-019"
+            ]
           }
         ]
       },
@@ -45423,6 +46302,36 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-019",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:file-structure",
+              "profile:task",
+              "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "approval:user: user requested proceed after TASK-019 resume",
+              "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+              "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+              "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+              "generated-parity pass",
+              "stale-reference pass",
+              "task TASK-019 pass",
+              "changed warning only: generated index dirty"
+            ],
+            "content_proof_refs": [
+              "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-25-planning-pass-task-017.json",
             "verdict": "pass",
             "profile": "planning",
@@ -45497,6 +46406,39 @@
             ],
             "content_proof_refs": [],
             "isolation_status": "partial"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "verdict": "block",
+            "profile": "task-close",
+            "task_id": "TASK-019",
+            "source_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:file-structure",
+              "profile:alignment",
+              "profile:generated-parity",
+              "profile:stale-reference",
+              "profile:task",
+              "profile:changed",
+              "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              "approval:user: user requested proceed after TASK-019 resume",
+              "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+              "decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+              "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+              "generated-parity pass",
+              "stale-reference pass",
+              "task TASK-019 pass"
+            ],
+            "content_proof_refs": [
+              "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+              "11b76ed63996785ba5fb12e77933963f075425ac"
+            ],
+            "isolation_status": "isolated"
           },
           {
             "path": ".codewiki/validation/2026-05-25-task-close-pass-task-017.json",
@@ -46540,6 +47482,20 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+            "task_id": "TASK-019",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-25-planning-pass-task-017.json",
             "task_id": "TASK-017",
             "verdict": "pass",
@@ -46574,6 +47530,27 @@
             "related_claim_ids": [],
             "content_proof_refs": [],
             "publisher_result_refs": []
+          },
+          {
+            "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "task_id": "TASK-019",
+            "verdict": "block",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "validated_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "published_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+              "11b76ed63996785ba5fb12e77933963f075425ac"
+            ],
+            "publisher_result_refs": [
+              "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+              "11b76ed63996785ba5fb12e77933963f075425ac"
+            ]
           },
           {
             "path": ".codewiki/validation/2026-05-25-task-close-pass-task-017.json",
@@ -46677,6 +47654,7 @@
           "changed warning only before final graph refresh/amend; generated-parity pass",
           "changed warning only: generated .codewiki view/state files changed after refresh",
           "changed warning only: generated files dirty after refresh",
+          "changed warning only: generated index dirty",
           "changed warning only: generated state/view dirty files",
           "changed warning: generated state/view files changed (.codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-010/context.json, .codewiki/roadmap/tasks/TASK-010/task.json); no file-structure failure",
           "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass",
@@ -46767,6 +47745,7 @@
           "npm test => pass; includes check:architecture, test:smoke, test:features, test:pack",
           "npm test: pass",
           "package",
+          "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
           "profile:alignment",
           "profile:changed",
           "profile:file-structure",
@@ -46795,6 +47774,8 @@
           "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
           "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
           "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
           "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
         ],
         "content_proof_refs": [
@@ -46818,6 +47799,7 @@
           ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
           ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json@sha256:ccaa34872441696470807a9f2f08457d5d5dd41c0189c3a73750de4cae4f5de1",
           ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json@sha256:4d13f229df61b47646d9ed214888f10f1876b7a35894d43addb233f9a8634c39",
+          ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
           ".codewiki/kb/lexicon.md@sha256:d22d840dc2bed5542dd5457a64066e904d545658247d228128857826cfcee6ad",
           ".codewiki/kb/product/stories/intent.md@sha256:26ebb45953fba51c153d2b8ba6d230c4030d2c4a1025a3d9cecfd2221f2f2571",
           ".codewiki/kb/product/users/agents.md@sha256:6766709858beeb5e92c5266bd1bb0767b6e8ce922c2a09fbddc5e8471e06b435",
@@ -46852,9 +47834,11 @@
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
           ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b009b7369ac7db297b2906751f113317468cf5e416e6cd12c941acf35a0f27f2",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
           ".codewiki/kb/system/diagrams/key-flow.yaml@sha256:0358afaecb1da4e16550c64739daf962607bc782bd7c841999b2de6336653877",
           ".codewiki/kb/system/extension.md@sha256:4505283986b49ea3d713a08a730f0397f494bb7d5433a75707fdfe173c0b3bb4",
           ".codewiki/kb/system/file-structure.md@sha256:46b94ee33ea0b468e429c8d250e5b716279759a2f941c51e0c58e625a1bb6085",
+          ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
           ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
           ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
           ".codewiki/kb/system/file-structure.md@sha256:f7ace60d69684c08c571d053d48b82c7c997834cca86f8b3215560d106e1f562",
@@ -46883,15 +47867,21 @@
           ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
           ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
           ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
+          ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+          ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
           ".codewiki/validation/2026-05-20-implementation-block-task-007.json@sha256:c36c128686e26403d12fff1a44f53353c9a8617b6fbee4efc03ecb0be2f5145b",
           ".codewiki/validation/2026-05-20-planning-pass-task-007.json@sha256:11334233f99f269c3b05118dd23b6277f1d06dc8383e3b47981dc7eb5daed499",
           ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
           ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
           ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
           ".codewiki/validation/2026-05-25-decision-pass-task-018.json@sha256:a3eb408f1d087fee9e96eb5a676c9866104f9a8da6d942278eb9e210cddbc285",
+          ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
           ".codewiki/validation/2026-05-25-planning-pass-task-018.json@sha256:21a0cd6dfd1bd352040fa9c8f7406ab546f9a0edb1dda110fb88ab62157a2275",
+          ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+          ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
           "08a913f4488a5a686170aa3918d095683a98821f",
           "11a758300a54fc99c585b1c47ae9ae0b90767151",
+          "11b76ed63996785ba5fb12e77933963f075425ac",
           "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
           "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
@@ -46943,6 +47933,7 @@
           "e329c1f47deec0f969c834131b017d33dd46e8de",
           "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
           "e993fdd9e0952203a2169ced3d61ed661366c98d",
+          "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
           "fd3f93e548bc1d239e35b70a659333b3df644b7a",
           "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
           "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
@@ -46964,10 +47955,12 @@
           "refs/codewiki/archive/task/TASK-016",
           "refs/codewiki/archive/task/TASK-017",
           "refs/codewiki/archive/task/TASK-018",
+          "refs/codewiki/archive/task/TASK-019",
           "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
           "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
           "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
           "sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
+          "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
           "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
           "sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
           "sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
@@ -46978,6 +47971,7 @@
           "sha256:4b4bbddd1fc1a4b378e3253bd710fd06ba376552c2a99eb38fb3ce08eda72980",
           "sha256:57d14e9587ba552931f1e20b5f2f53394593eb0ac8cfaccbe5a796a456717904",
           "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+          "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
           "sha256:66ff4ee9ede2442bf2a6706826e852eed746c1eb03faf6884d83b14fd85eb09e",
           "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
           "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
@@ -47279,9 +48273,9 @@
             "to_layer": "code",
             "next_loop": "implementation",
             "task_id": "TASK-019",
-            "reason": "Traceability gap for DEC-T019-1: missing_implementation_build.",
+            "reason": "Traceability gap for DEC-T019-1: missing_test_evidence.",
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47293,9 +48287,9 @@
             "to_layer": "code",
             "next_loop": "implementation",
             "task_id": "TASK-019",
-            "reason": "Traceability gap for DEC-T019-2: missing_implementation_build.",
+            "reason": "Traceability gap for DEC-T019-2: missing_test_evidence.",
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47307,9 +48301,9 @@
             "to_layer": "code",
             "next_loop": "implementation",
             "task_id": "TASK-019",
-            "reason": "Traceability gap for DEC-T019-3: missing_implementation_build.",
+            "reason": "Traceability gap for DEC-T019-3: missing_test_evidence.",
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47321,10 +48315,21 @@
             "to_layer": "code",
             "next_loop": "implementation",
             "task_id": "TASK-019",
-            "reason": "Traceability gap for DEC-T019-4: missing_implementation_build.",
+            "reason": "Traceability gap for DEC-T019-4: missing_test_evidence.",
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
+          },
+          {
+            "id": "reconcile:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "source_id": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "state": "blocked",
+            "direction": "gateway",
+            "from_layer": "validation",
+            "to_layer": "decision",
+            "next_loop": "decision",
+            "task_id": "TASK-019",
+            "reason": "Validation blocked; escalate ambiguous intent to decision compiler."
           },
           {
             "id": "reconcile:task:TASK-019",
@@ -47370,14 +48375,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47400,14 +48432,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47430,14 +48489,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           },
           {
@@ -47460,14 +48546,41 @@
               "TASK-015"
             ],
             "test_paths": [],
-            "code_paths": [],
-            "implementation_builds": [],
-            "validation_paths": [],
-            "audit_evidence_refs": [],
+            "code_paths": [
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/roadmap/tasks/TASK-019/task.json",
+              ".codewiki/roadmap/tasks/TASK-020/task.json"
+            ],
+            "implementation_builds": [
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+            ],
+            "validation_paths": [
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+              "pending implementation validation",
+              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed"
+            ],
             "publication_refs": [],
-            "content_proof_refs": [],
+            "content_proof_refs": [
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+              "refs/codewiki/archive/task/TASK-019",
+              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+            ],
             "gaps": [
-              "missing_implementation_build"
+              "missing_test_evidence"
             ]
           }
         ],
@@ -49900,6 +51013,20 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+          "task_id": "TASK-019",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-25-planning-pass-task-017.json",
           "task_id": "TASK-017",
           "verdict": "pass",
@@ -49934,6 +51061,27 @@
           "related_claim_ids": [],
           "content_proof_refs": [],
           "publisher_result_refs": []
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "task_id": "TASK-019",
+          "verdict": "block",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+          "validated_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+          "published_sha": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "11b76ed63996785ba5fb12e77933963f075425ac"
+          ],
+          "publisher_result_refs": [
+            "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "11b76ed63996785ba5fb12e77933963f075425ac"
+          ]
         },
         {
           "path": ".codewiki/validation/2026-05-25-task-close-pass-task-017.json",
@@ -50035,6 +51183,7 @@
         ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
         ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
         ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+        ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -50155,6 +51304,7 @@
         "TASK-018 implementation from validated planning build.",
         "TASK-019",
         "TASK-019 decision compiler; user requested proceed after TASK-018 close. Grounded in TASK-015 agency pilot task-close validation and TASK-018 deferred-trigger guardrail evidence.",
+        "TASK-019 implementation compiler records the completed decision/planning task with no source movement after task-close policy required an implementation_build source.",
         "TASK-019 planning compiler consumed TASK-019 and TASK-014 decision refs, created TASK-020 as executable agency shim cleanup task, and renewed heavier-root deferral until cleanup validation.",
         "TASK-019 planning compiler consumed accepted decision build and created TASK-020 as the executable agency shim cleanup implementation boundary.",
         "TASK-020",
@@ -50353,6 +51503,7 @@
         "changed warning only before final graph refresh/amend; generated-parity pass",
         "changed warning only: generated .codewiki view/state files changed after refresh",
         "changed warning only: generated files dirty after refresh",
+        "changed warning only: generated index dirty",
         "changed warning only: generated state/view dirty files",
         "changed warning: generated state/view files changed (.codewiki/index_graph.json, .codewiki/roadmap/tasks/TASK-010/context.json, .codewiki/roadmap/tasks/TASK-010/task.json); no file-structure failure",
         "codewiki_audit 2026-05-22 profiles=file-structure,alignment,generated-parity,changed pass",
@@ -50443,6 +51594,7 @@
         "npm test => pass; includes check:architecture, test:smoke, test:features, test:pack",
         "npm test: pass",
         "package",
+        "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
         "profile:alignment",
         "profile:changed",
         "profile:file-structure",
@@ -50471,6 +51623,8 @@
         "validation:.codewiki/validation/2026-05-24-implementation-pass-task-015.json",
         "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
         "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+        "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+        "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
         "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
       ],
       "content_proof_refs": [
@@ -50494,6 +51648,7 @@
         ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json@sha256:ab51e3d0a94d26fd70c722b91a730ea69de4520c48cec40b6e2d029e9754d0d3",
         ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json@sha256:ccaa34872441696470807a9f2f08457d5d5dd41c0189c3a73750de4cae4f5de1",
         ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json@sha256:4d13f229df61b47646d9ed214888f10f1876b7a35894d43addb233f9a8634c39",
+        ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
         ".codewiki/kb/lexicon.md@sha256:d22d840dc2bed5542dd5457a64066e904d545658247d228128857826cfcee6ad",
         ".codewiki/kb/product/stories/intent.md@sha256:26ebb45953fba51c153d2b8ba6d230c4030d2c4a1025a3d9cecfd2221f2f2571",
         ".codewiki/kb/product/users/agents.md@sha256:6766709858beeb5e92c5266bd1bb0767b6e8ce922c2a09fbddc5e8471e06b435",
@@ -50528,9 +51683,11 @@
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:7c322a59ef99b7be11ed9e42f131148b68c73e7cb4b907c7cc11a8cbcdbcf710",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:b009b7369ac7db297b2906751f113317468cf5e416e6cd12c941acf35a0f27f2",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
         ".codewiki/kb/system/diagrams/key-flow.yaml@sha256:0358afaecb1da4e16550c64739daf962607bc782bd7c841999b2de6336653877",
         ".codewiki/kb/system/extension.md@sha256:4505283986b49ea3d713a08a730f0397f494bb7d5433a75707fdfe173c0b3bb4",
         ".codewiki/kb/system/file-structure.md@sha256:46b94ee33ea0b468e429c8d250e5b716279759a2f941c51e0c58e625a1bb6085",
+        ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
         ".codewiki/kb/system/file-structure.md@sha256:52c9f376386fc48582c93ea2692f38eac6524655f94074f0fc74340edc348741",
         ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
         ".codewiki/kb/system/file-structure.md@sha256:f7ace60d69684c08c571d053d48b82c7c997834cca86f8b3215560d106e1f562",
@@ -50559,15 +51716,21 @@
         ".codewiki/roadmap/tasks/TASK-014/task.json@sha256:23d723a797365739ffda6f34839312325b6924576b616a9e0e761816f33a1b45",
         ".codewiki/roadmap/tasks/TASK-015/context.json@sha256:6f81d6f854ef98e0054d9134381b8c29cb0bbfa6fde8d7266c512b4dbc3be7b5",
         ".codewiki/roadmap/tasks/TASK-015/task.json@sha256:7b010a917379e0742f66c8d1617f2cd0645b77b08e6e703575095325908f320e",
+        ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+        ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
         ".codewiki/validation/2026-05-20-implementation-block-task-007.json@sha256:c36c128686e26403d12fff1a44f53353c9a8617b6fbee4efc03ecb0be2f5145b",
         ".codewiki/validation/2026-05-20-planning-pass-task-007.json@sha256:11334233f99f269c3b05118dd23b6277f1d06dc8383e3b47981dc7eb5daed499",
         ".codewiki/validation/2026-05-23-decision-pass-task-014.json@sha256:8a351c40a7a04a0c7ae5448fadd46fd54db80fe44041e17e14712815e4ba4f1a",
         ".codewiki/validation/2026-05-24-planning-pass-task-014.json@sha256:81b6989e168451ef520492de0f77efa79a78049011bd50cc50a73d2c31077454",
         ".codewiki/validation/2026-05-24-task-close-block-task-014.json@sha256:370598bac9726e81b8323f6ff7aedec08947d3878e87d99bce168eebe5c84329",
         ".codewiki/validation/2026-05-25-decision-pass-task-018.json@sha256:a3eb408f1d087fee9e96eb5a676c9866104f9a8da6d942278eb9e210cddbc285",
+        ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
         ".codewiki/validation/2026-05-25-planning-pass-task-018.json@sha256:21a0cd6dfd1bd352040fa9c8f7406ab546f9a0edb1dda110fb88ab62157a2275",
+        ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+        ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
         "08a913f4488a5a686170aa3918d095683a98821f",
         "11a758300a54fc99c585b1c47ae9ae0b90767151",
+        "11b76ed63996785ba5fb12e77933963f075425ac",
         "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
         "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
@@ -50619,6 +51782,7 @@
         "e329c1f47deec0f969c834131b017d33dd46e8de",
         "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
         "e993fdd9e0952203a2169ced3d61ed661366c98d",
+        "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
         "fd3f93e548bc1d239e35b70a659333b3df644b7a",
         "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
         "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
@@ -50640,10 +51804,12 @@
         "refs/codewiki/archive/task/TASK-016",
         "refs/codewiki/archive/task/TASK-017",
         "refs/codewiki/archive/task/TASK-018",
+        "refs/codewiki/archive/task/TASK-019",
         "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
         "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
         "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
         "sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
+        "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
         "sha256:32b40b6b1fe51f7a829fa84ce98f8d6e554b48c2c7687f38898172690e9deec2",
         "sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
         "sha256:35edabe68b3f4f8d212c0333a22be9a5d633ebf8261cd0e515c3bc1ff1d443ef",
@@ -50654,6 +51820,7 @@
         "sha256:4b4bbddd1fc1a4b378e3253bd710fd06ba376552c2a99eb38fb3ce08eda72980",
         "sha256:57d14e9587ba552931f1e20b5f2f53394593eb0ac8cfaccbe5a796a456717904",
         "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+        "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
         "sha256:66ff4ee9ede2442bf2a6706826e852eed746c1eb03faf6884d83b14fd85eb09e",
         "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
@@ -52341,6 +53508,36 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-019",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:file-structure",
+            "profile:task",
+            "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "approval:user: user requested proceed after TASK-019 resume",
+            "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+            "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+            "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+            "generated-parity pass",
+            "stale-reference pass",
+            "task TASK-019 pass",
+            "changed warning only: generated index dirty"
+          ],
+          "content_proof_refs": [
+            "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-25-planning-pass-task-017.json",
           "verdict": "pass",
           "profile": "planning",
@@ -52415,6 +53612,39 @@
           ],
           "content_proof_refs": [],
           "isolation_status": "partial"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "verdict": "block",
+          "profile": "task-close",
+          "task_id": "TASK-019",
+          "source_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:file-structure",
+            "profile:alignment",
+            "profile:generated-parity",
+            "profile:stale-reference",
+            "profile:task",
+            "profile:changed",
+            "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            "approval:user: user requested proceed after TASK-019 resume",
+            "codewiki_audit:2026-05-25:TASK-019:file-structure,alignment,generated-parity,stale-reference,task,changed",
+            "decision validation pass .codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            "planning validation pass .codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            "file-structure pass: 22 approved migration deltas, 0 actionable drift",
+            "alignment warning only: existing graph-health warnings; no decision-propagation residuals",
+            "generated-parity pass",
+            "stale-reference pass",
+            "task TASK-019 pass"
+          ],
+          "content_proof_refs": [
+            "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
+            "11b76ed63996785ba5fb12e77933963f075425ac"
+          ],
+          "isolation_status": "isolated"
         },
         {
           "path": ".codewiki/validation/2026-05-25-task-close-pass-task-017.json",
@@ -54384,21 +55614,29 @@
             "src/application/agency.ts",
             "src/application/tools/agency.ts",
             "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
+            "src/adapters/pi/schemas.ts",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
             "implementation validation pending",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
             ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -54437,7 +55675,17 @@
             ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
             "refs/codewiki/archive/task/TASK-015",
-            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
           ],
           "gaps": []
         },
@@ -54481,21 +55729,29 @@
             "src/application/agency.ts",
             "src/application/tools/agency.ts",
             "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
+            "src/adapters/pi/schemas.ts",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
             "implementation validation pending",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
             ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -54534,7 +55790,17 @@
             ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
             "refs/codewiki/archive/task/TASK-015",
-            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
           ],
           "gaps": []
         },
@@ -54578,21 +55844,29 @@
             "src/application/agency.ts",
             "src/application/tools/agency.ts",
             "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
+            "src/adapters/pi/schemas.ts",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
             "implementation validation pending",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
             ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -54631,7 +55905,17 @@
             ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
             "refs/codewiki/archive/task/TASK-015",
-            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
           ],
           "gaps": []
         },
@@ -54675,21 +55959,29 @@
             "src/application/agency.ts",
             "src/application/tools/agency.ts",
             "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
+            "src/adapters/pi/schemas.ts",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-23-decision-pass-task-014.json",
             ".codewiki/validation/2026-05-24-planning-pass-task-014.json",
             ".codewiki/validation/2026-05-24-task-close-block-task-014.json",
             "implementation validation pending",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
             ".codewiki/validation/2026-05-24-implementation-pass-task-014.json",
             ".codewiki/validation/2026-05-24-implementation-pass-task-015.json",
             ".codewiki/validation/2026-05-24-task-close-pass-task-014.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
+            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -54728,7 +56020,17 @@
             ".codewiki/kb/system/file-structure.md@sha256:c493f91f68672c4412de5df5e4d84203feb36ff08052ceda0cf08e80f9f1fe8c",
             ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:58fee30aae0d1702ade4267c12179682f31529b5e52bbdeb75ed90bf3c6d2bd1",
             "refs/codewiki/archive/task/TASK-015",
-            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e"
+            "sha256:46f2d25378a0aede682b671ec3f4306fe8a422038c81174fdf67f3276885fa3e",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
           ],
           "gaps": []
         },
@@ -54752,14 +56054,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -54782,14 +56111,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -54812,14 +56168,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -54842,55 +56225,45 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         }
       ],
       "semantic_change_rows": [
-        {
-          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
-          ],
-          "gaps": []
-        },
         {
           "path": ".codewiki/roadmap/queue.json",
           "change_type": "task",
@@ -54944,7 +56317,8 @@
             ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
             ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
             ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "gaps": []
         }
@@ -54972,14 +56346,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55002,14 +56403,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55032,14 +56460,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55062,14 +56517,41 @@
             "TASK-015"
           ],
           "test_paths": [],
-          "code_paths": [],
-          "implementation_builds": [],
-          "validation_paths": [],
-          "audit_evidence_refs": [],
+          "code_paths": [
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            ".codewiki/roadmap/tasks/TASK-019/task.json",
+            ".codewiki/roadmap/tasks/TASK-020/task.json"
+          ],
+          "implementation_builds": [
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
+          ],
+          "validation_paths": [
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
+            "pending implementation validation",
+            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed"
+          ],
           "publication_refs": [],
-          "content_proof_refs": [],
+          "content_proof_refs": [
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
+            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
+            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
+            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
+            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
+            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
+            "refs/codewiki/archive/task/TASK-019",
+            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac"
+          ],
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         }
       ]
@@ -55271,13 +56753,13 @@
       }
     },
     "workflow_cursor": {
-      "active_loop": "implementation",
-      "reason": "TASK-019 is open implementation delta below knowledge.",
+      "active_loop": "decision",
+      "reason": "Validation blocked; escalate ambiguous intent to decision compiler.",
       "input_refs": [
-        "task:TASK-019",
+        "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
         "TASK-019"
       ],
-      "expected_output": "implementation_build",
+      "expected_output": "decision_build",
       "exit_gate": "validation pass or explicit user decision",
       "scope": {
         "kind": "sprint",
@@ -55291,11 +56773,11 @@
           "source build/task refs read",
           "new_session or context_refresh when useful"
         ],
-        "handoff": "implementation_loop context boundary"
+        "handoff": "decision_loop context boundary"
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "task:TASK-019",
+        "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
         "TASK-019"
       ]
     },
@@ -55322,7 +56804,8 @@
             ".codewiki/validation/2026-05-22-decision-block.json",
             ".codewiki/validation/2026-05-22-planning-block.json",
             ".codewiki/validation/2026-05-23-planning-fail.json",
-            ".codewiki/validation/2026-05-24-decision-block.json"
+            ".codewiki/validation/2026-05-24-decision-block.json",
+            ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
           ],
           "claim_ids": [
             "CLAIM-155"
@@ -55387,7 +56870,8 @@
             ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
             ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
             ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -55463,7 +56947,8 @@
             ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
             ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
             ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
           ]
         },
         "purgeable": {
@@ -55810,10 +57295,20 @@
           "digest": "sha256:57d14e9587ba552931f1e20b5f2f53394593eb0ac8cfaccbe5a796a456717904",
           "restore_command": "/wiki-restore TASK-018",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-019",
+          "build_path": ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-019",
+          "commit_sha": "",
+          "digest": "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
+          "restore_command": "/wiki-restore TASK-019",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 33,
+        "ledger_count": 34,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -55847,7 +57342,8 @@
           "refs/codewiki/archive/task/TASK-015",
           "refs/codewiki/archive/task/TASK-016",
           "refs/codewiki/archive/task/TASK-017",
-          "refs/codewiki/archive/task/TASK-018"
+          "refs/codewiki/archive/task/TASK-018",
+          "refs/codewiki/archive/task/TASK-019"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -55882,7 +57378,8 @@
           ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
           ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -55917,7 +57414,8 @@
           ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
           ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+          ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+          ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -55936,9 +57434,9 @@
           "to_layer": "code",
           "next_loop": "implementation",
           "task_id": "TASK-019",
-          "reason": "Traceability gap for DEC-T019-1: missing_implementation_build.",
+          "reason": "Traceability gap for DEC-T019-1: missing_test_evidence.",
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55950,9 +57448,9 @@
           "to_layer": "code",
           "next_loop": "implementation",
           "task_id": "TASK-019",
-          "reason": "Traceability gap for DEC-T019-2: missing_implementation_build.",
+          "reason": "Traceability gap for DEC-T019-2: missing_test_evidence.",
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55964,9 +57462,9 @@
           "to_layer": "code",
           "next_loop": "implementation",
           "task_id": "TASK-019",
-          "reason": "Traceability gap for DEC-T019-3: missing_implementation_build.",
+          "reason": "Traceability gap for DEC-T019-3: missing_test_evidence.",
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
         },
         {
@@ -55978,10 +57476,21 @@
           "to_layer": "code",
           "next_loop": "implementation",
           "task_id": "TASK-019",
-          "reason": "Traceability gap for DEC-T019-4: missing_implementation_build.",
+          "reason": "Traceability gap for DEC-T019-4: missing_test_evidence.",
           "gaps": [
-            "missing_implementation_build"
+            "missing_test_evidence"
           ]
+        },
+        {
+          "id": "reconcile:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "source_id": "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
+          "state": "blocked",
+          "direction": "gateway",
+          "from_layer": "validation",
+          "to_layer": "decision",
+          "next_loop": "decision",
+          "task_id": "TASK-019",
+          "reason": "Validation blocked; escalate ambiguous intent to decision compiler."
         },
         {
           "id": "reconcile:task:TASK-019",
@@ -56007,13 +57516,14 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 6
+        "implementation": 6,
+        "decision": 1
       },
       "next_action": {
-        "loop": "implementation",
-        "command": "/wiki-resume TASK-019",
-        "reason": "TASK-019 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-019",
+        "loop": "decision",
+        "command": "Run decision compiler",
+        "reason": "Validation blocked; escalate ambiguous intent to decision compiler.",
+        "item_id": "reconcile:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -56023,11 +57533,11 @@
             "source build/task refs read",
             "new_session or context_refresh when useful"
           ],
-          "handoff": "implementation_loop context boundary"
+          "handoff": "decision_loop context boundary"
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-019",
+          "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
           "TASK-019"
         ]
       },
@@ -56036,13 +57546,13 @@
         "knowledge": "aligned",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "aligned"
+        "validation": "drift"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-25T04:35:04.236Z",
+      "generated_at": "2026-05-25T04:47:59.532Z",
       "counts": {
         "large-doc": 4
       },
@@ -56075,7 +57585,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-25T04:35:04Z",
+      "generated_at": "2026-05-25T04:47:59Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -56363,7 +57873,7 @@
             ".codewiki/validation/2026-05-25-task-close-pass-task-018.json"
           ],
           "code_paths": [],
-          "updated": "2026-05-25T04:35:04Z",
+          "updated": "2026-05-25T04:47:59Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -56448,7 +57958,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-25T04:35:04Z",
+      "generated_at": "2026-05-25T04:47:59Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -56515,19 +58025,19 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-019",
-        "reason": "TASK-019 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-019"
+        "kind": "reconciliation:decision",
+        "command": "Run decision compiler",
+        "reason": "Validation blocked; escalate ambiguous intent to decision compiler.",
+        "item_id": "reconcile:validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json"
       },
       "workflow_cursor": {
-        "active_loop": "implementation",
-        "reason": "TASK-019 is open implementation delta below knowledge.",
+        "active_loop": "decision",
+        "reason": "Validation blocked; escalate ambiguous intent to decision compiler.",
         "input_refs": [
-          "task:TASK-019",
+          "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
           "TASK-019"
         ],
-        "expected_output": "implementation_build",
+        "expected_output": "decision_build",
         "exit_gate": "validation pass or explicit user decision",
         "scope": {
           "kind": "sprint",
@@ -56541,11 +58051,11 @@
             "source build/task refs read",
             "new_session or context_refresh when useful"
           ],
-          "handoff": "implementation_loop context boundary"
+          "handoff": "decision_loop context boundary"
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-019",
+          "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
           "TASK-019"
         ]
       },
@@ -56572,7 +58082,8 @@
               ".codewiki/validation/2026-05-22-decision-block.json",
               ".codewiki/validation/2026-05-22-planning-block.json",
               ".codewiki/validation/2026-05-23-planning-fail.json",
-              ".codewiki/validation/2026-05-24-decision-block.json"
+              ".codewiki/validation/2026-05-24-decision-block.json",
+              ".codewiki/validation/2026-05-25-task-close-block-task-019.json"
             ],
             "claim_ids": [
               "CLAIM-155"
@@ -56637,7 +58148,8 @@
               ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
               ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
               ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -56713,7 +58225,8 @@
               ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
               ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
               ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json"
             ]
           },
           "purgeable": {
@@ -56730,7 +58243,7 @@
         ]
       },
       "direction": [
-        "TASK-019 is open implementation delta below knowledge.",
+        "Validation blocked; escalate ambiguous intent to decision compiler.",
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
@@ -57639,7 +59152,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-25T04:35:04Z",
+        "generated_at": "2026-05-25T04:47:59Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -57667,14 +59180,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T04:35:04Z",
+            "checked_at": "2026-05-25T04:47:59Z",
             "revision": {
               "git": {
-                "head": "4891cd572a5dea16363d60848179062b29b783da",
+                "head": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-019/context.json",
                   ".codewiki/roadmap/tasks/TASK-019/task.json"
@@ -57709,7 +59220,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "3f1768110b2554ec9f75450c5169c6eb69cccbe6",
+                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -57717,7 +59228,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "69365dec5e63a3005923e8d8411fba05a607e7e0",
+                  ".codewiki/roadmap/queue.json": "d4003ff94a8c70c30ab3f9ebaaf58a653a4d09ea",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -57763,14 +59274,14 @@
                 }
               },
               "spec_digest": "606c7f56ffec16304553cf5500beef0696fdcf234abfa19182acf8941a878373",
-              "task_digest": "0f223d1cbfce16ae98fabe0a8bbf28868e04fa404bc65f6c48e4929010bc62c5",
-              "code_digest": "1af20d353f31b85b77e902f501394a7e90cb015f402d32f4305a417a3ed04ff1",
-              "digest": "ed82a6912a5968f46855cfcb05c5b87c3377b6fa9c14b6f51f45a1e8ab52dc56"
+              "task_digest": "c4d177250bf4598bf177355476a0ea2cbb2d1398e9d7b41b07857db3af2c2b57",
+              "code_digest": "47004ad373b1071457855cc06cdcf0313fabc9231f0adc6d1b7415babe7d3c50",
+              "digest": "b51970eccf185c8ccfd8570b52a0e3ecf11395086a327f811ead594ac4523202"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T04:35:04Z",
+              "checked_at": "2026-05-25T04:47:59Z",
               "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -57895,14 +59406,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-25T04:35:04Z",
+            "checked_at": "2026-05-25T04:47:59Z",
             "revision": {
               "git": {
-                "head": "4891cd572a5dea16363d60848179062b29b783da",
+                "head": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-019/context.json",
                   ".codewiki/roadmap/tasks/TASK-019/task.json"
@@ -57921,7 +59430,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "3f1768110b2554ec9f75450c5169c6eb69cccbe6",
+                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -57929,7 +59438,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "69365dec5e63a3005923e8d8411fba05a607e7e0",
+                  ".codewiki/roadmap/queue.json": "d4003ff94a8c70c30ab3f9ebaaf58a653a4d09ea",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -57970,14 +59479,14 @@
                 }
               },
               "spec_digest": "507f5ae636cc5cc51c86e7dae28f05c8780dd80e7e594d47fd2f5f6ec4cb723a",
-              "task_digest": "0f223d1cbfce16ae98fabe0a8bbf28868e04fa404bc65f6c48e4929010bc62c5",
-              "code_digest": "f35543ce27bef4ce6b0a71daf009a7a2087f212f8196ca6777f0ead85770ec39",
-              "digest": "dfd11b4715b386b129cb3c33e2ddca6bbdc35deaddce55755d3ca95513fc1786"
+              "task_digest": "c4d177250bf4598bf177355476a0ea2cbb2d1398e9d7b41b07857db3af2c2b57",
+              "code_digest": "a1fa9108c2d7954d377f1cff9ac0e8c383df0d4d17b2a94bb96572bd6c73c2b9",
+              "digest": "5c53d79dcc1b0cb950da318e8b7a95cc87b026c5bdd0f4ad972ef9f5891a259c"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T04:35:04Z",
+              "checked_at": "2026-05-25T04:47:59Z",
               "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -58081,14 +59590,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T04:35:04Z",
+            "checked_at": "2026-05-25T04:47:59Z",
             "revision": {
               "git": {
-                "head": "4891cd572a5dea16363d60848179062b29b783da",
+                "head": "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-019/context.json",
                   ".codewiki/roadmap/tasks/TASK-019/task.json"
@@ -58123,7 +59630,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "3f1768110b2554ec9f75450c5169c6eb69cccbe6",
+                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -58131,7 +59638,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "69365dec5e63a3005923e8d8411fba05a607e7e0",
+                  ".codewiki/roadmap/queue.json": "d4003ff94a8c70c30ab3f9ebaaf58a653a4d09ea",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -58177,14 +59684,14 @@
                 }
               },
               "spec_digest": "606c7f56ffec16304553cf5500beef0696fdcf234abfa19182acf8941a878373",
-              "task_digest": "0f223d1cbfce16ae98fabe0a8bbf28868e04fa404bc65f6c48e4929010bc62c5",
-              "code_digest": "1af20d353f31b85b77e902f501394a7e90cb015f402d32f4305a417a3ed04ff1",
-              "digest": "ed82a6912a5968f46855cfcb05c5b87c3377b6fa9c14b6f51f45a1e8ab52dc56"
+              "task_digest": "c4d177250bf4598bf177355476a0ea2cbb2d1398e9d7b41b07857db3af2c2b57",
+              "code_digest": "47004ad373b1071457855cc06cdcf0313fabc9231f0adc6d1b7415babe7d3c50",
+              "digest": "b51970eccf185c8ccfd8570b52a0e3ecf11395086a327f811ead594ac4523202"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T04:35:04Z",
+              "checked_at": "2026-05-25T04:47:59Z",
               "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -58310,7 +59817,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-25T04:35:04Z",
+        "generated_at": "2026-05-25T04:47:59Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],

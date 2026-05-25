@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-25T04:35:04Z",
+  "updated": "2026-05-25T04:47:59Z",
   "order": [
     "TASK-012",
     "TASK-019",
@@ -137,7 +137,7 @@
         "closure": "A decision_build/planning_build maps the post-agency follow-up to executable tasks or renewed deferral."
       },
       "created": "2026-05-25",
-      "updated": "2026-05-25T04:35:04Z"
+      "updated": "2026-05-25T04:47:59Z"
     },
     "TASK-020": {
       "id": "TASK-020",
