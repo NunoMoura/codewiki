@@ -1,0 +1,63 @@
+{
+  "id": "TASK-019",
+  "title": "Select post-agency concept-root follow-up boundary",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Use validated agency pilot and deferred-trigger guardrail evidence to choose the next file-structure follow-up before any source movement.",
+  "spec_paths": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+    ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+    ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json"
+  ],
+  "code_paths": [
+    "src/agency/**",
+    "src/domain/agency/types.ts",
+    "src/application/agency.ts",
+    "src/application/tools/agency.ts",
+    "src/audit/**",
+    "src/build/**",
+    "src/validation/**",
+    "src/session/**",
+    "src/roadmap/**",
+    "src/state/**",
+    "src/project/**"
+  ],
+  "research_ids": [],
+  "labels": [
+    "file-structure",
+    "concept-root",
+    "decision",
+    "migration-planning"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Post-agency file-structure work has an approved next boundary or renewed deferral before additional source movement happens.",
+    "acceptance": [
+      "Review agency pilot closure evidence, compatibility shims, file-structure audit output, TASK-018 guardrail behavior, and deferred concept roots.",
+      "Decide whether the next step is agency shim cleanup, a second concept-root migration boundary, or renewed deferral with owner/trigger/rationale.",
+      "If source work is needed, produce executable follow-up task(s) with acceptance, non-goals, verification, and compatibility constraints; do not perform source movement in this task.",
+      "Update file-structure KB/diagram only when the accepted boundary changes canonical structure intent.",
+      "Planning validation must fail/block if any approved boundary decision is left only as an open question."
+    ],
+    "non_goals": [
+      "Do not move non-agency concept roots in this task.",
+      "Do not remove agency shims in this task unless a separate implementation task is created and validated later.",
+      "Do not change public commands, package entrypoints, adapter schemas, or product behavior."
+    ],
+    "verification": [
+      "codewiki_audit profiles=file-structure,alignment,generated-parity,stale-reference,task",
+      "decision/planning validation before implementation handoff"
+    ]
+  },
+  "delta": {
+    "desired": "Maintainers choose or explicitly defer the next concept-root migration boundary with durable roadmap/build evidence.",
+    "current": "Agency pilot and TASK-018 trigger guardrail are validated; deferred-root trigger is satisfied; no next boundary has been selected.",
+    "closure": "A decision_build/planning_build maps the post-agency follow-up to executable tasks or renewed deferral."
+  },
+  "created": "2026-05-25",
+  "updated": "2026-05-25"
+}
