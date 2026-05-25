@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-25T07:23:19.916Z",
+  "generated_at": "2026-05-25T07:25:03.361Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4072,7 +4072,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4174,7 +4174,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4242,7 +4242,7 @@
       "kind": "code_path",
       "path": "src/application",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4333,7 +4333,7 @@
       "kind": "code_path",
       "path": "src/domain",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4359,7 +4359,7 @@
       "kind": "code_path",
       "path": "src/domain/shared/types.ts",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4758,96 +4758,6 @@
       "change_type": "task",
       "alignment_state": "aligned",
       "lens_family": "work"
-    },
-    {
-      "id": "task:TASK-020",
-      "kind": "roadmap_task",
-      "title": "Remove agency compatibility shims",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "code",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:src/agency/types.ts",
-      "kind": "code_path",
-      "path": "src/agency/types.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/agency/planning.ts",
-      "kind": "code_path",
-      "path": "src/agency/planning.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/agency/tool.ts",
-      "kind": "code_path",
-      "path": "src/agency/tool.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/domain/project/types.ts",
-      "kind": "code_path",
-      "path": "src/domain/project/types.ts",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/domain/roadmap/types.ts",
-      "kind": "code_path",
-      "path": "src/domain/roadmap/types.ts",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/domain/session/links.ts",
-      "kind": "code_path",
-      "path": "src/domain/session/links.ts",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/domain/session/types.ts",
-      "kind": "code_path",
-      "path": "src/domain/session/types.ts",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/domain/validation/types.ts",
-      "kind": "code_path",
-      "path": "src/domain/validation/types.ts",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/adapters/pi/tools/agency.ts",
-      "kind": "code_path",
-      "path": "src/adapters/pi/tools/agency.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/tasks/TASK-015/agency-source-root.test.mjs",
-      "kind": "code_path",
-      "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
-      "layer": "code",
-      "alignment_state": "drift",
-      "lens_family": "execution"
     },
     {
       "id": "test:scripts/check-architecture.mjs",
@@ -7435,6 +7345,13 @@
       "lens_family": "execution"
     },
     {
+      "id": "code:src/adapters/pi/tools/agency.ts",
+      "kind": "code_path",
+      "path": "src/adapters/pi/tools/agency.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
       "id": "test:tests/smoke/control-room.test.mjs",
       "kind": "test_file",
       "path": "tests/smoke/control-room.test.mjs",
@@ -7557,6 +7474,13 @@
       "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
       "layer": "source",
       "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/domain/validation/types.ts",
+      "kind": "code_path",
+      "path": "src/domain/validation/types.ts",
+      "layer": "code",
       "lens_family": "execution"
     },
     {
@@ -7817,6 +7741,27 @@
       "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
       "layer": "source",
       "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/agency/types.ts",
+      "kind": "code_path",
+      "path": "src/agency/types.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/agency/planning.ts",
+      "kind": "code_path",
+      "path": "src/agency/planning.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/agency/tool.ts",
+      "kind": "code_path",
+      "path": "src/agency/tool.ts",
+      "layer": "code",
       "lens_family": "execution"
     },
     {
@@ -19950,6 +19895,103 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+        "validated_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+        "tree_sha": "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation consumed committed implementation build, validation report, audit/check evidence, and clean commit/tree proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:file-structure",
+          "profile:alignment",
+          "profile:stale-reference",
+          "profile:generated-parity",
+          "profile:changed",
+          "profile:task",
+          "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+          "codewiki_audit:2026-05-25:TASK-020:file-structure,alignment,stale-reference,generated-parity,changed,task",
+          "approval:user: proceed after scope clarification",
+          "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+          "file-structure pass: 90 TypeScript source files, 187 diagram refs, 22 approved migration deltas, 0 actionable drift",
+          "alignment warning only: existing graph-health warnings",
+          "stale-reference pass",
+          "generated-parity pass",
+          "changed pass: 0 changed files",
+          "task TASK-020 pass"
+        ],
+        "content_proof_refs": [
+          "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+          "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:approval:user: proceed after scope clarification",
+      "kind": "audit_evidence",
+      "path": "approval:user: proceed after scope clarification",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "kind": "audit_evidence",
+      "path": "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:changed pass: 0 changed files",
+      "kind": "audit_evidence",
+      "path": "changed pass: 0 changed files",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+      "kind": "content_proof",
+      "path": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
+      "kind": "content_proof",
+      "path": "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
     }
   ],
   "edges": [
@@ -24711,96 +24753,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-012",
       "to": "code:src/application/tools/audit.ts"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-020",
-      "to": "doc:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-020",
-      "to": "doc:.codewiki/kb/system/diagrams/file-structure-map.yaml"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-020",
-      "to": "doc:.codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-020",
-      "to": "doc:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-020",
-      "to": "doc:.codewiki/validation/2026-05-24-task-close-pass-task-015.json"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/agency/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/agency/planning.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/agency/tool.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/project/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/roadmap/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/session/links.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/session/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/shared/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/domain/validation/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/adapters/pi/tools/agency.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:src/adapters/pi/schemas.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:tests/tasks/TASK-015/agency-source-root.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-020",
-      "to": "code:tests/smoke/package-smoke.test.mjs"
     },
     {
       "kind": "build_references_canonical_source",
@@ -42720,6 +42672,125 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-019.json",
       "to": "task:TASK-019"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:codewiki_audit:2026-05-25:TASK-020:file-structure,alignment,stale-reference,generated-parity,changed,task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:approval:user: proceed after scope clarification",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:file-structure pass: 90 TypeScript source files, 187 diagram refs, 22 approved migration deltas, 0 actionable drift",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:alignment warning only: existing graph-health warnings",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:stale-reference pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:generated-parity pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:changed pass: 0 changed files",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "audit:task TASK-020 pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "content_proof:8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "content_proof:e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+      "to": "task:TASK-020"
     }
   ],
   "views": {
@@ -42816,16 +42887,12 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 19,
+            "item_count": 18,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 1,
-                "refs": [
-                  "TASK-020"
-                ],
-                "ref_count": 1
+                "count": 0
               },
               {
                 "id": "done_tasks",
@@ -42852,13 +42919,13 @@
               "sprint:SPRINT-001",
               "sprint:SPRINT-002",
               "task:TASK-012",
-              "task:TASK-020",
               "claim:CLAIM-156",
               "claim_scope:TASK-020",
               "claim_scope:.codewiki/kb/system/file-structure.md",
               "claim_scope:.codewiki/kb/system/diagrams/file-structure-map.yaml",
               "claim_scope:src/domain/agency/types.ts",
-              "claim_scope:src/application/agency.ts"
+              "claim_scope:src/application/agency.ts",
+              "claim_scope:src/application/tools/agency.ts"
             ],
             "collapsed": true
           },
@@ -42866,13 +42933,13 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "drift",
-            "item_count": 124,
+            "state": "aligned",
+            "item_count": 119,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 96
+                "count": 91
               },
               {
                 "id": "test_files",
@@ -42887,16 +42954,7 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 11,
-                "refs": [
-                  "src/application/agency.ts",
-                  "src/application/tools/agency.ts",
-                  "src/domain/agency/types.ts",
-                  "src/domain/project/types.ts",
-                  "src/domain/roadmap/types.ts",
-                  "src/domain/session/links.ts"
-                ],
-                "ref_count": 11
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -42923,7 +42981,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 68
+                "count": 69
               },
               {
                 "id": "fail_or_block_validation",
@@ -42933,12 +42991,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 188
+                "count": 192
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 499
+                "count": 501
               },
               {
                 "id": "traceability_gaps",
@@ -42962,18 +43020,18 @@
             "collapsed": 59
           },
           "validations": {
-            "total": 68,
-            "pass": 53,
+            "total": 69,
+            "pass": 54,
             "fail_or_block": 15,
             "hot": 4,
-            "collapsed": 68
+            "collapsed": 69
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-020",
-          "source_id": "task:TASK-020",
-          "loop": "implementation",
-          "reason": "TASK-020 is open implementation delta below knowledge."
+          "item_id": null,
+          "source_id": null,
+          "loop": "observe",
+          "reason": "No reconciliation item currently requires a compiler loop."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -42986,422 +43044,8 @@
         "version": 1,
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
-        "requirement_rows": [
-          {
-            "requirement_id": "DEC-T019-1",
-            "requirement_text": "Review agency pilot closure evidence, compatibility shims, file-structure audit output, TASK-018 guardrail behavior, and deferred concept roots before selecting a follow-up boundary.",
-            "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-019",
-              "TASK-020",
-              "TASK-015"
-            ],
-            "test_paths": [
-              "tests/tasks/TASK-015/agency-source-root.test.mjs",
-              "tests/smoke/package-smoke.test.mjs"
-            ],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/tasks/TASK-019/task.json",
-              ".codewiki/roadmap/tasks/TASK-020/task.json",
-              "src/application/agency.ts (deleted)",
-              "src/application/tools/agency.ts (deleted)",
-              "src/domain/agency/types.ts (deleted)",
-              "src/domain/project/types.ts",
-              "src/domain/roadmap/types.ts",
-              "src/domain/session/links.ts",
-              "src/domain/session/types.ts",
-              "src/domain/shared/types.ts",
-              "src/domain/validation/types.ts",
-              ".codewiki/roadmap/queue.json",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/agency/tool.ts",
-              "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-              "pending implementation validation",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-              ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-              "refs/codewiki/archive/task/TASK-019",
-              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-              "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-              "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-              "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-              "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-              "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-              "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-              "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-              ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-              ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-              "refs/codewiki/archive/task/TASK-020",
-              "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-            ],
-            "gaps": []
-          },
-          {
-            "requirement_id": "DEC-T019-2",
-            "requirement_text": "Select agency shim cleanup as the next post-agency boundary before any second concept-root migration.",
-            "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-019",
-              "TASK-020",
-              "TASK-015"
-            ],
-            "test_paths": [
-              "tests/tasks/TASK-015/agency-source-root.test.mjs",
-              "tests/smoke/package-smoke.test.mjs"
-            ],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/tasks/TASK-019/task.json",
-              ".codewiki/roadmap/tasks/TASK-020/task.json",
-              "src/application/agency.ts (deleted)",
-              "src/application/tools/agency.ts (deleted)",
-              "src/domain/agency/types.ts (deleted)",
-              "src/domain/project/types.ts",
-              "src/domain/roadmap/types.ts",
-              "src/domain/session/links.ts",
-              "src/domain/session/types.ts",
-              "src/domain/shared/types.ts",
-              "src/domain/validation/types.ts",
-              ".codewiki/roadmap/queue.json",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/agency/tool.ts",
-              "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-              "pending implementation validation",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-              ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-              "refs/codewiki/archive/task/TASK-019",
-              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-              "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-              "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-              "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-              "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-              "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-              "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-              "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-              ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-              ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-              "refs/codewiki/archive/task/TASK-020",
-              "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-            ],
-            "gaps": []
-          },
-          {
-            "requirement_id": "DEC-T019-3",
-            "requirement_text": "Renew non-agency concept-root deferral until agency shim cleanup closes with task-close validation and file-structure audit evidence.",
-            "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-019",
-              "TASK-020",
-              "TASK-015"
-            ],
-            "test_paths": [
-              "tests/tasks/TASK-015/agency-source-root.test.mjs",
-              "tests/smoke/package-smoke.test.mjs"
-            ],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/tasks/TASK-019/task.json",
-              ".codewiki/roadmap/tasks/TASK-020/task.json",
-              "src/application/agency.ts (deleted)",
-              "src/application/tools/agency.ts (deleted)",
-              "src/domain/agency/types.ts (deleted)",
-              "src/domain/project/types.ts",
-              "src/domain/roadmap/types.ts",
-              "src/domain/session/links.ts",
-              "src/domain/session/types.ts",
-              "src/domain/shared/types.ts",
-              "src/domain/validation/types.ts",
-              ".codewiki/roadmap/queue.json",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/agency/tool.ts",
-              "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-              "pending implementation validation",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-              ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-              "refs/codewiki/archive/task/TASK-019",
-              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-              "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-              "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-              "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-              "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-              "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-              "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-              "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-              ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-              ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-              "refs/codewiki/archive/task/TASK-020",
-              "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-            ],
-            "gaps": []
-          },
-          {
-            "requirement_id": "DEC-T019-4",
-            "requirement_text": "Do not move source files or remove shims in TASK-019; source work must be a separate implementation task after planning validation.",
-            "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            "knowledge_paths": [
-              ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-            ],
-            "planning_builds": [
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-            ],
-            "roadmap_task_ids": [
-              "TASK-019",
-              "TASK-020",
-              "TASK-015"
-            ],
-            "test_paths": [
-              "tests/tasks/TASK-015/agency-source-root.test.mjs",
-              "tests/smoke/package-smoke.test.mjs"
-            ],
-            "code_paths": [
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              ".codewiki/roadmap/tasks/TASK-019/task.json",
-              ".codewiki/roadmap/tasks/TASK-020/task.json",
-              "src/application/agency.ts (deleted)",
-              "src/application/tools/agency.ts (deleted)",
-              "src/domain/agency/types.ts (deleted)",
-              "src/domain/project/types.ts",
-              "src/domain/roadmap/types.ts",
-              "src/domain/session/links.ts",
-              "src/domain/session/types.ts",
-              "src/domain/shared/types.ts",
-              "src/domain/validation/types.ts",
-              ".codewiki/roadmap/queue.json",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/agency/tool.ts",
-              "src/adapters/pi/tools/agency.ts",
-              "src/adapters/pi/schemas.ts"
-            ],
-            "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "validation_paths": [
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-              "pending implementation validation",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-              ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-              ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-            ],
-            "audit_evidence_refs": [
-              "profile:alignment",
-              "profile:changed",
-              "profile:file-structure",
-              "profile:stale-reference",
-              "profile:generated-parity",
-              "profile:task"
-            ],
-            "publication_refs": [],
-            "content_proof_refs": [
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-              ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-              ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-              ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-              ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-              ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-              ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-              "refs/codewiki/archive/task/TASK-019",
-              "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-              "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-              "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-              "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-              "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-              "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-              "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-              "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-              ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-              ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-              "refs/codewiki/archive/task/TASK-020",
-              "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-            ],
-            "gaps": []
-          }
-        ],
+        "requirement_rows": [],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "change_type": "system",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
           {
             "path": ".codewiki/roadmap/queue.json",
             "change_type": "task",
@@ -43457,154 +43101,6 @@
               ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
               ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
               ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/application/agency.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/application/tools/agency.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/agency/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/project/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/roadmap/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/session/links.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/session/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/shared/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/domain/validation/types.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/package-smoke.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
               ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
             ],
             "gaps": []
@@ -47154,6 +46650,38 @@
               "3541f0071755739dfe0f4d44783913447f3da890"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-020",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:file-structure",
+              "profile:alignment",
+              "profile:stale-reference",
+              "profile:generated-parity",
+              "profile:changed",
+              "profile:task",
+              "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+              "codewiki_audit:2026-05-25:TASK-020:file-structure,alignment,stale-reference,generated-parity,changed,task",
+              "approval:user: proceed after scope clarification",
+              "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+              "file-structure pass: 90 TypeScript source files, 187 diagram refs, 22 approved migration deltas, 0 actionable drift",
+              "alignment warning only: existing graph-health warnings",
+              "stale-reference pass",
+              "generated-parity pass",
+              "changed pass: 0 changed files",
+              "task TASK-020 pass"
+            ],
+            "content_proof_refs": [
+              "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+              "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -48287,6 +47815,25 @@
               "f607024d4ee250a648b1651b801427fc60ad3b2c",
               "3541f0071755739dfe0f4d44783913447f3da890"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+            "task_id": "TASK-020",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+            "validated_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+              "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+            ],
+            "publisher_result_refs": [
+              "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -48322,6 +47869,7 @@
           "approval:user said \"great, proceed\" on 2026-05-22 after task-close route explanation",
           "approval:user: planning gateway failure diagnosis approved with proceed request",
           "approval:user: proceed after clarification",
+          "approval:user: proceed after scope clarification",
           "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23",
           "approval:user: user approved planning-gateway failure recovery with proceed request",
           "approval:user: user requested proceed after TASK-019 resume",
@@ -48346,6 +47894,7 @@
           "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
           "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
           "changed",
+          "changed pass: 0 changed files",
           "changed warning only before final graph refresh/amend; generated-parity pass",
           "changed warning only: generated .codewiki view/state files changed after refresh",
           "changed warning only: generated dirty files",
@@ -48433,6 +47982,7 @@
           "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-017.json",
           "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-018.json",
           "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+          "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
           "injected codewiki_audit tool package on /home/nunoc/projects/think-code: fail from stale loaded tool still hardcoding skills/codewiki until extension reload",
           "inline audit output from codewiki_audit 2026-05-22: file-structure pass, alignment pass, generated-parity pass, changed pass",
           "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
@@ -48475,6 +48025,7 @@
           "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
           "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
           "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+          "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
           "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
           "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
           "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
@@ -48611,6 +48162,7 @@
           "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
           "89b181ac7811619bab15d054894dd787f1abd371",
+          "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
           "8e2fe1708366bdd39427443a4f4f0143ce4b3ffc",
           "91be025737fef57c98863d56d5222844421e358a",
           "94384261e3f900b35080497b743eb56f4a941bc2",
@@ -48637,6 +48189,7 @@
           "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
           "e329c1f47deec0f969c834131b017d33dd46e8de",
           "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+          "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
           "e993fdd9e0952203a2169ced3d61ed661366c98d",
           "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
           "f607024d4ee250a648b1651b801427fc60ad3b2c",
@@ -48980,19 +48533,7 @@
           "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:dc1726a745db72b749b650b2f443aeea5cdea6d97c31b8280d5365f3c23e3c3d",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4"
         ],
-        "reconciliation_items": [
-          {
-            "id": "reconcile:task:TASK-020",
-            "source_id": "task:TASK-020",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-020",
-            "reason": "TASK-020 is open implementation delta below knowledge."
-          }
-        ],
+        "reconciliation_items": [],
         "traceability_gaps": [],
         "semantic_change_gaps": [],
         "file_structure_drift": {
@@ -49190,15 +48731,10 @@
     },
     "roadmap": {
       "task_ids": [
-        "TASK-012",
-        "TASK-020"
+        "TASK-012"
       ],
-      "open_task_ids": [
-        "TASK-020"
-      ],
-      "in_progress_task_ids": [
-        "TASK-020"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [],
@@ -49206,8 +48742,7 @@
         "TASK-012"
       ],
       "status_counts": {
-        "cancelled": 1,
-        "in_progress": 1
+        "cancelled": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -49314,154 +48849,10 @@
     "decision_propagation": {
       "version": 1,
       "model": "accepted-decision-row-to-roadmap-resolution",
-      "checked_decision_count": 1,
-      "row_count": 5,
+      "checked_decision_count": 0,
+      "row_count": 0,
       "residual_count": 0,
-      "assessments": [
-        {
-          "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-          ],
-          "row_count": 3,
-          "question_count": 2,
-          "residual_count": 0,
-          "rows": [
-            {
-              "kind": "row",
-              "id": "T019-SHIM-CLEANUP-NEXT",
-              "text": "Select agency shim cleanup as the next post-pilot boundary. The next implementation task should remove only agency compatibility shims, update shim/parity tests and file-structure evidence, and prove no public package command, package entrypoint, adapter schema/tool behavior, direct Node execution, package loading, or product behavior changes.",
-              "planning_builds": [
-                ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-              ],
-              "resolution": "roadmap-task",
-              "status": "resolved",
-              "gaps": [],
-              "task_ids": [
-                "TASK-020"
-              ],
-              "sprint_ids": [],
-              "knowledge_refs": [
-                ".codewiki/kb/system/file-structure.md"
-              ],
-              "source_refs": [
-                ".codewiki/roadmap/tasks/TASK-020/task.json",
-                "file-structure-map:agency_shim_cleanup_boundary"
-              ],
-              "rationale": "Selected source work becomes one atomic implementation task so TASK-019 remains decision/planning only.",
-              "evidence": "TASK-020 Remove agency compatibility shims has acceptance, non-goals, verification, candidate paths, and compatibility constraints.",
-              "inferred": false,
-              "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-            },
-            {
-              "kind": "row",
-              "id": "T019-RENEW-HEAVY-ROOT-DEFERRAL",
-              "text": "Renew deferral for non-agency concept-root migrations until the agency shim cleanup task closes with validation and file-structure audit evidence. Maintainers own the deferral; the trigger is agency-shim-cleanup task-close validation plus evidence that cleanup did not change public package, adapter, or product behavior.",
-              "planning_builds": [
-                ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-              ],
-              "resolution": "deferred",
-              "status": "resolved",
-              "gaps": [],
-              "task_ids": [
-                "TASK-020"
-              ],
-              "sprint_ids": [],
-              "knowledge_refs": [
-                ".codewiki/kb/system/file-structure.md"
-              ],
-              "source_refs": [
-                "file-structure-map:deferred_concept_roots",
-                "file-structure-map:agency_shim_cleanup_boundary",
-                ".codewiki/roadmap/tasks/TASK-020/task.json"
-              ],
-              "owner": "maintainers",
-              "trigger": "TASK-020 agency shim cleanup task-close validation and file-structure audit evidence",
-              "rationale": "Non-agency migrations wait until the pilot cleanup phase proves full migration lifecycle and compatibility cost.",
-              "evidence": "KB and diagram renew deferred_concept_roots with maintainer owner, TASK-020 trigger, and pending trigger state.",
-              "inferred": false,
-              "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-            },
-            {
-              "kind": "row",
-              "id": "T019-NO-SOURCE-MOVE",
-              "text": "TASK-019 updates only CodeWiki decision/planning/KB/diagram/roadmap evidence. Any source deletion or import cleanup happens later in the dedicated agency shim cleanup implementation task after planning validation.",
-              "planning_builds": [
-                ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-              ],
-              "resolution": "knowledge-only",
-              "status": "resolved",
-              "gaps": [],
-              "task_ids": [
-                "TASK-019"
-              ],
-              "sprint_ids": [],
-              "knowledge_refs": [
-                ".codewiki/kb/system/file-structure.md"
-              ],
-              "source_refs": [
-                "TASK-019 non-goals",
-                "git diff --name-only"
-              ],
-              "rationale": "TASK-019 records boundary and planning evidence only; implementation is routed to TASK-020.",
-              "evidence": "Only .codewiki KB/diagram/roadmap/build artifacts changed in TASK-019; no src/** files moved or removed.",
-              "inferred": false,
-              "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-            }
-          ],
-          "questions": [
-            {
-              "kind": "question",
-              "id": "Q1",
-              "text": "Create/refine one agency shim cleanup implementation task with acceptance, non-goals, verification, and compatibility constraints.",
-              "planning_builds": [
-                ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-              ],
-              "resolution": "roadmap-task",
-              "status": "resolved",
-              "gaps": [],
-              "task_ids": [
-                "TASK-020"
-              ],
-              "sprint_ids": [],
-              "knowledge_refs": [],
-              "source_refs": [
-                ".codewiki/roadmap/tasks/TASK-020/task.json"
-              ],
-              "rationale": "TASK-020 is the implementation handoff for selected cleanup work.",
-              "evidence": "TASK-020 created with explicit source paths, non-goals, and verification gates.",
-              "inferred": false,
-              "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-            },
-            {
-              "kind": "question",
-              "id": "Q2",
-              "text": "Resolve T019 deferral rows so planning validation has no open approved boundary questions.",
-              "planning_builds": [
-                ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-              ],
-              "resolution": "knowledge-only",
-              "status": "resolved",
-              "gaps": [],
-              "task_ids": [],
-              "sprint_ids": [],
-              "knowledge_refs": [
-                ".codewiki/kb/system/file-structure.md",
-                ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-              ],
-              "source_refs": [
-                "file-structure-map:deferred_concept_roots",
-                "file-structure-map:agency_shim_cleanup_boundary"
-              ],
-              "rationale": "No accepted boundary decision remains only as an open question; each row is mapped to TASK-020, renewed deferral, or knowledge-only no-source movement.",
-              "evidence": "Planning build has decision_row_resolutions for all approved rows and downstream_question_resolutions for all planning questions.",
-              "inferred": false,
-              "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json"
-            }
-          ],
-          "residuals": []
-        }
-      ],
+      "assessments": [],
       "residuals": []
     },
     "research": {
@@ -49494,12 +48885,8 @@
         "src/adapters/pi/commands/resume.ts",
         "src/adapters/pi/schemas.ts",
         "src/adapters/pi/tools",
-        "src/adapters/pi/tools/agency.ts",
         "src/adapters/pi/ui",
         "src/adapters/pi/ui/manager.ts",
-        "src/agency/planning.ts",
-        "src/agency/tool.ts",
-        "src/agency/types.ts",
         "src/application",
         "src/application/builds.ts",
         "src/application/claims.ts",
@@ -49523,12 +48910,7 @@
         "src/domain",
         "src/domain/audit/types.ts",
         "src/domain/build/types.ts",
-        "src/domain/project/types.ts",
-        "src/domain/roadmap/types.ts",
-        "src/domain/session/links.ts",
-        "src/domain/session/types.ts",
         "src/domain/shared/types.ts",
-        "src/domain/validation/types.ts",
         "src/index.ts",
         "src/templates.ts",
         "src/ui",
@@ -49536,22 +48918,9 @@
         "src/ui/web/control-room.ts",
         "tests",
         "tests/**",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+        "tests/smoke/package-smoke.test.mjs"
       ],
-      "dirty_paths": [
-        "src/application/agency.ts",
-        "src/application/tools/agency.ts",
-        "src/domain/agency/types.ts",
-        "src/domain/project/types.ts",
-        "src/domain/roadmap/types.ts",
-        "src/domain/session/links.ts",
-        "src/domain/session/types.ts",
-        "src/domain/shared/types.ts",
-        "src/domain/validation/types.ts",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/tasks/TASK-015/agency-source-root.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
       "active_claim_count": 1,
@@ -51612,6 +50981,25 @@
             "f607024d4ee250a648b1651b801427fc60ad3b2c",
             "3541f0071755739dfe0f4d44783913447f3da890"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+          "task_id": "TASK-020",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+          "validated_sha": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+            "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+          ],
+          "publisher_result_refs": [
+            "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+          ]
         }
       ]
     },
@@ -51970,6 +51358,7 @@
         "approval:user said \"great, proceed\" on 2026-05-22 after task-close route explanation",
         "approval:user: planning gateway failure diagnosis approved with proceed request",
         "approval:user: proceed after clarification",
+        "approval:user: proceed after scope clarification",
         "approval:user: user approved all FCB migration-boundary rows in chat on 2026-05-23",
         "approval:user: user approved planning-gateway failure recovery with proceed request",
         "approval:user: user requested proceed after TASK-019 resume",
@@ -51994,6 +51383,7 @@
         "build:.codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
         "build:.codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
         "changed",
+        "changed pass: 0 changed files",
         "changed warning only before final graph refresh/amend; generated-parity pass",
         "changed warning only: generated .codewiki view/state files changed after refresh",
         "changed warning only: generated dirty files",
@@ -52081,6 +51471,7 @@
         "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-017.json",
         "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-018.json",
         "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+        "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
         "injected codewiki_audit tool package on /home/nunoc/projects/think-code: fail from stale loaded tool still hardcoding skills/codewiki until extension reload",
         "inline audit output from codewiki_audit 2026-05-22: file-structure pass, alignment pass, generated-parity pass, changed pass",
         "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
@@ -52123,6 +51514,7 @@
         "validation:.codewiki/validation/2026-05-24-implementation-pass-task-016.json",
         "validation:.codewiki/validation/2026-05-25-decision-pass-task-019.json",
         "validation:.codewiki/validation/2026-05-25-implementation-pass-task-019.json",
+        "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
         "validation:.codewiki/validation/2026-05-25-planning-pass-task-019.json",
         "validation:.codewiki/validation/2026-05-25-task-close-block-task-019.json",
         "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472"
@@ -52259,6 +51651,7 @@
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
         "89b181ac7811619bab15d054894dd787f1abd371",
+        "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
         "8e2fe1708366bdd39427443a4f4f0143ce4b3ffc",
         "91be025737fef57c98863d56d5222844421e358a",
         "94384261e3f900b35080497b743eb56f4a941bc2",
@@ -52285,6 +51678,7 @@
         "e1a1b092cd8e76804a0d47891dcfc75eee6ed097",
         "e329c1f47deec0f969c834131b017d33dd46e8de",
         "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+        "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
         "e993fdd9e0952203a2169ced3d61ed661366c98d",
         "eeaedf6ee7d8fba19a17c230f1b8d721d009fd7c",
         "f607024d4ee250a648b1651b801427fc60ad3b2c",
@@ -54281,6 +53675,38 @@
             "3541f0071755739dfe0f4d44783913447f3da890"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-25-task-close-pass-task-020.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-020",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:file-structure",
+            "profile:alignment",
+            "profile:stale-reference",
+            "profile:generated-parity",
+            "profile:changed",
+            "profile:task",
+            "validation:.codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+            "codewiki_audit:2026-05-25:TASK-020:file-structure,alignment,stale-reference,generated-parity,changed,task",
+            "approval:user: proceed after scope clarification",
+            "implementation validation pass .codewiki/validation/2026-05-25-implementation-pass-task-020.json",
+            "file-structure pass: 90 TypeScript source files, 187 diagram refs, 22 approved migration deltas, 0 actionable drift",
+            "alignment warning only: existing graph-health warnings",
+            "stale-reference pass",
+            "generated-parity pass",
+            "changed pass: 0 changed files",
+            "task TASK-020 pass"
+          ],
+          "content_proof_refs": [
+            "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
+            "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -55688,422 +55114,8 @@
       "parse_issues": []
     },
     "traceability": {
-      "rows": [
-        {
-          "requirement_id": "DEC-T019-1",
-          "requirement_text": "Review agency pilot closure evidence, compatibility shims, file-structure audit output, TASK-018 guardrail behavior, and deferred concept roots before selecting a follow-up boundary.",
-          "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-019",
-            "TASK-020",
-            "TASK-015"
-          ],
-          "test_paths": [
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/tasks/TASK-019/task.json",
-            ".codewiki/roadmap/tasks/TASK-020/task.json",
-            "src/application/agency.ts (deleted)",
-            "src/application/tools/agency.ts (deleted)",
-            "src/domain/agency/types.ts (deleted)",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            ".codewiki/roadmap/queue.json",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-            "pending implementation validation",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-            ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-            "refs/codewiki/archive/task/TASK-019",
-            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-            "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-            "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-            "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-            "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-            "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-            "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-            "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-            ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-            ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-            "refs/codewiki/archive/task/TASK-020",
-            "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "DEC-T019-2",
-          "requirement_text": "Select agency shim cleanup as the next post-agency boundary before any second concept-root migration.",
-          "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-019",
-            "TASK-020",
-            "TASK-015"
-          ],
-          "test_paths": [
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/tasks/TASK-019/task.json",
-            ".codewiki/roadmap/tasks/TASK-020/task.json",
-            "src/application/agency.ts (deleted)",
-            "src/application/tools/agency.ts (deleted)",
-            "src/domain/agency/types.ts (deleted)",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            ".codewiki/roadmap/queue.json",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-            "pending implementation validation",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-            ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-            "refs/codewiki/archive/task/TASK-019",
-            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-            "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-            "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-            "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-            "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-            "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-            "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-            "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-            ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-            ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-            "refs/codewiki/archive/task/TASK-020",
-            "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "DEC-T019-3",
-          "requirement_text": "Renew non-agency concept-root deferral until agency shim cleanup closes with task-close validation and file-structure audit evidence.",
-          "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-019",
-            "TASK-020",
-            "TASK-015"
-          ],
-          "test_paths": [
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/tasks/TASK-019/task.json",
-            ".codewiki/roadmap/tasks/TASK-020/task.json",
-            "src/application/agency.ts (deleted)",
-            "src/application/tools/agency.ts (deleted)",
-            "src/domain/agency/types.ts (deleted)",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            ".codewiki/roadmap/queue.json",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-            "pending implementation validation",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-            ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-            "refs/codewiki/archive/task/TASK-019",
-            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-            "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-            "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-            "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-            "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-            "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-            "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-            "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-            ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-            ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-            "refs/codewiki/archive/task/TASK-020",
-            "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-          ],
-          "gaps": []
-        },
-        {
-          "requirement_id": "DEC-T019-4",
-          "requirement_text": "Do not move source files or remove shims in TASK-019; source work must be a separate implementation task after planning validation.",
-          "decision_build": ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-          "knowledge_paths": [
-            ".codewiki/kb/system/file-structure.md records agency shim cleanup as the next post-pilot boundary and renews heavier-root deferral until cleanup validation.",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml adds agency_shim_cleanup_boundary and changes deferred_concept_roots trigger state from satisfied to pending cleanup close.",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml"
-          ],
-          "planning_builds": [
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json"
-          ],
-          "roadmap_task_ids": [
-            "TASK-019",
-            "TASK-020",
-            "TASK-015"
-          ],
-          "test_paths": [
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ],
-          "code_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/roadmap/tasks/TASK-019/task.json",
-            ".codewiki/roadmap/tasks/TASK-020/task.json",
-            "src/application/agency.ts (deleted)",
-            "src/application/tools/agency.ts (deleted)",
-            "src/domain/agency/types.ts (deleted)",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            ".codewiki/roadmap/queue.json",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts"
-          ],
-          "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "validation_paths": [
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json",
-            "pending implementation validation",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-019.json",
-            ".codewiki/validation/2026-05-25-implementation-pass-task-020.json",
-            ".codewiki/validation/2026-05-25-task-close-pass-task-019.json"
-          ],
-          "audit_evidence_refs": [
-            "profile:alignment",
-            "profile:changed",
-            "profile:file-structure",
-            "profile:stale-reference",
-            "profile:generated-parity",
-            "profile:task"
-          ],
-          "publication_refs": [],
-          "content_proof_refs": [
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
-            ".codewiki/validation/2026-05-25-decision-pass-task-019.json@sha256:baf35978a51087be25e38006a79b8be2c6682da79904c1d6a9f9059de7ead608",
-            ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
-            ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
-            ".codewiki/kb/system/file-structure.md@sha256:4b47b194aead103596363e589e4511b1ad203a493dfcfe610958295172e80ef5",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:d1276bfb06113961bd333d51ccaf6dd9d17dbb207f88424f727ae7466527a488",
-            ".codewiki/roadmap/tasks/TASK-019/task.json@sha256:4db850a8a1e776bc2888a1a4b4b6131dc95f855de800fc9da01c15db40d6d8fd",
-            ".codewiki/roadmap/tasks/TASK-020/task.json@sha256:58a50ffd1076b8c61a6a3209cca0bb06b9e34fb4effe0922ed2b5834fb356df1",
-            "refs/codewiki/archive/task/TASK-019",
-            "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:d6bad5c0e34edf81dcd36d59279e8b0bb624e9ea07d15d9fb382c780bf2888ac",
-            "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
-            "src/domain/project/types.ts@sha256:3e41fae9a1d4395b3fa32aa67b999a92aba3663d87b2a2889ca684740491be3a",
-            "src/domain/roadmap/types.ts@sha256:e21250d06ba1022cc6d813c350c5cf1e341cc055269fdf7edb121cbbbd01ab6e",
-            "src/domain/session/links.ts@sha256:6b786cb5d4ab63ac7f8175ee4fb762a14af43185760a63d6784207c7dbffdd62",
-            "src/domain/session/types.ts@sha256:b45b8202a7792b9a3ae9d5349bf69cb670b880bf6013da54df6e39884e42b35e",
-            "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
-            "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
-            ".codewiki/kb/system/file-structure.md@sha256:cd0dd6c0938c61981e631adc0af8a55b449f97793ac45d48ba55aec51713aa54",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml@sha256:71f977e0b2fb6747aa1cad299fcc83ed7132f66f870903f546279aa92a6e8cb8",
-            ".codewiki/roadmap/queue.json@sha256:bed7339949bd0e06ad404030f482cababef19842d52b9cd354b75e6e181ddfa8",
-            "refs/codewiki/archive/task/TASK-020",
-            "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33"
-          ],
-          "gaps": []
-        }
-      ],
+      "rows": [],
       "semantic_change_rows": [
-        {
-          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "change_type": "system",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
         {
           "path": ".codewiki/roadmap/queue.json",
           "change_type": "task",
@@ -56162,154 +55174,6 @@
             ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
           ],
           "gaps": []
-        },
-        {
-          "path": "src/application/agency.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/application/tools/agency.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/agency/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/project/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/roadmap/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/session/links.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/session/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/shared/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "src/domain/validation/types.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/package-smoke.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json"
-          ],
-          "gaps": []
         }
       ],
       "semantic_change_gaps": [],
@@ -56320,12 +55184,9 @@
       "roadmap": {
         "kind": "roadmap",
         "task_ids": [
-          "TASK-012",
-          "TASK-020"
+          "TASK-012"
         ],
-        "open_task_ids": [
-          "TASK-020"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -56454,70 +55315,28 @@
             "src/application/graph.ts",
             "src/application/tools/audit.ts"
           ]
-        },
-        "TASK-020": {
-          "kind": "task",
-          "id": "TASK-020",
-          "task_ids": [
-            "TASK-020"
-          ],
-          "open_task_ids": [
-            "TASK-020"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
-          ],
-          "code_paths": [
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ]
         }
       }
     },
     "workflow_cursor": {
-      "active_loop": "implementation",
-      "reason": "TASK-020 is open implementation delta below knowledge.",
-      "input_refs": [
-        "task:TASK-020",
-        "TASK-020"
-      ],
-      "expected_output": "implementation_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "sprint",
         "id": "SPRINT-001"
       },
       "isolation": {
         "required": false,
-        "mode": "agent-owned-new-session",
-        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-        "evidence": [
-          "source build/task refs read",
-          "new_session or context_refresh when useful"
-        ],
-        "handoff": "implementation_loop context boundary"
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
       "context_boundary": "none",
-      "handoff_refs": [
-        "task:TASK-020",
-        "TASK-020"
-      ]
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -56529,9 +55348,7 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-020"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-001",
             "SPRINT-002"
@@ -57175,56 +55992,35 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:task:TASK-020",
-          "source_id": "task:TASK-020",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-020",
-          "reason": "TASK-020 is open implementation delta below knowledge."
-        }
-      ],
-      "counts_by_loop": {
-        "implementation": 1
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "implementation",
-        "command": "/wiki-resume TASK-020",
-        "reason": "TASK-020 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-020",
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
         "isolation_required": false,
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "implementation_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "task:TASK-020",
-          "TASK-020"
-        ]
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
         "knowledge": "aligned",
-        "roadmap": "drift",
-        "code": "drift",
+        "roadmap": "aligned",
+        "code": "aligned",
         "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-25T07:23:19.749Z",
+      "generated_at": "2026-05-25T07:25:03.254Z",
       "counts": {
         "large-doc": 4
       },
@@ -57257,7 +56053,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-25T07:23:19Z",
+      "generated_at": "2026-05-25T07:25:03Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -57268,30 +56064,23 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 2,
-        "open_count": 1,
+        "task_count": 1,
+        "open_count": 0,
         "sprint_count": 2,
         "active_sprint_count": 2,
         "status_counts": {
-          "cancelled": 1,
-          "in_progress": 1
+          "cancelled": 1
         },
         "priority_counts": {
-          "medium": 1,
-          "high": 1
+          "medium": 1
         }
       },
       "views": {
         "ordered_task_ids": [
-          "TASK-012",
-          "TASK-020"
+          "TASK-012"
         ],
-        "open_task_ids": [
-          "TASK-020"
-        ],
-        "executable_open_task_ids": [
-          "TASK-020"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -57394,12 +56183,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-020"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-020"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -57408,7 +56193,6 @@
           "TASK-012"
         ],
         "recent_task_ids": [
-          "TASK-020",
           "TASK-012"
         ]
       },
@@ -57493,84 +56277,12 @@
             "updated_at": "",
             "evidence": null
           }
-        },
-        "TASK-020": {
-          "id": "TASK-020",
-          "title": "Remove agency compatibility shims",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "migration",
-          "change_type": "code",
-          "summary": "Complete the agency concept-root pilot lifecycle by removing deprecated agency old-path re-export shims after validated planning, updating remaining internal references to the source-root owner, and preserving public package or adapter behavior.",
-          "labels": [
-            "agency-shim-cleanup"
-          ],
-          "goal": {
-            "outcome": "Agency no longer depends on old layer-first compatibility shim files, while package/public behavior and adapter behavior remain unchanged.",
-            "acceptance": [
-              "Remove the deprecated re-export-only agency compatibility shims at src/domain/agency/types.ts, src/application/agency.ts, and src/application/tools/agency.ts, or replace them only with explicitly justified non-source artifacts if deletion is blocked by validation.",
-              "Prove no package source, adapters, tests, or package smoke paths import the old agency shim paths after cleanup.",
-              "Preserve public commands, package entrypoints, adapter schemas/tool behavior, direct Node execution, package loading, and product behavior.",
-              "Update TASK-015-era shim/parity tests and package smoke assertions so they prove cleanup rather than shim equivalence.",
-              "Update file-structure KB/diagram to mark agency shim cleanup validated and keep non-agency concept roots deferred until cleanup task-close evidence exists.",
-              "Do not move any non-agency concept root or start audit/build/validation/session/roadmap/state/project migration in this task."
-            ],
-            "non_goals": [
-              "Do not move audit, build, validation, session, state, roadmap, project, knowledge, gateway, GC, adapters, UI, or skills into concept roots.",
-              "Do not change public commands, tool schemas, package entrypoints, package metadata, or product behavior.",
-              "Do not select or implement the second concept-root migration boundary.",
-              "Do not remove or rewrite src/agency/** owner modules except where tests/imports require cleanup parity."
-            ],
-            "verification": [
-              "npm run typecheck",
-              "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs or successor TASK-specific cleanup test",
-              "npm run check:architecture",
-              "npm run test:smoke",
-              "npm run test:features",
-              "npm run test:pack",
-              "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/validation/2026-05-24-task-close-pass-task-015.json"
-          ],
-          "code_paths": [
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/agency/tool.ts",
-            "src/domain/project/types.ts",
-            "src/domain/roadmap/types.ts",
-            "src/domain/session/links.ts",
-            "src/domain/session/types.ts",
-            "src/domain/shared/types.ts",
-            "src/domain/validation/types.ts",
-            "src/adapters/pi/tools/agency.ts",
-            "src/adapters/pi/schemas.ts",
-            "tests/tasks/TASK-015/agency-source-root.test.mjs",
-            "tests/smoke/package-smoke.test.mjs"
-          ],
-          "updated": "2026-05-25T07:23:19Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-020/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-25T07:23:19Z",
+      "generated_at": "2026-05-25T07:25:03Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -57585,13 +56297,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 34,
-        "tracked_specs": 1,
+        "aligned_specs": 35,
+        "tracked_specs": 0,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 2,
-        "open_task_count": 1,
+        "task_count": 1,
+        "open_task_count": 0,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 22
@@ -57599,14 +56311,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 1,
-          "total": 1,
+          "value": 0,
+          "total": 0,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 2,
+          "total": 1,
           "percent": 0
         },
         "spec_mapping": {
@@ -57617,15 +56329,9 @@
         }
       },
       "views": {
-        "risky_spec_paths": [
-          ".codewiki/kb/system/file-structure.md"
-        ],
-        "top_risky_spec_paths": [
-          ".codewiki/kb/system/file-structure.md"
-        ],
-        "open_task_ids": [
-          "TASK-020"
-        ],
+        "risky_spec_paths": [],
+        "top_risky_spec_paths": [],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -57636,39 +56342,29 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-020",
-        "reason": "TASK-020 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-020"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "implementation",
-        "reason": "TASK-020 is open implementation delta below knowledge.",
-        "input_refs": [
-          "task:TASK-020",
-          "TASK-020"
-        ],
-        "expected_output": "implementation_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "sprint",
           "id": "SPRINT-001"
         },
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "implementation_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "task:TASK-020",
-          "TASK-020"
-        ]
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -57680,9 +56376,7 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-020"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-001",
               "SPRINT-002"
@@ -57854,11 +56548,11 @@
         ]
       },
       "direction": [
-        "TASK-020 is open implementation delta below knowledge.",
+        "No open deterministic drift requires action right now.",
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 1/1.",
+        "No tracked spec drift is open.",
         "File-structure drift: 0 actionable item(s), 22 approved migration delta(s)."
       ],
       "file_structure": {
@@ -57910,42 +56604,12 @@
       "decision_propagation": {
         "version": 1,
         "model": "accepted-decision-row-to-roadmap-resolution",
-        "checked_decision_count": 1,
-        "row_count": 5,
+        "checked_decision_count": 0,
+        "row_count": 0,
         "residual_count": 0,
         "residuals": []
       },
       "specs": [
-        {
-          "path": ".codewiki/kb/system/file-structure.md",
-          "title": "File Structure",
-          "summary": "Target knowledge-base and package file structure for CodeWiki.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/kb",
-            "src",
-            "skills/codewiki"
-          ],
-          "code_area": ".codewiki, src +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-020"
-          ],
-          "primary_task": {
-            "id": "TASK-020",
-            "status": "in_progress",
-            "title": "Remove agency compatibility shims"
-          },
-          "revision": {
-            "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-020"
-        },
         {
           "path": ".codewiki/kb/lexicon.md",
           "title": "Lexicon",
@@ -58614,6 +57278,30 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "title": "File Structure",
+          "summary": "Target knowledge-base and package file structure for CodeWiki.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/kb",
+            "src",
+            "skills/codewiki"
+          ],
+          "code_area": ".codewiki, src +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/graph.md",
           "title": "Graph",
           "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -58762,7 +57450,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-25T07:23:19Z",
+        "generated_at": "2026-05-25T07:25:03Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -58790,27 +57478,16 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T07:23:19Z",
+            "checked_at": "2026-05-25T07:25:03Z",
             "revision": {
               "git": {
-                "head": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
+                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/archive.jsonl",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json",
-                  "src/application/agency.ts",
-                  "src/application/tools/agency.ts",
-                  "src/domain/agency/types.ts",
-                  "src/domain/project/types.ts",
-                  "src/domain/roadmap/types.ts",
-                  "src/domain/session/links.ts",
-                  "src/domain/session/types.ts",
-                  "src/domain/shared/types.ts",
-                  "src/domain/validation/types.ts",
-                  "tests/smoke/package-smoke.test.mjs"
+                  ".codewiki/roadmap/tasks/TASK-020/task.json"
                 ],
                 "paths": {
                   ".codewiki/kb": "",
@@ -58842,7 +57519,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
+                  ".codewiki/kb/system/file-structure.md": "71adae69b376efc4c7b0ab39c6be9a14ffd564dd",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -58850,7 +57527,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "1b926fa1e3e7671f7542e04d291800a6f6f48a2b",
+                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -58887,24 +57564,24 @@
                   "src/application/tools/build.ts": "8c79c919c2ca4dbf4ade6a448be1794b6df1baa6",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "0b6b751c1e6ba338e94f3ec5c5fa7679e8f57b76",
+                  "src/domain/shared/types.ts": "d4749f1706ae4eb57aa2a89edc180447468edb7e",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
-                  "tests/smoke/package-smoke.test.mjs": "6fde9524583586f3f0d53e6ce8bfd8221b28a84c"
+                  "tests/smoke/package-smoke.test.mjs": "2f3e8a1e33f9c0e34f439edc33377e855643e254"
                 }
               },
               "spec_digest": "f9b9b47c3a2a3a9ad818b0d05fe6915f9c7bb4f4df5c02f44ed8240610f96a75",
-              "task_digest": "1300e428d8eaf5b12677426cb99bb72b583eec4b502da325af12d78c8a38d01a",
-              "code_digest": "fb30569a40a67f51d172801211266757c187bafe2f0ebff79f4cd011ddc5eb78",
-              "digest": "553d251bdf83da5f3b46b7416cf9dfa0e99a568a5886961f0900360e7f943f3f"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "878d25f9813b4fac07d101ea1b7c2c15ee1ddbd9a05770cc40da1ef7e9b11643",
+              "digest": "f4fca24864a8157f11828b9f712b2659501b9ab4d3e19c59f50d511a7b7c1a72"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:23:19Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-25T07:25:03Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -58923,7 +57600,6 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -58936,6 +57612,7 @@
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
@@ -58960,10 +57637,9 @@
               "src",
               "src/index.ts",
               "package.json",
-              ".codewiki/kb",
-              "skills/codewiki",
               "src/adapters",
               "src/application",
+              "skills/codewiki",
               "src/adapters/pi",
               "src/application/graph.ts",
               "src/application/builds.ts",
@@ -58980,6 +57656,7 @@
               "src/bootstrap.ts",
               "src/templates.ts",
               "src/application/prompt.ts",
+              ".codewiki/kb",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
@@ -58993,16 +57670,12 @@
               "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-020"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/file-structure.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 33,
-              "tracked_specs": 1,
+              "aligned_specs": 34,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -59027,27 +57700,16 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-25T07:23:19Z",
+            "checked_at": "2026-05-25T07:25:03Z",
             "revision": {
               "git": {
-                "head": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
+                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/archive.jsonl",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json",
-                  "src/application/agency.ts",
-                  "src/application/tools/agency.ts",
-                  "src/domain/agency/types.ts",
-                  "src/domain/project/types.ts",
-                  "src/domain/roadmap/types.ts",
-                  "src/domain/session/links.ts",
-                  "src/domain/session/types.ts",
-                  "src/domain/shared/types.ts",
-                  "src/domain/validation/types.ts",
-                  "tests/smoke/package-smoke.test.mjs"
+                  ".codewiki/roadmap/tasks/TASK-020/task.json"
                 ],
                 "paths": {
                   ".codewiki/kb": "",
@@ -59063,7 +57725,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
+                  ".codewiki/kb/system/file-structure.md": "71adae69b376efc4c7b0ab39c6be9a14ffd564dd",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -59071,7 +57733,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "1b926fa1e3e7671f7542e04d291800a6f6f48a2b",
+                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
                   "skills": "",
                   "skills/codewiki": "",
                   "skills/codewiki-decision/SKILL.md": "62b6ac71c033485203e7795b72909cc584a7852d",
@@ -59103,28 +57765,27 @@
                   "src/application/tools/build.ts": "8c79c919c2ca4dbf4ade6a448be1794b6df1baa6",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "0b6b751c1e6ba338e94f3ec5c5fa7679e8f57b76",
+                  "src/domain/shared/types.ts": "d4749f1706ae4eb57aa2a89edc180447468edb7e",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
-                  "tests/smoke/package-smoke.test.mjs": "6fde9524583586f3f0d53e6ce8bfd8221b28a84c"
+                  "tests/smoke/package-smoke.test.mjs": "2f3e8a1e33f9c0e34f439edc33377e855643e254"
                 }
               },
               "spec_digest": "98a1f6a8f5545819524a8afe94701838b6f954cc3d874c259cbf36b2c0eb8ea6",
-              "task_digest": "1300e428d8eaf5b12677426cb99bb72b583eec4b502da325af12d78c8a38d01a",
-              "code_digest": "fb9214b2e901d66dcc684e6b56611e0e76c8279cf276319fa9d24b913f9376fa",
-              "digest": "04010f24b7832aa18966556bce3e113aa4d2212df1112ef3c23818e18e6ee281"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "75339fd0e85437aab01e46c443ca5aadd2b57e1b303719d19efecce5d4cd4e45",
+              "digest": "812d31c94afd1c20d8f2b10352635e769821b4b633b0bf605fa6abe3cc85754b"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:23:19Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-25T07:25:03Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -59137,6 +57798,7 @@
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
@@ -59145,11 +57807,9 @@
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              ".codewiki/kb",
-              "src",
-              "skills/codewiki",
               "src/adapters",
               "src/application",
+              "skills/codewiki",
               "src/adapters/pi",
               "src/application/graph.ts",
               "src/application/builds.ts",
@@ -59174,6 +57834,8 @@
               "src/templates.ts",
               "src/application/prompt.ts",
               "tests/smoke/package-smoke.test.mjs",
+              ".codewiki/kb",
+              "src",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
@@ -59187,17 +57849,13 @@
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools"
             ],
-            "code_area": ".codewiki, src +2 more",
-            "open_task_ids": [
-              "TASK-020"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/file-structure.md"
-            ],
+            "code_area": "src, skills +2 more",
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 18,
-              "tracked_specs": 1,
+              "aligned_specs": 19,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -59222,27 +57880,16 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-25T07:23:19Z",
+            "checked_at": "2026-05-25T07:25:03Z",
             "revision": {
               "git": {
-                "head": "45b2aa401099ea7cc483b8d8ef07a02046583cf5",
+                "head": "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/roadmap/archive.jsonl",
                   ".codewiki/roadmap/queue.json",
                   ".codewiki/roadmap/tasks/TASK-020/context.json",
-                  ".codewiki/roadmap/tasks/TASK-020/task.json",
-                  "src/application/agency.ts",
-                  "src/application/tools/agency.ts",
-                  "src/domain/agency/types.ts",
-                  "src/domain/project/types.ts",
-                  "src/domain/roadmap/types.ts",
-                  "src/domain/session/links.ts",
-                  "src/domain/session/types.ts",
-                  "src/domain/shared/types.ts",
-                  "src/domain/validation/types.ts",
-                  "tests/smoke/package-smoke.test.mjs"
+                  ".codewiki/roadmap/tasks/TASK-020/task.json"
                 ],
                 "paths": {
                   ".codewiki/kb": "",
@@ -59274,7 +57921,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "94c8629c395c6b36d564a7189eef6ddfae68591e",
                   ".codewiki/kb/system/extension.md": "8d258b2769ff0d64705c3897d245cdc033318c77",
-                  ".codewiki/kb/system/file-structure.md": "c7d5b536333b6ee080877aacf07223df79e49177",
+                  ".codewiki/kb/system/file-structure.md": "71adae69b376efc4c7b0ab39c6be9a14ffd564dd",
                   ".codewiki/kb/system/graph.md": "a658f245bbe2c3d553c4979ca2f7cd428c562949",
                   ".codewiki/kb/system/knowledge.md": "de372d7ddec4e6ca7550255b7352a731508a8f42",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -59282,7 +57929,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "da89897589aec9f035c05a17bad300f2d85d0a95",
                   ".codewiki/kb/system/worktree-isolation.md": "9608e4670705b261531ec5bf3b1b127989945b6b",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "1b926fa1e3e7671f7542e04d291800a6f6f48a2b",
+                  ".codewiki/roadmap/queue.json": "e7c1b553416304853f2b37864c6509fa2da67741",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "skills": "",
                   "skills/codewiki": "",
@@ -59319,24 +57966,24 @@
                   "src/application/tools/build.ts": "8c79c919c2ca4dbf4ade6a448be1794b6df1baa6",
                   "src/bootstrap.ts": "f2808bd0e2f0ff632263ec78cee45783369dc739",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "0b6b751c1e6ba338e94f3ec5c5fa7679e8f57b76",
+                  "src/domain/shared/types.ts": "d4749f1706ae4eb57aa2a89edc180447468edb7e",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/templates.ts": "af47996342ca27366aa3b5e6f43cee4428dd6e6b",
                   "src/ui/web": "",
                   "src/ui/web/control-room.ts": "095487c54715bee43cf8d5a7364247376a4bc7e8",
-                  "tests/smoke/package-smoke.test.mjs": "6fde9524583586f3f0d53e6ce8bfd8221b28a84c"
+                  "tests/smoke/package-smoke.test.mjs": "2f3e8a1e33f9c0e34f439edc33377e855643e254"
                 }
               },
               "spec_digest": "f9b9b47c3a2a3a9ad818b0d05fe6915f9c7bb4f4df5c02f44ed8240610f96a75",
-              "task_digest": "1300e428d8eaf5b12677426cb99bb72b583eec4b502da325af12d78c8a38d01a",
-              "code_digest": "fb30569a40a67f51d172801211266757c187bafe2f0ebff79f4cd011ddc5eb78",
-              "digest": "553d251bdf83da5f3b46b7416cf9dfa0e99a568a5886961f0900360e7f943f3f"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "878d25f9813b4fac07d101ea1b7c2c15ee1ddbd9a05770cc40da1ef7e9b11643",
+              "digest": "f4fca24864a8157f11828b9f712b2659501b9ab4d3e19c59f50d511a7b7c1a72"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-25T07:23:19Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-25T07:25:03Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -59355,7 +58002,6 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -59368,6 +58014,7 @@
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
+              ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
@@ -59392,10 +58039,9 @@
               "src",
               "src/index.ts",
               "package.json",
-              ".codewiki/kb",
-              "skills/codewiki",
               "src/adapters",
               "src/application",
+              "skills/codewiki",
               "src/adapters/pi",
               "src/application/graph.ts",
               "src/application/builds.ts",
@@ -59412,6 +58058,7 @@
               "src/bootstrap.ts",
               "src/templates.ts",
               "src/application/prompt.ts",
+              ".codewiki/kb",
               ".codewiki/index_graph.json",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
@@ -59425,16 +58072,12 @@
               "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +3 more",
-            "open_task_ids": [
-              "TASK-020"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/file-structure.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 33,
-              "tracked_specs": 1,
+              "aligned_specs": 34,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -59448,19 +58091,19 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-020",
-        "lane_id": "",
-        "heading": "TASK-020 — Remove agency compatibility shims",
-        "command": "/wiki-resume TASK-020",
-        "reason": "Resume roadmap task (in_progress).",
+        "source": "agency",
+        "task_id": "",
+        "lane_id": "product_system",
+        "heading": "Product ↔ System",
+        "command": "/wiki-status",
+        "reason": "Resume from stale agency lane.",
         "status": "in_progress",
-        "verification": "npm run typecheck",
+        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-25T07:23:19Z",
+        "generated_at": "2026-05-25T07:25:03Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -59969,36 +58612,6 @@
       },
       "wiki": {
         "rows": [
-          {
-            "path": ".codewiki/kb/system/file-structure.md",
-            "title": "File Structure",
-            "summary": "Target knowledge-base and package file structure for CodeWiki.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/kb",
-              "src",
-              "skills/codewiki"
-            ],
-            "code_area": ".codewiki, src +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-020"
-            ],
-            "primary_task": {
-              "id": "TASK-020",
-              "status": "in_progress",
-              "title": "Remove agency compatibility shims"
-            },
-            "revision": {
-              "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-020"
-          },
           {
             "path": ".codewiki/kb/lexicon.md",
             "title": "Lexicon",
@@ -60667,6 +59280,30 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/file-structure.md",
+            "title": "File Structure",
+            "summary": "Target knowledge-base and package file structure for CodeWiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/kb",
+              "src",
+              "skills/codewiki"
+            ],
+            "code_area": ".codewiki, src +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/graph.md",
             "title": "Graph",
             "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -61167,36 +59804,6 @@
             "label": "System",
             "rows": [
               {
-                "path": ".codewiki/kb/system/file-structure.md",
-                "title": "File Structure",
-                "summary": "Target knowledge-base and package file structure for CodeWiki.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/kb",
-                  "src",
-                  "skills/codewiki"
-                ],
-                "code_area": ".codewiki, src +1 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-020"
-                ],
-                "primary_task": {
-                  "id": "TASK-020",
-                  "status": "in_progress",
-                  "title": "Remove agency compatibility shims"
-                },
-                "revision": {
-                  "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-020"
-              },
-              {
                 "path": ".codewiki/kb/lexicon.md",
                 "title": "Lexicon",
                 "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -61523,6 +60130,30 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/file-structure.md",
+                "title": "File Structure",
+                "summary": "Target knowledge-base and package file structure for CodeWiki.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/kb",
+                  "src",
+                  "skills/codewiki"
+                ],
+                "code_area": ".codewiki, src +1 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "f4af417643c6016d2919758f7a68cba4aa31f437f79e7ddc0ad46090110320c4",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/graph.md",
                 "title": "Graph",
                 "summary": "Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.",
@@ -61679,12 +60310,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-020",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-020"
-        ],
-        "next_task_id": "TASK-020",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002"
@@ -61795,9 +60424,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-020"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
