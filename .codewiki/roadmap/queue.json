@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-26T11:22:32Z",
+  "updated": "2026-05-26T21:18:29Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-024",
     "TASK-025",
     "TASK-026",
     "TASK-027",
@@ -287,72 +286,6 @@
       },
       "created": "2026-05-26",
       "updated": "2026-05-26T11:08:00Z"
-    },
-    "TASK-024": {
-      "id": "TASK-024",
-      "title": "Migrate project and bootstrap source root",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "migration",
-      "summary": "Move project resolution, setup/bootstrap execution, starter templates, and local project storage helpers into src/project/** while preserving bootstrap/config behavior.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-        ".codewiki/validation/2026-05-22-decision-pass.json",
-        ".codewiki/validation/2026-05-26-task-close-pass-task-022.json"
-      ],
-      "code_paths": [
-        "src/project/context.ts",
-        "src/project/root.ts",
-        "src/project/bootstrap.ts",
-        "src/project/tool.ts",
-        "src/project/templates.ts",
-        "src/project/types.ts",
-        "src/project/local/filesystem.ts",
-        "src/project/local/file-store.ts",
-        "src/project/local/git-cache.ts",
-        "src/adapters/pi/bootstrap.ts",
-        "src/adapters/pi/index.ts",
-        "tests/tasks/TASK-024/project-source-root.test.mjs",
-        "tests/smoke/package-smoke.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "project-root-migration"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Project loading, root resolution, setup/bootstrap use cases, templates, file store/filesystem, and git cache have source-root ownership under src/project/**.",
-        "acceptance": [
-          "Create src/project/** owner modules for project types, loadProject/context, root resolution, setup/bootstrap use cases/tool execution, starter templates, file store/filesystem, and git cache as applicable.",
-          "Update adapters/scripts/tests to import project/bootstrap behavior from src/project/** or stable public API paths, not old project/application owner paths.",
-          "Remove old project/bootstrap owner paths or retain only explicit temporary shims with TASK-specific tests.",
-          "Preserve wiki-bootstrap/wiki-config schemas/results, starter output, package loading, direct Node execution, and smoke behavior.",
-          "Add TASK-specific guard proving old project/bootstrap owner imports are gone or explicitly shimmed."
-        ],
-        "non_goals": [
-          "Do not migrate knowledge, roadmap, session, state/graph/resume, GC, change/diff-table, adapters/UI, skills, or final API/shared cleanup.",
-          "Do not change public tool schemas, package entrypoints, starter file contents, or bootstrap product behavior."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run check:architecture",
-          "npm run test:smoke",
-          "npm run test:features",
-          "npm run test:pack",
-          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
-          "TASK-specific project/bootstrap guard",
-          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-05-26",
-      "updated": "2026-05-26T11:22:32Z"
     },
     "TASK-025": {
       "id": "TASK-025",
