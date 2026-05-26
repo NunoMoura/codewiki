@@ -10,8 +10,8 @@ import { buildLintReport } from "../lint.ts";
 import { claimsFilePath, normalizeClaimsFile } from "../claims.ts";
 import { buildRoadmapState, buildStatusState } from "../state-builders.ts";
 import { buildCodewikiTaskDetail } from "../state.ts";
-import { parseDoc } from "../knowledge/doc-parser.ts";
-import type { ParsedDoc } from "../knowledge/doc-parser.ts";
+import { parseDoc } from "../../knowledge/doc-parser.ts";
+import type { ParsedDoc } from "../../knowledge/doc-parser.ts";
 
 export class CodewikiRebuilder {
 	private readonly repoRoot: string;

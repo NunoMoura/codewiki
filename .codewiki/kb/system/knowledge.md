@@ -6,9 +6,10 @@ summary: Durable product and system knowledge structure for CodeWiki projects.
 owners:
   - architecture
   - product
-updated: "2026-05-19"
+updated: "2026-05-26"
 code_paths:
   - .codewiki/kb
+  - src/knowledge
 ---
 
 # Knowledge

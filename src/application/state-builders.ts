@@ -6,7 +6,7 @@ import type { RoadmapSprintRecord, RoadmapTaskRecord } from "../domain/roadmap/t
 import type { ChangeClaimsFile } from "../domain/session/types.ts";
 import type { GraphFile, RoadmapStateFile, StatusStateFile } from "../domain/state/types.ts";
 import type { LintReport } from "../validation/types.ts";
-import type { ParsedDoc } from "./knowledge/doc-parser.ts";
+import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 import { buildChangeClaimState } from "./claims.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";

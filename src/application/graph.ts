@@ -12,8 +12,8 @@ import type {
 } from "../domain/state/types.ts";
 import type { LintReport } from "../validation/types.ts";
 import { GitCache } from "../project/local/git-cache.ts";
-import type { ParsedDoc } from "./knowledge/doc-parser.ts";
-import { buildFileStructureDriftReport, compactFileStructureDriftReport, parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";
+import type { ParsedDoc } from "../knowledge/doc-parser.ts";
+import { buildFileStructureDriftReport, compactFileStructureDriftReport, parseSystemDiagrams, resolveDiagramRef } from "../knowledge/diagram-parser.ts";
 import { buildChangeClaimState, claimScopeLabels } from "./claims.ts";
 import { unique } from "../domain/shared/utils.ts";
 

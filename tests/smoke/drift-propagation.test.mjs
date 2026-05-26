@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { parseDoc } from "../../src/application/knowledge/doc-parser.ts";
+import { parseDoc } from "../../src/knowledge/doc-parser.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 import { buildLintReport } from "../../src/application/lint.ts";
 import {

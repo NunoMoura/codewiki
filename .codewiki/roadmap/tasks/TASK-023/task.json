@@ -1,7 +1,7 @@
 {
   "id": "TASK-023",
   "title": "Migrate project and bootstrap source root",
-  "status": "cancelled",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Superseded by split post-TASK-022 migration tasks.",
@@ -27,8 +27,8 @@
     "src/project/local/filesystem.ts",
     "src/project/local/file-store.ts",
     "src/project/local/git-cache.ts",
-    "src/application/knowledge/doc-parser.ts",
-    "src/application/knowledge/diagram-parser.ts",
+    "src/knowledge/doc-parser.ts",
+    "src/knowledge/diagram-parser.ts",
     "src/domain/change/types.ts",
     "src/domain/change/traceability.ts",
     "src/application/diff-table.ts",
@@ -192,5 +192,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T11:08:00Z"
+  "updated": "2026-05-26T22:00:36Z"
 }

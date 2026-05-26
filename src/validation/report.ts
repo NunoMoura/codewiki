@@ -22,7 +22,7 @@ import type { WorkflowLoop } from "../domain/session/types.ts";
 import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { normalizeWorktreeIsolation } from "../application/claims.ts";
-import { fileStructureSatisfiedDeferredTriggerRefs } from "../application/knowledge/diagram-parser.ts";
+import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
 import type { CodewikiValidationFailureClass, CodewikiValidationReportInput } from "./types.ts";
 import { VALIDATION_FAILURE_CLASS_VALUES } from "./types.ts";
 

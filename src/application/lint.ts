@@ -3,10 +3,10 @@ import { resolve, relative } from "node:path";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { LintIssue, LintReport } from "../validation/types.ts";
-import { extractLinks } from "./knowledge/doc-parser.ts";
-import type { ParsedDoc } from "./knowledge/doc-parser.ts";
+import { extractLinks } from "../knowledge/doc-parser.ts";
+import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
-import { validateSystemDiagramRefs } from "./knowledge/diagram-parser.ts";
+import { validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
 
 const DEFAULT_REQUIRED_FIELDS = ["id", "title", "state", "summary", "owners", "updated"];
 const FORBIDDEN_HEADINGS = [

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:22:59Z",
+  "generated_at": "2026-05-26T22:27:12Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-025/context.json",
   "task": {
     "id": "TASK-025",
     "title": "Migrate knowledge parser source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
@@ -33,7 +33,7 @@
         "npm run test:features",
         "npm run test:pack",
         "node --experimental-strip-types ./tests/smoke/alignment-drift-fixtures.test.mjs",
-        "TASK-specific knowledge guard",
+        "node --experimental-strip-types ./tests/tasks/TASK-025/knowledge-source-root.test.mjs",
         "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
       ]
     },

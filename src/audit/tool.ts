@@ -17,8 +17,8 @@ import { AUDIT_PROFILE_VALUES } from "./types.ts";
 import { formatError, nowIso, unique } from "../domain/shared/utils.ts";
 import { pathExists } from "../project/local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
-import { parseDoc } from "../application/knowledge/doc-parser.ts";
-import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../application/knowledge/diagram-parser.ts";
+import { parseDoc } from "../knowledge/doc-parser.ts";
+import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
 
 const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [

@@ -158,8 +158,9 @@ nodes:
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: implementation_pending_validation_by_task_024
+    status: task_close_validated_by_task_024
     task_id: TASK-024
+    validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-024.json
     cleanup_state: old_project_bootstrap_paths_removed
     paths:
       - src/project/**
@@ -175,6 +176,23 @@ nodes:
       - src/bootstrap.ts
       - src/project-root.ts
       - src/templates.ts
+  - id: knowledge_concept_root_boundary
+    label: Knowledge parser concept-root migration
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implementation_pending_validation_by_task_025
+    task_id: TASK-025
+    cleanup_state: old_knowledge_parser_paths_removed
+    paths:
+      - src/knowledge/**
+      - tests/tasks/TASK-025/knowledge-source-root.test.mjs
+      - tests/smoke/diagram-refs.test.mjs
+      - tests/smoke/alignment-drift-fixtures.test.mjs
+    removed_paths:
+      - src/application/knowledge/doc-parser.ts
+      - src/application/knowledge/diagram-parser.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -319,15 +337,15 @@ nodes:
     owner: maintainers
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
-    next_boundary: knowledge_change_gc_session_roadmap_state_api_shared
+    next_boundary: change_gc_session_roadmap_state_api_shared
+    active_boundary: TASK-025_knowledge_parser_migration_pending_validation
     completed_boundaries:
-      - TASK-024_project_root_migration_pending_validation
+      - TASK-024_project_root_migration_task_close_validated
     downstream_deferred_until: executable roadmap tasks and validated planning_build for remaining concept roots
     paths:
       - src/api/**
       - src/change/**
       - src/gc/**
-      - src/knowledge/**
       - src/roadmap/**
       - src/session/**
       - src/state/**
@@ -396,6 +414,14 @@ edges:
     from: migration_compatibility_constraints
     to: project_concept_root_boundary
     label: gates project source move
+  - id: knowledge_selected_after_project
+    from: concept_root_target
+    to: knowledge_concept_root_boundary
+    label: selected TASK-025 knowledge parser migration boundary
+  - id: knowledge_uses_compatibility_constraints
+    from: migration_compatibility_constraints
+    to: knowledge_concept_root_boundary
+    label: gates knowledge parser source move
   - id: concept_target_exposed_by_api
     from: concept_root_target
     to: api_facade

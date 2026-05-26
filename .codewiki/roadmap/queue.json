@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-26T21:18:29Z",
+  "updated": "2026-05-26T22:27:12Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -94,7 +94,7 @@
     "TASK-023": {
       "id": "TASK-023",
       "title": "Migrate project and bootstrap source root",
-      "status": "cancelled",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Superseded by split post-TASK-022 migration tasks.",
@@ -120,8 +120,8 @@
         "src/project/local/filesystem.ts",
         "src/project/local/file-store.ts",
         "src/project/local/git-cache.ts",
-        "src/application/knowledge/doc-parser.ts",
-        "src/application/knowledge/diagram-parser.ts",
+        "src/knowledge/doc-parser.ts",
+        "src/knowledge/diagram-parser.ts",
         "src/domain/change/types.ts",
         "src/domain/change/traceability.ts",
         "src/application/diff-table.ts",
@@ -285,12 +285,12 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T11:08:00Z"
+      "updated": "2026-05-26T22:00:36Z"
     },
     "TASK-025": {
       "id": "TASK-025",
       "title": "Migrate knowledge parser source root",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Move markdown/frontmatter/link parsing and diagram/file-structure parsing ownership into src/knowledge/** while preserving graph and audit behavior.",
@@ -302,8 +302,17 @@
         ".codewiki/validation/2026-05-22-decision-pass.json"
       ],
       "code_paths": [
-        "src/application/knowledge/doc-parser.ts",
-        "src/application/knowledge/diagram-parser.ts"
+        "src/knowledge/doc-parser.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/application/graph.ts",
+        "src/application/graph/rebuilder.ts",
+        "src/application/lint.ts",
+        "src/application/state-builders.ts",
+        "src/audit/tool.ts",
+        "src/validation/report.ts",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/drift-propagation.test.mjs",
+        "tests/tasks/TASK-025/knowledge-source-root.test.mjs"
       ],
       "research_ids": [],
       "labels": [
@@ -330,7 +339,7 @@
           "npm run test:features",
           "npm run test:pack",
           "node --experimental-strip-types ./tests/smoke/alignment-drift-fixtures.test.mjs",
-          "TASK-specific knowledge guard",
+          "node --experimental-strip-types ./tests/tasks/TASK-025/knowledge-source-root.test.mjs",
           "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
         ]
       },
@@ -340,7 +349,7 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T03:22:59Z"
+      "updated": "2026-05-26T22:27:12Z"
     },
     "TASK-026": {
       "id": "TASK-026",

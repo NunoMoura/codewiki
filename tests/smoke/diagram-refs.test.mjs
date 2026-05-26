@@ -6,8 +6,8 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { buildGraph } from "../../src/application/graph.ts";
 import { buildLintReport } from "../../src/application/lint.ts";
-import { parseDoc } from "../../src/application/knowledge/doc-parser.ts";
-import { buildFileStructureDriftReport } from "../../src/application/knowledge/diagram-parser.ts";
+import { parseDoc } from "../../src/knowledge/doc-parser.ts";
+import { buildFileStructureDriftReport } from "../../src/knowledge/diagram-parser.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 import { buildRoadmapState, buildStatusState } from "../../src/application/state-builders.ts";
 

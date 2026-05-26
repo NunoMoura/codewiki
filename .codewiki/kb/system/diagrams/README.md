@@ -6,8 +6,9 @@ summary: Agent-editable raw data contract for project diagrams rendered by CodeW
 owners:
   - architecture
   - design
-updated: "2026-05-22"
+updated: "2026-05-26"
 code_paths:
+  - src/knowledge/diagram-parser.ts
   - src/ui/web/control-room.ts
   - src/adapters/pi/ui/manager.ts
 ---
