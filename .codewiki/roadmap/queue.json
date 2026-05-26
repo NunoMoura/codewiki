@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-26T22:27:12Z",
+  "updated": "2026-05-26T22:29:38Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-025",
     "TASK-026",
     "TASK-027",
     "TASK-028",
@@ -94,10 +93,10 @@
     "TASK-023": {
       "id": "TASK-023",
       "title": "Migrate project and bootstrap source root",
-      "status": "in_progress",
+      "status": "cancelled",
       "priority": "high",
       "kind": "migration",
-      "summary": "Superseded by split post-TASK-022 migration tasks.",
+      "summary": "Keep TASK-023 cancelled/superseded after TASK-025 source-ref refresh.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -285,71 +284,7 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T22:00:36Z"
-    },
-    "TASK-025": {
-      "id": "TASK-025",
-      "title": "Migrate knowledge parser source root",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "migration",
-      "summary": "Move markdown/frontmatter/link parsing and diagram/file-structure parsing ownership into src/knowledge/** while preserving graph and audit behavior.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/kb/system/diagrams/README.md",
-        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-        ".codewiki/validation/2026-05-22-decision-pass.json"
-      ],
-      "code_paths": [
-        "src/knowledge/doc-parser.ts",
-        "src/knowledge/diagram-parser.ts",
-        "src/application/graph.ts",
-        "src/application/graph/rebuilder.ts",
-        "src/application/lint.ts",
-        "src/application/state-builders.ts",
-        "src/audit/tool.ts",
-        "src/validation/report.ts",
-        "tests/smoke/diagram-refs.test.mjs",
-        "tests/smoke/drift-propagation.test.mjs",
-        "tests/tasks/TASK-025/knowledge-source-root.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "knowledge-root-migration"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Knowledge parsing and diagram/file-structure parsing have source-root ownership under src/knowledge/**.",
-        "acceptance": [
-          "Create src/knowledge/** owner modules for ParsedDoc, markdown/frontmatter/link parsing, diagram parsing, diagram-ref validation, and file-structure drift parsing helpers.",
-          "Update graph, rebuild, lint, audit, tests, and scripts to import parser behavior from src/knowledge/**.",
-          "Remove old src/application/knowledge/** owner paths or retain only explicit temporary shims with TASK-specific tests.",
-          "Preserve alignment, stale-reference, file-structure, generated-parity, graph rebuild, and package smoke behavior.",
-          "Add TASK-specific guard proving legacy knowledge parser imports are gone or explicitly shimmed."
-        ],
-        "non_goals": [
-          "Do not migrate project/bootstrap, roadmap, session, state/graph ownership beyond parser consumer import updates, GC, change/diff-table, adapters/UI, or skills.",
-          "Do not change diagram YAML schema, markdown parsing semantics, audit profile names, or graph JSON schema."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run check:architecture",
-          "npm run test:smoke",
-          "npm run test:features",
-          "npm run test:pack",
-          "node --experimental-strip-types ./tests/smoke/alignment-drift-fixtures.test.mjs",
-          "node --experimental-strip-types ./tests/tasks/TASK-025/knowledge-source-root.test.mjs",
-          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-05-26",
-      "updated": "2026-05-26T22:27:12Z"
+      "updated": "2026-05-26T22:29:38Z"
     },
     "TASK-026": {
       "id": "TASK-026",

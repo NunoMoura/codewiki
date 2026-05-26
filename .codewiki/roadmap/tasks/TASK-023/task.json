@@ -1,10 +1,10 @@
 {
   "id": "TASK-023",
   "title": "Migrate project and bootstrap source root",
-  "status": "in_progress",
+  "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Superseded by split post-TASK-022 migration tasks.",
+  "summary": "Keep TASK-023 cancelled/superseded after TASK-025 source-ref refresh.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -192,5 +192,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T22:00:36Z"
+  "updated": "2026-05-26T22:29:38Z"
 }
