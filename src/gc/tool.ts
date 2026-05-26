@@ -1,7 +1,7 @@
-import type { CodewikiGcToolInput } from "../../domain/gc/types.ts";
-import type { WikiProject } from "../../project/types.ts";
-import { runCodewikiGc } from "../gc.ts";
-import { runRebuild } from "../state-artifacts.ts";
+import type { WikiProject } from "../project/types.ts";
+import { runRebuild } from "../application/state-artifacts.ts";
+import { runCodewikiGc } from "./runtime.ts";
+import type { CodewikiGcToolInput } from "./types.ts";
 
 export async function executeCodewikiGcTool(
 	project: WikiProject,

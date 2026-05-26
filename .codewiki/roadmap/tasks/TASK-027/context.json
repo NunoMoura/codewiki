@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:09Z",
+  "generated_at": "2026-05-26T23:22:28Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-027/context.json",
   "task": {
     "id": "TASK-027",
     "title": "Migrate GC source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
@@ -38,8 +38,8 @@
       ]
     },
     "delta": {
-      "desired": "",
-      "current": "",
+      "desired": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and codewiki_gc tool execution preserved.",
+      "current": "GC owner paths are being moved from src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts to src/gc/**.",
       "closure": ""
     }
   }

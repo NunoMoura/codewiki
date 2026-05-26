@@ -13,7 +13,7 @@ import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject
 import { executeCodewikiBuildTool } from "../../build/tool.ts";
 import { executeCodewikiValidationTool } from "../../validation/tool.ts";
 import { executeCodewikiDiffTableTool } from "../../change/tool.ts";
-import { executeCodewikiGcTool } from "../../application/tools/gc.ts";
+import { executeCodewikiGcTool } from "../../gc/tool.ts";
 import { executeCodewikiAgency } from "./tools/agency.ts";
 import { registerCodewikiArtifactStatusTool } from "./tools/artifact-status.ts";
 import { registerCodewikiAuditTool } from "./tools/audit.ts";

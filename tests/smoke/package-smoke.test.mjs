@@ -275,7 +275,8 @@ async function main() {
 		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to source-root tool executor");
 		assert.match(piIndexSource, /change\/tool/, "Pi diff-table registration should delegate to the change source-root tool module");
-		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to application tool executor");
+		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to source-root tool executor");
+		assert.match(piIndexSource, /gc\/tool/, "Pi GC registration should delegate to the GC source-root tool module");
 		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
 		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
 		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Pi bootstrap setup tool should delegate through project tool contract");
@@ -311,6 +312,16 @@ async function main() {
 		}
 		assert.doesNotMatch(piIndexSource, /application\/tools\/diff-table|application\/diff-table|domain\/change/, "Diff-table package paths should not delegate through old change/diff-table shims");
 		assert.doesNotMatch(schemaSource, /domain\/change/, "Schema package paths should not read change values from old change shims");
+		for (const removedGcShim of [
+			"src/domain/gc/types.ts",
+			"src/application/gc.ts",
+			"src/application/tools/gc.ts",
+		]) {
+			assert.ok(!existsSync(resolve(repoRoot, removedGcShim)), `${removedGcShim} should not be packaged after GC migration`);
+		}
+		assert.match(schemaSource, /gc\/types/, "Pi schemas should read GC values from the GC source-root module");
+		assert.doesNotMatch(piIndexSource, /application\/tools\/gc|application\/gc|domain\/gc/, "GC package paths should not delegate through old GC shims");
+		assert.doesNotMatch(schemaSource, /domain\/gc/, "Schema package paths should not read GC values from old GC shims");
 		for (const adapterFile of ["artifact-status", "session", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);

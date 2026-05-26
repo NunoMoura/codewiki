@@ -10,6 +10,7 @@ import {
 } from "../../agency/types.ts";
 import { AUDIT_PROFILE_VALUES } from "../../audit/types.ts";
 import { CHANGE_TYPE_VALUES, TRACEABILITY_EXEMPTION_VALUES } from "../../change/types.ts";
+import { GC_ACTION_VALUES, GC_INCLUDE_VALUES } from "../../gc/types.ts";
 import {
 	ROADMAP_PRIORITY_VALUES,
 	SPRINT_STATUS_VALUES,
@@ -310,14 +311,8 @@ export const codewikiAgencyToolInputSchema = Type.Object({
 });
 export const codewikiGcToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
-	action: Type.Optional(Type.Union([
-		Type.Literal("dry-run"),
-		Type.Literal("purge"),
-	])),
-	include: Type.Optional(Type.Array(Type.Union([
-		Type.Literal("tracked"),
-		Type.Literal("runtime"),
-	]))),
+	action: Type.Optional(Type.Union(GC_ACTION_VALUES.map((value) => Type.Literal(value)))),
+	include: Type.Optional(Type.Array(Type.Union(GC_INCLUDE_VALUES.map((value) => Type.Literal(value))))),
 	scopes: Type.Optional(Type.Array(Type.String({ minLength: 1 }))),
 	archive_sha: Type.Optional(Type.String({ minLength: 1 })),
 	tree_sha: Type.Optional(Type.String({ minLength: 1 })),

@@ -9,7 +9,7 @@ export * from "../../agency/types.ts";
 export * from "../../audit/types.ts";
 export * from "../../build/types.ts";
 export * from "../../change/types.ts";
-export * from "../gc/types.ts";
+export * from "../../gc/types.ts";
 export * from "../../project/types.ts";
 export * from "../roadmap/types.ts";
 export * from "../session/types.ts";

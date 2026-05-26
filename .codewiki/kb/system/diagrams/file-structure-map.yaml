@@ -200,8 +200,9 @@ nodes:
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: implementation_pending_validation_by_task_026
+    status: task_close_validated_by_task_026
     task_id: TASK-026
+    validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-026.json
     cleanup_state: old_change_diff_table_paths_removed
     paths:
       - src/change/**
@@ -214,6 +215,24 @@ nodes:
       - src/domain/change/traceability.ts
       - src/application/diff-table.ts
       - src/application/tools/diff-table.ts
+  - id: gc_concept_root_boundary
+    label: GC concept-root migration
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implementation_pending_validation_by_task_027
+    task_id: TASK-027
+    cleanup_state: old_gc_paths_removed
+    paths:
+      - src/gc/**
+      - tests/tasks/TASK-027/gc-source-root.test.mjs
+      - tests/smoke/hot-retention.test.mjs
+      - tests/smoke/package-smoke.test.mjs
+    removed_paths:
+      - src/domain/gc/types.ts
+      - src/application/gc.ts
+      - src/application/tools/gc.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -358,11 +377,12 @@ nodes:
     owner: maintainers
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
-    next_boundary: change_gc_session_roadmap_state_api_shared
-    active_boundary: TASK-026_change_diff_table_migration_pending_validation
+    next_boundary: session_roadmap_state_api_shared
+    active_boundary: TASK-027_gc_migration_pending_validation
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated
+      - TASK-026_change_diff_table_migration_task_close_validated
     downstream_deferred_until: executable roadmap tasks and validated planning_build for remaining concept roots
     paths:
       - src/api/**

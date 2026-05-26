@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
-import type { CodewikiGcToolInput } from "../domain/gc/types.ts";
+import type { CodewikiGcToolInput } from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 

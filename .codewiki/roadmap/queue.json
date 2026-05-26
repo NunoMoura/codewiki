@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-26T23:06:30Z",
+  "updated": "2026-05-26T23:22:28Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -95,7 +95,7 @@
       "status": "cancelled",
       "priority": "high",
       "kind": "migration",
-      "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
+      "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -124,9 +124,9 @@
         "src/change/traceability.ts",
         "src/change/diff-table.ts",
         "src/change/tool.ts",
-        "src/domain/gc/types.ts",
-        "src/application/gc.ts",
-        "src/application/tools/gc.ts",
+        "src/gc/types.ts",
+        "src/gc/runtime.ts",
+        "src/gc/tool.ts",
         "src/domain/session/types.ts",
         "src/domain/session/links.ts",
         "src/domain/session/worktree-isolation.ts",
@@ -283,12 +283,12 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T22:53:32Z"
+      "updated": "2026-05-26T23:17:27Z"
     },
     "TASK-027": {
       "id": "TASK-027",
       "title": "Migrate GC source root",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Move CodeWiki garbage-collection types, dry-run/purge logic, restore-ledger writing, and codewiki_gc tool execution into src/gc/**.",
@@ -300,9 +300,9 @@
         ".codewiki/validation/2026-05-22-decision-pass.json"
       ],
       "code_paths": [
-        "src/domain/gc/types.ts",
-        "src/application/gc.ts",
-        "src/application/tools/gc.ts"
+        "src/gc/types.ts",
+        "src/gc/runtime.ts",
+        "src/gc/tool.ts"
       ],
       "research_ids": [],
       "labels": [
@@ -334,12 +334,12 @@
         ]
       },
       "delta": {
-        "desired": "",
-        "current": "",
+        "desired": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and codewiki_gc tool execution preserved.",
+        "current": "GC owner paths are being moved from src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts to src/gc/**.",
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T03:23:09Z"
+      "updated": "2026-05-26T23:22:28Z"
     },
     "TASK-028": {
       "id": "TASK-028",

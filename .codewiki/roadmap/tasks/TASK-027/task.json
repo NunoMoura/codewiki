@@ -1,7 +1,7 @@
 {
   "id": "TASK-027",
   "title": "Migrate GC source root",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Move CodeWiki garbage-collection types, dry-run/purge logic, restore-ledger writing, and codewiki_gc tool execution into src/gc/**.",
@@ -13,9 +13,9 @@
     ".codewiki/validation/2026-05-22-decision-pass.json"
   ],
   "code_paths": [
-    "src/domain/gc/types.ts",
-    "src/application/gc.ts",
-    "src/application/tools/gc.ts"
+    "src/gc/types.ts",
+    "src/gc/runtime.ts",
+    "src/gc/tool.ts"
   ],
   "research_ids": [],
   "labels": [
@@ -47,10 +47,10 @@
     ]
   },
   "delta": {
-    "desired": "",
-    "current": "",
+    "desired": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and codewiki_gc tool execution preserved.",
+    "current": "GC owner paths are being moved from src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts to src/gc/**.",
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T03:23:09Z"
+  "updated": "2026-05-26T23:22:28Z"
 }

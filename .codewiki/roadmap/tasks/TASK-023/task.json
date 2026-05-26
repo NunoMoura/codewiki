@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
+  "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -33,9 +33,9 @@
     "src/change/traceability.ts",
     "src/change/diff-table.ts",
     "src/change/tool.ts",
-    "src/domain/gc/types.ts",
-    "src/application/gc.ts",
-    "src/application/tools/gc.ts",
+    "src/gc/types.ts",
+    "src/gc/runtime.ts",
+    "src/gc/tool.ts",
     "src/domain/session/types.ts",
     "src/domain/session/links.ts",
     "src/domain/session/worktree-isolation.ts",
@@ -192,5 +192,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T22:53:32Z"
+  "updated": "2026-05-26T23:17:27Z"
 }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T23:06:54.117Z",
+  "generated_at": "2026-05-26T23:23:07.659Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -2086,6 +2086,27 @@
       "lens_family": "knowledge"
     },
     {
+      "id": "diagram_ref:file-structure-map:gc_concept_root_boundary",
+      "kind": "system_diagram_ref",
+      "title": "GC concept-root migration",
+      "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "ref": "file-structure-map:gc_concept_root_boundary",
+      "aliases": [
+        "file-structure-map:gc_concept_root_boundary",
+        "spec.system.diagrams.file-structure-map:gc_concept_root_boundary",
+        "file-structure-map.gc_concept_root_boundary",
+        "spec.system.diagrams.file-structure-map.gc_concept_root_boundary"
+      ],
+      "diagram_id": "spec.system.diagrams.file-structure-map",
+      "diagram_slug": "file-structure-map",
+      "ref_category": "component",
+      "raw_kind": "component",
+      "requires_doc": true,
+      "source": ".codewiki/kb/system/file-structure.md",
+      "layer": "knowledge",
+      "lens_family": "knowledge"
+    },
+    {
       "id": "diagram_ref:file-structure-map:api_facade",
       "kind": "system_diagram_ref",
       "title": "Stable API facade",
@@ -4040,7 +4061,7 @@
       "alignment_state": "aligned",
       "issue_kind": "file_structure_drift",
       "summary": {
-        "approved_migration_delta": 15,
+        "approved_migration_delta": 13,
         "actionable_drift": 0,
         "parse_issues": 0
       },
@@ -4050,7 +4071,7 @@
         "ownership_mismatch": 0,
         "deprecated_path_present": 0,
         "generated_or_runtime_artifact_in_source_area": 0,
-        "approved_migration_delta": 15,
+        "approved_migration_delta": 13,
         "compatibility_export_gap": 0
       },
       "lens_family": "proof"
@@ -4111,18 +4132,6 @@
       "severity": "info",
       "issue_kind": "approved_migration_delta",
       "message": "src/domain/** remains current-valid until concept-root migration lands.",
-      "alignment_state": "aligned",
-      "default_hidden": true,
-      "lens_family": "execution"
-    },
-    {
-      "id": "file_structure_drift:approved_migration_delta:src/gc/**",
-      "kind": "audit_evidence",
-      "path": "src/gc/**",
-      "layer": "audit",
-      "severity": "info",
-      "issue_kind": "approved_migration_delta",
-      "message": "src/gc/** is an accepted target path not yet present; migration delta is approved by file-structure map.",
       "alignment_state": "aligned",
       "default_hidden": true,
       "lens_family": "execution"
@@ -5295,25 +5304,25 @@
       "lens_family": "execution"
     },
     {
-      "id": "code:src/domain/gc/types.ts",
+      "id": "code:src/gc/types.ts",
       "kind": "code_path",
-      "path": "src/domain/gc/types.ts",
+      "path": "src/gc/types.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
-      "id": "code:src/application/gc.ts",
+      "id": "code:src/gc/runtime.ts",
       "kind": "code_path",
-      "path": "src/application/gc.ts",
+      "path": "src/gc/runtime.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
-      "id": "code:src/application/tools/gc.ts",
+      "id": "code:src/gc/tool.ts",
       "kind": "code_path",
-      "path": "src/application/tools/gc.ts",
+      "path": "src/gc/tool.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -5515,7 +5524,7 @@
       "kind": "roadmap_task",
       "title": "Migrate GC source root",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "system",
       "alignment_state": "drift",
       "lens_family": "work"
@@ -6908,6 +6917,13 @@
       "id": "code:src/application/tools/catalog.ts",
       "kind": "code_path",
       "path": "src/application/tools/catalog.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/application/gc.ts",
+      "kind": "code_path",
+      "path": "src/application/gc.ts",
       "layer": "code",
       "lens_family": "execution"
     },
@@ -9720,6 +9736,20 @@
       "id": "code:src/application/tools/diff-table.ts",
       "kind": "code_path",
       "path": "src/application/tools/diff-table.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/domain/gc/types.ts",
+      "kind": "code_path",
+      "path": "src/domain/gc/types.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/application/tools/gc.ts",
+      "kind": "code_path",
+      "path": "src/application/tools/gc.ts",
       "layer": "code",
       "lens_family": "execution"
     },
@@ -20032,6 +20062,282 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "title": "TASK-027",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-027",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+          ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/change-lifecycle.md",
+          ".codewiki/roadmap/tasks/TASK-027/context.json",
+          "TASK-027",
+          "skills/codewiki/references/tool-catalog.md",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-027/task.json",
+          ".codewiki/roadmap/tasks/TASK-023/task.json",
+          ".codewiki/roadmap/tasks/TASK-023/context.json",
+          "src/gc/types.ts",
+          "src/gc/runtime.ts",
+          "src/gc/tool.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/domain/shared/types.ts",
+          "tests/tasks/TASK-027/gc-source-root.test.mjs",
+          "tests/smoke/hot-retention.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/run.mjs"
+        ],
+        "audit_evidence_refs": [
+          "profile:file-structure",
+          "profile:alignment",
+          "profile:stale-reference",
+          "profile:generated-parity",
+          "profile:changed",
+          "profile:task",
+          "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+          "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+          "alignment pass: generated graph health and roadmap queue reachability.",
+          "stale-reference pass: scanned 52 active markdown/source text files.",
+          "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+          "task TASK-027 pass.",
+          "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json@sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+          "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+          "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+          "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+          "tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
+          "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+          "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+          "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+          "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+          "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+          "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+          "refs/codewiki/archive/task/TASK-027",
+          "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
+        ],
+        "validation_attestation_refs": [
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:.codewiki/roadmap/tasks/TASK-027/context.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/tasks/TASK-027/context.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:.codewiki/roadmap/tasks/TASK-027/task.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/tasks/TASK-027/task.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:src/gc/types.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/gc/types.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "source:src/gc/runtime.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/gc/runtime.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "source:src/gc/tool.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/gc/tool.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "audit:working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+      "kind": "audit_evidence",
+      "path": "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+      "kind": "audit_evidence",
+      "path": "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+      "kind": "audit_evidence",
+      "path": "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:task TASK-027 pass.",
+      "kind": "audit_evidence",
+      "path": "task TASK-027 pass.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "kind": "audit_evidence",
+      "path": "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+      "kind": "content_proof",
+      "path": "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+      "kind": "content_proof",
+      "path": "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+      "kind": "content_proof",
+      "path": "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+      "kind": "content_proof",
+      "path": "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+      "kind": "content_proof",
+      "path": "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+      "kind": "content_proof",
+      "path": "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+      "kind": "content_proof",
+      "path": "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-027",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-027",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+      "kind": "content_proof",
+      "path": "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-027",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-027",
+      "task_id": "TASK-027",
+      "digest": "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+      "restore_command": "/wiki-restore TASK-027",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -25459,17 +25765,94 @@
       "lens_family": "proof"
     },
     {
-      "id": "audit:changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "id": "content_proof:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+      "kind": "content_proof",
+      "path": "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Implementation validation consumed implementation build, source refs, required checks, CodeWiki audit evidence, explicit user approval, and deterministic dirty working-tree digest; task-close still requires clean commit/tree proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+        ],
+        "audit_evidence_refs": [
+          "approval:user:2026-05-26 Great. Please continue",
+          "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+          "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "decision:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+          "profile:file-structure",
+          "profile:alignment",
+          "profile:stale-reference",
+          "profile:generated-parity",
+          "profile:changed",
+          "profile:task",
+          "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+          "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+          "alignment pass: generated graph health and roadmap queue reachability.",
+          "stale-reference pass: scanned 52 active markdown/source text files.",
+          "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+          "task TASK-027 pass.",
+          "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
+        ],
+        "content_proof_refs": [
+          "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
       "kind": "audit_evidence",
-      "path": "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "path": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
       "layer": "audit",
       "default_hidden": true,
       "lens_family": "proof"
     },
     {
-      "id": "content_proof:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+      "id": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+      "kind": "audit_evidence",
+      "path": "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
       "kind": "content_proof",
-      "path": "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+      "path": "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true,
@@ -27480,6 +27863,16 @@
     {
       "kind": "diagram_contains_ref",
       "from": "diagram:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "to": "diagram_ref:file-structure-map:gc_concept_root_boundary"
+    },
+    {
+      "kind": "diagram_ref_source_doc",
+      "from": "diagram_ref:file-structure-map:gc_concept_root_boundary",
+      "to": "doc:.codewiki/kb/system/file-structure.md"
+    },
+    {
+      "kind": "diagram_contains_ref",
+      "from": "diagram:.codewiki/kb/system/diagrams/file-structure-map.yaml",
       "to": "diagram_ref:file-structure-map:api_facade"
     },
     {
@@ -29010,12 +29403,6 @@
       "kind": "file_structure_drift_entry",
       "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
       "to": "file_structure_drift:approved_migration_delta:src/domain/**",
-      "default_hidden": true
-    },
-    {
-      "kind": "file_structure_drift_entry",
-      "from": "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "file_structure_drift:approved_migration_delta:src/gc/**",
       "default_hidden": true
     },
     {
@@ -31198,17 +31585,17 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-023",
-      "to": "code:src/domain/gc/types.ts"
+      "to": "code:src/gc/types.ts"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-023",
-      "to": "code:src/application/gc.ts"
+      "to": "code:src/gc/runtime.ts"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-023",
-      "to": "code:src/application/tools/gc.ts"
+      "to": "code:src/gc/tool.ts"
     },
     {
       "kind": "task_code_path",
@@ -31428,17 +31815,17 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-027",
-      "to": "code:src/domain/gc/types.ts"
+      "to": "code:src/gc/types.ts"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-027",
-      "to": "code:src/application/gc.ts"
+      "to": "code:src/gc/runtime.ts"
     },
     {
       "kind": "task_code_path",
       "from": "task:TASK-027",
-      "to": "code:src/application/tools/gc.ts"
+      "to": "code:src/gc/tool.ts"
     },
     {
       "kind": "task_spec",
@@ -49172,6 +49559,311 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/kb/system/file-structure.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/kb/system/change-lifecycle.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-027/context.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:TASK-027",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:skills/codewiki/references/tool-catalog.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/roadmap/queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-027/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-023/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-023/context.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/gc/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/gc/runtime.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/gc/tool.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/adapters/pi/index.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/adapters/pi/schemas.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:src/domain/shared/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:tests/tasks/TASK-027/gc-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:tests/smoke/hot-retention.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "source:tests/run.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:alignment pass: generated graph health and roadmap queue reachability.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:stale-reference pass: scanned 52 active markdown/source text files.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:task TASK-027 pass.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "audit:changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json@sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:tests/run.mjs@sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-027",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "content_proof:sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "task:TASK-027"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-027",
+      "default_hidden": true
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -55376,6 +56068,155 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:approval:user:2026-05-26 Great. Please continue",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:decision:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-22-decision-pass.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:alignment pass: generated graph health and roadmap queue reachability.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:stale-reference pass: scanned 52 active markdown/source text files.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:task TASK-027 pass.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "audit:changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "content_proof:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "to": "task:TASK-027"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
       "to": "source:.codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
       "default_hidden": true
@@ -56016,7 +56857,7 @@
             "label": "Knowledge",
             "summary": "Product/system docs, diagram refs, and source-backed knowledge context.",
             "state": "aligned",
-            "item_count": 243,
+            "item_count": 244,
             "badges": [
               {
                 "id": "docs",
@@ -56031,7 +56872,7 @@
               {
                 "id": "diagram_refs",
                 "label": "diagram refs",
-                "count": 202
+                "count": 203
               },
               {
                 "id": "diagram_parse_issues",
@@ -56041,7 +56882,7 @@
               {
                 "id": "file_structure_approved_deltas",
                 "label": "approved structure deltas",
-                "count": 15,
+                "count": 13,
                 "refs": [
                   "src/agency/**",
                   "src/api/**",
@@ -56050,7 +56891,7 @@
                   "src/audit/**",
                   "src/domain/**"
                 ],
-                "ref_count": 15
+                "ref_count": 13
               },
               {
                 "id": "file_structure_actionable_drift",
@@ -56133,12 +56974,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 207,
+            "item_count": 210,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 169
+                "count": 172
               },
               {
                 "id": "test_files",
@@ -56148,7 +56989,7 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 40
+                "count": 41
               },
               {
                 "id": "dirty_paths",
@@ -56180,7 +57021,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 81
+                "count": 82
               },
               {
                 "id": "fail_or_block_validation",
@@ -56190,12 +57031,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 306
+                "count": 313
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 698
+                "count": 710
               },
               {
                 "id": "traceability_gaps",
@@ -56211,19 +57052,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 67,
+            "total": 68,
             "decision": 7,
             "planning": 20,
-            "implementation": 40,
+            "implementation": 41,
             "hot": 0,
-            "collapsed": 67
+            "collapsed": 68
           },
           "validations": {
-            "total": 81,
-            "pass": 66,
+            "total": 82,
+            "pass": 67,
             "fail_or_block": 15,
             "hot": 4,
-            "collapsed": 81
+            "collapsed": 82
           }
         },
         "next_action": {
@@ -56305,7 +57146,9 @@
               "tests/smoke/drift-propagation.test.mjs",
               "tests/run.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs"
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs",
+              "tests/smoke/hot-retention.test.mjs"
             ],
             "code_paths": [
               "src/application/knowledge/diagram-parser.ts",
@@ -56419,7 +57262,10 @@
               "src/change/traceability.ts",
               "src/change/diff-table.ts",
               "src/change/tool.ts",
-              "src/domain/roadmap/types.ts"
+              "src/domain/roadmap/types.ts",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -56429,7 +57275,8 @@
               ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
             ],
             "validation_paths": [
               "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -56442,6 +57289,7 @@
               "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
               "fresh implementation validation required for TASK-025",
               "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
               ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
               ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
               ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -56454,6 +57302,7 @@
               ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -56509,7 +57358,12 @@
               "alignment pass: generated graph health and roadmap queue reachability.",
               "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
               "task TASK-026 pass.",
-              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+              "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+              "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+              "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+              "task TASK-027 pass.",
+              "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
             ],
             "publication_refs": [],
             "content_proof_refs": [
@@ -56728,7 +57582,18 @@
               "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
               "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
               "refs/codewiki/archive/task/TASK-026",
-              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+              "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+              "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+              "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+              "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+              "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+              "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+              "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+              "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+              "refs/codewiki/archive/task/TASK-027",
+              "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
             ],
             "gaps": []
           },
@@ -56793,7 +57658,9 @@
               "tests/smoke/drift-propagation.test.mjs",
               "tests/run.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs"
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs",
+              "tests/smoke/hot-retention.test.mjs"
             ],
             "code_paths": [
               "src/application/knowledge/diagram-parser.ts",
@@ -56907,7 +57774,10 @@
               "src/change/traceability.ts",
               "src/change/diff-table.ts",
               "src/change/tool.ts",
-              "src/domain/roadmap/types.ts"
+              "src/domain/roadmap/types.ts",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -56917,7 +57787,8 @@
               ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
             ],
             "validation_paths": [
               "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -56930,6 +57801,7 @@
               "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
               "fresh implementation validation required for TASK-025",
               "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
               ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
               ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
               ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -56942,6 +57814,7 @@
               ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -56997,7 +57870,12 @@
               "alignment pass: generated graph health and roadmap queue reachability.",
               "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
               "task TASK-026 pass.",
-              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+              "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+              "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+              "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+              "task TASK-027 pass.",
+              "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
             ],
             "publication_refs": [],
             "content_proof_refs": [
@@ -57216,7 +58094,18 @@
               "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
               "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
               "refs/codewiki/archive/task/TASK-026",
-              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+              "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+              "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+              "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+              "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+              "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+              "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+              "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+              "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+              "refs/codewiki/archive/task/TASK-027",
+              "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
             ],
             "gaps": []
           },
@@ -57281,7 +58170,9 @@
               "tests/smoke/drift-propagation.test.mjs",
               "tests/run.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs"
+              "tests/smoke/efficiency-ui.test.mjs",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs",
+              "tests/smoke/hot-retention.test.mjs"
             ],
             "code_paths": [
               "src/application/knowledge/diagram-parser.ts",
@@ -57395,7 +58286,10 @@
               "src/change/traceability.ts",
               "src/change/diff-table.ts",
               "src/change/tool.ts",
-              "src/domain/roadmap/types.ts"
+              "src/domain/roadmap/types.ts",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts"
             ],
             "implementation_builds": [
               ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -57405,7 +58299,8 @@
               ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
             ],
             "validation_paths": [
               "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -57418,6 +58313,7 @@
               "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
               "fresh implementation validation required for TASK-025",
               "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
               ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
               ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
               ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -57430,6 +58326,7 @@
               ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
               ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -57485,7 +58382,12 @@
               "alignment pass: generated graph health and roadmap queue reachability.",
               "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
               "task TASK-026 pass.",
-              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+              "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+              "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+              "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+              "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+              "task TASK-027 pass.",
+              "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
             ],
             "publication_refs": [],
             "content_proof_refs": [
@@ -57704,7 +58606,18 @@
               "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
               "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
               "refs/codewiki/archive/task/TASK-026",
-              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+              "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+              "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+              "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+              "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+              "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+              "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+              "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+              "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+              "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+              "refs/codewiki/archive/task/TASK-027",
+              "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
             ],
             "gaps": []
           }
@@ -57761,6 +58674,7 @@
           ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -57842,6 +58756,8 @@
           ".codewiki/roadmap/tasks/TASK-023/task.json",
           ".codewiki/roadmap/tasks/TASK-026/context.json",
           ".codewiki/roadmap/tasks/TASK-026/task.json",
+          ".codewiki/roadmap/tasks/TASK-027/context.json",
+          ".codewiki/roadmap/tasks/TASK-027/task.json",
           ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
           ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
           "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
@@ -58066,6 +58982,9 @@
           "src/domain/validation/types.ts",
           "src/gateway/index.ts",
           "src/gateway/transaction.ts",
+          "src/gc/runtime.ts",
+          "src/gc/tool.ts",
+          "src/gc/types.ts",
           "src/index.ts",
           "src/knowledge/diagram-parser.ts",
           "src/knowledge/doc-parser.ts",
@@ -60151,6 +61070,39 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/run.mjs"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-027"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/roadmap/tasks/TASK-027/context.json",
+              "TASK-027",
+              "skills/codewiki/references/tool-catalog.md",
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap/tasks/TASK-027/task.json",
+              ".codewiki/roadmap/tasks/TASK-023/task.json",
+              ".codewiki/roadmap/tasks/TASK-023/context.json",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/domain/shared/types.ts",
+              "tests/tasks/TASK-027/gc-source-root.test.mjs",
+              "tests/smoke/hot-retention.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/run.mjs"
+            ]
           }
         ]
       },
@@ -62107,6 +63059,43 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-027",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+            ],
+            "audit_evidence_refs": [
+              "approval:user:2026-05-26 Great. Please continue",
+              "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              "decision:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+              "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+              "profile:file-structure",
+              "profile:alignment",
+              "profile:stale-reference",
+              "profile:generated-parity",
+              "profile:changed",
+              "profile:task",
+              "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+              "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+              "alignment pass: generated graph health and roadmap queue reachability.",
+              "stale-reference pass: scanned 52 active markdown/source text files.",
+              "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+              "task TASK-027 pass.",
+              "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
+            ],
+            "content_proof_refs": [
+              "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             "verdict": "pass",
             "profile": "task-close",
@@ -63524,6 +64513,20 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+            "task_id": "TASK-027",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             "task_id": "TASK-022",
             "verdict": "pass",
@@ -63679,6 +64682,7 @@
           "build:.codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
           "build:.codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
           "build:.codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+          "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
           "build:.codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
           "changed",
           "changed pass: 0 changed files",
@@ -63797,6 +64801,7 @@
           "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 198 diagram refs, 19 approved migration deltas, 0 actionable drift items.",
           "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 201 diagram refs, 17 approved migration deltas, 0 actionable drift items.",
           "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 202 diagram refs, 15 approved migration deltas, 0 actionable drift items.",
+          "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
           "file-structure pass: Checked 90 TypeScript source files, architecture wrapper boundaries, 191 diagram refs, and file-structure drift lens with 20 approved migration deltas and 0 actionable drift items.",
           "file-structure pass: checked 95 TypeScript source files, architecture wrapper boundaries, 195 diagram refs, and file-structure drift lens with 21 approved migration deltas and 0 actionable drift items.",
           "generated-parity",
@@ -63809,6 +64814,7 @@
           "generated-parity pass: generated graph presence/freshness and 1 active roadmap task view pass.",
           "generated-parity pass: generated graph presence/freshness and 1 active roadmap task views match canonical sources.",
           "generated-parity pass: generated graph presence/freshness and 1 active roadmap task views pass.",
+          "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
           "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
           "generated-parity pass: generated graph presence/freshness and 8 active roadmap task views against canonical sources.",
           "generated-parity pass: generated graph presence/freshness and 8 active roadmap task views pass.",
@@ -63867,6 +64873,7 @@
           "task TASK-024 pass.",
           "task TASK-025 pass.",
           "task TASK-026 pass.",
+          "task TASK-027 pass.",
           "task pass for TASK-011",
           "task pass: TASK-010 roadmap task checked",
           "task pass: TASK-024 path references and task metadata pass.",
@@ -63902,11 +64909,14 @@
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
           "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
           "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
+          "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
           "working_tree_digest:sha256:7f892fe134595f7849a11239e35e411dd2cc00900ad80fea0c5f23217e1aedec",
           "working_tree_digest:sha256:adc35b9665ed0211d529684d7919b6738e686eccb775b047997871b5f18cbf97",
-          "working_tree_digest:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40"
+          "working_tree_digest:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+          "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12"
         ],
         "content_proof_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json@sha256:c91bcd3ff0a9c881cb5bcb9ce08dc0aa6d2731159134cb655904a3747f32a377",
@@ -64131,6 +65141,7 @@
           "refs/codewiki/archive/task/TASK-024",
           "refs/codewiki/archive/task/TASK-025",
           "refs/codewiki/archive/task/TASK-026",
+          "refs/codewiki/archive/task/TASK-027",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
           "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
           "scripts/codewiki-gateway.mjs@sha256:7749d37f4d8f0b62da2f441ac36c522a988ba562f6c739ac94fd8175d8cb90df",
@@ -64159,6 +65170,7 @@
           "sha256:696950f19a1ab409fa37e737e3c716bcd70e886f0f96007beafc2992a85e0788",
           "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
           "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
+          "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
           "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
           "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
           "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
@@ -64182,6 +65194,7 @@
           "sha256:b5e92ce4a1675ba31397aa8b0dd1b469c09c6e3322b508631559d7efc6e02ecf",
           "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f",
           "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
+          "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
           "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
           "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
           "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
@@ -64258,6 +65271,7 @@
           "src/adapters/pi/index.ts@sha256:755c1620d7eaafc9fd909f26effefa713a77c0b10afaf9a8b0e139136fe3b8f6",
           "src/adapters/pi/index.ts@sha256:94a765d32bb4710ff4c57ccb979893561ea1b22efa9ff36bece6475a1f4e84a9",
           "src/adapters/pi/index.ts@sha256:9cfdd389e0c9af4ac30627d637a5cd4a95e3fe61f8629c2d4a33565d80bc56e6",
+          "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
           "src/adapters/pi/index.ts@sha256:c0a162f81f1d841ca5e48c4e810140b9361b36f72ca9a42824d3978d91beccc3",
           "src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
           "src/adapters/pi/index.ts@sha256:fd0cbde9be061dd0e5aea4e11a1048e5367f14327321cb002dc1eee87beb65b9",
@@ -64273,6 +65287,7 @@
           "src/adapters/pi/schemas.ts@sha256:813642147c38dc2b4430f2c26da815157e31c5621efd45eec756f87914dc88a5",
           "src/adapters/pi/schemas.ts@sha256:960d97353b52a2f28e3592e01c8a946979d964993b9a55e896955798f2d74c85",
           "src/adapters/pi/schemas.ts@sha256:a239609a9f8c88a73d96395e7045b84e4240e0c89e1a8dc47dca554642c788bb",
+          "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
           "src/adapters/pi/schemas.ts@sha256:bd6c340c0e68ad170a909e38b40a2c5ca5ab76448e2cff55670122e9339ad4f8",
           "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
           "src/adapters/pi/schemas.ts@sha256:dea80cf438976fd925500b98554ee42d7b4fbeae9a0428ce3a2e5511052619b9",
@@ -64469,6 +65484,7 @@
           "src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
           "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
           "src/domain/shared/types.ts@sha256:9d40293914df1be3626affb777689e5b41a8f9304b90f99f4ca32fde05c46388",
+          "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
           "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
           "src/domain/shared/types.ts@sha256:de6738a6d8484bb34c1fa171977b19040b6cdb92ceb6eda7aa794c32ff38334b",
           "src/domain/shared/types.ts@sha256:eabbba4143659a1377ef32b2462e105a9ef0d8aebc8cb2057879d872f4f7a94a",
@@ -64482,6 +65498,9 @@
           "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
           "src/gateway/index.ts@sha256:5ba8c55f7758b2fbe77e753b9b49886d0cac5f557664145432cd1ddb20d1ed16",
           "src/gateway/transaction.ts@sha256:ca71556e0540b4cdd0b99786ac2db92d997d77a4cfb17ae22508952608d84fcb",
+          "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+          "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+          "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
           "src/knowledge/diagram-parser.ts@sha256:78f071985e79e2d9fc9359ea4fa73c772a70b5a47e6871f0d6c4e3ab7aeae79c",
           "src/knowledge/doc-parser.ts@sha256:3333debffe08d59eda5bef330fedb61fcbde9a63198ef4aaa15286e89caad266",
           "src/project/bootstrap.ts@sha256:4addc279007d426b5cf0af0ba8bc23856c22d0c3964b975bc922a90e1e1a6b21",
@@ -64552,6 +65571,7 @@
           "tests/smoke/graph-lenses.test.mjs@sha256:bfd6f4a2e09ce2787b2aa15394c912d4c19463032a37a8b515da78d77f581c92",
           "tests/smoke/hot-context.test.mjs@sha256:0a3cc00bf07084bef2eaf9479248942ffd211ea180c6324b88e6fcf830a666a1",
           "tests/smoke/hot-context.test.mjs@sha256:549f999d6db911dfdb30f766405c73659d30147460699eed1900ac3c452655b6",
+          "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
           "tests/smoke/hot-retention.test.mjs@sha256:f51abd69c2ca65a2bed8585f43f9f53a251ae188122371253f41038aad18b281",
           "tests/smoke/loop-isolation-policy.test.mjs@sha256:01f60f962bdddad06d3f212bd8e8b8282e1f8973adf631fc7621d26ae0549136",
           "tests/smoke/loop-isolation-policy.test.mjs@sha256:297a28f608ccb8162d7dab7c35c76afbc5bf86050c31cbee2c1a549c4c8744fe",
@@ -64565,6 +65585,7 @@
           "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
           "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
           "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
+          "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
           "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
           "tests/smoke/package-smoke.test.mjs@sha256:87306f298ae233cf58f6fa4b2d673b9bf7b44dd19a3da9fa9696f7880ca11974",
           "tests/smoke/package-smoke.test.mjs@sha256:bae5e5ec3201045392c920a7a08abc4fc6a70bd15f01fff9fe94ec7d95035bfb",
@@ -64605,6 +65626,7 @@
           "tests/tasks/TASK-024/project-source-root.test.mjs@sha256:22f09537a5cfa50b91ed6587c4f48d15a826dc5bb2b13d6bbc2a0742e0c1e44b",
           "tests/tasks/TASK-025/knowledge-source-root.test.mjs@sha256:3f88e69a413b95f33610f64cee869f48867b39ae727397d557d1b8000609a4bc",
           "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs@sha256:75c840064cda19f5045231754cfe8fc93c24961ae82c38960e9ce80ce1108872",
+          "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24"
         ],
@@ -64687,13 +65709,13 @@
             "ownership_mismatch": 0,
             "deprecated_path_present": 0,
             "generated_or_runtime_artifact_in_source_area": 0,
-            "approved_migration_delta": 15,
+            "approved_migration_delta": 13,
             "compatibility_export_gap": 0
           },
           "path_rule_counts": {
-            "intended": 65,
+            "intended": 69,
             "current": 4,
-            "target": 41
+            "target": 45
           },
           "approved_delta_edges": [
             {
@@ -64724,8 +65746,6 @@
             "src/application/**",
             "src/audit/**",
             "src/domain/**",
-            "src/gc/**",
-            "src/gc/**",
             "src/roadmap/**",
             "src/roadmap/**",
             "src/session/**",
@@ -64875,9 +65895,10 @@
         "TASK-030",
         "TASK-031"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-027"
+      ],
       "todo_task_ids": [
-        "TASK-027",
         "TASK-028",
         "TASK-029",
         "TASK-030",
@@ -64891,7 +65912,8 @@
       ],
       "status_counts": {
         "cancelled": 2,
-        "todo": 5
+        "in_progress": 1,
+        "todo": 4
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -65400,7 +66422,6 @@
         "src/application/builds.ts",
         "src/application/claims.ts",
         "src/application/gateway/**",
-        "src/application/gc.ts",
         "src/application/graph.ts",
         "src/application/graph/**",
         "src/application/graph/rebuilder.ts",
@@ -65421,7 +66442,6 @@
         "src/application/tools/**",
         "src/application/tools/artifact-status.ts",
         "src/application/tools/audit.ts",
-        "src/application/tools/gc.ts",
         "src/application/tools/resume-context.ts",
         "src/application/tools/session.ts",
         "src/application/tools/state.ts",
@@ -65441,7 +66461,6 @@
         "src/domain",
         "src/domain/audit/types.ts",
         "src/domain/build/types.ts",
-        "src/domain/gc/types.ts",
         "src/domain/roadmap/status.ts",
         "src/domain/roadmap/task-boundary.ts",
         "src/domain/roadmap/task-id.ts",
@@ -65455,6 +66474,9 @@
         "src/domain/state/types.ts",
         "src/gateway",
         "src/gc/**",
+        "src/gc/runtime.ts",
+        "src/gc/tool.ts",
+        "src/gc/types.ts",
         "src/index.ts",
         "src/knowledge",
         "src/knowledge/**",
@@ -66777,6 +67799,20 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+          "task_id": "TASK-027",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
           "task_id": "TASK-022",
           "verdict": "pass",
@@ -66917,6 +67953,7 @@
         ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
         ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
         ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+        ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -66998,6 +68035,8 @@
         ".codewiki/roadmap/tasks/TASK-023/task.json",
         ".codewiki/roadmap/tasks/TASK-026/context.json",
         ".codewiki/roadmap/tasks/TASK-026/task.json",
+        ".codewiki/roadmap/tasks/TASK-027/context.json",
+        ".codewiki/roadmap/tasks/TASK-027/task.json",
         ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
         ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
         "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
@@ -67222,6 +68261,9 @@
         "src/domain/validation/types.ts",
         "src/gateway/index.ts",
         "src/gateway/transaction.ts",
+        "src/gc/runtime.ts",
+        "src/gc/tool.ts",
+        "src/gc/types.ts",
         "src/index.ts",
         "src/knowledge/diagram-parser.ts",
         "src/knowledge/doc-parser.ts",
@@ -67372,6 +68414,7 @@
         "build:.codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
         "build:.codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
         "build:.codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+        "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
         "build:.codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
         "changed",
         "changed pass: 0 changed files",
@@ -67490,6 +68533,7 @@
         "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 198 diagram refs, 19 approved migration deltas, 0 actionable drift items.",
         "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 201 diagram refs, 17 approved migration deltas, 0 actionable drift items.",
         "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 202 diagram refs, 15 approved migration deltas, 0 actionable drift items.",
+        "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
         "file-structure pass: Checked 90 TypeScript source files, architecture wrapper boundaries, 191 diagram refs, and file-structure drift lens with 20 approved migration deltas and 0 actionable drift items.",
         "file-structure pass: checked 95 TypeScript source files, architecture wrapper boundaries, 195 diagram refs, and file-structure drift lens with 21 approved migration deltas and 0 actionable drift items.",
         "generated-parity",
@@ -67502,6 +68546,7 @@
         "generated-parity pass: generated graph presence/freshness and 1 active roadmap task view pass.",
         "generated-parity pass: generated graph presence/freshness and 1 active roadmap task views match canonical sources.",
         "generated-parity pass: generated graph presence/freshness and 1 active roadmap task views pass.",
+        "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
         "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
         "generated-parity pass: generated graph presence/freshness and 8 active roadmap task views against canonical sources.",
         "generated-parity pass: generated graph presence/freshness and 8 active roadmap task views pass.",
@@ -67560,6 +68605,7 @@
         "task TASK-024 pass.",
         "task TASK-025 pass.",
         "task TASK-026 pass.",
+        "task TASK-027 pass.",
         "task pass for TASK-011",
         "task pass: TASK-010 roadmap task checked",
         "task pass: TASK-024 path references and task metadata pass.",
@@ -67595,11 +68641,14 @@
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+        "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
         "working_tree_digest:sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
         "working_tree_digest:sha256:33b9132bc524e95dab6e1693e035c48145de15bbe6c3c6b254a5fcb538dc5472",
+        "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
         "working_tree_digest:sha256:7f892fe134595f7849a11239e35e411dd2cc00900ad80fea0c5f23217e1aedec",
         "working_tree_digest:sha256:adc35b9665ed0211d529684d7919b6738e686eccb775b047997871b5f18cbf97",
-        "working_tree_digest:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40"
+        "working_tree_digest:sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
+        "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12"
       ],
       "content_proof_refs": [
         ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json@sha256:c91bcd3ff0a9c881cb5bcb9ce08dc0aa6d2731159134cb655904a3747f32a377",
@@ -67824,6 +68873,7 @@
         "refs/codewiki/archive/task/TASK-024",
         "refs/codewiki/archive/task/TASK-025",
         "refs/codewiki/archive/task/TASK-026",
+        "refs/codewiki/archive/task/TASK-027",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
         "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
         "scripts/codewiki-gateway.mjs@sha256:7749d37f4d8f0b62da2f441ac36c522a988ba562f6c739ac94fd8175d8cb90df",
@@ -67852,6 +68902,7 @@
         "sha256:696950f19a1ab409fa37e737e3c716bcd70e886f0f96007beafc2992a85e0788",
         "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
         "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
+        "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
         "sha256:754d34df600dedb1bc63f7e75bc5d6df1aa1142a31f29396dc2db646e98ff309",
         "sha256:762caa4535ed1cc3d0382aa8877ba6d2ba252c51d959bf78b7977283e094d034",
         "sha256:7781d95ea074e048ce4c4e9385d251b133e4f5d5c3a0f6d486ffa1e5af2da455",
@@ -67875,6 +68926,7 @@
         "sha256:b5e92ce4a1675ba31397aa8b0dd1b469c09c6e3322b508631559d7efc6e02ecf",
         "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f",
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
+        "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
         "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
@@ -67951,6 +69003,7 @@
         "src/adapters/pi/index.ts@sha256:755c1620d7eaafc9fd909f26effefa713a77c0b10afaf9a8b0e139136fe3b8f6",
         "src/adapters/pi/index.ts@sha256:94a765d32bb4710ff4c57ccb979893561ea1b22efa9ff36bece6475a1f4e84a9",
         "src/adapters/pi/index.ts@sha256:9cfdd389e0c9af4ac30627d637a5cd4a95e3fe61f8629c2d4a33565d80bc56e6",
+        "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
         "src/adapters/pi/index.ts@sha256:c0a162f81f1d841ca5e48c4e810140b9361b36f72ca9a42824d3978d91beccc3",
         "src/adapters/pi/index.ts@sha256:c3dadb3d170ae7a6cae2888cfbe44c975d93109797c4664a4feaafc45a36bea6",
         "src/adapters/pi/index.ts@sha256:fd0cbde9be061dd0e5aea4e11a1048e5367f14327321cb002dc1eee87beb65b9",
@@ -67966,6 +69019,7 @@
         "src/adapters/pi/schemas.ts@sha256:813642147c38dc2b4430f2c26da815157e31c5621efd45eec756f87914dc88a5",
         "src/adapters/pi/schemas.ts@sha256:960d97353b52a2f28e3592e01c8a946979d964993b9a55e896955798f2d74c85",
         "src/adapters/pi/schemas.ts@sha256:a239609a9f8c88a73d96395e7045b84e4240e0c89e1a8dc47dca554642c788bb",
+        "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
         "src/adapters/pi/schemas.ts@sha256:bd6c340c0e68ad170a909e38b40a2c5ca5ab76448e2cff55670122e9339ad4f8",
         "src/adapters/pi/schemas.ts@sha256:be3ad776adc0d9d68523c6ef41daef3a440f4d698565c53e2e50fe3408c30fe2",
         "src/adapters/pi/schemas.ts@sha256:dea80cf438976fd925500b98554ee42d7b4fbeae9a0428ce3a2e5511052619b9",
@@ -68162,6 +69216,7 @@
         "src/domain/shared/types.ts@sha256:8517ae4acd0b76198420ce4f89aa36603341647ddf25e3061f26805acbbdc13e",
         "src/domain/shared/types.ts@sha256:888e995902fb871e8e791e094bbaf0888906f54fb2647eebe2f3e6ec14f76baf",
         "src/domain/shared/types.ts@sha256:9d40293914df1be3626affb777689e5b41a8f9304b90f99f4ca32fde05c46388",
+        "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
         "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
         "src/domain/shared/types.ts@sha256:de6738a6d8484bb34c1fa171977b19040b6cdb92ceb6eda7aa794c32ff38334b",
         "src/domain/shared/types.ts@sha256:eabbba4143659a1377ef32b2462e105a9ef0d8aebc8cb2057879d872f4f7a94a",
@@ -68175,6 +69230,9 @@
         "src/domain/validation/types.ts@sha256:ff4c7a1baacc8eb48995d7b6b7ed645f51060b5298d17d3efa178e3ff076b280",
         "src/gateway/index.ts@sha256:5ba8c55f7758b2fbe77e753b9b49886d0cac5f557664145432cd1ddb20d1ed16",
         "src/gateway/transaction.ts@sha256:ca71556e0540b4cdd0b99786ac2db92d997d77a4cfb17ae22508952608d84fcb",
+        "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+        "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+        "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
         "src/knowledge/diagram-parser.ts@sha256:78f071985e79e2d9fc9359ea4fa73c772a70b5a47e6871f0d6c4e3ab7aeae79c",
         "src/knowledge/doc-parser.ts@sha256:3333debffe08d59eda5bef330fedb61fcbde9a63198ef4aaa15286e89caad266",
         "src/project/bootstrap.ts@sha256:4addc279007d426b5cf0af0ba8bc23856c22d0c3964b975bc922a90e1e1a6b21",
@@ -68245,6 +69303,7 @@
         "tests/smoke/graph-lenses.test.mjs@sha256:bfd6f4a2e09ce2787b2aa15394c912d4c19463032a37a8b515da78d77f581c92",
         "tests/smoke/hot-context.test.mjs@sha256:0a3cc00bf07084bef2eaf9479248942ffd211ea180c6324b88e6fcf830a666a1",
         "tests/smoke/hot-context.test.mjs@sha256:549f999d6db911dfdb30f766405c73659d30147460699eed1900ac3c452655b6",
+        "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
         "tests/smoke/hot-retention.test.mjs@sha256:f51abd69c2ca65a2bed8585f43f9f53a251ae188122371253f41038aad18b281",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:01f60f962bdddad06d3f212bd8e8b8282e1f8973adf631fc7621d26ae0549136",
         "tests/smoke/loop-isolation-policy.test.mjs@sha256:297a28f608ccb8162d7dab7c35c76afbc5bf86050c31cbee2c1a549c4c8744fe",
@@ -68258,6 +69317,7 @@
         "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
         "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
         "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
+        "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
         "tests/smoke/package-smoke.test.mjs@sha256:85e200aacc4106c96fffe467cce4e1c55d5cdd0228c752986fa98e8775bd899a",
         "tests/smoke/package-smoke.test.mjs@sha256:87306f298ae233cf58f6fa4b2d673b9bf7b44dd19a3da9fa9696f7880ca11974",
         "tests/smoke/package-smoke.test.mjs@sha256:bae5e5ec3201045392c920a7a08abc4fc6a70bd15f01fff9fe94ec7d95035bfb",
@@ -68298,6 +69358,7 @@
         "tests/tasks/TASK-024/project-source-root.test.mjs@sha256:22f09537a5cfa50b91ed6587c4f48d15a826dc5bb2b13d6bbc2a0742e0c1e44b",
         "tests/tasks/TASK-025/knowledge-source-root.test.mjs@sha256:3f88e69a413b95f33610f64cee869f48867b39ae727397d557d1b8000609a4bc",
         "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs@sha256:75c840064cda19f5045231754cfe8fc93c24961ae82c38960e9ce80ce1108872",
+        "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:5ad445877a8080972663a7c15a76b7b924442d2db77ebb9d2a13d280bc5b89b4",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24"
       ],
@@ -70250,6 +71311,43 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-027",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+          ],
+          "audit_evidence_refs": [
+            "approval:user:2026-05-26 Great. Please continue",
+            "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            "decision:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+            "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+            "profile:file-structure",
+            "profile:alignment",
+            "profile:stale-reference",
+            "profile:generated-parity",
+            "profile:changed",
+            "profile:task",
+            "working_tree_digest:sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
+            "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+            "alignment pass: generated graph health and roadmap queue reachability.",
+            "stale-reference pass: scanned 52 active markdown/source text files.",
+            "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+            "task TASK-027 pass.",
+            "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
+          ],
+          "content_proof_refs": [
+            "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
           "verdict": "pass",
           "profile": "task-close",
@@ -70530,6 +71628,7 @@
         "file-structure-map:drift_lens_against_target",
         "file-structure-map:drift_lens_compares",
         "file-structure-map:first_concept_root_pilot",
+        "file-structure-map:gc_concept_root_boundary",
         "file-structure-map:generated_graph",
         "file-structure-map:graph_indexes_structure",
         "file-structure-map:heavier_roots_wait_for_audit",
@@ -70641,6 +71740,7 @@
           "file-structure-map:change_diff_table_concept_root_boundary",
           "file-structure-map:current_layered_source",
           "file-structure-map:current_ui",
+          "file-structure-map:gc_concept_root_boundary",
           "file-structure-map:human_structure_surface",
           "file-structure-map:knowledge_concept_root_boundary",
           "file-structure-map:optional_scripts",
@@ -70874,6 +71974,7 @@
         "file-structure-map:current_layered_source",
         "file-structure-map:deferred_concept_roots",
         "file-structure-map:first_concept_root_pilot",
+        "file-structure-map:gc_concept_root_boundary",
         "file-structure-map:intended_file_structure",
         "file-structure-map:knowledge_concept_root_boundary",
         "file-structure-map:migration_compatibility_constraints",
@@ -70902,7 +72003,7 @@
         "ownership_mismatch": 0,
         "deprecated_path_present": 0,
         "generated_or_runtime_artifact_in_source_area": 0,
-        "approved_migration_delta": 15,
+        "approved_migration_delta": 13,
         "compatibility_export_gap": 0
       },
       "intended_paths": [
@@ -71244,7 +72345,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71253,7 +72354,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71262,7 +72363,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71271,7 +72372,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71280,7 +72381,43 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "src/gc/**",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/tasks/TASK-027/gc-source-root.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/smoke/hot-retention.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/smoke/package-smoke.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -71788,7 +72925,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71797,7 +72934,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71806,7 +72943,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71815,7 +72952,7 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
           "role": "target",
           "approved_delta": false
         },
@@ -71824,7 +72961,43 @@
           "owner_id": "change_diff_table_concept_root_boundary",
           "owner_label": "Change and diff-table concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_026",
+          "status": "task_close_validated_by_task_026",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "src/gc/**",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/tasks/TASK-027/gc-source-root.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/smoke/hot-retention.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
+          "role": "target",
+          "approved_delta": false
+        },
+        {
+          "pattern": "tests/smoke/package-smoke.test.mjs",
+          "owner_id": "gc_concept_root_boundary",
+          "owner_label": "GC concept-root migration",
+          "group": "source_target",
+          "status": "implementation_pending_validation_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -71999,30 +73172,6 @@
         {
           "category": "approved_migration_delta",
           "severity": "info",
-          "path": "src/gc/**",
-          "owner_id": "concept_root_target",
-          "owner_label": "Concept-root source ownership target",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/gc/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
-          "path": "src/gc/**",
-          "owner_id": "deferred_concept_roots",
-          "owner_label": "Remaining concept-root migration cohort",
-          "refs": [
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/file-structure.md"
-          ],
-          "message": "src/gc/** is an accepted target path not yet present; migration delta is approved by file-structure map."
-        },
-        {
-          "category": "approved_migration_delta",
-          "severity": "info",
           "path": "src/roadmap/**",
           "owner_id": "concept_root_target",
           "owner_label": "Concept-root source ownership target",
@@ -72179,7 +73328,9 @@
             "tests/smoke/drift-propagation.test.mjs",
             "tests/run.mjs",
             "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs"
+            "tests/smoke/efficiency-ui.test.mjs",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs",
+            "tests/smoke/hot-retention.test.mjs"
           ],
           "code_paths": [
             "src/application/knowledge/diagram-parser.ts",
@@ -72293,7 +73444,10 @@
             "src/change/traceability.ts",
             "src/change/diff-table.ts",
             "src/change/tool.ts",
-            "src/domain/roadmap/types.ts"
+            "src/domain/roadmap/types.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -72303,7 +73457,8 @@
             ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
           ],
           "validation_paths": [
             "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -72316,6 +73471,7 @@
             "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
             "fresh implementation validation required for TASK-025",
             "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+            "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
             ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
             ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
             ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -72328,6 +73484,7 @@
             ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -72383,7 +73540,12 @@
             "alignment pass: generated graph health and roadmap queue reachability.",
             "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
             "task TASK-026 pass.",
-            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+            "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+            "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+            "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+            "task TASK-027 pass.",
+            "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
           ],
           "publication_refs": [],
           "content_proof_refs": [
@@ -72602,7 +73764,18 @@
             "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
             "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
             "refs/codewiki/archive/task/TASK-026",
-            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+            "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+            "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+            "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+            "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+            "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+            "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+            "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+            "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+            "refs/codewiki/archive/task/TASK-027",
+            "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
           ],
           "gaps": []
         },
@@ -72667,7 +73840,9 @@
             "tests/smoke/drift-propagation.test.mjs",
             "tests/run.mjs",
             "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs"
+            "tests/smoke/efficiency-ui.test.mjs",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs",
+            "tests/smoke/hot-retention.test.mjs"
           ],
           "code_paths": [
             "src/application/knowledge/diagram-parser.ts",
@@ -72781,7 +73956,10 @@
             "src/change/traceability.ts",
             "src/change/diff-table.ts",
             "src/change/tool.ts",
-            "src/domain/roadmap/types.ts"
+            "src/domain/roadmap/types.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -72791,7 +73969,8 @@
             ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
           ],
           "validation_paths": [
             "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -72804,6 +73983,7 @@
             "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
             "fresh implementation validation required for TASK-025",
             "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+            "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
             ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
             ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
             ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -72816,6 +73996,7 @@
             ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -72871,7 +74052,12 @@
             "alignment pass: generated graph health and roadmap queue reachability.",
             "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
             "task TASK-026 pass.",
-            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+            "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+            "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+            "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+            "task TASK-027 pass.",
+            "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
           ],
           "publication_refs": [],
           "content_proof_refs": [
@@ -73090,7 +74276,18 @@
             "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
             "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
             "refs/codewiki/archive/task/TASK-026",
-            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+            "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+            "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+            "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+            "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+            "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+            "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+            "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+            "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+            "refs/codewiki/archive/task/TASK-027",
+            "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
           ],
           "gaps": []
         },
@@ -73155,7 +74352,9 @@
             "tests/smoke/drift-propagation.test.mjs",
             "tests/run.mjs",
             "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs"
+            "tests/smoke/efficiency-ui.test.mjs",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs",
+            "tests/smoke/hot-retention.test.mjs"
           ],
           "code_paths": [
             "src/application/knowledge/diagram-parser.ts",
@@ -73269,7 +74468,10 @@
             "src/change/traceability.ts",
             "src/change/diff-table.ts",
             "src/change/tool.ts",
-            "src/domain/roadmap/types.ts"
+            "src/domain/roadmap/types.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts"
           ],
           "implementation_builds": [
             ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
@@ -73279,7 +74481,8 @@
             ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
           ],
           "validation_paths": [
             "codewiki_audit:file-structure/alignment/generated-parity/changed",
@@ -73292,6 +74495,7 @@
             "fresh implementation validation should cite this build path, working_tree_digest or commit/tree proof, required check outputs, and CodeWiki audit evidence.",
             "fresh implementation validation required for TASK-025",
             "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-026 -> semantic profiles pass; changed warnings only dirty generated read models",
+            "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-027 -> semantic profiles pass; changed warnings only dirty generated read models",
             ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
             ".codewiki/validation/2026-05-22-task-close-pass-task-010.json",
             ".codewiki/validation/2026-05-23-implementation-pass-task-011.json",
@@ -73304,6 +74508,7 @@
             ".codewiki/validation/2026-05-26-implementation-pass-task-024.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-025.json",
             ".codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-implementation-pass-task-027.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -73359,7 +74564,12 @@
             "alignment pass: generated graph health and roadmap queue reachability.",
             "generated-parity pass: generated graph presence/freshness and 6 active roadmap task views.",
             "task TASK-026 pass.",
-            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit."
+            "changed warning: dirty generated read models and implementation files before commit; expected for implementation validation and to be cleared by post-commit audit.",
+            "working_tree_digest:sha256:f2d711f0f36a85417f716673ee0eff1d74e173bc7e91e65abe5f55e40bdd8d12",
+            "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+            "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+            "task TASK-027 pass.",
+            "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
           ],
           "publication_refs": [],
           "content_proof_refs": [
@@ -73578,7 +74788,18 @@
             "src/domain/shared/types.ts@sha256:de579cedf620c378492e9b8caa6254d4639de4d293b36711210d51a32a7bdc87",
             "src/validation/report.ts@sha256:fba21553d48c2dcfa40437e906a9cce360291722dab371c46434f41e9cd826b1",
             "refs/codewiki/archive/task/TASK-026",
-            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4"
+            "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
+            "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:37f895bbb18816d58b333d5aed39cc08e72b1fdc0f20ae55d7c5f4d6111c54b4",
+            "tests/smoke/hot-retention.test.mjs@sha256:65948384b0c7e5d8465a4b1fb4577c68e414e922b678f4c8d5aa768c32f93866",
+            "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
+            "src/gc/types.ts@sha256:68be9251c10ccf207e218c81333acb93c2e7447ec4abfa88e15e69245d42e1dd",
+            "src/gc/runtime.ts@sha256:a6c27986ba617731382f0fca459abff9f95161e13a5d5e22dcc96c125dfd9061",
+            "src/gc/tool.ts@sha256:03a11a4b3e18dbe8f55cff04ed39fd02156cc5548fae4e42647730aff1ff9931",
+            "src/adapters/pi/index.ts@sha256:b3de7dcf75562cc4acdb23144fd0fcadb8c7cf16fb631b3c34cc4160cf515762",
+            "src/adapters/pi/schemas.ts@sha256:b51e178f96e6a73077b8ebb3c4fdf64c1efee124c28138c07a25e11fa4031e31",
+            "src/domain/shared/types.ts@sha256:a4ca4a5f1dbfc617377f70fe4d9dfb038e1fbc9f986e0c3c43d08687408b3a35",
+            "refs/codewiki/archive/task/TASK-027",
+            "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6"
           ],
           "gaps": []
         }
@@ -73826,9 +75047,9 @@
             "src/change/traceability.ts",
             "src/change/diff-table.ts",
             "src/change/tool.ts",
-            "src/domain/gc/types.ts",
-            "src/application/gc.ts",
-            "src/application/tools/gc.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts",
             "src/domain/session/types.ts",
             "src/domain/session/links.ts",
             "src/domain/session/worktree-isolation.ts",
@@ -73889,9 +75110,9 @@
             ".codewiki/validation/2026-05-22-decision-pass.json"
           ],
           "code_paths": [
-            "src/domain/gc/types.ts",
-            "src/application/gc.ts",
-            "src/application/tools/gc.ts"
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts"
           ]
         },
         "TASK-028": {
@@ -74154,7 +75375,8 @@
             ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -74240,7 +75462,8 @@
             ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
             ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
           ]
         },
         "purgeable": {
@@ -74657,10 +75880,20 @@
           "digest": "sha256:4a3256504fb53a9532624f148a00a40caa7be2f2a33030e557b409f09cea1aa4",
           "restore_command": "/wiki-restore TASK-026",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-027",
+          "build_path": ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-027",
+          "commit_sha": "",
+          "digest": "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+          "restore_command": "/wiki-restore TASK-027",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 40,
+        "ledger_count": 41,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -74701,7 +75934,8 @@
           "refs/codewiki/archive/task/TASK-022",
           "refs/codewiki/archive/task/TASK-024",
           "refs/codewiki/archive/task/TASK-025",
-          "refs/codewiki/archive/task/TASK-026"
+          "refs/codewiki/archive/task/TASK-026",
+          "refs/codewiki/archive/task/TASK-027"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -74743,7 +75977,8 @@
           ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-          ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+          ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -74785,7 +76020,8 @@
           ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
           ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-          ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+          ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -74887,13 +76123,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-26T23:06:54.015Z",
+      "generated_at": "2026-05-26T23:23:07.547Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-26T23:06:54Z",
+      "generated_at": "2026-05-26T23:23:07Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -74910,7 +76146,8 @@
         "active_sprint_count": 3,
         "status_counts": {
           "cancelled": 2,
-          "todo": 5
+          "in_progress": 1,
+          "todo": 4
         },
         "priority_counts": {
           "medium": 1,
@@ -75097,17 +76334,19 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-027"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-027"
+        ],
         "todo_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
           "TASK-031"
         ],
         "executable_todo_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
@@ -75120,12 +76359,12 @@
           "TASK-023"
         ],
         "recent_task_ids": [
+          "TASK-027",
           "TASK-023",
           "TASK-031",
           "TASK-030",
           "TASK-029",
           "TASK-028",
-          "TASK-027",
           "TASK-012"
         ]
       },
@@ -75218,7 +76457,7 @@
           "priority": "high",
           "kind": "migration",
           "change_type": "system",
-          "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
+          "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
           "labels": [
             "concept-root-migration",
             "project-root",
@@ -75356,9 +76595,9 @@
             "src/change/traceability.ts",
             "src/change/diff-table.ts",
             "src/change/tool.ts",
-            "src/domain/gc/types.ts",
-            "src/application/gc.ts",
-            "src/application/tools/gc.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts",
             "src/domain/session/types.ts",
             "src/domain/session/links.ts",
             "src/domain/session/worktree-isolation.ts",
@@ -75398,7 +76637,7 @@
             "scripts/check-architecture.mjs",
             "tests/tasks/TASK-076/restructure.test.mjs"
           ],
-          "updated": "2026-05-26T22:53:32Z",
+          "updated": "2026-05-26T23:17:27Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -75413,7 +76652,7 @@
         "TASK-027": {
           "id": "TASK-027",
           "title": "Migrate GC source root",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "migration",
           "change_type": "system",
@@ -75453,11 +76692,11 @@
             ".codewiki/validation/2026-05-22-decision-pass.json"
           ],
           "code_paths": [
-            "src/domain/gc/types.ts",
-            "src/application/gc.ts",
-            "src/application/tools/gc.ts"
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts"
           ],
-          "updated": "2026-05-26T03:23:09Z",
+          "updated": "2026-05-26T23:22:28Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -75748,7 +76987,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-26T23:06:54Z",
+      "generated_at": "2026-05-26T23:23:07Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -75772,7 +77011,7 @@
         "open_task_count": 5,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
-        "file_structure_approved_migration_deltas": 15
+        "file_structure_approved_migration_deltas": 13
       },
       "bars": {
         "tracked_drift": {
@@ -75964,7 +77203,8 @@
               ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -76050,7 +77290,8 @@
               ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
               ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json"
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
             ]
           },
           "purgeable": {
@@ -76072,7 +77313,7 @@
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
         "Tracked drift coverage: 6/6.",
-        "File-structure drift: 0 actionable item(s), 15 approved migration delta(s)."
+        "File-structure drift: 0 actionable item(s), 13 approved migration delta(s)."
       ],
       "file_structure": {
         "version": 1,
@@ -76085,13 +77326,13 @@
           "ownership_mismatch": 0,
           "deprecated_path_present": 0,
           "generated_or_runtime_artifact_in_source_area": 0,
-          "approved_migration_delta": 15,
+          "approved_migration_delta": 13,
           "compatibility_export_gap": 0
         },
         "path_rule_counts": {
-          "intended": 65,
+          "intended": 69,
           "current": 4,
-          "target": 41
+          "target": 45
         },
         "approved_migration_delta_paths": [
           "src/agency/**",
@@ -76100,8 +77341,6 @@
           "src/application/**",
           "src/audit/**",
           "src/domain/**",
-          "src/gc/**",
-          "src/gc/**",
           "src/roadmap/**",
           "src/roadmap/**",
           "src/session/**",
@@ -76180,7 +77419,7 @@
           ],
           "primary_task": {
             "id": "TASK-027",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Migrate GC source root"
           },
           "revision": {
@@ -76214,11 +77453,11 @@
           ],
           "primary_task": {
             "id": "TASK-027",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Migrate GC source root"
           },
           "revision": {
-            "digest": "76f318a1c99e33ec39a5c540dfc8925f3427a320c8d9bf0d0d0c6f064085980e",
+            "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
             "basis": "source_content"
           },
           "note": "tracked by TASK-027"
@@ -77016,7 +78255,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-26T23:06:54Z",
+        "generated_at": "2026-05-26T23:23:07Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -77044,10 +78283,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-26T23:06:54Z",
+            "checked_at": "2026-05-26T23:23:07Z",
             "revision": {
               "git": {
-                "head": "6e97c2bc7d7923ae455669307d1750702f7e3411",
+                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -77080,7 +78319,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "5ba54cc75b432bbe96208ea8098844bf1b4eade8",
+                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -77088,7 +78327,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a8a32a191e3ecb195843e1f38cbc7db2ea539c18",
+                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
@@ -77107,7 +78346,7 @@
                   "src/adapters/pi/commands": "",
                   "src/adapters/pi/commands/audit.ts": "70f12c4f58038e859cf29b1b04c4a87a3ec1f1e3",
                   "src/adapters/pi/commands/resume.ts": "e97bc9bccd78ee65367bdb04005882d71413164a",
-                  "src/adapters/pi/schemas.ts": "2d3453d5c3be4b17fc0c95d4b91264d12d804e7c",
+                  "src/adapters/pi/schemas.ts": "cd2e8140f35fabca8053e2a943875e220b1a1318",
                   "src/adapters/pi/tools": "",
                   "src/adapters/pi/tools/audit.ts": "bb8feec9203806c020659255ec6fa88a5d16a681",
                   "src/adapters/pi/ui": "",
@@ -77130,7 +78369,7 @@
                   "src/build/types.ts": "6a4e2c88f6b118d2ce1e62fc7cd2165f4a7cfedb",
                   "src/build/writer.ts": "437c82580032811ba6a95bcb0e78ac04d851841d",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "baa094b4ed9c463dece2d8a3e8d76011aaa7f3a0",
+                  "src/domain/shared/types.ts": "413aa1fc7aaafea963d83dfe44400f77bdc6594b",
                   "src/gateway": "",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/knowledge": "",
@@ -77142,18 +78381,18 @@
                   "src/validation": "",
                   "src/validation/report.ts": "7e2d1a1a062782fb2a3aa38de39759948b4bc530",
                   "src/validation/tool.ts": "e93153ec2f70f45f0d4baba421ff0b1e65519dfe",
-                  "tests/smoke/package-smoke.test.mjs": "8038e5c368413179cc490068aece59be625be1c5"
+                  "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "2ee7f788f12d6f83cf048a70ee03c877619c495822ed184960aada72a1d8dcf1",
-              "task_digest": "12ab450cf891aa103103cfbbe2c5786aed6df60cd90073995cb48797c01522c9",
-              "code_digest": "7d909525894bf8e30bbd93c4f33b4dc4e4e4dc0652895f57191dacb68ef23bac",
-              "digest": "ee62547f5558d03a5f4e5a1b9078ab39b09ae0a1434e4bf8561f743453722ff9"
+              "spec_digest": "a3067781c18e75474b9d43e8aa8d8a9220c2d4e47a5bd6bb995e477ae8f66680",
+              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
+              "code_digest": "df0b1a3e183b0666a063274cb0ad9d18c143b89bc5982e94946c7bd6b717fcbe",
+              "digest": "a63d478a6b1b7f61fe7dc705f1c853521971fc4439bb1d6dc171adafbf44ab0f"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:06:54Z",
+              "checked_at": "2026-05-26T23:23:07Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -77298,10 +78537,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-26T23:06:54Z",
+            "checked_at": "2026-05-26T23:23:07Z",
             "revision": {
               "git": {
-                "head": "6e97c2bc7d7923ae455669307d1750702f7e3411",
+                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -77318,7 +78557,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "5ba54cc75b432bbe96208ea8098844bf1b4eade8",
+                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -77326,7 +78565,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a8a32a191e3ecb195843e1f38cbc7db2ea539c18",
+                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
                   "skills/codewiki": "",
@@ -77341,7 +78580,7 @@
                   "src/adapters/pi/commands": "",
                   "src/adapters/pi/commands/audit.ts": "70f12c4f58038e859cf29b1b04c4a87a3ec1f1e3",
                   "src/adapters/pi/commands/resume.ts": "e97bc9bccd78ee65367bdb04005882d71413164a",
-                  "src/adapters/pi/schemas.ts": "2d3453d5c3be4b17fc0c95d4b91264d12d804e7c",
+                  "src/adapters/pi/schemas.ts": "cd2e8140f35fabca8053e2a943875e220b1a1318",
                   "src/adapters/pi/tools": "",
                   "src/adapters/pi/tools/audit.ts": "bb8feec9203806c020659255ec6fa88a5d16a681",
                   "src/adapters/pi/ui/manager.ts": "9cc86baea786b0f353da459251aaba5120af6151",
@@ -77363,7 +78602,7 @@
                   "src/build/types.ts": "6a4e2c88f6b118d2ce1e62fc7cd2165f4a7cfedb",
                   "src/build/writer.ts": "437c82580032811ba6a95bcb0e78ac04d851841d",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "baa094b4ed9c463dece2d8a3e8d76011aaa7f3a0",
+                  "src/domain/shared/types.ts": "413aa1fc7aaafea963d83dfe44400f77bdc6594b",
                   "src/gateway": "",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/knowledge": "",
@@ -77375,18 +78614,18 @@
                   "src/validation": "",
                   "src/validation/report.ts": "7e2d1a1a062782fb2a3aa38de39759948b4bc530",
                   "src/validation/tool.ts": "e93153ec2f70f45f0d4baba421ff0b1e65519dfe",
-                  "tests/smoke/package-smoke.test.mjs": "8038e5c368413179cc490068aece59be625be1c5"
+                  "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "b06748fee995f59e8e679cfe6935b48bfa7405e7e60351d766a5372c9a02bd66",
-              "task_digest": "12ab450cf891aa103103cfbbe2c5786aed6df60cd90073995cb48797c01522c9",
-              "code_digest": "33e1be1f045e15f4dbb292236429b40f0554a9034cf50b99fa1adeb2bebb954c",
-              "digest": "e3c73ca02bc0ce7e26a13918ad8cfb733db8923e8f99faecb9aafcd2094e5e5a"
+              "spec_digest": "b235a0a99d1742612b25d0962bea0945a4791dd005cd3b7e9deefe7624b48bf4",
+              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
+              "code_digest": "432e8f5b0ec42a88fda08e3ab96cb5644e03ecb5e5fea37c1351672e09052c21",
+              "digest": "7973b110544b56b6c69c6ae3202ee7721ad638a3b5d7f36e591642c990d3787a"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:06:54Z",
+              "checked_at": "2026-05-26T23:23:07Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -77510,10 +78749,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-26T23:06:54Z",
+            "checked_at": "2026-05-26T23:23:07Z",
             "revision": {
               "git": {
-                "head": "6e97c2bc7d7923ae455669307d1750702f7e3411",
+                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -77546,7 +78785,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "5ba54cc75b432bbe96208ea8098844bf1b4eade8",
+                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -77554,7 +78793,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "a8a32a191e3ecb195843e1f38cbc7db2ea539c18",
+                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
@@ -77573,7 +78812,7 @@
                   "src/adapters/pi/commands": "",
                   "src/adapters/pi/commands/audit.ts": "70f12c4f58038e859cf29b1b04c4a87a3ec1f1e3",
                   "src/adapters/pi/commands/resume.ts": "e97bc9bccd78ee65367bdb04005882d71413164a",
-                  "src/adapters/pi/schemas.ts": "2d3453d5c3be4b17fc0c95d4b91264d12d804e7c",
+                  "src/adapters/pi/schemas.ts": "cd2e8140f35fabca8053e2a943875e220b1a1318",
                   "src/adapters/pi/tools": "",
                   "src/adapters/pi/tools/audit.ts": "bb8feec9203806c020659255ec6fa88a5d16a681",
                   "src/adapters/pi/ui": "",
@@ -77596,7 +78835,7 @@
                   "src/build/types.ts": "6a4e2c88f6b118d2ce1e62fc7cd2165f4a7cfedb",
                   "src/build/writer.ts": "437c82580032811ba6a95bcb0e78ac04d851841d",
                   "src/domain": "",
-                  "src/domain/shared/types.ts": "baa094b4ed9c463dece2d8a3e8d76011aaa7f3a0",
+                  "src/domain/shared/types.ts": "413aa1fc7aaafea963d83dfe44400f77bdc6594b",
                   "src/gateway": "",
                   "src/index.ts": "0a8180e22f177c11f5f2615e258298acef59c57d",
                   "src/knowledge": "",
@@ -77608,18 +78847,18 @@
                   "src/validation": "",
                   "src/validation/report.ts": "7e2d1a1a062782fb2a3aa38de39759948b4bc530",
                   "src/validation/tool.ts": "e93153ec2f70f45f0d4baba421ff0b1e65519dfe",
-                  "tests/smoke/package-smoke.test.mjs": "8038e5c368413179cc490068aece59be625be1c5"
+                  "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "2ee7f788f12d6f83cf048a70ee03c877619c495822ed184960aada72a1d8dcf1",
-              "task_digest": "12ab450cf891aa103103cfbbe2c5786aed6df60cd90073995cb48797c01522c9",
-              "code_digest": "7d909525894bf8e30bbd93c4f33b4dc4e4e4dc0652895f57191dacb68ef23bac",
-              "digest": "ee62547f5558d03a5f4e5a1b9078ab39b09ae0a1434e4bf8561f743453722ff9"
+              "spec_digest": "a3067781c18e75474b9d43e8aa8d8a9220c2d4e47a5bd6bb995e477ae8f66680",
+              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
+              "code_digest": "df0b1a3e183b0666a063274cb0ad9d18c143b89bc5982e94946c7bd6b717fcbe",
+              "digest": "a63d478a6b1b7f61fe7dc705f1c853521971fc4439bb1d6dc171adafbf44ab0f"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:06:54Z",
+              "checked_at": "2026-05-26T23:23:07Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -77758,14 +78997,14 @@
         "lane_id": "",
         "heading": "TASK-027 — Migrate GC source root",
         "command": "/wiki-resume TASK-027",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-26T23:06:54Z",
+        "generated_at": "2026-05-26T23:23:07Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -77846,7 +79085,7 @@
             ],
             "primary_task": {
               "id": "TASK-027",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Migrate GC source root"
             },
             "revision": {
@@ -77880,11 +79119,11 @@
             ],
             "primary_task": {
               "id": "TASK-027",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Migrate GC source root"
             },
             "revision": {
-              "digest": "76f318a1c99e33ec39a5c540dfc8925f3427a320c8d9bf0d0d0c6f064085980e",
+              "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
               "basis": "source_content"
             },
             "note": "tracked by TASK-027"
@@ -79091,7 +80330,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-027",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Migrate GC source root"
                 },
                 "revision": {
@@ -79125,11 +80364,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-027",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Migrate GC source root"
                 },
                 "revision": {
-                  "digest": "76f318a1c99e33ec39a5c540dfc8925f3427a320c8d9bf0d0d0c6f064085980e",
+                  "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-027"
@@ -79594,9 +80833,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-027",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-027"
+        ],
         "next_task_id": "TASK-027",
         "sprint_ids": [
           "SPRINT-001",
@@ -79758,7 +80999,6 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -79768,7 +81008,9 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-027"
+            ]
           },
           {
             "id": "done",

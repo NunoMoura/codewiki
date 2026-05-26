@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T22:53:32Z",
+  "generated_at": "2026-05-26T23:17:27Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-023/context.json",
   "task": {
     "id": "TASK-023",
@@ -9,7 +9,7 @@
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
-    "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
+    "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
     "labels": [
       "concept-root-migration",
       "project-root",
