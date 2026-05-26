@@ -1,6 +1,6 @@
 import { assessDecisionPropagation } from "../build/decision-propagation.ts";
 import { isAcceptedBuildData } from "../build/lifecycle.ts";
-import { normalizeChangeType, normalizeTraceabilityExemption } from "../domain/change/traceability.ts";
+import { normalizeChangeType, normalizeTraceabilityExemption } from "../change/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { ChangeClaimsFile } from "../domain/session/types.ts";

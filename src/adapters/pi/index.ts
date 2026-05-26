@@ -12,7 +12,7 @@ import { readRoadmapTask } from "../../application/roadmap.ts";
 import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject } from "../../project/context.ts";
 import { executeCodewikiBuildTool } from "../../build/tool.ts";
 import { executeCodewikiValidationTool } from "../../validation/tool.ts";
-import { executeCodewikiDiffTableTool } from "../../application/tools/diff-table.ts";
+import { executeCodewikiDiffTableTool } from "../../change/tool.ts";
 import { executeCodewikiGcTool } from "../../application/tools/gc.ts";
 import { executeCodewikiAgency } from "./tools/agency.ts";
 import { registerCodewikiArtifactStatusTool } from "./tools/artifact-status.ts";

@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import type { CodewikiDiffTableRowInput } from "../build/types.ts";
+import type { CodewikiDiffTableRowInput } from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 

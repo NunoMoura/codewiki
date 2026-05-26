@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:05Z",
+  "generated_at": "2026-05-26T23:04:21Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-026/context.json",
   "task": {
     "id": "TASK-026",
     "title": "Migrate change and diff-table source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

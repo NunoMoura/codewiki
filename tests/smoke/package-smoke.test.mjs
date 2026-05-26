@@ -273,7 +273,8 @@ async function main() {
 		const bootstrapSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "bootstrap.ts"), "utf8");
 		assert.match(piIndexSource, /executeCodewikiBuildTool/, "Pi build registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
-		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to application tool executor");
+		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to source-root tool executor");
+		assert.match(piIndexSource, /change\/tool/, "Pi diff-table registration should delegate to the change source-root tool module");
 		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to application tool executor");
 		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
 		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
@@ -303,10 +304,13 @@ async function main() {
 		assert.match(auditCommandSource, /audit\/tool/, "Pi audit command should delegate to the audit source-root tool module");
 		assert.match(auditCommandSource, /audit\/types/, "Pi audit command should read types from the audit source-root module");
 		assert.match(schemaSource, /audit\/types/, "Pi schemas should read audit values from the audit source-root module");
+		assert.match(schemaSource, /change\/types/, "Pi schemas should read change values from the change source-root module");
 		assert.match(architectureScriptSource, /src\/audit\/tool\.ts/, "Architecture script should delegate to the audit source-root tool module");
 		for (const oldAuditPathSource of [auditAdapterSource, auditCommandSource, schemaSource, architectureScriptSource]) {
 			assert.doesNotMatch(oldAuditPathSource, /application\/tools\/audit|domain\/audit\/types/, "Audit package paths should not delegate through old audit shims");
 		}
+		assert.doesNotMatch(piIndexSource, /application\/tools\/diff-table|application\/diff-table|domain\/change/, "Diff-table package paths should not delegate through old change/diff-table shims");
+		assert.doesNotMatch(schemaSource, /domain\/change/, "Schema package paths should not read change values from old change shims");
 		for (const adapterFile of ["artifact-status", "session", "state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);

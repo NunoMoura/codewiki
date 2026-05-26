@@ -1,21 +1,12 @@
-import type { ChangeType, LegacyChangeClass, TraceabilityExemption } from "../domain/change/types.ts";
+import type { ChangeType, CodewikiDiffTableRowInput, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
 import type { CodewikiIsolationRequirementInput } from "../domain/session/types.ts";
+
+export type { CodewikiDiffTableRowInput } from "../change/types.ts";
 
 export interface CodewikiBuildIsolationPolicyInput {
 	loop_start?: CodewikiIsolationRequirementInput;
 	validation?: CodewikiIsolationRequirementInput;
 	next_loop?: CodewikiIsolationRequirementInput;
-}
-
-export interface CodewikiDiffTableRowInput {
-	id?: string;
-	current_state: string;
-	desired_state: string;
-	rationale: string;
-	affected_layers?: string[];
-	risk?: "low" | "medium" | "high" | string;
-	user_action?: "pending" | "approved" | "rejected" | "deferred" | "edited" | string;
-	alternatives?: string[];
 }
 
 export interface CodewikiBuildRefsInput {

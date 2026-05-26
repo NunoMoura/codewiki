@@ -4,7 +4,7 @@ import { mkdtemp, rm, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { readRoadmapFile } from "../../src/application/roadmap.ts";
-import { executeDiffTableAction, readRuntimeDiffTables } from "../../src/application/diff-table.ts";
+import { executeDiffTableAction, readRuntimeDiffTables } from "../../src/change/diff-table.ts";
 import { readDiffTablePanelData, readGraphPanelData, updateRuntimeDiffRow } from "../../src/adapters/pi/ui/manager.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-efficiency-ui-"));

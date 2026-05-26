@@ -8,3 +8,14 @@ export type TraceabilityExemption = (typeof TRACEABILITY_EXEMPTION_VALUES)[numbe
 export type LegacyChangeClass = ChangeType | TraceabilityExemption | "code-bugfix" | "maintenance" | "audit" | "security" | "publication";
 /** @deprecated Use ChangeType. */
 export type ChangeClass = LegacyChangeClass;
+
+export interface CodewikiDiffTableRowInput {
+	id?: string;
+	current_state: string;
+	desired_state: string;
+	rationale: string;
+	affected_layers?: string[];
+	risk?: "low" | "medium" | "high" | string;
+	user_action?: "pending" | "approved" | "rejected" | "deferred" | "edited" | string;
+	alternatives?: string[];
+}

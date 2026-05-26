@@ -1,6 +1,6 @@
 # CodeWiki tool catalog
 
-Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source-owned contracts live in `src/application/tools/**`; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
+Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source-owned contracts live in concept roots when migrated, with remaining transitional tools under `src/application/tools/**`; Pi adapter files should resolve project/schema/UI concerns and delegate execution there.
 
 | Tool | Application contract | Purpose | Safe mutation path |
 | --- | --- | --- | --- |
@@ -14,7 +14,7 @@ Use this catalog as the skill-facing map for internal `codewiki_*` tools. Source
 | `codewiki_validation` | `src/application/tools/validation.ts` | Preflight gateway metadata/risk or write validation reports. | `preflight_only=true` is read-only; report writes preserve pass/fail/block gateway evidence. Validators do not mutate source truth. |
 | `codewiki_gc` | `src/application/tools/gc.ts` | Dry-run or purge eligible CodeWiki artifacts after archive proof. | Use post-commit only: tracked purge requires `archive_sha`/`tree_sha`, writes a restore ledger first, and records a separate GC deletion commit; runtime cleanup is limited to ignored session-boundary artifacts. |
 | `codewiki_task` | `src/application/tools/task.ts` | Mutate roadmap task truth and sprint metadata. | Tasks use create/update/close/cancel/checkpoint; sprint metadata uses `action="sprint"` and `sprint` input. |
-| `codewiki_diff_table` | `src/application/tools/diff-table.ts` | Manage pending decision diff rows. | Pending semantic diff state only; accepted rows compile into decision builds. |
+| `codewiki_diff_table` | `src/change/tool.ts` | Manage pending decision diff rows. | Pending semantic diff state only; accepted rows compile into decision builds. |
 | `codewiki_session` | `src/application/tools/session.ts` | Manage runtime session focus. | Runtime focus only; not roadmap truth. |
 | `codewiki_agency` | `src/application/tools/agency.ts` | Plan bounded observe/maintain/work cycles. | Planning-only; parent agent owns canonical writes. |
 

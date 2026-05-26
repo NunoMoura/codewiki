@@ -16,7 +16,7 @@ import {
 	semanticTraceabilityGaps,
 	trimList,
 } from "../build/shared.ts";
-import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
+import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../change/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { WorkflowLoop } from "../domain/session/types.ts";
 import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";

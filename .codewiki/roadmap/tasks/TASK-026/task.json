@@ -1,7 +1,7 @@
 {
   "id": "TASK-026",
   "title": "Migrate change and diff-table source root",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Move change traceability types/helpers and runtime diff-table tool ownership into src/change/** while preserving decision-row approval behavior.",
@@ -14,10 +14,21 @@
     ".codewiki/kb/system/validation-gateway.md"
   ],
   "code_paths": [
-    "src/domain/change/types.ts",
-    "src/domain/change/traceability.ts",
-    "src/application/diff-table.ts",
-    "src/application/tools/diff-table.ts"
+    "src/change/types.ts",
+    "src/change/traceability.ts",
+    "src/change/diff-table.ts",
+    "src/change/tool.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/application/graph.ts",
+    "src/application/roadmap.ts",
+    "src/build/shared.ts",
+    "src/build/types.ts",
+    "src/validation/report.ts",
+    "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/efficiency-ui.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
   ],
   "research_ids": [],
   "labels": [
@@ -55,5 +66,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T03:23:05Z"
+  "updated": "2026-05-26T23:04:21Z"
 }

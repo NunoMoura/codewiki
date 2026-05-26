@@ -3,9 +3,9 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput } from "./types.ts";
 import { isAcceptedBuildData } from "./lifecycle.ts";
-import type { ChangeType } from "../domain/change/types.ts";
+import type { ChangeType } from "../change/types.ts";
 import type { WikiProject } from "../project/types.ts";
-import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
+import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../change/traceability.ts";
 import { unique } from "../domain/shared/utils.ts";
 
 export function buildSlug(value: string, defaultPrefix: string): string {

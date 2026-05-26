@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Keep TASK-023 cancelled/superseded after TASK-025 source-ref refresh.",
+  "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -29,10 +29,10 @@
     "src/project/local/git-cache.ts",
     "src/knowledge/doc-parser.ts",
     "src/knowledge/diagram-parser.ts",
-    "src/domain/change/types.ts",
-    "src/domain/change/traceability.ts",
-    "src/application/diff-table.ts",
-    "src/application/tools/diff-table.ts",
+    "src/change/types.ts",
+    "src/change/traceability.ts",
+    "src/change/diff-table.ts",
+    "src/change/tool.ts",
     "src/domain/gc/types.ts",
     "src/application/gc.ts",
     "src/application/tools/gc.ts",
@@ -192,5 +192,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T22:29:38Z"
+  "updated": "2026-05-26T22:53:32Z"
 }

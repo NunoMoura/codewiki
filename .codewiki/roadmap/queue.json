@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-26T22:29:38Z",
+  "updated": "2026-05-26T23:04:21Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -96,7 +96,7 @@
       "status": "cancelled",
       "priority": "high",
       "kind": "migration",
-      "summary": "Keep TASK-023 cancelled/superseded after TASK-025 source-ref refresh.",
+      "summary": "Keep TASK-023 cancelled/superseded while TASK-026 proceeds.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -121,10 +121,10 @@
         "src/project/local/git-cache.ts",
         "src/knowledge/doc-parser.ts",
         "src/knowledge/diagram-parser.ts",
-        "src/domain/change/types.ts",
-        "src/domain/change/traceability.ts",
-        "src/application/diff-table.ts",
-        "src/application/tools/diff-table.ts",
+        "src/change/types.ts",
+        "src/change/traceability.ts",
+        "src/change/diff-table.ts",
+        "src/change/tool.ts",
         "src/domain/gc/types.ts",
         "src/application/gc.ts",
         "src/application/tools/gc.ts",
@@ -284,12 +284,12 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T22:29:38Z"
+      "updated": "2026-05-26T22:53:32Z"
     },
     "TASK-026": {
       "id": "TASK-026",
       "title": "Migrate change and diff-table source root",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Move change traceability types/helpers and runtime diff-table tool ownership into src/change/** while preserving decision-row approval behavior.",
@@ -302,10 +302,21 @@
         ".codewiki/kb/system/validation-gateway.md"
       ],
       "code_paths": [
-        "src/domain/change/types.ts",
-        "src/domain/change/traceability.ts",
-        "src/application/diff-table.ts",
-        "src/application/tools/diff-table.ts"
+        "src/change/types.ts",
+        "src/change/traceability.ts",
+        "src/change/diff-table.ts",
+        "src/change/tool.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/application/graph.ts",
+        "src/application/roadmap.ts",
+        "src/build/shared.ts",
+        "src/build/types.ts",
+        "src/validation/report.ts",
+        "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/efficiency-ui.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
       ],
       "research_ids": [],
       "labels": [
@@ -343,7 +354,7 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T03:23:05Z"
+      "updated": "2026-05-26T23:04:21Z"
     },
     "TASK-027": {
       "id": "TASK-027",
