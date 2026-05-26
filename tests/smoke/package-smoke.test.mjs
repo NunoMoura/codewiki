@@ -270,14 +270,14 @@ async function main() {
 		}
 		assert.match(skillToolCatalog, /action="sprint"/, "Skill-facing tool catalog should document safe sprint metadata path");
 		const piIndexSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "index.ts"), "utf8");
-		const bootstrapSource = readFileSync(resolve(repoRoot, "src", "bootstrap.ts"), "utf8");
+		const bootstrapSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "bootstrap.ts"), "utf8");
 		assert.match(piIndexSource, /executeCodewikiBuildTool/, "Pi build registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to application tool executor");
 		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
 		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
-		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Bootstrap setup tool should delegate through application tool contract");
+		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Pi bootstrap setup tool should delegate through project tool contract");
 		for (const removedAgencyShim of [
 			"src/domain/agency/types.ts",
 			"src/application/agency.ts",

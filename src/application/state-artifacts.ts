@@ -1,5 +1,5 @@
 import { resolve } from "node:path";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapStatus, ToolTaskStatus } from "../domain/roadmap/types.ts";
 import type {
 	StatusStateFile,
@@ -9,7 +9,7 @@ import type {
 	RoadmapStateTaskSummary,
 } from "../domain/state/types.ts";
 import type { LintReport } from "../validation/types.ts";
-import { maybeReadJson, readJson } from "./local/filesystem.ts";
+import { maybeReadJson, readJson } from "../project/local/filesystem.ts";
 import {
 	runRebuild as runApplicationRebuild,
 	runRebuildUnlocked as runApplicationRebuildUnlocked,

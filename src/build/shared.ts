@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput } from "./types.ts";
 import { isAcceptedBuildData } from "./lifecycle.ts";
 import type { ChangeType } from "../domain/change/types.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
 import { unique } from "../domain/shared/utils.ts";
 

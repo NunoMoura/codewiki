@@ -6,7 +6,7 @@
  */
 import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type {
 	RoadmapTaskRecord,
 	RoadmapTaskInput,

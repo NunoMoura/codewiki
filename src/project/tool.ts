@@ -1,4 +1,4 @@
-import type { BootstrapOptions, BootstrapResult } from "../../bootstrap.ts";
+import type { BootstrapOptions, BootstrapResult } from "./bootstrap.ts";
 
 export interface CodewikiBootstrapToolInput {
 	repoPath?: string;

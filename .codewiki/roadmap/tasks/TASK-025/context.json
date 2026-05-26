@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-26T03:22:59Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-025/context.json",
+  "task": {
+    "id": "TASK-025",
+    "title": "Migrate knowledge parser source root",
+    "status": "todo",
+    "priority": "high",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Move markdown/frontmatter/link parsing and diagram/file-structure parsing ownership into src/knowledge/** while preserving graph and audit behavior.",
+    "labels": [
+      "knowledge-root-migration"
+    ],
+    "goal": {
+      "outcome": "Knowledge parsing and diagram/file-structure parsing have source-root ownership under src/knowledge/**.",
+      "acceptance": [
+        "Create src/knowledge/** owner modules for ParsedDoc, markdown/frontmatter/link parsing, diagram parsing, diagram-ref validation, and file-structure drift parsing helpers.",
+        "Update graph, rebuild, lint, audit, tests, and scripts to import parser behavior from src/knowledge/**.",
+        "Remove old src/application/knowledge/** owner paths or retain only explicit temporary shims with TASK-specific tests.",
+        "Preserve alignment, stale-reference, file-structure, generated-parity, graph rebuild, and package smoke behavior.",
+        "Add TASK-specific guard proving legacy knowledge parser imports are gone or explicitly shimmed."
+      ],
+      "non_goals": [
+        "Do not migrate project/bootstrap, roadmap, session, state/graph ownership beyond parser consumer import updates, GC, change/diff-table, adapters/UI, or skills.",
+        "Do not change diagram YAML schema, markdown parsing semantics, audit profile names, or graph JSON schema."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/alignment-drift-fixtures.test.mjs",
+        "TASK-specific knowledge guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

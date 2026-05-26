@@ -1,5 +1,5 @@
 /**
- * application/local/filesystem.ts
+ * project/local/filesystem.ts
  *
  * Local filesystem I/O implementation used by the built-in CodeWiki runtime.
  * Can be replaced with any other storage backend (e.g. in-memory for tests).

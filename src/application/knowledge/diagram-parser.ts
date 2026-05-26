@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, extname, join, relative, resolve } from "node:path";
 import yaml from "js-yaml";
-import type { WikiProject } from "../../domain/project/types.ts";
+import type { WikiProject } from "../../project/types.ts";
 import type { ParsedDoc } from "./doc-parser.ts";
 
 export type DiagramRefCategory = "component" | "adapter" | "flow" | "domain_entity" | "lifecycle" | "policy" | "artifact" | "actor" | "external_system";

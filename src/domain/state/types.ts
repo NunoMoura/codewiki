@@ -1,4 +1,4 @@
-import type { WikiProject } from "../project/types.ts";
+import type { WikiProject } from "../../project/types.ts";
 import type { RoadmapStatus, RoadmapTaskGoal } from "../roadmap/types.ts";
 import type { ArtifactStatusRecord, ChangeClaimConflict, ChangeClaimRecord, ChangeClaimWaiterRecord, TaskSessionLinkRecord, WorkflowCursor } from "../session/types.ts";
 

@@ -4,7 +4,7 @@
  * Session focus management use cases.
  * Links runtime agent session state to the CodeWiki roadmap without importing Pi types.
  */
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { TaskSessionLinkRecord, TaskSessionAction, TaskSessionLinkInput } from "../domain/session/types.ts";
 import { findLatestTaskSessionLink, normalizeTaskSessionLinkInput } from "../domain/shared/session.ts";

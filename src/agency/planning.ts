@@ -10,7 +10,7 @@ import type {
 	AgencyBudget,
 	AgencyScope,
 } from "./types.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import { readCodewikiState } from "../application/state.ts";
 import type { ReadStatePorts } from "../application/state.ts";
 import type { FileStore, RebuildRunner } from "../application/ports.ts";

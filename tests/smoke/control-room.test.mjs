@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { loadProject } from "../../src/application/project.ts";
+import { loadProject } from "../../src/project/context.ts";
 import {
 	buildControlRoomBoardModel,
 	buildControlRoomGraphModel,

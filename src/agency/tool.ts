@@ -1,5 +1,5 @@
 import type { AgencyMode, AgencyToolInput, AgencyTrigger } from "./types.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import { planAgency } from "./planning.ts";
 
 export interface CodewikiAgencyToolPorts {

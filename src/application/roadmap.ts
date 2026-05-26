@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { readFile, stat, writeFile } from "node:fs/promises";
 import type { ChangeType } from "../domain/change/types.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type {
 	RoadmapFile,
 	RoadmapSprintRecord,
@@ -1365,7 +1365,7 @@ export function normalizeRoadmapSprints(raw: unknown): Record<string, RoadmapSpr
  * Read and normalize a roadmap file.
  */
 export async function readRoadmapFile(path: string): Promise<RoadmapFile> {
-	const { pathExists, readJson } = await import("./local/filesystem.ts");
+	const { pathExists, readJson } = await import("../project/local/filesystem.ts");
 	if (!(await pathExists(path))) {
 		return { version: 1, updated: nowIso(), order: [], tasks: {} };
 	}

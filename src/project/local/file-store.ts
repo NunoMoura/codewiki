@@ -1,4 +1,3 @@
-import type { FileStore } from "../ports.ts";
 import {
 	appendJsonl,
 	isDirectory,
@@ -10,7 +9,11 @@ import {
 	writeText,
 } from "./filesystem.ts";
 
-export interface CodewikiFileStore extends FileStore {
+export interface CodewikiFileStore {
+	readJson<T>(path: string): Promise<T>;
+	maybeReadJson<T>(path: string): Promise<T | null>;
+	writeJson(path: string, data: unknown): Promise<void>;
+	appendJsonl(path: string, record: unknown): Promise<void>;
 	readText(path: string): Promise<string>;
 	writeText(path: string, content: string): Promise<void>;
 	pathExists(path: string): Promise<boolean>;

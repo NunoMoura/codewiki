@@ -427,14 +427,16 @@ This package assumes:
 ```text
 src/
   index.ts
-  bootstrap.ts
-  project-root.ts
   mutation-queue.ts
-  templates.ts
+  project/
+    bootstrap.ts
+    context.ts
+    root.ts
+    templates.ts
+    local/
   domain/
     shared/
   application/
-    gateway/
     graph/
     knowledge/
     local/

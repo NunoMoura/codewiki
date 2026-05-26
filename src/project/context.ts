@@ -1,6 +1,4 @@
 import { resolve, dirname, basename } from "node:path";
-import type { CodewikiFileStore } from "./local/file-store.ts";
-import type { WikiProject, DocsConfig } from "../domain/project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../domain/session/types.ts";
 import type { ResolvedStatusDockProject, StatusDockPrefs } from "../domain/state/types.ts";
@@ -12,8 +10,10 @@ import {
 import {
 	readStatusDockPrefs,
 	writeStatusDockPrefs,
-} from "./local/status-dock-prefs.ts";
+} from "../application/local/status-dock-prefs.ts";
+import type { CodewikiFileStore } from "./local/file-store.ts";
 import { nodeFileStore } from "./local/file-store.ts";
+import type { WikiProject, DocsConfig } from "./types.ts";
 
 export interface CodewikiUiPort {
 	setStatus(key: string, value: string | undefined): void;
@@ -122,7 +122,7 @@ export async function appendTaskSessionEvent(
 	link: TaskSessionLinkRecord,
 	sessionId: string,
 ): Promise<void> {
-    const { appendProjectEvent } = await import("./roadmap.ts");
+	const { appendProjectEvent } = await import("../application/roadmap.ts");
 	await appendProjectEvent(project, {
 		ts: nowIso(),
 		kind: "roadmap_task_session_link",
@@ -179,7 +179,7 @@ export async function resolveStatusDockProject(
 	ctx: CodewikiContextPort,
 	options?: { allowWhenOff?: boolean },
 ): Promise<ResolvedStatusDockProject | null> {
-	const { maybeReadStatusState } = await import("./state-artifacts.ts");
+	const { maybeReadStatusState } = await import("../application/state-artifacts.ts");
 	const prefs = await readStatusDockPrefs();
 	if (prefs.mode === "off" && !options?.allowWhenOff) return null;
 	const localProject = await maybeLoadProject(ctx.cwd || ctx.workspaceRoot || "");
@@ -267,7 +267,7 @@ export async function resolveCommandProject(
 	pathArg: string | null,
 	commandName: string,
 ): Promise<WikiProject> {
-	const { findWikiRootsBelow } = await import("../project-root.ts");
+	const { findWikiRootsBelow } = await import("./root.ts");
 	if (pathArg) {
 		const requestedPath = resolve(ctx.cwd || ctx.workspaceRoot || process.cwd(), pathArg);
 		const project = await maybeLoadProject(requestedPath);

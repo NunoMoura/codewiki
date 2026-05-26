@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { resolveCommandProject, resolveStatusDockProject } from "../../../application/project.ts";
+import { resolveCommandProject, resolveStatusDockProject } from "../../../project/context.ts";
 import { executeCodewikiAudit, formatAuditReport } from "../../../audit/tool.ts";
 import type { AuditProfile } from "../../../audit/types.ts";
 import { AUDIT_PROFILE_VALUES } from "../../../audit/types.ts";

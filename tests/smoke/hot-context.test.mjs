@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { buildGraph } from "../../src/application/graph.ts";
 import { readCodewikiState } from "../../src/application/state.ts";
-import { loadProject } from "../../src/application/project.ts";
+import { loadProject } from "../../src/project/context.ts";
 import { buildControlRoomGraphModel, buildControlRoomStateModel } from "../../src/ui/web/control-room.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-hot-context-"));

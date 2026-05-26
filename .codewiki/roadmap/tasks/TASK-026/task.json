@@ -1,0 +1,59 @@
+{
+  "id": "TASK-026",
+  "title": "Migrate change and diff-table source root",
+  "status": "todo",
+  "priority": "high",
+  "kind": "migration",
+  "summary": "Move change traceability types/helpers and runtime diff-table tool ownership into src/change/** while preserving decision-row approval behavior.",
+  "spec_paths": [
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    ".codewiki/validation/2026-05-22-decision-pass.json",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md"
+  ],
+  "code_paths": [
+    "src/domain/change/types.ts",
+    "src/domain/change/traceability.ts",
+    "src/application/diff-table.ts",
+    "src/application/tools/diff-table.ts"
+  ],
+  "research_ids": [],
+  "labels": [
+    "change-root-migration",
+    "diff-table-migration"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Change traceability and diff-table approval runtime have source-root ownership under src/change/**.",
+    "acceptance": [
+      "Create src/change/** owner modules for change types, traceability normalization/exemption helpers, runtime diff table types, diff-table storage/mutation use cases, and codewiki_diff_table tool execution.",
+      "Update schemas, build/validation/graph callers, adapters, tests, and package smoke to import change/diff-table behavior from src/change/** or stable public API paths.",
+      "Remove old src/domain/change/**, src/application/diff-table.ts, and src/application/tools/diff-table.ts owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "Preserve codewiki_diff_table schema/result behavior, decision_build diff table shape, traceability policy behavior, package loading, and direct Node execution.",
+      "Add TASK-specific guard proving legacy change/diff-table imports are gone or explicitly shimmed."
+    ],
+    "non_goals": [
+      "Do not migrate project, knowledge, roadmap, session, state/graph/resume, GC, adapters/UI, or skills.",
+      "Do not change decision diff-table semantics, public tool schemas, traceability enum values, build JSON schema, or validation report schema."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "node --experimental-strip-types ./tests/smoke/builds.test.mjs",
+      "TASK-specific change/diff-table guard",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+    ]
+  },
+  "delta": {
+    "desired": "",
+    "current": "",
+    "closure": ""
+  },
+  "created": "2026-05-26",
+  "updated": "2026-05-26T03:23:05Z"
+}

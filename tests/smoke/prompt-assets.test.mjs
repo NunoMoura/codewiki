@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { codePrompt } from "../../src/application/prompt.ts";
 import { readSkillAsset } from "../../src/application/skill-assets.ts";
-import { renderOnboardingPrompt } from "../../src/bootstrap.ts";
+import { renderOnboardingPrompt } from "../../src/project/bootstrap.ts";
 import { normalizeCodeArgs } from "../../src/adapters/pi/commands/resume.ts";
 
 const repoRoot = resolve(import.meta.dirname, "..", "..");

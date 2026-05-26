@@ -12,7 +12,7 @@ import {
 	shouldTriggerCodewikiThresholdRefresh,
 	takePendingCodewikiContextRefresh,
 } from "../../src/adapters/pi/compaction.ts";
-import { loadProject } from "../../src/application/project.ts";
+import { loadProject } from "../../src/project/context.ts";
 
 assert.equal(
 	shouldTriggerCodewikiThresholdRefresh(undefined, undefined),

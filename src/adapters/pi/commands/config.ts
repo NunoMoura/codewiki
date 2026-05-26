@@ -3,7 +3,7 @@ import {
 	resolveCommandProject,
 	resolveStatusDockProject,
 	rememberStatusDockProject,
-} from "../../../application/project.ts";
+} from "../../../project/context.ts";
 import {
 	readStatusDockPrefs,
 	writeStatusDockPrefs,

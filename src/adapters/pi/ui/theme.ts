@@ -1,4 +1,4 @@
-import type { WikiProject } from "../../../domain/project/types.ts";
+import type { WikiProject } from "../../../project/types.ts";
 import type { TaskSessionLinkRecord } from "../../../domain/session/types.ts";
 import type {
 	RoadmapStateFile,

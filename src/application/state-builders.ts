@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapSprintRecord, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { ChangeClaimsFile } from "../domain/session/types.ts";
 import type { GraphFile, RoadmapStateFile, StatusStateFile } from "../domain/state/types.ts";
@@ -322,7 +322,7 @@ export function laneStats(rows: any[]) {
 	};
 }
 
-import { GitCache } from "./local/git-cache.ts";
+import { GitCache } from "../project/local/git-cache.ts";
 
 export function previousAgencyLane(previousStatus: any, laneId: string): any {
 	const agency = previousStatus?.agency || {};

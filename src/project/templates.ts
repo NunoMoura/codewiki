@@ -1,5 +1,5 @@
 import { basename, posix } from "node:path";
-import { renderSkillAsset } from "./application/skill-assets.ts";
+import { renderSkillAsset } from "../application/skill-assets.ts";
 
 export interface StarterBoundary {
 	codePath: string;

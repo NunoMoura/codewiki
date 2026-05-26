@@ -1,0 +1,1519 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-26T11:12:59Z",
+  "source": "TASK-024 implementation compiler from planning build .codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "task_id": "TASK-024",
+  "task": {
+    "id": "TASK-024",
+    "title": "Migrate project and bootstrap source root",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Move project resolution, setup/bootstrap execution, starter templates, and local project storage helpers into src/project/** while preserving bootstrap/config behavior.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-022.json"
+    ],
+    "code_paths": [
+      "src/project/context.ts",
+      "src/project/root.ts",
+      "src/project/bootstrap.ts",
+      "src/project/tool.ts",
+      "src/project/templates.ts",
+      "src/project/types.ts",
+      "src/project/local/filesystem.ts",
+      "src/project/local/file-store.ts",
+      "src/project/local/git-cache.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "tests/tasks/TASK-024/project-source-root.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Project loading, root resolution, setup/bootstrap use cases, templates, file store/filesystem, and git cache have source-root ownership under src/project/**.",
+      "acceptance": [
+        "Create src/project/** owner modules for project types, loadProject/context, root resolution, setup/bootstrap use cases/tool execution, starter templates, file store/filesystem, and git cache as applicable.",
+        "Update adapters/scripts/tests to import project/bootstrap behavior from src/project/** or stable public API paths, not old project/application owner paths.",
+        "Remove old project/bootstrap owner paths or retain only explicit temporary shims with TASK-specific tests.",
+        "Preserve wiki-bootstrap/wiki-config schemas/results, starter output, package loading, direct Node execution, and smoke behavior.",
+        "Add TASK-specific guard proving old project/bootstrap owner imports are gone or explicitly shimmed."
+      ],
+      "non_goals": [
+        "Do not migrate knowledge, roadmap, session, state/graph/resume, GC, change/diff-table, adapters/UI, skills, or final API/shared cleanup.",
+        "Do not change public tool schemas, package entrypoints, starter file contents, or bootstrap product behavior."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "TASK-specific project/bootstrap guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-09T11:12:59.000Z",
+    "purge_after": "2026-06-23T11:12:59.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "task-024-project-bootstrap-source-root",
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [
+      "codewiki_audit:2026-05-26:TASK-024:file-structure,alignment,stale-reference,generated-parity,changed,task"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status",
+        "reason": "TASK-024 touched project/bootstrap source roots and related roadmap/KB/build state.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "codewiki_artifact_status write claim for TASK-024 project/bootstrap scopes",
+          "codewiki_state refresh=true"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Implementation validation must verify source-root move, old owner path removal, behavior preservation, and task-boundary compliance from artifacts rather than builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "this implementation_build",
+          "TASK-024 context/task",
+          "checks_run",
+          "codewiki_audit evidence"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Task close or next implementation must start from validation/build/task refs, not chat memory.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation_build ref",
+          "future validation ref"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation",
+          "task-close"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "codewiki_audit:2026-05-26:TASK-024:file-structure,alignment,stale-reference,generated-parity,changed,task"
+  ],
+  "audit_reports": [
+    "file-structure pass: 96 TypeScript source files, 198 diagram refs, 19 approved migration deltas, 0 actionable drift items.",
+    "alignment pass: generated graph health and roadmap queue reachability pass after task code_paths update and doc compaction.",
+    "stale-reference pass: 52 active markdown/source text files scanned.",
+    "generated-parity pass: generated graph presence/freshness and 8 active roadmap task views pass.",
+    "task pass: TASK-024 path references and task metadata pass.",
+    "changed warning only: generated .codewiki/index_graph.json and .codewiki/roadmap/tasks/** are dirty in this working tree."
+  ],
+  "agent_assessment": "",
+  "summary": "TASK-024 project/bootstrap source-root migration",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-024"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-022.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/extension.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/extension.md",
+      "README.md"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/project/context.ts",
+      "src/project/root.ts",
+      "src/project/bootstrap.ts",
+      "src/project/tool.ts",
+      "src/project/templates.ts",
+      "src/project/types.ts",
+      "src/project/local/filesystem.ts",
+      "src/project/local/file-store.ts",
+      "src/project/local/git-cache.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/commands/config.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/commands/ui.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/adapters/pi/tools/resume-context.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/tools/state.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/agency/planning.ts",
+      "src/agency/tool.ts",
+      "src/application/claims.ts",
+      "src/application/diff-table.ts",
+      "src/application/gc.ts",
+      "src/application/graph.ts",
+      "src/application/graph/rebuilder.ts",
+      "src/application/knowledge/diagram-parser.ts",
+      "src/application/knowledge/doc-parser.ts",
+      "src/application/lint.ts",
+      "src/application/local/rebuild-runner.ts",
+      "src/application/local/status-dock-prefs.ts",
+      "src/application/ports.ts",
+      "src/application/prompt.ts",
+      "src/application/rebuild.ts",
+      "src/application/resume-context.ts",
+      "src/application/roadmap.ts",
+      "src/application/session.ts",
+      "src/application/state-artifacts.ts",
+      "src/application/state-builders.ts",
+      "src/application/state.ts",
+      "src/application/task.ts",
+      "src/application/tools/artifact-status.ts",
+      "src/application/tools/diff-table.ts",
+      "src/application/tools/gc.ts",
+      "src/application/tools/resume-context.ts",
+      "src/application/tools/session.ts",
+      "src/application/tools/state.ts",
+      "src/application/tools/task.ts",
+      "src/audit/tool.ts",
+      "src/build/shared.ts",
+      "src/build/tool.ts",
+      "src/build/writer.ts",
+      "src/domain/session/worktree-isolation.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/state/types.ts",
+      "src/ui/web/control-room.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "scripts/check-architecture.mjs"
+    ],
+    "tests": [
+      "tests/tasks/TASK-024/project-source-root.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/project-resolution.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs"
+    ],
+    "validation": [
+      "Fresh implementation validation required for TASK-024 before close."
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-024",
+      "TASK-024 can move to fresh validation; do not close from builder context."
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-022.json"
+    ],
+    "code_paths": [
+      "src/project/context.ts",
+      "src/project/root.ts",
+      "src/project/bootstrap.ts",
+      "src/project/tool.ts",
+      "src/project/templates.ts",
+      "src/project/types.ts",
+      "src/project/local/filesystem.ts",
+      "src/project/local/file-store.ts",
+      "src/project/local/git-cache.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/index.ts",
+      "tests/tasks/TASK-024/project-source-root.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-024/project-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs"
+  ],
+  "code_files": [
+    "src/project/context.ts",
+    "src/project/root.ts",
+    "src/project/bootstrap.ts",
+    "src/project/tool.ts",
+    "src/project/templates.ts",
+    "src/project/types.ts",
+    "src/project/local/filesystem.ts",
+    "src/project/local/file-store.ts",
+    "src/project/local/git-cache.ts",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/artifact-wake.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/commands/config.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/adapters/pi/tools/agency.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/task.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/agency/planning.ts",
+    "src/agency/tool.ts",
+    "src/application/claims.ts",
+    "src/application/diff-table.ts",
+    "src/application/gc.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/knowledge/diagram-parser.ts",
+    "src/application/knowledge/doc-parser.ts",
+    "src/application/lint.ts",
+    "src/application/local/rebuild-runner.ts",
+    "src/application/local/status-dock-prefs.ts",
+    "src/application/ports.ts",
+    "src/application/prompt.ts",
+    "src/application/rebuild.ts",
+    "src/application/resume-context.ts",
+    "src/application/roadmap.ts",
+    "src/application/session.ts",
+    "src/application/state-artifacts.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/application/task.ts",
+    "src/application/tools/artifact-status.ts",
+    "src/application/tools/diff-table.ts",
+    "src/application/tools/gc.ts",
+    "src/application/tools/resume-context.ts",
+    "src/application/tools/session.ts",
+    "src/application/tools/state.ts",
+    "src/application/tools/task.ts",
+    "src/audit/tool.ts",
+    "src/build/shared.ts",
+    "src/build/tool.ts",
+    "src/build/writer.ts",
+    "src/domain/session/worktree-isolation.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/ui/web/control-room.ts",
+    "src/validation/report.ts",
+    "src/validation/tool.ts",
+    "scripts/check-architecture.mjs"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-024/project-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/project-resolution.test.mjs",
+    "tests/smoke/prompt-assets.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "src/project/context.ts",
+    "src/project/root.ts",
+    "src/project/bootstrap.ts",
+    "src/project/tool.ts",
+    "src/project/templates.ts",
+    "src/project/types.ts",
+    "src/project/local/filesystem.ts",
+    "src/project/local/file-store.ts",
+    "src/project/local/git-cache.ts",
+    "src/adapters/pi/bootstrap.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/artifact-wake.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/commands/config.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/commands/status.ts",
+    "src/adapters/pi/commands/ui.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/adapters/pi/tools/agency.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/task.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/agency/planning.ts",
+    "src/agency/tool.ts",
+    "src/application/claims.ts",
+    "src/application/diff-table.ts",
+    "src/application/gc.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/knowledge/diagram-parser.ts",
+    "src/application/knowledge/doc-parser.ts",
+    "src/application/lint.ts",
+    "src/application/local/rebuild-runner.ts",
+    "src/application/local/status-dock-prefs.ts",
+    "src/application/ports.ts",
+    "src/application/prompt.ts",
+    "src/application/rebuild.ts",
+    "src/application/resume-context.ts",
+    "src/application/roadmap.ts",
+    "src/application/session.ts",
+    "src/application/state-artifacts.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/application/task.ts",
+    "src/application/tools/artifact-status.ts",
+    "src/application/tools/diff-table.ts",
+    "src/application/tools/gc.ts",
+    "src/application/tools/resume-context.ts",
+    "src/application/tools/session.ts",
+    "src/application/tools/state.ts",
+    "src/application/tools/task.ts",
+    "src/audit/tool.ts",
+    "src/build/shared.ts",
+    "src/build/tool.ts",
+    "src/build/writer.ts",
+    "src/domain/session/worktree-isolation.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/ui/web/control-room.ts",
+    "src/validation/report.ts",
+    "src/validation/tool.ts",
+    "scripts/check-architecture.mjs"
+  ],
+  "checks_run": [
+    "npm run typecheck — pass",
+    "npm run check:architecture — pass",
+    "npm run test:smoke — pass",
+    "npm run test:features — pass (26 passed, 0 failed)",
+    "npm run test:pack — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass",
+    "codewiki_state refresh=true taskId=TASK-024 — green"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-024",
+      "test_files": [
+        "tests/tasks/TASK-024/project-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/project-resolution.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs"
+      ],
+      "evidence": [
+        "Guard test scans src/scripts/tests for stale old owner imports and direct old top-level path references while excluding itself so the assertions can name deprecated paths safely.",
+        "Existing package-smoke, project-resolution, prompt-assets, and smoke/feature suites cover bootstrap behavior, package loading, direct Node execution, resource loading, and project resolution after the move."
+      ],
+      "notes": [
+        "No temporary project/bootstrap compatibility shims were retained.",
+        "TASK-024 guard, package smoke, smoke suite, feature suite, architecture check, pack dry-run, and CodeWiki audit all ran after migration. The final CodeWiki audit warning is changed-profile-only for dirty generated views, not behavior failure."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-024",
+      "code_files": [
+        "src/project/context.ts",
+        "src/project/root.ts",
+        "src/project/bootstrap.ts",
+        "src/project/tool.ts",
+        "src/project/templates.ts",
+        "src/project/types.ts",
+        "src/project/local/filesystem.ts",
+        "src/project/local/file-store.ts",
+        "src/project/local/git-cache.ts",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/tools/agency.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/tools/resume-context.ts",
+        "src/adapters/pi/tools/session.ts",
+        "src/adapters/pi/tools/state.ts",
+        "src/adapters/pi/tools/task.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/application/claims.ts",
+        "src/application/diff-table.ts",
+        "src/application/gc.ts",
+        "src/application/graph.ts",
+        "src/application/graph/rebuilder.ts",
+        "src/application/knowledge/diagram-parser.ts",
+        "src/application/knowledge/doc-parser.ts",
+        "src/application/lint.ts",
+        "src/application/local/rebuild-runner.ts",
+        "src/application/local/status-dock-prefs.ts",
+        "src/application/ports.ts",
+        "src/application/prompt.ts",
+        "src/application/rebuild.ts",
+        "src/application/resume-context.ts",
+        "src/application/roadmap.ts",
+        "src/application/session.ts",
+        "src/application/state-artifacts.ts",
+        "src/application/state-builders.ts",
+        "src/application/state.ts",
+        "src/application/task.ts",
+        "src/application/tools/artifact-status.ts",
+        "src/application/tools/diff-table.ts",
+        "src/application/tools/gc.ts",
+        "src/application/tools/resume-context.ts",
+        "src/application/tools/session.ts",
+        "src/application/tools/state.ts",
+        "src/application/tools/task.ts",
+        "src/audit/tool.ts",
+        "src/build/shared.ts",
+        "src/build/tool.ts",
+        "src/build/writer.ts",
+        "src/domain/session/worktree-isolation.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "src/ui/web/control-room.ts",
+        "src/validation/report.ts",
+        "src/validation/tool.ts",
+        "scripts/check-architecture.mjs"
+      ],
+      "evidence": [
+        "Moved project types from src/domain/project/types.ts to src/project/types.ts and updated imports across source/adapters/tests/scripts.",
+        "Moved project context/load/resolve status/tool project functions from src/application/project.ts to src/project/context.ts.",
+        "Moved root discovery/setup root helpers from src/project-root.ts to src/project/root.ts.",
+        "Moved setup/bootstrap use cases and starter generation from src/bootstrap.ts to src/project/bootstrap.ts; moved project bootstrap tool execution from src/application/tools/bootstrap.ts to src/project/tool.ts.",
+        "Moved starter template owner from src/templates.ts to src/project/templates.ts.",
+        "Moved local filesystem/file-store/git-cache helpers from src/application/local/** to src/project/local/**.",
+        "Added src/adapters/pi/bootstrap.ts so Pi SDK/TypeBox registration remains adapter-owned while delegating to project use cases/tool ports.",
+        "Updated file-structure KB/diagram, extension KB, README, package smoke, generated roadmap task views, and TASK-024 code_paths/evidence to reflect the new owner paths."
+      ],
+      "notes": [
+        "Scope intentionally limited to project/bootstrap/root/local project storage move plus import updates required by the move. Other concept migrations remain in TASK-025..TASK-031.",
+        "Pi-specific registration could not remain in src/project/bootstrap.ts because file-structure audit enforces Pi SDK imports only inside adapters; adapter bootstrap wrapper preserves public command/tool behavior."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Guard test scans src/scripts/tests for stale old owner imports and direct old top-level path references while excluding itself so the assertions can name deprecated paths safely.",
+    "Existing package-smoke, project-resolution, prompt-assets, and smoke/feature suites cover bootstrap behavior, package loading, direct Node execution, resource loading, and project resolution after the move."
+  ],
+  "code_change_evidence": [
+    "Moved project types from src/domain/project/types.ts to src/project/types.ts and updated imports across source/adapters/tests/scripts.",
+    "Moved project context/load/resolve status/tool project functions from src/application/project.ts to src/project/context.ts.",
+    "Moved root discovery/setup root helpers from src/project-root.ts to src/project/root.ts.",
+    "Moved setup/bootstrap use cases and starter generation from src/bootstrap.ts to src/project/bootstrap.ts; moved project bootstrap tool execution from src/application/tools/bootstrap.ts to src/project/tool.ts.",
+    "Moved starter template owner from src/templates.ts to src/project/templates.ts.",
+    "Moved local filesystem/file-store/git-cache helpers from src/application/local/** to src/project/local/**.",
+    "Added src/adapters/pi/bootstrap.ts so Pi SDK/TypeBox registration remains adapter-owned while delegating to project use cases/tool ports.",
+    "Updated file-structure KB/diagram, extension KB, README, package smoke, generated roadmap task views, and TASK-024 code_paths/evidence to reflect the new owner paths."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Create src/project/** owner modules for project types, loadProject/context, root resolution, setup/bootstrap use cases/tool execution, starter templates, file store/filesystem, and git cache as applicable.",
+      "evidence": "Created src/project/types.ts, context.ts, root.ts, bootstrap.ts, tool.ts, templates.ts, and src/project/local/{filesystem,file-store,git-cache}.ts. typecheck, package smoke, and TASK-024 guard pass."
+    },
+    {
+      "criterion": "Update adapters/scripts/tests to import project/bootstrap behavior from src/project/** or stable public API paths, not old project/application owner paths.",
+      "evidence": "Updated adapters, scripts/check-architecture.mjs, tests, and source callers to import WikiProject/context/root/bootstrap/templates/local helpers from src/project/**. Pi-specific bootstrap registration moved to src/adapters/pi/bootstrap.ts and delegates to src/project/tool.ts + src/project/bootstrap.ts."
+    },
+    {
+      "criterion": "Remove old project/bootstrap owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "evidence": "Removed src/application/project.ts, src/application/tools/bootstrap.ts, src/application/local/{filesystem,file-store,git-cache}.ts, src/domain/project/types.ts, src/bootstrap.ts, src/project-root.ts, and src/templates.ts. tests/tasks/TASK-024/project-source-root.test.mjs asserts old files/imports are absent and new owner modules load."
+    },
+    {
+      "criterion": "Preserve wiki-bootstrap/wiki-config schemas/results, starter output, package loading, direct Node execution, and smoke behavior.",
+      "evidence": "Schemas stay in Pi adapter registration; setup/bootstrap result formatting and use cases are delegated through project tool ports. npm run test:smoke, package-smoke direct Node execution, prompt-assets, project-resolution, and npm pack dry-run pass."
+    },
+    {
+      "criterion": "Add TASK-specific guard proving old project/bootstrap owner imports are gone or explicitly shimmed.",
+      "evidence": "Added tests/tasks/TASK-024/project-source-root.test.mjs; it verifies new src/project owner files exist, old owner paths do not exist, stale imports/direct path refs are absent, and new owner modules export expected APIs."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-024 project/bootstrap source-root migration from the accepted post-TASK-022 planning build.",
+    "implemented_changes": [
+      "Moved project loading/context, root resolution, setup/bootstrap use cases, starter templates, tool execution, project types, file store/filesystem, and git cache under src/project/**.",
+      "Kept Pi command/tool registration in src/adapters/pi/bootstrap.ts and delegated to src/project/tool.ts/src/project/bootstrap.ts to preserve public behavior and architecture boundaries.",
+      "Removed old project/bootstrap owner paths with no temporary shims.",
+      "Updated imports, smoke/package tests, README, file-structure/extension KB, and generated roadmap task views.",
+      "Added TASK-024 source-root guard test proving old owner paths/imports are gone and new modules load."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/extension.md"
+      ],
+      "roadmap": [
+        "TASK-024",
+        "TASK-023"
+      ],
+      "code": [
+        "src/project/**",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "import updates across source/adapters/scripts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-024/project-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/project-resolution.test.mjs",
+        "tests/smoke/prompt-assets.test.mjs"
+      ],
+      "validation": [
+        "Fresh validation pending; builder audit evidence recorded."
+      ]
+    },
+    "acceptance_evidence": [
+      "TASK-024 guard test passes.",
+      "typecheck/check:architecture/test:smoke/test:features/test:pack/package-smoke pass.",
+      "CodeWiki audit passes file-structure, alignment, stale-reference, generated-parity, and task profiles; changed profile warns only about dirty generated files."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+      "node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs",
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+    ],
+    "non_goals_preserved": [
+      "No knowledge, roadmap, session, state/graph/resume, GC, change/diff-table, adapters/UI/skills, or final API/shared cleanup migration beyond import updates required by project ownership move.",
+      "No public tool schema, package entrypoint, starter file content, or bootstrap product behavior change intended."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation and task-close validation/content proof still required before closure."
+    ]
+  },
+  "risks": [
+    "Fresh independent implementation validation and task-close proof still required before closing TASK-024.",
+    "Working tree contains generated CodeWiki graph/task-view changes from planning/task refresh; changed audit warns until commit/publication or expected generated-state handling."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-024",
+      "task_id": "TASK-024",
+      "next_focus_task_id": "TASK-025",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-024",
+        "title": "Migrate project and bootstrap source root",
+        "summary": "TASK-024 project/bootstrap source-root migration",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json",
+          ".codewiki/validation/2026-05-26-task-close-pass-task-022.json"
+        ],
+        "code_paths": [
+          "src/project/context.ts",
+          "src/project/root.ts",
+          "src/project/bootstrap.ts",
+          "src/project/tool.ts",
+          "src/project/templates.ts",
+          "src/project/types.ts",
+          "src/project/local/filesystem.ts",
+          "src/project/local/file-store.ts",
+          "src/project/local/git-cache.ts",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "tests/tasks/TASK-024/project-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "src/adapters/pi/artifact-wake.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/commands/config.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/commands/status.ts",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/tools/session.ts",
+          "src/adapters/pi/tools/state.ts",
+          "src/adapters/pi/tools/task.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/application/claims.ts",
+          "src/application/diff-table.ts",
+          "src/application/gc.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/knowledge/diagram-parser.ts",
+          "src/application/knowledge/doc-parser.ts",
+          "src/application/lint.ts",
+          "src/application/local/rebuild-runner.ts",
+          "src/application/local/status-dock-prefs.ts",
+          "src/application/ports.ts",
+          "src/application/prompt.ts",
+          "src/application/rebuild.ts",
+          "src/application/resume-context.ts",
+          "src/application/roadmap.ts",
+          "src/application/session.ts",
+          "src/application/state-artifacts.ts",
+          "src/application/state-builders.ts",
+          "src/application/state.ts",
+          "src/application/task.ts",
+          "src/application/tools/artifact-status.ts",
+          "src/application/tools/diff-table.ts",
+          "src/application/tools/gc.ts",
+          "src/application/tools/resume-context.ts",
+          "src/application/tools/session.ts",
+          "src/application/tools/state.ts",
+          "src/application/tools/task.ts",
+          "src/audit/tool.ts",
+          "src/build/shared.ts",
+          "src/build/tool.ts",
+          "src/build/writer.ts",
+          "src/domain/session/worktree-isolation.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "src/ui/web/control-room.ts",
+          "src/validation/report.ts",
+          "src/validation/tool.ts",
+          "scripts/check-architecture.mjs"
+        ],
+        "acceptance": [
+          "Create src/project/** owner modules for project types, loadProject/context, root resolution, setup/bootstrap use cases/tool execution, starter templates, file store/filesystem, and git cache as applicable.",
+          "Update adapters/scripts/tests to import project/bootstrap behavior from src/project/** or stable public API paths, not old project/application owner paths.",
+          "Remove old project/bootstrap owner paths or retain only explicit temporary shims with TASK-specific tests.",
+          "Preserve wiki-bootstrap/wiki-config schemas/results, starter output, package loading, direct Node execution, and smoke behavior.",
+          "Add TASK-specific guard proving old project/bootstrap owner imports are gone or explicitly shimmed."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "TASK-specific project/bootstrap guard",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+        "checks_run": [
+          "npm run typecheck — pass",
+          "npm run check:architecture — pass",
+          "npm run test:smoke — pass",
+          "npm run test:features — pass (26 passed, 0 failed)",
+          "npm run test:pack — pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass",
+          "codewiki_state refresh=true taskId=TASK-024 — green"
+        ],
+        "test_design_evidence": [
+          "Guard test scans src/scripts/tests for stale old owner imports and direct old top-level path references while excluding itself so the assertions can name deprecated paths safely.",
+          "Existing package-smoke, project-resolution, prompt-assets, and smoke/feature suites cover bootstrap behavior, package loading, direct Node execution, resource loading, and project resolution after the move."
+        ],
+        "code_change_evidence": [
+          "Moved project types from src/domain/project/types.ts to src/project/types.ts and updated imports across source/adapters/tests/scripts.",
+          "Moved project context/load/resolve status/tool project functions from src/application/project.ts to src/project/context.ts.",
+          "Moved root discovery/setup root helpers from src/project-root.ts to src/project/root.ts.",
+          "Moved setup/bootstrap use cases and starter generation from src/bootstrap.ts to src/project/bootstrap.ts; moved project bootstrap tool execution from src/application/tools/bootstrap.ts to src/project/tool.ts.",
+          "Moved starter template owner from src/templates.ts to src/project/templates.ts.",
+          "Moved local filesystem/file-store/git-cache helpers from src/application/local/** to src/project/local/**.",
+          "Added src/adapters/pi/bootstrap.ts so Pi SDK/TypeBox registration remains adapter-owned while delegating to project use cases/tool ports.",
+          "Updated file-structure KB/diagram, extension KB, README, package smoke, generated roadmap task views, and TASK-024 code_paths/evidence to reflect the new owner paths."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-024",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-024",
+      "show_build": "git show refs/codewiki/archive/task/TASK-024:.codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/validation/2026-05-22-decision-pass.json",
+        ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+        "src/project/context.ts",
+        "src/project/root.ts",
+        "src/project/bootstrap.ts",
+        "src/project/tool.ts",
+        "src/project/templates.ts",
+        "src/project/types.ts",
+        "src/project/local/filesystem.ts",
+        "src/project/local/file-store.ts",
+        "src/project/local/git-cache.ts",
+        "src/adapters/pi/bootstrap.ts",
+        "src/adapters/pi/index.ts",
+        "tests/tasks/TASK-024/project-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-024 Migrate project and bootstrap source root implementation evidence",
+      "body": "TASK-024 project/bootstrap source-root migration\n\nChecks: npm run typecheck — pass, npm run check:architecture — pass, npm run test:smoke — pass, npm run test:features — pass (26 passed, 0 failed), npm run test:pack — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass, codewiki_state refresh=true taskId=TASK-024 — green\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-024\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json\nCodeWiki-Checks: npm run typecheck — pass, npm run check:architecture — pass, npm run test:smoke — pass, npm run test:features — pass (26 passed, 0 failed), npm run test:pack — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass, codewiki_state refresh=true taskId=TASK-024 — green\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-024\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-024\nCodeWiki-Digest: sha256:d9a4db851d6773d47869fc8a71cd3431d3669b45074e95c48f807c9e6a53d608\nCodeWiki-Restore: /wiki-restore TASK-024",
+      "trailers": [
+        "CodeWiki-Task: TASK-024",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+        "CodeWiki-Checks: npm run typecheck — pass, npm run check:architecture — pass, npm run test:smoke — pass, npm run test:features — pass (26 passed, 0 failed), npm run test:pack — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass, codewiki_state refresh=true taskId=TASK-024 — green",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-024",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-024",
+        "CodeWiki-Digest: sha256:d9a4db851d6773d47869fc8a71cd3431d3669b45074e95c48f807c9e6a53d608",
+        "CodeWiki-Restore: /wiki-restore TASK-024"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-024 Migrate project and bootstrap source root implementation evidence",
+      "body": "TASK-024 project/bootstrap source-root migration\n\nChecks: npm run typecheck — pass, npm run check:architecture — pass, npm run test:smoke — pass, npm run test:features — pass (26 passed, 0 failed), npm run test:pack — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass, codewiki_state refresh=true taskId=TASK-024 — green\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-024\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json\nCodeWiki-Checks: npm run typecheck — pass, npm run check:architecture — pass, npm run test:smoke — pass, npm run test:features — pass (26 passed, 0 failed), npm run test:pack — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass, codewiki_state refresh=true taskId=TASK-024 — green\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-024\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-024\nCodeWiki-Digest: sha256:d9a4db851d6773d47869fc8a71cd3431d3669b45074e95c48f807c9e6a53d608\nCodeWiki-Restore: /wiki-restore TASK-024"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-024",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-024"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-024",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-024",
+        "show_build": "git show refs/codewiki/archive/task/TASK-024:.codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json",
+          ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+          "src/project/context.ts",
+          "src/project/root.ts",
+          "src/project/bootstrap.ts",
+          "src/project/tool.ts",
+          "src/project/templates.ts",
+          "src/project/types.ts",
+          "src/project/local/filesystem.ts",
+          "src/project/local/file-store.ts",
+          "src/project/local/git-cache.ts",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "tests/tasks/TASK-024/project-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-024",
+      "build_path": ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-024",
+      "commit_sha": "",
+      "digest": "sha256:d9a4db851d6773d47869fc8a71cd3431d3669b45074e95c48f807c9e6a53d608",
+      "restore_command": "/wiki-restore TASK-024"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+          "bytes": 32591
+        },
+        {
+          "path": "tests/tasks/TASK-024/project-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:22f09537a5cfa50b91ed6587c4f48d15a826dc5bb2b13d6bbc2a0742e0c1e44b",
+          "bytes": 3684
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:eb07434957d7906611524b454c77fff4189dc43348929b95bfaa59172422b652",
+          "bytes": 90725
+        },
+        {
+          "path": "tests/smoke/project-resolution.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:8a1b37e5bc9e2b4b113577232e97ef0e9ab544a1afe74829c75ffe621d1d461e",
+          "bytes": 1157
+        },
+        {
+          "path": "tests/smoke/prompt-assets.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:fb94645b335ec49415c60aedf6f6f9629b661535749c02c578fe01c690cee4d6",
+          "bytes": 13015
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:98945ca37723910534df2a4650adf0843861e1e2237c8a2c69e20fc91ec994a4",
+          "bytes": 14296
+        },
+        {
+          "path": "src/project/context.ts",
+          "role": "code_file",
+          "sha256": "sha256:242ed62596c8947a7bfba355e40555263cf3625c26ee238050fb40f900bd6387",
+          "bytes": 10091
+        },
+        {
+          "path": "src/project/root.ts",
+          "role": "code_file",
+          "sha256": "sha256:0774b6dc5821918dfc77c3c219a9c4c2316128045c673297f71f8dfec111078a",
+          "bytes": 3735
+        },
+        {
+          "path": "src/project/bootstrap.ts",
+          "role": "code_file",
+          "sha256": "sha256:4addc279007d426b5cf0af0ba8bc23856c22d0c3964b975bc922a90e1e1a6b21",
+          "bytes": 9420
+        },
+        {
+          "path": "src/project/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:fce821d986abbf0db0f4540c3de694b3cfe4d385b9242f4d67c5f58358977846",
+          "bytes": 1431
+        },
+        {
+          "path": "src/project/templates.ts",
+          "role": "code_file",
+          "sha256": "sha256:1656811b660be4518c79a9a61db7f36e49842a85bfa61e2076300e328f1dde23",
+          "bytes": 27545
+        },
+        {
+          "path": "src/project/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:c10c58451885ae619a029f9f4b12b00f78c7dace7380151e11570dd20ee4f639",
+          "bytes": 2594
+        },
+        {
+          "path": "src/project/local/filesystem.ts",
+          "role": "code_file",
+          "sha256": "sha256:74a9a66e4d47db596ab8106a727131720dd25c2c53e8fa1003f0174ab9dfa559",
+          "bytes": 2533
+        },
+        {
+          "path": "src/project/local/file-store.ts",
+          "role": "code_file",
+          "sha256": "sha256:4a9fb2f24b3a0ff5abfffa1a2879be3d93bbe1bdfb8ab645fa247097c3685ccd",
+          "bytes": 758
+        },
+        {
+          "path": "src/project/local/git-cache.ts",
+          "role": "code_file",
+          "sha256": "sha256:bc868ed5f08eb04c6382f2742753046dda4a611965abadd85276f16d9726a73c",
+          "bytes": 2696
+        },
+        {
+          "path": "src/adapters/pi/bootstrap.ts",
+          "role": "code_file",
+          "sha256": "sha256:8b9a93570a34fcd1e04895733e6cb8cf5781346c9aa9feefdfa6aea243388f5b",
+          "bytes": 4066
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:755c1620d7eaafc9fd909f26effefa713a77c0b10afaf9a8b0e139136fe3b8f6",
+          "bytes": 15301
+        },
+        {
+          "path": "src/adapters/pi/artifact-wake.ts",
+          "role": "code_file",
+          "sha256": "sha256:88c5d7a70aa74a3e090a20dc56d8a502c3687e46c5f7c0813288b570495513b0",
+          "bytes": 4188
+        },
+        {
+          "path": "src/adapters/pi/commands/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:4a747ab959b00c005648710023b26543a71c632167a33ee7cc4261b0227e2780",
+          "bytes": 3988
+        },
+        {
+          "path": "src/adapters/pi/commands/config.ts",
+          "role": "code_file",
+          "sha256": "sha256:2ed2e334cc420462e2e083af356715c85c6c68af0310b5c191e3506164a18b2a",
+          "bytes": 5212
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:5c5670bdfb6e875f71c20de9dca47bf837f813bb3159096bd6ea9fd9addfa395",
+          "bytes": 18907
+        },
+        {
+          "path": "src/adapters/pi/commands/status.ts",
+          "role": "code_file",
+          "sha256": "sha256:eca58cf893397b8dcb933a76b5dec2913f13707158b651a1aa1da319445c79db",
+          "bytes": 2970
+        },
+        {
+          "path": "src/adapters/pi/commands/ui.ts",
+          "role": "code_file",
+          "sha256": "sha256:a33c14ceac2d20232a6b13f2a4e961a9d0a0863586098cd849a23ed7e6b01079",
+          "bytes": 4017
+        },
+        {
+          "path": "src/adapters/pi/compaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:1595f5cf71ed7ce24715628c8413c98a8afd6e1a1b20a79d7f741d0700bbcdc3",
+          "bytes": 7135
+        },
+        {
+          "path": "src/adapters/pi/tools/agency.ts",
+          "role": "code_file",
+          "sha256": "sha256:0e6d09a176737d94f0e56612770bd8fcad5b4076b8c38dccc23bef445cee247b",
+          "bytes": 787
+        },
+        {
+          "path": "src/adapters/pi/tools/artifact-status.ts",
+          "role": "code_file",
+          "sha256": "sha256:9d61ef5b74a6e50f210342508fa9e43ed7b4edf514d7d2df138b07cc568d09ec",
+          "bytes": 2641
+        },
+        {
+          "path": "src/adapters/pi/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:174b361ace367114b976c17ee9c4b85bef76a413d5cf9d6f630a1d4d13b09f82",
+          "bytes": 1889
+        },
+        {
+          "path": "src/adapters/pi/tools/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:54611d5eeee9180a6b1c042f0b7fb1f02ac0b070d955206728e5715e2de1ce14",
+          "bytes": 1694
+        },
+        {
+          "path": "src/adapters/pi/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:06e60301633ca97859b1918b9f4ec057f249871c5173566fdfa13185979e9cd0",
+          "bytes": 2192
+        },
+        {
+          "path": "src/adapters/pi/tools/session.ts",
+          "role": "code_file",
+          "sha256": "sha256:ac2dc8c6e7140cf77f5597f67ead6085f6484287d365ca9a0dc44ec63e2c4f72",
+          "bytes": 650
+        },
+        {
+          "path": "src/adapters/pi/tools/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:8d6d4b1de3973abf37fdebe539dc1f0c439bed3b748fe522bdc476b72825d169",
+          "bytes": 1663
+        },
+        {
+          "path": "src/adapters/pi/tools/task.ts",
+          "role": "code_file",
+          "sha256": "sha256:c57c9a7e966812b9729a713dd3bcf473dc32b953aea39a647c10008523d32a15",
+          "bytes": 610
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:cbe0d01083ec6e1b908ed0189eec905ec3f87e6128a64a76042a0f89d8092ea7",
+          "bytes": 73576
+        },
+        {
+          "path": "src/adapters/pi/ui/theme.ts",
+          "role": "code_file",
+          "sha256": "sha256:c3d6fddba87e210f57c24730816c8da65cafc498a74b5c602fdf8890989f5f17",
+          "bytes": 8007
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "role": "code_file",
+          "sha256": "sha256:559cd466ca7172165e1901637e3bf5c10dc6a1325040b0b03310352f7352e783",
+          "bytes": 9963
+        },
+        {
+          "path": "src/agency/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:cbd02929023bf581777736e8a0ea31ac45e9852ca48c7280c5bfda5b0dd5af37",
+          "bytes": 2248
+        },
+        {
+          "path": "src/application/claims.ts",
+          "role": "code_file",
+          "sha256": "sha256:06fc6b40e9b155936271ea9abcbfe203a5c7c80a96eee93716fb3a77b4f5e5be",
+          "bytes": 38387
+        },
+        {
+          "path": "src/application/diff-table.ts",
+          "role": "code_file",
+          "sha256": "sha256:f0aa3de70a92ede41b2678cd9631bbcc483fb002b2204298332e9523cdc889f3",
+          "bytes": 5734
+        },
+        {
+          "path": "src/application/gc.ts",
+          "role": "code_file",
+          "sha256": "sha256:fd58433f6fae959a3e6765e13bbdb34da5421db4817f6210dc6a346a47d44c1b",
+          "bytes": 13233
+        },
+        {
+          "path": "src/application/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:f596657ccc2c048486b6d238c406596df8e340dcb90808175d3f2296a581bc8d",
+          "bytes": 94531
+        },
+        {
+          "path": "src/application/graph/rebuilder.ts",
+          "role": "code_file",
+          "sha256": "sha256:a59c10a5c8c5ac4c25190131d5f998f47a9fcfbc57e84d9ff3986365f7f534ab",
+          "bytes": 11343
+        },
+        {
+          "path": "src/application/knowledge/diagram-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:bac9c7b83106bc9cfc4262fb773247c721428d997d94cdc8131fd45d4d613774",
+          "bytes": 37728
+        },
+        {
+          "path": "src/application/knowledge/doc-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:5cb65757118b06f0cc7155905f9df2571e5ff1d42c743a9e7ef4768cd611e6a7",
+          "bytes": 3961
+        },
+        {
+          "path": "src/application/lint.ts",
+          "role": "code_file",
+          "sha256": "sha256:f8f4ab49e2561be46774e39f65f5b4cabb41d3644c8f774426f83e790fbd55d8",
+          "bytes": 19657
+        },
+        {
+          "path": "src/application/local/rebuild-runner.ts",
+          "role": "code_file",
+          "sha256": "sha256:a982eb505528a51719ba0e460fc861248775c65bcaaa5c0e4a5f35d00a30f34e",
+          "bytes": 721
+        },
+        {
+          "path": "src/application/local/status-dock-prefs.ts",
+          "role": "code_file",
+          "sha256": "sha256:cb3a1aab214f282a18a7a12ef25df44ceeb7b5f1eb7fde063b2ff77fd0d9f742",
+          "bytes": 2219
+        },
+        {
+          "path": "src/application/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:47249ff5c46d2d1784b0e0f99ec97f04078b3103dcb89a18922980e079c3dd49",
+          "bytes": 2954
+        },
+        {
+          "path": "src/application/prompt.ts",
+          "role": "code_file",
+          "sha256": "sha256:352591002940435e1a5959a761e4b754dd9950c45e0da6efd7eee96fbd7c9c41",
+          "bytes": 9648
+        },
+        {
+          "path": "src/application/rebuild.ts",
+          "role": "code_file",
+          "sha256": "sha256:a3c3326329b3d35541a7f5b53a87c056c40174e708d95b3a877cb3b35aaeb6fa",
+          "bytes": 1859
+        },
+        {
+          "path": "src/application/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:431885d9cf147d5b941bd7ca73cb53c0d00047771ad7ac981e3e7d2561dcf0c7",
+          "bytes": 17160
+        },
+        {
+          "path": "src/application/roadmap.ts",
+          "role": "code_file",
+          "sha256": "sha256:42a76d6000f5383b636a68f405fa8663e4fc63a8a12edfb8c8270cc9af7b0739",
+          "bytes": 49034
+        },
+        {
+          "path": "src/application/session.ts",
+          "role": "code_file",
+          "sha256": "sha256:888e18dcf48c0792a1660dd6664405333b1a2435ed961f79f28b7e02b9497588",
+          "bytes": 4775
+        },
+        {
+          "path": "src/application/state-artifacts.ts",
+          "role": "code_file",
+          "sha256": "sha256:ac7b68bdf5b408071ce6774c3492c2042d9c79dc81964f79a2448cd01ba8569e",
+          "bytes": 4777
+        },
+        {
+          "path": "src/application/state-builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:ac46e5d87059063e5682914b837f29b744be184236991ab71837922f2382eb48",
+          "bytes": 45805
+        },
+        {
+          "path": "src/application/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:17c238fa43b3b9be58feacb6fb69f885247af0a0a025cda47bc5c6796487adab",
+          "bytes": 13729
+        },
+        {
+          "path": "src/application/task.ts",
+          "role": "code_file",
+          "sha256": "sha256:d367849a8af2b2c0f6146ee5d06042dd87dbb5bc6b1cb96f2581e5a1042a2e40",
+          "bytes": 6498
+        },
+        {
+          "path": "src/application/tools/artifact-status.ts",
+          "role": "code_file",
+          "sha256": "sha256:4b69ba41c03f8d50b7033cddea8fff6f31966ee551d923042bd1a2650c5b352f",
+          "bytes": 1461
+        },
+        {
+          "path": "src/application/tools/diff-table.ts",
+          "role": "code_file",
+          "sha256": "sha256:7234fb4db85ac0d12710ad100a5367551ad13781937ba7b3ea529c73a0ea1ef8",
+          "bytes": 406
+        },
+        {
+          "path": "src/application/tools/gc.ts",
+          "role": "code_file",
+          "sha256": "sha256:d4d23bfed8cb491c0115fa92c50ef962b365ce576b4338e947ca800a10053fec",
+          "bytes": 542
+        },
+        {
+          "path": "src/application/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:15f9e204cf6c4b67196e78ee13d8f13b1dce0389fb410a021b61291a13bac30d",
+          "bytes": 1558
+        },
+        {
+          "path": "src/application/tools/session.ts",
+          "role": "code_file",
+          "sha256": "sha256:4e8a291fc8fcba2c0365f6f3aa3258a0fa981bb3058c196c4c2ec5b53f8d6bee",
+          "bytes": 2245
+        },
+        {
+          "path": "src/application/tools/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:62883939d298acf47b85847a84f5eaa85fe244346227e9c96e2f4297c8bb444c",
+          "bytes": 1748
+        },
+        {
+          "path": "src/application/tools/task.ts",
+          "role": "code_file",
+          "sha256": "sha256:06775eafebc459c823e2e82bef102873aed2de97776fc8d7a23304db75a35aa2",
+          "bytes": 11352
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:e57eefa870d7ad99875c831d4bc7a7fc0e3cfeb604bcf7fd92043cb37ce2a3a2",
+          "bytes": 40612
+        },
+        {
+          "path": "src/build/shared.ts",
+          "role": "code_file",
+          "sha256": "sha256:0b4f9b25af48fbbc8198e939d1e62ce087131776dc8e9f2719abeb24aaf876b0",
+          "bytes": 10647
+        },
+        {
+          "path": "src/build/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:b32d5399c6aabbc3c843d59e8fef140fa28a4f32523d2eb3f7d3e0d28850b719",
+          "bytes": 510
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:2d506b1457243940fe7de39a152f5dceccfa01c5427b1150ad381837fe402f12",
+          "bytes": 31202
+        },
+        {
+          "path": "src/domain/session/worktree-isolation.ts",
+          "role": "code_file",
+          "sha256": "sha256:c9259a1d93a7ea981e9114e5698e391a6908db172d4ec2ce72bb6bf4f8f5ee01",
+          "bytes": 7406
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:6294d4f044e649e1026e2a398bbe17f2ea3cd34d5081823722a5f99cbba9c265",
+          "bytes": 637
+        },
+        {
+          "path": "src/domain/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:2aad952f610d34e4aceed2e1405c465d7d9a68aef3947e0041bed1768aa286c0",
+          "bytes": 9713
+        },
+        {
+          "path": "src/ui/web/control-room.ts",
+          "role": "code_file",
+          "sha256": "sha256:cd473a372da57666d7744b63b2493fc077f051535f833b0c37de61cbc449109e",
+          "bytes": 90578
+        },
+        {
+          "path": "src/validation/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:056e2d186eee114107ef9e05b075fa5a6d75d60f1448b2d815fe7853024e0047",
+          "bytes": 40661
+        },
+        {
+          "path": "src/validation/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:1b20e89909581e770a58ebf7621154db7196a9caf32210a58af893ac2696ab20",
+          "bytes": 820
+        },
+        {
+          "path": "scripts/check-architecture.mjs",
+          "role": "code_file",
+          "sha256": "sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
+          "bytes": 536
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-024",
+      "source_build": ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/project/context.ts",
+          "src/project/root.ts",
+          "src/project/bootstrap.ts",
+          "src/project/tool.ts",
+          "src/project/templates.ts",
+          "src/project/types.ts",
+          "src/project/local/filesystem.ts",
+          "src/project/local/file-store.ts",
+          "src/project/local/git-cache.ts",
+          "src/adapters/pi/bootstrap.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/artifact-wake.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/commands/config.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/commands/status.ts",
+          "src/adapters/pi/commands/ui.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/tools/agency.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/tools/resume-context.ts",
+          "src/adapters/pi/tools/session.ts",
+          "src/adapters/pi/tools/state.ts",
+          "src/adapters/pi/tools/task.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/application/claims.ts",
+          "src/application/diff-table.ts",
+          "src/application/gc.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/knowledge/diagram-parser.ts",
+          "src/application/knowledge/doc-parser.ts",
+          "src/application/lint.ts",
+          "src/application/local/rebuild-runner.ts",
+          "src/application/local/status-dock-prefs.ts",
+          "src/application/ports.ts",
+          "src/application/prompt.ts",
+          "src/application/rebuild.ts",
+          "src/application/resume-context.ts",
+          "src/application/roadmap.ts",
+          "src/application/session.ts",
+          "src/application/state-artifacts.ts",
+          "src/application/state-builders.ts",
+          "src/application/state.ts",
+          "src/application/task.ts",
+          "src/application/tools/artifact-status.ts",
+          "src/application/tools/diff-table.ts",
+          "src/application/tools/gc.ts",
+          "src/application/tools/resume-context.ts",
+          "src/application/tools/session.ts",
+          "src/application/tools/state.ts",
+          "src/application/tools/task.ts",
+          "src/audit/tool.ts",
+          "src/build/shared.ts",
+          "src/build/tool.ts",
+          "src/build/writer.ts",
+          "src/domain/session/worktree-isolation.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "src/ui/web/control-room.ts",
+          "src/validation/report.ts",
+          "src/validation/tool.ts",
+          "scripts/check-architecture.mjs",
+          "tests/tasks/TASK-024/project-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/project-resolution.test.mjs",
+          "tests/smoke/prompt-assets.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-024",
+        "restore_command": "/wiki-restore TASK-024"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npm run typecheck — pass",
+        "npm run check:architecture — pass",
+        "npm run test:smoke — pass",
+        "npm run test:features — pass (26 passed, 0 failed)",
+        "npm run test:pack — pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-024/project-source-root.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs — pass",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-024 — warning only for changed generated files; file-structure/alignment/stale-reference/generated-parity/task pass",
+        "codewiki_state refresh=true taskId=TASK-024 — green"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

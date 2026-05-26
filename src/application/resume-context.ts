@@ -23,7 +23,7 @@ import {
 import { stableAgentName } from "./state-builders.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 import { unique } from "../domain/shared/utils.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapFile, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type {
 	ArtifactStatusRecord,

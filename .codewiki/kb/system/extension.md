@@ -9,8 +9,9 @@ owners:
 updated: "2026-05-16"
 code_paths:
   - src/index.ts
-  - src/bootstrap.ts
-  - src/templates.ts
+  - src/project/bootstrap.ts
+  - src/project/templates.ts
+  - src/adapters/pi/bootstrap.ts
   - src/application/prompt.ts
   - src/adapters/pi
   - skills/codewiki
@@ -42,10 +43,11 @@ The Pi adapter owns:
 ## Package support files
 
 - `src/index.ts` should remain a thin entrypoint.
-- `src/application/tools/**` owns agent-callable bootstrap, state, build, validation, task, session queue, and publication use cases.
+- `src/project/**` owns project loading, root resolution, starter templates, and setup/bootstrap use cases.
+- `src/application/tools/**` owns agent-callable state, task, session queue, and publication use cases that have not yet moved to concept roots.
 - `skills/codewiki/bootstrap/**` owns bootstrap workflow guidance and starter contract assets.
 - `skills/codewiki/prompts/**` owns prompt templates as skill assets.
-- `project-root.ts` and `mutation-queue.ts` are transitional support files until folded behind application ports/local runtime services.
+- `mutation-queue.ts` is a transitional support file until folded behind application ports/local runtime services.
 - `scripts/**`, when present, is optional developer convenience only and must not be required for product behavior or gateway policy.
 
 ## Boundaries

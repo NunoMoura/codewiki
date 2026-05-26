@@ -3,7 +3,7 @@ import {
 	resolveCommandProject,
 	resolveStatusDockProject,
 	rememberStatusDockProject,
-} from "../../../application/project.ts";
+} from "../../../project/context.ts";
 import {
 	withUiErrorHandling,
 	openStatusPanel,
@@ -11,7 +11,7 @@ import {
 } from "../ui/manager.ts";
 import { currentTaskLink } from "../session.ts";
 import { maybeReadStatusState } from "../../../application/state-artifacts.ts";
-import { maybeReadJson } from "../../../application/local/filesystem.ts";
+import { maybeReadJson } from "../../../project/local/filesystem.ts";
 import type { StatusPanelSection } from "../../../domain/state/types.ts";
 import type { LintReport } from "../../../validation/types.ts";
 

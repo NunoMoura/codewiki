@@ -17,7 +17,7 @@ import {
 	trimList,
 } from "../build/shared.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../domain/change/traceability.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { WorkflowLoop } from "../domain/session/types.ts";
 import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";

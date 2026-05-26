@@ -3,7 +3,7 @@ import type {
 	ExtensionContext,
 	ExtensionCommandContext,
 } from "@earendil-works/pi-coding-agent";
-import type { WikiProject } from "../../../domain/project/types.ts";
+import type { WikiProject } from "../../../project/types.ts";
 import type { TaskSessionLinkRecord, TaskSessionAction } from "../../../domain/session/types.ts";
 import type {
 	ActiveStatusPanel,
@@ -37,7 +37,7 @@ import {
 	loadProject,
 	maybeLoadProject,
     rememberStatusDockProject,
-} from "../../../application/project.ts";
+} from "../../../project/context.ts";
 import {
 	formatError,
 	cycleIndex,
@@ -45,7 +45,7 @@ import {
 } from "../../../domain/shared/utils.ts";
 import {
     maybeReadJsonSync,
-} from "../../../application/local/filesystem.ts";
+} from "../../../project/local/filesystem.ts";
 import {
     padToWidth,
     truncatePlain,
@@ -1033,7 +1033,7 @@ export async function discoverPinRepoChoices(
 	ctx: ExtensionCommandContext | ExtensionContext,
 	prefs: StatusDockPrefs,
 ): Promise<Array<{ root: string; label: string }>> {
-    const { findWikiRootsBelow } = await import("../../../project-root.ts");
+    const { findWikiRootsBelow } = await import("../../../project/root.ts");
 	const roots = new Set<string>();
 	const localProject = await maybeLoadProject(ctx.cwd);
 	if (localProject) roots.add(localProject.root);

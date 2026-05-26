@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { WikiProject } from "../../../domain/project/types.ts";
+import type { WikiProject } from "../../../project/types.ts";
 import { executeCodewikiAudit, formatAuditReport } from "../../../audit/tool.ts";
-import { resolveToolProject } from "../../../application/project.ts";
+import { resolveToolProject } from "../../../project/context.ts";
 import { codewikiAuditToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";

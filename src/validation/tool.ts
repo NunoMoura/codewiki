@@ -1,4 +1,4 @@
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { CodewikiValidationReportInput } from "./types.ts";
 import { buildValidationPreflight, writeValidationReport } from "./report.ts";
 import { runRebuild } from "../application/state-artifacts.ts";

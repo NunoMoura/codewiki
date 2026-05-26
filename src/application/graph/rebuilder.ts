@@ -1,8 +1,8 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { GitCache } from "../local/git-cache.ts";
-import type { WikiProject } from "../../domain/project/types.ts";
+import { GitCache } from "../../project/local/git-cache.ts";
+import type { WikiProject } from "../../project/types.ts";
 import type { RoadmapTaskRecord } from "../../domain/roadmap/types.ts";
 import type { RoadmapStateFile } from "../../domain/state/types.ts";
 import { buildGraph } from "../graph.ts";

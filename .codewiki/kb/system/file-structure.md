@@ -17,6 +17,7 @@ diagram_refs:
   - file-structure-map:structure_drift_lens
   - file-structure-map:first_concept_root_pilot
   - file-structure-map:migration_compatibility_constraints
+  - file-structure-map:project_concept_root_boundary
   - file-structure-map:deferred_concept_roots
 ---
 
@@ -47,15 +48,15 @@ Every CodeWiki project should use the same top-level knowledge-base shape:
       file-structure-map.yaml
 ```
 
-Product docs define users, user stories, and visual user interfaces. System docs define the technical architecture, API, adapters, distribution mechanisms, component ownership, and diagram raw data that implement product intent.
+Product docs define users, stories, and visual interfaces. System docs define architecture, API, adapters, distribution, ownership, and diagram raw data.
 
-At the `.codewiki/` root, active surfaces are config, KB, roadmap, session coordination, builds, validation, runtime diff tables, source/research support, and generated graph state. In this repository, `.codewiki/` is dogfood state, not package source. Legacy `.codewiki/index/**` and `.codewiki/evidence/**` are deprecated; use `.codewiki/index_graph.json`, builds, validation reports, and `.codewiki/sources/**` or `research_root`.
+At `.codewiki/`, active surfaces are config, KB, roadmap, session coordination, builds, validation, runtime diff tables, source/research support, and generated graph state. In this repo, `.codewiki/` is dogfood state, not package source. Legacy `.codewiki/index/**` and `.codewiki/evidence/**` stay deprecated; use `.codewiki/index_graph.json`, builds, validation reports, and `.codewiki/sources/**` or `research_root`.
 
-System component docs should stay flat. Each major system component should have one matching `.md` file under `system/`. Diagram raw data is the one intended nested system folder and lives under `system/diagrams/**`.
+System component docs stay flat: one major component per `system/*.md`. `system/diagrams/**` is the only intended nested system folder.
 
-In the vNext target, system diagrams are the allowlist/navigation spine for system docs. Every system `.md` doc except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Primary refs use `<diagram-file-stem>:<local-id>` with `<diagram-id>:<local-id>` accepted as an alias. Diagram refs may point to components, adapters, flows, domain entities, lifecycles, policy boundaries, artifacts, actors, or external systems. Diagram nodes may set `requires_doc` when a doc is mandatory; diagram nodes without that flag may remain diagram-only. `codewiki.system_diagrams.diagram_refs.mode` controls migration: `off`, `warn`, or `error`.
+System diagrams are the vNext allowlist/navigation spine. Every system `.md` except `system/overview.md` and `system/diagrams/README.md` should declare valid `diagram_refs` after migration. Primary refs use `<diagram-file-stem>:<local-id>`; `<diagram-id>:<local-id>` is an alias. Diagram nodes may set `requires_doc`; others may remain diagram-only. `codewiki.system_diagrams.diagram_refs.mode` controls migration.
 
-Avoid nested component folders and avoid `overview.md` files except `product/overview.md`, `system/overview.md`, and the diagram contract `system/diagrams/README.md`.
+Avoid nested component folders and extra `overview.md` files.
 
 ## Diagram raw-data contract
 
@@ -72,9 +73,7 @@ The default diagram families are:
 | `diagrams/state-lifecycle.yaml` | State/lifecycle map | Task, compiler, validation, build, and release lifecycles. | Mermaid state diagram or custom state renderer. |
 | `diagrams/file-structure-map.yaml` | File-structure map | Intended source/tree ownership, current implementation shape, approved migration deltas, and drift-lens categories. | Tree graph, layered graph, or Mermaid flowchart. |
 
-Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generated or renderer input unless a later task explicitly promotes a renderer-specific source file to canonical truth.
-
-`system/architecture.mmd` is a compatibility source for the existing architecture renderer until CodeWiki UI and status panel rendering migrate to `system/diagrams/component-map.yaml`. New diagram work should target `system/diagrams/**`.
+Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer input unless a later task promotes it to canonical truth. `system/architecture.mmd` remains a compatibility source until rendering migrates to `system/diagrams/component-map.yaml`. New diagram work targets `system/diagrams/**`.
 
 ## Component-doc map
 
@@ -103,7 +102,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 
 ## CodeWiki system docs
 
-The CodeWiki project keeps one flat system doc per major component under `.codewiki/kb/system/`, plus `overview.md`, `architecture.mmd` during renderer migration, and canonical diagram raw data under `diagrams/**`. The component-doc map above is the source list for expected owners and primary paths.
+CodeWiki keeps one flat system doc per major component, plus `overview.md`, temporary `architecture.mmd`, and canonical raw diagrams under `diagrams/**`. The component-doc map above owns expected docs and primary paths.
 
 Deprecated `.codewiki/` paths must not be recreated by templates or normal agent writes:
 
@@ -127,13 +126,13 @@ Legacy nested system KB folders removed by the flattening migration remain inval
 | Runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Coordination and pending decision UI state; not durable product truth unless compiled into builds. |
 | Publication proof | Git commits/tree SHAs, package digests, archive ledgers, remote refs | Immutable or external proof of content and publication assertions. |
 
-Architecture and audit checks must understand these classes so dogfood state, generated outputs, and package source cannot drift silently again.
+Architecture and audit checks use these classes to prevent dogfood state, generated outputs, and package source drift.
 
 ## Package target layout
 
-The accepted vNext direction is concept-root source ownership: main concepts should be findable from `src/<concept>/**` with model, use cases, tool/API entrypoints, and concept-local implementation nearby. Adapters and UI remain exposure layers; shared code stays primitive-only; no top-level `infrastructure/` layer should exist.
+The accepted vNext direction is concept-root source ownership: main concepts live in `src/<concept>/**` with model, use cases, tool/API entrypoints, and local implementation nearby. Adapters and UI remain exposure layers; shared code stays primitive-only; no top-level `infrastructure/` exists.
 
-Current staged implementation is a hybrid: validated concept roots exist for agency and audit, while remaining concepts still live in domain/application until their migration tasks close.
+Current implementation is hybrid: agency, audit, build, validation, gateway, and TASK-024 project/bootstrap roots live under concept roots; remaining concepts stay in domain/application until their migration tasks close.
 
 ```text
 src/{agency,audit,domain,application,adapters,ui}/
@@ -150,7 +149,7 @@ Primary deltas move domain/application pairs into concept roots: session, state/
 
 `agency` is the validated pilot. TASK-015 introduced `src/agency/**`; TASK-020 removed the old `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts` shims. Old agency shims must not be recreated.
 
-Post-TASK-021 planning maps the accepted FS-ROOT-CONCEPTS decision into the next executable wave. TASK-021 closed the first non-agency boundary by moving audit types and tool execution to `src/audit/types.ts` and `src/audit/tool.ts`, removing old `src/domain/audit/types.ts` and `src/application/tools/audit.ts` paths, and passing task-close validation with file-structure audit evidence. TASK-022 is the next wave: migrate tightly coupled build, validation, and gateway ownership to `src/build/**`, `src/validation/**`, and `src/gateway/**`. Session, roadmap, state/graph/resume, project, knowledge, GC, change, and API/shared cleanup wait until TASK-022 task-close evidence proves the compiler/gateway seam.
+TASK-021 closed audit by moving types/tool execution to `src/audit/**` and removing old audit shims. TASK-022 closed build, validation, and gateway by moving ownership to `src/build/**`, `src/validation/**`, and `src/gateway/**` with task-close validation `.codewiki/validation/2026-05-26-task-close-pass-task-022.json`. TASK-024 moves project loading, root resolution, setup/bootstrap use cases, starter templates, file store/filesystem, and git cache into `src/project/**`, removes old project/bootstrap owner paths, and leaves Pi registration in the adapter. Remaining tasks stage knowledge, change/diff-table, GC, session, roadmap, state/graph/resume, and final API/shared cleanup under FS-ROOT-CONCEPTS.
 
 Skills own agent workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
@@ -162,7 +161,7 @@ concept local implementations -> concept contracts / shared ports
 shared -> primitives only
 ```
 
-During migration, current paths still obey `adapters -> application -> domain`, `ui -> application -> domain`, and `application/local -> ports/domain contracts`.
+During migration, unmigrated paths still obey `adapters -> application -> domain`, `ui -> application -> domain`, and `application/local -> ports/domain contracts`.
 
 Rules:
 
@@ -177,9 +176,9 @@ Rules:
 
 The repository no longer contains transitional `core/**` or `engine/**` source folders. Generated task shards remain runtime outputs, not target source architecture.
 
-The repository does contain an approved concept-root migration delta from the current `src/domain/**` + `src/application/**` split toward `src/<concept>/**` ownership. The deterministic drift lens should treat unmigrated concept roots as planned deltas when they have an approved boundary, owner, trigger, and rationale. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking throughout the move.
+The repository has an approved migration delta from `src/domain/**` + `src/application/**` toward `src/<concept>/**`. The drift lens treats unmigrated roots as planned deltas when they have approved boundary, owner, trigger, and rationale. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking.
 
-Runtime checks must cover direct Node execution and package loading, not only TypeScript typechecking.
+Runtime checks cover direct Node execution and package loading, not only TypeScript typechecking.
 
 ## Related docs
 

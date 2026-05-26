@@ -5,7 +5,7 @@ import type {
 } from "@earendil-works/pi-coding-agent";
 import {
 	resolveCommandProject,
-} from "../../../application/project.ts";
+} from "../../../project/context.ts";
 import {
 	withUiErrorHandling,
 	refreshStatusDock,
@@ -48,7 +48,7 @@ import {
     statusLevel
 } from "../ui/theme.ts";
 import { buildResumeContextForTask } from "../../../application/resume-context.ts";
-import type { WikiProject } from "../../../domain/project/types.ts";
+import type { WikiProject } from "../../../project/types.ts";
 import type { RoadmapFile, RoadmapTaskRecord, RoadmapStatus } from "../../../domain/roadmap/types.ts";
 import type {
 	TaskSessionLinkRecord,

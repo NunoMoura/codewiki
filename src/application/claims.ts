@@ -1,6 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type {
 	ArtifactStatusHolder,
 	ArtifactStatusRecord,

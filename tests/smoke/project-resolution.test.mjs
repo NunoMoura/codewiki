@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 import {
 	maybeLoadProject,
 	resolveToolProject,
-} from "../../src/application/project.ts";
+} from "../../src/project/context.ts";
 
 const root = mkdtempSync(join(tmpdir(), "codewiki-project-resolution-"));
 try {

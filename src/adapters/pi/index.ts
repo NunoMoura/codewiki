@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { ActiveStatusPanel } from "../../domain/state/types.ts";
-import { registerBootstrapFeatures } from "../../bootstrap.ts";
+import { registerBootstrapFeatures } from "./bootstrap.ts";
 import { codewikiBuildToolInputSchema, codewikiAgencyToolInputSchema, codewikiDiffTableToolInputSchema, codewikiGcToolInputSchema, codewikiSessionToolInputSchema, codewikiTaskToolInputSchema, codewikiValidationReportSchema } from "./schemas.ts";
 import { registerAuditCommand } from "./commands/audit.ts";
 import { registerConfigCommand } from "./commands/config.ts";
@@ -9,7 +9,7 @@ import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
 import { currentTaskLink } from "./session.ts";
 import { readRoadmapTask } from "../../application/roadmap.ts";
-import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject } from "../../application/project.ts";
+import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject } from "../../project/context.ts";
 import { executeCodewikiBuildTool } from "../../build/tool.ts";
 import { executeCodewikiValidationTool } from "../../validation/tool.ts";
 import { executeCodewikiDiffTableTool } from "../../application/tools/diff-table.ts";

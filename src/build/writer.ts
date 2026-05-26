@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { CodewikiBuildProducesInput, CodewikiBuildRefsInput, CodewikiBuildToolInput, CodewikiClosureBriefInput, CodewikiDiffTableRowInput } from "./types.ts";
 import { normalizeDecisionQuestionResolutions, normalizeDecisionRowResolutions } from "./decision-propagation.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { readRoadmapTask } from "../application/roadmap.ts";

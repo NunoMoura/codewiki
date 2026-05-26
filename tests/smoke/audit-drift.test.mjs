@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { loadProject } from "../../src/application/project.ts";
+import { loadProject } from "../../src/project/context.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 
 function writeJson(path, value) {

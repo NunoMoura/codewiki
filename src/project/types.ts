@@ -1,4 +1,4 @@
-import type { AgencyBudget, AgencyScope, AgencyScopeKind } from "../../agency/types.ts";
+import type { AgencyBudget, AgencyScope, AgencyScopeKind } from "../agency/types.ts";
 
 export interface ScopeConfig {
 	include: string[];

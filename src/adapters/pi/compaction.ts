@@ -1,7 +1,7 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { buildCodewikiResumeContext } from "../../application/resume-context.ts";
-import { resolveStatusDockProject } from "../../application/project.ts";
-import type { WikiProject } from "../../domain/project/types.ts";
+import { resolveStatusDockProject } from "../../project/context.ts";
+import type { WikiProject } from "../../project/types.ts";
 import { formatError, nowIso } from "../../domain/shared/utils.ts";
 import { currentTaskLink } from "./session.ts";
 

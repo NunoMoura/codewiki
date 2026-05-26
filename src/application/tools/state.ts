@@ -1,4 +1,4 @@
-import type { WikiProject } from "../../domain/project/types.ts";
+import type { WikiProject } from "../../project/types.ts";
 import type { CodewikiStateToolInput } from "../../domain/state/types.ts";
 import { readCodewikiState } from "../state.ts";
 

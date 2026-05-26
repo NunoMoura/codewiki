@@ -12,10 +12,10 @@ import type {
 	AuditScope,
 	AuditStatus,
 } from "./types.ts";
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import { AUDIT_PROFILE_VALUES } from "./types.ts";
 import { formatError, nowIso, unique } from "../domain/shared/utils.ts";
-import { pathExists } from "../application/local/filesystem.ts";
+import { pathExists } from "../project/local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 import { parseDoc } from "../application/knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../application/knowledge/diagram-parser.ts";

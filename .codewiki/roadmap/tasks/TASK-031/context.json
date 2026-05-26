@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-26T03:23:36Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-031/context.json",
+  "task": {
+    "id": "TASK-031",
+    "title": "Add API facade and remove remaining layer-first shims",
+    "status": "todo",
+    "priority": "high",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Introduce/finish src/api/** and src/shared/** facades, move primitive shared ports/helpers, and remove residual src/domain/** and src/application/** owner paths after concept roots land.",
+    "labels": [
+      "api-facade-migration",
+      "shared-cleanup-migration",
+      "final-root-cleanup"
+    ],
+    "goal": {
+      "outcome": "Stable API/shared facade exists and residual layer-first owner paths are removed or explicitly documented as temporary compatibility shims with guard coverage.",
+      "acceptance": [
+        "Create or finish src/api/** facade modules that expose stable package/tool use-case entrypoints for adapters/scripts while keeping adapters/UI as exposure layers.",
+        "Move primitive shared types/utils/ports/session-independent helpers to src/shared/** and keep shared small; no dumping-ground replacement for application/domain is created.",
+        "Update adapters, scripts, tests, and package smoke to import concept behavior through src/api/**, concept roots, or src/shared/** as appropriate.",
+        "Remove residual src/domain/** and src/application/** owner paths after previous concept-root tasks land, or retain only explicit temporary shims with expiry, owner, and tests.",
+        "Update file-structure KB/diagram and architecture checks to mark concept-root migration complete and fail on reintroduced old owner paths unless explicitly approved.",
+        "Add final guard proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load."
+      ],
+      "non_goals": [
+        "Do not redesign public package API or user-facing tool schemas beyond import/facade preservation.",
+        "Do not migrate adapters, UI, skills, tests, or scripts into concept roots; they remain exposure/assets/tests/helper layers.",
+        "Do not create top-level infrastructure/core/engine roots or broad shared dumping grounds."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "final source-root architecture guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    },
+    "delta": {
+      "desired": "",
+      "current": "",
+      "closure": ""
+    }
+  }
+}

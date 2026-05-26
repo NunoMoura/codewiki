@@ -4,7 +4,7 @@
  * "Read CodeWiki state" use case.
  * Accepts ports instead of Pi ExtensionContext so any agent harness can call it.
  */
-import type { WikiProject } from "../domain/project/types.ts";
+import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../domain/session/types.ts";
 import type {

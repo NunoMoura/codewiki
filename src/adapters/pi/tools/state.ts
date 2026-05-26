@@ -1,7 +1,7 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { CodewikiStateToolInput } from "../../../domain/state/types.ts";
 import { executeCodewikiStateTool } from "../../../application/tools/state.ts";
-import { resolveToolProject } from "../../../application/project.ts";
+import { resolveToolProject } from "../../../project/context.ts";
 import { codewikiStateToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
