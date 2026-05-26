@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T23:23:07.659Z",
+  "generated_at": "2026-05-26T23:25:25.602Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5518,16 +5518,6 @@
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
-    },
-    {
-      "id": "task:TASK-027",
-      "kind": "roadmap_task",
-      "title": "Migrate GC source root",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
     },
     {
       "id": "task:TASK-028",
@@ -26307,6 +26297,111 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+        "validated_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+        "tree_sha": "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation consumed committed implementation build, implementation validation report, post-commit audit evidence, and clean commit/tree proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+        ],
+        "audit_evidence_refs": [
+          "approval:user:2026-05-26 Great. Please continue",
+          "profile:file-structure",
+          "profile:alignment",
+          "profile:stale-reference",
+          "profile:generated-parity",
+          "profile:changed",
+          "profile:task",
+          "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+          "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+          "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+          "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+          "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+          "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+          "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+          "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+          "alignment pass: generated graph health and roadmap queue reachability.",
+          "stale-reference pass: scanned 52 active markdown/source text files.",
+          "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+          "changed pass: 0 changed files across 0 layers.",
+          "task TASK-027 pass."
+        ],
+        "content_proof_refs": [
+          "c31533b8cd58de08c2b937acf58db1df228c3608",
+          "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "kind": "audit_evidence",
+      "path": "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+      "kind": "audit_evidence",
+      "path": "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "kind": "audit_evidence",
+      "path": "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "kind": "audit_evidence",
+      "path": "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:c31533b8cd58de08c2b937acf58db1df228c3608",
+      "kind": "content_proof",
+      "path": "c31533b8cd58de08c2b937acf58db1df228c3608",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "kind": "content_proof",
+      "path": "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
     }
   ],
   "edges": [
@@ -31786,46 +31881,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-023",
       "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-027",
-      "to": "doc:.codewiki/kb/system/file-structure.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-027",
-      "to": "doc:.codewiki/kb/system/diagrams/file-structure-map.yaml"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-027",
-      "to": "doc:.codewiki/kb/system/change-lifecycle.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-027",
-      "to": "doc:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-027",
-      "to": "doc:.codewiki/validation/2026-05-22-decision-pass.json"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-027",
-      "to": "code:src/gc/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-027",
-      "to": "code:src/gc/runtime.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-027",
-      "to": "code:src/gc/tool.ts"
     },
     {
       "kind": "task_spec",
@@ -56822,6 +56877,173 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
       "to": "task:TASK-026"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:approval:user:2026-05-26 Great. Please continue",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-22-decision-pass.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:alignment pass: generated graph health and roadmap queue reachability.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:stale-reference pass: scanned 52 active markdown/source text files.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:changed pass: 0 changed files across 0 layers.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "audit:task TASK-027 pass.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "content_proof:c31533b8cd58de08c2b937acf58db1df228c3608",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "content_proof:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      "to": "task:TASK-027"
     }
   ],
   "views": {
@@ -56918,20 +57140,19 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 10,
+            "item_count": 9,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 5,
+                "count": 4,
                 "refs": [
-                  "TASK-027",
                   "TASK-028",
                   "TASK-029",
                   "TASK-030",
                   "TASK-031"
                 ],
-                "ref_count": 5
+                "ref_count": 4
               },
               {
                 "id": "done_tasks",
@@ -56961,7 +57182,6 @@
               "sprint:SPRINT-003",
               "task:TASK-012",
               "task:TASK-023",
-              "task:TASK-027",
               "task:TASK-028",
               "task:TASK-029",
               "task:TASK-030",
@@ -57021,7 +57241,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 82
+                "count": 83
               },
               {
                 "id": "fail_or_block_validation",
@@ -57031,12 +57251,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 313
+                "count": 317
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 710
+                "count": 712
               },
               {
                 "id": "traceability_gaps",
@@ -57060,18 +57280,18 @@
             "collapsed": 68
           },
           "validations": {
-            "total": 82,
-            "pass": 67,
+            "total": 83,
+            "pass": 68,
             "fail_or_block": 15,
             "hot": 4,
-            "collapsed": 82
+            "collapsed": 83
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-027",
-          "source_id": "task:TASK-027",
+          "item_id": "reconcile:task:TASK-028",
+          "source_id": "task:TASK-028",
           "loop": "implementation",
-          "reason": "TASK-027 is open implementation delta below knowledge."
+          "reason": "TASK-028 is open implementation delta below knowledge."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -57306,7 +57526,8 @@
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
             ],
             "audit_evidence_refs": [
               "npm run typecheck: pass",
@@ -57818,7 +58039,8 @@
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
             ],
             "audit_evidence_refs": [
               "npm run typecheck: pass",
@@ -58330,7 +58552,8 @@
               ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
               ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+              ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+              ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
             ],
             "audit_evidence_refs": [
               "npm run typecheck: pass",
@@ -63244,6 +63467,46 @@
               "932065b9e7412be9c435844ca47ff9da8b8a1af3"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-027",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+            ],
+            "audit_evidence_refs": [
+              "approval:user:2026-05-26 Great. Please continue",
+              "profile:file-structure",
+              "profile:alignment",
+              "profile:stale-reference",
+              "profile:generated-parity",
+              "profile:changed",
+              "profile:task",
+              "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+              "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+              "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+              "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+              "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+              "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+              "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+              "alignment pass: generated graph health and roadmap queue reachability.",
+              "stale-reference pass: scanned 52 active markdown/source text files.",
+              "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+              "changed pass: 0 changed files across 0 layers.",
+              "task TASK-027 pass."
+            ],
+            "content_proof_refs": [
+              "c31533b8cd58de08c2b937acf58db1df228c3608",
+              "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -64601,6 +64864,25 @@
             "publisher_result_refs": [
               "932065b9e7412be9c435844ca47ff9da8b8a1af3"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+            "task_id": "TASK-027",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+            "validated_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "c31533b8cd58de08c2b937acf58db1df228c3608",
+              "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+            ],
+            "publisher_result_refs": [
+              "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -64782,6 +65064,7 @@
           "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
           "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
           "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
+          "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
           "commit:cbb6739480e429e0005b93234b1c7df792856af3",
           "commit:e2f073db7ad0df3000fa4cc2280d763c1205112c",
           "decision validation pass .codewiki/validation/2026-05-22-decision-pass.json",
@@ -64829,6 +65112,7 @@
           "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-024.json",
           "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-025.json",
           "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+          "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
           "injected codewiki_audit tool package on /home/nunoc/projects/think-code: fail from stale loaded tool still hardcoding skills/codewiki until extension reload",
           "inline audit output from codewiki_audit 2026-05-22: file-structure pass, alignment pass, generated-parity pass, changed pass",
           "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
@@ -64884,6 +65168,7 @@
           "task:TASK-002",
           "task:TASK-005",
           "task:TASK-006",
+          "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
           "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
           "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
           "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
@@ -64906,6 +65191,7 @@
           "validation:.codewiki/validation/2026-05-26-implementation-pass-task-024.json",
           "validation:.codewiki/validation/2026-05-26-implementation-pass-task-025.json",
           "validation:.codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+          "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
           "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -65047,6 +65333,7 @@
           "11a758300a54fc99c585b1c47ae9ae0b90767151",
           "11b76ed63996785ba5fb12e77933963f075425ac",
           "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+          "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
           "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
           "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
@@ -65096,6 +65383,7 @@
           "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
           "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
           "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+          "c31533b8cd58de08c2b937acf58db1df228c3608",
           "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
           "cbb6739480e429e0005b93234b1c7df792856af3",
           "ccc06de45add0502b691dd440240dc4281b4f026",
@@ -65632,17 +65920,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:task:TASK-027",
-            "source_id": "task:TASK-027",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-027",
-            "reason": "TASK-027 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-028",
             "source_id": "task:TASK-028",
             "state": "drift",
@@ -65713,9 +65990,9 @@
             "compatibility_export_gap": 0
           },
           "path_rule_counts": {
-            "intended": 69,
+            "intended": 68,
             "current": 4,
-            "target": 45
+            "target": 44
           },
           "approved_delta_edges": [
             {
@@ -65882,22 +66159,18 @@
       "task_ids": [
         "TASK-012",
         "TASK-023",
-        "TASK-027",
         "TASK-028",
         "TASK-029",
         "TASK-030",
         "TASK-031"
       ],
       "open_task_ids": [
-        "TASK-027",
         "TASK-028",
         "TASK-029",
         "TASK-030",
         "TASK-031"
       ],
-      "in_progress_task_ids": [
-        "TASK-027"
-      ],
+      "in_progress_task_ids": [],
       "todo_task_ids": [
         "TASK-028",
         "TASK-029",
@@ -65912,7 +66185,6 @@
       ],
       "status_counts": {
         "cancelled": 2,
-        "in_progress": 1,
         "todo": 4
       },
       "sprint_ids": [
@@ -66033,7 +66305,6 @@
             "TASK-031"
           ],
           "open_task_ids": [
-            "TASK-027",
             "TASK-028",
             "TASK-029",
             "TASK-030",
@@ -67887,6 +68158,25 @@
           "publisher_result_refs": [
             "932065b9e7412be9c435844ca47ff9da8b8a1af3"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+          "task_id": "TASK-027",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+          "validated_sha": "c31533b8cd58de08c2b937acf58db1df228c3608",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "c31533b8cd58de08c2b937acf58db1df228c3608",
+            "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+          ],
+          "publisher_result_refs": [
+            "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+          ]
         }
       ]
     },
@@ -68514,6 +68804,7 @@
         "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
         "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
         "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
+        "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
         "commit:cbb6739480e429e0005b93234b1c7df792856af3",
         "commit:e2f073db7ad0df3000fa4cc2280d763c1205112c",
         "decision validation pass .codewiki/validation/2026-05-22-decision-pass.json",
@@ -68561,6 +68852,7 @@
         "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-024.json",
         "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-025.json",
         "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+        "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
         "injected codewiki_audit tool package on /home/nunoc/projects/think-code: fail from stale loaded tool still hardcoding skills/codewiki until extension reload",
         "inline audit output from codewiki_audit 2026-05-22: file-structure pass, alignment pass, generated-parity pass, changed pass",
         "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
@@ -68616,6 +68908,7 @@
         "task:TASK-002",
         "task:TASK-005",
         "task:TASK-006",
+        "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
         "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
         "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
         "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
@@ -68638,6 +68931,7 @@
         "validation:.codewiki/validation/2026-05-26-implementation-pass-task-024.json",
         "validation:.codewiki/validation/2026-05-26-implementation-pass-task-025.json",
         "validation:.codewiki/validation/2026-05-26-implementation-pass-task-026.json",
+        "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
         "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
@@ -68779,6 +69073,7 @@
         "11a758300a54fc99c585b1c47ae9ae0b90767151",
         "11b76ed63996785ba5fb12e77933963f075425ac",
         "12da5d7f805f75b9f0b94b4ce38b97b893c00f1c",
+        "149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
         "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
         "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
@@ -68828,6 +69123,7 @@
         "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
         "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
         "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+        "c31533b8cd58de08c2b937acf58db1df228c3608",
         "c66bd9fef5240252b89bc482b8dc224f0aa09cbc",
         "cbb6739480e429e0005b93234b1c7df792856af3",
         "ccc06de45add0502b691dd440240dc4281b4f026",
@@ -71496,6 +71792,46 @@
             "932065b9e7412be9c435844ca47ff9da8b8a1af3"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-027",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json"
+          ],
+          "audit_evidence_refs": [
+            "approval:user:2026-05-26 Great. Please continue",
+            "profile:file-structure",
+            "profile:alignment",
+            "profile:stale-reference",
+            "profile:generated-parity",
+            "profile:changed",
+            "profile:task",
+            "validation:.codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+            "build:.codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+            "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+            "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
+            "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+            "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-027.json",
+            "file-structure pass: 96 TypeScript source files, architecture wrapper boundaries, 203 diagram refs, 13 approved migration deltas, 0 actionable drift items.",
+            "alignment pass: generated graph health and roadmap queue reachability.",
+            "stale-reference pass: scanned 52 active markdown/source text files.",
+            "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+            "changed pass: 0 changed files across 0 layers.",
+            "task TASK-027 pass."
+          ],
+          "content_proof_refs": [
+            "c31533b8cd58de08c2b937acf58db1df228c3608",
+            "149cb22ef9dd1fa87ace8b91fa0a38de70b78573"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -72390,7 +72726,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72399,7 +72735,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72408,7 +72744,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72417,7 +72753,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72585,15 +72921,6 @@
         },
         {
           "pattern": "src/api/**",
-          "owner_id": "deferred_concept_roots",
-          "owner_label": "Remaining concept-root migration cohort",
-          "group": "drift",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gc/**",
           "owner_id": "deferred_concept_roots",
           "owner_label": "Remaining concept-root migration cohort",
           "group": "drift",
@@ -72970,7 +73297,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72979,7 +73306,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72988,7 +73315,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -72997,7 +73324,7 @@
           "owner_id": "gc_concept_root_boundary",
           "owner_label": "GC concept-root migration",
           "group": "source_target",
-          "status": "implementation_pending_validation_by_task_027",
+          "status": "task_close_validated_by_task_027",
           "role": "target",
           "approved_delta": false
         },
@@ -73030,15 +73357,6 @@
         },
         {
           "pattern": "src/api/**",
-          "owner_id": "deferred_concept_roots",
-          "owner_label": "Remaining concept-root migration cohort",
-          "group": "drift",
-          "status": "accepted_target",
-          "role": "target",
-          "approved_delta": true
-        },
-        {
-          "pattern": "src/gc/**",
           "owner_id": "deferred_concept_roots",
           "owner_label": "Remaining concept-root migration cohort",
           "group": "drift",
@@ -73488,7 +73806,8 @@
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
           ],
           "audit_evidence_refs": [
             "npm run typecheck: pass",
@@ -74000,7 +74319,8 @@
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
           ],
           "audit_evidence_refs": [
             "npm run typecheck: pass",
@@ -74512,7 +74832,8 @@
             ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
             ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
-            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json"
+            ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+            ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
           ],
           "audit_evidence_refs": [
             "npm run typecheck: pass",
@@ -74815,14 +75136,12 @@
         "task_ids": [
           "TASK-012",
           "TASK-023",
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
           "TASK-031"
         ],
         "open_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
@@ -74945,7 +75264,6 @@
             "TASK-031"
           ],
           "open_task_ids": [
-            "TASK-027",
             "TASK-028",
             "TASK-029",
             "TASK-030",
@@ -75090,31 +75408,6 @@
             "tests/tasks/TASK-076/restructure.test.mjs"
           ]
         },
-        "TASK-027": {
-          "kind": "task",
-          "id": "TASK-027",
-          "task_ids": [
-            "TASK-027"
-          ],
-          "open_task_ids": [
-            "TASK-027"
-          ],
-          "sprint_ids": [
-            "SPRINT-003"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/change-lifecycle.md",
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/validation/2026-05-22-decision-pass.json"
-          ],
-          "code_paths": [
-            "src/gc/types.ts",
-            "src/gc/runtime.ts",
-            "src/gc/tool.ts"
-          ]
-        },
         "TASK-028": {
           "kind": "task",
           "id": "TASK-028",
@@ -75248,10 +75541,10 @@
     },
     "workflow_cursor": {
       "active_loop": "implementation",
-      "reason": "TASK-027 is open implementation delta below knowledge.",
+      "reason": "TASK-028 is open implementation delta below knowledge.",
       "input_refs": [
-        "task:TASK-027",
-        "TASK-027"
+        "task:TASK-028",
+        "TASK-028"
       ],
       "expected_output": "implementation_build",
       "exit_gate": "validation pass or explicit user decision",
@@ -75271,8 +75564,8 @@
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "task:TASK-027",
-        "TASK-027"
+        "task:TASK-028",
+        "TASK-028"
       ]
     },
     "gc": {
@@ -75286,7 +75579,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-027",
             "TASK-028",
             "TASK-029",
             "TASK-030",
@@ -76032,17 +76324,6 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
-          "id": "reconcile:task:TASK-027",
-          "source_id": "task:TASK-027",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-027",
-          "reason": "TASK-027 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-028",
           "source_id": "task:TASK-028",
           "state": "drift",
@@ -76088,13 +76369,13 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 5
+        "implementation": 4
       },
       "next_action": {
         "loop": "implementation",
-        "command": "/wiki-resume TASK-027",
-        "reason": "TASK-027 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-027",
+        "command": "/wiki-resume TASK-028",
+        "reason": "TASK-028 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-028",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -76108,8 +76389,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-027",
-          "TASK-027"
+          "task:TASK-028",
+          "TASK-028"
         ]
       },
       "layer_states": {
@@ -76123,13 +76404,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-26T23:23:07.547Z",
+      "generated_at": "2026-05-26T23:25:25.520Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-26T23:23:07Z",
+      "generated_at": "2026-05-26T23:25:25Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -76140,39 +76421,35 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 7,
-        "open_count": 5,
+        "task_count": 6,
+        "open_count": 4,
         "sprint_count": 3,
         "active_sprint_count": 3,
         "status_counts": {
           "cancelled": 2,
-          "in_progress": 1,
           "todo": 4
         },
         "priority_counts": {
           "medium": 1,
-          "high": 6
+          "high": 5
         }
       },
       "views": {
         "ordered_task_ids": [
           "TASK-012",
           "TASK-023",
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
           "TASK-031"
         ],
         "open_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
           "TASK-031"
         ],
         "executable_open_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
@@ -76297,7 +76574,6 @@
               "TASK-031"
             ],
             "open_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -76334,12 +76610,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-027"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-027"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [
           "TASK-028",
           "TASK-029",
@@ -76359,7 +76631,6 @@
           "TASK-023"
         ],
         "recent_task_ids": [
-          "TASK-027",
           "TASK-023",
           "TASK-031",
           "TASK-030",
@@ -76649,65 +76920,6 @@
             "evidence": null
           }
         },
-        "TASK-027": {
-          "id": "TASK-027",
-          "title": "Migrate GC source root",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "migration",
-          "change_type": "system",
-          "summary": "Move CodeWiki garbage-collection types, dry-run/purge logic, restore-ledger writing, and codewiki_gc tool execution into src/gc/**.",
-          "labels": [
-            "gc-root-migration"
-          ],
-          "goal": {
-            "outcome": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and tool execution preserved.",
-            "acceptance": [
-              "Create src/gc/** owner modules for GC tool input types, candidate detection, dry-run/purge execution, restore-ledger writing, and codewiki_gc tool execution.",
-              "Update adapters, schemas, tests, and package smoke to import GC behavior from src/gc/** or stable public API paths.",
-              "Remove old src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts owner paths or retain only explicit temporary shims with TASK-specific tests.",
-              "Preserve codewiki_gc schema/result behavior, archive_sha/tree_sha proof requirements, restore-ledger semantics, package loading, direct Node execution, and existing GC dry-run outputs.",
-              "Add TASK-specific guard proving legacy GC imports are gone or explicitly shimmed."
-            ],
-            "non_goals": [
-              "Do not migrate project, knowledge, roadmap, session, state/graph/resume, change/diff-table, adapters/UI, or skills.",
-              "Do not change GC eligibility policy, restore-ledger schema, destructive purge safety, package metadata, or public command behavior."
-            ],
-            "verification": [
-              "npm run typecheck",
-              "npm run check:architecture",
-              "npm run test:smoke",
-              "npm run test:features",
-              "npm run test:pack",
-              "codewiki_gc action=dry-run include=tracked,runtime with safe proof where applicable",
-              "TASK-specific GC guard",
-              "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            ".codewiki/kb/system/change-lifecycle.md",
-            ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-            ".codewiki/validation/2026-05-22-decision-pass.json"
-          ],
-          "code_paths": [
-            "src/gc/types.ts",
-            "src/gc/runtime.ts",
-            "src/gc/tool.ts"
-          ],
-          "updated": "2026-05-26T23:22:28Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-027/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
-        },
         "TASK-028": {
           "id": "TASK-028",
           "title": "Migrate session coordination source root",
@@ -76987,7 +77199,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-26T23:23:07Z",
+      "generated_at": "2026-05-26T23:25:25Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -77002,13 +77214,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 29,
-        "tracked_specs": 6,
+        "aligned_specs": 30,
+        "tracked_specs": 5,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 7,
-        "open_task_count": 5,
+        "task_count": 6,
+        "open_task_count": 4,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 13
@@ -77016,14 +77228,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 6,
-          "total": 6,
+          "value": 5,
+          "total": 5,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 7,
+          "total": 6,
           "percent": 0
         },
         "spec_mapping": {
@@ -77036,7 +77248,6 @@
       "views": {
         "risky_spec_paths": [
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/change-lifecycle.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
           ".codewiki/kb/system/roadmap.md",
@@ -77044,14 +77255,12 @@
         ],
         "top_risky_spec_paths": [
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/change-lifecycle.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
           ".codewiki/kb/system/roadmap.md",
           ".codewiki/kb/system/worktree-isolation.md"
         ],
         "open_task_ids": [
-          "TASK-027",
           "TASK-028",
           "TASK-029",
           "TASK-030",
@@ -77070,16 +77279,16 @@
       },
       "next_step": {
         "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-027",
-        "reason": "TASK-027 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-027"
+        "command": "/wiki-resume TASK-028",
+        "reason": "TASK-028 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-028"
       },
       "workflow_cursor": {
         "active_loop": "implementation",
-        "reason": "TASK-027 is open implementation delta below knowledge.",
+        "reason": "TASK-028 is open implementation delta below knowledge.",
         "input_refs": [
-          "task:TASK-027",
-          "TASK-027"
+          "task:TASK-028",
+          "TASK-028"
         ],
         "expected_output": "implementation_build",
         "exit_gate": "validation pass or explicit user decision",
@@ -77099,8 +77308,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-027",
-          "TASK-027"
+          "task:TASK-028",
+          "TASK-028"
         ]
       },
       "gc": {
@@ -77114,7 +77323,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -77308,11 +77516,11 @@
         ]
       },
       "direction": [
-        "TASK-027 is open implementation delta below knowledge.",
+        "TASK-028 is open implementation delta below knowledge.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 6/6.",
+        "Tracked drift coverage: 5/5.",
         "File-structure drift: 0 actionable item(s), 13 approved migration delta(s)."
       ],
       "file_structure": {
@@ -77330,9 +77538,9 @@
           "compatibility_export_gap": 0
         },
         "path_rule_counts": {
-          "intended": 69,
+          "intended": 68,
           "current": 4,
-          "target": 45
+          "target": 44
         },
         "approved_migration_delta_paths": [
           "src/agency/**",
@@ -77395,40 +77603,6 @@
           "note": "tracked by TASK-028"
         },
         {
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "title": "Change Lifecycle",
-          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-validation/SKILL.md",
-            "src/build",
-            "src/validation",
-            "src/application/graph.ts"
-          ],
-          "code_area": "skills, src",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-027"
-          ],
-          "primary_task": {
-            "id": "TASK-027",
-            "status": "in_progress",
-            "title": "Migrate GC source root"
-          },
-          "revision": {
-            "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-027"
-        },
-        {
           "path": ".codewiki/kb/system/file-structure.md",
           "title": "File Structure",
           "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -77445,22 +77619,21 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-027",
             "TASK-028",
             "TASK-029",
             "TASK-030",
             "TASK-031"
           ],
           "primary_task": {
-            "id": "TASK-027",
-            "status": "in_progress",
-            "title": "Migrate GC source root"
+            "id": "TASK-028",
+            "status": "todo",
+            "title": "Migrate session coordination source root"
           },
           "revision": {
-            "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
+            "digest": "ca835210412e85891f69feb15be0bd84e2a6c13c0613732429b399181813a4ed",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-027"
+          "note": "tracked by TASK-028"
         },
         {
           "path": ".codewiki/kb/system/graph.md",
@@ -78052,6 +78225,34 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "title": "Change Lifecycle",
+          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
+            "src/build",
+            "src/validation",
+            "src/application/graph.ts"
+          ],
+          "code_area": "skills, src",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/compilers.md",
           "title": "Compilers",
           "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -78255,7 +78456,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-26T23:23:07Z",
+        "generated_at": "2026-05-26T23:25:25Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -78283,10 +78484,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-26T23:23:07Z",
+            "checked_at": "2026-05-26T23:25:25Z",
             "revision": {
               "git": {
-                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
+                "head": "c124cb8457fad95c583194f1c3df4666fdddc9fa",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -78319,7 +78520,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
+                  ".codewiki/kb/system/file-structure.md": "718a83635ec660a47327366d9dbe54fd0527e513",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -78327,7 +78528,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
+                  ".codewiki/roadmap/queue.json": "139f2020ce7dd894758f819c99c71c8aa66b3482",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
@@ -78384,15 +78585,15 @@
                   "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "a3067781c18e75474b9d43e8aa8d8a9220c2d4e47a5bd6bb995e477ae8f66680",
-              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
-              "code_digest": "df0b1a3e183b0666a063274cb0ad9d18c143b89bc5982e94946c7bd6b717fcbe",
-              "digest": "a63d478a6b1b7f61fe7dc705f1c853521971fc4439bb1d6dc171adafbf44ab0f"
+              "spec_digest": "1af1fb02f946babe07064f94f487726b17a956e41d750bd89e2c63ff30b2987b",
+              "task_digest": "4b596249a97a0f93df52416f6a9eded4d3a21e786c1b11d3cf6cbd8ddfead805",
+              "code_digest": "631725f56e3f28f2aa960dbf17ff939640fdc39b140d8a27f88185c9eabd2073",
+              "digest": "c2a6a16653e8c439d3d85e7840b352b0121d648388f7e8f874c2b943ab30a960"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:23:07Z",
+              "checked_at": "2026-05-26T23:25:25Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -78413,7 +78614,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78423,6 +78623,7 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -78452,14 +78653,10 @@
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -78475,7 +78672,11 @@
               "src/build/writer.ts",
               "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
@@ -78495,7 +78696,6 @@
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -78503,7 +78703,6 @@
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78511,8 +78710,8 @@
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 28,
-              "tracked_specs": 6,
+              "aligned_specs": 29,
+              "tracked_specs": 5,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -78537,10 +78736,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-26T23:23:07Z",
+            "checked_at": "2026-05-26T23:25:25Z",
             "revision": {
               "git": {
-                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
+                "head": "c124cb8457fad95c583194f1c3df4666fdddc9fa",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -78557,7 +78756,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
+                  ".codewiki/kb/system/file-structure.md": "718a83635ec660a47327366d9dbe54fd0527e513",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -78565,7 +78764,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
+                  ".codewiki/roadmap/queue.json": "139f2020ce7dd894758f819c99c71c8aa66b3482",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
                   "skills/codewiki": "",
@@ -78617,21 +78816,20 @@
                   "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "b235a0a99d1742612b25d0962bea0945a4791dd005cd3b7e9deefe7624b48bf4",
-              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
-              "code_digest": "432e8f5b0ec42a88fda08e3ab96cb5644e03ecb5e5fea37c1351672e09052c21",
-              "digest": "7973b110544b56b6c69c6ae3202ee7721ad638a3b5d7f36e591642c990d3787a"
+              "spec_digest": "b9193384c0685a0e142fcff9dec5ffa0a45de65b33f932e43da13d0097d3f643",
+              "task_digest": "4b596249a97a0f93df52416f6a9eded4d3a21e786c1b11d3cf6cbd8ddfead805",
+              "code_digest": "82f24dbb8776e695a949640c82f8d378c883cfa194da57d93c51f7646907b734",
+              "digest": "a28e9022b931a55fbdde2ba7938bb5971beb1e41a780b068599846de6f509a65"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:23:07Z",
+              "checked_at": "2026-05-26T23:25:25Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78641,6 +78839,7 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -78654,17 +78853,11 @@
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "src",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -78680,8 +78873,14 @@
               "src/build/writer.ts",
               "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/application/lint.ts",
               "src/gateway",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
@@ -78705,9 +78904,8 @@
               "skills",
               "src/validation/tool.ts"
             ],
-            "code_area": "src, skills +3 more",
+            "code_area": "src, .codewiki +3 more",
             "open_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -78715,7 +78913,6 @@
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78723,8 +78920,8 @@
             ],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 13,
-              "tracked_specs": 6,
+              "aligned_specs": 14,
+              "tracked_specs": 5,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -78749,10 +78946,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-26T23:23:07Z",
+            "checked_at": "2026-05-26T23:25:25Z",
             "revision": {
               "git": {
-                "head": "cdec912f8d0e9076e5821aac1a28e2d652d24079",
+                "head": "c124cb8457fad95c583194f1c3df4666fdddc9fa",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -78785,7 +78982,7 @@
                   ".codewiki/kb/system/control-room-ui.md": "7e5d3ea787b8577c05eada7fdffb4d95e3b6af19",
                   ".codewiki/kb/system/diagrams/README.md": "c9f1a89f0ba8daa1fbbc36d729dd7289b6459881",
                   ".codewiki/kb/system/extension.md": "641f5bdd5e5145f087f7515b0bc2e504eae751d7",
-                  ".codewiki/kb/system/file-structure.md": "0e9589d7cec216da1219ae1838614bfa8ba2a3c7",
+                  ".codewiki/kb/system/file-structure.md": "718a83635ec660a47327366d9dbe54fd0527e513",
                   ".codewiki/kb/system/graph.md": "7790194bf5087f2d3cf73eb461b3fa6ef81c12b8",
                   ".codewiki/kb/system/knowledge.md": "5501feb14efa6fe95c401e6e7caef36fb8d17306",
                   ".codewiki/kb/system/overview.md": "5f8bc4d5310a4d0a9967a90622018b9ac00bb9a7",
@@ -78793,7 +78990,7 @@
                   ".codewiki/kb/system/validation-gateway.md": "e02bd307890fda0942264b2ea31c7385603dd34e",
                   ".codewiki/kb/system/worktree-isolation.md": "882679a19cf7f0373de8fdcbb5f7bc211cffc88c",
                   ".codewiki/roadmap": "",
-                  ".codewiki/roadmap/queue.json": "6283b21f3b4fd2c35400f40ef38c727a4fc5841c",
+                  ".codewiki/roadmap/queue.json": "139f2020ce7dd894758f819c99c71c8aa66b3482",
                   "package.json": "d8ddf48a377e6b56b1d0395397d5e7ce6696639a",
                   "scripts/check-architecture.mjs": "3578dc474020cbb2103ed06b5a4ac15d8812610c",
                   "skills": "",
@@ -78850,15 +79047,15 @@
                   "tests/smoke/package-smoke.test.mjs": "f9a9ce6e6030bdd178336f2562afb2957caef8a1"
                 }
               },
-              "spec_digest": "a3067781c18e75474b9d43e8aa8d8a9220c2d4e47a5bd6bb995e477ae8f66680",
-              "task_digest": "282f73e2bc7193b2463413061003d2ca8c93af7615c39b2da5fc24c1d0d472aa",
-              "code_digest": "df0b1a3e183b0666a063274cb0ad9d18c143b89bc5982e94946c7bd6b717fcbe",
-              "digest": "a63d478a6b1b7f61fe7dc705f1c853521971fc4439bb1d6dc171adafbf44ab0f"
+              "spec_digest": "1af1fb02f946babe07064f94f487726b17a956e41d750bd89e2c63ff30b2987b",
+              "task_digest": "4b596249a97a0f93df52416f6a9eded4d3a21e786c1b11d3cf6cbd8ddfead805",
+              "code_digest": "631725f56e3f28f2aa960dbf17ff939640fdc39b140d8a27f88185c9eabd2073",
+              "digest": "c2a6a16653e8c439d3d85e7840b352b0121d648388f7e8f874c2b943ab30a960"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-26T23:23:07Z",
+              "checked_at": "2026-05-26T23:25:25Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -78879,7 +79076,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78889,6 +79085,7 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -78918,14 +79115,10 @@
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -78941,7 +79134,11 @@
               "src/build/writer.ts",
               "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
@@ -78961,7 +79158,6 @@
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -78969,7 +79165,6 @@
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
@@ -78977,8 +79172,8 @@
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 28,
-              "tracked_specs": 6,
+              "aligned_specs": 29,
+              "tracked_specs": 5,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -78993,18 +79188,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-027",
+        "task_id": "TASK-028",
         "lane_id": "",
-        "heading": "TASK-027 — Migrate GC source root",
-        "command": "/wiki-resume TASK-027",
-        "reason": "Resume roadmap task (in_progress).",
-        "status": "in_progress",
+        "heading": "TASK-028 — Migrate session coordination source root",
+        "command": "/wiki-resume TASK-028",
+        "reason": "Resume roadmap task (todo).",
+        "status": "todo",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-26T23:23:07Z",
+        "generated_at": "2026-05-26T23:25:25Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -79061,40 +79256,6 @@
             "note": "tracked by TASK-028"
           },
           {
-            "path": ".codewiki/kb/system/change-lifecycle.md",
-            "title": "Change Lifecycle",
-            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts"
-            ],
-            "code_area": "skills, src",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-027"
-            ],
-            "primary_task": {
-              "id": "TASK-027",
-              "status": "in_progress",
-              "title": "Migrate GC source root"
-            },
-            "revision": {
-              "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-027"
-          },
-          {
             "path": ".codewiki/kb/system/file-structure.md",
             "title": "File Structure",
             "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -79111,22 +79272,21 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "primary_task": {
-              "id": "TASK-027",
-              "status": "in_progress",
-              "title": "Migrate GC source root"
+              "id": "TASK-028",
+              "status": "todo",
+              "title": "Migrate session coordination source root"
             },
             "revision": {
-              "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
+              "digest": "ca835210412e85891f69feb15be0bd84e2a6c13c0613732429b399181813a4ed",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-027"
+            "note": "tracked by TASK-028"
           },
           {
             "path": ".codewiki/kb/system/graph.md",
@@ -79713,6 +79873,34 @@
             "primary_task": null,
             "revision": {
               "digest": "6db8fe75dd7e2853cefcc3daee439e514614b3a81ad984326e78fa69e1284114",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/change-lifecycle.md",
+            "title": "Change Lifecycle",
+            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/build",
+              "src/validation",
+              "src/application/graph.ts"
+            ],
+            "code_area": "skills, src",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -80306,40 +80494,6 @@
                 "note": "tracked by TASK-028"
               },
               {
-                "path": ".codewiki/kb/system/change-lifecycle.md",
-                "title": "Change Lifecycle",
-                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "src/build",
-                  "src/validation",
-                  "src/application/graph.ts"
-                ],
-                "code_area": "skills, src",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-027"
-                ],
-                "primary_task": {
-                  "id": "TASK-027",
-                  "status": "in_progress",
-                  "title": "Migrate GC source root"
-                },
-                "revision": {
-                  "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-027"
-              },
-              {
                 "path": ".codewiki/kb/system/file-structure.md",
                 "title": "File Structure",
                 "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -80356,22 +80510,21 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-027",
                   "TASK-028",
                   "TASK-029",
                   "TASK-030",
                   "TASK-031"
                 ],
                 "primary_task": {
-                  "id": "TASK-027",
-                  "status": "in_progress",
-                  "title": "Migrate GC source root"
+                  "id": "TASK-028",
+                  "status": "todo",
+                  "title": "Migrate session coordination source root"
                 },
                 "revision": {
-                  "digest": "bada7c07133f01429c433bfc8a330204d240a7054ca18ef8efb8949a01625675",
+                  "digest": "ca835210412e85891f69feb15be0bd84e2a6c13c0613732429b399181813a4ed",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-027"
+                "note": "tracked by TASK-028"
               },
               {
                 "path": ".codewiki/kb/system/graph.md",
@@ -80622,6 +80775,34 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/change-lifecycle.md",
+                "title": "Change Lifecycle",
+                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "src/build",
+                  "src/validation",
+                  "src/application/graph.ts"
+                ],
+                "code_area": "skills, src",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/compilers.md",
                 "title": "Compilers",
                 "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -80833,12 +81014,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-027",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-027"
-        ],
-        "next_task_id": "TASK-027",
+        "in_progress_task_ids": [],
+        "next_task_id": "TASK-028",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -80957,7 +81136,6 @@
               "TASK-031"
             ],
             "open_task_ids": [
-              "TASK-027",
               "TASK-028",
               "TASK-029",
               "TASK-030",
@@ -81008,9 +81186,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-027"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",

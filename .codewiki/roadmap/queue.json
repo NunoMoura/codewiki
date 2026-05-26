@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-26T23:22:28Z",
+  "updated": "2026-05-26T23:24:16Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-027",
     "TASK-028",
     "TASK-029",
     "TASK-030",
@@ -284,62 +283,6 @@
       },
       "created": "2026-05-26",
       "updated": "2026-05-26T23:17:27Z"
-    },
-    "TASK-027": {
-      "id": "TASK-027",
-      "title": "Migrate GC source root",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "migration",
-      "summary": "Move CodeWiki garbage-collection types, dry-run/purge logic, restore-ledger writing, and codewiki_gc tool execution into src/gc/**.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/kb/system/change-lifecycle.md",
-        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-        ".codewiki/validation/2026-05-22-decision-pass.json"
-      ],
-      "code_paths": [
-        "src/gc/types.ts",
-        "src/gc/runtime.ts",
-        "src/gc/tool.ts"
-      ],
-      "research_ids": [],
-      "labels": [
-        "gc-root-migration"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and tool execution preserved.",
-        "acceptance": [
-          "Create src/gc/** owner modules for GC tool input types, candidate detection, dry-run/purge execution, restore-ledger writing, and codewiki_gc tool execution.",
-          "Update adapters, schemas, tests, and package smoke to import GC behavior from src/gc/** or stable public API paths.",
-          "Remove old src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts owner paths or retain only explicit temporary shims with TASK-specific tests.",
-          "Preserve codewiki_gc schema/result behavior, archive_sha/tree_sha proof requirements, restore-ledger semantics, package loading, direct Node execution, and existing GC dry-run outputs.",
-          "Add TASK-specific guard proving legacy GC imports are gone or explicitly shimmed."
-        ],
-        "non_goals": [
-          "Do not migrate project, knowledge, roadmap, session, state/graph/resume, change/diff-table, adapters/UI, or skills.",
-          "Do not change GC eligibility policy, restore-ledger schema, destructive purge safety, package metadata, or public command behavior."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run check:architecture",
-          "npm run test:smoke",
-          "npm run test:features",
-          "npm run test:pack",
-          "codewiki_gc action=dry-run include=tracked,runtime with safe proof where applicable",
-          "TASK-specific GC guard",
-          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-        ]
-      },
-      "delta": {
-        "desired": "GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and codewiki_gc tool execution preserved.",
-        "current": "GC owner paths are being moved from src/domain/gc/types.ts, src/application/gc.ts, and src/application/tools/gc.ts to src/gc/**.",
-        "closure": ""
-      },
-      "created": "2026-05-26",
-      "updated": "2026-05-26T23:22:28Z"
     },
     "TASK-028": {
       "id": "TASK-028",
