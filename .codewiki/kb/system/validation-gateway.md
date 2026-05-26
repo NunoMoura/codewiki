@@ -5,18 +5,19 @@ state: active
 summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.
 owners:
   - architecture
-updated: "2026-05-24"
+updated: "2026-05-26"
 code_paths:
-  - src/application/gateway
+  - src/validation
+  - src/gateway
+  - src/validation/tool.ts
   - skills/codewiki-validation/SKILL.md
-  - src/application/builds.ts
 ---
 
 # Validation Gateway
 
 ## Responsibility
 
-The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. It is exposed through the validation tool plus focused modules such as `src/application/builds.ts` and `src/application/gateway/**`, staying separate from compiler-loop build production.
+The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. It is exposed through the validation tool at `src/validation/tool.ts`, validation report/preflight modules under `src/validation/**`, and gateway transaction helpers under `src/gateway/**`, staying separate from compiler-loop build production.
 
 The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds; commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence and, for implementation builds, verifies commit-readiness.
 

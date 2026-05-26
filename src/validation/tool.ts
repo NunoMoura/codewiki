@@ -1,7 +1,7 @@
-import type { WikiProject } from "../../domain/project/types.ts";
-import type { CodewikiValidationReportInput } from "../../domain/validation/types.ts";
-import { buildValidationPreflight, writeValidationReport } from "../builds.ts";
-import { runRebuild } from "../state-artifacts.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import type { CodewikiValidationReportInput } from "./types.ts";
+import { buildValidationPreflight, writeValidationReport } from "./report.ts";
+import { runRebuild } from "../application/state-artifacts.ts";
 
 export async function executeCodewikiValidationTool(
 	project: WikiProject,

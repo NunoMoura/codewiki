@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-25"
+updated: "2026-05-26"
 code_paths:
   - .codewiki/kb
   - src
@@ -85,8 +85,8 @@ Renderer-specific Mermaid, Cytoscape, or SVG output should be treated as generat
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/application/tools/**`, focused application use-case modules, domain contracts |
 | Agency controller | `agency.md` | application use cases and adapter-exposed agency entrypoints |
-| Compilers | `compilers.md` | `src/application/builds.ts`, `src/application/roadmap.ts`, `src/application/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
-| Validation gateway | `validation-gateway.md` | `src/application/builds.ts`, `src/application/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
+| Compilers | `compilers.md` | `src/build/**`, `src/application/roadmap.ts`, `src/application/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
+| Validation gateway | `validation-gateway.md` | `src/validation/**`, `src/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**` |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |
@@ -133,10 +133,10 @@ Architecture and audit checks must understand these classes so dogfood state, ge
 
 The accepted vNext direction is concept-root source ownership: main concepts should be findable from `src/<concept>/**` with model, use cases, tool/API entrypoints, and concept-local implementation nearby. Adapters and UI remain exposure layers; shared code stays primitive-only; no top-level `infrastructure/` layer should exist.
 
-Current implementation remains valid until migration tasks land:
+Current staged implementation is a hybrid: validated concept roots exist for agency and audit, while remaining concepts still live in domain/application until their migration tasks close.
 
 ```text
-src/{domain,application,adapters,ui}/
+src/{agency,audit,domain,application,adapters,ui}/
 ```
 
 Target roots:
@@ -150,7 +150,7 @@ Primary deltas move domain/application pairs into concept roots: session, state/
 
 `agency` is the validated pilot. TASK-015 introduced `src/agency/**`; TASK-020 removed the old `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts` shims. Old agency shims must not be recreated.
 
-Post-TASK-020 planning maps the accepted FS-ROOT-CONCEPTS decision into staged executable work. TASK-021 is the first non-agency boundary: migrate audit to `src/audit/**`. TASK-021 implementation moves audit types and tool execution to `src/audit/types.ts` and `src/audit/tool.ts`, removes old `src/domain/audit/types.ts` and `src/application/tools/audit.ts` paths, and keeps later roots gated until TASK-021 task-close validation plus file-structure audit evidence. Build and validation remain next-wave candidates after TASK-021 evidence; session, roadmap, state, and project wait until shared import patterns stabilize.
+Post-TASK-021 planning maps the accepted FS-ROOT-CONCEPTS decision into the next executable wave. TASK-021 closed the first non-agency boundary by moving audit types and tool execution to `src/audit/types.ts` and `src/audit/tool.ts`, removing old `src/domain/audit/types.ts` and `src/application/tools/audit.ts` paths, and passing task-close validation with file-structure audit evidence. TASK-022 is the next wave: migrate tightly coupled build, validation, and gateway ownership to `src/build/**`, `src/validation/**`, and `src/gateway/**`. Session, roadmap, state/graph/resume, project, knowledge, GC, change, and API/shared cleanup wait until TASK-022 task-close evidence proves the compiler/gateway seam.
 
 Skills own agent workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 

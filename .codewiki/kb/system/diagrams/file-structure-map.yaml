@@ -37,13 +37,15 @@ nodes:
     requires_doc: true
     role: canonical_target
   - id: current_layered_source
-    label: Current src/domain + src/application split
+    label: Current hybrid src layout
     group: source_current
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: current_valid_until_migrated
+    status: hybrid_valid_until_migrated
     paths:
+      - src/agency/**
+      - src/audit/**
       - src/domain/**
       - src/application/**
   - id: current_adapters
@@ -117,9 +119,10 @@ nodes:
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: implemented_pending_validation
+    status: task_close_validated_by_task_021
     task_id: TASK-021
-    cleanup_state: old_audit_paths_removed_pending_task_close
+    validation_ref: .codewiki/validation/2026-05-25-task-close-pass-task-021.json
+    cleanup_state: old_audit_paths_removed
     paths:
       - src/audit/**
       - tests/tasks/TASK-021/audit-source-root.test.mjs
@@ -127,6 +130,27 @@ nodes:
     removed_paths:
       - src/domain/audit/types.ts
       - src/application/tools/audit.ts
+  - id: build_validation_gateway_wave
+    label: Build, validation, and gateway concept-root wave
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implemented_pending_validation
+    task_id: TASK-022
+    validation_state: implementation_build_pending
+    paths:
+      - src/build/**
+      - src/validation/**
+      - src/gateway/**
+      - tests/tasks/TASK-022/**
+    removed_paths:
+      - src/domain/build/**
+      - src/domain/validation/**
+      - src/application/builds.ts
+      - src/application/tools/build.ts
+      - src/application/tools/validation.ts
+      - src/application/gateway/**
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -261,26 +285,28 @@ nodes:
       - require_typecheck_smoke_feature_package_checks
       - keep_compatibility_shims_test_backed_and_temporary
   - id: deferred_concept_roots
-    label: Deferred concept roots after audit boundary
+    label: Deferred concept roots after build/validation/gateway wave
     group: drift
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
     status: accepted_target
-    defer_status: awaiting_audit_task_close_evidence
+    defer_status: awaiting_TASK_022_task_close_evidence
     owner: maintainers
-    trigger: TASK-021 audit migration task-close validation and file-structure audit evidence
-    trigger_state: waiting_for_TASK_021_task_close
-    next_task_id: TASK-021
-    next_boundary: audit
-    downstream_deferred_until: TASK-021 audit migration task-close validation and file-structure audit evidence
+    trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
+    trigger_state: waiting_for_TASK_022_task_close
+    next_task_id: TASK-022
+    next_boundary: build_validation_gateway
+    downstream_deferred_until: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     paths:
-      - src/build/**
-      - src/validation/**
-      - src/session/**
-      - src/roadmap/**
-      - src/state/**
+      - src/api/**
+      - src/change/**
+      - src/gc/**
+      - src/knowledge/**
       - src/project/**
+      - src/roadmap/**
+      - src/session/**
+      - src/state/**
 edges:
   - id: intended_defines_current
     from: intended_file_structure
@@ -317,7 +343,7 @@ edges:
   - id: audit_selected_after_cleanup
     from: concept_root_target
     to: audit_concept_root_boundary
-    label: next approved migration boundary
+    label: selected migration boundary after agency cleanup
   - id: audit_uses_compatibility_constraints
     from: migration_compatibility_constraints
     to: audit_concept_root_boundary
@@ -325,7 +351,19 @@ edges:
   - id: heavier_roots_wait_for_audit
     from: deferred_concept_roots
     to: audit_concept_root_boundary
-    label: current deferral gate waits for audit task-close validation
+    label: previous deferral gate satisfied by audit task-close validation
+  - id: build_validation_wave_selected_after_audit
+    from: concept_root_target
+    to: build_validation_gateway_wave
+    label: next approved migration wave after audit validation
+  - id: build_validation_wave_uses_compatibility_constraints
+    from: migration_compatibility_constraints
+    to: build_validation_gateway_wave
+    label: gates build/validation/gateway source move
+  - id: heavier_roots_wait_for_build_validation
+    from: deferred_concept_roots
+    to: build_validation_gateway_wave
+    label: current deferral gate waits for TASK-022 task-close validation
   - id: concept_target_exposed_by_api
     from: concept_root_target
     to: api_facade

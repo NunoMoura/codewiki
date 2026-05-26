@@ -13,8 +13,10 @@ assert.ok(existsSync(resolve(repoRoot, "src", "domain")), "Domain layer should e
 assert.ok(existsSync(resolve(repoRoot, "src", "application")), "Application layer should exist under root src/");
 assert.ok(existsSync(resolve(repoRoot, "src", "adapters")), "Adapters layer should exist under root src/");
 assert.ok(!existsSync(resolve(repoRoot, "src", "infrastructure")), "Top-level infrastructure layer should not exist");
-assert.ok(existsSync(resolve(repoRoot, "src", "application", "gateway", "index.ts")), "Gateway policy should live under application/");
-assert.ok(existsSync(resolve(repoRoot, "src", "application", "graph", "rebuilder.ts")), "Graph rebuilder should live under application/");
+assert.ok(existsSync(resolve(repoRoot, "src", "gateway", "index.ts")), "Gateway policy should live under source-root gateway/");
+assert.ok(existsSync(resolve(repoRoot, "src", "build", "writer.ts")), "Build writer should live under source-root build/");
+assert.ok(existsSync(resolve(repoRoot, "src", "validation", "report.ts")), "Validation reports should live under source-root validation/");
+assert.ok(existsSync(resolve(repoRoot, "src", "application", "graph", "rebuilder.ts")), "Graph rebuilder should live under application/ until state/graph migration happens");
 
 const skillEntries = readdirSync(resolve(repoRoot, "skills"), { withFileTypes: true })
 	.filter((entry) => entry.isDirectory())

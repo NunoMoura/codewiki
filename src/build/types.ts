@@ -1,5 +1,5 @@
-import type { ChangeType, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
-import type { CodewikiIsolationRequirementInput } from "../session/types.ts";
+import type { ChangeType, LegacyChangeClass, TraceabilityExemption } from "../domain/change/types.ts";
+import type { CodewikiIsolationRequirementInput } from "../domain/session/types.ts";
 
 export interface CodewikiBuildIsolationPolicyInput {
 	loop_start?: CodewikiIsolationRequirementInput;

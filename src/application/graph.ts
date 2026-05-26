@@ -1,5 +1,5 @@
-import { assessDecisionPropagation } from "../domain/build/decision-propagation.ts";
-import { isAcceptedBuildData } from "../domain/build/lifecycle.ts";
+import { assessDecisionPropagation } from "../build/decision-propagation.ts";
+import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption } from "../domain/change/traceability.ts";
 import type { WikiProject } from "../domain/project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
@@ -10,7 +10,7 @@ import type {
 	GraphNode,
 	GraphViews,
 } from "../domain/state/types.ts";
-import type { LintReport } from "../domain/validation/types.ts";
+import type { LintReport } from "../validation/types.ts";
 import { GitCache } from "./local/git-cache.ts";
 import type { ParsedDoc } from "./knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport, compactFileStructureDriftReport, parseSystemDiagrams, resolveDiagramRef } from "./knowledge/diagram-parser.ts";

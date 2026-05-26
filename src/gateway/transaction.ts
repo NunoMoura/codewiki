@@ -173,7 +173,7 @@ export function applyAppendJsonl(repo: string, gateway: GatewayConfig, op: Appen
 
 export async function runRebuild(repo: string) {
 	try {
-		const { CodewikiRebuilder } = await import("../graph/rebuilder.ts");
+		const { CodewikiRebuilder } = await import("../application/graph/rebuilder.ts");
 		const builder = new CodewikiRebuilder(repo);
 		await builder.rebuildAll();
 	} catch (e) {

@@ -4,7 +4,8 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { buildChangeClaimState, mutateChangeClaims } from "../../src/application/claims.ts";
-import { writeImplementationBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { writeImplementationBuild } from "../../src/build/writer.ts";
+import { writeValidationReport } from "../../src/validation/report.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 import { createRoleWorktreePlan } from "../../src/application/worktree-isolation.ts";
 
@@ -79,7 +80,7 @@ try {
 		role: "validator",
 		taskId: "TASK-071",
 		summary: "Auto factory metadata for validator role.",
-		scopes: [{ layer: "code", path: "src/application/builds.ts" }],
+		scopes: [{ layer: "code", path: "src/build/writer.ts" }],
 	}, { sessionId: "validator-session", agentName: "Validator" });
 	assert.equal(factoryClaim.claim.worktree.branch, "codewiki/TASK-071/validator/validator-session");
 	assert.ok(factoryClaim.claim.worktree.worktree_path.endsWith(".codewiki-worktrees/role-worktree-smoke/TASK-071/validator/validator-session"));
@@ -91,7 +92,7 @@ try {
 		role: "builder",
 		taskId: "TASK-071",
 		summary: "Wait for exact validator blocker.",
-		scopes: [{ layer: "code", path: "src/application/builds.ts" }],
+		scopes: [{ layer: "code", path: "src/build/writer.ts" }],
 	}, { sessionId: "waiting-builder", agentName: "Waiting Builder" });
 	assert.equal(waiterResult.waiter.status, "pending");
 	assert.deepEqual(waiterResult.waiter.blocked_by_claim_ids, [factoryClaim.claim.id]);
@@ -101,7 +102,7 @@ try {
 	assert.match(waiterResult.waiter.blocker_summary, /CLAIM-\d+.*codewiki\/TASK-071\/validator\/validator-session/);
 
 	const stateWithWaiter = buildChangeClaimState(JSON.parse(await readFile(join(root, ".codewiki/session/queue.json"), "utf8")));
-	const statusForBuilds = stateWithWaiter.artifact_statuses.find((status) => status.artifact.path === "src/application/builds.ts");
+	const statusForBuilds = stateWithWaiter.artifact_statuses.find((status) => status.artifact.path === "src/build/writer.ts");
 	assert.equal(statusForBuilds.status, "in-use");
 	assert.equal(statusForBuilds.holders[0].worktree.branch, factoryClaim.claim.worktree.branch);
 	assert.match(statusForBuilds.waiters[0].next_safe_action, /Wait for CLAIM-\d+ release/);

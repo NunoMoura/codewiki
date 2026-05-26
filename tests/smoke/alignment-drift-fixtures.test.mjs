@@ -7,7 +7,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { buildGraph } from "../../src/application/graph.ts";
 import { loadProject } from "../../src/application/project.ts";
-import { writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
+import { writeValidationReport } from "../../src/validation/report.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 
 const matrix = JSON.parse(readFileSync("tests/fixtures/alignment-drift/matrix.json", "utf8"));

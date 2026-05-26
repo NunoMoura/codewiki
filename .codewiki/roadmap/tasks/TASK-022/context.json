@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-26T01:42:30Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-022/context.json",
+  "task": {
+    "id": "TASK-022",
+    "title": "Migrate build, validation, and gateway concept roots",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Move compiler build, validation report/preflight, codewiki_build/codewiki_validation tools, and gateway transaction ownership into source-root build/validation/gateway concepts while preserving public behavior and proof policy.",
+    "labels": [
+      "file-structure",
+      "concept-root",
+      "migration",
+      "build",
+      "validation",
+      "gateway",
+      "codewiki_build",
+      "codewiki_validation",
+      "post-task-021"
+    ],
+    "goal": {
+      "outcome": "Build, validation, and gateway concepts have source-root ownership under src/build/**, src/validation/**, and src/gateway/**, with old layer-first owner paths removed or retained only as explicit temporary shims.",
+      "acceptance": [
+        "Create src/build/** owner modules for build types, lifecycle helpers, decision-propagation helpers, build writer/use-case execution, and codewiki_build tool execution moved from src/domain/build/**, src/application/builds.ts, and src/application/tools/build.ts.",
+        "Create src/validation/** owner modules for validation types, validation report writing, validation preflight/risk policy, and codewiki_validation tool execution moved from src/domain/validation/**, validation-owned sections of src/application/builds.ts, and src/application/tools/validation.ts.",
+        "Create src/gateway/** owner modules for gateway transaction helpers moved from src/application/gateway/** when they are validation/gateway-owned rather than generic application plumbing.",
+        "Update adapters, schemas, graph/resume/task callers, tests, scripts, and package smoke to import build/validation/gateway behavior from src/build/**, src/validation/**, src/gateway/**, or stable public API paths, not old layer-first owner paths.",
+        "Preserve codewiki_build and codewiki_validation tool schema/result behavior; decision/planning/implementation build output shape; validation report/preflight semantics; task-close/publication content-proof policy; package loading; direct Node execution; and smoke/feature coverage.",
+        "Add or update TASK-specific tests proving old build/validation/gateway layer-first imports are gone or any temporary compatibility shims are explicit, scoped, and test-backed.",
+        "Update file-structure KB/diagram to mark the build/validation/gateway wave status and keep session, roadmap, state/graph/resume, project, knowledge, GC, and change roots gated until TASK-022 task-close evidence exists."
+      ],
+      "non_goals": [
+        "Do not migrate session, roadmap, state/graph/resume, project, knowledge, GC, change, adapters, UI, or skills in this task.",
+        "Do not change public tool schemas, validation profile names, package metadata, package entrypoints, build JSON schema, validation JSON schema, or product behavior.",
+        "Do not remove source paths outside the build/validation/gateway boundary except import updates required by this migration."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/builds.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    },
+    "delta": {
+      "desired": "Build, validation, and gateway concepts have source-root ownership under src/build/**, src/validation/**, and src/gateway/** with public behavior preserved.",
+      "current": "Build and validation/gateway code remain split across src/domain/build/**, src/domain/validation/**, src/application/builds.ts, src/application/tools/build.ts, src/application/tools/validation.ts, and src/application/gateway/**.",
+      "closure": "Implementation build and validation prove build/validation/gateway migration, compatibility-preserving imports, updated tests/KB/diagram, and no non-wave source migration."
+    }
+  }
+}

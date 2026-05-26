@@ -11,7 +11,7 @@ import type {
 	ConfigPanelSection,
 	StatusStateAgentRow,
 } from "../../../domain/state/types.ts";
-import type { LintReport } from "../../../domain/validation/types.ts";
+import type { LintReport } from "../../../validation/types.ts";
 import { basename } from "node:path";
 import { padToWidth, truncatePlain } from "./text.ts";
 

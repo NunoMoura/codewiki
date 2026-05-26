@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
+import { writeValidationReport } from "../../src/validation/report.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-loop-isolation-"));
@@ -59,7 +60,7 @@ try {
 		downstream_question_resolutions: [{ question: "Plan TASK-123 isolation implementation.", resolution: "roadmap-task", task_ids: ["TASK-123"], evidence: "TASK-123 answers the downstream planning question.", source_refs: [decision.path, "TASK-123"] }],
 		tdd_plan: ["Add isolation policy smoke coverage."],
 		candidate_test_files: ["tests/smoke/loop-isolation-policy.test.mjs"],
-		candidate_code_paths: ["src/application/builds.ts"],
+		candidate_code_paths: ["src/build/writer.ts"],
 	});
 	const planningData = JSON.parse(await readFile(join(root, planning.path), "utf8"));
 	assert.equal(planningData.policy.isolation.loop_start.required, false);
@@ -74,7 +75,7 @@ try {
 		source_planning_build: planning.path,
 		task_id: "TASK-123",
 		test_files: ["tests/smoke/loop-isolation-policy.test.mjs"],
-		code_files: ["src/application/builds.ts"],
+		code_files: ["src/build/writer.ts"],
 		checks_run: ["npm test"],
 		acceptance_mapping: [{ criterion: "Policy works", evidence: "Smoke test passes" }],
 		closure_brief: {
@@ -333,7 +334,7 @@ try {
 		roadmapSprints: [],
 		gitCache: fakeGitCache,
 		builds: [
-			{ path: ".codewiki/builds/decision/decision.json", kind: "decision_build", status: "accepted", data: { kind: "decision_build", lifecycle: { state: "accepted" }, diff_table: [{ id: "DTR-001", desired_state: "Change builds.", user_action: "approved" }], approved_diff_rows: ["DTR-001"], knowledge_changes: [".codewiki/kb/system/builds.md"], row_to_kb_mappings: [{ row_id: "DTR-001", knowledge_refs: [".codewiki/kb/system/builds.md"], evidence: "Builds doc captures decision." }], propagation: { direction: "system-first", no_product_impact: "No product behavior change." }, produces: { code: ["src/application/builds.ts"] } } },
+			{ path: ".codewiki/builds/decision/decision.json", kind: "decision_build", status: "accepted", data: { kind: "decision_build", lifecycle: { state: "accepted" }, diff_table: [{ id: "DTR-001", desired_state: "Change builds.", user_action: "approved" }], approved_diff_rows: ["DTR-001"], knowledge_changes: [".codewiki/kb/system/builds.md"], row_to_kb_mappings: [{ row_id: "DTR-001", knowledge_refs: [".codewiki/kb/system/builds.md"], evidence: "Builds doc captures decision." }], propagation: { direction: "system-first", no_product_impact: "No product behavior change." }, produces: { code: ["src/build/writer.ts"] } } },
 		],
 		validations: [],
 		testFiles: [],

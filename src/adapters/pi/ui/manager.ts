@@ -27,7 +27,7 @@ import type {
 	StatusDockDensity,
 	ArchitecturePanelComponent,
 } from "../../../domain/state/types.ts";
-import type { LintReport } from "../../../domain/validation/types.ts";
+import type { LintReport } from "../../../validation/types.ts";
 import {
 	readStatusDockPrefs,
     resolveStatusDockPrefsPath,

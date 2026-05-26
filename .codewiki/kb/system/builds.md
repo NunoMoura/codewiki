@@ -5,9 +5,10 @@ state: active
 summary: High-signal build contracts for decisions, knowledge, planning, implementation evidence, and state reconciliation.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-26"
 code_paths:
-  - src/application/builds.ts
+  - src/build
+  - src/validation/report.ts
   - src/application/graph.ts
   - src/domain/shared/types.ts
   - src/adapters/pi/schemas.ts

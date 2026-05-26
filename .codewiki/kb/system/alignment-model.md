@@ -6,12 +6,13 @@ summary: Core CodeWiki model for context-driven development alignment across int
 owners:
   - architecture
   - product
-updated: "2026-05-24"
+updated: "2026-05-26"
 code_paths:
   - src/application/graph.ts
-  - src/application/builds.ts
+  - src/build
+  - src/validation
   - src/application/lint.ts
-  - src/application/gateway
+  - src/gateway
   - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md
   - skills/codewiki-implementation/SKILL.md

@@ -32,7 +32,7 @@ import type {
 	TaskSessionLinkRecord,
 } from "../domain/session/types.ts";
 import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "../domain/state/types.ts";
-import type { LintReport } from "../domain/validation/types.ts";
+import type { LintReport } from "../validation/types.ts";
 
 export interface ResumeSelection {
 	task: RoadmapTaskRecord | null;

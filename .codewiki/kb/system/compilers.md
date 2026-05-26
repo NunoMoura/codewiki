@@ -6,12 +6,14 @@ summary: Alignment loops that create source-backed builds for decision, planning
 owners:
   - architecture
   - product
-updated: "2026-05-24"
+updated: "2026-05-26"
 code_paths:
-  - src/application/builds.ts
+  - src/build/writer.ts
+  - src/build/tool.ts
+  - src/build/types.ts
+  - src/validation/report.ts
   - src/application/roadmap.ts
   - src/application/task.ts
-  - src/application/tools/build.ts
   - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md
   - skills/codewiki-implementation/SKILL.md
@@ -22,7 +24,7 @@ code_paths:
 
 ## Responsibility
 
-CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Build-writing code lives in application modules such as `src/application/builds.ts`; compiler-loop instructions live in `skills/codewiki-*`; validation reports are gateway attestations, not compiler output.
+CodeWiki compilers move information through context-driven development boundaries. Each loop creates one source-backed build for the next loop. Build-writing code lives in source-root build modules such as `src/build/writer.ts` and `src/build/tool.ts`; compiler-loop instructions live in `skills/codewiki-*`; validation reports live under `src/validation/**` as gateway attestations, not compiler output.
 
 Target flow:
 

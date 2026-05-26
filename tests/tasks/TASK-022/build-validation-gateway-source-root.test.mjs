@@ -1,0 +1,88 @@
+import "../../setup-env.mjs";
+import assert from "node:assert/strict";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const repoRoot = resolve(import.meta.dirname, "..", "..", "..");
+const thisTest = relative(repoRoot, fileURLToPath(import.meta.url)).replaceAll("\\", "/");
+
+const requiredPaths = [
+	"src/build/types.ts",
+	"src/build/lifecycle.ts",
+	"src/build/decision-propagation.ts",
+	"src/build/writer.ts",
+	"src/build/tool.ts",
+	"src/validation/types.ts",
+	"src/validation/preflight.ts",
+	"src/validation/report.ts",
+	"src/validation/tool.ts",
+	"src/gateway/index.ts",
+	"src/gateway/transaction.ts",
+];
+
+for (const path of requiredPaths) {
+	assert.ok(existsSync(resolve(repoRoot, path)), `TASK-022 owner path missing: ${path}`);
+}
+
+const removedPaths = [
+	"src/domain/build",
+	"src/domain/validation",
+	"src/application/builds.ts",
+	"src/application/tools/build.ts",
+	"src/application/tools/validation.ts",
+	"src/application/gateway",
+];
+
+for (const path of removedPaths) {
+	assert.equal(existsSync(resolve(repoRoot, path)), false, `Legacy build/validation/gateway owner path remains: ${path}`);
+}
+
+const legacyImportFragments = [
+	"domain/build/",
+	"domain/validation/",
+	"application/builds.ts",
+	"application/tools/build.ts",
+	"application/tools/validation.ts",
+	"application/gateway/",
+];
+
+for (const file of walkTextFiles(["src", "scripts", "tests"])) {
+	const rel = relative(repoRoot, file).replaceAll("\\", "/");
+	if (rel === thisTest) continue;
+	const text = readFileSync(file, "utf8");
+	for (const fragment of legacyImportFragments) {
+		assert.equal(text.includes(fragment), false, `${rel} still references legacy build/validation/gateway owner fragment ${fragment}`);
+	}
+}
+
+const adapterSource = readFileSync(resolve(repoRoot, "src/adapters/pi/index.ts"), "utf8");
+assert.match(adapterSource, /from "\.\.\/\.\.\/build\/tool\.ts"/, "Pi adapter must call codewiki_build through src/build/tool.ts");
+assert.match(adapterSource, /from "\.\.\/\.\.\/validation\/tool\.ts"/, "Pi adapter must call codewiki_validation through src/validation/tool.ts");
+
+const gatewayScript = readFileSync(resolve(repoRoot, "scripts/codewiki-gateway.mjs"), "utf8");
+assert.match(gatewayScript, /src\/gateway\/index\.ts/, "Gateway script must use src/gateway/index.ts owner path");
+
+console.log("✓ TASK-022 build/validation/gateway source-root ownership test passed");
+
+function walkTextFiles(roots) {
+	return roots.flatMap((root) => {
+		const abs = resolve(repoRoot, root);
+		return existsSync(abs) ? walk(abs) : [];
+	});
+}
+
+function walk(dir) {
+	const out = [];
+	for (const entry of readdirSync(dir)) {
+		const abs = resolve(dir, entry);
+		const stat = statSync(abs);
+		if (stat.isDirectory()) {
+			if (["node_modules", ".git"].includes(entry)) continue;
+			out.push(...walk(abs));
+		} else if (/\.(?:ts|mjs|js)$/.test(entry)) {
+			out.push(abs);
+		}
+	}
+	return out;
+}

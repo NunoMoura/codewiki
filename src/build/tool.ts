@@ -1,7 +1,7 @@
-import type { CodewikiBuildToolInput } from "../../domain/build/types.ts";
-import type { WikiProject } from "../../domain/project/types.ts";
-import { writeBuild } from "../builds.ts";
-import { runRebuild } from "../state-artifacts.ts";
+import type { CodewikiBuildToolInput } from "./types.ts";
+import type { WikiProject } from "../domain/project/types.ts";
+import { writeBuild } from "./writer.ts";
+import { runRebuild } from "../application/state-artifacts.ts";
 
 export async function executeCodewikiBuildTool(
 	project: WikiProject,

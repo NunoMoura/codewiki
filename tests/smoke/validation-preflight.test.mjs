@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildValidationPreflight, writeDecisionBuild, writeImplementationBuild, writePlanningBuild, writeValidationReport } from "../../src/application/builds.ts";
+import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
+import { buildValidationPreflight, writeValidationReport } from "../../src/validation/report.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-validation-preflight-"));
 
@@ -57,7 +58,7 @@ try {
 		downstream_question_resolutions: [{ question: "Plan TASK-777 implementation.", resolution: "roadmap-task", task_ids: ["TASK-777"], evidence: "TASK-777 is the implementation route for the downstream question.", source_refs: [decision.path, "TASK-777"] }],
 		tdd_plan: ["Add gateway/preflight smoke coverage."],
 		candidate_test_files: ["tests/smoke/validation-preflight.test.mjs"],
-		candidate_code_paths: ["src/application/builds.ts"],
+		candidate_code_paths: ["src/build/writer.ts"],
 	});
 
 	const semanticImplementation = await writeImplementationBuild(project, {
@@ -67,7 +68,7 @@ try {
 		task_id: "TASK-777",
 		change_type: "system",
 		test_files: ["tests/smoke/validation-preflight.test.mjs"],
-		code_files: ["src/application/builds.ts", "src/application/tools/validation.ts"],
+		code_files: ["src/build/writer.ts", "src/validation/tool.ts"],
 		checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
 		acceptance_mapping: [{ criterion: "Preflight reports missing metadata", evidence: "Smoke assertions cover missing audit/content/source evidence." }],
 		closure_brief: {

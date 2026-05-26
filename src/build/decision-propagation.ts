@@ -1,4 +1,4 @@
-import { unique } from "../shared/utils.ts";
+import { unique } from "../domain/shared/utils.ts";
 
 export type DecisionPropagationResolutionKind = "knowledge-only" | "roadmap-task" | "sprint" | "deferred" | "covered-by-row-resolutions";
 

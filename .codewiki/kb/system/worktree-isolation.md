@@ -5,13 +5,14 @@ state: active
 summary: Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-26"
 code_paths:
   - src/application/claims.ts
   - src/application/tools/artifact-status.ts
   - src/application/resume-context.ts
   - src/adapters/pi/commands/resume.ts
-  - src/application/builds.ts
+  - src/validation/report.ts
+  - src/build/writer.ts
   - src/adapters/pi/tools
 ---
 

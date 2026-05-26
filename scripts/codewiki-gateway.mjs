@@ -2,7 +2,7 @@
 
 async function loadGatewayMain() {
 	try {
-		const mod = await import("../src/application/gateway/index.ts");
+		const mod = await import("../src/gateway/index.ts");
 		return mod.gatewayMain;
 	} catch (error) {
 		const code = String(error?.code || "");

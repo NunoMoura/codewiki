@@ -24,7 +24,7 @@ import {
 	WORKFLOW_LOOP_VALUES,
 } from "../../domain/session/types.ts";
 import { CODEWIKI_STATE_SECTION_VALUES } from "../../domain/state/types.ts";
-import { VALIDATION_FAILURE_CLASS_VALUES } from "../../domain/validation/types.ts";
+import { VALIDATION_FAILURE_CLASS_VALUES } from "../../validation/types.ts";
 
 export const changeTypeSchema = Type.Union(
 	CHANGE_TYPE_VALUES.map((value) => Type.Literal(value)),
