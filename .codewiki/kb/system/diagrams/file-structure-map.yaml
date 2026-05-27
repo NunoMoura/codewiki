@@ -240,8 +240,9 @@ nodes:
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: implementation_pending_validation_by_task_028
+    status: task_close_validated_by_task_028
     task_id: TASK-028
+    validation_ref: .codewiki/validation/2026-05-27-task-close-pass-task-028.json
     cleanup_state: old_session_claim_worktree_paths_removed
     paths:
       - src/session/**
@@ -404,13 +405,14 @@ nodes:
     owner: maintainers
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
-    next_boundary: session_roadmap_state_api_shared
-    active_boundary: TASK-028_session_migration_pending_validation
+    next_boundary: roadmap_state_api_shared
+    active_boundary: TASK-029_roadmap_migration_pending
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated
       - TASK-026_change_diff_table_migration_task_close_validated
       - TASK-027_gc_migration_task_close_validated
+      - TASK-028_session_migration_task_close_validated
     downstream_deferred_until: executable roadmap tasks and validated planning_build for remaining concept roots
     paths:
       - src/api/**

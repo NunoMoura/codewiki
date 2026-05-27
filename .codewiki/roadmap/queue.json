@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-27T00:00:00Z",
+  "updated": "2026-05-27T00:02:05Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-028",
     "TASK-029",
     "TASK-030",
     "TASK-031"
@@ -281,80 +280,6 @@
       },
       "created": "2026-05-26",
       "updated": "2026-05-26T23:55:17Z"
-    },
-    "TASK-028": {
-      "id": "TASK-028",
-      "title": "Migrate session coordination source root",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "migration",
-      "summary": "Move session focus, task-session links, artifact-status claims, worktree-isolation metadata, and related tool execution into src/session/**.",
-      "spec_paths": [
-        ".codewiki/kb/system/file-structure.md",
-        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-        ".codewiki/kb/system/worktree-isolation.md",
-        ".codewiki/kb/system/api.md",
-        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-        ".codewiki/validation/2026-05-22-decision-pass.json"
-      ],
-      "code_paths": [
-        "src/session/types.ts",
-        "src/session/links.ts",
-        "src/session/runtime.ts",
-        "src/session/claims.ts",
-        "src/session/worktree-isolation.ts",
-        "src/session/tool.ts",
-        "src/session/artifact-status-tool.ts",
-        "src/adapters/pi/session.ts",
-        "src/adapters/pi/tools/session.ts",
-        "src/adapters/pi/tools/artifact-status.ts",
-        "src/adapters/pi/schemas.ts",
-        "src/adapters/pi/commands/resume.ts",
-        "src/adapters/pi/artifact-wake.ts",
-        "tests/tasks/TASK-028/session-source-root.test.mjs",
-        "tests/smoke/claim-wait-queue.test.mjs",
-        "tests/smoke/loop-isolation-policy.test.mjs",
-        "tests/smoke/role-worktree-isolation.test.mjs",
-        "tests/smoke/package-smoke.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "session-root-migration",
-        "artifact-status-migration"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Session coordination and artifact-status ownership live under src/session/** while codewiki_session/codewiki_artifact_status behavior and isolation policy remain unchanged.",
-        "acceptance": [
-          "Create src/session/** owner modules for session types, task-session link normalization, focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
-          "Update adapters, schemas, compaction/session callers, tests, and package smoke to import session behavior from src/session/** or stable public API paths.",
-          "Remove old session/claims/worktree owner paths or retain only explicit temporary shims with TASK-specific tests.",
-          "Preserve codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution.",
-          "Add TASK-specific guard proving legacy session/claims/worktree imports are gone or explicitly shimmed."
-        ],
-        "non_goals": [
-          "Do not migrate project, knowledge, roadmap/task queue, state/graph/resume, GC, change/diff-table, adapters/UI, or skills beyond session consumer import updates.",
-          "Do not change runtime session storage format, artifact-status JSON schema, isolation policy, or public tool behavior."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run check:architecture",
-          "npm run test:smoke",
-          "npm run test:features",
-          "npm run test:pack",
-          "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs",
-          "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
-          "TASK-specific session guard",
-          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-05-26",
-      "updated": "2026-05-27T00:00:00Z"
     },
     "TASK-029": {
       "id": "TASK-029",

@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T00:01:46Z",
+  "profile": "task-close",
+  "task_id": "TASK-028",
+  "verdict": "pass",
+  "rationale": "TASK-028 can close. Commit ef7cfadb5f4c747e41b8f205df7a7e5f94fac059 migrates session coordination ownership into src/session/**. It places session/tool input types, task-session link normalization, session focus/update use cases, artifact-status claim queue logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution under src/session/**; removes old src/domain/session/**, src/domain/shared/session.ts, src/application/session.ts, src/application/claims.ts, src/application/worktree-isolation.ts, src/application/tools/session.ts, and src/application/tools/artifact-status.ts owner paths without shims; updates adapters, schemas, tests, package smoke, roadmap refs, file-structure docs, worktree isolation docs, generated graph, and skill tool catalog; and includes TASK-specific guard coverage. Implementation validation passed and post-commit CodeWiki audit passes with 0 issues on a clean worktree.",
+  "checks": [
+    "approval:user:2026-05-26 Great. Please continue",
+    "git rev-parse HEAD=ef7cfadb5f4c747e41b8f205df7a7e5f94fac059",
+    "git rev-parse HEAD^{tree}=c87a3bd5c59ea42afdc315aebb753853c3e3e0f6",
+    "git status --short: clean",
+    "codewiki_validation profile=implementation -> pass .codewiki/validation/2026-05-26-implementation-pass-task-028.json",
+    "node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass (implementation validation)",
+    "npm run typecheck -> pass (implementation validation)",
+    "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass (implementation validation)",
+    "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass (implementation validation)",
+    "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass (implementation validation)",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass (implementation validation)",
+    "npm run check:architecture -> pass (implementation validation)",
+    "npm run test:smoke -> pass (implementation validation)",
+    "npm run test:features -> pass, 30 passed 0 failed (implementation validation)",
+    "npm run test:pack -> pass (implementation validation)",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-028 after commit -> pass, 0 issues"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Later concept-root migration waves remain intentionally open; TASK-028 only closes session coordination ownership."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+  "policy_profile": "task-close",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "file-structure",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "approval:user:2026-05-26 Great. Please continue",
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed",
+    "profile:task",
+    "validation:.codewiki/validation/2026-05-26-implementation-pass-task-028.json",
+    "build:.codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+    "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+    "commit:ef7cfadb5f4c747e41b8f205df7a7e5f94fac059",
+    "tree:c87a3bd5c59ea42afdc315aebb753853c3e3e0f6"
+  ],
+  "audit_reports": [
+    "implementation validation pass .codewiki/validation/2026-05-26-implementation-pass-task-028.json",
+    "file-structure pass: 94 TypeScript source files, architecture wrapper boundaries, 204 diagram refs, 11 approved migration deltas, 0 actionable drift items.",
+    "alignment pass: generated graph health and roadmap queue reachability.",
+    "stale-reference pass: scanned 52 active markdown/source text files.",
+    "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+    "changed pass: 0 changed files across 0 layers.",
+    "task TASK-028 pass."
+  ],
+  "content_proof_refs": [
+    "ef7cfadb5f4c747e41b8f205df7a7e5f94fac059",
+    "c87a3bd5c59ea42afdc315aebb753853c3e3e0f6"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "c87a3bd5c59ea42afdc315aebb753853c3e3e0f6"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "file-structure",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-028",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:2026-05-26 Great. Please continue"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "ef7cfadb5f4c747e41b8f205df7a7e5f94fac059",
+    "validated_sha": "ef7cfadb5f4c747e41b8f205df7a7e5f94fac059",
+    "tree_sha": "c87a3bd5c59ea42afdc315aebb753853c3e3e0f6",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation consumed committed implementation build, implementation validation report, post-commit audit evidence, and clean commit/tree proof.",
+    "role": "validator"
+  }
+}
