@@ -16,7 +16,7 @@ import type {
 } from "./types.ts";
 import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./runtime.ts";
 import { maybeReadRoadmapState } from "../state/artifacts.ts";
-import type { FileStore, RebuildRunner, MessageBus } from "../application/ports.ts";
+import type { FileStore, RebuildRunner, MessageBus } from "../shared/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Port dependencies

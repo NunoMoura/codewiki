@@ -28,17 +28,17 @@ The Pi adapter owns:
 - `codewiki_agency` as the current Pi-facing agency controller entrypoint,
 - session lifecycle hooks,
 - packaged workflow skills,
-- bootstrap/adoption entrypoints that call application tools,
+- bootstrap/adoption entrypoints that call API/concept tools,
 - package smoke and resource loading coverage.
 
 ## Package support files
 
 - `src/index.ts` should remain a thin entrypoint.
 - `src/project/**` owns project loading, root resolution, starter templates, and setup/bootstrap use cases.
-- Concept tool entrypoints such as `src/state/tool.ts`, `src/state/resume-tool.ts`, `src/roadmap/tool.ts`, and `src/session/**` own agent-callable use cases that have moved to concept roots; remaining `src/application/**` support is transitional until final API/shared cleanup.
+- `src/api/**` exposes stable package/tool use-case facades over concept tool entrypoints such as `src/state/tool.ts`, `src/state/resume-tool.ts`, `src/roadmap/tool.ts`, and `src/session/**`.
 - `skills/codewiki/bootstrap/**` owns bootstrap workflow guidance and starter contract assets.
 - `skills/codewiki/prompts/**` owns prompt templates as skill assets.
-- `mutation-queue.ts` is a transitional support file until folded behind application ports/local runtime services.
+- `src/shared/**` holds primitive ports, pure helpers, and session-independent lock helpers; it must not become a dumping ground for concept behavior.
 - `scripts/**`, when present, is optional developer convenience only and must not be required for product behavior or gateway policy.
 
 ## Boundaries

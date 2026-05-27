@@ -1,0 +1,201 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T22:33:26Z",
+  "profile": "implementation",
+  "task_id": "TASK-031",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passed for TASK-031 after Pi reload. Accepted decision/planning evidence approves concept-root migration and final API/shared cleanup. Implementation adds src/api/** stable facade, moves primitive ports/utils/lock helpers to src/shared/**, removes residual src/domain/**, src/application/**, and src/mutation-queue.ts owner paths, updates adapters/scripts/tests to use src/api/tools.ts or shared primitives, and marks concept-root migration complete in KB/diagram/audit guards. Required checks pass. Audit warnings are expected pre-commit dirty generated views and existing large-doc graph-health warnings, not TASK-031 blockers.",
+  "checks": [
+    "read .codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+    "read .codewiki/roadmap/tasks/TASK-031/task.json",
+    "read accepted planning and decision build refs",
+    "read API/shared/source/test refs",
+    "node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run check:architecture — pass",
+    "npm run test:smoke — pass",
+    "npm run test:features — pass (34 passed, 0 failed)",
+    "npm run test:pack — pass",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — pass with non-blocking warnings"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Working tree is dirty; implementation validation uses working_tree_digest only. Task-close still needs clean commit/tree proof."
+    },
+    {
+      "severity": "warning",
+      "summary": "Changed/alignment audits warn about dirty generated files and large-doc graph health warnings; file-structure, stale-reference, generated-parity, and task profiles pass."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "stale-reference",
+    "generated-parity",
+    "task"
+  ],
+  "audit_refs": [
+    "approval:user:accepted decision build .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json includes FS-ROOT-CONCEPTS approved",
+    "approval:user:2026-05-28 reloaded Pi and requested compact/proceed with roadmap",
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed",
+    "profile:task",
+    "codewiki_audit:file-structure,alignment,stale-reference,generated-parity,changed,task:TASK-031",
+    "src/api/index.ts",
+    "src/api/tools.ts",
+    "src/shared/ports.ts",
+    "src/shared/utils.ts",
+    "src/shared/lock.ts",
+    "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "audit_reports": [
+    "file-structure: pass — 95 TypeScript source files, architecture wrapper boundaries, 216 diagram refs, 0 approved migration deltas, 0 actionable drift",
+    "stale-reference: pass — 52 active markdown/source files scanned",
+    "generated-parity: pass — graph presence/freshness and 1 active roadmap task view",
+    "task: pass — TASK-031 checked",
+    "alignment: warning — graph health reports 3 large-doc warnings",
+    "changed: warning — 79 changed files including generated views before commit"
+  ],
+  "content_proof_refs": [
+    "e288b5fdf5786a246c8e7335a54470658065faba1bea7597a8d61cabc9717e15"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-031",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:accepted decision build .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json includes FS-ROOT-CONCEPTS approved",
+        "approval:user:2026-05-28 reloaded Pi and requested compact/proceed with roadmap"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "e288b5fdf5786a246c8e7335a54470658065faba1bea7597a8d61cabc9717e15",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh validation after Pi reload. Dirty pre-commit content proof accepted for implementation validation only, not task-close/publication.",
+    "role": "validator"
+  }
+}

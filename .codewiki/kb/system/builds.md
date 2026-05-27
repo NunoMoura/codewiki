@@ -10,7 +10,7 @@ code_paths:
   - src/build
   - src/validation/report.ts
   - src/state/graph.ts
-  - src/domain/shared/types.ts
+  - src/shared/ports.ts
   - src/adapters/pi/schemas.ts
 code_paths_mode: explicit_override
 ---

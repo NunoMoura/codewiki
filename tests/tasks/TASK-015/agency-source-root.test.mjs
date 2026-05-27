@@ -82,7 +82,7 @@ assert.deepEqual(importViolations, [], "Source and tests should not import remov
 
 const adapterSource = readFileSync(source("adapters", "pi", "tools", "agency.ts"), "utf8");
 assert.match(adapterSource, /from "\.\.\/\.\.\/\.\.\/agency\/types\.ts"/, "Pi agency adapter should consume source-root agency types");
-assert.match(adapterSource, /from "\.\.\/\.\.\/\.\.\/agency\/tool\.ts"/, "Pi agency adapter should consume source-root agency tool executor");
+assert.match(adapterSource, /from "\.\.\/\.\.\/\.\.\/api\/tools\.ts"/, "Pi agency adapter should consume API facade tool executor");
 assert.doesNotMatch(adapterSource, /application\/tools\/agency|domain\/agency\/types/, "Pi agency adapter should not call old agency shim paths");
 
 const schemaSource = readFileSync(source("adapters", "pi", "schemas.ts"), "utf8");

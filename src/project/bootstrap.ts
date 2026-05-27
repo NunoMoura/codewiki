@@ -1,7 +1,7 @@
 import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, resolve } from "node:path";
 import { renderSkillAsset } from "../state/skill-assets.ts";
-import { withLockedPaths } from "../mutation-queue.ts";
+import { withLockedPaths } from "../shared/lock.ts";
 import { resolveSetupRoot } from "./root.ts";
 import {
 	type StarterBoundary,

@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "medium",
   "kind": "architecture",
-  "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
+  "summary": "Keep TASK-012 cancelled; it is a stale non-atomic task already split into downstream source-root tasks.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -14,8 +14,8 @@
     ".codewiki/kb/system/control-room-ui.md"
   ],
   "code_paths": [
-    "src/application",
-    "src/domain",
+    "src/api",
+    "src/shared",
     "src/adapters",
     "src/ui",
     "tests",
@@ -74,5 +74,5 @@
     "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-27T21:14:40Z"
+  "updated": "2026-05-27T22:19:03Z"
 }

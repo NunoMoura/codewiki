@@ -40,7 +40,7 @@ import {
 	splitCommandArgs,
 	joinCommandArgs,
 	nowIso,
-} from "../../../domain/shared/utils.ts";
+} from "../../../shared/utils.ts";
 import { statusColor, statusLevel } from "../ui/theme.ts";
 import { buildResumeContextForTask } from "../../../state/resume-context.ts";
 import { buildCodewikiResumeKickoff } from "../compaction.ts";

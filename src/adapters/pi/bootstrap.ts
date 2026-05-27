@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { formatError } from "../../domain/shared/utils.ts";
+import { formatError } from "../../shared/utils.ts";
 import {
 	bootstrapFromCurrentProject,
 	bootstrapToolPorts,
@@ -12,7 +12,7 @@ import type { BootstrapResult } from "../../project/bootstrap.ts";
 import {
 	executeCodewikiBootstrapTool,
 	executeCodewikiSetupTool,
-} from "../../project/tool.ts";
+} from "../../api/tools.ts";
 
 const repoPathToolField = Type.Optional(
 	Type.String({

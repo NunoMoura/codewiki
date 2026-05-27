@@ -6,8 +6,8 @@ import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
 import type { WikiProject } from "../project/types.ts";
 import type { CodewikiTaskToolInput } from "./types.ts";
-import { nowIso } from "../domain/shared/utils.ts";
-import { withLockedPaths } from "../mutation-queue.ts";
+import { nowIso } from "../shared/utils.ts";
+import { withLockedPaths } from "../shared/lock.ts";
 import { buildCodewikiTaskDetail } from "../state/reader.ts";
 import { maybeReadRoadmapState, maybeReadTaskContext, runRebuild } from "../state/artifacts.ts";
 import {

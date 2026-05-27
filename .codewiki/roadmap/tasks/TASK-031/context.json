@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:36Z",
+  "generated_at": "2026-05-27T22:33:39Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-031/context.json",
   "task": {
     "id": "TASK-031",
     "title": "Add API facade and remove remaining layer-first shims",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

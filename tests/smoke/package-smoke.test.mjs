@@ -274,9 +274,9 @@ async function main() {
 		assert.match(piIndexSource, /executeCodewikiBuildTool/, "Pi build registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
 		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to source-root tool executor");
-		assert.match(piIndexSource, /change\/tool/, "Pi diff-table registration should delegate to the change source-root tool module");
+		assert.match(piIndexSource, /api\/tools/, "Pi diff-table registration should delegate through the API facade");
 		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to source-root tool executor");
-		assert.match(piIndexSource, /gc\/tool/, "Pi GC registration should delegate to the GC source-root tool module");
+		assert.match(piIndexSource, /api\/tools/, "Pi GC registration should delegate through the API facade");
 		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
 		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
 		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Pi bootstrap setup tool should delegate through project tool contract");
@@ -288,7 +288,7 @@ async function main() {
 			assert.ok(!existsSync(resolve(repoRoot, removedAgencyShim)), `${removedAgencyShim} should not be packaged after agency cleanup`);
 		}
 		const agencyAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "agency.ts"), "utf8");
-		assert.match(agencyAdapterSource, /agency\/tool/, "Pi agency tool should delegate to the agency source-root tool module");
+		assert.match(agencyAdapterSource, /api\/tools/, "Pi agency tool should delegate through the API facade");
 		assert.match(agencyAdapterSource, /agency\/types/, "Pi agency tool should read types from the agency source-root module");
 		assert.doesNotMatch(agencyAdapterSource, /application\/tools\/agency|application\/agency|domain\/agency\/types/, "Pi agency tool should not delegate through old agency shims");
 		for (const removedAuditShim of [
@@ -301,12 +301,12 @@ async function main() {
 		const auditCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "audit.ts"), "utf8");
 		const schemaSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "schemas.ts"), "utf8");
 		const architectureScriptSource = readFileSync(resolve(repoRoot, "scripts", "check-architecture.mjs"), "utf8");
-		assert.match(auditAdapterSource, /audit\/tool/, "Pi audit tool should delegate to the audit source-root tool module");
-		assert.match(auditCommandSource, /audit\/tool/, "Pi audit command should delegate to the audit source-root tool module");
+		assert.match(auditAdapterSource, /api\/tools/, "Pi audit tool should delegate through the API facade");
+		assert.match(auditCommandSource, /api\/tools/, "Pi audit command should delegate through the API facade");
 		assert.match(auditCommandSource, /audit\/types/, "Pi audit command should read types from the audit source-root module");
 		assert.match(schemaSource, /audit\/types/, "Pi schemas should read audit values from the audit source-root module");
 		assert.match(schemaSource, /change\/types/, "Pi schemas should read change values from the change source-root module");
-		assert.match(architectureScriptSource, /src\/audit\/tool\.ts/, "Architecture script should delegate to the audit source-root tool module");
+		assert.match(architectureScriptSource, /src\/api\/tools\.ts/, "Architecture script should delegate through the API facade");
 		for (const oldAuditPathSource of [auditAdapterSource, auditCommandSource, schemaSource, architectureScriptSource]) {
 			assert.doesNotMatch(oldAuditPathSource, /application\/tools\/audit|domain\/audit\/types/, "Audit package paths should not delegate through old audit shims");
 		}
@@ -339,9 +339,9 @@ async function main() {
 		assert.doesNotMatch(schemaSource, /domain\/session/, "Schema package paths should not read session values from old session shims");
 		const artifactStatusAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "artifact-status.ts"), "utf8");
 		const sessionAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "session.ts"), "utf8");
-		assert.match(artifactStatusAdapterSource, /session\/artifact-status-tool/, "Pi artifact-status tool should delegate to the session source-root tool module");
+		assert.match(artifactStatusAdapterSource, /api\/tools/, "Pi artifact-status tool should delegate through the API facade");
 		assert.match(artifactStatusAdapterSource, /session\/types/, "Pi artifact-status tool should read input types from the session source-root module");
-		assert.match(sessionAdapterSource, /session\/tool/, "Pi session tool should delegate to the session source-root tool module");
+		assert.match(sessionAdapterSource, /api\/tools/, "Pi session tool should delegate through the API facade");
 		assert.match(sessionAdapterSource, /session\/types/, "Pi session tool should read input types from the session source-root module");
 		assert.doesNotMatch(artifactStatusAdapterSource, /application\/tools\/artifact-status|application\/claims|domain\/session/, "Artifact-status package path should not delegate through old session/claims shims");
 		assert.doesNotMatch(sessionAdapterSource, /application\/tools\/session|application\/session|domain\/session/, "Session package path should not delegate through old session shims");
@@ -383,8 +383,8 @@ async function main() {
 		const resumeCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "resume.ts"), "utf8");
 		const compactionSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "compaction.ts"), "utf8");
 		const uiManagerSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "ui", "manager.ts"), "utf8");
-		assert.match(stateAdapterSource, /state\/tool/, "Pi state tool should delegate to state source-root tool module");
-		assert.match(resumeContextAdapterSource, /state\/resume-tool/, "Pi resume-context tool should delegate to state source-root resume tool module");
+		assert.match(stateAdapterSource, /api\/tools/, "Pi state tool should delegate through the API facade");
+		assert.match(resumeContextAdapterSource, /api\/tools/, "Pi resume-context tool should delegate through the API facade");
 		assert.match(schemaSource, /state\/types/, "Pi schemas should read state values from the state source-root module");
 		assert.match(configCommandSource, /state\/local\/status-dock-prefs/, "Pi config command should read status dock prefs from state source root");
 		assert.match(statusCommandSource, /state\/artifacts/, "Pi status command should read generated artifacts from state source root");
@@ -395,7 +395,7 @@ async function main() {
 			assert.doesNotMatch(statePathSource, /domain\/state|application\/state|application\/graph|application\/rebuild|application\/lint|application\/resume-context|application\/prompt|application\/skill-assets|application\/local\/(?:rebuild-runner|status-dock-prefs)|application\/tools\/(?:state|resume-context)/, "State package paths should not delegate through old state/graph/resume shims");
 		}
 		const taskToolAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
-		assert.match(taskToolAdapterSource, /roadmap\/tool/, "Pi task tool should delegate to roadmap source-root tool module");
+		assert.match(taskToolAdapterSource, /api\/tools/, "Pi task tool should delegate through the API facade");
 		assert.doesNotMatch(taskToolAdapterSource, /application\/tools\/task|application\/task|domain\/roadmap/, "Pi task tool should not delegate through old roadmap/task shims");
 		for (const removedTool of [
 			"codewiki_rebuild",

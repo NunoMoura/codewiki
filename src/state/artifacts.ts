@@ -14,7 +14,7 @@ import {
 	runRebuild as runApplicationRebuild,
 	runRebuildUnlocked as runApplicationRebuildUnlocked,
 } from "./rebuild.ts";
-import type { RebuildRunner } from "../application/ports.ts";
+import type { RebuildRunner } from "../shared/ports.ts";
 export { rebuildTargetPaths } from "./rebuild.ts";
 
 /**

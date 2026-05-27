@@ -5,7 +5,7 @@ import type {
 import { buildCodewikiResumeContext } from "../../state/resume-context.ts";
 import { resolveStatusDockProject } from "../../project/context.ts";
 import type { WikiProject } from "../../project/types.ts";
-import { formatError, nowIso } from "../../domain/shared/utils.ts";
+import { formatError, nowIso } from "../../shared/utils.ts";
 import { currentTaskLink } from "./session.ts";
 import {
 	effectiveAgencyPolicy,

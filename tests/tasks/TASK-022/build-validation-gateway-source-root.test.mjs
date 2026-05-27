@@ -57,8 +57,10 @@ for (const file of walkTextFiles(["src", "scripts", "tests"])) {
 }
 
 const adapterSource = readFileSync(resolve(repoRoot, "src/adapters/pi/index.ts"), "utf8");
-assert.match(adapterSource, /from "\.\.\/\.\.\/build\/tool\.ts"/, "Pi adapter must call codewiki_build through src/build/tool.ts");
-assert.match(adapterSource, /from "\.\.\/\.\.\/validation\/tool\.ts"/, "Pi adapter must call codewiki_validation through src/validation/tool.ts");
+assert.match(adapterSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter must call codewiki_build/codewiki_validation through src/api/tools.ts");
+const apiFacadeSource = readFileSync(resolve(repoRoot, "src/api/tools.ts"), "utf8");
+assert.match(apiFacadeSource, /build\/tool\.ts/, "API facade must expose codewiki_build from src/build/tool.ts");
+assert.match(apiFacadeSource, /validation\/tool\.ts/, "API facade must expose codewiki_validation from src/validation/tool.ts");
 
 const gatewayScript = readFileSync(resolve(repoRoot, "scripts/codewiki-gateway.mjs"), "utf8");
 assert.match(gatewayScript, /src\/gateway\/index\.ts/, "Gateway script must use src/gateway/index.ts owner path");

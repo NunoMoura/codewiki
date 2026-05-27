@@ -7,8 +7,8 @@
  */
 
 import type { WikiProject } from "../project/types.ts";
-import type { RebuildRunner } from "../application/ports.ts";
-import { withLockedPaths } from "../mutation-queue.ts";
+import type { RebuildRunner } from "../shared/ports.ts";
+import { withLockedPaths } from "../shared/lock.ts";
 import { resolve } from "node:path";
 
 // ---------------------------------------------------------------------------

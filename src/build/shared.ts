@@ -6,7 +6,7 @@ import { isAcceptedBuildData } from "./lifecycle.ts";
 import type { ChangeType } from "../change/types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../change/traceability.ts";
-import { unique } from "../domain/shared/utils.ts";
+import { unique } from "../shared/utils.ts";
 
 export function buildSlug(value: string, defaultPrefix: string): string {
 	return value

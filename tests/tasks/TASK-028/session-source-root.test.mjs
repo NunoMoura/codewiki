@@ -221,11 +221,14 @@ const resumeCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "p
 const packageSmokeSource = readFileSync(resolve(repoRoot, "tests", "smoke", "package-smoke.test.mjs"), "utf8");
 const toolCatalogSource = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
 
-assert.match(sessionAdapterSource, /session\/tool\.ts/, "Pi session tool should route codewiki_session through src/session/tool.ts");
-assert.match(artifactAdapterSource, /session\/artifact-status-tool\.ts/, "Pi artifact-status tool should route codewiki_artifact_status through src/session/artifact-status-tool.ts");
+assert.match(sessionAdapterSource, /api\/tools\.ts/, "Pi session tool should route codewiki_session through src/api/tools.ts");
+assert.match(artifactAdapterSource, /api\/tools\.ts/, "Pi artifact-status tool should route codewiki_artifact_status through src/api/tools.ts");
+const apiFacadeSource = readFileSync(resolve(repoRoot, "src", "api", "tools.ts"), "utf8");
+assert.match(apiFacadeSource, /session\/tool\.ts/, "API facade should expose codewiki_session from src/session/tool.ts");
+assert.match(apiFacadeSource, /session\/artifact-status-tool\.ts/, "API facade should expose codewiki_artifact_status from src/session/artifact-status-tool.ts");
 assert.match(schemaSource, /session\/types\.ts/, "Pi schemas should read session values from src/session/types.ts");
 assert.match(resumeCommandSource, /session\/claims\.ts/, "Resume command should read artifact status behavior from src/session/claims.ts");
-assert.match(packageSmokeSource, /session source-root tool module/, "Package smoke should guard session source-root delegation");
+assert.match(packageSmokeSource, /session tool should delegate through the API facade/, "Package smoke should guard session API facade delegation");
 assert.match(toolCatalogSource, /src\/session\/tool\.ts/, "Skill-facing tool catalog should point codewiki_session at src/session/tool.ts");
 assert.match(toolCatalogSource, /src\/session\/artifact-status-tool\.ts/, "Skill-facing tool catalog should point codewiki_artifact_status at src/session/artifact-status-tool.ts");
 

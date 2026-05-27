@@ -9,8 +9,8 @@ import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord, TaskSessionAction, TaskSessionLinkInput } from "./types.ts";
 import { findLatestTaskSessionLink, normalizeTaskSessionLinkInput } from "./links.ts";
 import { readRoadmapTask } from "../roadmap/runtime.ts";
-import { unique } from "../domain/shared/utils.ts";
-import type { FileStore, SessionStore, UserNotifier } from "../application/ports.ts";
+import { unique } from "../shared/utils.ts";
+import type { FileStore, SessionStore, UserNotifier } from "../shared/ports.ts";
 
 const TASK_SESSION_LINK_CUSTOM_TYPE = "codewiki.task-link";
 

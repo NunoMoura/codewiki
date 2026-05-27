@@ -45,7 +45,7 @@ import {
 	formatError,
 	cycleIndex,
 	unique,
-} from "../../../domain/shared/utils.ts";
+} from "../../../shared/utils.ts";
 import { maybeReadJsonSync } from "../../../project/local/filesystem.ts";
 import { padToWidth, truncatePlain } from "./text.ts";
 import { STATUS_DOCK_MODE_VALUES } from "../../../state/types.ts";

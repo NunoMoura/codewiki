@@ -79,8 +79,8 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | CodeWiki UI | `control-room-ui.md` | `src/ui/web/**`, local UI launch commands |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
-| CodeWiki API | `api.md` | concept tool modules such as `src/roadmap/tool.ts`, remaining `src/application/tools/**`, focused use-case modules, and stable contracts |
-| Agency controller | `agency.md` | application use cases and adapter-exposed agency entrypoints |
+| CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
+| Agency controller | `agency.md` | agency use cases and adapter-exposed agency entrypoints |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/validation/**`, `src/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
@@ -132,17 +132,16 @@ Accepted direction: concept-root source ownership. Main concepts live in `src/<c
 Current source roots:
 
 ```text
-src/{agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,domain,application,adapters,ui}/
+src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,state,validation,shared,adapters,ui}/
 ```
 
-Target roots:
+Deprecated roots:
 
 ```text
-src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,state,validation,shared}/
-src/{adapters,ui}/
+src/{domain,application}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), and `roadmap` (TASK-029). TASK-030 now migrates generated state, graph/rebuild/lint, prompt/resume-context, status dock prefs, and `codewiki_state`/`codewiki_resume_context` execution into `src/state/**` while preserving generated state schemas and tool behavior. Remaining work after TASK-030: final API/shared cleanup under FS-ROOT-CONCEPTS.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
@@ -154,7 +153,7 @@ concept local implementations -> concept contracts / shared ports
 shared -> primitives only
 ```
 
-During migration, unmigrated paths still obey `adapters -> application -> domain`, `ui -> application -> domain`, and `application/local -> ports/domain contracts`.
+Legacy `adapters -> application -> domain` layering is retired. New code follows `adapters/scripts -> api facade -> concept roots -> shared primitives`.
 
 Rules:
 
@@ -162,14 +161,14 @@ Rules:
 - Concept use cases own concrete behavior and may use concept-local runtime implementations behind contracts.
 - Cross-concept APIs must be explicit through the API facade, shared ports, or named contracts; do not recreate a dumping-ground `shared` or `application` under a new name.
 - `adapters/**` translate host/protocol APIs into API/concept calls and translate results back. Browser UI source stays under `src/ui/**`.
-- `src/shared/**` and transitional `src/domain/shared/**` stay small; compatibility barrels may remain only during migrations.
-- `core/**`, `engine/**`, and top-level `infrastructure/**` must not exist in target source.
+- `src/shared/**` stays small and primitive-only; `src/domain/shared/**` must not be recreated.
+- `core/**`, `engine/**`, `src/domain/**`, `src/application/**`, and top-level `infrastructure/**` must not exist in target source.
 
 ## Current migration warning
 
 The repository no longer contains transitional `core/**` or `engine/**` source folders. Generated task shards remain runtime outputs, not target source architecture.
 
-The repository has an approved migration delta from `src/domain/**` + `src/application/**` toward `src/<concept>/**`. The drift lens treats unmigrated roots as planned deltas when they have approved boundary, owner, trigger, and rationale. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking.
+The approved migration delta from `src/domain/**` + `src/application/**` toward concept roots is complete. The drift lens now treats recreated `src/domain/**` or `src/application/**` files as deprecated-path failures unless a future decision explicitly approves a temporary compatibility shim with owner, expiry, and tests. Migration tasks must preserve public tool behavior, compatibility exports, direct Node execution, package loading, and TypeScript typechecking.
 
 Runtime checks cover direct Node execution and package loading, not only TypeScript typechecking.
 

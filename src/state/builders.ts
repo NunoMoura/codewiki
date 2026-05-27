@@ -10,7 +10,7 @@ import type { ChangeClaimsFile } from "../session/types.ts";
 import type { GraphFile, RoadmapStateFile, StatusStateFile } from "./types.ts";
 import type { LintReport } from "../validation/types.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
-import { nowIso } from "../domain/shared/utils.ts";
+import { nowIso } from "../shared/utils.ts";
 import { buildChangeClaimState } from "../session/claims.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";

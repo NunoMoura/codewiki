@@ -16,8 +16,8 @@ import type {
 	ChangeClaimsFile,
 	ChangeClaimMutationInput,
 } from "./types.ts";
-import { nowIso, unique } from "../domain/shared/utils.ts";
-import { withLockedPaths } from "../mutation-queue.ts";
+import { nowIso, unique } from "../shared/utils.ts";
+import { withLockedPaths } from "../shared/lock.ts";
 import {
 	artifactBlockerFromClaim,
 	ensureRoleWorktreeMetadata,

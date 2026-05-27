@@ -1,0 +1,1050 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-27T22:17:57Z",
+  "source": "TASK-031 from .codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "task_id": "TASK-031",
+  "task": {
+    "id": "TASK-031",
+    "title": "Add API facade and remove remaining layer-first shims",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Introduce/finish src/api/** and src/shared/** facades, move primitive shared ports/helpers, and remove residual src/domain/** and src/application/** owner paths after concept roots land.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/api/index.ts",
+      "src/api/tools.ts",
+      "src/shared/ports.ts",
+      "src/shared/utils.ts",
+      "src/shared/lock.ts",
+      "src/index.ts",
+      "scripts/check-architecture.mjs",
+      "src/audit/tool.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/project/bootstrap.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/tool.ts",
+      "src/session/claims.ts",
+      "src/state/rebuild.ts",
+      "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+      "tests/tasks/TASK-076/restructure.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Stable API/shared facade exists and residual layer-first owner paths are removed or explicitly documented as temporary compatibility shims with guard coverage.",
+      "acceptance": [
+        "Create or finish src/api/** facade modules that expose stable package/tool use-case entrypoints for adapters/scripts while keeping adapters/UI as exposure layers.",
+        "Move primitive shared types/utils/ports/session-independent helpers to src/shared/** and keep shared small; no dumping-ground replacement for application/domain is created.",
+        "Update adapters, scripts, tests, and package smoke to import concept behavior through src/api/**, concept roots, or src/shared/** as appropriate.",
+        "Remove residual src/domain/** and src/application/** owner paths after previous concept-root tasks land, or retain only explicit temporary shims with expiry, owner, and tests.",
+        "Update file-structure KB/diagram and architecture checks to mark concept-root migration complete and fail on reintroduced old owner paths unless explicitly approved.",
+        "Add final guard proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load."
+      ],
+      "non_goals": [
+        "Do not redesign public package API or user-facing tool schemas beyond import/facade preservation.",
+        "Do not migrate adapters, UI, skills, tests, or scripts into concept roots; they remain exposure/assets/tests/helper layers.",
+        "Do not create top-level infrastructure/core/engine roots or broad shared dumping grounds."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "final source-root architecture guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-03T22:17:57.000Z",
+    "purge_after": "2026-06-10T22:17:57.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "initial",
+    "supersedes": [],
+    "status": "ready-for-validation"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "src/api/** exposes stable package/tool use-case facade for adapters/scripts.",
+      "src/shared/** holds primitive ports/utils/lock helpers; src/application/**, src/domain/**, and src/mutation-queue.ts are removed.",
+      "Adapters/scripts/tests import through src/api/**, concept roots, or src/shared/** as appropriate.",
+      "File-structure KB/diagram and audit guards mark concept-root migration complete and fail old owner paths.",
+      "Final guard proves no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [
+      "codewiki_audit file-structure,alignment,stale-reference,generated-parity,changed,task TASK-031",
+      "npm run check:architecture"
+    ],
+    "audit_reports": [
+      "file-structure pass with 0 approved migration deltas and 0 actionable drift from source-owned check:architecture; stale-reference/generated-parity/task pass; alignment warnings only large-doc graph-health and changed generated files while pre-commit dirty."
+    ],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "roadmap-task",
+        "reason": "Implementation loop starts from accepted planning and roadmap refs.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "TASK-031 selected by codewiki_state/codewiki_resume_context after TASK-033 closure"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh context after reload",
+        "reason": "TASK-031 changes CodeWiki source loaded by dogfood Pi tools; reload required before fresh validation.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "working_tree_digest a4d83c82fc0e7e680664af803bf4ed1b1414dacfe6ec992318939a47d431eef9 before implementation build write"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-031 final API/shared facade cleanup: added src/api/** stable facade, moved primitive ports/utils/lock helpers to src/shared/**, removed residual src/domain/**, src/application/**, and src/mutation-queue.ts owner paths, updated adapters/scripts/tests to use API facade or shared primitives, and marked concept-root migration complete in file-structure KB/diagram/audit guards.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-031"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-031/task.json",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      "src/application/ports.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/shared/utils.ts",
+      "src/mutation-queue.ts",
+      "src/index.ts",
+      "scripts/check-architecture.mjs",
+      "tests/tasks/TASK-076/restructure.test.mjs"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/extension.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/overview.md"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/api/index.ts",
+      "src/api/tools.ts",
+      "src/shared/ports.ts",
+      "src/shared/utils.ts",
+      "src/shared/lock.ts",
+      "src/index.ts",
+      "src/audit/tool.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/project/bootstrap.ts",
+      "src/project/context.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/tool.ts",
+      "src/session/claims.ts",
+      "src/state/rebuild.ts",
+      "scripts/check-architecture.mjs",
+      "src/application/ports.ts (deleted)",
+      "src/domain/shared/types.ts (deleted)",
+      "src/domain/shared/utils.ts (deleted)",
+      "src/mutation-queue.ts (deleted)",
+      "adapter/script import updates from concept tools to src/api/tools.ts",
+      "removed src/application/ports.ts",
+      "removed src/domain/shared/types.ts",
+      "removed src/domain/shared/utils.ts",
+      "removed src/mutation-queue.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+      "tests/tasks/TASK-076/restructure.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs",
+      "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+      "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+      "tests/tasks/TASK-027/gc-source-root.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "TASK-015/TASK-021/TASK-022/TASK-026/TASK-027/TASK-028 source-root guards updated for API facade"
+    ],
+    "validation": [
+      "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.",
+      "TASK-031 guard",
+      "TASK-076 guard",
+      "typecheck",
+      "check:architecture",
+      "test:smoke",
+      "test:features",
+      "test:pack",
+      "codewiki_audit file-structure,alignment,stale-reference,generated-parity,changed,task"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-031"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/api/index.ts",
+      "src/api/tools.ts",
+      "src/shared/ports.ts",
+      "src/shared/utils.ts",
+      "src/shared/lock.ts",
+      "src/index.ts",
+      "scripts/check-architecture.mjs",
+      "src/audit/tool.ts",
+      "src/knowledge/diagram-parser.ts",
+      "src/project/bootstrap.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/tool.ts",
+      "src/session/claims.ts",
+      "src/state/rebuild.ts",
+      "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+      "tests/tasks/TASK-076/restructure.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+    "tests/tasks/TASK-076/restructure.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+    "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+    "tests/tasks/TASK-027/gc-source-root.test.mjs",
+    "tests/tasks/TASK-028/session-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/api/index.ts",
+    "src/api/tools.ts",
+    "src/shared/ports.ts",
+    "src/shared/utils.ts",
+    "src/shared/lock.ts",
+    "src/index.ts",
+    "src/audit/tool.ts",
+    "src/knowledge/diagram-parser.ts",
+    "src/project/bootstrap.ts",
+    "src/project/context.ts",
+    "src/roadmap/runtime.ts",
+    "src/roadmap/tool.ts",
+    "src/session/claims.ts",
+    "src/state/rebuild.ts",
+    "scripts/check-architecture.mjs",
+    "src/application/ports.ts (deleted)",
+    "src/domain/shared/types.ts (deleted)",
+    "src/domain/shared/utils.ts (deleted)",
+    "src/mutation-queue.ts (deleted)"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+    "tests/tasks/TASK-076/restructure.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+    "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+    "tests/tasks/TASK-027/gc-source-root.test.mjs",
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "src/api/index.ts",
+    "src/api/tools.ts",
+    "src/shared/ports.ts",
+    "src/shared/utils.ts",
+    "src/shared/lock.ts",
+    "src/index.ts",
+    "src/audit/tool.ts",
+    "src/knowledge/diagram-parser.ts",
+    "src/project/bootstrap.ts",
+    "src/project/context.ts",
+    "src/roadmap/runtime.ts",
+    "src/roadmap/tool.ts",
+    "src/session/claims.ts",
+    "src/state/rebuild.ts",
+    "scripts/check-architecture.mjs",
+    "src/application/ports.ts (deleted)",
+    "src/domain/shared/types.ts (deleted)",
+    "src/domain/shared/utils.ts (deleted)",
+    "src/mutation-queue.ts (deleted)"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift)",
+    "npm run test:smoke — pass",
+    "npm run test:features — pass (34 passed, 0 failed)",
+    "npm run test:pack — pass",
+    "git diff --check — pass",
+    "direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-031",
+      "test_files": [
+        "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+        "tests/tasks/TASK-076/restructure.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs",
+        "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+        "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+        "tests/tasks/TASK-027/gc-source-root.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs"
+      ],
+      "evidence": [
+        "TASK-031 guard directly checks final source layout and package entrypoint/API exports.",
+        "Updated earlier source-root task guards to treat API facade as adapter/script use-case access surface while concept roots still own behavior and types.",
+        "Package smoke confirms Pi package loading and bootstrap still work after facade/import changes.",
+        "Diagram/file-structure smoke fixture updated to use concept-root roadmap types and API facade script import."
+      ],
+      "notes": [
+        "All required TASK-031 verification commands pass in direct Node/source execution context.",
+        "Current dogfood Pi process loaded CodeWiki before TASK-031 source changes; reload before fresh validation so tool wrappers/API facade behavior is validated with updated source.",
+        "CodeWiki graph health has only existing large-doc warnings after rebuild."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-031",
+      "code_files": [
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "src/shared/ports.ts",
+        "src/shared/utils.ts",
+        "src/shared/lock.ts",
+        "src/index.ts",
+        "src/audit/tool.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/project/bootstrap.ts",
+        "src/project/context.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/tool.ts",
+        "src/session/claims.ts",
+        "src/state/rebuild.ts",
+        "scripts/check-architecture.mjs",
+        "src/application/ports.ts (deleted)",
+        "src/domain/shared/types.ts (deleted)",
+        "src/domain/shared/utils.ts (deleted)",
+        "src/mutation-queue.ts (deleted)"
+      ],
+      "evidence": [
+        "Created src/api/index.ts and src/api/tools.ts as stable facade modules.",
+        "Created src/shared/ports.ts, src/shared/utils.ts, and src/shared/lock.ts; removed src/application/ports.ts, src/domain/shared/types.ts, src/domain/shared/utils.ts, and src/mutation-queue.ts.",
+        "Updated imports across concept roots, adapters, and scripts to use src/shared/** and src/api/tools.ts.",
+        "Updated file-structure audit/deprecated path checks to fail src/domain/** and src/application/** recreation.",
+        "Updated file-structure/API/system KB and diagram raw data to record migration complete."
+      ],
+      "notes": [
+        "No push or package publication performed.",
+        "Working tree is dirty with TASK-031 source/docs/tests/generated/evidence changes.",
+        "TASK-012 and TASK-023 cancelled task metadata was cleaned to replace stale removed-path code_paths with current api/shared paths so generated lint no longer reports missing code paths."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "TASK-031 guard directly checks final source layout and package entrypoint/API exports.",
+    "Updated earlier source-root task guards to treat API facade as adapter/script use-case access surface while concept roots still own behavior and types.",
+    "Package smoke confirms Pi package loading and bootstrap still work after facade/import changes.",
+    "Diagram/file-structure smoke fixture updated to use concept-root roadmap types and API facade script import."
+  ],
+  "code_change_evidence": [
+    "Created src/api/index.ts and src/api/tools.ts as stable facade modules.",
+    "Created src/shared/ports.ts, src/shared/utils.ts, and src/shared/lock.ts; removed src/application/ports.ts, src/domain/shared/types.ts, src/domain/shared/utils.ts, and src/mutation-queue.ts.",
+    "Updated imports across concept roots, adapters, and scripts to use src/shared/** and src/api/tools.ts.",
+    "Updated file-structure audit/deprecated path checks to fail src/domain/** and src/application/** recreation.",
+    "Updated file-structure/API/system KB and diagram raw data to record migration complete."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Create or finish src/api/** facade modules that expose stable package/tool use-case entrypoints for adapters/scripts while keeping adapters/UI as exposure layers.",
+      "evidence": "Added src/api/tools.ts and src/api/index.ts; updated Pi adapters and scripts/check-architecture.mjs to import tool/use-case entrypoints through src/api/tools.ts; src/index.ts re-exports the API facade while preserving default Pi extension export."
+    },
+    {
+      "criterion": "Move primitive shared types/utils/ports/session-independent helpers to src/shared/** and keep shared small; no dumping-ground replacement for application/domain is created.",
+      "evidence": "Added src/shared/ports.ts, src/shared/utils.ts, and src/shared/lock.ts; updated concept roots to import shared primitives; removed src/application/ports.ts, src/domain/shared/types.ts, src/domain/shared/utils.ts, and src/mutation-queue.ts; TASK-031 guard asserts src/shared contains only primitive helper files."
+    },
+    {
+      "criterion": "Update adapters, scripts, tests, and package smoke to import concept behavior through src/api/**, concept roots, or src/shared/** as appropriate.",
+      "evidence": "Adapters under src/adapters/pi/tools/** and src/adapters/pi/index.ts import use-case executors from src/api/tools.ts; scripts/check-architecture.mjs imports from src/api/tools.ts; package smoke and prior source-root task guards now expect API facade delegation while still verifying concept type modules stay source-root owned."
+    },
+    {
+      "criterion": "Remove residual src/domain/** and src/application/** owner paths after previous concept-root tasks land, or retain only explicit temporary shims with expiry, owner, and tests.",
+      "evidence": "src/domain/** and src/application/** no longer exist; no temporary compatibility shim was retained; final guard and file-structure audit both fail if those roots are recreated."
+    },
+    {
+      "criterion": "Update file-structure KB/diagram and architecture checks to mark concept-root migration complete and fail on reintroduced old owner paths unless explicitly approved.",
+      "evidence": ".codewiki/kb/system/file-structure.md and file-structure-map.yaml mark concept-root migration complete; src/audit/tool.ts and src/knowledge/diagram-parser.ts classify src/domain/** and src/application/** as removed/deprecated; npm run check:architecture passes with 0 approved migration deltas and 0 actionable drift."
+    },
+    {
+      "criterion": "Add final guard proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load.",
+      "evidence": "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs asserts removed roots are absent, no source imports layer-first owner paths, adapters/scripts use API facade, API facade exports required tools, and src/index.ts default/API exports load through direct Node import."
+    }
+  ],
+  "validation_refs": [
+    "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write."
+  ],
+  "closure_brief": {
+    "user_intent": "Proceed with final roadmap task TASK-031 after TASK-033 closure.",
+    "implemented_changes": [
+      "Added src/api facade and src/shared primitive helper modules.",
+      "Removed residual src/domain, src/application, and top-level mutation-queue owner paths.",
+      "Updated adapters/scripts/tests to use API facade and shared primitives.",
+      "Updated file-structure KB/diagram/audit checks to mark concept-root migration complete and fail old roots.",
+      "Added final TASK-031 architecture guard."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/extension.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/overview.md"
+      ],
+      "roadmap": [
+        "TASK-031 evidence/code_paths",
+        ".codewiki/roadmap/tasks/TASK-012/task.json",
+        ".codewiki/roadmap/tasks/TASK-023/task.json"
+      ],
+      "code": [
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "src/shared/ports.ts",
+        "src/shared/utils.ts",
+        "src/shared/lock.ts",
+        "src/index.ts",
+        "src/audit/tool.ts",
+        "src/knowledge/diagram-parser.ts",
+        "adapter/script/shared import updates",
+        "deleted src/application and src/domain owner files"
+      ],
+      "tests": [
+        "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+        "updated source-root/package/diagram guards"
+      ],
+      "validation": [
+        "checks listed in implementation build",
+        "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write."
+      ]
+    },
+    "acceptance_evidence": [
+      "TASK-031 guard pass",
+      "typecheck, architecture, smoke, features, and pack checks pass",
+      "file-structure audit pass with 0 approved migration deltas and 0 actionable drift"
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack"
+    ],
+    "non_goals_preserved": [
+      "No public tool schema redesign beyond import/facade preservation.",
+      "Adapters/UI/skills/tests/scripts remain exposure/assets/tests/helper layers.",
+      "No top-level infrastructure/core/engine roots or broad shared dumping ground created.",
+      "No push or publication performed."
+    ],
+    "remaining_risks": [
+      "Reload Pi before validation; task-close needs fresh validation and clean commit/tree proof."
+    ]
+  },
+  "risks": [
+    "src/shared/lock.ts is an in-process queue helper; cross-process content proof remains Git/content-proof policy.",
+    "API facade is re-export-only for now; future public API redesign remains non-goal.",
+    "Fresh validation and clean commit/tree proof still required before task close."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-031",
+      "task_id": "TASK-031",
+      "next_focus_task_id": "TASK-012",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-031",
+        "title": "Add API facade and remove remaining layer-first shims",
+        "summary": "Implemented TASK-031 final API/shared facade cleanup: added src/api/** stable facade, moved primitive ports/utils/lock helpers to src/shared/**, removed residual src/domain/**, src/application/**, and src/mutation-queue.ts owner paths, updated adapters/scripts/tests to use API facade or shared primitives, and marked concept-root migration complete in file-structure KB/diagram/audit guards.",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json"
+        ],
+        "code_paths": [
+          "src/api/index.ts",
+          "src/api/tools.ts",
+          "src/shared/ports.ts",
+          "src/shared/utils.ts",
+          "src/shared/lock.ts",
+          "src/index.ts",
+          "scripts/check-architecture.mjs",
+          "src/audit/tool.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/project/bootstrap.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/tool.ts",
+          "src/session/claims.ts",
+          "src/state/rebuild.ts",
+          "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+          "tests/tasks/TASK-076/restructure.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "src/project/context.ts",
+          "src/application/ports.ts (deleted)",
+          "src/domain/shared/types.ts (deleted)",
+          "src/domain/shared/utils.ts (deleted)",
+          "src/mutation-queue.ts (deleted)"
+        ],
+        "acceptance": [
+          "Create or finish src/api/** facade modules that expose stable package/tool use-case entrypoints for adapters/scripts while keeping adapters/UI as exposure layers.",
+          "Move primitive shared types/utils/ports/session-independent helpers to src/shared/** and keep shared small; no dumping-ground replacement for application/domain is created.",
+          "Update adapters, scripts, tests, and package smoke to import concept behavior through src/api/**, concept roots, or src/shared/** as appropriate.",
+          "Remove residual src/domain/** and src/application/** owner paths after previous concept-root tasks land, or retain only explicit temporary shims with expiry, owner, and tests.",
+          "Update file-structure KB/diagram and architecture checks to mark concept-root migration complete and fail on reintroduced old owner paths unless explicitly approved.",
+          "Add final guard proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "final source-root architecture guard",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+          "npm run typecheck — pass",
+          "npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift)",
+          "npm run test:smoke — pass",
+          "npm run test:features — pass (34 passed, 0 failed)",
+          "npm run test:pack — pass",
+          "git diff --check — pass",
+          "direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+        ],
+        "test_design_evidence": [
+          "TASK-031 guard directly checks final source layout and package entrypoint/API exports.",
+          "Updated earlier source-root task guards to treat API facade as adapter/script use-case access surface while concept roots still own behavior and types.",
+          "Package smoke confirms Pi package loading and bootstrap still work after facade/import changes.",
+          "Diagram/file-structure smoke fixture updated to use concept-root roadmap types and API facade script import."
+        ],
+        "code_change_evidence": [
+          "Created src/api/index.ts and src/api/tools.ts as stable facade modules.",
+          "Created src/shared/ports.ts, src/shared/utils.ts, and src/shared/lock.ts; removed src/application/ports.ts, src/domain/shared/types.ts, src/domain/shared/utils.ts, and src/mutation-queue.ts.",
+          "Updated imports across concept roots, adapters, and scripts to use src/shared/** and src/api/tools.ts.",
+          "Updated file-structure audit/deprecated path checks to fail src/domain/** and src/application/** recreation.",
+          "Updated file-structure/API/system KB and diagram raw data to record migration complete."
+        ],
+        "validation_refs": [
+          "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write."
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-031",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-031",
+      "show_build": "git show refs/codewiki/archive/task/TASK-031:.codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/validation/2026-05-22-decision-pass.json",
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "src/shared/ports.ts",
+        "src/shared/utils.ts",
+        "src/shared/lock.ts",
+        "src/index.ts",
+        "scripts/check-architecture.mjs",
+        "src/audit/tool.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/project/bootstrap.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/tool.ts",
+        "src/session/claims.ts",
+        "src/state/rebuild.ts",
+        "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+        "tests/tasks/TASK-076/restructure.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-031 Add API facade and remove remaining layer-first shims implementation evidence",
+      "body": "Implemented TASK-031 final API/shared facade cleanup: added src/api/** stable facade, moved primitive ports/utils/lock helpers to src/shared/**, removed residual src/domain/**, src/application/**, and src/mutation-queue.ts owner paths, updated adapters/scripts/tests to use API facade or shared primitives, and marked concept-root migration complete in file-structure KB/diagram/audit guards.\n\nChecks: node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run typecheck — pass, npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift), npm run test:smoke — pass, npm run test:features — pass (34 passed, 0 failed), npm run test:pack — pass, git diff --check — pass, direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nValidation: Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-031\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run typecheck — pass, npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift), npm run test:smoke — pass, npm run test:features — pass (34 passed, 0 failed), npm run test:pack — pass, git diff --check — pass, direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nCodeWiki-Validation: Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.\nCodeWiki-Recover: /wiki-restore TASK-031\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-031\nCodeWiki-Digest: sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a\nCodeWiki-Restore: /wiki-restore TASK-031",
+      "trailers": [
+        "CodeWiki-Task: TASK-031",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run typecheck — pass, npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift), npm run test:smoke — pass, npm run test:features — pass (34 passed, 0 failed), npm run test:pack — pass, git diff --check — pass, direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only",
+        "CodeWiki-Validation: Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.",
+        "CodeWiki-Recover: /wiki-restore TASK-031",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-031",
+        "CodeWiki-Digest: sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a",
+        "CodeWiki-Restore: /wiki-restore TASK-031"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-031 Add API facade and remove remaining layer-first shims implementation evidence",
+      "body": "Implemented TASK-031 final API/shared facade cleanup: added src/api/** stable facade, moved primitive ports/utils/lock helpers to src/shared/**, removed residual src/domain/**, src/application/**, and src/mutation-queue.ts owner paths, updated adapters/scripts/tests to use API facade or shared primitives, and marked concept-root migration complete in file-structure KB/diagram/audit guards.\n\nChecks: node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run typecheck — pass, npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift), npm run test:smoke — pass, npm run test:features — pass (34 passed, 0 failed), npm run test:pack — pass, git diff --check — pass, direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nValidation: Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-031\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass, npm run typecheck — pass, npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift), npm run test:smoke — pass, npm run test:features — pass (34 passed, 0 failed), npm run test:pack — pass, git diff --check — pass, direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nCodeWiki-Validation: Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.\nCodeWiki-Recover: /wiki-restore TASK-031\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-031\nCodeWiki-Digest: sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a\nCodeWiki-Restore: /wiki-restore TASK-031"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-031",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-031"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-031",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-031",
+        "show_build": "git show refs/codewiki/archive/task/TASK-031:.codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json",
+          "src/api/index.ts",
+          "src/api/tools.ts",
+          "src/shared/ports.ts",
+          "src/shared/utils.ts",
+          "src/shared/lock.ts",
+          "src/index.ts",
+          "scripts/check-architecture.mjs",
+          "src/audit/tool.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/project/bootstrap.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/tool.ts",
+          "src/session/claims.ts",
+          "src/state/rebuild.ts",
+          "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+          "tests/tasks/TASK-076/restructure.test.mjs",
+          "tests/smoke/package-smoke.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-031",
+      "build_path": ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-031",
+      "commit_sha": "",
+      "digest": "sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a",
+      "restore_command": "/wiki-restore TASK-031"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+          "bytes": 32591
+        },
+        {
+          "path": "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f27cbb0ede9120a4bbddd04cbba8137ead1b49ec7a7131c0d491bddc5158e2e0",
+          "bytes": 3317
+        },
+        {
+          "path": "tests/tasks/TASK-076/restructure.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
+          "bytes": 4986
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0202e4712544c3c5bb8a5e0605ea5c705c4eab06555c7689b53a9ccddeb1375d",
+          "bytes": 97760
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f71db99d4b8d38bc95a4cdfaeba62edaf4d4bd91d4692f4f33e7fe912189b425",
+          "bytes": 14238
+        },
+        {
+          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+          "bytes": 4937
+        },
+        {
+          "path": "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7b56046dd02a117c86c764e6e54b5bd1c61fdfac05c4841a195959d3093efa16",
+          "bytes": 5223
+        },
+        {
+          "path": "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:32fe71a530d635245a811c1d4266c221457faea3c0c93a594521f7ebc4c73f1b",
+          "bytes": 3178
+        },
+        {
+          "path": "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7213b0cb930fe65ad16e2c442e7f08fbab9a2699c6bc2b555ce2aa0280ecb527",
+          "bytes": 8729
+        },
+        {
+          "path": "tests/tasks/TASK-027/gc-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:4d799bbe8cef87977d0706ba00d84792e0729f7984806140820e747b2cabae14",
+          "bytes": 9160
+        },
+        {
+          "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:14dff9be327fa2648f5a9ea954a65125747103c7d1cc49204d3771252df93abf",
+          "bytes": 15627
+        },
+        {
+          "path": "src/api/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:b148282b977d1d062a4cda3c43e5758d510c050145a92d291e4645bc6997bc58",
+          "bytes": 126
+        },
+        {
+          "path": "src/api/tools.ts",
+          "role": "code_file",
+          "sha256": "sha256:a00342cd2781325c5dedd3f9daf129711f55e0a0f78fb3c4ccd79bd4e9a6019e",
+          "bytes": 925
+        },
+        {
+          "path": "src/shared/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:d0654456f159c95c54ab53b0a95688cdf980088d1aba1cc9cab36ae85c8f4f9b",
+          "bytes": 1721
+        },
+        {
+          "path": "src/shared/utils.ts",
+          "role": "code_file",
+          "sha256": "sha256:b8a5243d476b430f26af8b05c84802c732cca8a38605e6b6a6d9a13125ea625b",
+          "bytes": 2733
+        },
+        {
+          "path": "src/shared/lock.ts",
+          "role": "code_file",
+          "sha256": "sha256:832c26d237474675f5d19ece0bc6c0c015fa734a80354e8ae1f7fa359efe7a1a",
+          "bytes": 1141
+        },
+        {
+          "path": "src/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:5f9617170ea3741095705780bec17b15d2c11ee53ba851e02a5b041b31716ca6",
+          "bytes": 251
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:c7d8ee4a9e72aa895b4e9c0166c3597eac452c4733dd7f215c6131a9b4780c85",
+          "bytes": 40567
+        },
+        {
+          "path": "src/knowledge/diagram-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:0c76b7dbd645f8d093fb62d54d5e00a913329ccdfa1bf4250231e5be35a315dd",
+          "bytes": 37766
+        },
+        {
+          "path": "src/project/bootstrap.ts",
+          "role": "code_file",
+          "sha256": "sha256:a5d6990276d9ba0f0e41dfbf75fd86ed931e81876e4a606436b094a64beb087c",
+          "bytes": 9405
+        },
+        {
+          "path": "src/project/context.ts",
+          "role": "code_file",
+          "sha256": "sha256:487fff7807cbb1cec7a54979222d2051359844e41ec8bd3f19cfd5ce32e4a8e4",
+          "bytes": 10041
+        },
+        {
+          "path": "src/roadmap/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:0b8d799ad016aa83d3746b1c91d582841f516c78b77accafde8403784d404dd6",
+          "bytes": 48940
+        },
+        {
+          "path": "src/roadmap/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:2ad1400d07d2cf48d1556ee781cc26e53768e1634c0fdb6312273cfd5a27019a",
+          "bytes": 11319
+        },
+        {
+          "path": "src/session/claims.ts",
+          "role": "code_file",
+          "sha256": "sha256:c8eb4c0cb7652c86d2e0dc5ea52a6c0c22b99301171b984c658147b916d17037",
+          "bytes": 38345
+        },
+        {
+          "path": "src/state/rebuild.ts",
+          "role": "code_file",
+          "sha256": "sha256:e9ff5e7ae5491301594e82c89ed45d5e587c0a8c45aa603fa5abd37c5efe9784",
+          "bytes": 1858
+        },
+        {
+          "path": "scripts/check-architecture.mjs",
+          "role": "code_file",
+          "sha256": "sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
+          "bytes": 535
+        }
+      ],
+      "skipped": [
+        {
+          "path": "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write.",
+          "role": "validation_ref",
+          "reason": "missing"
+        },
+        {
+          "path": "src/application/ports.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/domain/shared/types.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/domain/shared/utils.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        },
+        {
+          "path": "src/mutation-queue.ts (deleted)",
+          "role": "code_file",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-031",
+      "source_build": ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/api/index.ts",
+          "src/api/tools.ts",
+          "src/shared/ports.ts",
+          "src/shared/utils.ts",
+          "src/shared/lock.ts",
+          "src/index.ts",
+          "src/audit/tool.ts",
+          "src/knowledge/diagram-parser.ts",
+          "src/project/bootstrap.ts",
+          "src/project/context.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/tool.ts",
+          "src/session/claims.ts",
+          "src/state/rebuild.ts",
+          "scripts/check-architecture.mjs",
+          "src/application/ports.ts (deleted)",
+          "src/domain/shared/types.ts (deleted)",
+          "src/domain/shared/utils.ts (deleted)",
+          "src/mutation-queue.ts (deleted)",
+          "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+          "tests/tasks/TASK-076/restructure.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+          "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+          "tests/tasks/TASK-027/gc-source-root.test.mjs",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "adapter/script import updates from concept tools to src/api/tools.ts",
+          "removed src/application/ports.ts",
+          "removed src/domain/shared/types.ts",
+          "removed src/domain/shared/utils.ts",
+          "removed src/mutation-queue.ts",
+          "TASK-015/TASK-021/TASK-022/TASK-026/TASK-027/TASK-028 source-root guards updated for API facade"
+        ],
+        "validation_refs": [
+          "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write."
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-031",
+        "restore_command": "/wiki-restore TASK-031"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs — pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-076/restructure.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+        "npm run typecheck — pass",
+        "npm run check:architecture — pass (file-structure 0 approved migration deltas, 0 actionable drift)",
+        "npm run test:smoke — pass",
+        "npm run test:features — pass (34 passed, 0 failed)",
+        "npm run test:pack — pass",
+        "git diff --check — pass",
+        "direct CodewikiRebuilder rebuild — pass; lint only large-doc warnings",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-031 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+      ],
+      "validation_refs": [
+        "Fresh implementation validation after Pi reload should inspect this implementation build, TASK-031 source refs, checks, and working_tree_digest after build write."
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

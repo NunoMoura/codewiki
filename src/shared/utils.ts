@@ -1,8 +1,8 @@
 /**
- * domain/shared/utils.ts
+ * shared/utils.ts
  *
  * Pure utility functions with zero external dependencies.
- * No node:fs, no Pi types, no TUI — these belong in application-local runtime code or adapters/.
+ * No node:fs, no Pi types, no TUI — runtime code belongs in concept-local implementations or adapters/.
  */
 
 /**
@@ -73,9 +73,7 @@ export function splitCommandArgs(args: string): string[] {
  */
 export function joinCommandArgs(tokens: string[]): string | null {
 	if (tokens.length === 0) return null;
-	return tokens
-		.map((t) => (t.includes(" ") ? `"${t}"` : t))
-		.join(" ");
+	return tokens.map((t) => (t.includes(" ") ? `"${t}"` : t)).join(" ");
 }
 
 /**

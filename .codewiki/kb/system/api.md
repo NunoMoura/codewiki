@@ -2,7 +2,7 @@
 id: spec.system.api
 title: CodeWiki API
 state: active
-summary: Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
+summary: Harness-independent API facade and tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
 owners:
   - architecture
 updated: "2026-05-27"
@@ -12,7 +12,7 @@ updated: "2026-05-27"
 
 ## Responsibility
 
-The CodeWiki API is the stable semantic contract implemented as agent-facing application tools. Adapters, the local CodeWiki UI, CLI/MCP wrappers, skill helper tools, and future harness integrations call these tools. Pi tools are one adapter over this API; they must not be the only way to access CodeWiki semantics.
+The CodeWiki API is the stable semantic contract implemented as `src/api/**` facade modules over focused concept use cases and agent-facing tools. Adapters, scripts, the local CodeWiki UI, CLI/MCP wrappers, skill helper tools, and future harness integrations call this facade or named concept contracts. Pi tools are one adapter over this API; they must not be the only way to access CodeWiki semantics.
 
 The API should expose CodeWiki operations as typed capabilities instead of asking external access surfaces to edit `.codewiki/` internals directly.
 
@@ -113,7 +113,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## API boundary
 
-The API currently lives in concept tool modules such as `src/roadmap/tool.ts` and `src/session/tool.ts`, plus remaining transitional `src/application/tools/**` modules and stable contracts. Tool modules call focused use cases for builds, validation, roadmap/session operations, state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into those tools. Local runtime services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until an external adapter needs its own boundary.
+The API facade lives under `src/api/**`. It re-exports stable package/tool use-case entrypoints from concept roots such as `src/roadmap/tool.ts`, `src/session/tool.ts`, `src/state/tool.ts`, `src/build/tool.ts`, and `src/validation/tool.ts`. Concept roots call focused use cases for builds, validation, roadmap/session operations, state/graph work, and local runtime behavior. Adapters, scripts, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into the API facade or explicit concept contracts. Local runtime services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until an external adapter needs its own boundary. Residual `src/application/**` and `src/domain/**` owner paths are retired.
 
 The API should stay stable while adapter protocols change.
 

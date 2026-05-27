@@ -14,7 +14,7 @@ import type {
 } from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { AUDIT_PROFILE_VALUES } from "./types.ts";
-import { formatError, nowIso, unique } from "../domain/shared/utils.ts";
+import { formatError, nowIso, unique } from "../shared/utils.ts";
 import { pathExists } from "../project/local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { parseDoc } from "../knowledge/doc-parser.ts";
@@ -107,7 +107,7 @@ const ARCHITECTURE_RULES: TextRule[] = [
 		forbidden: [/@earendil-works\/pi-/],
 	},
 ];
-const PI_SDK_ENTRYPOINT_ALLOWLIST = new Set(["index.ts", "bootstrap.ts", "mutation-queue.ts"]);
+const PI_SDK_ENTRYPOINT_ALLOWLIST = new Set(["index.ts", "bootstrap.ts"]);
 const CANONICAL_ROADMAP_STATUSES = ["todo", "in_progress", "blocked", "done", "cancelled"];
 const LEGACY_ROADMAP_WORKFLOW_VALUES = new Set(["research", "implement", "verify"]);
 
@@ -278,7 +278,7 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 	for (const file of tsFiles) {
 		const rel = normalizeRel(relative(srcRoot, file));
 		const text = await readFile(file, "utf8");
-		if (rel.startsWith("core/") || rel.startsWith("engine/") || rel.startsWith("infrastructure/")) {
+		if (rel.startsWith("core/") || rel.startsWith("engine/") || rel.startsWith("infrastructure/") || rel.startsWith("domain/") || rel.startsWith("application/")) {
 			issues.push(createIssue(profile, "error", "transitional-layer-no-new-files", `${rel} is in a removed source layer.`, `src/${rel}`));
 		}
 		for (const rule of ARCHITECTURE_RULES) {
@@ -343,7 +343,7 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 	const fingerprints = await fingerprintFiles(project, [
 		"src/audit/tool.ts",
 		"src/roadmap/types.ts",
-		"src/domain/shared/types.ts",
+		"src/shared/ports.ts",
 		"src/adapters/pi/schemas.ts",
 		"src/adapters/pi/index.ts",
 		"scripts/check-architecture.mjs",

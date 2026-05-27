@@ -111,10 +111,12 @@ const hotRetentionSource = readFileSync(resolve(repoRoot, "tests", "smoke", "hot
 const packageSmokeSource = readFileSync(resolve(repoRoot, "tests", "smoke", "package-smoke.test.mjs"), "utf8");
 const toolCatalogSource = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
 
-assert.match(piIndexSource, /from "\.\.\/\.\.\/gc\/tool\.ts"/, "Pi adapter should route codewiki_gc through src/gc/tool.ts");
+assert.match(piIndexSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter should route codewiki_gc through src/api/tools.ts");
+const apiFacadeSource = readFileSync(resolve(repoRoot, "src", "api", "tools.ts"), "utf8");
+assert.match(apiFacadeSource, /from "\.\.\/gc\/tool\.ts"/, "API facade should expose codewiki_gc from src/gc/tool.ts");
 assert.match(schemaSource, /from "\.\.\/\.\.\/gc\/types\.ts"/, "Pi schemas should read GC values from src/gc/types.ts");
 assert.match(hotRetentionSource, /src\/gc\/runtime\.ts/, "GC smoke should exercise src/gc/runtime.ts");
-assert.match(packageSmokeSource, /GC source-root tool module/, "Package smoke should guard GC source-root tool delegation");
+assert.match(packageSmokeSource, /GC registration should delegate through the API facade/, "Package smoke should guard GC API facade delegation");
 assert.match(toolCatalogSource, /src\/gc\/tool\.ts/, "Skill-facing tool catalog should point codewiki_gc at src/gc/tool.ts");
 
 function walkCodeFiles(roots) {

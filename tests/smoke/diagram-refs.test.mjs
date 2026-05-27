@@ -108,15 +108,15 @@ ${extra}`;
 
 function writeFixture(root, options = {}) {
 	mkdir(resolve(root, ".codewiki", "kb", "system", "diagrams"));
-	mkdir(resolve(root, "src", "domain"));
+	mkdir(resolve(root, "src", "roadmap"));
 	mkdir(resolve(root, "src", "adapters", "pi"));
 	mkdir(resolve(root, "scripts"));
 	writeJson(resolve(root, ".codewiki", "config.json"), { project_name: "diagram-ref-fixture", codewiki: { system_diagrams: { diagram_refs: { mode: options.mode || "warn" } } } });
 	writeJson(resolve(root, ".codewiki", "roadmap", "queue.json"), { version: 1, order: [], tasks: {} });
-	write(resolve(root, "src", "domain", "shared", "types.ts"), `export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`);
+	write(resolve(root, "src", "roadmap", "types.ts"), `export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`);
 	write(resolve(root, "src", "adapters", "pi", "schemas.ts"), "export const schemas = {};\n");
 	write(resolve(root, "src", "adapters", "pi", "index.ts"), "export const pi = {};\n");
-	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
+	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n");
 	write(resolve(root, ".codewiki", "kb", "system", "overview.md"), `---
 id: spec.system.overview
 title: Overview
@@ -317,7 +317,7 @@ edges:
 	write(resolve(driftRoot, "src", "runtime", "index_graph.json"), "{}\n");
 	write(resolve(driftRoot, "src", "unmapped", "file.ts"), "export const stray = 1;\n");
 	write(resolve(driftRoot, ".codewiki", "index", "legacy.json"), "{}\n");
-	write(resolve(driftRoot, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/audit/tool.ts';\nvoid executeCodewikiAudit;\n");
+	write(resolve(driftRoot, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n");
 
 	const drift = buildFileStructureDriftReport(driftRoot, project);
 	assert.equal(drift.available, true);

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-27T21:41:44Z",
+  "updated": "2026-05-27T22:33:39Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -13,7 +13,7 @@
       "status": "cancelled",
       "priority": "medium",
       "kind": "architecture",
-      "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
+      "summary": "Keep TASK-012 cancelled; it is a stale non-atomic task already split into downstream source-root tasks.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -23,8 +23,8 @@
         ".codewiki/kb/system/control-room-ui.md"
       ],
       "code_paths": [
-        "src/application",
-        "src/domain",
+        "src/api",
+        "src/shared",
         "src/adapters",
         "src/ui",
         "tests",
@@ -83,7 +83,7 @@
         "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
       },
       "created": "2026-05-23",
-      "updated": "2026-05-27T21:14:40Z"
+      "updated": "2026-05-27T22:19:03Z"
     },
     "TASK-023": {
       "id": "TASK-023",
@@ -91,7 +91,7 @@
       "status": "cancelled",
       "priority": "high",
       "kind": "migration",
-      "summary": "Cancel superseded aggregate TASK-023 and stop auto-reuse.",
+      "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -156,10 +156,11 @@
         "src/state/local/status-dock-prefs.ts",
         "src/state/tool.ts",
         "src/state/resume-tool.ts",
-        "src/application/ports.ts",
-        "src/domain/shared/types.ts",
-        "src/domain/shared/utils.ts",
-        "src/mutation-queue.ts",
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "src/shared/ports.ts",
+        "src/shared/utils.ts",
+        "src/shared/lock.ts",
         "src/index.ts",
         "scripts/check-architecture.mjs",
         "tests/tasks/TASK-076/restructure.test.mjs",
@@ -294,12 +295,12 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-27T19:45:13Z"
+      "updated": "2026-05-27T22:19:13Z"
     },
     "TASK-031": {
       "id": "TASK-031",
       "title": "Add API facade and remove remaining layer-first shims",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Introduce/finish src/api/** and src/shared/** facades, move primitive shared ports/helpers, and remove residual src/domain/** and src/application/** owner paths after concept roots land.",
@@ -311,13 +312,23 @@
         ".codewiki/validation/2026-05-22-decision-pass.json"
       ],
       "code_paths": [
-        "src/application/ports.ts",
-        "src/domain/shared/types.ts",
-        "src/domain/shared/utils.ts",
-        "src/mutation-queue.ts",
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "src/shared/ports.ts",
+        "src/shared/utils.ts",
+        "src/shared/lock.ts",
         "src/index.ts",
         "scripts/check-architecture.mjs",
-        "tests/tasks/TASK-076/restructure.test.mjs"
+        "src/audit/tool.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/project/bootstrap.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/tool.ts",
+        "src/session/claims.ts",
+        "src/state/rebuild.ts",
+        "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
+        "tests/tasks/TASK-076/restructure.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
       ],
       "research_ids": [],
       "labels": [
@@ -358,7 +369,7 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-26T03:23:36Z"
+      "updated": "2026-05-27T22:33:39Z"
     }
   },
   "sprints": {

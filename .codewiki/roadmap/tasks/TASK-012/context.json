@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T21:14:40Z",
+  "generated_at": "2026-05-27T22:19:03Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-012/context.json",
   "task": {
     "id": "TASK-012",
@@ -9,7 +9,7 @@
     "priority": "medium",
     "kind": "architecture",
     "change_type": "task",
-    "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
+    "summary": "Keep TASK-012 cancelled; it is a stale non-atomic task already split into downstream source-root tasks.",
     "labels": [
       "file-structure",
       "concept-root",

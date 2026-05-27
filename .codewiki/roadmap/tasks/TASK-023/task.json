@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Cancel superseded aggregate TASK-023 and stop auto-reuse.",
+  "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -69,10 +69,11 @@
     "src/state/local/status-dock-prefs.ts",
     "src/state/tool.ts",
     "src/state/resume-tool.ts",
-    "src/application/ports.ts",
-    "src/domain/shared/types.ts",
-    "src/domain/shared/utils.ts",
-    "src/mutation-queue.ts",
+    "src/api/index.ts",
+    "src/api/tools.ts",
+    "src/shared/ports.ts",
+    "src/shared/utils.ts",
+    "src/shared/lock.ts",
     "src/index.ts",
     "scripts/check-architecture.mjs",
     "tests/tasks/TASK-076/restructure.test.mjs",
@@ -207,5 +208,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-27T19:45:13Z"
+  "updated": "2026-05-27T22:19:13Z"
 }

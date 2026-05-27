@@ -6,7 +6,7 @@ import {
 	nowIso,
 	unique,
 	formatError,
-} from "../domain/shared/utils.ts";
+} from "../shared/utils.ts";
 import {
 	readStatusDockPrefs,
 	writeStatusDockPrefs,

@@ -238,8 +238,14 @@ const validationReportSource = readFileSync(
 
 assert.match(
 	piIndexSource,
-	/from "\.\.\/\.\.\/change\/tool\.ts"/,
-	"Pi adapter should route codewiki_diff_table through src/change/tool.ts",
+	/from "\.\.\/\.\.\/api\/tools\.ts"/,
+	"Pi adapter should route codewiki_diff_table through src/api/tools.ts",
+);
+const apiFacadeSource = readFileSync(resolve(repoRoot, "src", "api", "tools.ts"), "utf8");
+assert.match(
+	apiFacadeSource,
+	/from "\.\.\/change\/tool\.ts"/,
+	"API facade should expose codewiki_diff_table from src/change/tool.ts",
 );
 assert.match(
 	schemaSource,

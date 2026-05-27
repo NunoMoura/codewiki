@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T19:45:13Z",
+  "generated_at": "2026-05-27T22:19:13Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-023/context.json",
   "task": {
     "id": "TASK-023",
@@ -9,7 +9,7 @@
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
-    "summary": "Cancel superseded aggregate TASK-023 and stop auto-reuse.",
+    "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
     "labels": [
       "concept-root-migration",
       "project-root",

@@ -18,7 +18,7 @@ import {
 	resolveDiagramRef,
 } from "../knowledge/diagram-parser.ts";
 import { buildChangeClaimState, claimScopeLabels } from "../session/claims.ts";
-import { unique } from "../domain/shared/utils.ts";
+import { unique } from "../shared/utils.ts";
 
 export interface GraphBuildInputs {
 	project: WikiProject;

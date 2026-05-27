@@ -20,7 +20,7 @@ import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceabi
 import type { WikiProject } from "../project/types.ts";
 import type { WorkflowLoop } from "../session/types.ts";
 import { hasPublisherResultProof, publisherProofRefs } from "../session/worktree-isolation.ts";
-import { nowIso, unique } from "../domain/shared/utils.ts";
+import { nowIso, unique } from "../shared/utils.ts";
 import { normalizeWorktreeIsolation } from "../session/claims.ts";
 import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
 import type { CodewikiValidationFailureClass, CodewikiValidationReportInput } from "./types.ts";

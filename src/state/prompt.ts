@@ -1,5 +1,5 @@
 import { renderSkillAsset } from "./skill-assets.ts";
-import { unique } from "../domain/shared/utils.ts";
+import { unique } from "../shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { GraphFile, RoadmapTaskContextPacket, StatusScope } from "./types.ts";

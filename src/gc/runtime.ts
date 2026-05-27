@@ -4,7 +4,7 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import type { CodewikiGcToolInput } from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
-import { nowIso } from "../domain/shared/utils.ts";
+import { nowIso } from "../shared/utils.ts";
 
 export type CodewikiGcCandidateKind = "build" | "validation" | "runtime";
 

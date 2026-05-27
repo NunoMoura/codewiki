@@ -17,7 +17,7 @@ import type {
 import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./artifacts.ts";
 import { readRoadmapTask } from "../roadmap/runtime.ts";
 import { findLatestTaskSessionLink } from "../session/links.ts";
-import type { FileStore, RebuildRunner, SessionStore } from "../application/ports.ts";
+import type { FileStore, RebuildRunner, SessionStore } from "../shared/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Section include normalization (was inline in Pi adapter)

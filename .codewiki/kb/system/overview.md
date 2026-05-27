@@ -23,8 +23,8 @@ CodeWiki maintains the repository-local `.codewiki/` contract and exposes it thr
 - **File-structure ownership map** owns human-readable intended source/tree ownership, current implementation shape, approved migration deltas, and drift categories through [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
 - **Audits** produce deterministic alignment, file-structure, stale-reference, package, security, and generated-parity evidence for users and gateways.
 - **CodeWiki UI** owns the standalone local browser command center for humans under `src/ui/**` while delegating all semantics to the CodeWiki API.
-- **Application layer** owns harness-agnostic compilers, validation gateways, the state engine, agent-facing application tools, ports, and built-in local runtime implementations.
-- **Domain layer** owns pure CodeWiki concepts, rules, entities, schemas, transitions, and invariants for agency, audits, builds, changes, project contracts, roadmap, session queue, validation, generated state, and GC.
+- **API facade** owns stable package/tool use-case entrypoints under `src/api/**` so adapters, scripts, UI, CLI/MCP wrappers, and future harnesses do not depend on old layer-first internals.
+- **Concept roots** own pure CodeWiki concepts, rules, use cases, local runtime implementations, tool entrypoints, schemas, transitions, and invariants for agency, audits, builds, changes, project contracts, roadmap, session queue, validation, generated state, and GC.
 - **Adapters** own harness-specific or protocol-specific translation. The Pi adapter owns current commands, tools, status panel, session integration, packaged skills, and resource discovery. Browser web code is UI, not an agent adapter. Adapters do not own CodeWiki semantics.
 - **Shared** owns minimal cross-cutting helpers and types that are truly common; it must not become a dumping ground for domain or application behavior.
 
@@ -101,9 +101,9 @@ CodeWiki should not implement a general sandbox, hosted SaaS, or duplicate Pi ob
 
 ## Target package architecture
 
-The package is moving from layer-first `src/domain/**` plus `src/application/**` toward concept-root `src/<concept>/**` ownership. Session, state, roadmap, build, validation, audit, agency, project, knowledge, gateway, and GC should be navigable from the source root with model, use cases, tool/API entrypoints, and concept-local runtime code nearby. Adapters, UI, and skills call API/concept entrypoints and do not own semantics. No top-level `infrastructure/` layer should exist; `scripts/**` remains optional developer convenience.
+The package has moved from layer-first `src/domain/**` plus `src/application/**` ownership to concept-root `src/<concept>/**` ownership with a stable `src/api/**` facade and primitive-only `src/shared/**` helpers. Session, state, roadmap, build, validation, audit, agency, project, knowledge, gateway, and GC are navigable from the source root with model, use cases, tool/API entrypoints, and concept-local runtime code nearby. Adapters, UI, and skills call API/concept entrypoints and do not own semantics. No top-level `infrastructure/`, `src/domain/**`, or `src/application/**` layer should exist; `scripts/**` remains optional developer convenience.
 
-Until migration tasks land, the current layer-first tree remains valid and is tracked as an approved migration delta in [File Structure](file-structure.md) and `diagrams/file-structure-map.yaml`.
+Recreating layer-first owner paths now requires a new accepted decision with explicit temporary shim owner, expiry, and guard coverage.
 
 ## Knowledge-base organization rule
 

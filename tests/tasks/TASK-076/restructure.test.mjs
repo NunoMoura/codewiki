@@ -25,12 +25,20 @@ assert.ok(
 	"Deprecated extensions/codewiki wrapper should not exist",
 );
 assert.ok(
-	existsSync(resolve(repoRoot, "src", "domain")),
-	"Domain layer should exist under root src/",
+	!existsSync(resolve(repoRoot, "src", "domain")),
+	"Domain layer should be removed after concept-root migration",
 );
 assert.ok(
-	existsSync(resolve(repoRoot, "src", "application")),
-	"Application layer should exist under root src/",
+	!existsSync(resolve(repoRoot, "src", "application")),
+	"Application layer should be removed after concept-root migration",
+);
+assert.ok(
+	existsSync(resolve(repoRoot, "src", "api")),
+	"API facade should exist under root src/",
+);
+assert.ok(
+	existsSync(resolve(repoRoot, "src", "shared")),
+	"Shared primitive facade should exist under root src/",
 );
 assert.ok(
 	existsSync(resolve(repoRoot, "src", "adapters")),

@@ -76,12 +76,12 @@ for (const codeRoot of [resolve(repoRoot, "src"), resolve(repoRoot, "tests"), re
 assert.deepEqual(importViolations, [], "Source, tests, and scripts should not import removed audit shim paths");
 
 const commandSource = readFileSync(source("adapters", "pi", "commands", "audit.ts"), "utf8");
-assert.match(commandSource, /from "\.\.\/\.\.\/\.\.\/audit\/tool\.ts"/, "Pi audit command should consume source-root audit tool");
+assert.match(commandSource, /from "\.\.\/\.\.\/\.\.\/api\/tools\.ts"/, "Pi audit command should consume API facade audit tool");
 assert.match(commandSource, /from "\.\.\/\.\.\/\.\.\/audit\/types\.ts"/, "Pi audit command should consume source-root audit types");
 assert.doesNotMatch(commandSource, /application\/tools\/audit|domain\/audit\/types/, "Pi audit command should not call old audit paths");
 
 const adapterToolSource = readFileSync(source("adapters", "pi", "tools", "audit.ts"), "utf8");
-assert.match(adapterToolSource, /from "\.\.\/\.\.\/\.\.\/audit\/tool\.ts"/, "Pi audit tool should consume source-root audit executor");
+assert.match(adapterToolSource, /from "\.\.\/\.\.\/\.\.\/api\/tools\.ts"/, "Pi audit tool should consume API facade audit executor");
 assert.doesNotMatch(adapterToolSource, /application\/tools\/audit|domain\/audit\/types/, "Pi audit tool should not call old audit paths");
 
 const schemaSource = readFileSync(source("adapters", "pi", "schemas.ts"), "utf8");
@@ -89,7 +89,7 @@ assert.match(schemaSource, /from "\.\.\/\.\.\/audit\/types\.ts"/, "Pi schemas sh
 assert.doesNotMatch(schemaSource, /domain\/audit\/types/, "Pi schemas should not import old audit type path");
 
 const architectureScript = readFileSync(resolve(repoRoot, "scripts", "check-architecture.mjs"), "utf8");
-assert.match(architectureScript, /src\/audit\/tool\.ts/, "Architecture wrapper should delegate to source-root audit tool");
+assert.match(architectureScript, /src\/api\/tools\.ts/, "Architecture wrapper should delegate through API facade");
 assert.doesNotMatch(architectureScript, /application\/tools\/audit/, "Architecture wrapper should not import old audit tool path");
 
 const auditRoot = readFileSync(source("audit", "tool.ts"), "utf8");

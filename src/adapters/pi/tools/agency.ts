@@ -1,7 +1,7 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { AgencyToolInput } from "../../../agency/types.ts";
 import type { WikiProject } from "../../../project/types.ts";
-import { executeCodewikiAgencyTool } from "../../../agency/tool.ts";
+import { executeCodewikiAgencyTool } from "../../../api/tools.ts";
 import { piAgencyPorts } from "./ports.ts";
 
 /** Execute the codewiki_agency tool. */

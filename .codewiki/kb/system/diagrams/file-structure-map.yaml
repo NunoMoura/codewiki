@@ -37,17 +37,13 @@ nodes:
     requires_doc: true
     role: canonical_target
   - id: current_layered_source
-    label: Current hybrid src layout
+    label: Current concept-root src layout
     group: source_current
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: hybrid_valid_until_migrated
-    paths:
-      - src/agency/**
-      - src/audit/**
-      - src/domain/**
-      - src/application/**
+    status: concept_root_validated
+    summary: Current source tree is represented by individual concept-root owner nodes.
   - id: current_adapters
     label: Current adapters
     group: exposure
@@ -70,6 +66,7 @@ nodes:
     requires_doc: true
     status: accepted_target
     paths:
+      - src/api/**
       - src/agency/**
       - src/audit/**
       - src/build/**
@@ -80,6 +77,7 @@ nodes:
       - src/project/**
       - src/roadmap/**
       - src/session/**
+      - src/shared/**
       - src/state/**
       - src/validation/**
   - id: first_concept_root_pilot
@@ -329,7 +327,6 @@ nodes:
     status: accepted_target
     paths:
       - src/shared/**
-      - src/domain/shared/**
   - id: dogfood_kb
     label: Dogfood knowledge base
     group: codewiki_state
@@ -452,13 +449,13 @@ nodes:
     kind: policy
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: accepted_target
-    defer_status: released_to_planning
+    status: completed
+    defer_status: satisfied
     owner: maintainers
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
-    trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
-    next_boundary: state_api_shared
-    active_boundary: TASK-030_state_graph_resume_migration_pending
+    trigger_state: satisfied_by_remaining_concept_root_tasks_TASK-024_through_TASK-031
+    next_boundary: none
+    active_boundary: none
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated
@@ -466,11 +463,9 @@ nodes:
       - TASK-027_gc_migration_task_close_validated
       - TASK-028_session_migration_task_close_validated
       - TASK-029_roadmap_migration_task_close_validated
-    downstream_deferred_until: executable roadmap tasks and validated planning_build for remaining concept roots
-    paths:
-      - src/api/**
-      - src/roadmap/**
-      - src/state/**
+      - TASK-030_state_graph_resume_migration_task_close_validated
+      - TASK-031_api_shared_cleanup_validated
+    downstream_deferred_until: complete
 edges:
   - id: intended_defines_current
     from: intended_file_structure
@@ -483,7 +478,7 @@ edges:
   - id: current_to_target_delta
     from: current_layered_source
     to: concept_root_target
-    label: approved migration delta
+    label: concept-root layout matches accepted target
   - id: agency_selected_first
     from: concept_root_target
     to: first_concept_root_pilot

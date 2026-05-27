@@ -7,7 +7,7 @@ import type {
 	WorkflowCursor,
 	WorkflowLoop,
 } from "./types.ts";
-import { nowIso, unique } from "../domain/shared/utils.ts";
+import { nowIso, unique } from "../shared/utils.ts";
 
 const TASK_SESSION_LINK_CUSTOM_TYPE = "codewiki.task-link";
 

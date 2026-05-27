@@ -195,6 +195,8 @@ const DEPRECATED_PATH_PATTERNS = [
 	"src/core/**",
 	"src/engine/**",
 	"src/infrastructure/**",
+	"src/domain/**",
+	"src/application/**",
 	"core/**",
 	"engine/**",
 	"infrastructure/**",

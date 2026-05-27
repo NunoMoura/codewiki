@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { loadProject } from "../src/project/context.ts";
-import { executeCodewikiAudit, formatAuditReport } from "../src/audit/tool.ts";
+import { executeCodewikiAudit, formatAuditReport } from "../src/api/tools.ts";
 
 try {
 	const project = await loadProject(process.cwd());

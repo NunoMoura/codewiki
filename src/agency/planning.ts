@@ -16,7 +16,7 @@ import {
 import type { WikiProject } from "../project/types.ts";
 import { readCodewikiState } from "../state/reader.ts";
 import type { ReadStatePorts } from "../state/reader.ts";
-import type { FileStore, RebuildRunner } from "../application/ports.ts";
+import type { FileStore, RebuildRunner } from "../shared/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Port dependencies

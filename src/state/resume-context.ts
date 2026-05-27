@@ -22,7 +22,7 @@ import {
 } from "./artifacts.ts";
 import { stableAgentName } from "./builders.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
-import { unique } from "../domain/shared/utils.ts";
+import { unique } from "../shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapFile, RoadmapTaskRecord } from "../roadmap/types.ts";
 import type {

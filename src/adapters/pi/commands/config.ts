@@ -24,7 +24,7 @@ import { currentTaskLink } from "../session.ts";
 import { maybeReadStatusState } from "../../../state/artifacts.ts";
 import { effectiveAgencyPolicy } from "../../../agency/types.ts";
 import { formatStatusConfigSummary } from "../ui/theme.ts";
-import { splitCommandArgs } from "../../../domain/shared/utils.ts";
+import { splitCommandArgs } from "../../../shared/utils.ts";
 
 /**
  * Register the wiki-config command.

@@ -1,9 +1,9 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { resolveCommandProject, resolveStatusDockProject } from "../../../project/context.ts";
-import { executeCodewikiAudit, formatAuditReport } from "../../../audit/tool.ts";
+import { executeCodewikiAudit, formatAuditReport } from "../../../api/tools.ts";
 import type { AuditProfile } from "../../../audit/types.ts";
 import { AUDIT_PROFILE_VALUES } from "../../../audit/types.ts";
-import { splitCommandArgs } from "../../../domain/shared/utils.ts";
+import { splitCommandArgs } from "../../../shared/utils.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock, withUiErrorHandling } from "../ui/manager.ts";
 

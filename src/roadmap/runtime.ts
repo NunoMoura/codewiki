@@ -20,8 +20,8 @@ import type { RoadmapStateTaskSummary } from "../state/types.ts";
 import type { TaskVerifierResult } from "../validation/types.ts";
 import { CHANGE_TYPE_VALUES } from "../change/types.ts";
 import { ROADMAP_STATUS_VALUES, ROADMAP_PRIORITY_VALUES } from "./types.ts";
-import { unique, nowIso, formatError } from "../domain/shared/utils.ts";
-import { withLockedPaths } from "../mutation-queue.ts";
+import { unique, nowIso, formatError } from "../shared/utils.ts";
+import { withLockedPaths } from "../shared/lock.ts";
 import { assertExecutableRoadmapTask, assessRoadmapTaskBoundary } from "./task-boundary.ts";
 import { formatTaskId, parseTaskIdSequence, taskIdCandidates } from "./task-id.ts";
 import {

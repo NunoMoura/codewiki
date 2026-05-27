@@ -1,4 +1,4 @@
-import { unique } from "../domain/shared/utils.ts";
+import { unique } from "../shared/utils.ts";
 
 export function taskIdCandidates(taskId: string): string[] {
 	const trimmed = taskId.trim();
