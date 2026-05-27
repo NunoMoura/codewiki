@@ -1,7 +1,7 @@
 import { resolve, dirname, basename } from "node:path";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../session/types.ts";
-import type { ResolvedStatusDockProject, StatusDockPrefs } from "../domain/state/types.ts";
+import type { ResolvedStatusDockProject, StatusDockPrefs } from "../state/types.ts";
 import {
 	nowIso,
 	unique,
@@ -10,7 +10,7 @@ import {
 import {
 	readStatusDockPrefs,
 	writeStatusDockPrefs,
-} from "../application/local/status-dock-prefs.ts";
+} from "../state/local/status-dock-prefs.ts";
 import type { CodewikiFileStore } from "./local/file-store.ts";
 import { nodeFileStore } from "./local/file-store.ts";
 import type { WikiProject, DocsConfig } from "./types.ts";
@@ -179,7 +179,7 @@ export async function resolveStatusDockProject(
 	ctx: CodewikiContextPort,
 	options?: { allowWhenOff?: boolean },
 ): Promise<ResolvedStatusDockProject | null> {
-	const { maybeReadStatusState } = await import("../application/state-artifacts.ts");
+	const { maybeReadStatusState } = await import("../state/artifacts.ts");
 	const prefs = await readStatusDockPrefs();
 	if (prefs.mode === "off" && !options?.allowWhenOff) return null;
 	const localProject = await maybeLoadProject(ctx.cwd || ctx.workspaceRoot || "");

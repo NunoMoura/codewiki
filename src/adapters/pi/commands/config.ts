@@ -7,7 +7,7 @@ import {
 import {
 	readStatusDockPrefs,
 	writeStatusDockPrefs,
-} from "../../../application/local/status-dock-prefs.ts";
+} from "../../../state/local/status-dock-prefs.ts";
 import {
 	withUiErrorHandling,
 	openConfigPanel,
@@ -15,13 +15,15 @@ import {
 	clearStatusDock,
 	activeStatusPanelGlobal,
 } from "../ui/manager.ts";
-import { STATUS_DOCK_MODE_VALUES, STATUS_DOCK_DENSITY_VALUES } from "../../../domain/state/types.ts";
-import type { StatusDockMode } from "../../../domain/state/types.ts";
-import { currentTaskLink } from "../session.ts";
-import { maybeReadStatusState } from "../../../application/state-artifacts.ts";
 import {
-    formatStatusConfigSummary,
-} from "../ui/theme.ts";
+	STATUS_DOCK_MODE_VALUES,
+	STATUS_DOCK_DENSITY_VALUES,
+} from "../../../state/types.ts";
+import type { StatusDockMode } from "../../../state/types.ts";
+import { currentTaskLink } from "../session.ts";
+import { maybeReadStatusState } from "../../../state/artifacts.ts";
+import { effectiveAgencyPolicy } from "../../../agency/types.ts";
+import { formatStatusConfigSummary } from "../ui/theme.ts";
 import { splitCommandArgs } from "../../../domain/shared/utils.ts";
 
 /**
@@ -32,10 +34,14 @@ export function registerConfigCommand(pi: ExtensionAPI): void {
 		description:
 			"Configure Codewiki status summary and panel behavior. Usage: /wiki-config [show|auto|pin|off|minimal|standard|full] [repo-path]",
 		getArgumentCompletions: (prefix) => {
-            const options = ["show", ...STATUS_DOCK_MODE_VALUES, ...STATUS_DOCK_DENSITY_VALUES];
-            const items = options.filter((item) => item.startsWith(prefix));
-            return items.map((value) => ({ value, label: value }));
-        },
+			const options = [
+				"show",
+				...STATUS_DOCK_MODE_VALUES,
+				...STATUS_DOCK_DENSITY_VALUES,
+			];
+			const items = options.filter((item) => item.startsWith(prefix));
+			return items.map((value) => ({ value, label: value }));
+		},
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
 				const input = parseConfigCommandInput(args);
@@ -53,7 +59,7 @@ export function registerConfigCommand(pi: ExtensionAPI): void {
 							resolved,
 						);
 					}
-					const opened = await openConfigPanel(ctx);
+					const opened = await openConfigPanel(ctx, resolved?.project ?? null);
 					if (!opened) {
 						if (!resolved) {
 							ctx.ui.notify(
@@ -62,7 +68,13 @@ export function registerConfigCommand(pi: ExtensionAPI): void {
 							);
 							return;
 						}
-						ctx.ui.notify(formatStatusConfigSummary(prefs), "info");
+						ctx.ui.notify(
+							formatStatusConfigSummary(
+								prefs,
+								effectiveAgencyPolicy(resolved.project.config),
+							),
+							"info",
+						);
 					}
 					return;
 				}
@@ -124,7 +136,8 @@ export function registerConfigCommand(pi: ExtensionAPI): void {
 				await refreshStatusDock(project, ctx, currentTaskLink(ctx), {
 					...project,
 					project,
-					statusState: (await maybeReadStatusState(project.statusStatePath)) ?? undefined,
+					statusState:
+						(await maybeReadStatusState(project.statusStatePath)) ?? undefined,
 					source: "pinned",
 				});
 				ctx.ui.notify(`Status summary pinned to ${project.root}.`, "info");

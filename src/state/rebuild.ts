@@ -1,5 +1,5 @@
 /**
- * application/rebuild.ts
+ * state/rebuild.ts
  *
  * "Run a rebuild" use case.
  * Orchestrates the rebuild pipeline via the RebuildRunner port.
@@ -7,7 +7,7 @@
  */
 
 import type { WikiProject } from "../project/types.ts";
-import type { RebuildRunner } from "./ports.ts";
+import type { RebuildRunner } from "../application/ports.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import { resolve } from "node:path";
 

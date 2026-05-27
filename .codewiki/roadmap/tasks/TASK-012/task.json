@@ -1,7 +1,7 @@
 {
   "id": "TASK-012",
   "title": "Select first concept-root migration boundary",
-  "status": "cancelled",
+  "status": "in_progress",
   "priority": "medium",
   "kind": "architecture",
   "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
@@ -19,9 +19,9 @@
     "src/adapters",
     "src/ui",
     "tests",
-    "src/application/state.ts",
-    "src/application/state-builders.ts",
-    "src/application/graph.ts",
+    "src/state/reader.ts",
+    "src/state/builders.ts",
+    "src/state/graph.ts",
     "src/audit/tool.ts"
   ],
   "research_ids": [],
@@ -74,5 +74,5 @@
     "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
   },
   "created": "2026-05-23",
-  "updated": "2026-05-25T22:40:57Z"
+  "updated": "2026-05-27T03:08:29Z"
 }

@@ -4,12 +4,12 @@ import { join, relative, resolve } from "node:path";
 import { GitCache } from "../../project/local/git-cache.ts";
 import type { WikiProject } from "../../project/types.ts";
 import type { RoadmapTaskRecord } from "../../roadmap/types.ts";
-import type { RoadmapStateFile } from "../../domain/state/types.ts";
+import type { RoadmapStateFile } from "../types.ts";
 import { buildGraph } from "../graph.ts";
 import { buildLintReport } from "../lint.ts";
 import { claimsFilePath, normalizeClaimsFile } from "../../session/claims.ts";
-import { buildRoadmapState, buildStatusState } from "../state-builders.ts";
-import { buildCodewikiTaskDetail } from "../state.ts";
+import { buildRoadmapState, buildStatusState } from "../builders.ts";
+import { buildCodewikiTaskDetail } from "../reader.ts";
 import { parseDoc } from "../../knowledge/doc-parser.ts";
 import type { ParsedDoc } from "../../knowledge/doc-parser.ts";
 

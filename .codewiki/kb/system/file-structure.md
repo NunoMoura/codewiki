@@ -93,7 +93,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | Audits | `audits.md` | `src/audit/**`, `/audit [flags]`, `codewiki_audit`, gateway-required audit profiles |
 | Roadmap | `roadmap.md` | `src/roadmap/**`, `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `src/session/**`, `.codewiki/session/queue.json`, artifact statuses, generated session views |
-| Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
+| Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/state/**` |
 | File-structure map and drift lens | `file-structure.md` | `.codewiki/kb/system/diagrams/file-structure-map.yaml`, repository tree audit inputs, source-layout migration deltas |
 | Task-linked tests | `file-structure.md` | `tests/tasks/TASK-###/**`, stable smoke/regression tests under `tests/smoke/**` |
 | Skill assets and bootstrap | `extension.md`, `adapters.md`, `compilers.md` | `skills/codewiki/**` router/bootstrap/prompt/playbook/reference assets and focused `skills/codewiki-*/SKILL.md` compiler skills |
@@ -146,7 +146,7 @@ src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,
 src/{adapters,ui}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), and `roadmap` (TASK-029). TASK-029 moved roadmap/task/sprint types, status/task-id helpers, task-boundary checks, roadmap mutation, task use cases, sprint mutation, and `codewiki_task` execution into `src/roadmap/**` while preserving roadmap JSON and tool behavior. Remaining work: state/graph/resume and final API/shared cleanup under FS-ROOT-CONCEPTS.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), and `roadmap` (TASK-029). TASK-030 now migrates generated state, graph/rebuild/lint, prompt/resume-context, status dock prefs, and `codewiki_state`/`codewiki_resume_context` execution into `src/state/**` while preserving generated state schemas and tool behavior. Remaining work after TASK-030: final API/shared cleanup under FS-ROOT-CONCEPTS.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 

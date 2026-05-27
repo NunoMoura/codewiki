@@ -1,7 +1,7 @@
 {
   "id": "TASK-030",
   "title": "Migrate state graph and resume source root",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Move derived state, graph rebuild, lint, status/task context artifacts, prompt/resume context, status dock prefs, and codewiki_state/codewiki_resume_context tool execution into src/state/**.",
@@ -14,21 +14,25 @@
     ".codewiki/validation/2026-05-22-decision-pass.json"
   ],
   "code_paths": [
-    "src/domain/state/types.ts",
-    "src/application/state.ts",
-    "src/application/state-artifacts.ts",
-    "src/application/state-builders.ts",
-    "src/application/rebuild.ts",
-    "src/application/graph.ts",
-    "src/application/graph/rebuilder.ts",
-    "src/application/lint.ts",
-    "src/application/resume-context.ts",
-    "src/application/prompt.ts",
-    "src/application/skill-assets.ts",
-    "src/application/local/rebuild-runner.ts",
-    "src/application/local/status-dock-prefs.ts",
-    "src/application/tools/state.ts",
-    "src/application/tools/resume-context.ts"
+    "src/state/types.ts",
+    "src/state/reader.ts",
+    "src/state/artifacts.ts",
+    "src/state/builders.ts",
+    "src/state/rebuild.ts",
+    "src/state/graph.ts",
+    "src/state/graph/rebuilder.ts",
+    "src/state/lint.ts",
+    "src/state/resume-context.ts",
+    "src/state/prompt.ts",
+    "src/state/skill-assets.ts",
+    "src/state/local/rebuild-runner.ts",
+    "src/state/local/status-dock-prefs.ts",
+    "src/state/tool.ts",
+    "src/state/resume-tool.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
   ],
   "research_ids": [],
   "labels": [
@@ -64,10 +68,10 @@
     ]
   },
   "delta": {
-    "desired": "",
-    "current": "",
-    "closure": ""
+    "desired": "Derived state, graph/rebuild/lint, prompt/resume context, status dock prefs, and state tool execution live under src/state/** while public behavior and generated schemas stay stable.",
+    "current": "Implementation moved owner modules to src/state/** and removed old state/graph/resume owner paths without shims; validation pending.",
+    "closure": "Close after implementation build, fresh implementation validation, clean commit/tree proof, task-close validation, and post-commit audits."
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T03:23:30Z"
+  "updated": "2026-05-27T19:43:02Z"
 }

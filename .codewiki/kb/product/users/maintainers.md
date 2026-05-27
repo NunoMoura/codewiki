@@ -9,7 +9,7 @@ owners:
 updated: '2026-05-16'
 code_paths:
 - tests/smoke/package-smoke.test.mjs
-- src/application/lint.ts
+- src/state/lint.ts
 ---
 
 # Maintainers

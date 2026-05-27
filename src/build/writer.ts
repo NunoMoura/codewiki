@@ -6,7 +6,7 @@ import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { readRoadmapTask } from "../roadmap/runtime.ts";
-import { maybeReadGraph } from "../application/state-artifacts.ts";
+import { maybeReadGraph } from "../state/artifacts.ts";
 import {
 	buildArtifactDigests,
 	buildBuildPath,

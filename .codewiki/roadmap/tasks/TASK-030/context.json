@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:30Z",
+  "generated_at": "2026-05-27T19:43:02Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-030/context.json",
   "task": {
     "id": "TASK-030",
     "title": "Migrate state graph and resume source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
@@ -42,9 +42,9 @@
       ]
     },
     "delta": {
-      "desired": "",
-      "current": "",
-      "closure": ""
+      "desired": "Derived state, graph/rebuild/lint, prompt/resume context, status dock prefs, and state tool execution live under src/state/** while public behavior and generated schemas stay stable.",
+      "current": "Implementation moved owner modules to src/state/** and removed old state/graph/resume owner paths without shims; validation pending.",
+      "closure": "Close after implementation build, fresh implementation validation, clean commit/tree proof, task-close validation, and post-commit audits."
     }
   }
 }

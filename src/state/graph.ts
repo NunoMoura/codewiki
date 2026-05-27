@@ -9,7 +9,7 @@ import type {
 	GraphFile,
 	GraphNode,
 	GraphViews,
-} from "../domain/state/types.ts";
+} from "./types.ts";
 import type { LintReport } from "../validation/types.ts";
 import { GitCache } from "../project/local/git-cache.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";

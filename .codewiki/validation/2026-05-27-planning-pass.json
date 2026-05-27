@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T19:48:43Z",
+  "profile": "planning",
+  "verdict": "pass",
+  "rationale": "Planning build maps approved context reset, agency-level, and frontmatter code_paths decisions into executable roadmap work. TASK-032 covers protocol-safe reset auto-pickup plus agency levels; TASK-033 covers graph-owned doc-code link migration. TASK-030 boundary was restored and superseded aggregate TASK-023 was cancelled to prevent reuse contamination. SPRINT-004 groups the follow-up work without acting as an umbrella task.",
+  "checks": [
+    "codewiki_state refresh task_id=TASK-032 -> yellow only large-doc warnings; roadmap open 5; generated parity current",
+    "codewiki_audit profiles=alignment,generated-parity,stale-reference,task task_id=TASK-032 -> task pass; generated-parity pass; stale-reference pass; alignment warning large-doc only",
+    "codewiki_audit profiles=task task_id=TASK-033 -> pass"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "api.md and graph.md have large-doc warnings after semantic doc edits."
+    },
+    {
+      "severity": "low",
+      "summary": "TASK-032 should be implemented before relying on automatic CodeWiki context reset for long follow-up work."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "generated-parity",
+    "stale-reference",
+    "task"
+  ],
+  "audit_refs": [
+    "approval:user:all approved",
+    "profile:alignment",
+    "profile:generated-parity",
+    "profile:stale-reference",
+    "profile:task",
+    "build:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+    "validation:.codewiki/validation/2026-05-27-decision-pass.json",
+    "planning:.codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit task TASK-032 pass.",
+    "codewiki_audit task TASK-033 pass.",
+    "codewiki_audit generated-parity pass: graph presence/freshness and 5 active roadmap task views checked.",
+    "codewiki_audit stale-reference pass: 52 active markdown/source text files checked.",
+    "codewiki_audit alignment warning only because graph health has large-doc warnings in api.md and graph.md."
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "generated-parity",
+      "stale-reference",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:all approved"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

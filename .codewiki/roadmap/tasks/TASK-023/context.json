@@ -1,15 +1,15 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T00:21:58Z",
+  "generated_at": "2026-05-27T19:45:13Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-023/context.json",
   "task": {
     "id": "TASK-023",
     "title": "Migrate project and bootstrap source root",
-    "status": "in_progress",
+    "status": "cancelled",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",
-    "summary": "TASK-023 cancelled as superseded aggregate; continue with TASK-029.",
+    "summary": "Cancel superseded aggregate TASK-023 and stop auto-reuse.",
     "labels": [
       "concept-root-migration",
       "project-root",
@@ -27,7 +27,11 @@
       "resume-context",
       "api-facade",
       "shared-cleanup",
-      "final-wave"
+      "final-wave",
+      "agency",
+      "config",
+      "approval-cadence",
+      "roadmap"
     ],
     "goal": {
       "outcome": "Project loading, root resolution, bootstrap/setup tool execution, templates, and local file/git storage have source-root ownership under src/project/** without changing public bootstrap/config behavior.",
@@ -73,7 +77,11 @@
         "Update adapters, scripts, tests, and package smoke to import concept behavior through src/api/**, concept roots, or src/shared/** as appropriate.",
         "Remove residual src/domain/** and src/application/** owner paths after previous concept-root tasks land, or retain only explicit temporary shims with expiry, owner, and tests.",
         "Update file-structure KB/diagram and architecture checks to mark concept-root migration complete and fail on reintroduced old owner paths unless explicitly approved.",
-        "Add final guard coverage proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load."
+        "Add final guard coverage proving no unapproved src/domain/** or src/application/** owner imports remain and package entrypoints/direct Node execution still load.",
+        "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
+        "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
+        "Status/config surfaces show effective agency level and reset auto-pickup policy.",
+        "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries."
       ],
       "non_goals": [
         "Do not migrate knowledge, roadmap, session, state/graph/resume, GC, change/diff-table, adapters/UI, skills, or final API/shared cleanup in this task.",
@@ -93,7 +101,9 @@
         "Do not change generated graph/state schemas, roadmap task context schema, audit profile names, package metadata, or public tool behavior.",
         "Do not redesign public package API or user-facing tool schemas beyond import/facade preservation.",
         "Do not migrate adapters, UI, skills, tests, or scripts into concept roots; they remain exposure/assets/tests/helper layers.",
-        "Do not create top-level infrastructure/core/engine roots or broad shared dumping grounds."
+        "Do not create top-level infrastructure/core/engine roots or broad shared dumping grounds.",
+        "Do not implement parallel subagent orchestration unless already supported by existing agency machinery.",
+        "Do not grant automatic publication or remote push permission."
       ],
       "verification": [
         "npm run typecheck",
@@ -120,7 +130,7 @@
       ]
     },
     "delta": {
-      "desired": "Additional outcome: Knowledge parsing and diagram/file-structure parsing have source-root ownership under src/knowledge/** with graph/audit output preserved.\nRefinement: Additional outcome: Change traceability and diff-table approval runtime have source-root ownership under src/change/** with decision/diff-table behavior preserved.\nRefinement: Additional outcome: GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and tool execution preserved.\nRefinement: Additional outcome: Session coordination and artifact-status ownership live under src/session/** while codewiki_session and codewiki_artifact_status behavior and isolation policy remain unchanged.\nRefinement: Additional outcome: Roadmap queue/task/sprint ownership lives under src/roadmap/** while codewiki_task behavior, task-boundary policy, and generated task views remain unchanged.\nRefinement: Additional outcome: Derived state, graph/rebuild/lint, prompt, and resume-context ownership live under src/state/** while codewiki_state and codewiki_resume_context behavior remain unchanged.\nRefinement: Additional outcome: Stable API/shared facade exists and residual layer-first owner paths are removed or explicitly documented as temporary compatibility shims with guard coverage.",
+      "desired": "Additional outcome: Knowledge parsing and diagram/file-structure parsing have source-root ownership under src/knowledge/** with graph/audit output preserved.\nRefinement: Additional outcome: Change traceability and diff-table approval runtime have source-root ownership under src/change/** with decision/diff-table behavior preserved.\nRefinement: Additional outcome: GC ownership lives under src/gc/** with dry-run/purge behavior, restore-ledger policy, and tool execution preserved.\nRefinement: Additional outcome: Session coordination and artifact-status ownership live under src/session/** while codewiki_session and codewiki_artifact_status behavior and isolation policy remain unchanged.\nRefinement: Additional outcome: Roadmap queue/task/sprint ownership lives under src/roadmap/** while codewiki_task behavior, task-boundary policy, and generated task views remain unchanged.\nRefinement: Additional outcome: Derived state, graph/rebuild/lint, prompt, and resume-context ownership live under src/state/** while codewiki_state and codewiki_resume_context behavior remain unchanged.\nRefinement: Additional outcome: Stable API/shared facade exists and residual layer-first owner paths are removed or explicitly documented as temporary compatibility shims with guard coverage.\nRefinement: Additional outcome: Users can configure CodeWiki agency level as task, sprint, or roadmap; agency planning and reset continuation respect that contract while hard gates remain mandatory.",
       "current": "",
       "closure": ""
     }

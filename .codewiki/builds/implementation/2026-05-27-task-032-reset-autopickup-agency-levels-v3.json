@@ -1,0 +1,693 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-27T20:53:16Z",
+  "source": "TASK-032 follow-up after observed runtime error: Cannot continue from message role: assistant",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+  "task_id": "TASK-032",
+  "task": {
+    "id": "TASK-032",
+    "title": "Protocol-safe reset auto-pickup and agency levels",
+    "status": "in_progress",
+    "priority": "critical",
+    "kind": "architecture",
+    "summary": "Implement CodeWiki reset auto-pickup from source-backed protocol-safe kickoff messages and add configurable task/sprint/roadmap agency levels that govern continuation.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+      ".codewiki/validation/2026-05-27-decision-pass.json",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/product/stories/automation.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/index.ts",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "src/project/types.ts",
+      "src/project/templates.ts",
+      "src/project/tool.ts",
+      "src/agency/types.ts",
+      "src/agency/planning.ts",
+      "src/adapters/pi/commands/config.ts"
+    ],
+    "goal": {
+      "outcome": "CodeWiki reset auto-picks up through a protocol-safe source-backed kickoff when configured agency level allows continuation; agency level task/sprint/roadmap controls approval cadence while hard gates remain mandatory.",
+      "acceptance": [
+        "Same-session CodeWiki compaction delivers a minimal resume-context kickoff with auto turn triggering when safe.",
+        "Fresh-session resume seeds the replacement session with the same source-backed kickoff while preserving manual /wiki-resume UX.",
+        "Reset defers or refuses auto-pickup when pending tool/message state or adapter capability cannot guarantee a valid next-turn boundary.",
+        "No reset path injects slash-command text through follow-up chat or calls continuation from an assistant-role leaf.",
+        "Regression tests reproduce invalid assistant-leaf risk and prove safe kickoff/fallback behavior.",
+        "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
+        "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
+        "Status/config surfaces show effective agency level and reset auto-pickup policy.",
+        "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries."
+      ],
+      "non_goals": [
+        "Do not implement parallel subagent orchestration unless already supported by existing agency machinery.",
+        "Do not grant automatic publication or remote push permission.",
+        "Do not publish or push changes."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run check:architecture"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-03T20:53:16.000Z",
+    "purge_after": "2026-06-10T20:53:16.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 3,
+    "attempt": "runtime-assistant-leaf-fix",
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json"
+    ],
+    "status": "ready-for-validation"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "Observed assistant-leaf continuation error is addressed by protocol-safe kickoff delivery.",
+      "Regression tests fail if reset auto-pickup uses nextTurn with triggerTurn.",
+      "Required TASK-032 verification checks pass.",
+      "Fresh implementation validation starts from source refs and content proof."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "stale-reference"
+    ],
+    "audit_refs": [
+      "codewiki_audit changed,task,generated-parity,stale-reference,alignment TASK-032"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "same-session runtime issue report",
+        "reason": "Observed reset auto-pickup still used Pi nextTurn delivery, whose triggerTurn is ignored and can leave continuation at an invalid assistant leaf.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "User reported post-compaction error: Cannot continue from message role: assistant"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh context",
+        "reason": "Implementation validation requires source refs and content proof after runtime fix.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "pre-build working_tree_digest f64c9962fb17165891b0110f247903531fb109d253f8897a9aebf538283ccf4b"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Patched TASK-032 reset auto-pickup after observed assistant-leaf continuation failure: custom kickoff now triggers through Pi follow-up delivery instead of nextTurn, and pending context-refresh requests are preserved until a safe lifecycle boundary.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+      ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+      ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-032"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-27-decision-pass.json",
+      ".codewiki/validation/2026-05-27-planning-pass.json"
+    ],
+    "source": [
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts"
+    ],
+    "tests": [
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs"
+    ],
+    "validation": [
+      "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.",
+      "targeted reset smoke tests",
+      "typecheck",
+      "test:smoke",
+      "test:features",
+      "check:architecture"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-032"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+      ".codewiki/validation/2026-05-27-decision-pass.json",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/product/stories/automation.md",
+      ".codewiki/kb/system/roadmap.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/index.ts",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "src/project/types.ts",
+      "src/project/templates.ts",
+      "src/project/tool.ts",
+      "src/agency/types.ts",
+      "src/agency/planning.ts",
+      "src/adapters/pi/commands/config.ts"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs"
+  ],
+  "code_files": [
+    "src/adapters/pi/compaction.ts",
+    "src/adapters/pi/commands/resume.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "src/adapters/pi/compaction.ts",
+    "src/adapters/pi/commands/resume.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+    "lsp_diagnostics reset source/tests — no diagnostics",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run test:features — pass (32 passed, 0 failed)",
+    "npm run check:architecture — pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+      "roadmap_task_id": "TASK-032",
+      "test_files": [
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs"
+      ],
+      "evidence": [
+        "Added regression assertions that reset auto-pickup must not rely on deliverAs:\"nextTurn\" with triggerTurn because Pi ignores triggerTurn for that delivery mode.",
+        "Kept custom kickoff and no-slash/no-assistant-leaf smoke assertions from v2."
+      ],
+      "notes": [
+        "Observed runtime issue matched Pi docs/source behavior: triggerTurn is ignored for nextTurn delivery, while followUp/idle sendMessage triggers a real turn from custom user-like content.",
+        "All required TASK-032 verification commands pass after v3 patch.",
+        "Changed/alignment audit warnings remain publication hygiene from dirty generated CodeWiki files and existing graph warnings; task/generated-parity/stale-reference pass."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+      "roadmap_task_id": "TASK-032",
+      "code_files": [
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/commands/resume.ts"
+      ],
+      "evidence": [
+        "src/adapters/pi/compaction.ts changed same-session auto-pickup delivery from nextTurn to followUp so triggerTurn can start a prompt turn safely after compaction.",
+        "src/adapters/pi/compaction.ts now peeks pending context-refresh requests before lifecycle checks and consumes them only after a safe boundary is accepted.",
+        "src/adapters/pi/commands/resume.ts changed fresh-session replacement kickoff delivery from nextTurn to followUp.",
+        "Reset smoke tests updated to enforce followUp delivery and reject nextTurn+triggerTurn reliance."
+      ],
+      "notes": [
+        "User reported exact post-compaction error: Cannot continue from message role: assistant. v3 addresses the unsafe delivery mode rather than attempting assistant-leaf continuation.",
+        "No publication or push performed.",
+        "Working tree still includes broader pre-existing dirty files from earlier TASK-030/TASK-032 work; v3 code delta is limited to reset delivery and tests.",
+        "Pre-build working_tree_digest: f64c9962fb17165891b0110f247903531fb109d253f8897a9aebf538283ccf4b."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added regression assertions that reset auto-pickup must not rely on deliverAs:\"nextTurn\" with triggerTurn because Pi ignores triggerTurn for that delivery mode.",
+    "Kept custom kickoff and no-slash/no-assistant-leaf smoke assertions from v2."
+  ],
+  "code_change_evidence": [
+    "src/adapters/pi/compaction.ts changed same-session auto-pickup delivery from nextTurn to followUp so triggerTurn can start a prompt turn safely after compaction.",
+    "src/adapters/pi/compaction.ts now peeks pending context-refresh requests before lifecycle checks and consumes them only after a safe boundary is accepted.",
+    "src/adapters/pi/commands/resume.ts changed fresh-session replacement kickoff delivery from nextTurn to followUp.",
+    "Reset smoke tests updated to enforce followUp delivery and reject nextTurn+triggerTurn reliance."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Same-session CodeWiki compaction delivers a minimal resume-context kickoff with auto turn triggering when safe.",
+      "evidence": "src/adapters/pi/compaction.ts still builds CodeWiki custom kickoff from source-backed resume context; auto-pickup now uses pi.sendMessage(summary.kickoff, { triggerTurn: true, deliverAs: \"followUp\" }) so Pi triggers a prompt turn instead of relying on nextTurn, whose trigger is ignored."
+    },
+    {
+      "criterion": "Fresh-session resume seeds the replacement session with the same source-backed kickoff while preserving manual /wiki-resume UX.",
+      "evidence": "src/adapters/pi/commands/resume.ts uses replacementCtx.sendMessage(kickoff, { triggerTurn: true, deliverAs: \"followUp\" }) for fresh sessions and keeps sendUserMessage fallback only when custom sendMessage capability is missing."
+    },
+    {
+      "criterion": "Reset defers or refuses auto-pickup when pending tool/message state or adapter capability cannot guarantee a valid next-turn boundary.",
+      "evidence": "src/adapters/pi/compaction.ts preserves pending context-refresh requests until lifecycle boundary passes, rather than consuming them before an unsafe boundary; existing lifecycle/capability checks still gate auto-pickup."
+    },
+    {
+      "criterion": "No reset path injects slash-command text through follow-up chat or calls continuation from an assistant-role leaf.",
+      "evidence": "tests/smoke/codewiki-compaction.test.mjs and tests/smoke/resume-scheduler.test.mjs now assert reset auto-pickup does not use deliverAs:\"nextTurn\" with triggerTurn; kickoff remains a custom message, not slash-command text."
+    },
+    {
+      "criterion": "Regression tests reproduce invalid assistant-leaf risk and prove safe kickoff/fallback behavior.",
+      "evidence": "Reset smoke tests pass and include assertions against nextTurn-trigger reliance because Pi ignores triggerTurn for nextTurn mode; this covers the observed assistant-leaf failure mode."
+    },
+    {
+      "criterion": "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
+      "evidence": "Unchanged from v2; v3 only patches protocol delivery and pending-refresh consumption."
+    },
+    {
+      "criterion": "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
+      "evidence": "Unchanged from v2; full smoke/features/architecture checks still pass after v3 patch."
+    },
+    {
+      "criterion": "Status/config surfaces show effective agency level and reset auto-pickup policy.",
+      "evidence": "Unchanged from v2; full smoke/features/architecture checks still pass after v3 patch."
+    },
+    {
+      "criterion": "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries.",
+      "evidence": "Unchanged from v2; full smoke/features/architecture checks still pass after v3 patch."
+    }
+  ],
+  "validation_refs": [
+    "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest."
+  ],
+  "closure_brief": {
+    "user_intent": "Fix observed CodeWiki compaction auto-pickup failure after user reported Cannot continue from message role: assistant.",
+    "implemented_changes": [
+      "Changed same-session and fresh-session reset auto-pickup from nextTurn delivery to followUp delivery with triggerTurn.",
+      "Preserved pending context-refresh requests until a safe lifecycle boundary instead of dropping them on unsafe boundary.",
+      "Added smoke assertions preventing future nextTurn+triggerTurn reset regressions."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/commands/resume.ts"
+      ],
+      "tests": [
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs"
+      ],
+      "validation": [
+        "checks listed in implementation build",
+        "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest."
+      ]
+    },
+    "acceptance_evidence": [
+      "Targeted reset smokes pass.",
+      "Full typecheck, smoke, feature, and architecture checks pass."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+      "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run check:architecture"
+    ],
+    "non_goals_preserved": [
+      "No parallel subagent orchestration implemented.",
+      "No automatic publication or remote push permission granted.",
+      "No publish or push performed."
+    ],
+    "remaining_risks": [
+      "Fresh validation/content proof still required before task close."
+    ]
+  },
+  "risks": [
+    "Runtime behavior depends on Pi sendMessage semantics documented in docs/extensions.md and implemented in AgentSession.sendCustomMessage; v3 aligns with current behavior.",
+    "Task-close still needs clean commit/tree proof after validation."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-032",
+      "task_id": "TASK-032",
+      "next_focus_task_id": "TASK-012",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-032",
+        "title": "Protocol-safe reset auto-pickup and agency levels",
+        "summary": "Patched TASK-032 reset auto-pickup after observed assistant-leaf continuation failure: custom kickoff now triggers through Pi follow-up delivery instead of nextTurn, and pending context-refresh requests are preserved until a safe lifecycle boundary.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+          ".codewiki/validation/2026-05-27-decision-pass.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/product/stories/automation.md",
+          ".codewiki/kb/system/roadmap.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/index.ts",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "src/project/types.ts",
+          "src/project/templates.ts",
+          "src/project/tool.ts",
+          "src/agency/types.ts",
+          "src/agency/planning.ts",
+          "src/adapters/pi/commands/config.ts"
+        ],
+        "acceptance": [
+          "Same-session CodeWiki compaction delivers a minimal resume-context kickoff with auto turn triggering when safe.",
+          "Fresh-session resume seeds the replacement session with the same source-backed kickoff while preserving manual /wiki-resume UX.",
+          "Reset defers or refuses auto-pickup when pending tool/message state or adapter capability cannot guarantee a valid next-turn boundary.",
+          "No reset path injects slash-command text through follow-up chat or calls continuation from an assistant-role leaf.",
+          "Regression tests reproduce invalid assistant-leaf risk and prove safe kickoff/fallback behavior.",
+          "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
+          "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
+          "Status/config surfaces show effective agency level and reset auto-pickup policy.",
+          "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run check:architecture"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+          "lsp_diagnostics reset source/tests — no diagnostics",
+          "npm run typecheck — pass",
+          "npm run test:smoke — pass",
+          "npm run test:features — pass (32 passed, 0 failed)",
+          "npm run check:architecture — pass"
+        ],
+        "test_design_evidence": [
+          "Added regression assertions that reset auto-pickup must not rely on deliverAs:\"nextTurn\" with triggerTurn because Pi ignores triggerTurn for that delivery mode.",
+          "Kept custom kickoff and no-slash/no-assistant-leaf smoke assertions from v2."
+        ],
+        "code_change_evidence": [
+          "src/adapters/pi/compaction.ts changed same-session auto-pickup delivery from nextTurn to followUp so triggerTurn can start a prompt turn safely after compaction.",
+          "src/adapters/pi/compaction.ts now peeks pending context-refresh requests before lifecycle checks and consumes them only after a safe boundary is accepted.",
+          "src/adapters/pi/commands/resume.ts changed fresh-session replacement kickoff delivery from nextTurn to followUp.",
+          "Reset smoke tests updated to enforce followUp delivery and reject nextTurn+triggerTurn reliance."
+        ],
+        "validation_refs": [
+          "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest."
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-032",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-032",
+      "show_build": "git show refs/codewiki/archive/task/TASK-032:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+        ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+        ".codewiki/validation/2026-05-27-decision-pass.json",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/product/stories/automation.md",
+        ".codewiki/kb/system/roadmap.md",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/index.ts",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "src/project/types.ts",
+        "src/project/templates.ts",
+        "src/project/tool.ts",
+        "src/agency/types.ts",
+        "src/agency/planning.ts",
+        "src/adapters/pi/commands/config.ts"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-032 Protocol-safe reset auto-pickup and agency levels implementation evidence",
+      "body": "Patched TASK-032 reset auto-pickup after observed assistant-leaf continuation failure: custom kickoff now triggers through Pi follow-up delivery instead of nextTurn, and pending context-refresh requests are preserved until a safe lifecycle boundary.\n\nChecks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, lsp_diagnostics reset source/tests — no diagnostics, npm run typecheck — pass, npm run test:smoke — pass, npm run test:features — pass (32 passed, 0 failed), npm run check:architecture — pass\nValidation: Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-032\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, lsp_diagnostics reset source/tests — no diagnostics, npm run typecheck — pass, npm run test:smoke — pass, npm run test:features — pass (32 passed, 0 failed), npm run check:architecture — pass\nCodeWiki-Validation: Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.\nCodeWiki-Recover: /wiki-restore TASK-032\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-032\nCodeWiki-Digest: sha256:852f8f9c9bbff9fdaeb44c28a9a546a82578a0d36c2cc97cb9f386de5e1e4c78\nCodeWiki-Restore: /wiki-restore TASK-032",
+      "trailers": [
+        "CodeWiki-Task: TASK-032",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, lsp_diagnostics reset source/tests — no diagnostics, npm run typecheck — pass, npm run test:smoke — pass, npm run test:features — pass (32 passed, 0 failed), npm run check:architecture — pass",
+        "CodeWiki-Validation: Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.",
+        "CodeWiki-Recover: /wiki-restore TASK-032",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-032",
+        "CodeWiki-Digest: sha256:852f8f9c9bbff9fdaeb44c28a9a546a82578a0d36c2cc97cb9f386de5e1e4c78",
+        "CodeWiki-Restore: /wiki-restore TASK-032"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-032 Protocol-safe reset auto-pickup and agency levels implementation evidence",
+      "body": "Patched TASK-032 reset auto-pickup after observed assistant-leaf continuation failure: custom kickoff now triggers through Pi follow-up delivery instead of nextTurn, and pending context-refresh requests are preserved until a safe lifecycle boundary.\n\nChecks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, lsp_diagnostics reset source/tests — no diagnostics, npm run typecheck — pass, npm run test:smoke — pass, npm run test:features — pass (32 passed, 0 failed), npm run check:architecture — pass\nValidation: Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-032\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, lsp_diagnostics reset source/tests — no diagnostics, npm run typecheck — pass, npm run test:smoke — pass, npm run test:features — pass (32 passed, 0 failed), npm run check:architecture — pass\nCodeWiki-Validation: Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.\nCodeWiki-Recover: /wiki-restore TASK-032\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-032\nCodeWiki-Digest: sha256:852f8f9c9bbff9fdaeb44c28a9a546a82578a0d36c2cc97cb9f386de5e1e4c78\nCodeWiki-Restore: /wiki-restore TASK-032"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-032",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-032"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-032",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-032",
+        "show_build": "git show refs/codewiki/archive/task/TASK-032:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+          ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+          ".codewiki/validation/2026-05-27-decision-pass.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/product/stories/automation.md",
+          ".codewiki/kb/system/roadmap.md",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/index.ts",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "src/project/types.ts",
+          "src/project/templates.ts",
+          "src/project/tool.ts",
+          "src/agency/types.ts",
+          "src/agency/planning.ts",
+          "src/adapters/pi/commands/config.ts"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-032",
+      "build_path": ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-032",
+      "commit_sha": "",
+      "digest": "sha256:852f8f9c9bbff9fdaeb44c28a9a546a82578a0d36c2cc97cb9f386de5e1e4c78",
+      "restore_command": "/wiki-restore TASK-032"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:9dcbf5fcf43faff07b9b41da92d4db1f5aeb46cd84e8933a41dfa65d2d6651af",
+          "bytes": 18968
+        },
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:a0af1b7170cec2b13db9b7f6e2f8a9e29691f5c05ee69dbb73b681676cfb153a",
+          "bytes": 9548
+        },
+        {
+          "path": "tests/smoke/resume-scheduler.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:fcceb8b1215286cd01bad4d84ccd6e7d9539cbbe8778e61a804b081e44169e62",
+          "bytes": 7389
+        },
+        {
+          "path": "src/adapters/pi/compaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:ed85fe3c8eab44ed66b15537a91352c25e340a4514b73cb4b7bf0d1f518c0751",
+          "bytes": 12819
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:5e89dcf84e6220ef273d3b3eb8f2e8f5f95ea2463bbcfe432745a29ef1d468f9",
+          "bytes": 20161
+        }
+      ],
+      "skipped": [
+        {
+          "path": "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest.",
+          "role": "validation_ref",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-032",
+      "source_build": ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs"
+        ],
+        "validation_refs": [
+          "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest."
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-032",
+        "restore_command": "/wiki-restore TASK-032"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+        "lsp_diagnostics reset source/tests — no diagnostics",
+        "npm run typecheck — pass",
+        "npm run test:smoke — pass",
+        "npm run test:features — pass (32 passed, 0 failed)",
+        "npm run check:architecture — pass"
+      ],
+      "validation_refs": [
+        "Fresh implementation validation should inspect .codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json plus source/test refs and post-build working_tree_digest."
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

@@ -1,12 +1,21 @@
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { buildCodewikiResumeContext } from "../../application/resume-context.ts";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
+import { buildCodewikiResumeContext } from "../../state/resume-context.ts";
 import { resolveStatusDockProject } from "../../project/context.ts";
 import type { WikiProject } from "../../project/types.ts";
 import { formatError, nowIso } from "../../domain/shared/utils.ts";
 import { currentTaskLink } from "./session.ts";
+import {
+	effectiveAgencyPolicy,
+	type EffectiveAgencyPolicy,
+} from "../../agency/types.ts";
 
 const DEFAULT_CONTEXT_REFRESH_THRESHOLD_PERCENT = 80;
 const CONTEXT_REFRESH_PREFIX = "CodeWiki context refresh";
+
+export const CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE = "codewiki.resume-kickoff";
 
 export interface CodewikiContextRefreshRequest {
 	reason: string;
@@ -15,11 +24,32 @@ export interface CodewikiContextRefreshRequest {
 	requestedAt?: string;
 }
 
+export interface CodewikiResumeKickoffMessage {
+	customType: typeof CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE;
+	content: string;
+	display: true;
+	details: Record<string, unknown>;
+}
+
+export interface CodewikiResetBoundaryDecision {
+	allowed: boolean;
+	reason: string;
+	policy: EffectiveAgencyPolicy;
+}
+
+export interface CodewikiCompactionSummary {
+	summary: string;
+	details: Record<string, unknown>;
+	kickoff: CodewikiResumeKickoffMessage;
+}
+
 let pendingContextRefresh: CodewikiContextRefreshRequest | null = null;
 let activeContextRefresh: CodewikiContextRefreshRequest | null = null;
-let preparedContextRefreshSummary: { summary: string; details: Record<string, unknown> } | null = null;
+let preparedContextRefreshSummary: CodewikiCompactionSummary | null = null;
 
-export function requestCodewikiContextRefresh(request: CodewikiContextRefreshRequest): void {
+export function requestCodewikiContextRefresh(
+	request: CodewikiContextRefreshRequest,
+): void {
 	pendingContextRefresh = {
 		...request,
 		reason: request.reason.trim() || "context-refresh",
@@ -42,59 +72,111 @@ export function shouldTriggerCodewikiThresholdRefresh(
 ): boolean {
 	const percent = usage?.percent ?? null;
 	if (percent === null) return false;
-	return percent >= thresholdPercent && (previousPercent === undefined || previousPercent === null || previousPercent < thresholdPercent);
+	return (
+		percent >= thresholdPercent &&
+		(previousPercent === undefined ||
+			previousPercent === null ||
+			previousPercent < thresholdPercent)
+	);
 }
 
 export function installCodewikiCompaction(pi: ExtensionAPI): void {
 	let previousContextPercent: number | null | undefined;
 
 	pi.on("session_before_compact", async (event: any, ctx: ExtensionContext) => {
-		const request = activeContextRefresh ?? pendingContextRefresh ?? {
-			reason: "pi-compaction",
-			followUpIntent: typeof event.customInstructions === "string" ? event.customInstructions : null,
-		};
+		const request = activeContextRefresh ??
+			pendingContextRefresh ?? {
+				reason: "pi-compaction",
+				followUpIntent:
+					typeof event.customInstructions === "string"
+						? event.customInstructions
+						: null,
+			};
 		try {
-			const resolved = await resolveStatusDockProject(ctx, { allowWhenOff: true });
+			const resolved = await resolveStatusDockProject(ctx, {
+				allowWhenOff: true,
+			});
 			if (!resolved) return undefined;
-			const summary = activeContextRefresh && preparedContextRefreshSummary
-				? preparedContextRefreshSummary
-				: await buildCodewikiCompactionSummary(resolved.project, ctx, request, event.customInstructions);
+			const summary =
+				activeContextRefresh && preparedContextRefreshSummary
+					? preparedContextRefreshSummary
+					: await buildCodewikiCompactionSummary(
+							resolved.project,
+							ctx,
+							request,
+							event.customInstructions,
+						);
 			if (!summary) return undefined;
 			return formatPiCompactionResult(summary, event);
 		} catch (error) {
-			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`, "warning");
+			if (ctx.hasUI)
+				ctx.ui.notify(
+					`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`,
+					"warning",
+				);
 			return undefined;
 		}
 	});
 
 	pi.on("agent_end", async (_event: unknown, ctx: ExtensionContext) => {
 		const usage = ctx.getContextUsage();
-		const pending = takePendingCodewikiContextRefresh();
-		const shouldRefresh = pending || shouldTriggerCodewikiThresholdRefresh(usage, previousContextPercent);
+		const pending = pendingContextRefresh;
+		const shouldRefresh =
+			pending ||
+			shouldTriggerCodewikiThresholdRefresh(usage, previousContextPercent);
 		previousContextPercent = usage?.percent ?? previousContextPercent ?? null;
 		if (!shouldRefresh) return;
 
 		let resolvedProject: { project: WikiProject } | null = null;
 		try {
-			resolvedProject = await resolveStatusDockProject(ctx, { allowWhenOff: true });
+			resolvedProject = await resolveStatusDockProject(ctx, {
+				allowWhenOff: true,
+			});
 		} catch {
 			resolvedProject = null;
 		}
 		if (!resolvedProject) return;
 
+		const lifecycle = evaluateCodewikiResetLifecycleBoundary(
+			ctx,
+			resolvedProject.project,
+		);
+		if (!lifecycle.allowed) {
+			if (ctx.hasUI)
+				ctx.ui.notify(
+					`${CONTEXT_REFRESH_PREFIX} deferred: ${lifecycle.reason}`,
+					"warning",
+				);
+			return;
+		}
+
 		const request = pending ?? {
 			reason: `context-usage-${Math.round(usage?.percent ?? 0)}pct`,
 			requestedAt: nowIso(),
 		};
-		let summary: { summary: string; details: Record<string, unknown> } | null = null;
+		if (pending) takePendingCodewikiContextRefresh();
+		let summary: CodewikiCompactionSummary | null = null;
 		try {
-			summary = await buildCodewikiCompactionSummary(resolvedProject.project, ctx, request, null);
+			summary = await buildCodewikiCompactionSummary(
+				resolvedProject.project,
+				ctx,
+				request,
+				null,
+			);
 		} catch (error) {
-			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`, "warning");
+			if (ctx.hasUI)
+				ctx.ui.notify(
+					`${CONTEXT_REFRESH_PREFIX} skipped: ${formatError(error)}`,
+					"warning",
+				);
 			return;
 		}
 		if (!summary) {
-			if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} skipped: no source-backed resume packet`, "info");
+			if (ctx.hasUI)
+				ctx.ui.notify(
+					`${CONTEXT_REFRESH_PREFIX} skipped: no source-backed resume packet`,
+					"info",
+				);
 			return;
 		}
 		activeContextRefresh = request;
@@ -106,18 +188,58 @@ export function installCodewikiCompaction(pi: ExtensionAPI): void {
 				activeContextRefresh = null;
 				preparedContextRefreshSummary = null;
 				previousContextPercent = null;
-				if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} complete`, "info");
+				const autoPickup = evaluateCodewikiAutoPickupBoundary(
+					ctx,
+					resolvedProject.project,
+					{
+						canSendMessage: typeof pi.sendMessage === "function",
+					},
+				);
+				if (ctx.hasUI)
+					ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} complete`, "info");
+				if (!autoPickup.allowed) {
+					if (ctx.hasUI)
+						ctx.ui.notify(
+							`${CONTEXT_REFRESH_PREFIX} auto-pickup skipped: ${autoPickup.reason}`,
+							"warning",
+						);
+					return;
+				}
+				try {
+					pi.sendMessage(summary.kickoff, {
+						triggerTurn: true,
+						deliverAs: "followUp",
+					});
+					if (ctx.hasUI)
+						ctx.ui.notify(
+							`${CONTEXT_REFRESH_PREFIX} auto-pickup queued`,
+							"info",
+						);
+				} catch (error) {
+					if (ctx.hasUI)
+						ctx.ui.notify(
+							`${CONTEXT_REFRESH_PREFIX} auto-pickup failed: ${formatError(error)}`,
+							"warning",
+						);
+				}
 			},
 			onError: (error) => {
 				activeContextRefresh = null;
 				preparedContextRefreshSummary = null;
-				if (ctx.hasUI) ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} failed: ${error.message}`, "warning");
+				if (ctx.hasUI)
+					ctx.ui.notify(
+						`${CONTEXT_REFRESH_PREFIX} failed: ${error.message}`,
+						"warning",
+					);
 			},
 		});
 	});
 }
 
-function formatPiCompactionResult(summary: { summary: string; details: Record<string, unknown> }, event: any) {
+function formatPiCompactionResult(
+	summary: CodewikiCompactionSummary,
+	event: any,
+) {
 	return {
 		compaction: {
 			summary: summary.summary,
@@ -133,9 +255,12 @@ export async function buildCodewikiCompactionSummary(
 	ctx: ExtensionContext,
 	request: CodewikiContextRefreshRequest,
 	customInstructions: unknown,
-): Promise<{ summary: string; details: Record<string, unknown> } | null> {
+): Promise<CodewikiCompactionSummary | null> {
 	const activeLink = currentTaskLink(ctx);
-	const followUpIntent = [request.followUpIntent, typeof customInstructions === "string" ? customInstructions : ""]
+	const followUpIntent = [
+		request.followUpIntent,
+		typeof customInstructions === "string" ? customInstructions : "",
+	]
 		.map((item) => item?.trim())
 		.filter(Boolean)
 		.join("\n");
@@ -143,7 +268,9 @@ export async function buildCodewikiCompactionSummary(
 		requestedTaskId: request.taskId || undefined,
 		followUpIntent: followUpIntent || undefined,
 		activeLink,
-		sessionId: String(ctx.sessionManager?.getSessionId?.() || "codewiki-compaction"),
+		sessionId: String(
+			ctx.sessionManager?.getSessionId?.() || "codewiki-compaction",
+		),
 		refresh: true,
 	};
 	let result;
@@ -157,6 +284,19 @@ export async function buildCodewikiCompactionSummary(
 		});
 	}
 	if (!result.prompt.trim()) return null;
+	const policy = effectiveAgencyPolicy(project.config);
+	const details = {
+		source: "codewiki",
+		reason: request.reason,
+		taskId: result.task?.id ?? request.taskId ?? activeLink?.taskId ?? null,
+		contextPath: result.context_path,
+		projectRoot: project.root,
+		requestedAt: request.requestedAt ?? null,
+		agencyLevel: policy.level,
+		approvalCadence: policy.approval_cadence,
+		contextResetAutoPickup:
+			policy.context_reset.enabled && policy.context_reset.auto_pickup,
+	};
 	return {
 		summary: [
 			"## CodeWiki Context Refresh",
@@ -167,15 +307,124 @@ export async function buildCodewikiCompactionSummary(
 			"",
 			result.prompt,
 		].join("\n"),
-		details: {
-			source: "codewiki",
+		details,
+		kickoff: buildCodewikiResumeKickoff({
+			prompt: result.prompt,
 			reason: request.reason,
+			generatedAt: nowIso(),
+			projectRoot: project.root,
 			taskId: result.task?.id ?? request.taskId ?? activeLink?.taskId ?? null,
 			contextPath: result.context_path,
-			projectRoot: project.root,
-			requestedAt: request.requestedAt ?? null,
+			sourceRefs: result.source_refs,
+			policy,
+		}),
+	};
+}
+
+export function buildCodewikiResumeKickoff(input: {
+	prompt: string;
+	reason: string;
+	generatedAt?: string;
+	projectRoot?: string | null;
+	taskId?: string | null;
+	contextPath?: string | null;
+	sourceRefs?: string[];
+	policy: EffectiveAgencyPolicy;
+}): CodewikiResumeKickoffMessage {
+	const generatedAt = input.generatedAt ?? nowIso();
+	const sourceRefs = (input.sourceRefs || [])
+		.map((ref) => String(ref || "").trim())
+		.filter(Boolean);
+	const resetAutoPickup =
+		input.policy.context_reset.enabled &&
+		input.policy.context_reset.auto_pickup;
+	const header = [
+		"## CodeWiki Auto-Pickup Kickoff",
+		`Reason: ${input.reason}`,
+		`Generated: ${generatedAt}`,
+		`Task: ${input.taskId || "—"}`,
+		`Context packet: ${input.contextPath || "—"}`,
+		`Agency: level=${input.policy.level}; approval=${input.policy.approval_cadence}; reset_auto_pickup=${resetAutoPickup ? "on" : "off"}`,
+		`Source refs: ${sourceRefs.slice(0, 8).join(", ") || "—"}`,
+		"",
+		"Proceed from this CodeWiki source-backed kickoff. Do not depend on pre-reset chat history.",
+		"",
+	];
+	return {
+		customType: CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE,
+		display: true,
+		content: [...header, input.prompt.trim()].join("\n"),
+		details: {
+			source: "codewiki",
+			reason: input.reason,
+			generatedAt,
+			projectRoot: input.projectRoot ?? null,
+			taskId: input.taskId ?? null,
+			contextPath: input.contextPath ?? null,
+			sourceRefs,
+			agencyLevel: input.policy.level,
+			approvalCadence: input.policy.approval_cadence,
+			contextResetAutoPickup: resetAutoPickup,
 		},
 	};
+}
+
+export function evaluateCodewikiResetLifecycleBoundary(
+	ctx: Pick<ExtensionContext, "isIdle" | "hasPendingMessages">,
+	project: WikiProject,
+): CodewikiResetBoundaryDecision {
+	const policy = effectiveAgencyPolicy(project.config);
+	if (!policy.context_reset.enabled)
+		return {
+			allowed: false,
+			reason: "context reset disabled by config",
+			policy,
+		};
+	if (policy.context_reset.require_idle_boundary) {
+		if (typeof ctx.isIdle !== "function")
+			return {
+				allowed: false,
+				reason: "adapter cannot report idle boundary",
+				policy,
+			};
+		if (!ctx.isIdle())
+			return { allowed: false, reason: "agent is not idle", policy };
+		if (typeof ctx.hasPendingMessages !== "function")
+			return {
+				allowed: false,
+				reason: "adapter cannot report pending messages",
+				policy,
+			};
+		if (ctx.hasPendingMessages())
+			return {
+				allowed: false,
+				reason: "pending messages would break reset boundary",
+				policy,
+			};
+	}
+	return { allowed: true, reason: "safe reset lifecycle boundary", policy };
+}
+
+export function evaluateCodewikiAutoPickupBoundary(
+	ctx: Pick<ExtensionContext, "isIdle" | "hasPendingMessages">,
+	project: WikiProject,
+	input: { canSendMessage?: boolean } = {},
+): CodewikiResetBoundaryDecision {
+	const lifecycle = evaluateCodewikiResetLifecycleBoundary(ctx, project);
+	if (!lifecycle.allowed) return lifecycle;
+	if (!lifecycle.policy.context_reset.auto_pickup)
+		return {
+			...lifecycle,
+			allowed: false,
+			reason: "context reset auto-pickup disabled by config",
+		};
+	if (input.canSendMessage === false)
+		return {
+			...lifecycle,
+			allowed: false,
+			reason: "adapter cannot send protocol-safe custom kickoff",
+		};
+	return { ...lifecycle, reason: "protocol-safe custom kickoff available" };
 }
 
 function isStaleTaskResumeError(error: unknown): boolean {
@@ -183,10 +432,14 @@ function isStaleTaskResumeError(error: unknown): boolean {
 	return /Roadmap task (not found|already closed): TASK-\d+/i.test(message);
 }
 
-export function formatCodewikiCompactionInstruction(request: CodewikiContextRefreshRequest): string {
+export function formatCodewikiCompactionInstruction(
+	request: CodewikiContextRefreshRequest,
+): string {
 	return [
 		`${CONTEXT_REFRESH_PREFIX}: ${request.reason}`,
 		request.taskId ? `task=${request.taskId}` : "",
 		request.followUpIntent ? `intent=${request.followUpIntent}` : "",
-	].filter(Boolean).join("; ");
+	]
+		.filter(Boolean)
+		.join("; ");
 }

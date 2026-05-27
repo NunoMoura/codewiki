@@ -7,14 +7,14 @@ import type {
 	GraphFile,
 	RoadmapTaskContextPacket,
 	RoadmapStateTaskSummary,
-} from "../domain/state/types.ts";
+} from "./types.ts";
 import type { LintReport } from "../validation/types.ts";
 import { maybeReadJson, readJson } from "../project/local/filesystem.ts";
 import {
 	runRebuild as runApplicationRebuild,
 	runRebuildUnlocked as runApplicationRebuildUnlocked,
 } from "./rebuild.ts";
-import type { RebuildRunner } from "./ports.ts";
+import type { RebuildRunner } from "../application/ports.ts";
 export { rebuildTargetPaths } from "./rebuild.ts";
 
 /**

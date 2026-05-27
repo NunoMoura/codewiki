@@ -1,6 +1,6 @@
 import { access, mkdir, readdir, writeFile } from "node:fs/promises";
 import { basename, dirname, extname, resolve } from "node:path";
-import { renderSkillAsset } from "../application/skill-assets.ts";
+import { renderSkillAsset } from "../state/skill-assets.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import { resolveSetupRoot } from "./root.ts";
 import {
@@ -192,7 +192,7 @@ function bootstrapTargetPaths(
 
 async function runRebuild(root: string): Promise<void> {
 	try {
-		const { CodewikiRebuilder } = await import("../application/graph/rebuilder.js");
+		const { CodewikiRebuilder } = await import("../state/graph/rebuilder.js");
 		await new CodewikiRebuilder(root).rebuildAll();
 	} catch (error) {
 		console.error("Bootstrap rebuild failed with stack:", error);

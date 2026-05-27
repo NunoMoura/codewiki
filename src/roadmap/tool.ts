@@ -8,8 +8,8 @@ import type { WikiProject } from "../project/types.ts";
 import type { CodewikiTaskToolInput } from "./types.ts";
 import { nowIso } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
-import { buildCodewikiTaskDetail } from "../application/state.ts";
-import { maybeReadRoadmapState, maybeReadTaskContext, runRebuild } from "../application/state-artifacts.ts";
+import { buildCodewikiTaskDetail } from "../state/reader.ts";
+import { maybeReadRoadmapState, maybeReadTaskContext, runRebuild } from "../state/artifacts.ts";
 import {
 	appendCodewikiTaskEvidence,
 	appendProjectEvent,

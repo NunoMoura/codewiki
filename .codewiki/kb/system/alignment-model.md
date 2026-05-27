@@ -8,10 +8,10 @@ owners:
   - product
 updated: "2026-05-26"
 code_paths:
-  - src/application/graph.ts
+  - src/state/graph.ts
   - src/build
   - src/validation
-  - src/application/lint.ts
+  - src/state/lint.ts
   - src/gateway
   - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md

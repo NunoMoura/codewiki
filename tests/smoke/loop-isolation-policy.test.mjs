@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
 import { writeValidationReport } from "../../src/validation/report.ts";
-import { buildGraph } from "../../src/application/graph.ts";
+import { buildGraph } from "../../src/state/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-loop-isolation-"));
 

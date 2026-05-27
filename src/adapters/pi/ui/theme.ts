@@ -1,4 +1,5 @@
 import type { WikiProject } from "../../../project/types.ts";
+import type { EffectiveAgencyPolicy } from "../../../agency/types.ts";
 import type { TaskSessionLinkRecord } from "../../../session/types.ts";
 import type {
 	RoadmapStateFile,
@@ -10,7 +11,7 @@ import type {
 	StatusPanelSection,
 	ConfigPanelSection,
 	StatusStateAgentRow,
-} from "../../../domain/state/types.ts";
+} from "../../../state/types.ts";
 import type { LintReport } from "../../../validation/types.ts";
 import { basename } from "node:path";
 import { padToWidth, truncatePlain } from "./text.ts";
@@ -21,11 +22,7 @@ import {
 	isTaskBlocked,
 } from "../../../roadmap/runtime.ts";
 
-export {
-	roadmapTaskStage,
-	taskBoardColumn,
-	isTaskBlocked,
-};
+export { roadmapTaskStage, taskBoardColumn, isTaskBlocked };
 
 export function kanbanTaskCircle(
 	task: RoadmapStateTaskSummary,
@@ -115,13 +112,19 @@ export function roadmapColumnLabel(status: string): string {
 	return "Implement";
 }
 
-export function formatStatusConfigSummary(prefs: StatusDockPrefs): string {
+export function formatStatusConfigSummary(
+	prefs: StatusDockPrefs,
+	agencyPolicy?: EffectiveAgencyPolicy | null,
+): string {
 	return [
 		"Codewiki config",
 		`Summary mode: ${prefs.mode}`,
 		`Panel density: ${prefs.density}`,
 		`Pinned repo: ${prefs.pinnedRepoPath ?? "—"}`,
 		`Last repo: ${prefs.lastRepoPath ?? "—"}`,
+		`Agency level: ${agencyPolicy?.level ?? "—"}`,
+		`Approval cadence: ${agencyPolicy?.approval_cadence ?? "—"}`,
+		`Reset auto-pickup: ${agencyPolicy ? (agencyPolicy.context_reset.enabled && agencyPolicy.context_reset.auto_pickup ? "on" : "off") : "—"}`,
 		"Panel toggle: alt+w",
 	].join("\n");
 }
@@ -291,11 +294,14 @@ export function wikiActivityMarker(
 	_roadmapState: RoadmapStateFile | null,
 	tick: number,
 ): string {
-	if (activeLink?.taskId && row.path.includes(activeLink.taskId)) return activeSpinnerFrame(tick);
+	if (activeLink?.taskId && row.path.includes(activeLink.taskId))
+		return activeSpinnerFrame(tick);
 	return driftIcon(row.drift_status);
 }
 
-export function agentStatusCircle(status: StatusStateAgentRow["status"]): string {
+export function agentStatusCircle(
+	status: StatusStateAgentRow["status"],
+): string {
 	if (status === "done") return "🟢";
 	if (status === "blocked") return "🔴";
 	if (status === "active" || status === "waiting") return "🟡";

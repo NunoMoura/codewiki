@@ -1,0 +1,708 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-27T19:38:00Z",
+  "source": "User approvals for DT-2026-05-27-13 and DT-2026-05-27-14",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-26T19:38:00.000Z",
+    "purge_after": "2026-07-26T19:38:00.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "attempt": "decision-context-reset-agency-doc-code-links",
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [
+      "Approved rows recorded for context reset semantics, protocol-safe auto-pickup, agency levels, roadmap-level autonomy, minimal reset packets, regression guards, and graph-owned doc-code links.",
+      "Product/system knowledge updated with row mappings and downstream planning questions.",
+      "Executable follow-up work routed to planning rather than implemented inside decision loop."
+    ],
+    "required_audits": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity"
+    ],
+    "audit_refs": [
+      "diff_table:DT-2026-05-27-13",
+      "diff_table:DT-2026-05-27-14",
+      "approval:user:all approved",
+      "audit:file-structure:pass",
+      "audit:stale-reference:pass",
+      "audit:generated-parity:pass",
+      "audit:alignment:warning-large-doc-only"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "CW-RESET-001",
+      "text": "CodeWiki context reset is a first-class semantic boundary rebuilt from CodeWiki source truth instead of old chat history.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-001"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-RESET-002",
+      "text": "Context reset flows must be protocol-safe and never auto-continue from an assistant-leaf message.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-002"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-RESET-003",
+      "text": "Automatic context refresh must be gated by safe lifecycle checks, visible status, and fallback behavior.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-003"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-RESET-004",
+      "text": "Reset packets stay minimal and source-backed; durable rules live in KB/skills and are read on demand.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-004"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-RESET-005",
+      "text": "Regression tests must prove invalid assistant-leaf continuation cannot recur.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-005"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-RESET-006",
+      "text": "After safe reset, CodeWiki auto-picks up through a protocol-safe source-backed kickoff when agency policy allows continuation.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-RESET-006"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-AGENCY-001",
+      "text": "Agency level is configurable as task, sprint, or roadmap and controls approval cadence while hard gates remain mandatory.",
+      "source_refs": [
+        "DT-2026-05-27-13:CW-AGENCY-001"
+      ],
+      "state": "approved"
+    },
+    {
+      "id": "CW-DOC-CODEPATHS-001",
+      "text": "Routine knowledge frontmatter code_paths are deprecated; graph derives doc-code links from source-backed inputs, with code_paths only as optional explicit overrides.",
+      "source_refs": [
+        "DT-2026-05-27-14:CW-DOC-CODEPATHS-001"
+      ],
+      "state": "approved"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Context reset source of truth and protocol safety documented",
+      "evidence": "Updated agency, adapters, API, compilers, product automation, lexicon, and diagrams to define source-backed reset, protocol-safe custom kickoff, and no assistant-leaf auto-continue.",
+      "requirement_ids": [
+        "CW-RESET-001",
+        "CW-RESET-002",
+        "CW-RESET-003",
+        "CW-RESET-004",
+        "CW-RESET-006"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/product/stories/automation.md",
+        ".codewiki/kb/lexicon.md"
+      ]
+    },
+    {
+      "criterion": "Agency levels task/sprint/roadmap documented",
+      "evidence": "Updated agency, roadmap, API, compilers, product automation, lexicon, and diagrams to describe agency level/approval cadence and roadmap-level continuation under hard gates.",
+      "requirement_ids": [
+        "CW-AGENCY-001"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/product/stories/automation.md",
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ]
+    },
+    {
+      "criterion": "Graph owns routine doc-code links",
+      "evidence": "Updated knowledge and graph specs and data-model diagram to deprecate routine frontmatter code_paths and route machine doc-code mapping to graph-derived inputs.",
+      "requirement_ids": [
+        "CW-DOC-CODEPATHS-001"
+      ],
+      "source_refs": [
+        ".codewiki/kb/system/knowledge.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/diagrams/data-model.yaml"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Define protocol-safe CodeWiki context reset auto-pickup, agency levels, and graph-owned doc-code links",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "CW-RESET-001",
+      "current_state": "Reset can be treated as chat-history mechanics.",
+      "desired_state": "Reset is first-class source-backed CodeWiki semantic boundary.",
+      "rationale": "Prevent context bloat without relying on chat memory.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-002",
+      "current_state": "Reset can leave continuation after assistant leaf.",
+      "desired_state": "Reset must start next turn from user/custom-safe kickoff or block.",
+      "rationale": "Avoid Pi invalid-role continuation failures.",
+      "affected_layers": [
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-003",
+      "current_state": "Auto refresh can be opaque and unsafe.",
+      "desired_state": "Auto refresh must check lifecycle, show status, and fallback safely.",
+      "rationale": "Auto reset must be reliable and debuggable.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-004",
+      "current_state": "Reset packets can restate broad rules and bloat context.",
+      "desired_state": "Reset packets stay minimal and link to rules/source refs.",
+      "rationale": "Durable rules belong in KB/skills, not repeated prompt ballast.",
+      "affected_layers": [
+        "product",
+        "system",
+        "skills",
+        "code",
+        "tests"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-005",
+      "current_state": "No regression guard for invalid-role reset failures.",
+      "desired_state": "Add tests proving reset cannot auto-continue from assistant leaf.",
+      "rationale": "Repeated failure needs durable guard.",
+      "affected_layers": [
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-006",
+      "current_state": "Reset lacks explicit auto-pickup kickoff.",
+      "desired_state": "Safe reset auto-picks up through source-backed custom kickoff when agency allows.",
+      "rationale": "User wants automatic continuation after reset.",
+      "affected_layers": [
+        "product",
+        "system",
+        "adapters",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-AGENCY-001",
+      "current_state": "Agency scope exists but approval cadence is unclear.",
+      "desired_state": "Expose agency level task/sprint/roadmap as continuation contract.",
+      "rationale": "Autonomy must be explicit and user-owned.",
+      "affected_layers": [
+        "product",
+        "system",
+        "roadmap",
+        "config",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-DOC-CODEPATHS-001",
+      "current_state": "Knowledge frontmatter code_paths act as manual graph edges and drift.",
+      "desired_state": "Deprecate routine frontmatter code_paths; graph derives doc-code links, with code_paths as optional overrides only.",
+      "rationale": "Graph is operational state machine linking docs and code.",
+      "affected_layers": [
+        "knowledge",
+        "system",
+        "graph",
+        "audit",
+        "roadmap",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "CW-RESET-001",
+    "CW-RESET-002",
+    "CW-RESET-003",
+    "CW-RESET-004",
+    "CW-RESET-005",
+    "CW-RESET-006",
+    "CW-AGENCY-001",
+    "CW-DOC-CODEPATHS-001"
+  ],
+  "approved_rows": [
+    {
+      "id": "CW-RESET-001",
+      "current_state": "Reset can be treated as chat-history mechanics.",
+      "desired_state": "Reset is first-class source-backed CodeWiki semantic boundary.",
+      "rationale": "Prevent context bloat without relying on chat memory.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-002",
+      "current_state": "Reset can leave continuation after assistant leaf.",
+      "desired_state": "Reset must start next turn from user/custom-safe kickoff or block.",
+      "rationale": "Avoid Pi invalid-role continuation failures.",
+      "affected_layers": [
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-003",
+      "current_state": "Auto refresh can be opaque and unsafe.",
+      "desired_state": "Auto refresh must check lifecycle, show status, and fallback safely.",
+      "rationale": "Auto reset must be reliable and debuggable.",
+      "affected_layers": [
+        "product",
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-004",
+      "current_state": "Reset packets can restate broad rules and bloat context.",
+      "desired_state": "Reset packets stay minimal and link to rules/source refs.",
+      "rationale": "Durable rules belong in KB/skills, not repeated prompt ballast.",
+      "affected_layers": [
+        "product",
+        "system",
+        "skills",
+        "code",
+        "tests"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-005",
+      "current_state": "No regression guard for invalid-role reset failures.",
+      "desired_state": "Add tests proving reset cannot auto-continue from assistant leaf.",
+      "rationale": "Repeated failure needs durable guard.",
+      "affected_layers": [
+        "system",
+        "code",
+        "tests"
+      ],
+      "risk": "low",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-RESET-006",
+      "current_state": "Reset lacks explicit auto-pickup kickoff.",
+      "desired_state": "Safe reset auto-picks up through source-backed custom kickoff when agency allows.",
+      "rationale": "User wants automatic continuation after reset.",
+      "affected_layers": [
+        "product",
+        "system",
+        "adapters",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-AGENCY-001",
+      "current_state": "Agency scope exists but approval cadence is unclear.",
+      "desired_state": "Expose agency level task/sprint/roadmap as continuation contract.",
+      "rationale": "Autonomy must be explicit and user-owned.",
+      "affected_layers": [
+        "product",
+        "system",
+        "roadmap",
+        "config",
+        "code",
+        "tests"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "CW-DOC-CODEPATHS-001",
+      "current_state": "Knowledge frontmatter code_paths act as manual graph edges and drift.",
+      "desired_state": "Deprecate routine frontmatter code_paths; graph derives doc-code links, with code_paths as optional overrides only.",
+      "rationale": "Graph is operational state machine linking docs and code.",
+      "affected_layers": [
+        "knowledge",
+        "system",
+        "graph",
+        "audit",
+        "roadmap",
+        "code"
+      ],
+      "risk": "medium",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "CodeWiki owns context reset from source truth and should auto-pick up within configured agency level."
+    },
+    {
+      "id": "D2",
+      "summary": "Agency level is task/sprint/roadmap and controls approval cadence, not hard gates."
+    },
+    {
+      "id": "D3",
+      "summary": "Routine knowledge frontmatter code_paths are deprecated; graph owns generated doc-code links."
+    }
+  ],
+  "knowledge_changes": [
+    "Updated agency spec with autonomy levels, reset auto-pickup, config sketch, and invariants.",
+    "Updated adapter/API/compiler specs with protocol-safe reset boundary and custom kickoff requirements.",
+    "Updated roadmap spec with task/sprint/roadmap agency boundary semantics.",
+    "Updated product automation story and lexicon with user-visible agency levels.",
+    "Updated knowledge/graph specs to deprecate routine code_paths and make graph the routine doc-code linker.",
+    "Updated system diagrams to add agency contract, reset auto-pickup, and doc-code ownership semantics."
+  ],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "CW-RESET-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "diagram_refs": [
+        "component-map:agency",
+        "data-model:resume_context_packet",
+        "key-flow:agency_gate",
+        "state-lifecycle:context_reset"
+      ],
+      "evidence": "Docs define CodeWiki reset as source-backed context hygiene rebuilt from CodeWiki refs rather than chat history.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-RESET-002",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [
+        "state-lifecycle:context_reset"
+      ],
+      "evidence": "Docs require protocol-safe custom kickoff or fallback and forbid assistant-leaf auto-continuation.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-RESET-003",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Docs require safe lifecycle checks, visible status/fallback, and no tool-context compaction before visible result.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-RESET-004",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/knowledge.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [
+        "data-model:resume_context_packet"
+      ],
+      "evidence": "Docs define minimal kickoff/reset packets and keep durable rules in KB/skills/source refs.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-RESET-005",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "diagram_refs": [],
+      "evidence": "Decision records downstream test requirement for invalid assistant-leaf regression guard.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-RESET-006",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/product/stories/automation.md"
+      ],
+      "diagram_refs": [
+        "component-map:agency",
+        "key-flow:resume_context",
+        "state-lifecycle:context_reset"
+      ],
+      "evidence": "Docs define auto-pickup through source-backed custom kickoff when agency policy allows continuation.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-AGENCY-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/product/stories/automation.md",
+        ".codewiki/kb/lexicon.md"
+      ],
+      "diagram_refs": [
+        "data-model:agency_contract",
+        "component-map:agency",
+        "key-flow:agency_gate"
+      ],
+      "evidence": "Docs define agency level task/sprint/roadmap and approval cadence over roadmap boundaries.",
+      "deferred": false
+    },
+    {
+      "row_id": "CW-DOC-CODEPATHS-001",
+      "knowledge_refs": [
+        ".codewiki/kb/system/knowledge.md",
+        ".codewiki/kb/system/graph.md"
+      ],
+      "diagram_refs": [
+        "data-model:knowledge_doc"
+      ],
+      "evidence": "Docs deprecate routine knowledge-frontmatter code_paths and route routine doc-code linking to graph-derived inputs.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "mixed",
+    "product_impact": [
+      "Users can choose agency level task/sprint/roadmap.",
+      "Context reset can automatically pick up when agency level allows continuation.",
+      "Automation remains visibly gated by hard stop conditions."
+    ],
+    "system_impact": [
+      "Pi adapter reset must deliver protocol-safe custom kickoff after compaction and never continue from assistant leaf.",
+      "Agency config must include level, approval cadence, and context reset auto-pickup policy.",
+      "Graph/lint/audit must stop treating routine knowledge-frontmatter code_paths as required doc-code mapping truth."
+    ],
+    "downstream_planning_questions": [
+      "Create or refine an executable task to implement protocol-safe CodeWiki context reset auto-pickup in the Pi adapter with regression tests for assistant-leaf continuation and minimal resume packets.",
+      "Create or refine an executable task to add agency level/approval cadence config and route auto-pickup according to task/sprint/roadmap boundaries.",
+      "Create or refine an executable task to deprecate routine knowledge-frontmatter code_paths in parser/graph/lint/audit behavior and migrate docs without creating unscoped-doc drift."
+    ]
+  },
+  "diagram_refs": [
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    "component-map:agency",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    "data-model:agency_contract",
+    "data-model:knowledge_doc",
+    ".codewiki/kb/system/diagrams/key-flow.yaml",
+    "key-flow:agency_gate",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+    "state-lifecycle:context_reset",
+    "data-model:resume_context_packet",
+    "key-flow:resume_context"
+  ],
+  "downstream_planning_questions": [
+    "Plan Pi adapter context reset auto-pickup and assistant-leaf regression guard.",
+    "Plan agency level/approval cadence config across task, sprint, and roadmap.",
+    "Plan graph/lint/audit migration away from required knowledge-frontmatter code_paths.",
+    "Create or refine an executable task to implement protocol-safe CodeWiki context reset auto-pickup in the Pi adapter with regression tests for assistant-leaf continuation and minimal resume packets.",
+    "Create or refine an executable task to add agency level/approval cadence config and route auto-pickup according to task/sprint/roadmap boundaries.",
+    "Create or refine an executable task to deprecate routine knowledge-frontmatter code_paths in parser/graph/lint/audit behavior and migrate docs without creating unscoped-doc drift."
+  ],
+  "assumptions": [
+    "Pi custom message delivery with triggerTurn=true is available to extension code for same-session auto-pickup.",
+    "Hard replacement-session auto-pickup remains command-context only unless Pi exposes event-context newSession or an external orchestrator is added."
+  ],
+  "open_questions": [
+    "Whether protocol-safe hard reset should require a new Pi extension API or only improve /wiki-resume --new for now.",
+    "Whether frontmatter code_paths should be removed in one migration or gradually downgraded to explicit overrides."
+  ],
+  "non_goals": [
+    "Do not implement adapter/code changes inside this decision loop.",
+    "Do not remove all existing knowledge-frontmatter code_paths until graph/lint/audit behavior is migrated.",
+    "Do not authorize publication/remote updates through agency level."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      ".codewiki/runtime/diff-tables.json",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/knowledge.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/product/stories/automation.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      "Updated agency spec with autonomy levels, reset auto-pickup, config sketch, and invariants.",
+      "Updated adapter/API/compiler specs with protocol-safe reset boundary and custom kickoff requirements.",
+      "Updated roadmap spec with task/sprint/roadmap agency boundary semantics.",
+      "Updated product automation story and lexicon with user-visible agency levels.",
+      "Updated knowledge/graph specs to deprecate routine code_paths and make graph the routine doc-code linker.",
+      "Updated system diagrams to add agency contract, reset auto-pickup, and doc-code ownership semantics.",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/knowledge.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/product/stories/automation.md",
+      ".codewiki/kb/lexicon.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/data-model.yaml",
+      ".codewiki/kb/system/diagrams/key-flow.yaml",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [
+      "codewiki_state refresh -> yellow only large-doc warnings",
+      "codewiki_audit profiles=file-structure,stale-reference,alignment,generated-parity -> file-structure/stale-reference/generated-parity pass; alignment warning only graph-health large-doc warnings"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}

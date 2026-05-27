@@ -1,5 +1,5 @@
 import { basename, posix } from "node:path";
-import { renderSkillAsset } from "../application/skill-assets.ts";
+import { renderSkillAsset } from "../state/skill-assets.ts";
 
 export interface StarterBoundary {
 	codePath: string;
@@ -167,8 +167,11 @@ export function starterFiles(
 
 	for (const boundary of brownfieldHints.boundaries) {
 		const flatSlug = boundary.slug.replaceAll("/", "-");
-		files[`.codewiki/kb/system/${flatSlug}.md`] =
-			boundarySpecDoc(projectName, date, boundary);
+		files[`.codewiki/kb/system/${flatSlug}.md`] = boundarySpecDoc(
+			projectName,
+			date,
+			boundary,
+		);
 	}
 
 	return files;
@@ -217,9 +220,7 @@ function configJson(
 				meta_root: ".codewiki",
 				views_root: ".codewiki/views",
 				sources_root: ".codewiki/sources",
-				generated_files: [
-					".codewiki/index_graph.json",
-				],
+				generated_files: [".codewiki/index_graph.json"],
 				lint: {
 					repo_markdown: repoMarkdown,
 					forbidden_headings: [
@@ -240,12 +241,63 @@ function configJson(
 						debounce_ms: 250,
 					},
 					agency: {
+						level: "task",
+						approval_cadence: "task",
 						default_scope: { kind: "roadmap" },
+						context_reset: {
+							enabled: true,
+							auto_pickup: true,
+							strategy: "soft-first",
+							max_resets_per_run: 5,
+							require_source_backed_kickoff: true,
+							require_idle_boundary: true,
+						},
+						stop_gates: [
+							"semantic_decision",
+							"validation_block",
+							"artifact_conflict",
+							"risk_escalation",
+							"publication",
+							"destructive_action",
+							"unsafe_reset_boundary",
+						],
 						budgets: {
-							default: { maxCycles: 3, maxWallSeconds: 600, maxTokens: 60000, maxCostUsd: 3, maxWrites: 24, maxSessions: 2, risk: "medium" },
-							roadmap: { maxCycles: 4, maxWallSeconds: 900, maxTokens: 90000, maxCostUsd: 5, maxWrites: 40, maxSessions: 3, risk: "medium" },
-							sprint: { maxCycles: 3, maxWallSeconds: 600, maxTokens: 60000, maxCostUsd: 3, maxWrites: 24, maxSessions: 3, risk: "medium" },
-							task: { maxCycles: 2, maxWallSeconds: 300, maxTokens: 25000, maxCostUsd: 1, maxWrites: 12, maxSessions: 1, risk: "medium" },
+							default: {
+								maxCycles: 3,
+								maxWallSeconds: 600,
+								maxTokens: 60000,
+								maxCostUsd: 3,
+								maxWrites: 24,
+								maxSessions: 2,
+								risk: "medium",
+							},
+							roadmap: {
+								maxCycles: 4,
+								maxWallSeconds: 900,
+								maxTokens: 90000,
+								maxCostUsd: 5,
+								maxWrites: 40,
+								maxSessions: 3,
+								risk: "medium",
+							},
+							sprint: {
+								maxCycles: 3,
+								maxWallSeconds: 600,
+								maxTokens: 60000,
+								maxCostUsd: 3,
+								maxWrites: 24,
+								maxSessions: 3,
+								risk: "medium",
+							},
+							task: {
+								maxCycles: 2,
+								maxWallSeconds: 300,
+								maxTokens: 25000,
+								maxCostUsd: 1,
+								maxWrites: 12,
+								maxSessions: 1,
+								risk: "medium",
+							},
 						},
 						parallelism: {
 							max_sessions: 3,
@@ -272,12 +324,20 @@ function configJson(
 							".codewiki/session/queue.json",
 							".codewiki/index_graph.json",
 						],
-						write_paths: [".codewiki/kb/**", ".codewiki/sources/**", ".codewiki/research/**"],
+						write_paths: [
+							".codewiki/kb/**",
+							".codewiki/sources/**",
+							".codewiki/research/**",
+						],
 						generated_readonly_paths: [
 							".codewiki/index_graph.json",
 							".codewiki/roadmap/tasks/**",
 						],
-						deny_paths: ["**/.env*", "**/*secret*", ".codewiki/sources/private/**"],
+						deny_paths: [
+							"**/.env*",
+							"**/*secret*",
+							".codewiki/sources/private/**",
+						],
 						network: false,
 						max_stdout_bytes: 12000,
 						max_read_bytes: 200000,
@@ -560,7 +620,6 @@ function systemClientDoc(
 	].join("\n");
 }
 
-
 function architectureComponentDoc(
 	_projectName: string,
 	date: string,
@@ -767,11 +826,11 @@ function boundarySpecDoc(
 		docDir,
 		".codewiki/kb/product/overview.md",
 	);
-	const uiLink = posix.relative(docDir, ".codewiki/kb/product/uis/status-panel.md");
-	const systemLink = posix.relative(
+	const uiLink = posix.relative(
 		docDir,
-		".codewiki/kb/system/overview.md",
+		".codewiki/kb/product/uis/status-panel.md",
 	);
+	const systemLink = posix.relative(docDir, ".codewiki/kb/system/overview.md");
 	const boundaryId = boundary.slug.split("/").join(".");
 
 	return [
@@ -821,10 +880,19 @@ function roadmapJson(projectName: string, date: string): string {
 						id: "SPRINT-001",
 						title: "Foundation",
 						status: "active",
-						outcome: "Project intent, ownership, and roadmap truth become usable by agents and humans.",
+						outcome:
+							"Project intent, ownership, and roadmap truth become usable by agents and humans.",
 						task_ids: ["TASK-001", "TASK-002", "TASK-003"],
 						scope: { knowledge: [".codewiki/kb/**"], code: [] },
-						budget: { maxCycles: 3, maxWallSeconds: 600, maxTokens: 60000, maxCostUsd: 3, maxWrites: 24, maxSessions: 2, risk: "medium" },
+						budget: {
+							maxCycles: 3,
+							maxWallSeconds: 600,
+							maxTokens: 60000,
+							maxCostUsd: 3,
+							maxWrites: 24,
+							maxSessions: 2,
+							risk: "medium",
+						},
 						gates: ["validation", "checkpoint"],
 						created: date,
 						updated: date,

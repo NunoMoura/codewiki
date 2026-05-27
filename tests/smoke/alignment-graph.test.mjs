@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { buildGraph } from "../../src/application/graph.ts";
-import { buildLintReport } from "../../src/application/lint.ts";
+import { buildGraph } from "../../src/state/graph.ts";
+import { buildLintReport } from "../../src/state/lint.ts";
 
 const project = {
 	root: "/tmp/codewiki-alignment-graph",
@@ -39,7 +39,7 @@ const docs = [
 		title: "Alignment",
 		doc_type: "spec",
 		links: [],
-		code_paths: ["src/application/graph.ts"],
+		code_paths: ["src/state/graph.ts"],
 	},
 ];
 
@@ -106,11 +106,11 @@ const implementationBuild = {
 		source_planning_build: planningPath,
 		task_id: "TASK-900",
 		produces: {
-			code: ["src/application/graph.ts"],
+			code: ["src/state/graph.ts"],
 			tests: ["tests/smoke/alignment-graph.test.mjs"],
 			publication: ["package:codewiki"],
 		},
-		code_files: ["src/application/graph.ts"],
+		code_files: ["src/state/graph.ts"],
 		test_files: ["tests/smoke/alignment-graph.test.mjs"],
 		audit_refs: ["audit:file-structure"],
 	},
@@ -131,7 +131,7 @@ const validationReport = {
 {
 	const graph = baseGraph({
 		roadmapEntries: [
-			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
+			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/state/graph.ts"], research_ids: [] },
 		],
 		builds: [decisionBuild, planningBuild, implementationBuild],
 		validations: [validationReport],
@@ -154,21 +154,21 @@ const validationReport = {
 
 {
 	const graph = baseGraph({
-		gitCache: { getDirtyPaths: () => ["src/application/graph.ts"] },
+		gitCache: { getDirtyPaths: () => ["src/state/graph.ts"] },
 		builds: [],
 	});
-	const row = graph.views.traceability.semantic_change_gaps.find((entry) => entry.path === "src/application/graph.ts");
+	const row = graph.views.traceability.semantic_change_gaps.find((entry) => entry.path === "src/state/graph.ts");
 	assert.equal(row?.change_type, "code");
 	assert.ok(row?.gaps.includes("missing_accepted_build_coverage"), "Dirty semantic code should require accepted build coverage");
-	assert.ok(graph.views.reconciliation.items.some((item) => item.id === "reconcile:semantic-build:src/application/graph.ts"), "Graph should route missing semantic build coverage");
+	assert.ok(graph.views.reconciliation.items.some((item) => item.id === "reconcile:semantic-build:src/state/graph.ts"), "Graph should route missing semantic build coverage");
 }
 
 {
 	const graph = baseGraph({
-		gitCache: { getDirtyPaths: () => ["src/application/graph.ts"] },
+		gitCache: { getDirtyPaths: () => ["src/state/graph.ts"] },
 		builds: [implementationBuild],
 	});
-	assert.ok(!graph.views.traceability.semantic_change_gaps.some((entry) => entry.path === "src/application/graph.ts"), "Accepted implementation build should cover dirty semantic code");
+	assert.ok(!graph.views.traceability.semantic_change_gaps.some((entry) => entry.path === "src/state/graph.ts"), "Accepted implementation build should cover dirty semantic code");
 }
 
 {
@@ -191,7 +191,7 @@ const validationReport = {
 {
 	const graph = baseGraph({
 		roadmapEntries: [
-			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
+			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/state/graph.ts"], research_ids: [] },
 		],
 		builds: [decisionBuild, planningBuild],
 	});
@@ -201,7 +201,7 @@ const validationReport = {
 {
 	const graph = baseGraph({
 		roadmapEntries: [
-			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/application/graph.ts"], research_ids: [] },
+			{ id: "TASK-900", title: "Implement graph", status: "todo", priority: "critical", kind: "architecture", summary: "Graph work.", spec_paths: [".codewiki/kb/system/alignment.md"], code_paths: ["src/state/graph.ts"], research_ids: [] },
 		],
 		builds: [decisionBuild, planningBuild, implementationBuild],
 	});

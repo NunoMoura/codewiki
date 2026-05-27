@@ -5,7 +5,7 @@ state: active
 summary: Work truth for active items, priority, status, blockers, progress, and closure.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-27"
 code_paths:
   - .codewiki/roadmap/queue.json
   - .codewiki/roadmap
@@ -32,7 +32,7 @@ A planning build decides which requirements need work, whether to refine active 
 
 When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking.
 
-Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, stop conditions, and autonomous execution gates.
+Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates.
 
 ## Sprints
 
@@ -77,7 +77,15 @@ Deprecated workflow statuses such as `research`, `implement`, and `verify` must 
 
 ## Gated agency support
 
-Roadmap state should expose fields needed to derive eligible work, blockers, linked builds and knowledge, planning refs, validation gates, budgets, risk, and closure evidence. The roadmap supplies work truth; it does not decide whether an agent may continue.
+Roadmap state should expose fields needed to derive eligible work, blockers, linked builds and knowledge, planning refs, validation gates, budgets, risk, agency level, approval cadence, and closure evidence. The roadmap supplies work truth; it does not decide whether an agent may continue.
+
+Agency levels use roadmap structure as the continuation boundary:
+
+- `task` level may continue within one focused task and stops at task validation/closure approval.
+- `sprint` level may continue task-by-task through the active sprint and stops at sprint closure or a hard gate.
+- `roadmap` level may continue across active roadmap work in priority order and stops at roadmap completion, budget exhaustion, or a hard gate.
+
+The roadmap does not grant permission for semantic decisions, destructive changes, publication, or remote updates; those remain separate gates.
 
 ## Retention and history
 

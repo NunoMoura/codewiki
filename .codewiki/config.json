@@ -149,7 +149,26 @@
         "max_sessions": 3,
         "session_per_sprint": true,
         "require_claims": true
-      }
+      },
+      "level": "task",
+      "approval_cadence": "task",
+      "context_reset": {
+        "enabled": true,
+        "auto_pickup": true,
+        "strategy": "soft-first",
+        "max_resets_per_run": 5,
+        "require_source_backed_kickoff": true,
+        "require_idle_boundary": true
+      },
+      "stop_gates": [
+        "semantic_decision",
+        "validation_block",
+        "artifact_conflict",
+        "risk_escalation",
+        "publication",
+        "destructive_action",
+        "unsafe_reset_boundary"
+      ]
     },
     "gc": {
       "hot_days": 7,

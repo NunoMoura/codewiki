@@ -24,7 +24,7 @@ import {
 	CHANGE_CLAIM_ROLE_VALUES,
 	WORKFLOW_LOOP_VALUES,
 } from "../../session/types.ts";
-import { CODEWIKI_STATE_SECTION_VALUES } from "../../domain/state/types.ts";
+import { CODEWIKI_STATE_SECTION_VALUES } from "../../state/types.ts";
 import { VALIDATION_FAILURE_CLASS_VALUES } from "../../validation/types.ts";
 
 export const changeTypeSchema = Type.Union(

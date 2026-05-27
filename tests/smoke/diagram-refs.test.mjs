@@ -4,12 +4,12 @@ import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
-import { buildGraph } from "../../src/application/graph.ts";
-import { buildLintReport } from "../../src/application/lint.ts";
+import { buildGraph } from "../../src/state/graph.ts";
+import { buildLintReport } from "../../src/state/lint.ts";
 import { parseDoc } from "../../src/knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport } from "../../src/knowledge/diagram-parser.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
-import { buildRoadmapState, buildStatusState } from "../../src/application/state-builders.ts";
+import { buildRoadmapState, buildStatusState } from "../../src/state/builders.ts";
 
 function mkdir(path) {
 	mkdirSync(path, { recursive: true });

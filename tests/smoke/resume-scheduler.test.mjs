@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { resolveImplementationTask } from "../../src/adapters/pi/commands/resume.ts";
+import { agencyHardStopReasons } from "../../src/agency/planning.ts";
+import {
+	agencyLevelAllowsContinuation,
+	effectiveAgencyPolicy,
+} from "../../src/agency/types.ts";
 
 function task(id, status, labels = [], codePaths = [], acceptance = []) {
 	return {
@@ -9,7 +15,9 @@ function task(id, status, labels = [], codePaths = [], acceptance = []) {
 		status,
 		priority: "high",
 		kind: "testing",
-		summary: labels.includes("umbrella") ? "Umbrella coordination task." : `${id} summary`,
+		summary: labels.includes("umbrella")
+			? "Umbrella coordination task."
+			: `${id} summary`,
 		spec_paths: [],
 		code_paths: codePaths,
 		research_ids: [],
@@ -44,28 +52,79 @@ function state(claims = []) {
 	};
 }
 
-const umbrella = task("TASK-077", "in_progress", ["umbrella"], ["src/application/graph.ts"]);
-const delegatedContainer = task("TASK-082", "todo", [], ["src/roadmap/runtime.ts"], [
-	"TASK-078 is closed with passing checks and evidence.",
-	"TASK-079 is closed with passing checks and evidence.",
-]);
+const umbrella = task(
+	"TASK-077",
+	"in_progress",
+	["umbrella"],
+	["src/state/graph.ts"],
+);
+const delegatedContainer = task(
+	"TASK-082",
+	"todo",
+	[],
+	["src/roadmap/runtime.ts"],
+	[
+		"TASK-078 is closed with passing checks and evidence.",
+		"TASK-079 is closed with passing checks and evidence.",
+	],
+);
 const firstChild = task("TASK-083", "todo", [], ["skills/codewiki"]);
 const secondChild = task("TASK-085", "todo", [], ["tests/fixtures"]);
 const board = roadmap([umbrella, delegatedContainer, firstChild, secondChild]);
 
-const selected = resolveImplementationTask(board, null, null, "TASK-077", state(), "session-helper");
-assert.equal(selected.task?.id, "TASK-083", "implicit /wiki-resume should skip persisted container focus and delegated container tasks");
-assert.ok(selected.skipped.some((item) => /TASK-077: non-executable container task/.test(item)), "selection should explain skipped container task");
-assert.ok(selected.skipped.some((item) => /TASK-082: non-executable container task/.test(item)), "selection should explain delegated task-closure criteria");
+const selected = resolveImplementationTask(
+	board,
+	null,
+	null,
+	"TASK-077",
+	state(),
+	"session-helper",
+);
+assert.equal(
+	selected.task?.id,
+	"TASK-083",
+	"implicit /wiki-resume should skip persisted container focus and delegated container tasks",
+);
+assert.ok(
+	selected.skipped.some((item) =>
+		/TASK-077: non-executable container task/.test(item),
+	),
+	"selection should explain skipped container task",
+);
+assert.ok(
+	selected.skipped.some((item) =>
+		/TASK-082: non-executable container task/.test(item),
+	),
+	"selection should explain delegated task-closure criteria",
+);
 
 assert.throws(
-	() => resolveImplementationTask(board, null, "TASK-077", null, state(), "session-helper"),
+	() =>
+		resolveImplementationTask(
+			board,
+			null,
+			"TASK-077",
+			null,
+			state(),
+			"session-helper",
+		),
 	/not executable work/i,
 	"explicit /wiki-resume TASK-### should reject container tasks",
 );
 
-const explicit = resolveImplementationTask(board, null, "TASK-083", "TASK-077", state(), "session-helper");
-assert.equal(explicit.task?.id, "TASK-083", "explicit /wiki-resume TASK-### should honor requested child task");
+const explicit = resolveImplementationTask(
+	board,
+	null,
+	"TASK-083",
+	"TASK-077",
+	state(),
+	"session-helper",
+);
+assert.equal(
+	explicit.task?.id,
+	"TASK-083",
+	"explicit /wiki-resume TASK-### should honor requested child task",
+);
 
 const conflicting = state([
 	{
@@ -82,14 +141,153 @@ const conflicting = state([
 		expires_at: "2099-01-01T00:00:00Z",
 	},
 ]);
-const conflictSelection = resolveImplementationTask(board, null, null, "TASK-077", conflicting, "session-helper");
-assert.equal(conflictSelection.task?.id, "TASK-085", "implicit /wiki-resume should skip artifacts in use by another session");
-assert.ok(conflictSelection.skipped.some((item) => /TASK-083: Artifact conflict/.test(item)), "selection should explain artifact conflict");
+const conflictSelection = resolveImplementationTask(
+	board,
+	null,
+	null,
+	"TASK-077",
+	conflicting,
+	"session-helper",
+);
+assert.equal(
+	conflictSelection.task?.id,
+	"TASK-085",
+	"implicit /wiki-resume should skip artifacts in use by another session",
+);
+assert.ok(
+	conflictSelection.skipped.some((item) =>
+		/TASK-083: Artifact conflict/.test(item),
+	),
+	"selection should explain artifact conflict",
+);
 
 assert.throws(
-	() => resolveImplementationTask(board, null, "TASK-083", "TASK-077", conflicting, "session-helper"),
+	() =>
+		resolveImplementationTask(
+			board,
+			null,
+			"TASK-083",
+			"TASK-077",
+			conflicting,
+			"session-helper",
+		),
 	/Artifact conflict/i,
 	"explicit /wiki-resume TASK-### should block on real artifact conflict",
+);
+
+const defaultAgency = effectiveAgencyPolicy({ codewiki: { agency: {} } });
+assert.equal(
+	defaultAgency.level,
+	"task",
+	"agency should default to task-level approval cadence",
+);
+assert.equal(
+	defaultAgency.approval_cadence,
+	"task",
+	"approval cadence should default from agency level",
+);
+assert.equal(
+	defaultAgency.context_reset.auto_pickup,
+	true,
+	"context reset auto-pickup should default on",
+);
+assert.ok(
+	defaultAgency.stop_gates.includes("unsafe_reset_boundary"),
+	"unsafe reset boundary should be a hard stop gate",
+);
+assert.equal(
+	agencyLevelAllowsContinuation("task", "sprint"),
+	false,
+	"task-level agency must stop before next task/sprint continuation",
+);
+assert.equal(
+	agencyLevelAllowsContinuation("sprint", "sprint"),
+	true,
+	"sprint-level agency may continue task-by-task inside a sprint",
+);
+assert.equal(
+	agencyLevelAllowsContinuation("roadmap", "roadmap"),
+	true,
+	"roadmap-level agency may continue across roadmap work until a hard gate fires",
+);
+const roadmapAgency = effectiveAgencyPolicy({
+	codewiki: { agency: { level: "roadmap" } },
+});
+const agencyGateInput = {
+	policy: roadmapAgency,
+	trigger: "task_end",
+	health: { errors: 0 },
+	claims: { conflict_count: 0 },
+	budget: { risk: "medium" },
+};
+assert.ok(
+	agencyHardStopReasons({
+		...agencyGateInput,
+		nextStep: { kind: "publication", command: "git push origin HEAD" },
+	}).includes("publication gate active"),
+	"roadmap agency should stop before publication or remote push actions",
+);
+assert.ok(
+	agencyHardStopReasons({
+		...agencyGateInput,
+		nextStep: { kind: "gc:purge", reason: "destructive purge requested" },
+	}).includes("destructive action gate active"),
+	"roadmap agency should stop before destructive actions",
+);
+assert.ok(
+	agencyHardStopReasons({
+		...agencyGateInput,
+		nextStep: {
+			kind: "context_reset",
+			reason: "pending messages would break reset boundary",
+		},
+	}).includes("unsafe reset boundary gate active"),
+	"roadmap agency should stop at unsafe reset boundaries",
+);
+
+const resumeSource = readFileSync(
+	new URL("../../src/adapters/pi/commands/resume.ts", import.meta.url),
+	"utf8",
+);
+assert.match(
+	resumeSource,
+	/buildCodewikiResumeKickoff/,
+	"fresh-session resume should reuse the CodeWiki kickoff builder",
+);
+assert.match(
+	resumeSource,
+	/replacementCtx\.sendMessage\(\s*kickoff,\s*\{[\s\S]*triggerTurn:\s*true,[\s\S]*deliverAs:\s*"followUp"[\s\S]*\}\s*\)/,
+	"fresh-session resume should trigger from a custom kickoff follow-up boundary",
+);
+assert.doesNotMatch(
+	resumeSource,
+	/deliverAs:\s*"nextTurn"[\s\S]*triggerTurn:\s*true|triggerTurn:\s*true[\s\S]*deliverAs:\s*"nextTurn"/,
+	"fresh-session resume must not rely on nextTurn because pi ignores triggerTurn for that mode",
+);
+assert.doesNotMatch(
+	resumeSource,
+	/sendUserMessage\(\s*[`'"]\/wiki-resume/,
+	"fresh-session resume must not inject slash commands as chat text",
+);
+
+const agencyPlanningSource = readFileSync(
+	new URL("../../src/agency/planning.ts", import.meta.url),
+	"utf8",
+);
+assert.match(
+	agencyPlanningSource,
+	/approval cadence boundary reached/,
+	"agency planner should stop at configured approval boundaries",
+);
+assert.match(
+	agencyPlanningSource,
+	/hard_stop_gates/,
+	"agency planner should expose mandatory hard stop gates",
+);
+assert.match(
+	agencyPlanningSource,
+	/context_reset/,
+	"agency planner should expose reset auto-pickup policy",
 );
 
 console.log("✓ resume scheduler smoke passed");

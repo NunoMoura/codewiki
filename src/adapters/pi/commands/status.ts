@@ -10,9 +10,9 @@ import {
 	refreshStatusDock,
 } from "../ui/manager.ts";
 import { currentTaskLink } from "../session.ts";
-import { maybeReadStatusState } from "../../../application/state-artifacts.ts";
+import { maybeReadStatusState } from "../../../state/artifacts.ts";
 import { maybeReadJson } from "../../../project/local/filesystem.ts";
-import type { StatusPanelSection } from "../../../domain/state/types.ts";
+import type { StatusPanelSection } from "../../../state/types.ts";
 import type { LintReport } from "../../../validation/types.ts";
 
 /**

@@ -1,5 +1,5 @@
 import type { WikiProject } from "../project/types.ts";
-import { runRebuild } from "../application/state-artifacts.ts";
+import { runRebuild } from "../state/artifacts.ts";
 import { runCodewikiGc } from "./runtime.ts";
 import type { CodewikiGcToolInput } from "./types.ts";
 

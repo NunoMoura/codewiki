@@ -1,6 +1,6 @@
-import type { WikiProject } from "../../project/types.ts";
-import type { CodewikiStateToolInput } from "../../domain/state/types.ts";
-import { readCodewikiState } from "../state.ts";
+import type { WikiProject } from "../project/types.ts";
+import type { CodewikiStateToolInput } from "./types.ts";
+import { readCodewikiState } from "./reader.ts";
 
 export interface CodewikiStateToolPorts {
 	fileStore: unknown;

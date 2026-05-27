@@ -2,8 +2,8 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { codePrompt } from "../../src/application/prompt.ts";
-import { readSkillAsset } from "../../src/application/skill-assets.ts";
+import { codePrompt } from "../../src/state/prompt.ts";
+import { readSkillAsset } from "../../src/state/skill-assets.ts";
 import { renderOnboardingPrompt } from "../../src/project/bootstrap.ts";
 import { normalizeCodeArgs } from "../../src/adapters/pi/commands/resume.ts";
 
@@ -109,7 +109,7 @@ const task = {
 	kind: "agent-workflow",
 	summary: "Prompt prose should live under skills/codewiki.",
 	spec_paths: [".codewiki/kb/system/extension.md"],
-	code_paths: ["skills/codewiki/prompts/resume-implementation.md", "src/application/prompt.ts"],
+	code_paths: ["skills/codewiki/prompts/resume-implementation.md", "src/state/prompt.ts"],
 	research_ids: [],
 	labels: ["prompts"],
 	goal: {

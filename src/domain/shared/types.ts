@@ -13,5 +13,5 @@ export * from "../../gc/types.ts";
 export * from "../../project/types.ts";
 export * from "../../roadmap/types.ts";
 export * from "../../session/types.ts";
-export * from "../state/types.ts";
+export * from "../../state/types.ts";
 export * from "../../validation/types.ts";

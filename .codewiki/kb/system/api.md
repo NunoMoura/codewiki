@@ -5,12 +5,13 @@ state: active
 summary: Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.
 owners:
   - architecture
-updated: "2026-05-19"
+updated: "2026-05-27"
 code_paths:
   - src/application
   - src/domain
   - src/roadmap
   - src/session
+  - src/state
   - src/adapters
 ---
 
@@ -33,8 +34,8 @@ The API should expose CodeWiki operations as typed capabilities instead of askin
 | `codewiki.implementation` | Coordinate implementation work, evidence collection, and implementation builds. |
 | `codewiki.roadmap` | Manage work truth: queue, status, priority, blockers, progress, and closure. |
 | `codewiki.session_queue` | Manage session focus, artifact availability/in-use/waiting/conflict/stale status, wait/wake, context-boundary metadata, and isolation metadata for parallel session coordination across knowledge, roadmap, code, builds, validation, and state/source refs. |
-| `codewiki.agency` | Run bounded roadmap, sprint, or task automation through token, time, cost, write, session, risk, validation, policy, and approval gates. |
-| `codewiki.session_boundary` | Request adapter-managed CodeWiki-owned compaction, new_session, context_refresh, external-orchestrator, or true transfer boundaries seeded by bounded CodeWiki resume context. Legacy session-handoff shims are not normal workflow tools. |
+| `codewiki.agency` | Run bounded roadmap, sprint, or task automation through token, time, cost, write, session, risk, validation, policy, approval cadence, and configured agency level gates. |
+| `codewiki.session_boundary` | Request adapter-managed CodeWiki-owned compaction, new_session, context_refresh, external-orchestrator, or true transfer boundaries seeded by bounded CodeWiki resume context and, when allowed, a protocol-safe auto-pickup kickoff. Legacy session-handoff shims are not normal workflow tools. |
 | `codewiki.build` | Read and write accepted compiler build briefs. |
 | `codewiki.validation` | Run validation gateways and persist failed, blocked, or policy-kept reports. |
 | `codewiki.state_engine` | Rebuild and read generated state/graph representations. |
@@ -103,13 +104,13 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Coordination/publication should expose worktree-factory, publisher-queue, and exact wait/wake blocker semantics; artifact status shows metadata but Git refs remain content proof.
 - Validation callers may provide isolation metadata such as fresh-context status, worktree path, branch, base/head/validated SHA, and clean worktree result when independence matters.
 - Validation callers must provide fresh-context, clean-worktree, and checked-SHA evidence for implementation, task-close, publication, publish, and release profiles; otherwise the API records a `block` verdict.
-- Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, and approval gates.
-- Session-boundary callers must provide reason, source refs, expected output, and mode. CodeWiki-owned compaction and `context_refresh` are same-agent soft context hygiene seeded by `codewiki_resume_context`; `new_session` is hard replacement-session hygiene when policy needs it; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. True separate process isolation needs an explicit external-orchestrator or worker adapter path.
-- Tool-context Pi boundaries must return visible results and must not call `ctx.compact()` before the agent sees them. Normal CodeWiki continuation uses `codewiki_resume_context` directly or through CodeWiki-owned compaction, not VCC recall, generic Pi compaction, or injected slash-command chat. Pi `sendUserMessage` follow-ups do not execute registered slash commands, so adapter code must not inject legacy `/wiki-session-handoff` text as a recovery mechanism.
+- Gated agency runs must respect token, time, cost, write, session, risk, validation, policy, approval cadence, and configured agency level gates. Supported levels are `task`, `sprint`, and `roadmap`; each grants continuation permission only up to its boundary and never bypasses hard stop gates.
+- Session-boundary callers must provide reason, source refs, expected output, mode, agency level, and approval cadence when agency owns continuation. CodeWiki-owned compaction and `context_refresh` are same-agent soft context hygiene seeded by `codewiki_resume_context`; `new_session` is hard replacement-session hygiene when policy needs it; `handoff` is transfer to another session, agent, or role. In Pi today, `ctx.newSession()` creates a fresh replacement session in the current process/terminal, not a new terminal tab; no portable terminal-tab launcher exists in the extension API. True separate process isolation needs an explicit external-orchestrator or worker adapter path.
+- Tool-context Pi boundaries must return visible results and must not call `ctx.compact()` before the agent sees them. Normal CodeWiki continuation uses `codewiki_resume_context` directly or through CodeWiki-owned compaction, not VCC recall, generic Pi compaction, or injected slash-command chat. Pi `sendUserMessage` follow-ups do not execute registered slash commands, so adapter code must not inject legacy `/wiki-session-handoff` text as a recovery mechanism. Same-session auto-pickup after CodeWiki compaction must use a source-backed custom kickoff or equivalent user-role-safe boundary with `triggerTurn=true`; if the adapter cannot guarantee that boundary, it must block or show fallback instructions instead of calling continuation from an assistant leaf.
 - Pending diff tables are runtime/session decision surfaces; accepted rows become decision build truth. The CodeWiki UI diff surface and compact status-panel diff affordance can approve, reject, defer, or attach alternatives to pending rows.
 - Builds are accepted loop handoff briefs and should expose explicit consumes/produces edges plus loop-start, validation, and next-loop isolation policy.
 - During CodeWiki self-refactors, deprecated aliases and shim tools are removed when a direct replacement exists; if callers break, fix them at the replacement surface instead of keeping compatibility wrappers.
-- Config schema v4 defines quiet rebuild defaults, scoped agency budgets, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
+- Config schema v4 defines quiet rebuild defaults, scoped agency budgets, agency level/approval cadence, context reset auto-pickup policy, parallelism/session-per-sprint policy, and hot/warm/cold/purge garbage-collection windows.
 - Tracked CodeWiki garbage collection must run after an archive/close/publication commit exists. The GC capability requires archive commit/tree proof, supports dry-run, writes a restore ledger with removed paths and `git restore --source=<archive-sha> -- <path>` commands, and applies tracked deletions only in a separate GC commit.
 - Ignored runtime/session artifacts may be purged under runtime policy, but manual deletion of tracked `.codewiki` builds, validation reports, or roadmap truth is not an API-compliant GC path.
 - Generated state/graph index is never hand-edited.

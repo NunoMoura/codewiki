@@ -12,7 +12,7 @@ code_paths:
   - src/project/bootstrap.ts
   - src/project/templates.ts
   - src/adapters/pi/bootstrap.ts
-  - src/application/prompt.ts
+  - src/state/prompt.ts
   - src/adapters/pi
   - skills/codewiki
   - tests/smoke/package-smoke.test.mjs
@@ -44,7 +44,7 @@ The Pi adapter owns:
 
 - `src/index.ts` should remain a thin entrypoint.
 - `src/project/**` owns project loading, root resolution, starter templates, and setup/bootstrap use cases.
-- `src/application/tools/**` owns agent-callable state, task, session queue, and publication use cases that have not yet moved to concept roots.
+- Concept tool entrypoints such as `src/state/tool.ts`, `src/state/resume-tool.ts`, `src/roadmap/tool.ts`, and `src/session/**` own agent-callable use cases that have moved to concept roots; remaining `src/application/**` support is transitional until final API/shared cleanup.
 - `skills/codewiki/bootstrap/**` owns bootstrap workflow guidance and starter contract assets.
 - `skills/codewiki/prompts/**` owns prompt templates as skill assets.
 - `mutation-queue.ts` is a transitional support file until folded behind application ports/local runtime services.

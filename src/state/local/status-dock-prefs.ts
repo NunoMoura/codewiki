@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { homedir } from "node:os";
-import { STATUS_DOCK_MODE_VALUES, STATUS_DOCK_DENSITY_VALUES } from "../../domain/state/types.ts";
-import type { StatusDockPrefs, StatusDockMode, StatusDockDensity } from "../../domain/state/types.ts";
+import { STATUS_DOCK_MODE_VALUES, STATUS_DOCK_DENSITY_VALUES } from "../types.ts";
+import type { StatusDockPrefs, StatusDockMode, StatusDockDensity } from "../types.ts";
 import type { CodewikiFileStore } from "../../project/local/file-store.ts";
 import { nodeFileStore } from "../../project/local/file-store.ts";
 

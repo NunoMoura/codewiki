@@ -1,5 +1,5 @@
 /**
- * application/state.ts
+ * state/reader.ts
  *
  * "Read CodeWiki state" use case.
  * Accepts ports instead of Pi ExtensionContext so any agent harness can call it.
@@ -13,11 +13,11 @@ import type {
 	StatusStateFile,
 	RoadmapTaskContextPacket,
 	RoadmapStateTaskSummary,
-} from "../domain/state/types.ts";
-import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./state-artifacts.ts";
+} from "./types.ts";
+import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./artifacts.ts";
 import { readRoadmapTask } from "../roadmap/runtime.ts";
 import { findLatestTaskSessionLink } from "../session/links.ts";
-import type { FileStore, RebuildRunner, SessionStore } from "./ports.ts";
+import type { FileStore, RebuildRunner, SessionStore } from "../application/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Section include normalization (was inline in Pi adapter)

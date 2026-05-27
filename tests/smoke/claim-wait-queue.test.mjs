@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { mutateChangeClaims, readyWaitersForSession } from "../../src/session/claims.ts";
 import { notifyReadyArtifactWaiters } from "../../src/adapters/pi/artifact-wake.ts";
-import { buildGraph } from "../../src/application/graph.ts";
+import { buildGraph } from "../../src/state/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-claim-wait-"));
 

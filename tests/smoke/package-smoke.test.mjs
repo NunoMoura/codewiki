@@ -357,8 +357,43 @@ async function main() {
 			assert.ok(!existsSync(resolve(repoRoot, removedRoadmapShim)), `${removedRoadmapShim} should not be packaged after roadmap migration`);
 		}
 		assert.match(schemaSource, /roadmap\/types/, "Pi schemas should read roadmap values from the roadmap source-root module");
+		for (const removedStateOwner of [
+			"src/domain/state/types.ts",
+			"src/application/state.ts",
+			"src/application/state-artifacts.ts",
+			"src/application/state-builders.ts",
+			"src/application/rebuild.ts",
+			"src/application/graph.ts",
+			"src/application/graph/rebuilder.ts",
+			"src/application/lint.ts",
+			"src/application/resume-context.ts",
+			"src/application/prompt.ts",
+			"src/application/skill-assets.ts",
+			"src/application/local/rebuild-runner.ts",
+			"src/application/local/status-dock-prefs.ts",
+			"src/application/tools/state.ts",
+			"src/application/tools/resume-context.ts",
+		]) {
+			assert.ok(!existsSync(resolve(repoRoot, removedStateOwner)), `${removedStateOwner} should not be packaged after state/graph/resume migration`);
+		}
 		const stateAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "state.ts"), "utf8");
-		assert.match(stateAdapterSource, /application\/tools/, "Pi state tool should delegate to application tool module until TASK-030 moves state ownership");
+		const resumeContextAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "resume-context.ts"), "utf8");
+		const configCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "config.ts"), "utf8");
+		const statusCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "status.ts"), "utf8");
+		const resumeCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "resume.ts"), "utf8");
+		const compactionSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "compaction.ts"), "utf8");
+		const uiManagerSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "ui", "manager.ts"), "utf8");
+		assert.match(stateAdapterSource, /state\/tool/, "Pi state tool should delegate to state source-root tool module");
+		assert.match(resumeContextAdapterSource, /state\/resume-tool/, "Pi resume-context tool should delegate to state source-root resume tool module");
+		assert.match(schemaSource, /state\/types/, "Pi schemas should read state values from the state source-root module");
+		assert.match(configCommandSource, /state\/local\/status-dock-prefs/, "Pi config command should read status dock prefs from state source root");
+		assert.match(statusCommandSource, /state\/artifacts/, "Pi status command should read generated artifacts from state source root");
+		assert.match(resumeCommandSource, /state\/resume-context/, "Pi resume command should build resume packets from state source root");
+		assert.match(compactionSource, /state\/resume-context/, "Pi compaction should build resume packets from state source root");
+		assert.match(uiManagerSource, /state\/artifacts/, "Pi status UI should read generated state artifacts from state source root");
+		for (const statePathSource of [stateAdapterSource, resumeContextAdapterSource, schemaSource, configCommandSource, statusCommandSource, resumeCommandSource, compactionSource, uiManagerSource]) {
+			assert.doesNotMatch(statePathSource, /domain\/state|application\/state|application\/graph|application\/rebuild|application\/lint|application\/resume-context|application\/prompt|application\/skill-assets|application\/local\/(?:rebuild-runner|status-dock-prefs)|application\/tools\/(?:state|resume-context)/, "State package paths should not delegate through old state/graph/resume shims");
+		}
 		const taskToolAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
 		assert.match(taskToolAdapterSource, /roadmap\/tool/, "Pi task tool should delegate to roadmap source-root tool module");
 		assert.doesNotMatch(taskToolAdapterSource, /application\/tools\/task|application\/task|domain\/roadmap/, "Pi task tool should not delegate through old roadmap/task shims");

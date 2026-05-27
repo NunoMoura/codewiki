@@ -4,7 +4,10 @@ import type {
 	ExtensionCommandContext,
 } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
-import type { TaskSessionLinkRecord, TaskSessionAction } from "../../../session/types.ts";
+import type {
+	TaskSessionLinkRecord,
+	TaskSessionAction,
+} from "../../../session/types.ts";
 import type {
 	ActiveStatusPanel,
 	ActiveConfigPanel,
@@ -26,57 +29,62 @@ import type {
 	StatusDockPrefs,
 	StatusDockDensity,
 	ArchitecturePanelComponent,
-} from "../../../domain/state/types.ts";
+} from "../../../state/types.ts";
 import type { LintReport } from "../../../validation/types.ts";
 import {
 	readStatusDockPrefs,
-    resolveStatusDockPrefsPath,
-} from "../../../application/local/status-dock-prefs.ts";
+	resolveStatusDockPrefsPath,
+} from "../../../state/local/status-dock-prefs.ts";
 import {
 	resolveStatusDockProject,
 	loadProject,
 	maybeLoadProject,
-    rememberStatusDockProject,
+	rememberStatusDockProject,
 } from "../../../project/context.ts";
 import {
 	formatError,
 	cycleIndex,
-    unique,
+	unique,
 } from "../../../domain/shared/utils.ts";
-import {
-    maybeReadJsonSync,
-} from "../../../project/local/filesystem.ts";
-import {
-    padToWidth,
-    truncatePlain,
-} from "./text.ts";
-import { STATUS_DOCK_MODE_VALUES } from "../../../domain/state/types.ts";
+import { maybeReadJsonSync } from "../../../project/local/filesystem.ts";
+import { padToWidth, truncatePlain } from "./text.ts";
+import { STATUS_DOCK_MODE_VALUES } from "../../../state/types.ts";
 import {
 	configSectionTabs,
 	renderChoiceRow,
 	renderPinnedTopPanel,
 	statusModeChip,
 	healthCircle,
-    highlightSelectable,
-    statusSectionTabs,
-    detailHint,
-    kanbanTaskCircle,
-    isLiveAnimatedTask,
-    roadmapColumnLabel,
-    wikiActivityMarker,
+	highlightSelectable,
+	statusSectionTabs,
+	detailHint,
+	kanbanTaskCircle,
+	isLiveAnimatedTask,
+	roadmapColumnLabel,
+	wikiActivityMarker,
 } from "./theme.ts";
-import { 
-    updateTaskLoop, 
-    taskLoopEvidenceLine,
-    isTaskBlocked,
-    taskBoardColumn,
+import {
+	updateTaskLoop,
+	taskLoopEvidenceLine,
+	isTaskBlocked,
+	taskBoardColumn,
 } from "../../../roadmap/runtime.ts";
 import { taskIdCandidates } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, setTaskSessionStatusText } from "../session.ts";
-import { maybeReadStatusState, maybeReadRoadmapState } from "../../../application/state-artifacts.ts";
+import {
+	maybeReadStatusState,
+	maybeReadRoadmapState,
+} from "../../../state/artifacts.ts";
+import { effectiveAgencyPolicy } from "../../../agency/types.ts";
 import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";
 import { resolve, dirname, basename } from "node:path";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	readdirSync,
+	readFileSync,
+	writeFileSync,
+} from "node:fs";
 
 export const STATUS_DOCK_WIDGET_KEY = "codewiki-status-dock";
 
@@ -88,18 +96,36 @@ export let activeConfigPanelClose: (() => void) | null = null;
 /**
  * Set the global active status panel.
  */
-export function setActiveStatusPanelGlobal(panel: ActiveStatusPanel | null): void {
+export function setActiveStatusPanelGlobal(
+	panel: ActiveStatusPanel | null,
+): void {
 	activeStatusPanelGlobal = panel;
 }
 const AGENT_NAME_POOL = [
-	"Otter", "Kestrel", "Marten", "Heron", "Fox", "Raven", "Panda", "Lynx",
-	"Badger", "Cormorant", "Falcon", "Tern", "Wren", "Puma", "Seal", "Yak"
+	"Otter",
+	"Kestrel",
+	"Marten",
+	"Heron",
+	"Fox",
+	"Raven",
+	"Panda",
+	"Lynx",
+	"Badger",
+	"Cormorant",
+	"Falcon",
+	"Tern",
+	"Wren",
+	"Puma",
+	"Seal",
+	"Yak",
 ];
 
 /**
  * Clear the status dock from the UI.
  */
-export function clearStatusDock(ctx: ExtensionContext | ExtensionCommandContext): void {
+export function clearStatusDock(
+	ctx: ExtensionContext | ExtensionCommandContext,
+): void {
 	if (activeStatusPanelInputUnsubscribe) {
 		activeStatusPanelInputUnsubscribe();
 		activeStatusPanelInputUnsubscribe = null;
@@ -159,6 +185,7 @@ export async function queueAudit(
  */
 export async function openConfigPanel(
 	ctx: ExtensionCommandContext | ExtensionContext,
+	project?: WikiProject | null,
 ): Promise<boolean> {
 	const ui = ctx.ui as any;
 	if (
@@ -168,13 +195,18 @@ export async function openConfigPanel(
 		return false;
 
 	let currentPrefs = await readStatusDockPrefs();
+	const agencyPolicy = project ? effectiveAgencyPolicy(project.config) : null;
 	const sections: ConfigPanelSection[] = ["summary", "pinning", "gateway"];
 	const pinActions = ["browse", "set current", "enter path", "clear"] as const;
 	const panelState: ActiveConfigPanel = {
 		section: "summary",
 		pinActionIndex: 0,
-		requestRender: () => { /* set later */ },
-		close: () => { /* noop */ },
+		requestRender: () => {
+			/* set later */
+		},
+		close: () => {
+			/* noop */
+		},
 	};
 
 	const renderWidget = () => {
@@ -207,12 +239,24 @@ export async function openConfigPanel(
 										? "Show pinned repo in footer status."
 										: "Hide footer status line.",
 							),
+							theme.fg("muted", `Agency level: ${agencyPolicy?.level ?? "—"}`),
+							theme.fg(
+								"muted",
+								`Approval cadence: ${agencyPolicy?.approval_cadence ?? "—"}`,
+							),
+							theme.fg(
+								"muted",
+								`Reset auto-pickup: ${agencyPolicy ? (agencyPolicy.context_reset.enabled && agencyPolicy.context_reset.auto_pickup ? "on" : "off") : "—"}`,
+							),
 						];
 					} else if (panelState.section === "gateway") {
 						body = [
 							theme.fg("text", theme.bold("Context gateway")),
 							"",
-							theme.fg("text", "Configured in repo-local .codewiki/config.json."),
+							theme.fg(
+								"text",
+								"Configured in repo-local .codewiki/config.json.",
+							),
 							theme.fg(
 								"muted",
 								"Bootstrap creates a read-only gateway by default.",
@@ -358,7 +402,9 @@ export async function applyConfigValueChange(
 	value: string,
 	ctx: ExtensionCommandContext | ExtensionContext,
 ): Promise<void> {
-    const { writeStatusDockPrefs } = await import("../../../application/local/status-dock-prefs.ts");
+	const { writeStatusDockPrefs } = await import(
+		"../../../state/local/status-dock-prefs.ts"
+	);
 	const prefs = await readStatusDockPrefs();
 	if (kind === "summary-mode") {
 		const cleaned = value.replace(/^[◉◆○]\s*/, "").trim() as any;
@@ -394,22 +440,27 @@ export async function applyConfigValueChange(
 				});
 			}
 		} else if (value === "browse") {
-            const nextRoot = await choosePinnedRepoRoot(ctx, prefs);
-            if (nextRoot) {
-                const project = await loadProject(nextRoot);
+			const nextRoot = await choosePinnedRepoRoot(ctx, prefs);
+			if (nextRoot) {
+				const project = await loadProject(nextRoot);
 				await writeStatusDockPrefs({
 					...prefs,
 					mode: "pin",
 					pinnedRepoPath: project.root,
 				});
-            }
+			}
 		}
 	}
 
 	const resolved = await resolveStatusDockProject(ctx as any);
 	if (resolved) {
 		const { currentTaskLink } = await import("../session.ts");
-		await refreshStatusDock(resolved.project, ctx, currentTaskLink(ctx), resolved);
+		await refreshStatusDock(
+			resolved.project,
+			ctx,
+			currentTaskLink(ctx),
+			resolved,
+		);
 	} else {
 		clearStatusDock(ctx);
 	}
@@ -489,6 +540,7 @@ export function buildStatusText(
 		`why ${resume.reason}`,
 		`gate ${resume.verification}`,
 		`evidence ${resume.evidence}`,
+		`agency level=${state.agency?.summary?.level ?? "—"} approval=${state.agency?.summary?.approval_cadence ?? "—"} reset_auto_pickup=${state.agency?.summary?.context_reset_auto_pickup ? "on" : "off"}`,
 		`specs ${(focusedTask?.spec_paths ?? []).slice(0, 6).join(", ") || "—"}`,
 		`code ${(focusedTask?.code_paths ?? []).slice(0, 6).join(", ") || "—"}`,
 		`agents ${sameTaskAgents.join(", ") || "—"}`,
@@ -504,7 +556,7 @@ export function buildStatusSummaryText(
 	activeLink: TaskSessionLinkRecord | null,
 	_source: string,
 ): string {
-    const activeTask = activeRoadmapTaskSummary(roadmapState, activeLink);
+	const activeTask = activeRoadmapTaskSummary(roadmapState, activeLink);
 	const nextStep = resolvedNextStep(state, roadmapState, activeLink);
 	const taskLabel = activeTask
 		? `${truncatePlain(activeTask.title, 30)}${activeTask.id ? ` · ${activeTask.id}` : ""}`
@@ -584,7 +636,10 @@ export function buildResumeSnapshot(
 }
 
 // Logic helpers
-export function countIssuesBySeverity(report: LintReport, severity: string): number {
+export function countIssuesBySeverity(
+	report: LintReport,
+	severity: string,
+): number {
 	return report.issues.filter((issue) => issue.severity === severity).length;
 }
 
@@ -698,19 +753,27 @@ export function summarizeAgency(
 	).length;
 	if (lanes.length === 0)
 		return {
-			total: 0, stale: 0, work: 0, time: 0, summary: "no agency lanes"
+			total: 0,
+			stale: 0,
+			work: 0,
+			time: 0,
+			summary: "no agency lanes",
 		};
 	if (stale === 0)
 		return {
-			total: lanes.length, stale: 0, work: 0, time: 0, summary: `${lanes.length}/${lanes.length} fresh`
+			total: lanes.length,
+			stale: 0,
+			work: 0,
+			time: 0,
+			summary: `${lanes.length}/${lanes.length} fresh`,
 		};
-    return {
-        total: lanes.length,
-        stale,
-        work,
-        time,
-        summary: `${stale}/${lanes.length} stale (${work} work, ${time} time)`
-    };
+	return {
+		total: lanes.length,
+		stale,
+		work,
+		time,
+		summary: `${stale}/${lanes.length} stale (${work} work, ${time} time)`,
+	};
 }
 
 export function resolveRoadmapStateTaskId(
@@ -724,13 +787,10 @@ export function resolveRoadmapStateTaskId(
 	return null;
 }
 
-export function isOpenRoadmapTask(task: RoadmapStateTaskSummary | undefined): boolean {
-	return (
-		!!task &&
-		[
-			"todo", "in_progress", "blocked"
-		].includes(task.status)
-	);
+export function isOpenRoadmapTask(
+	task: RoadmapStateTaskSummary | undefined,
+): boolean {
+	return !!task && ["todo", "in_progress", "blocked"].includes(task.status);
 }
 
 export function roadmapWorkingSetTaskIds(
@@ -823,14 +883,16 @@ export function parallelTaskCollisions(
 	);
 }
 
-
 export function stableAgentNameFromSessionId(sessionId: string): string {
 	let hash = 0;
 	for (const ch of sessionId) hash = (hash * 33 + ch.charCodeAt(0)) >>> 0;
 	return AGENT_NAME_POOL[hash % AGENT_NAME_POOL.length] ?? "Agent";
 }
 
-export function uniqueAgentName(base: string, used: Map<string, number>): string {
+export function uniqueAgentName(
+	base: string,
+	used: Map<string, number>,
+): string {
 	const count = (used.get(base) ?? 0) + 1;
 	used.set(base, count);
 	return count === 1 ? base : `${base} ${count}`;
@@ -888,7 +950,7 @@ export function currentSessionId(
 			if (typeof sessionId === "string" && sessionId.trim())
 				return sessionId.trim();
 		}
-        return null;
+		return null;
 	} catch {
 		return null;
 	}
@@ -917,7 +979,8 @@ export function nextStatusPanelSection(
 export function buildRoadmapTaskDetail(
 	task: RoadmapStateTaskSummary,
 ): StatusPanelDetail {
-	const goal = task.goal ?? {} as NonNullable<RoadmapStateTaskSummary["goal"]>;
+	const goal =
+		task.goal ?? ({} as NonNullable<RoadmapStateTaskSummary["goal"]>);
 	const acceptance = (goal.acceptance ?? []).slice(0, 3);
 	const verification = (goal.verification ?? []).slice(0, 3);
 	const specs = (task.spec_paths ?? []).slice(0, 4);
@@ -931,10 +994,18 @@ export function buildRoadmapTaskDetail(
 		"",
 		`Outcome: ${goal.outcome || "—"}`,
 		...(acceptance.length > 0
-			? ["Success signals:", ...acceptance.map((item: string) => `- ${item}`), ""]
+			? [
+					"Success signals:",
+					...acceptance.map((item: string) => `- ${item}`),
+					"",
+				]
 			: []),
 		...(verification.length > 0
-			? ["Verification:", ...verification.map((item: string) => `- ${item}`), ""]
+			? [
+					"Verification:",
+					...verification.map((item: string) => `- ${item}`),
+					"",
+				]
 			: []),
 		`Specs: ${specs.join(", ") || "—"}`,
 		`Code: ${code.join(", ") || "—"}`,
@@ -1003,7 +1074,7 @@ export async function writeStoredChannels(
 	rows: StatusStateChannelRow[],
 ): Promise<void> {
 	const path = resolveChannelStorePath();
-    const { writeFile, mkdir } = await import("node:fs/promises");
+	const { writeFile, mkdir } = await import("node:fs/promises");
 	await mkdir(dirname(path), { recursive: true });
 	await writeFile(path, `${JSON.stringify({ rows }, null, 2)}\n`, "utf8");
 }
@@ -1022,7 +1093,9 @@ export function readStoredChannelsSync(): StatusStateChannelRow[] {
 	}
 }
 
-export function liveChannelRows(state: StatusStateFile): StatusStateChannelRow[] {
+export function liveChannelRows(
+	state: StatusStateFile,
+): StatusStateChannelRow[] {
 	const rows = [...(state.channels?.rows ?? []), ...readStoredChannelsSync()];
 	return unique(rows.map((row) => row.id))
 		.map((id) => rows.find((row) => row.id === id)!)
@@ -1033,7 +1106,7 @@ export async function discoverPinRepoChoices(
 	ctx: ExtensionCommandContext | ExtensionContext,
 	prefs: StatusDockPrefs,
 ): Promise<Array<{ root: string; label: string }>> {
-    const { findWikiRootsBelow } = await import("../../../project/root.ts");
+	const { findWikiRootsBelow } = await import("../../../project/root.ts");
 	const roots = new Set<string>();
 	const localProject = await maybeLoadProject(ctx.cwd);
 	if (localProject) roots.add(localProject.root);
@@ -1088,7 +1161,10 @@ export async function choosePinnedRepoRoot(
 	return choices.find((choice) => choice.label === picked)?.root ?? null;
 }
 
-export function wikiMarkdownPreview(project: WikiProject, path: string): string[] {
+export function wikiMarkdownPreview(
+	project: WikiProject,
+	path: string,
+): string[] {
 	try {
 		const fullPath = resolve(project.root, path);
 		const content = readFileSync(fullPath, "utf8");
@@ -1134,12 +1210,23 @@ export function readArchitecturePanelData(project: WikiProject): {
 	return { mermaid, components };
 }
 
-export function readSystemDiagramCatalog(project: WikiProject): Array<{ id: string; title: string; kind: string; path: string; purpose: string }> {
+export function readSystemDiagramCatalog(
+	project: WikiProject,
+): Array<{
+	id: string;
+	title: string;
+	kind: string;
+	path: string;
+	purpose: string;
+}> {
 	const dir = resolve(project.root, ".codewiki/kb/system/diagrams");
 	if (!existsSync(dir)) return [];
 	return readdirSync(dir)
 		.filter((name) => /\.ya?ml$/i.test(name))
-		.sort((a, b) => diagramCatalogRank(a) - diagramCatalogRank(b) || a.localeCompare(b))
+		.sort(
+			(a, b) =>
+				diagramCatalogRank(a) - diagramCatalogRank(b) || a.localeCompare(b),
+		)
 		.map((name) => {
 			const path = `.codewiki/kb/system/diagrams/${name}`;
 			const raw = readFileSync(resolve(dir, name), "utf8");
@@ -1148,20 +1235,27 @@ export function readSystemDiagramCatalog(project: WikiProject): Array<{ id: stri
 				title: frontmatterLikeYaml(raw, "title") || basename(name, ".yaml"),
 				kind: frontmatterLikeYaml(raw, "kind") || "diagram",
 				path,
-				purpose: frontmatterLikeYaml(raw, "purpose") || "System diagram raw data.",
+				purpose:
+					frontmatterLikeYaml(raw, "purpose") || "System diagram raw data.",
 			};
 		});
 }
 
 function diagramCatalogRank(name: string): number {
-	const order = ["context-map", "component-map", "key-flow", "data-model", "state-lifecycle"];
+	const order = [
+		"context-map",
+		"component-map",
+		"key-flow",
+		"data-model",
+		"state-lifecycle",
+	];
 	const index = order.findIndex((item) => name.startsWith(item));
 	return index >= 0 ? index : order.length;
 }
 
 function frontmatterLikeYaml(raw: string, key: string): string | null {
 	const match = new RegExp(`^${key}:\\s*(.+)$`, "m").exec(raw);
-	return match ? match[1].trim().replace(/^['\"]|['\"]$/g, "") : null;
+	return match ? match[1].trim().replace(/^['"]|['"]$/g, "") : null;
 }
 
 export function readGraphPanelData(project: WikiProject): {
@@ -1179,76 +1273,147 @@ export function readGraphPanelData(project: WikiProject): {
 	const dagEdges = edges
 		.filter((edge: any) => String(edge.kind || "").startsWith("build_"))
 		.slice(0, 24)
-		.map((edge: any) => ({ label: String(edge.kind || "edge"), from: String(edge.from || ""), to: String(edge.to || "") }));
+		.map((edge: any) => ({
+			label: String(edge.kind || "edge"),
+			from: String(edge.from || ""),
+			to: String(edge.to || ""),
+		}));
 	const sprintViews = Object.values(scopeViews.sprints || {}) as any[];
 	return {
 		stats: {
 			nodes: Array.isArray(graph.nodes) ? graph.nodes.length : 0,
 			edges: Array.isArray(graph.edges) ? graph.edges.length : 0,
 			build_edges: dagEdges.length,
-			reconciliation_items: Array.isArray(reconciliation.items) ? reconciliation.items.length : 0,
+			reconciliation_items: Array.isArray(reconciliation.items)
+				? reconciliation.items.length
+				: 0,
 		},
 		nextAction: reconciliation.next_action || views.workflow_cursor || {},
 		scopeLines: [
 			`roadmap open=${scopeViews.roadmap?.open_task_ids?.length || 0} tasks=${scopeViews.roadmap?.task_ids?.length || 0}`,
-			...sprintViews.slice(0, 6).map((sprint: any) => `${sprint.id} ${sprint.status} open=${sprint.open_task_ids?.length || 0} tasks=${sprint.task_ids?.length || 0}`),
+			...sprintViews
+				.slice(0, 6)
+				.map(
+					(sprint: any) =>
+						`${sprint.id} ${sprint.status} open=${sprint.open_task_ids?.length || 0} tasks=${sprint.task_ids?.length || 0}`,
+				),
 		],
 		dagEdges,
 		issues: Array.isArray(reconciliation.items)
-			? reconciliation.items.slice(0, 8).map((item: any) => `${item.next_loop || "observe"}: ${item.reason || item.source_id || item.id}`)
+			? reconciliation.items
+					.slice(0, 8)
+					.map(
+						(item: any) =>
+							`${item.next_loop || "observe"}: ${item.reason || item.source_id || item.id}`,
+					)
 			: [],
 	};
 }
 
 export function readDiffTablePanelData(project: WikiProject): {
-	rows: Array<{ tableId: string; rowId: string; status: string; current: string; desired: string; risk: string; source: string; alternatives: string[]; readOnly: boolean }>;
+	rows: Array<{
+		tableId: string;
+		rowId: string;
+		status: string;
+		current: string;
+		desired: string;
+		risk: string;
+		source: string;
+		alternatives: string[];
+		readOnly: boolean;
+	}>;
 	summary: string;
 } {
-	const rows: Array<{ tableId: string; rowId: string; status: string; current: string; desired: string; risk: string; source: string; alternatives: string[]; readOnly: boolean }> = [];
-	const runtimePath = resolve(project.root, ".codewiki/runtime/diff-tables.json");
+	const rows: Array<{
+		tableId: string;
+		rowId: string;
+		status: string;
+		current: string;
+		desired: string;
+		risk: string;
+		source: string;
+		alternatives: string[];
+		readOnly: boolean;
+	}> = [];
+	const runtimePath = resolve(
+		project.root,
+		".codewiki/runtime/diff-tables.json",
+	);
 	const runtime = maybeReadJsonSync<any>(runtimePath);
 	for (const table of Array.isArray(runtime?.tables) ? runtime.tables : []) {
 		if (String(table.status || "pending") !== "pending") continue;
-		for (const row of Array.isArray(table.rows) ? table.rows : []) rows.push({
-			tableId: String(table.id || ""),
-			rowId: String(row.id || ""),
-			status: String(row.user_action || "pending"),
-			current: String(row.current_state || ""),
-			desired: String(row.desired_state || ""),
-			risk: String(row.risk || "medium"),
-			source: String(table.summary || table.id || "pending"),
-			alternatives: Array.isArray(row.alternatives) ? row.alternatives.map(String) : [],
-			readOnly: false,
-		});
-	}
-	const decisionDir = resolve(project.root, ".codewiki/builds/decision");
-	if (rows.length === 0 && existsSync(decisionDir)) {
-		for (const file of readdirSync(decisionDir).filter((name) => name.endsWith(".json")).sort().reverse().slice(0, 3)) {
-			const build = maybeReadJsonSync<any>(resolve(decisionDir, file));
-			for (const row of Array.isArray(build?.diff_table) ? build.diff_table : []) rows.push({
-				tableId: file,
+		for (const row of Array.isArray(table.rows) ? table.rows : [])
+			rows.push({
+				tableId: String(table.id || ""),
 				rowId: String(row.id || ""),
 				status: String(row.user_action || "pending"),
 				current: String(row.current_state || ""),
 				desired: String(row.desired_state || ""),
 				risk: String(row.risk || "medium"),
-				source: String(build?.summary || file),
-				alternatives: Array.isArray(row.alternatives) ? row.alternatives.map(String) : [],
-				readOnly: true,
+				source: String(table.summary || table.id || "pending"),
+				alternatives: Array.isArray(row.alternatives)
+					? row.alternatives.map(String)
+					: [],
+				readOnly: false,
 			});
+	}
+	const decisionDir = resolve(project.root, ".codewiki/builds/decision");
+	if (rows.length === 0 && existsSync(decisionDir)) {
+		for (const file of readdirSync(decisionDir)
+			.filter((name) => name.endsWith(".json"))
+			.sort()
+			.reverse()
+			.slice(0, 3)) {
+			const build = maybeReadJsonSync<any>(resolve(decisionDir, file));
+			for (const row of Array.isArray(build?.diff_table)
+				? build.diff_table
+				: [])
+				rows.push({
+					tableId: file,
+					rowId: String(row.id || ""),
+					status: String(row.user_action || "pending"),
+					current: String(row.current_state || ""),
+					desired: String(row.desired_state || ""),
+					risk: String(row.risk || "medium"),
+					source: String(build?.summary || file),
+					alternatives: Array.isArray(row.alternatives)
+						? row.alternatives.map(String)
+						: [],
+					readOnly: true,
+				});
 		}
 	}
-	return { rows, summary: rows.some((row) => !row.readOnly) ? "Pending decision diff table" : "Latest accepted decision diff rows (read-only)" };
+	return {
+		rows,
+		summary: rows.some((row) => !row.readOnly)
+			? "Pending decision diff table"
+			: "Latest accepted decision diff rows (read-only)",
+	};
 }
 
-export function updateRuntimeDiffRow(project: WikiProject, tableId: string, rowId: string, action: "approved" | "rejected" | "deferred" | "edited", alternative?: string): boolean {
+export function updateRuntimeDiffRow(
+	project: WikiProject,
+	tableId: string,
+	rowId: string,
+	action: "approved" | "rejected" | "deferred" | "edited",
+	alternative?: string,
+): boolean {
 	const path = resolve(project.root, ".codewiki/runtime/diff-tables.json");
 	const data = maybeReadJsonSync<any>(path) || { version: 1, tables: [] };
-	const table = Array.isArray(data.tables) ? data.tables.find((item: any) => String(item.id) === tableId) : null;
-	const row = table && Array.isArray(table.rows) ? table.rows.find((item: any) => String(item.id) === rowId) : null;
+	const table = Array.isArray(data.tables)
+		? data.tables.find((item: any) => String(item.id) === tableId)
+		: null;
+	const row =
+		table && Array.isArray(table.rows)
+			? table.rows.find((item: any) => String(item.id) === rowId)
+			: null;
 	if (!row) return false;
 	row.user_action = action;
-	if (alternative) row.alternatives = [...(Array.isArray(row.alternatives) ? row.alternatives : []), alternative];
+	if (alternative)
+		row.alternatives = [
+			...(Array.isArray(row.alternatives) ? row.alternatives : []),
+			alternative,
+		];
 	data.updated_at = new Date().toISOString();
 	table.updated_at = data.updated_at;
 	mkdirSync(dirname(path), { recursive: true });
@@ -1341,7 +1506,10 @@ export function renderHomeTab(
 		),
 		"",
 		theme.bold(theme.fg("accent", "Next action")),
-		truncatePlain(state.next_step?.reason || resume.reason || resume.command, Math.max(20, width - 4)),
+		truncatePlain(
+			state.next_step?.reason || resume.reason || resume.command,
+			Math.max(20, width - 4),
+		),
 		"",
 		theme.bold(theme.fg("accent", "Issues")),
 	];
@@ -1369,7 +1537,9 @@ export function renderHomeTab(
 
 export function taskStatusLabel(status: string): string {
 	if (status === "in_progress") return "In progress";
-	return status ? status[0]!.toUpperCase() + status.slice(1).replace(/_/g, " ") : "Todo";
+	return status
+		? status[0]!.toUpperCase() + status.slice(1).replace(/_/g, " ")
+		: "Todo";
 }
 
 export function homeIssueLabel(severity: HomeIssue["severity"]): string {
@@ -1511,11 +1681,14 @@ export function readLiveStatusPanelSnapshot(
 	roadmapState: RoadmapStateFile | null;
 } | null {
 	const indexGraph = maybeReadJsonSync<any>(project.graphPath);
-	const state = indexGraph?.lenses?.status ?? maybeReadJsonSync<StatusStateFile>(project.statusStatePath);
-	const report = indexGraph?.lenses?.lint ?? maybeReadJsonSync<LintReport>(project.lintPath);
-	const roadmapState = indexGraph?.lenses?.roadmap ?? maybeReadJsonSync<RoadmapStateFile>(
-		project.roadmapStatePath,
-	);
+	const state =
+		indexGraph?.lenses?.status ??
+		maybeReadJsonSync<StatusStateFile>(project.statusStatePath);
+	const report =
+		indexGraph?.lenses?.lint ?? maybeReadJsonSync<LintReport>(project.lintPath);
+	const roadmapState =
+		indexGraph?.lenses?.roadmap ??
+		maybeReadJsonSync<RoadmapStateFile>(project.roadmapStatePath);
 	if (!state || !report) return null;
 	if (activeStatusPanelGlobal) activeStatusPanelGlobal.activeLink = activeLink;
 	return { state, report, roadmapState };
@@ -1608,7 +1781,15 @@ export function renderStatusPanelLines(
 				),
 			);
 			body.push(theme.fg("muted", row.path));
-			body.push(theme.fg("muted", truncatePlain(row.summary || row.note || "—", Math.max(12, width - 4))));
+			body.push(
+				theme.fg(
+					"muted",
+					truncatePlain(
+						row.summary || row.note || "—",
+						Math.max(12, width - 4),
+					),
+				),
+			);
 			body.push("");
 		}
 	}
@@ -1618,20 +1799,47 @@ export function renderStatusPanelLines(
 		const diagrams = readSystemDiagramCatalog(project);
 		panelState.wikiRowIndex = Math.min(
 			Math.max(0, panelState.wikiRowIndex),
-			Math.max(0, Math.max(diagrams.length, architecture.components.length) - 1),
+			Math.max(
+				0,
+				Math.max(diagrams.length, architecture.components.length) - 1,
+			),
 		);
 		body.push(theme.bold(theme.fg("accent", "Diagrams")));
-		if (diagrams.length === 0) body.push(theme.fg("muted", "No diagram YAML found under .codewiki/kb/system/diagrams."));
+		if (diagrams.length === 0)
+			body.push(
+				theme.fg(
+					"muted",
+					"No diagram YAML found under .codewiki/kb/system/diagrams.",
+				),
+			);
 		for (const [index, diagram] of diagrams.slice(0, 5).entries()) {
 			const selected = index === panelState.wikiRowIndex;
-			body.push(highlightSelectable(theme, `${selected ? "▸" : " "} ${diagram.title}`, selected));
-			body.push(theme.fg("muted", truncatePlain(`${diagram.kind} · ${diagram.path}`, Math.max(12, width - 4))));
+			body.push(
+				highlightSelectable(
+					theme,
+					`${selected ? "▸" : " "} ${diagram.title}`,
+					selected,
+				),
+			);
+			body.push(
+				theme.fg(
+					"muted",
+					truncatePlain(
+						`${diagram.kind} · ${diagram.path}`,
+						Math.max(12, width - 4),
+					),
+				),
+			);
 		}
 		body.push("");
 		body.push(theme.bold(theme.fg("accent", "Components")));
-		if (architecture.components.length === 0) body.push(theme.fg("muted", "No architecture components found."));
-		for (const [index, component] of architecture.components.slice(0, 8).entries()) {
-			const selected = diagrams.length === 0 && index === panelState.wikiRowIndex;
+		if (architecture.components.length === 0)
+			body.push(theme.fg("muted", "No architecture components found."));
+		for (const [index, component] of architecture.components
+			.slice(0, 8)
+			.entries()) {
+			const selected =
+				diagrams.length === 0 && index === panelState.wikiRowIndex;
 			body.push(
 				highlightSelectable(
 					theme,
@@ -1639,7 +1847,15 @@ export function renderStatusPanelLines(
 					selected,
 				),
 			);
-			body.push(theme.fg("muted", truncatePlain(`${component.path || "—"}${component.summary ? ` · ${component.summary}` : ""}`, Math.max(12, width - 4))));
+			body.push(
+				theme.fg(
+					"muted",
+					truncatePlain(
+						`${component.path || "—"}${component.summary ? ` · ${component.summary}` : ""}`,
+						Math.max(12, width - 4),
+					),
+				),
+			);
 		}
 	}
 
@@ -1748,34 +1964,92 @@ export function renderStatusPanelLines(
 
 	if (section === "graph") {
 		const graph = readGraphPanelData(project);
-		const rows = [...graph.scopeLines, ...graph.dagEdges.map((edge) => `${edge.label}: ${edge.from} → ${edge.to}`), ...graph.issues.map((issue) => `drift: ${issue}`)];
-		panelState.graphRowIndex = Math.min(Math.max(0, panelState.graphRowIndex ?? 0), Math.max(0, rows.length - 1));
+		const rows = [
+			...graph.scopeLines,
+			...graph.dagEdges.map(
+				(edge) => `${edge.label}: ${edge.from} → ${edge.to}`,
+			),
+			...graph.issues.map((issue) => `drift: ${issue}`),
+		];
+		panelState.graphRowIndex = Math.min(
+			Math.max(0, panelState.graphRowIndex ?? 0),
+			Math.max(0, rows.length - 1),
+		);
 		body.push(theme.bold(theme.fg("accent", "Graph scope + DAG")));
-		body.push(theme.fg("muted", `nodes=${graph.stats.nodes} edges=${graph.stats.edges} build_edges=${graph.stats.build_edges} reconciliation=${graph.stats.reconciliation_items}`));
-		body.push(theme.fg("muted", `next=${graph.nextAction.command || graph.nextAction.active_loop || "observe"}`));
+		body.push(
+			theme.fg(
+				"muted",
+				`nodes=${graph.stats.nodes} edges=${graph.stats.edges} build_edges=${graph.stats.build_edges} reconciliation=${graph.stats.reconciliation_items}`,
+			),
+		);
+		body.push(
+			theme.fg(
+				"muted",
+				`next=${graph.nextAction.command || graph.nextAction.active_loop || "observe"}`,
+			),
+		);
 		body.push("");
 		for (const [index, row] of rows.slice(0, 18).entries()) {
 			const selected = index === panelState.graphRowIndex;
-			body.push(highlightSelectable(theme, `${selected ? "▸" : " "} ${truncatePlain(row, Math.max(12, width - 4))}`, selected));
+			body.push(
+				highlightSelectable(
+					theme,
+					`${selected ? "▸" : " "} ${truncatePlain(row, Math.max(12, width - 4))}`,
+					selected,
+				),
+			);
 		}
-		if (!rows.length) body.push(theme.fg("muted", "Graph has no scoped rows yet."));
+		if (!rows.length)
+			body.push(theme.fg("muted", "Graph has no scoped rows yet."));
 	}
 
 	if (section === "diff") {
 		const diff = readDiffTablePanelData(project);
-		panelState.diffRowIndex = Math.min(Math.max(0, panelState.diffRowIndex ?? 0), Math.max(0, diff.rows.length - 1));
+		panelState.diffRowIndex = Math.min(
+			Math.max(0, panelState.diffRowIndex ?? 0),
+			Math.max(0, diff.rows.length - 1),
+		);
 		body.push(theme.bold(theme.fg("accent", "Feedback diff table")));
 		body.push(theme.fg("muted", diff.summary));
-		body.push(theme.fg("muted", "a approve · x reject · d defer · p alternative · Enter details"));
+		body.push(
+			theme.fg(
+				"muted",
+				"a approve · x reject · d defer · p alternative · Enter details",
+			),
+		);
 		body.push("");
 		for (const [index, row] of diff.rows.slice(0, 12).entries()) {
 			const selected = index === panelState.diffRowIndex;
 			const mode = row.readOnly ? "ro" : "edit";
-			body.push(highlightSelectable(theme, `${selected ? "▸" : " "} ${row.status} [${row.risk}/${mode}] ${truncatePlain(row.desired, Math.max(12, width - 24))}`, selected));
-			body.push(theme.fg("muted", truncatePlain(`${row.tableId}/${row.rowId} · ${row.current}`, Math.max(12, width - 4))));
-			if (row.alternatives.length) body.push(theme.fg("muted", truncatePlain(`alts: ${row.alternatives.join(" | ")}`, Math.max(12, width - 4))));
+			body.push(
+				highlightSelectable(
+					theme,
+					`${selected ? "▸" : " "} ${row.status} [${row.risk}/${mode}] ${truncatePlain(row.desired, Math.max(12, width - 24))}`,
+					selected,
+				),
+			);
+			body.push(
+				theme.fg(
+					"muted",
+					truncatePlain(
+						`${row.tableId}/${row.rowId} · ${row.current}`,
+						Math.max(12, width - 4),
+					),
+				),
+			);
+			if (row.alternatives.length)
+				body.push(
+					theme.fg(
+						"muted",
+						truncatePlain(
+							`alts: ${row.alternatives.join(" | ")}`,
+							Math.max(12, width - 4),
+						),
+					),
+				);
 		}
-		if (!diff.rows.length) body.push(theme.fg("muted", "No pending or accepted diff rows found."));
+		if (!diff.rows.length)
+			body.push(theme.fg("muted", "No pending or accepted diff rows found."));
 	}
 
 	return renderPinnedTopPanel(
@@ -1979,7 +2253,10 @@ export async function openStatusPanel(
 							Math.max(0, issueCount - 1),
 							panelState.homeIssueIndex + 1,
 						);
-				} else if (panelState.section === "product" || panelState.section === "system") {
+				} else if (
+					panelState.section === "product" ||
+					panelState.section === "system"
+				) {
 					if (matchesKey(data, "up") || matchesKey(data, "left"))
 						panelState.wikiRowIndex = Math.max(0, panelState.wikiRowIndex - 1);
 					if (matchesKey(data, "down") || matchesKey(data, "right"))
@@ -2004,16 +2281,30 @@ export async function openStatusPanel(
 						);
 					if (matchesKey(data, "down")) panelState.roadmapRowIndex += 1;
 				} else if (panelState.section === "graph") {
-					if (matchesKey(data, "up") || matchesKey(data, "left")) panelState.graphRowIndex = Math.max(0, (panelState.graphRowIndex ?? 0) - 1);
-					if (matchesKey(data, "down") || matchesKey(data, "right")) panelState.graphRowIndex = (panelState.graphRowIndex ?? 0) + 1;
+					if (matchesKey(data, "up") || matchesKey(data, "left"))
+						panelState.graphRowIndex = Math.max(
+							0,
+							(panelState.graphRowIndex ?? 0) - 1,
+						);
+					if (matchesKey(data, "down") || matchesKey(data, "right"))
+						panelState.graphRowIndex = (panelState.graphRowIndex ?? 0) + 1;
 				} else if (panelState.section === "diff") {
-					if (matchesKey(data, "up") || matchesKey(data, "left")) panelState.diffRowIndex = Math.max(0, (panelState.diffRowIndex ?? 0) - 1);
-					if (matchesKey(data, "down") || matchesKey(data, "right")) panelState.diffRowIndex = (panelState.diffRowIndex ?? 0) + 1;
+					if (matchesKey(data, "up") || matchesKey(data, "left"))
+						panelState.diffRowIndex = Math.max(
+							0,
+							(panelState.diffRowIndex ?? 0) - 1,
+						);
+					if (matchesKey(data, "down") || matchesKey(data, "right"))
+						panelState.diffRowIndex = (panelState.diffRowIndex ?? 0) + 1;
 				}
 				renderWidget();
 				return { consume: true };
 			}
-			if (!panelState.detail && panelState.section === "diff" && ["a", "x", "d", "p"].includes(data.toLowerCase())) {
+			if (
+				!panelState.detail &&
+				panelState.section === "diff" &&
+				["a", "x", "d", "p"].includes(data.toLowerCase())
+			) {
 				const diff = readDiffTablePanelData(panelState.project);
 				const row = diff.rows[panelState.diffRowIndex ?? 0];
 				if (!row || row.readOnly) {
@@ -2022,14 +2313,38 @@ export async function openStatusPanel(
 				}
 				if (data.toLowerCase() === "p") {
 					void (async () => {
-						const alternative = (await ui.input?.("Alternative desired state", row.desired))?.trim();
-						if (alternative) updateRuntimeDiffRow(panelState.project, row.tableId, row.rowId, "edited", alternative);
+						const alternative = (
+							await ui.input?.("Alternative desired state", row.desired)
+						)?.trim();
+						if (alternative)
+							updateRuntimeDiffRow(
+								panelState.project,
+								row.tableId,
+								row.rowId,
+								"edited",
+								alternative,
+							);
 						renderWidget();
-					})().catch((error: unknown) => ui.notify?.(error instanceof Error ? error.message : String(error), "error"));
+					})().catch((error: unknown) =>
+						ui.notify?.(
+							error instanceof Error ? error.message : String(error),
+							"error",
+						),
+					);
 					return { consume: true };
 				}
-				const action = data.toLowerCase() === "a" ? "approved" : data.toLowerCase() === "x" ? "rejected" : "deferred";
-				updateRuntimeDiffRow(panelState.project, row.tableId, row.rowId, action as any);
+				const action =
+					data.toLowerCase() === "a"
+						? "approved"
+						: data.toLowerCase() === "x"
+							? "rejected"
+							: "deferred";
+				updateRuntimeDiffRow(
+					panelState.project,
+					row.tableId,
+					row.rowId,
+					action as any,
+				);
 				renderWidget();
 				return { consume: true };
 			}
@@ -2066,8 +2381,11 @@ export async function openStatusPanel(
 							panelState.detail.selectedActionIndex ?? 0
 						]?.id;
 					if (selectedAction === "resume") {
-                        // TODO: call wiki-resume command
-                        ctx.ui.notify("Use /wiki-resume " + panelState.detail.taskId, "info");
+						// TODO: call wiki-resume command
+						ctx.ui.notify(
+							"Use /wiki-resume " + panelState.detail.taskId,
+							"info",
+						);
 						return { consume: true };
 					}
 					if (selectedAction === "block") {
@@ -2144,16 +2462,25 @@ export async function openStatusPanel(
 						".codewiki/kb/product/uis/board.md",
 						".codewiki/kb/product/uis/graph-navigation.md",
 					];
-                    const productRows = productPathOrder
-                        .map((path) => snapshot.state.specs.find((row) => row.path === path))
-                        .filter((row): row is StatusStateSpecRow => Boolean(row));
+					const productRows = productPathOrder
+						.map((path) =>
+							snapshot.state.specs.find((row) => row.path === path),
+						)
+						.filter((row): row is StatusStateSpecRow => Boolean(row));
 					const row = productRows[panelState.wikiRowIndex];
 					if (row) {
 						const preview = wikiMarkdownPreview(panelState.project, row.path);
 						openStatusPanelDetail(panelState, {
 							kind: "wiki",
 							title: row.title || row.path,
-							lines: [`Spec: ${row.path}`, "", row.summary || row.note || "No extra detail.", ...(preview.length ? ["", "Markdown preview:", ...preview] : [])],
+							lines: [
+								`Spec: ${row.path}`,
+								"",
+								row.summary || row.note || "No extra detail.",
+								...(preview.length
+									? ["", "Markdown preview:", ...preview]
+									: []),
+							],
 						});
 					}
 				} else if (panelState.section === "system") {
@@ -2163,17 +2490,33 @@ export async function openStatusPanel(
 						openStatusPanelDetail(panelState, {
 							kind: "diagram",
 							title: diagram.title,
-							lines: [`Diagram: ${diagram.kind}`, `Spec: ${diagram.path}`, "", diagram.purpose],
+							lines: [
+								`Diagram: ${diagram.kind}`,
+								`Spec: ${diagram.path}`,
+								"",
+								diagram.purpose,
+							],
 						});
 					} else {
 						const architecture = readArchitecturePanelData(panelState.project);
 						const component = architecture.components[panelState.wikiRowIndex];
 						if (component?.path) {
-							const preview = wikiMarkdownPreview(panelState.project, component.path);
+							const preview = wikiMarkdownPreview(
+								panelState.project,
+								component.path,
+							);
 							openStatusPanelDetail(panelState, {
 								kind: "wiki",
 								title: component.label || component.id,
-								lines: [`Component: ${component.id}`, `Spec: ${component.path}`, "", component.summary || "No summary.", ...(preview.length ? ["", "Markdown preview:", ...preview] : [])],
+								lines: [
+									`Component: ${component.id}`,
+									`Spec: ${component.path}`,
+									"",
+									component.summary || "No summary.",
+									...(preview.length
+										? ["", "Markdown preview:", ...preview]
+										: []),
+								],
 							});
 						}
 					}
@@ -2187,13 +2530,43 @@ export async function openStatusPanel(
 						openStatusPanelDetail(panelState, buildRoadmapTaskDetail(task));
 				} else if (panelState.section === "graph") {
 					const graph = readGraphPanelData(panelState.project);
-					const rows = [...graph.scopeLines, ...graph.dagEdges.map((edge) => `${edge.label}: ${edge.from} → ${edge.to}`), ...graph.issues.map((issue) => `drift: ${issue}`)];
+					const rows = [
+						...graph.scopeLines,
+						...graph.dagEdges.map(
+							(edge) => `${edge.label}: ${edge.from} → ${edge.to}`,
+						),
+						...graph.issues.map((issue) => `drift: ${issue}`),
+					];
 					const line = rows[panelState.graphRowIndex ?? 0];
-					if (line) openStatusPanelDetail(panelState, { kind: "graph", title: "Graph row", lines: [line, "", `Next: ${graph.nextAction.command || graph.nextAction.active_loop || "observe"}`] });
+					if (line)
+						openStatusPanelDetail(panelState, {
+							kind: "graph",
+							title: "Graph row",
+							lines: [
+								line,
+								"",
+								`Next: ${graph.nextAction.command || graph.nextAction.active_loop || "observe"}`,
+							],
+						});
 				} else if (panelState.section === "diff") {
 					const diff = readDiffTablePanelData(panelState.project);
 					const row = diff.rows[panelState.diffRowIndex ?? 0];
-					if (row) openStatusPanelDetail(panelState, { kind: "diff", title: `${row.tableId}/${row.rowId}`, lines: [`Status: ${row.status}${row.readOnly ? " (read-only)" : ""}`, `Risk: ${row.risk}`, "", `Current: ${row.current}`, "", `Desired: ${row.desired}`, ...(row.alternatives.length ? ["", "Alternatives:", ...row.alternatives] : [])] });
+					if (row)
+						openStatusPanelDetail(panelState, {
+							kind: "diff",
+							title: `${row.tableId}/${row.rowId}`,
+							lines: [
+								`Status: ${row.status}${row.readOnly ? " (read-only)" : ""}`,
+								`Risk: ${row.risk}`,
+								"",
+								`Current: ${row.current}`,
+								"",
+								`Desired: ${row.desired}`,
+								...(row.alternatives.length
+									? ["", "Alternatives:", ...row.alternatives]
+									: []),
+							],
+						});
 				}
 				renderWidget();
 				return { consume: true };

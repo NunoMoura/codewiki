@@ -9,6 +9,8 @@ source_docs:
   - .codewiki/kb/system/builds.md
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/graph.md
+  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/adapters.md
 renderer:
   preferred: er
   fallback: mermaid_er
@@ -23,7 +25,8 @@ entities:
       - state
       - summary
       - owners
-      - code_paths
+      - diagram_refs
+      - optional_explicit_code_paths
   - id: diagram_spec
     label: Diagram spec
     storage: .codewiki/kb/system/diagrams/**/*.yaml
@@ -97,6 +100,16 @@ entities:
       - preflight
       - evidence
       - prompt
+  - id: agency_contract
+    label: Agency contract
+    storage: .codewiki/config.json and tool input
+    role: configured continuation level, approval cadence, budgets, stop gates, and reset policy
+    key_fields:
+      - level
+      - default_scope
+      - approval_cadence
+      - context_reset
+      - budgets
   - id: scoped_lease
     label: Session queue scoped lease
     storage: .codewiki/session/queue.json
@@ -126,6 +139,12 @@ relationships:
   - from: state_index
     to: resume_context_packet
     type: composes
+  - from: agency_contract
+    to: resume_context_packet
+    type: seeds_auto_pickup
+  - from: agency_contract
+    to: roadmap_task
+    type: bounds_continuation
   - from: roadmap_task
     to: resume_context_packet
     type: seeds

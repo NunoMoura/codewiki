@@ -8,6 +8,8 @@ source_docs:
   - .codewiki/kb/system/builds.md
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/validation-gateway.md
+  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/adapters.md
 renderer:
   preferred: mermaid_sequence
   fallback: custom_sequence
@@ -35,6 +37,10 @@ participants:
     label: Roadmap
     kind: work_truth
     source: .codewiki/kb/system/roadmap.md
+  - id: agency_controller
+    label: Agency controller
+    kind: workflow
+    source: .codewiki/kb/system/agency.md
   - id: implementation_compiler
     label: Implementation compiler
     kind: workflow
@@ -75,10 +81,14 @@ steps:
     from: planning_compiler
     to: roadmap
     message: creates or refines executable work
-  - id: resume_context
+  - id: agency_gate
     from: roadmap
+    to: agency_controller
+    message: resolves task/sprint/roadmap approval cadence, budgets, and stop gates
+  - id: resume_context
+    from: agency_controller
     to: implementation_compiler
-    message: builds bounded resume context from graph, task shard, evidence, and refs
+    message: builds bounded resume context and protocol-safe auto-pickup kickoff from graph, task shard, evidence, and refs
   - id: build_code
     from: implementation_compiler
     to: code_tests

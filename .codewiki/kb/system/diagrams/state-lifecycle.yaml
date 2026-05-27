@@ -10,6 +10,8 @@ source_docs:
   - .codewiki/kb/system/validation-gateway.md
   - .codewiki/kb/system/graph.md
   - .codewiki/kb/system/alignment-model.md
+  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/adapters.md
 renderer:
   preferred: mermaid_state
   fallback: custom_state
@@ -41,6 +43,9 @@ states:
   - id: task_in_progress
     label: Task in progress
     kind: work
+  - id: context_reset
+    label: Context reset and auto-pickup
+    kind: hygiene
   - id: task_verify
     label: Task verify
     kind: gate
@@ -89,6 +94,13 @@ transitions:
   - from: task_todo
     to: task_in_progress
     trigger: implementation resumes task
+  - from: task_in_progress
+    to: context_reset
+    trigger: agency or loop boundary requests CodeWiki-owned reset and agency level still allows continuation
+    gate: protocol-safe source-backed kickoff
+  - from: context_reset
+    to: task_in_progress
+    trigger: adapter delivers auto-pickup kickoff from resume context
   - from: task_in_progress
     to: task_verify
     trigger: checks and acceptance evidence ready

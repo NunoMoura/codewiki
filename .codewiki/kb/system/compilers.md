@@ -40,7 +40,7 @@ The decision loop owns user semantic approval and knowledge updates. Planning ow
 
 An alignment cycle is one build attempt in a loop. It starts from upstream source refs, policy, and project state, then ends with a build submitted to the gateway.
 
-Each loop starts from CodeWiki source refs, not chat memory. Agents use `codewiki_resume_context` or CodeWiki-owned compaction when context is noisy, stale, token-heavy, or at an approved boundary. Hard session replacement remains available when policy requires it. Validation, task-close, publication, publish, and release still require explicit fresh/content proof.
+Each loop starts from CodeWiki source refs, not chat memory. Agents use `codewiki_resume_context` or CodeWiki-owned compaction when context is noisy, stale, token-heavy, or at an approved boundary. When agency level permits continued work, CodeWiki-owned compaction may auto-pick up with a protocol-safe source-backed kickoff instead of waiting for manual user input. Hard session replacement remains available when policy requires it. Validation, task-close, publication, publish, and release still require explicit fresh/content proof.
 
 Cycle builds carry loop identity, supersession, policy/isolation, requirement ids, source refs, evidence mappings, assumptions, non-goals, risks, open questions, assessment, and produced refs. Failed or blocked gateway verdicts do not mutate lower layers; they classify the failure and route to local retry, planning, decision, validation/proof, or runtime coordination.
 
@@ -109,7 +109,7 @@ When CodeWiki uses CodeWiki to refactor itself:
 
 ## Gated agency
 
-Gated agency may advance roadmap work automatically by invoking compiler cycles inside explicit token, time, risk, validation, policy, and approval gates. The agency mechanism selects one bounded step, then stops, validates, or routes to the next loop.
+Gated agency may advance roadmap work automatically by invoking compiler cycles inside explicit token, time, cost, write, session, risk, validation, policy, configured agency level, and approval gates. The agency mechanism selects bounded steps and may continue from task to sprint to roadmap scope only when the user-approved agency level allows that cadence. Task level stops after one task, sprint level may continue through the active sprint, and roadmap level may continue across active roadmap work until completion, budget exhaustion, or a hard gate.
 
 Compilers remain deterministic build producers. They do not own autonomous scheduling, budget policy, or publication approval.
 
@@ -128,7 +128,7 @@ The graph exposes affected loops and refs; compilers produce the next cycle buil
 - Validation handoffs require a gateway verdict on the submitted build.
 - Gateways may require audit evidence and checked content proof before passing.
 - Agents may run CodeWiki-owned compaction, `new_session`, or `context_refresh` at loop boundaries when context health needs it; this is agent-owned hygiene, not a handoff.
-- Normal loop continuation should use `codewiki_resume_context` directly or through CodeWiki-owned compaction instead of VCC recall, generic Pi compaction, or chat-history summaries as source truth. Use `/wiki-resume --new` only when hard replacement-session isolation is needed.
+- Normal loop continuation should use `codewiki_resume_context` directly or through CodeWiki-owned compaction instead of VCC recall, generic Pi compaction, or chat-history summaries as source truth. When auto-pickup is enabled by agency policy, the adapter must continue from a protocol-safe source-backed kickoff, not from an assistant leaf. Use `/wiki-resume --new` only when hard replacement-session isolation is needed.
 - Required fresh boundaries should use adapter session-boundary capability instead of asking the user to run `/new`, legacy handoff commands, or equivalent manually. If the adapter cannot execute the boundary automatically, record an explicit platform limitation and next safe action rather than making command submission routine user work.
 - Workflow-efficiency evidence matters: compiler/task-close paths should minimize user interrupts and manual command count while preserving validation, content-proof, and publication gates.
 - Automated compiler execution must run through gated agency controls, not through unbounded loops.

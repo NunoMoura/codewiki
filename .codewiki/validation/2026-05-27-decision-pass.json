@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T19:41:04Z",
+  "profile": "decision",
+  "verdict": "pass",
+  "rationale": "Decision rows CW-RESET-001..006, CW-AGENCY-001, and CW-DOC-CODEPATHS-001 are approved by user and compiled into product/system knowledge. Knowledge updates define CodeWiki-owned source-backed context reset, protocol-safe auto-pickup, task/sprint/roadmap agency levels, and graph-owned routine doc-code linking. Executable adapter/config/graph/lint work is intentionally routed to planning.",
+  "checks": [
+    "codewiki_state refresh -> yellow only large-doc warnings",
+    "codewiki_audit profiles=file-structure,stale-reference,alignment,generated-parity -> file-structure/stale-reference/generated-parity pass; alignment warning only graph-health large-doc warnings"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "api.md and graph.md exceed live-doc word-count warning threshold after this decision; follow-up split/cut can be handled separately."
+    },
+    {
+      "severity": "medium",
+      "summary": "Executable implementation is pending for Pi adapter protocol-safe auto-pickup, agency config, and graph/lint deprecation of routine code_paths."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference",
+    "file-structure",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "diff_table:DT-2026-05-27-13",
+    "diff_table:DT-2026-05-27-14",
+    "approval:user:all approved",
+    "build:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+    "profile:file-structure",
+    "profile:stale-reference",
+    "profile:alignment",
+    "profile:generated-parity"
+  ],
+  "audit_reports": [
+    "codewiki_state refresh reports health yellow only due large-doc warnings in api.md and graph.md.",
+    "codewiki_audit file-structure pass: source files, architecture wrappers, diagram refs, and approved migration deltas checked.",
+    "codewiki_audit stale-reference pass: active markdown/source text scanned for known stale references.",
+    "codewiki_audit generated-parity pass: graph presence/freshness and active roadmap views checked.",
+    "codewiki_audit alignment warning only because graph health has large-doc lint warnings; no unresolved stale-reference or generated-parity errors."
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference",
+      "file-structure",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:file-structure or profile:file-structure",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:all approved"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

@@ -1,13 +1,45 @@
-import type { WikiProject } from "../../project/types.ts";
-import type { RoadmapStatus, RoadmapTaskGoal } from "../../roadmap/types.ts";
-import type { ArtifactStatusRecord, ChangeClaimConflict, ChangeClaimRecord, ChangeClaimWaiterRecord, TaskSessionLinkRecord, WorkflowCursor } from "../../session/types.ts";
+import type { WikiProject } from "../project/types.ts";
+import type { RoadmapStatus, RoadmapTaskGoal } from "../roadmap/types.ts";
+import type {
+	ArtifactStatusRecord,
+	ChangeClaimConflict,
+	ChangeClaimRecord,
+	ChangeClaimWaiterRecord,
+	TaskSessionLinkRecord,
+	WorkflowCursor,
+} from "../session/types.ts";
 
-export const CODEWIKI_STATE_SECTION_VALUES = ["repo", "health", "summary", "roadmap", "graph", "trace", "audit", "drift", "session", "task", "claims", "archive"] as const;
-export const STATUS_DOCK_DENSITY_VALUES = ["minimal", "standard", "full"] as const;
+export const CODEWIKI_STATE_SECTION_VALUES = [
+	"repo",
+	"health",
+	"summary",
+	"roadmap",
+	"graph",
+	"trace",
+	"audit",
+	"drift",
+	"session",
+	"task",
+	"claims",
+	"archive",
+] as const;
+export const STATUS_DOCK_DENSITY_VALUES = [
+	"minimal",
+	"standard",
+	"full",
+] as const;
 export const STATUS_DOCK_MODE_VALUES = ["auto", "pin", "off"] as const;
-export const STATUS_SCOPE_VALUES = ["repo", "task", "spec", "both", "docs", "code"] as const;
+export const STATUS_SCOPE_VALUES = [
+	"repo",
+	"task",
+	"spec",
+	"both",
+	"docs",
+	"code",
+] as const;
 
-export type CodewikiStateSection = (typeof CODEWIKI_STATE_SECTION_VALUES)[number];
+export type CodewikiStateSection =
+	(typeof CODEWIKI_STATE_SECTION_VALUES)[number];
 export type StatusDockDensity = (typeof STATUS_DOCK_DENSITY_VALUES)[number];
 export type StatusDockMode = (typeof STATUS_DOCK_MODE_VALUES)[number];
 export type StatusScope = (typeof STATUS_SCOPE_VALUES)[number];
@@ -300,10 +332,14 @@ export interface StatusStateFile {
 		summary: {
 			lane_count: number;
 			freshness_basis: string;
+			level?: string;
+			approval_cadence?: string;
+			context_reset_auto_pickup?: boolean;
 			high_cadence_lane_ids: string[];
 			medium_cadence_lane_ids: string[];
 			low_cadence_lane_ids: string[];
 		};
+		policy?: Record<string, unknown>;
 		lanes: StatusStateAgencyLane[];
 	};
 	resume: {

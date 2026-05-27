@@ -9,7 +9,7 @@ updated: "2026-05-26"
 code_paths:
   - src/build
   - src/validation/report.ts
-  - src/application/graph.ts
+  - src/state/graph.ts
   - src/domain/shared/types.ts
   - src/adapters/pi/schemas.ts
 ---

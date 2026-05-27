@@ -18,7 +18,7 @@ export function piFileStore() {
 export function piRebuildRunner() {
 	return {
 		run: async (project: WikiProject) => {
-			const { runConfiguredOrDefaultRebuild } = await import("../../../application/local/rebuild-runner.ts");
+			const { runConfiguredOrDefaultRebuild } = await import("../../../state/local/rebuild-runner.ts");
 			await runConfiguredOrDefaultRebuild(project);
 		},
 	};

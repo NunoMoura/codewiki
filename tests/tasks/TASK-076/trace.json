@@ -25,7 +25,7 @@
     {
       "criterion": "Source tree uses domain/application/adapters as top-level layers and removes the confusing infrastructure layer.",
       "test": "tests/tasks/TASK-076/restructure.test.mjs",
-      "code_paths": ["src/domain", "src/application", "src/adapters", "src/application/gateway", "src/application/graph/rebuilder.ts"]
+      "code_paths": ["src/domain", "src/application", "src/adapters", "src/application/gateway", "src/state/graph/rebuilder.ts"]
     }
   ],
   "verification": [

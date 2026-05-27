@@ -1,4 +1,4 @@
-import type { AgencyBudget, AgencyScope, AgencyScopeKind } from "../agency/types.ts";
+import type { AgencyConfig } from "../agency/types.ts";
 
 export interface ScopeConfig {
 	include: string[];
@@ -38,16 +38,40 @@ export interface DocsConfig {
 		forbidden_headings?: string[];
 		word_count_warn?: number;
 		word_count_exempt?: string[];
-		diagram_refs_mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
+		diagram_refs_mode?:
+			| "off"
+			| "warn"
+			| "warning"
+			| "migration"
+			| "error"
+			| "enforce"
+			| "required"
+			| "hard";
 	};
 	codewiki?: {
 		system_diagrams?: {
 			diagram_refs?: {
-				mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
+				mode?:
+					| "off"
+					| "warn"
+					| "warning"
+					| "migration"
+					| "error"
+					| "enforce"
+					| "required"
+					| "hard";
 			};
 		};
 		diagram_refs?: {
-			mode?: "off" | "warn" | "warning" | "migration" | "error" | "enforce" | "required" | "hard";
+			mode?:
+				| "off"
+				| "warn"
+				| "warning"
+				| "migration"
+				| "error"
+				| "enforce"
+				| "required"
+				| "hard";
 		};
 		self_drift_scope?: ScopeConfig;
 		code_drift_scope?: CodeDriftScopeConfig;
@@ -56,15 +80,7 @@ export interface DocsConfig {
 			freshness_check?: boolean;
 			debounce_ms?: number;
 		};
-		agency?: {
-			default_scope?: AgencyScope;
-			budgets?: Partial<Record<AgencyScopeKind | "default", AgencyBudget>>;
-			parallelism?: {
-				max_sessions?: number;
-				session_per_sprint?: boolean;
-				require_claims?: boolean;
-			};
-		};
+		agency?: AgencyConfig;
 		gc?: {
 			hot_days?: number;
 			warm_days?: number;

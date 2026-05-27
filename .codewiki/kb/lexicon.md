@@ -68,11 +68,15 @@ Pure evaluator for a submitted cycle build. It validates the build against polic
 
 ## Gated agency
 
-User-facing capability where an agent advances roadmap work inside explicit token, time, risk, validation, policy, and approval gates.
+User-facing capability where an agent advances roadmap work inside explicit token, time, cost, write, session, risk, validation, policy, configured agency level, and approval gates.
+
+## Agency level
+
+User-approved continuation contract for gated agency. `task` stops after one task, `sprint` may continue through the active sprint, and `roadmap` may continue across active roadmap work until completion, budget exhaustion, or a hard gate.
 
 ## Agency
 
-System mechanism for gated agency. A cycle observes state, selects one bounded next action, checks gates, performs or declines, records evidence when needed, and stops or routes to the next loop. Agency is not a product UI or fourth compiler.
+System mechanism for gated agency. A cycle observes state, selects one bounded next action, checks gates, performs or declines, records evidence when needed, and stops, resets context with source-backed auto-pickup, or routes to the next loop. Agency is not a product UI or fourth compiler.
 
 ## Verifier
 

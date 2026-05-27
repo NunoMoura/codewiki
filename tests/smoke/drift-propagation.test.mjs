@@ -4,14 +4,14 @@ import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { parseDoc } from "../../src/knowledge/doc-parser.ts";
-import { buildGraph } from "../../src/application/graph.ts";
-import { buildLintReport } from "../../src/application/lint.ts";
+import { buildGraph } from "../../src/state/graph.ts";
+import { buildLintReport } from "../../src/state/lint.ts";
 import {
 	buildRoadmapState,
 	buildStatusState,
 	generatedStatePaths,
 	laneRevisionAnchor,
-} from "../../src/application/state-builders.ts";
+} from "../../src/state/builders.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-drift-propagation-"));
 const claims = { version: 1, claims: [] };

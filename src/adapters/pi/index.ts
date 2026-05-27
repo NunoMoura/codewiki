@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { ActiveStatusPanel } from "../../domain/state/types.ts";
+import type { ActiveStatusPanel } from "../../state/types.ts";
 import { registerBootstrapFeatures } from "./bootstrap.ts";
 import { codewikiBuildToolInputSchema, codewikiAgencyToolInputSchema, codewikiDiffTableToolInputSchema, codewikiGcToolInputSchema, codewikiSessionToolInputSchema, codewikiTaskToolInputSchema, codewikiValidationReportSchema } from "./schemas.ts";
 import { registerAuditCommand } from "./commands/audit.ts";

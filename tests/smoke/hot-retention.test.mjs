@@ -5,8 +5,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildLintReport } from "../../src/application/lint.ts";
-import { buildGraph } from "../../src/application/graph.ts";
+import { buildLintReport } from "../../src/state/lint.ts";
+import { buildGraph } from "../../src/state/graph.ts";
 import { runCodewikiGc } from "../../src/gc/runtime.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-hot-retention-"));

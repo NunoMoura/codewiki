@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { buildChangeClaimState, mutateChangeClaims } from "../../src/session/claims.ts";
 import { writeImplementationBuild } from "../../src/build/writer.ts";
 import { writeValidationReport } from "../../src/validation/report.ts";
-import { buildGraph } from "../../src/application/graph.ts";
+import { buildGraph } from "../../src/state/graph.ts";
 import { createRoleWorktreePlan } from "../../src/session/worktree-isolation.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-role-worktree-"));

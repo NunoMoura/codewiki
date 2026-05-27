@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildGraph } from "../../src/application/graph.ts";
-import { readCodewikiState } from "../../src/application/state.ts";
+import { buildGraph } from "../../src/state/graph.ts";
+import { readCodewikiState } from "../../src/state/reader.ts";
 import { loadProject } from "../../src/project/context.ts";
 import { buildControlRoomGraphModel, buildControlRoomStateModel } from "../../src/ui/web/control-room.ts";
 
@@ -28,7 +28,7 @@ try {
 		title: "Graph",
 		doc_type: "spec",
 		links: [],
-		code_paths: ["src/application/graph.ts", "src/application/state.ts"],
+		code_paths: ["src/state/graph.ts", "src/state/reader.ts"],
 		frontmatter: {},
 	}];
 	const task = {
@@ -39,7 +39,7 @@ try {
 		kind: "architecture",
 		summary: "Expose compact graph lens.",
 		spec_paths: [".codewiki/kb/system/graph.md"],
-		code_paths: ["src/application/graph.ts", "src/application/state.ts"],
+		code_paths: ["src/state/graph.ts", "src/state/reader.ts"],
 		research_ids: [],
 		labels: [],
 	};
@@ -77,10 +77,10 @@ try {
 			source_planning_build: planningPath,
 			task_id: "TASK-100",
 			produces: {
-				code: ["src/application/graph.ts", "src/application/state.ts"],
+				code: ["src/state/graph.ts", "src/state/reader.ts"],
 				tests: ["tests/smoke/graph-lenses.test.mjs"],
 			},
-			code_files: ["src/application/graph.ts", "src/application/state.ts"],
+			code_files: ["src/state/graph.ts", "src/state/reader.ts"],
 			test_files: ["tests/smoke/graph-lenses.test.mjs"],
 			audit_refs: ["audit:alignment"],
 			validation_refs: [validationPath],
@@ -126,7 +126,7 @@ try {
 	const traceLens = graph.views.lenses.trace;
 	assert.ok(traceLens.requirement_rows.some((row) => row.requirement_id === "REQ-LENS" && row.implementation_builds.includes(implementationPath)), "trace lens should expand requirement/build refs");
 	assert.ok(traceLens.canonical_source_refs.includes(implementationPath), "trace lens should expose exact canonical source refs");
-	assert.ok(traceLens.build_refs.some((row) => row.path === implementationPath && row.source_refs.includes("src/application/graph.ts")), "trace lens should expand build source refs");
+	assert.ok(traceLens.build_refs.some((row) => row.path === implementationPath && row.source_refs.includes("src/state/graph.ts")), "trace lens should expand build source refs");
 
 	const auditLens = graph.views.lenses.audit;
 	assert.ok(auditLens.validation_reports.some((row) => row.path === validationPath), "audit lens should expose validation reports");

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-27T21:02:00Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-032/context.json",
+  "task": {
+    "id": "TASK-032",
+    "title": "Protocol-safe reset auto-pickup and agency levels",
+    "status": "in_progress",
+    "priority": "critical",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Implement CodeWiki reset auto-pickup from source-backed protocol-safe kickoff messages and add configurable task/sprint/roadmap agency levels that govern continuation.",
+    "labels": [
+      "context-reset",
+      "auto-pickup",
+      "pi-adapter",
+      "bugfix",
+      "agency",
+      "config",
+      "approval-cadence",
+      "roadmap"
+    ],
+    "goal": {
+      "outcome": "CodeWiki reset auto-picks up through a protocol-safe source-backed kickoff when configured agency level allows continuation; agency level task/sprint/roadmap controls approval cadence while hard gates remain mandatory.",
+      "acceptance": [
+        "Same-session CodeWiki compaction delivers a minimal resume-context kickoff with auto turn triggering when safe.",
+        "Fresh-session resume seeds the replacement session with the same source-backed kickoff while preserving manual /wiki-resume UX.",
+        "Reset defers or refuses auto-pickup when pending tool/message state or adapter capability cannot guarantee a valid next-turn boundary.",
+        "No reset path injects slash-command text through follow-up chat or calls continuation from an assistant-role leaf.",
+        "Regression tests reproduce invalid assistant-leaf risk and prove safe kickoff/fallback behavior.",
+        "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
+        "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
+        "Status/config surfaces show effective agency level and reset auto-pickup policy.",
+        "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries."
+      ],
+      "non_goals": [
+        "Do not implement parallel subagent orchestration unless already supported by existing agency machinery.",
+        "Do not grant automatic publication or remote push permission.",
+        "Do not publish or push changes."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run check:architecture"
+      ]
+    },
+    "delta": {
+      "desired": "Protocol-safe context reset auto-pickup and agency-level continuation controls are implemented from the accepted decision build.",
+      "current": "Decision and validation exist; implementation pending.",
+      "closure": "Close after implementation build, fresh implementation validation, clean commit/tree proof, task-close validation, and post-commit audits."
+    }
+  }
+}

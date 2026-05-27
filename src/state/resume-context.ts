@@ -19,8 +19,8 @@ import {
 import {
 	loadCodewikiStateArtifacts,
 	maybeReadTaskContext,
-} from "./state-artifacts.ts";
-import { stableAgentName } from "./state-builders.ts";
+} from "./artifacts.ts";
+import { stableAgentName } from "./builders.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { unique } from "../domain/shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
@@ -31,7 +31,7 @@ import type {
 	ChangeClaimState,
 	TaskSessionLinkRecord,
 } from "../session/types.ts";
-import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "../domain/state/types.ts";
+import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "./types.ts";
 import type { LintReport } from "../validation/types.ts";
 
 export interface ResumeSelection {

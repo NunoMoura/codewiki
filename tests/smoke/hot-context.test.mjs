@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildGraph } from "../../src/application/graph.ts";
-import { readCodewikiState } from "../../src/application/state.ts";
+import { buildGraph } from "../../src/state/graph.ts";
+import { readCodewikiState } from "../../src/state/reader.ts";
 import { loadProject } from "../../src/project/context.ts";
 import { buildControlRoomGraphModel, buildControlRoomStateModel } from "../../src/ui/web/control-room.ts";
 

@@ -6,7 +6,11 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
+	CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE,
 	buildCodewikiCompactionSummary,
+	buildCodewikiResumeKickoff,
+	evaluateCodewikiAutoPickupBoundary,
+	evaluateCodewikiResetLifecycleBoundary,
 	formatCodewikiCompactionInstruction,
 	requestCodewikiContextRefresh,
 	shouldTriggerCodewikiThresholdRefresh,
@@ -77,12 +81,135 @@ assert.equal(
 	"CodeWiki compaction instruction should preserve boundary metadata",
 );
 
-const compactionSource = readFileSync(new URL("../../src/adapters/pi/compaction.ts", import.meta.url), "utf8");
-assert.match(compactionSource, /pi\.on\("agent_end"/, "CodeWiki compaction should trigger after the agent loop, not mid-turn");
-assert.doesNotMatch(compactionSource, /pi\.on\("turn_end"/, "CodeWiki compaction should not trigger from turn_end");
-assert.match(compactionSource, /CodeWiki context refresh.*starting/s, "CodeWiki compaction should visibly notify when it starts");
-assert.match(compactionSource, /skipped: no source-backed resume packet/, "CodeWiki compaction should skip when no source-backed packet exists");
-assert.match(compactionSource, /ctx\.compact[\s\S]*formatCodewikiCompactionInstruction/, "CodeWiki context refresh should own compact instructions");
+const compactionSource = readFileSync(
+	new URL("../../src/adapters/pi/compaction.ts", import.meta.url),
+	"utf8",
+);
+assert.match(
+	compactionSource,
+	/pi\.on\("agent_end"/,
+	"CodeWiki compaction should trigger after the agent loop, not mid-turn",
+);
+assert.doesNotMatch(
+	compactionSource,
+	/pi\.on\("turn_end"/,
+	"CodeWiki compaction should not trigger from turn_end",
+);
+assert.match(
+	compactionSource,
+	/CodeWiki context refresh.*starting/s,
+	"CodeWiki compaction should visibly notify when it starts",
+);
+assert.match(
+	compactionSource,
+	/skipped: no source-backed resume packet/,
+	"CodeWiki compaction should skip when no source-backed packet exists",
+);
+assert.match(
+	compactionSource,
+	/ctx\.compact[\s\S]*formatCodewikiCompactionInstruction/,
+	"CodeWiki context refresh should own compact instructions",
+);
+assert.match(
+	compactionSource,
+	/pi\.sendMessage\(\s*summary\.kickoff,\s*\{[\s\S]*triggerTurn:\s*true,[\s\S]*deliverAs:\s*"followUp"[\s\S]*\}\s*\)/,
+	"same-session auto-pickup should trigger from a custom kickoff follow-up boundary",
+);
+assert.doesNotMatch(
+	compactionSource,
+	/deliverAs:\s*"nextTurn"[\s\S]*triggerTurn:\s*true|triggerTurn:\s*true[\s\S]*deliverAs:\s*"nextTurn"/,
+	"context reset must not rely on nextTurn because pi ignores triggerTurn for that mode",
+);
+assert.doesNotMatch(
+	compactionSource,
+	/sendUserMessage\(\s*[`'"]\/wiki-resume/,
+	"context reset must not inject slash commands through follow-up chat",
+);
+assert.doesNotMatch(
+	compactionSource,
+	/role:\s*[`'"]assistant/,
+	"context reset must not synthesize assistant-role continuation leaves",
+);
+
+const safeProject = {
+	config: {
+		codewiki: {
+			agency: {
+				level: "sprint",
+				approval_cadence: "sprint",
+				context_reset: { enabled: true, auto_pickup: true },
+			},
+		},
+	},
+};
+const safeCtx = { isIdle: () => true, hasPendingMessages: () => false };
+assert.equal(
+	evaluateCodewikiResetLifecycleBoundary(safeCtx, safeProject).allowed,
+	true,
+	"idle session with no queued messages is reset-safe",
+);
+assert.equal(
+	evaluateCodewikiAutoPickupBoundary(safeCtx, safeProject, {
+		canSendMessage: true,
+	}).allowed,
+	true,
+	"custom-message adapter can auto-pick up safely",
+);
+assert.equal(
+	evaluateCodewikiAutoPickupBoundary(safeCtx, safeProject, {
+		canSendMessage: false,
+	}).allowed,
+	false,
+	"missing custom-message capability should refuse auto-pickup",
+);
+assert.match(
+	evaluateCodewikiAutoPickupBoundary(safeCtx, safeProject, {
+		canSendMessage: false,
+	}).reason,
+	/custom kickoff/,
+	"unsafe adapter refusal should explain protocol-safe kickoff gap",
+);
+assert.equal(
+	evaluateCodewikiAutoPickupBoundary(
+		{ isIdle: () => true, hasPendingMessages: () => true },
+		safeProject,
+		{ canSendMessage: true },
+	).allowed,
+	false,
+	"pending queued messages should block reset pickup",
+);
+
+const kickoff = buildCodewikiResumeKickoff({
+	prompt: "Implement roadmap task TASK-001 from source refs.",
+	reason: "test-reset",
+	projectRoot: "/tmp/repo",
+	taskId: "TASK-001",
+	contextPath: ".codewiki/roadmap/tasks/TASK-001/context.json",
+	sourceRefs: [".codewiki/roadmap/tasks/TASK-001/task.json"],
+	policy: evaluateCodewikiAutoPickupBoundary(safeCtx, safeProject, {
+		canSendMessage: true,
+	}).policy,
+});
+assert.equal(
+	kickoff.customType,
+	CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE,
+	"kickoff should be a CodeWiki custom message",
+);
+assert.equal(
+	kickoff.display,
+	true,
+	"kickoff should be visible in the transcript",
+);
+assert.match(
+	kickoff.content,
+	/CodeWiki Auto-Pickup Kickoff/,
+	"kickoff should identify the reset boundary",
+);
+assert.match(
+	kickoff.content,
+	/Source refs:/,
+	"kickoff should carry source refs",
+);
 
 function staleTaskContext(taskId = "TASK-999") {
 	return {
@@ -90,11 +217,13 @@ function staleTaskContext(taskId = "TASK-999") {
 		ui: { notify() {}, setStatus() {} },
 		sessionManager: {
 			getSessionId: () => "compaction-smoke-session",
-			getBranch: () => [{
-				type: "custom",
-				customType: "codewiki.task-link",
-				data: { taskId, action: "focus", summary: "stale task focus" },
-			}],
+			getBranch: () => [
+				{
+					type: "custom",
+					customType: "codewiki.task-link",
+					data: { taskId, action: "focus", summary: "stale task focus" },
+				},
+			],
 		},
 	};
 }
@@ -103,63 +232,98 @@ async function createCompactionFixture({ openTask = true } = {}) {
 	const root = await mkdtemp(join(tmpdir(), "codewiki-compaction-"));
 	await mkdir(join(root, ".codewiki/kb/system"), { recursive: true });
 	await mkdir(join(root, ".codewiki/roadmap"), { recursive: true });
-	await writeFile(join(root, ".codewiki/config.json"), JSON.stringify({
-		project_name: openTask ? "compaction-open" : "compaction-empty",
-		schema_version: 4,
-		docs_root: ".codewiki/kb",
-	}, null, 2));
-	await writeFile(join(root, ".codewiki/kb/system/graph.md"), [
-		"---",
-		"id: spec.system.graph",
-		"title: Graph",
-		"state: active",
-		"summary: Generated graph fixture.",
-		"---",
-		"",
-		"# Graph",
-		"",
-		"Fixture spec for context refresh tests.",
-	].join("\n"));
+	await writeFile(
+		join(root, ".codewiki/config.json"),
+		JSON.stringify(
+			{
+				project_name: openTask ? "compaction-open" : "compaction-empty",
+				schema_version: 4,
+				docs_root: ".codewiki/kb",
+			},
+			null,
+			2,
+		),
+	);
+	await writeFile(
+		join(root, ".codewiki/kb/system/graph.md"),
+		[
+			"---",
+			"id: spec.system.graph",
+			"title: Graph",
+			"state: active",
+			"summary: Generated graph fixture.",
+			"---",
+			"",
+			"# Graph",
+			"",
+			"Fixture spec for context refresh tests.",
+		].join("\n"),
+	);
 	const tasks = openTask
 		? {
-			"TASK-001": {
-				id: "TASK-001",
-				title: "Open compaction task",
-				status: "todo",
-				priority: "high",
-				kind: "bug",
-				summary: "Exercise stale task fallback.",
-				spec_paths: [".codewiki/kb/system/graph.md"],
-				code_paths: ["src/adapters/pi/compaction.ts"],
-				research_ids: [],
-				labels: ["compaction"],
-				goal: {
-					outcome: "Fallback selects this task.",
-					acceptance: ["Context refresh works."],
-					non_goals: [],
-					verification: [],
+				"TASK-001": {
+					id: "TASK-001",
+					title: "Open compaction task",
+					status: "todo",
+					priority: "high",
+					kind: "bug",
+					summary: "Exercise stale task fallback.",
+					spec_paths: [".codewiki/kb/system/graph.md"],
+					code_paths: ["src/adapters/pi/compaction.ts"],
+					research_ids: [],
+					labels: ["compaction"],
+					goal: {
+						outcome: "Fallback selects this task.",
+						acceptance: ["Context refresh works."],
+						non_goals: [],
+						verification: [],
+					},
+					created: "2026-05-20",
+					updated: "2026-05-20",
 				},
-				created: "2026-05-20",
-				updated: "2026-05-20",
-			},
-		}
+			}
 		: {};
-	await writeFile(join(root, ".codewiki/roadmap/queue.json"), JSON.stringify({
-		version: 2,
-		updated: "2026-05-20T00:00:00Z",
-		order: openTask ? ["TASK-001"] : [],
-		tasks,
-	}, null, 2));
+	await writeFile(
+		join(root, ".codewiki/roadmap/queue.json"),
+		JSON.stringify(
+			{
+				version: 2,
+				updated: "2026-05-20T00:00:00Z",
+				order: openTask ? ["TASK-001"] : [],
+				tasks,
+			},
+			null,
+			2,
+		),
+	);
 	return { root, project: await loadProject(root) };
 }
 
 {
 	const { root, project } = await createCompactionFixture({ openTask: true });
 	try {
-		const summary = await buildCodewikiCompactionSummary(project, staleTaskContext("TASK-999"), { reason: "threshold" }, null);
-		assert.equal(summary?.details.taskId, "TASK-001", "stale active session task should not become explicit resume request");
-		const explicitStale = await buildCodewikiCompactionSummary(project, staleTaskContext("TASK-999"), { reason: "manual", taskId: "TASK-999" }, null);
-		assert.equal(explicitStale?.details.taskId, "TASK-001", "stale explicit context refresh task should fall back to open roadmap task");
+		const summary = await buildCodewikiCompactionSummary(
+			project,
+			staleTaskContext("TASK-999"),
+			{ reason: "threshold" },
+			null,
+		);
+		assert.equal(
+			summary?.details.taskId,
+			"TASK-001",
+			"stale active session task should not become explicit resume request",
+		);
+		const explicitStale = await buildCodewikiCompactionSummary(
+			project,
+			staleTaskContext("TASK-999"),
+			{ reason: "manual", taskId: "TASK-999" },
+			null,
+		);
+		assert.equal(
+			explicitStale?.details.taskId,
+			"TASK-001",
+			"stale explicit context refresh task should fall back to open roadmap task",
+		);
 	} finally {
 		await rm(root, { recursive: true, force: true });
 	}
@@ -168,8 +332,17 @@ async function createCompactionFixture({ openTask = true } = {}) {
 {
 	const { root, project } = await createCompactionFixture({ openTask: false });
 	try {
-		const summary = await buildCodewikiCompactionSummary(project, staleTaskContext("TASK-999"), { reason: "manual", taskId: "TASK-999" }, null);
-		assert.equal(summary, null, "stale context refresh with no open roadmap task should no-op instead of throwing");
+		const summary = await buildCodewikiCompactionSummary(
+			project,
+			staleTaskContext("TASK-999"),
+			{ reason: "manual", taskId: "TASK-999" },
+			null,
+		);
+		assert.equal(
+			summary,
+			null,
+			"stale context refresh with no open roadmap task should no-op instead of throwing",
+		);
 	} finally {
 		await rm(root, { recursive: true, force: true });
 	}

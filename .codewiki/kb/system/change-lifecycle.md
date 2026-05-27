@@ -14,7 +14,7 @@ code_paths:
   - skills/codewiki-validation/SKILL.md
   - src/build
   - src/validation
-  - src/application/graph.ts
+  - src/state/graph.ts
 ---
 
 # Change Lifecycle

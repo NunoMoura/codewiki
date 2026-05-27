@@ -10,7 +10,7 @@ code_paths:
   - src/session/claims.ts
   - src/session/artifact-status-tool.ts
   - src/session/worktree-isolation.ts
-  - src/application/resume-context.ts
+  - src/state/resume-context.ts
   - src/adapters/pi/commands/resume.ts
   - src/validation/report.ts
   - src/build/writer.ts

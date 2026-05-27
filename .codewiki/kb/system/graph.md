@@ -5,13 +5,13 @@ state: active
 summary: Generated state/graph representation for reconciliation, routing, freshness, and requirement traceability.
 owners:
   - architecture
-updated: "2026-05-24"
+updated: "2026-05-27"
 code_paths:
   - .codewiki/index_graph.json
-  - src/application/graph.ts
-  - src/application/graph/rebuilder.ts
-  - src/application/state-builders.ts
-  - src/application/state.ts
+  - src/state/graph.ts
+  - src/state/graph/rebuilder.ts
+  - src/state/builders.ts
+  - src/state/reader.ts
   - src/domain/shared/types.ts
 ---
 
@@ -25,7 +25,7 @@ The state engine routes agents to the smallest useful next context, detects drif
 
 The graph does not decide intended behavior and does not replace source-of-truth reads. It points to the relevant cycle builds, knowledge docs, planning builds, roadmap items, validation reports, and code/test paths; agents must read those sources directly before making semantic changes.
 
-The graph is the operational state machine for CodeWiki. Markov-chain or Markov Decision Process language is an analytical lens over graph-derived transitions, not a replacement for the graph, because the graph must retain source refs, traceability, evidence ownership, and proof relationships.
+The graph is the operational state machine for CodeWiki and the generated linker between docs, roadmap, builds, validation, code, tests, and proofs. Markov-chain or Markov Decision Process language is an analytical lens over graph-derived transitions, not a replacement for the graph, because the graph must retain source refs, traceability, evidence ownership, and proof relationships.
 
 Alignment is sourced from cycle builds, KB docs, planning builds, roadmap tasks, tests/code, implementation builds, validation attestations, audit evidence, commits, and publication content proofs. The graph reports alignment gaps; it does not own requirements or solve alignment by itself.
 
@@ -35,7 +35,7 @@ The graph is generated from:
 
 ```text
 .codewiki/config.json
-.codewiki/kb/** frontmatter, paths, explicit refs, and curated Markdown links
+.codewiki/kb/** semantic frontmatter, diagram_refs, optional explicit overrides, paths, explicit refs, and curated Markdown links
 .codewiki/builds/**, including decision, planning, and implementation builds
 .codewiki/kb/system/diagrams/** diagram nodes, flows, entities, lifecycles, and policy boundaries
 .codewiki/roadmap/**
@@ -47,7 +47,7 @@ Git/source fingerprints, tree SHAs, commit SHAs, package digests, and archive le
 audit evidence required by gateway policy
 ```
 
-Curated Markdown links are one input. The graph computes backlinks, stale refs, traceability, freshness, and routing relationships.
+Curated Markdown links are one input. The graph computes backlinks, stale refs, traceability, freshness, and routing relationships. Routine knowledge-frontmatter `code_paths` are deprecated as required doc-code edges; the graph should derive doc-code links from file-structure and diagram mappings, roadmap task paths, builds, validation evidence, source facts, and explicit refs. If a doc still declares `code_paths`, the graph treats them as optional explicit overrides and audits them for staleness.
 
 ## Output
 
@@ -177,7 +177,7 @@ Status, `codewiki_state`, and CodeWiki UI views must consume the generated-state
 - Markov/MDP analytics are generated views over graph-backed transitions, not requirements.
 - Gated agency and UI stop reasons must be explicit for stale state, blockers, unsafe actions, missing approval, missing isolation, or overlapping write leases.
 - Session lease and wait metadata is temporary coordination evidence, not source-of-truth behavior.
-- Machine backlinks belong in the graph; knowledge docs keep intentional human-facing links.
+- Machine backlinks and routine doc-code links belong in the graph; knowledge docs keep intentional human-facing links and only rare explicit code-path overrides.
 
 ## Related docs
 

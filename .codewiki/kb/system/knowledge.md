@@ -6,10 +6,12 @@ summary: Durable product and system knowledge structure for CodeWiki projects.
 owners:
   - architecture
   - product
-updated: "2026-05-26"
+updated: "2026-05-27"
 code_paths:
   - .codewiki/kb
   - src/knowledge
+  - src/state/graph.ts
+  - src/state/lint.ts
 ---
 
 # Knowledge
@@ -64,6 +66,8 @@ Knowledge docs should use minimal curated Markdown links for human navigation an
 
 The generated graph derives machine relationships from frontmatter, explicit references, curated Markdown links, build metadata, roadmap links, validation reports, code/test facts, and source fingerprints. If a relationship is mainly needed for routing, drift detection, freshness, or backlinks, it belongs in generated graph state rather than in hand-maintained prose links.
 
+Routine `code_paths` in knowledge frontmatter are deprecated as a required mapping mechanism. They duplicate graph responsibility and drift during source-root migrations. Knowledge docs should keep minimal semantic metadata and use `diagram_refs` when a system diagram node is the intended anchor. Exact code paths belong primarily in roadmap tasks, builds, validation evidence, file-structure/diagram mappings, or generated graph facts. A knowledge doc may still use frontmatter `code_paths` as an explicit override when it intentionally owns a precise code surface; when present, audits should verify the paths instead of treating them as generated truth.
+
 ## Rules
 
 - Avoid nested `overview.md` files except `product/overview.md`, `system/overview.md`, and the diagram contract `system/diagrams/README.md`.
@@ -72,7 +76,7 @@ The generated graph derives machine relationships from frontmatter, explicit ref
 - Use Git for historical recovery.
 - Use builds for temporary loop handoff briefs.
 - Use roadmap for active work truth.
-- Use graph state for generated reconciliation, routing, freshness, backlinks, and drift detection.
+- Use graph state for generated reconciliation, routing, freshness, backlinks, doc-code mapping, and drift detection.
 - Use code/tests for executable truth.
 - Prefer sparse intentional links over exhaustive wiki-link meshes.
 - Store canonical diagram source as readable YAML specs under `system/diagrams/**`; treat Mermaid, Cytoscape element JSON, or SVG as renderer targets unless explicitly promoted.
