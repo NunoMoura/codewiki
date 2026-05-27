@@ -3,7 +3,7 @@ import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption } from "../change/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
-import type { ChangeClaimsFile } from "../domain/session/types.ts";
+import type { ChangeClaimsFile } from "../session/types.ts";
 import type {
 	GraphEdge,
 	GraphFile,
@@ -14,7 +14,7 @@ import type { LintReport } from "../validation/types.ts";
 import { GitCache } from "../project/local/git-cache.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport, compactFileStructureDriftReport, parseSystemDiagrams, resolveDiagramRef } from "../knowledge/diagram-parser.ts";
-import { buildChangeClaimState, claimScopeLabels } from "./claims.ts";
+import { buildChangeClaimState, claimScopeLabels } from "../session/claims.ts";
 import { unique } from "../domain/shared/utils.ts";
 
 export interface GraphBuildInputs {

@@ -8,7 +8,7 @@ import {
 	mutateChangeClaims,
 	normalizeScopes,
 	readChangeClaimsFile,
-} from "./claims.ts";
+} from "../session/claims.ts";
 import { codePrompt, statusColor } from "./prompt.ts";
 import {
 	isClosedRoadmapStatus,
@@ -30,7 +30,7 @@ import type {
 	ChangeClaimScope,
 	ChangeClaimState,
 	TaskSessionLinkRecord,
-} from "../domain/session/types.ts";
+} from "../session/types.ts";
 import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "../domain/state/types.ts";
 import type { LintReport } from "../validation/types.ts";
 

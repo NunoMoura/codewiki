@@ -15,7 +15,7 @@ import type {
 	ChangeClaimState,
 	ChangeClaimsFile,
 	ChangeClaimMutationInput,
-} from "../domain/session/types.ts";
+} from "./types.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
 import { withLockedPaths } from "../mutation-queue.ts";
 import {
@@ -24,7 +24,7 @@ import {
 	nextSafeActionForWaiter,
 	summarizeArtifactBlockers,
 	type ArtifactBlocker,
-} from "../domain/session/worktree-isolation.ts";
+} from "./worktree-isolation.ts";
 
 const DEFAULT_TTL_MINUTES = 120;
 const MAX_TTL_MINUTES = 24 * 60;

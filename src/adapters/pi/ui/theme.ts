@@ -1,5 +1,5 @@
 import type { WikiProject } from "../../../project/types.ts";
-import type { TaskSessionLinkRecord } from "../../../domain/session/types.ts";
+import type { TaskSessionLinkRecord } from "../../../session/types.ts";
 import type {
 	RoadmapStateFile,
 	RoadmapStateTaskSummary,

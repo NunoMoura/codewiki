@@ -3,11 +3,11 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildChangeClaimState, mutateChangeClaims } from "../../src/application/claims.ts";
+import { buildChangeClaimState, mutateChangeClaims } from "../../src/session/claims.ts";
 import { writeImplementationBuild } from "../../src/build/writer.ts";
 import { writeValidationReport } from "../../src/validation/report.ts";
 import { buildGraph } from "../../src/application/graph.ts";
-import { createRoleWorktreePlan } from "../../src/application/worktree-isolation.ts";
+import { createRoleWorktreePlan } from "../../src/session/worktree-isolation.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-role-worktree-"));
 
@@ -54,7 +54,7 @@ try {
 			head_sha: "def5678",
 			clean: true,
 		},
-		scopes: [{ layer: "code", path: "src/application/claims.ts" }],
+		scopes: [{ layer: "code", path: "src/session/claims.ts" }],
 	}, { sessionId: "builder-session", agentName: "Builder" });
 
 	assert.equal(claimResult.claim.role, "builder");
@@ -123,7 +123,7 @@ try {
 		source_planning_build: ".codewiki/builds/planning/accepted-plan.json",
 		task_id: "TASK-071",
 		test_files: ["tests/smoke/role-worktree-isolation.test.mjs"],
-		code_files: ["src/application/worktree-isolation.ts", "src/application/claims.ts"],
+		code_files: ["src/session/worktree-isolation.ts", "src/session/claims.ts"],
 		checks_run: ["node ./tests/smoke/role-worktree-isolation.test.mjs"],
 		acceptance_mapping: [{ criterion: "Publisher queue exists", evidence: "Implementation build contains publisher_queue." }],
 		closure_brief: {
@@ -136,7 +136,7 @@ try {
 	const implementationData = JSON.parse(await readFile(join(root, implementation.path), "utf8"));
 	assert.equal(implementationData.publication.publisher_queue.status, "waiting_validation");
 	assert.equal(implementationData.publication.publisher_queue.task_id, "TASK-071");
-	assert.ok(implementationData.publication.publisher_queue.inputs.builder_refs.includes("src/application/worktree-isolation.ts"));
+	assert.ok(implementationData.publication.publisher_queue.inputs.builder_refs.includes("src/session/worktree-isolation.ts"));
 	assert.ok(implementationData.publication.publisher_queue.required_steps.includes("refresh generated CodeWiki state"));
 	assert.ok(implementationData.publication.publisher_queue.result.required_proof.includes("published_sha"));
 

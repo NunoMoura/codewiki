@@ -1,4 +1,4 @@
-import type { AgencyScope } from "../../agency/types.ts";
+import type { AgencyScope } from "../agency/types.ts";
 
 export const TASK_SESSION_ACTION_VALUES = [
 	"focus",

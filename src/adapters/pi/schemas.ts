@@ -23,7 +23,7 @@ import {
 	CHANGE_CLAIM_MODE_VALUES,
 	CHANGE_CLAIM_ROLE_VALUES,
 	WORKFLOW_LOOP_VALUES,
-} from "../../domain/session/types.ts";
+} from "../../session/types.ts";
 import { CODEWIKI_STATE_SECTION_VALUES } from "../../domain/state/types.ts";
 import { VALIDATION_FAILURE_CLASS_VALUES } from "../../validation/types.ts";
 

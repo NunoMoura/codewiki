@@ -3,12 +3,12 @@ import { readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapSprintRecord, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
-import type { ChangeClaimsFile } from "../domain/session/types.ts";
+import type { ChangeClaimsFile } from "../session/types.ts";
 import type { GraphFile, RoadmapStateFile, StatusStateFile } from "../domain/state/types.ts";
 import type { LintReport } from "../validation/types.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { nowIso } from "../domain/shared/utils.ts";
-import { buildChangeClaimState } from "./claims.ts";
+import { buildChangeClaimState } from "../session/claims.ts";
 import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
 
 export function sha256Text(text: string): string {

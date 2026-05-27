@@ -1,7 +1,7 @@
-import type { WikiProject } from "../../project/types.ts";
-import type { CodewikiArtifactStatusToolInput } from "../../domain/session/types.ts";
-import { mutateArtifactStatuses } from "../claims.ts";
-import { runRebuild } from "../state-artifacts.ts";
+import type { WikiProject } from "../project/types.ts";
+import type { CodewikiArtifactStatusToolInput } from "./types.ts";
+import { mutateArtifactStatuses } from "./claims.ts";
+import { runRebuild } from "../application/state-artifacts.ts";
 
 export interface CodewikiArtifactStatusToolContext {
 	sessionId: string;

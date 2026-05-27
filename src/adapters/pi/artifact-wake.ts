@@ -2,8 +2,8 @@ import { watch, type FSWatcher } from "node:fs";
 import { dirname, basename } from "node:path";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../project/types.ts";
-import type { ChangeClaimWaiterRecord } from "../../domain/session/types.ts";
-import { claimsFilePath, readChangeClaimsFile, readyWaitersForSession } from "../../application/claims.ts";
+import type { ChangeClaimWaiterRecord } from "../../session/types.ts";
+import { claimsFilePath, readChangeClaimsFile, readyWaitersForSession } from "../../session/claims.ts";
 
 const WAKE_ENTRY_TYPE = "codewiki_artifact_wait_wake";
 

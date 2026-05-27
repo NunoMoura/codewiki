@@ -1,7 +1,7 @@
 {
   "id": "TASK-028",
   "title": "Migrate session coordination source root",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Move session focus, task-session links, artifact-status claims, worktree-isolation metadata, and related tool execution into src/session/**.",
@@ -14,15 +14,24 @@
     ".codewiki/validation/2026-05-22-decision-pass.json"
   ],
   "code_paths": [
-    "src/domain/session/types.ts",
-    "src/domain/session/links.ts",
-    "src/domain/session/worktree-isolation.ts",
-    "src/domain/shared/session.ts",
-    "src/application/session.ts",
-    "src/application/claims.ts",
-    "src/application/worktree-isolation.ts",
-    "src/application/tools/session.ts",
-    "src/application/tools/artifact-status.ts"
+    "src/session/types.ts",
+    "src/session/links.ts",
+    "src/session/runtime.ts",
+    "src/session/claims.ts",
+    "src/session/worktree-isolation.ts",
+    "src/session/tool.ts",
+    "src/session/artifact-status-tool.ts",
+    "src/adapters/pi/session.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/artifact-wake.ts",
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/smoke/package-smoke.test.mjs"
   ],
   "research_ids": [],
   "labels": [
@@ -61,5 +70,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T03:23:16Z"
+  "updated": "2026-05-27T00:00:00Z"
 }

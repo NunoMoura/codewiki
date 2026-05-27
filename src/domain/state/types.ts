@@ -1,6 +1,6 @@
 import type { WikiProject } from "../../project/types.ts";
 import type { RoadmapStatus, RoadmapTaskGoal } from "../roadmap/types.ts";
-import type { ArtifactStatusRecord, ChangeClaimConflict, ChangeClaimRecord, ChangeClaimWaiterRecord, TaskSessionLinkRecord, WorkflowCursor } from "../session/types.ts";
+import type { ArtifactStatusRecord, ChangeClaimConflict, ChangeClaimRecord, ChangeClaimWaiterRecord, TaskSessionLinkRecord, WorkflowCursor } from "../../session/types.ts";
 
 export const CODEWIKI_STATE_SECTION_VALUES = ["repo", "health", "summary", "roadmap", "graph", "trace", "audit", "drift", "session", "task", "claims", "archive"] as const;
 export const STATUS_DOCK_DENSITY_VALUES = ["minimal", "standard", "full"] as const;

@@ -234,6 +234,32 @@ nodes:
       - src/domain/gc/types.ts
       - src/application/gc.ts
       - src/application/tools/gc.ts
+  - id: session_concept_root_boundary
+    label: Session coordination concept-root migration
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implementation_pending_validation_by_task_028
+    task_id: TASK-028
+    cleanup_state: old_session_claim_worktree_paths_removed
+    paths:
+      - src/session/**
+      - tests/tasks/TASK-028/session-source-root.test.mjs
+      - tests/smoke/claim-wait-queue.test.mjs
+      - tests/smoke/loop-isolation-policy.test.mjs
+      - tests/smoke/role-worktree-isolation.test.mjs
+      - tests/smoke/package-smoke.test.mjs
+    removed_paths:
+      - src/domain/session/types.ts
+      - src/domain/session/links.ts
+      - src/domain/session/worktree-isolation.ts
+      - src/domain/shared/session.ts
+      - src/application/session.ts
+      - src/application/claims.ts
+      - src/application/worktree-isolation.ts
+      - src/application/tools/session.ts
+      - src/application/tools/artifact-status.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -379,7 +405,7 @@ nodes:
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
     next_boundary: session_roadmap_state_api_shared
-    active_boundary: TASK-028_session_migration_pending
+    active_boundary: TASK-028_session_migration_pending_validation
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated
@@ -389,7 +415,6 @@ nodes:
     paths:
       - src/api/**
       - src/roadmap/**
-      - src/session/**
       - src/state/**
 edges:
   - id: intended_defines_current

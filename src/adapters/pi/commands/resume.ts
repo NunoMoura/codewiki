@@ -27,7 +27,7 @@ import {
 import { assessRoadmapTaskBoundary } from "../../../domain/roadmap/task-boundary.ts";
 import { isRoadmapTaskToken } from "../../../domain/roadmap/task-id.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
-import { recordSessionTaskAction } from "../../../application/session.ts";
+import { recordSessionTaskAction } from "../../../session/runtime.ts";
 import {
 	artifactScopeLabel,
 	artifactStatusesForScopes,
@@ -36,7 +36,7 @@ import {
 	mutateChangeClaims,
 	normalizeScopes,
 	readChangeClaimsFile,
-} from "../../../application/claims.ts";
+} from "../../../session/claims.ts";
 import { stableAgentName } from "../../../application/state-builders.ts";
 import { 
     splitCommandArgs, 
@@ -56,7 +56,7 @@ import type {
 	ChangeClaimScope,
 	ChangeClaimState,
 	ArtifactStatusRecord,
-} from "../../../domain/session/types.ts";
+} from "../../../session/types.ts";
 
 /**
  * Register the wiki-resume command.

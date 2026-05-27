@@ -1,5 +1,5 @@
 import type { ChangeType, CodewikiDiffTableRowInput, LegacyChangeClass, TraceabilityExemption } from "../change/types.ts";
-import type { CodewikiIsolationRequirementInput } from "../domain/session/types.ts";
+import type { CodewikiIsolationRequirementInput } from "../session/types.ts";
 
 export type { CodewikiDiffTableRowInput } from "../change/types.ts";
 

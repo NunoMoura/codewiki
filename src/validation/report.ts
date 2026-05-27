@@ -18,10 +18,10 @@ import {
 } from "../build/shared.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption, isSemanticTraceability } from "../change/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
-import type { WorkflowLoop } from "../domain/session/types.ts";
-import { hasPublisherResultProof, publisherProofRefs } from "../domain/session/worktree-isolation.ts";
+import type { WorkflowLoop } from "../session/types.ts";
+import { hasPublisherResultProof, publisherProofRefs } from "../session/worktree-isolation.ts";
 import { nowIso, unique } from "../domain/shared/utils.ts";
-import { normalizeWorktreeIsolation } from "../application/claims.ts";
+import { normalizeWorktreeIsolation } from "../session/claims.ts";
 import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
 import type { CodewikiValidationFailureClass, CodewikiValidationReportInput } from "./types.ts";
 import { VALIDATION_FAILURE_CLASS_VALUES } from "./types.ts";

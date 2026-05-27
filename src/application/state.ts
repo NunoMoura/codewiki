@@ -6,7 +6,7 @@
  */
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
-import type { TaskSessionLinkRecord } from "../domain/session/types.ts";
+import type { TaskSessionLinkRecord } from "../session/types.ts";
 import type {
 	CodewikiStateSection,
 	RoadmapStateFile,
@@ -16,7 +16,7 @@ import type {
 } from "../domain/state/types.ts";
 import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./state-artifacts.ts";
 import { readRoadmapTask } from "./roadmap.ts";
-import { findLatestTaskSessionLink } from "../domain/shared/session.ts";
+import { findLatestTaskSessionLink } from "../session/links.ts";
 import type { FileStore, RebuildRunner, SessionStore } from "./ports.ts";
 
 // ---------------------------------------------------------------------------

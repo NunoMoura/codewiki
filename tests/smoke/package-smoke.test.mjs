@@ -322,7 +322,30 @@ async function main() {
 		assert.match(schemaSource, /gc\/types/, "Pi schemas should read GC values from the GC source-root module");
 		assert.doesNotMatch(piIndexSource, /application\/tools\/gc|application\/gc|domain\/gc/, "GC package paths should not delegate through old GC shims");
 		assert.doesNotMatch(schemaSource, /domain\/gc/, "Schema package paths should not read GC values from old GC shims");
-		for (const adapterFile of ["artifact-status", "session", "state", "task"]) {
+		for (const removedSessionShim of [
+			"src/domain/session/types.ts",
+			"src/domain/session/links.ts",
+			"src/domain/session/worktree-isolation.ts",
+			"src/domain/shared/session.ts",
+			"src/application/session.ts",
+			"src/application/claims.ts",
+			"src/application/worktree-isolation.ts",
+			"src/application/tools/session.ts",
+			"src/application/tools/artifact-status.ts",
+		]) {
+			assert.ok(!existsSync(resolve(repoRoot, removedSessionShim)), `${removedSessionShim} should not be packaged after session migration`);
+		}
+		assert.match(schemaSource, /session\/types/, "Pi schemas should read session values from the session source-root module");
+		assert.doesNotMatch(schemaSource, /domain\/session/, "Schema package paths should not read session values from old session shims");
+		const artifactStatusAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "artifact-status.ts"), "utf8");
+		const sessionAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "session.ts"), "utf8");
+		assert.match(artifactStatusAdapterSource, /session\/artifact-status-tool/, "Pi artifact-status tool should delegate to the session source-root tool module");
+		assert.match(artifactStatusAdapterSource, /session\/types/, "Pi artifact-status tool should read input types from the session source-root module");
+		assert.match(sessionAdapterSource, /session\/tool/, "Pi session tool should delegate to the session source-root tool module");
+		assert.match(sessionAdapterSource, /session\/types/, "Pi session tool should read input types from the session source-root module");
+		assert.doesNotMatch(artifactStatusAdapterSource, /application\/tools\/artifact-status|application\/claims|domain\/session/, "Artifact-status package path should not delegate through old session/claims shims");
+		assert.doesNotMatch(sessionAdapterSource, /application\/tools\/session|application\/session|domain\/session/, "Session package path should not delegate through old session shims");
+		for (const adapterFile of ["state", "task"]) {
 			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
 			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);
 		}

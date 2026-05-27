@@ -5,8 +5,8 @@ import type {
 	ChangeClaimWaiterRecord,
 	WorktreeIsolationMetadata,
 } from "./types.ts";
-import type { WikiProject } from "../../project/types.ts";
-import { unique } from "../shared/utils.ts";
+import type { WikiProject } from "../project/types.ts";
+import { unique } from "../domain/shared/utils.ts";
 
 export interface RoleWorktreePlanInput {
 	task_id?: string;

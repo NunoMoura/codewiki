@@ -1,7 +1,7 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
-import type { CodewikiSessionToolInput } from "../../../domain/session/types.ts";
-import { executeCodewikiSessionTool } from "../../../application/tools/session.ts";
+import type { CodewikiSessionToolInput } from "../../../session/types.ts";
+import { executeCodewikiSessionTool } from "../../../session/tool.ts";
 import { piSessionToolPorts } from "./ports.ts";
 
 /** Implementation of the codewiki_session tool. */

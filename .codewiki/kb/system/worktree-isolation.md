@@ -7,8 +7,9 @@ owners:
   - architecture
 updated: "2026-05-26"
 code_paths:
-  - src/application/claims.ts
-  - src/application/tools/artifact-status.ts
+  - src/session/claims.ts
+  - src/session/artifact-status-tool.ts
+  - src/session/worktree-isolation.ts
   - src/application/resume-context.ts
   - src/adapters/pi/commands/resume.ts
   - src/validation/report.ts

@@ -1,7 +1,7 @@
 {
   "id": "TASK-023",
   "title": "Migrate project and bootstrap source root",
-  "status": "cancelled",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
@@ -36,15 +36,13 @@
     "src/gc/types.ts",
     "src/gc/runtime.ts",
     "src/gc/tool.ts",
-    "src/domain/session/types.ts",
-    "src/domain/session/links.ts",
-    "src/domain/session/worktree-isolation.ts",
-    "src/domain/shared/session.ts",
-    "src/application/session.ts",
-    "src/application/claims.ts",
-    "src/application/worktree-isolation.ts",
-    "src/application/tools/session.ts",
-    "src/application/tools/artifact-status.ts",
+    "src/session/types.ts",
+    "src/session/links.ts",
+    "src/session/worktree-isolation.ts",
+    "src/session/runtime.ts",
+    "src/session/claims.ts",
+    "src/session/tool.ts",
+    "src/session/artifact-status-tool.ts",
     "src/domain/roadmap/types.ts",
     "src/domain/roadmap/status.ts",
     "src/domain/roadmap/task-id.ts",
@@ -192,5 +190,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T23:17:27Z"
+  "updated": "2026-05-26T23:55:17Z"
 }

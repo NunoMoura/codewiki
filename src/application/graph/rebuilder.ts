@@ -7,7 +7,7 @@ import type { RoadmapTaskRecord } from "../../domain/roadmap/types.ts";
 import type { RoadmapStateFile } from "../../domain/state/types.ts";
 import { buildGraph } from "../graph.ts";
 import { buildLintReport } from "../lint.ts";
-import { claimsFilePath, normalizeClaimsFile } from "../claims.ts";
+import { claimsFilePath, normalizeClaimsFile } from "../../session/claims.ts";
 import { buildRoadmapState, buildStatusState } from "../state-builders.ts";
 import { buildCodewikiTaskDetail } from "../state.ts";
 import { parseDoc } from "../../knowledge/doc-parser.ts";

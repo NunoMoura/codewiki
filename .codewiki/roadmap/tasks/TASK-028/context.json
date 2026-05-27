@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:16Z",
+  "generated_at": "2026-05-27T00:00:00Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-028/context.json",
   "task": {
     "id": "TASK-028",
     "title": "Migrate session coordination source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

@@ -4,7 +4,7 @@ import type {
 	ExtensionCommandContext,
 } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
-import type { TaskSessionLinkRecord, TaskSessionAction } from "../../../domain/session/types.ts";
+import type { TaskSessionLinkRecord, TaskSessionAction } from "../../../session/types.ts";
 import type {
 	ActiveStatusPanel,
 	ActiveConfigPanel,

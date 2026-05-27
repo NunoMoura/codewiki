@@ -1,5 +1,5 @@
 import type { SubagentVerdict } from "../agency/types.ts";
-import type { ChangeClaimRole, WorkflowLoop, WorktreeIsolationMetadata } from "../domain/session/types.ts";
+import type { ChangeClaimRole, WorkflowLoop, WorktreeIsolationMetadata } from "../session/types.ts";
 
 export type TaskVerifierVerdict = SubagentVerdict;
 

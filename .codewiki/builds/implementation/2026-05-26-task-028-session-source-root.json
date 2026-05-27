@@ -1,0 +1,1205 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-26T23:58:16Z",
+  "source": "TASK-028",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "task_id": "TASK-028",
+  "task": {
+    "id": "TASK-028",
+    "title": "Migrate session coordination source root",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Move session focus, task-session links, artifact-status claims, worktree-isolation metadata, and related tool execution into src/session/**.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/session/types.ts",
+      "src/session/links.ts",
+      "src/session/runtime.ts",
+      "src/session/claims.ts",
+      "src/session/worktree-isolation.ts",
+      "src/session/tool.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/adapters/pi/session.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Session coordination and artifact-status ownership live under src/session/** while codewiki_session/codewiki_artifact_status behavior and isolation policy remain unchanged.",
+      "acceptance": [
+        "Create src/session/** owner modules for session types, task-session link normalization, focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
+        "Update adapters, schemas, compaction/session callers, tests, and package smoke to import session behavior from src/session/** or stable public API paths.",
+        "Remove old session/claims/worktree owner paths or retain only explicit temporary shims with TASK-specific tests.",
+        "Preserve codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution.",
+        "Add TASK-specific guard proving legacy session/claims/worktree imports are gone or explicitly shimmed."
+      ],
+      "non_goals": [
+        "Do not migrate project, knowledge, roadmap/task queue, state/graph/resume, GC, change/diff-table, adapters/UI, or skills beyond session consumer import updates.",
+        "Do not change runtime session storage format, artifact-status JSON schema, isolation policy, or public tool behavior."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
+        "TASK-specific session guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-02T23:58:16.000Z",
+    "purge_after": "2026-06-09T23:58:16.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "TASK-028-implementation",
+    "supersedes": [],
+    "status": "builder_checks_passed"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "src/session/** owns session types, task-session link normalization, session focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
+      "Adapters, schemas, compaction/session callers, tests, package smoke, shared compatibility exports, roadmap refs, file-structure docs, worktree isolation docs, and skill tool catalog consume src/session/** or stable non-session application APIs.",
+      "Old src/domain/session/**, src/domain/shared/session.ts, src/application/session.ts, src/application/claims.ts, src/application/worktree-isolation.ts, src/application/tools/session.ts, and src/application/tools/artifact-status.ts owner paths are removed with no shims.",
+      "codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution remain stable.",
+      "Required checks and CodeWiki audit pass or only show expected dirty generated-file warnings before commit."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [
+      "profile:file-structure",
+      "profile:alignment",
+      "profile:stale-reference",
+      "profile:generated-parity",
+      "profile:changed",
+      "profile:task",
+      "working_tree_digest:sha256:9bf25bac85b2249b8ab2ad6e21ada085929c484020c83c222041616261614332"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status-write-claim",
+        "reason": "TASK-028 moves session coordination source owners and shared tool callers.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "codewiki_artifact_status mark task_id=TASK-028 -> no conflicts"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Implementation validation must consume build/checks/content proof, not builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation_build for TASK-028",
+          "working_tree_digest:sha256:9bf25bac85b2249b8ab2ad6e21ada085929c484020c83c222041616261614332",
+          "codewiki_audit semantic profiles pass"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "post-validation-task-close",
+        "reason": "Task close requires clean commit/tree proof after implementation validation.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "TASK-028-R1",
+      "text": "Create src/session/** owner modules for session types, task-session link normalization, focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-028/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-028-R2",
+      "text": "Update adapters, schemas, compaction/session callers, tests, and package smoke to import session behavior from src/session/** or stable public API paths.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-028/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-028-R3",
+      "text": "Remove old session/claims/worktree owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-028/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-028-R4",
+      "text": "Preserve codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-028/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-028-R5",
+      "text": "Add TASK-specific guard proving legacy session/claims/worktree imports are gone or explicitly shimmed.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-028/task.json"
+      ],
+      "state": "satisfied"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "src/session/** owner modules exist and own session coordination behavior",
+      "evidence": "src/session/types.ts defines session/artifact-status/worktree values and public input types; src/session/links.ts owns task-session link normalization; src/session/runtime.ts owns focus/update use cases; src/session/claims.ts owns claim file normalization, conflict detection, TTL, heartbeat, wait/release, and artifact-status mutation; src/session/worktree-isolation.ts owns isolation helpers; src/session/tool.ts and src/session/artifact-status-tool.ts own codewiki_session and codewiki_artifact_status execution.",
+      "requirement_ids": [
+        "TASK-028-R1"
+      ],
+      "source_refs": [
+        "src/session/types.ts",
+        "src/session/links.ts",
+        "src/session/runtime.ts",
+        "src/session/claims.ts",
+        "src/session/worktree-isolation.ts",
+        "src/session/tool.ts",
+        "src/session/artifact-status-tool.ts"
+      ]
+    },
+    {
+      "criterion": "Callers import from src/session/** or stable non-session APIs",
+      "evidence": "Updated Pi tools, schemas, session adapter, resume command, artifact wake, UI session types, graph/state/resume builders, build/validation/project types, smoke tests, package smoke, file-structure docs/diagram, worktree isolation docs, roadmap refs, and skill tool catalog to use src/session/**.",
+      "requirement_ids": [
+        "TASK-028-R2"
+      ],
+      "source_refs": [
+        "src/adapters/pi/tools/session.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/session.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "src/application/graph.ts",
+        "src/application/state.ts",
+        "src/application/state-builders.ts",
+        "src/build/types.ts",
+        "src/validation/report.ts",
+        "src/project/context.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "skills/codewiki/references/tool-catalog.md"
+      ]
+    },
+    {
+      "criterion": "Legacy session/claims/worktree owner paths removed and guarded",
+      "evidence": "src/domain/session/types.ts, src/domain/session/links.ts, src/domain/session/worktree-isolation.ts, src/domain/shared/session.ts, src/application/session.ts, src/application/claims.ts, src/application/worktree-isolation.ts, src/application/tools/session.ts, and src/application/tools/artifact-status.ts are deleted with no shims; tests/tasks/TASK-028/session-source-root.test.mjs asserts removed paths do not exist and import specifiers no longer target them.",
+      "requirement_ids": [
+        "TASK-028-R3",
+        "TASK-028-R5"
+      ],
+      "source_refs": [
+        "tests/tasks/TASK-028/session-source-root.test.mjs"
+      ]
+    },
+    {
+      "criterion": "Session tool and artifact-status behavior preserved",
+      "evidence": "TASK-028 guard verifies stable action/mode/role/workflow values, session focus/note/clear results, artifact mark conflict/wait heartbeat/release behavior, worktree plan metadata, adapter/schema/catalog routing, and removed-import absence; claim-wait-queue, loop-isolation-policy, role-worktree-isolation, package-smoke, smoke/features/pack checks pass.",
+      "requirement_ids": [
+        "TASK-028-R4"
+      ],
+      "source_refs": [
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed",
+    "profile:task",
+    "working_tree_digest:sha256:9bf25bac85b2249b8ab2ad6e21ada085929c484020c83c222041616261614332"
+  ],
+  "audit_reports": [
+    "file-structure pass: 94 TypeScript source files, architecture wrapper boundaries, 204 diagram refs, 11 approved migration deltas, 0 actionable drift items.",
+    "alignment pass: generated graph health and roadmap queue reachability.",
+    "stale-reference pass: scanned 52 active markdown/source text files.",
+    "generated-parity pass: generated graph presence/freshness and 5 active roadmap task views.",
+    "task TASK-028 pass.",
+    "changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit."
+  ],
+  "agent_assessment": "TASK-028 implementation is ready for fresh validation. Remaining risk is limited to expected dirty generated-read-model warnings before implementation commit.",
+  "summary": "Implement TASK-028 session coordination source-root migration",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-028"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-027.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/roadmap/tasks/TASK-028/context.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/worktree-isolation.md",
+      "skills/codewiki/references/tool-catalog.md"
+    ],
+    "roadmap": [
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-028/task.json",
+      ".codewiki/roadmap/tasks/TASK-028/context.json",
+      ".codewiki/roadmap/tasks/TASK-023/task.json",
+      ".codewiki/roadmap/tasks/TASK-023/context.json"
+    ],
+    "code": [
+      "src/session/types.ts",
+      "src/session/links.ts",
+      "src/session/runtime.ts",
+      "src/session/claims.ts",
+      "src/session/worktree-isolation.ts",
+      "src/session/tool.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/session.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/application/graph.ts",
+      "src/application/graph/rebuilder.ts",
+      "src/application/resume-context.ts",
+      "src/application/state-builders.ts",
+      "src/application/state.ts",
+      "src/application/tools/resume-context.ts",
+      "src/build/types.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/state/types.ts",
+      "src/project/context.ts",
+      "src/validation/report.ts",
+      "src/validation/types.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/run.mjs"
+    ],
+    "validation": [
+      "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task -> semantic profiles pass; changed warnings only dirty generated read models"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-028"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/session/types.ts",
+      "src/session/links.ts",
+      "src/session/runtime.ts",
+      "src/session/claims.ts",
+      "src/session/worktree-isolation.ts",
+      "src/session/tool.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/adapters/pi/session.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/run.mjs"
+  ],
+  "code_files": [
+    "src/session/types.ts",
+    "src/session/links.ts",
+    "src/session/runtime.ts",
+    "src/session/claims.ts",
+    "src/session/worktree-isolation.ts",
+    "src/session/tool.ts",
+    "src/session/artifact-status-tool.ts",
+    "src/adapters/pi/artifact-wake.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/session.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/resume-context.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/application/tools/resume-context.ts",
+    "src/build/types.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/project/context.ts",
+    "src/validation/report.ts",
+    "src/validation/types.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/run.mjs",
+    "src/session/types.ts",
+    "src/session/links.ts",
+    "src/session/runtime.ts",
+    "src/session/claims.ts",
+    "src/session/worktree-isolation.ts",
+    "src/session/tool.ts",
+    "src/session/artifact-status-tool.ts",
+    "src/adapters/pi/artifact-wake.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/session.ts",
+    "src/adapters/pi/tools/artifact-status.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/resume-context.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/application/tools/resume-context.ts",
+    "src/build/types.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/project/context.ts",
+    "src/validation/report.ts",
+    "src/validation/types.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run check:architecture -> pass",
+    "npm run test:smoke -> pass",
+    "npm run test:features -> pass (30 passed, 0 failed)",
+    "npm run test:pack -> pass",
+    "git diff --check -> pass",
+    "codewiki_state refresh task_id=TASK-028 -> green",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-028 -> semantic profiles pass; changed warnings only dirty generated read models"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-028",
+      "test_files": [
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/run.mjs"
+      ],
+      "evidence": [
+        "Added TASK-028 guard before final broad checks to verify session owner files, removed legacy owner paths, stable session/artifact-status/workflow values, task-session link normalization, session tool focus/note/clear behavior, artifact mark conflict/wait heartbeat/release behavior, worktree plan metadata, package/catalog routing, and absence of legacy imports.",
+        "Kept existing claim-wait-queue, loop-isolation-policy, role-worktree-isolation, and package-smoke tests as behavioral regression coverage for runtime queue semantics and package loading."
+      ],
+      "notes": [
+        "TASK-028 guard intentionally allows old session path text only in itself and package-smoke removed-path assertions while scanning import specifiers for removed owner imports.",
+        "Changed-profile CodeWiki audit warnings are expected until implementation artifacts and generated read models are committed."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-028",
+      "code_files": [
+        "src/session/types.ts",
+        "src/session/links.ts",
+        "src/session/runtime.ts",
+        "src/session/claims.ts",
+        "src/session/worktree-isolation.ts",
+        "src/session/tool.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/session.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/adapters/pi/tools/session.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/application/graph.ts",
+        "src/application/graph/rebuilder.ts",
+        "src/application/resume-context.ts",
+        "src/application/state-builders.ts",
+        "src/application/state.ts",
+        "src/application/tools/resume-context.ts",
+        "src/build/types.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "src/project/context.ts",
+        "src/validation/report.ts",
+        "src/validation/types.ts"
+      ],
+      "evidence": [
+        "Moved session/action/artifact/worktree types into src/session/types.ts.",
+        "Moved task-session link normalization into src/session/links.ts and session focus/update use cases into src/session/runtime.ts.",
+        "Moved artifact-status claim file normalization/mutation/conflict/wait/heartbeat/release logic into src/session/claims.ts and worktree helpers into src/session/worktree-isolation.ts.",
+        "Moved codewiki_session execution into src/session/tool.ts and codewiki_artifact_status execution into src/session/artifact-status-tool.ts.",
+        "Updated all direct session consumers and removed old owner paths without shims."
+      ],
+      "notes": [
+        "No public codewiki_session or codewiki_artifact_status tool name, schema field, artifact-status JSON schema, queue storage format, TTL default/max, conflict/wait semantics, heartbeat/release behavior, worktree-isolation policy, package metadata, or public command behavior changed.",
+        "TASK-023 cancelled aggregate code paths were refreshed to src/session/** so removed session owner paths do not produce graph warnings."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added TASK-028 guard before final broad checks to verify session owner files, removed legacy owner paths, stable session/artifact-status/workflow values, task-session link normalization, session tool focus/note/clear behavior, artifact mark conflict/wait heartbeat/release behavior, worktree plan metadata, package/catalog routing, and absence of legacy imports.",
+    "Kept existing claim-wait-queue, loop-isolation-policy, role-worktree-isolation, and package-smoke tests as behavioral regression coverage for runtime queue semantics and package loading."
+  ],
+  "code_change_evidence": [
+    "Moved session/action/artifact/worktree types into src/session/types.ts.",
+    "Moved task-session link normalization into src/session/links.ts and session focus/update use cases into src/session/runtime.ts.",
+    "Moved artifact-status claim file normalization/mutation/conflict/wait/heartbeat/release logic into src/session/claims.ts and worktree helpers into src/session/worktree-isolation.ts.",
+    "Moved codewiki_session execution into src/session/tool.ts and codewiki_artifact_status execution into src/session/artifact-status-tool.ts.",
+    "Updated all direct session consumers and removed old owner paths without shims."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Create src/session/** owner modules for session types, task-session link normalization, focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
+      "evidence": "src/session/types.ts, links.ts, runtime.ts, claims.ts, worktree-isolation.ts, tool.ts, and artifact-status-tool.ts added; TASK-028 guard verifies owners and behavior."
+    },
+    {
+      "criterion": "Update adapters, schemas, compaction/session callers, tests, and package smoke to import session behavior from src/session/** or stable public API paths.",
+      "evidence": "Updated Pi adapters/tools/schemas/session UI/resume/artifact wake, graph/state/resume builders, build/validation/project types, tests, package smoke, docs, roadmap refs, and tool catalog; typecheck, architecture, smoke, features, package smoke, and pack pass."
+    },
+    {
+      "criterion": "Remove old session/claims/worktree owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "evidence": "Old session/claims/worktree owner paths deleted with no shims; TASK-028 guard verifies missing paths and no imports to removed owners."
+    },
+    {
+      "criterion": "Preserve codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution.",
+      "evidence": "TASK-028 guard, claim-wait-queue, loop-isolation-policy, role-worktree-isolation, package-smoke, full smoke/features/pack, and CodeWiki audit pass."
+    },
+    {
+      "criterion": "Add TASK-specific guard proving legacy session/claims/worktree imports are gone or explicitly shimmed.",
+      "evidence": "tests/tasks/TASK-028/session-source-root.test.mjs added and passing."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue after TASK-027 closure and implement TASK-028 session coordination source-root migration.",
+    "implemented_changes": [
+      "Created src/session/** owner modules for session types, link normalization, session focus/update runtime, claim queue/artifact-status runtime, worktree-isolation helpers, and session/artifact-status tool execution.",
+      "Removed old session/claims/worktree owner paths without shims and updated imports/callers/tests/package smoke.",
+      "Preserved codewiki_session/codewiki_artifact_status behavior, artifact-status queue schema, conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/worktree-isolation.md",
+        "skills/codewiki/references/tool-catalog.md"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-028/task.json",
+        ".codewiki/roadmap/tasks/TASK-028/context.json",
+        ".codewiki/roadmap/tasks/TASK-023/task.json",
+        ".codewiki/roadmap/tasks/TASK-023/context.json"
+      ],
+      "code": [
+        "src/session/**",
+        "src/adapters/pi/**",
+        "src/application/**",
+        "src/build/types.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "src/project/context.ts",
+        "src/validation/**"
+      ],
+      "tests": [
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "validation": [
+        "codewiki_audit required profiles -> semantic pass with dirty generated warnings"
+      ]
+    },
+    "acceptance_evidence": [
+      "TASK-028 guard passes.",
+      "Required npm/typecheck/architecture/smoke/features/pack/package-smoke/claim-wait/isolation checks pass.",
+      "CodeWiki state is green and audit semantic profiles pass."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass",
+      "npm run typecheck -> pass",
+      "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass",
+      "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass",
+      "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+      "npm run check:architecture -> pass",
+      "npm run test:smoke -> pass",
+      "npm run test:features -> pass (30 passed, 0 failed)",
+      "npm run test:pack -> pass",
+      "git diff --check -> pass",
+      "codewiki_state refresh task_id=TASK-028 -> green",
+      "codewiki_audit required profiles -> semantic pass; changed warnings expected pre-commit"
+    ],
+    "non_goals_preserved": [
+      "Did not migrate project, knowledge, roadmap/task queue, state/graph/resume, GC, change/diff-table, adapters/UI beyond direct session consumer import updates, or skills beyond tool catalog update needed for TASK-028.",
+      "Did not change runtime session storage format, artifact-status JSON schema, isolation policy, public tool schema fields, package metadata, or public command behavior."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation and task-close validation/commit proof remain."
+    ]
+  },
+  "risks": [
+    "Implementation validation still requires fresh context/content proof; task close still requires clean commit/tree proof after implementation commit."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-028",
+      "task_id": "TASK-028",
+      "next_focus_task_id": "TASK-023",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-028",
+        "title": "Migrate session coordination source root",
+        "summary": "Implement TASK-028 session coordination source-root migration",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json"
+        ],
+        "code_paths": [
+          "src/session/types.ts",
+          "src/session/links.ts",
+          "src/session/runtime.ts",
+          "src/session/claims.ts",
+          "src/session/worktree-isolation.ts",
+          "src/session/tool.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/adapters/pi/session.ts",
+          "src/adapters/pi/tools/session.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/artifact-wake.ts",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/resume-context.ts",
+          "src/application/state-builders.ts",
+          "src/application/state.ts",
+          "src/application/tools/resume-context.ts",
+          "src/build/types.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "src/project/context.ts",
+          "src/validation/report.ts",
+          "src/validation/types.ts"
+        ],
+        "acceptance": [
+          "Create src/session/** owner modules for session types, task-session link normalization, focus/update use cases, artifact-status claim file logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution.",
+          "Update adapters, schemas, compaction/session callers, tests, and package smoke to import session behavior from src/session/** or stable public API paths.",
+          "Remove old session/claims/worktree owner paths or retain only explicit temporary shims with TASK-specific tests.",
+          "Preserve codewiki_session and codewiki_artifact_status schemas/results, claim conflict/wait semantics, TTL/heartbeat/release behavior, worktree-isolation policy, package loading, and direct Node execution.",
+          "Add TASK-specific guard proving legacy session/claims/worktree imports are gone or explicitly shimmed."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
+          "TASK-specific session guard",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass",
+          "npm run typecheck -> pass",
+          "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+          "npm run check:architecture -> pass",
+          "npm run test:smoke -> pass",
+          "npm run test:features -> pass (30 passed, 0 failed)",
+          "npm run test:pack -> pass",
+          "git diff --check -> pass",
+          "codewiki_state refresh task_id=TASK-028 -> green",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-028 -> semantic profiles pass; changed warnings only dirty generated read models"
+        ],
+        "test_design_evidence": [
+          "Added TASK-028 guard before final broad checks to verify session owner files, removed legacy owner paths, stable session/artifact-status/workflow values, task-session link normalization, session tool focus/note/clear behavior, artifact mark conflict/wait heartbeat/release behavior, worktree plan metadata, package/catalog routing, and absence of legacy imports.",
+          "Kept existing claim-wait-queue, loop-isolation-policy, role-worktree-isolation, and package-smoke tests as behavioral regression coverage for runtime queue semantics and package loading."
+        ],
+        "code_change_evidence": [
+          "Moved session/action/artifact/worktree types into src/session/types.ts.",
+          "Moved task-session link normalization into src/session/links.ts and session focus/update use cases into src/session/runtime.ts.",
+          "Moved artifact-status claim file normalization/mutation/conflict/wait/heartbeat/release logic into src/session/claims.ts and worktree helpers into src/session/worktree-isolation.ts.",
+          "Moved codewiki_session execution into src/session/tool.ts and codewiki_artifact_status execution into src/session/artifact-status-tool.ts.",
+          "Updated all direct session consumers and removed old owner paths without shims."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-028",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-028",
+      "show_build": "git show refs/codewiki/archive/task/TASK-028:.codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/validation/2026-05-22-decision-pass.json",
+        "src/session/types.ts",
+        "src/session/links.ts",
+        "src/session/runtime.ts",
+        "src/session/claims.ts",
+        "src/session/worktree-isolation.ts",
+        "src/session/tool.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/adapters/pi/session.ts",
+        "src/adapters/pi/tools/session.ts",
+        "src/adapters/pi/tools/artifact-status.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "Migrate session coordination source root",
+      "body": "TASK-028 moves session coordination ownership into src/session/**. Session/tool input types, task-session link normalization, session focus/update use cases, artifact-status claim queue logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution now live under src/session/**.\n\nOld src/domain/session/**, src/domain/shared/session.ts, src/application/session.ts, src/application/claims.ts, src/application/worktree-isolation.ts, src/application/tools/session.ts, and src/application/tools/artifact-status.ts owner paths are removed without shims. Callers, schemas, tests, package smoke, roadmap refs, file-structure docs, worktree isolation docs, and tool catalog now consume src/session/** or stable non-session APIs.\n\nChecks: TASK-028 guard, claim-wait queue, loop isolation policy, role worktree isolation, typecheck, architecture, package smoke, smoke, features, pack, git diff --check, CodeWiki audit.",
+      "trailers": [
+        "CodeWiki-Task: TASK-028",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass, npm run typecheck -> pass, node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run check:architecture -> pass, npm run test:smoke -> pass, npm run test:features -> pass (30 passed, 0 failed), npm run test:pack -> pass, git diff --check -> pass, codewiki_state refresh task_id=TASK-028 -> green, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-028 -> semantic profiles pass; changed warnings only dirty generated read models",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-028",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-028",
+        "CodeWiki-Digest: sha256:7b2253e725ebfe958b13b95e40e7899c632e20855e754563294f7f15b7008921",
+        "CodeWiki-Restore: /wiki-restore TASK-028"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "Migrate session coordination source root",
+      "body": "TASK-028 moves session coordination ownership into src/session/**. Session/tool input types, task-session link normalization, session focus/update use cases, artifact-status claim queue logic, worktree-isolation helpers, and codewiki_session/codewiki_artifact_status tool execution now live under src/session/**.\n\nOld src/domain/session/**, src/domain/shared/session.ts, src/application/session.ts, src/application/claims.ts, src/application/worktree-isolation.ts, src/application/tools/session.ts, and src/application/tools/artifact-status.ts owner paths are removed without shims. Callers, schemas, tests, package smoke, roadmap refs, file-structure docs, worktree isolation docs, and tool catalog now consume src/session/** or stable non-session APIs.\n\nChecks: TASK-028 guard, claim-wait queue, loop isolation policy, role worktree isolation, typecheck, architecture, package smoke, smoke, features, pack, git diff --check, CodeWiki audit."
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-028",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-028"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-028",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-028",
+        "show_build": "git show refs/codewiki/archive/task/TASK-028:.codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json",
+          "src/session/types.ts",
+          "src/session/links.ts",
+          "src/session/runtime.ts",
+          "src/session/claims.ts",
+          "src/session/worktree-isolation.ts",
+          "src/session/tool.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/adapters/pi/session.ts",
+          "src/adapters/pi/tools/session.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/artifact-wake.ts",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/smoke/package-smoke.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-028",
+      "build_path": ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-028",
+      "commit_sha": "",
+      "digest": "sha256:7b2253e725ebfe958b13b95e40e7899c632e20855e754563294f7f15b7008921",
+      "restore_command": "/wiki-restore TASK-028"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+          "bytes": 32591
+        },
+        {
+          "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:6510ebbd61968235bc35e2db78765851b64d62ae7d87dec956805baace6b4b87",
+          "bytes": 15277
+        },
+        {
+          "path": "tests/smoke/claim-wait-queue.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:20e4851f4b8fd1c5d65bc92a0bf6726b97a7a0cce0dfc07ac7385f5f16317fdb",
+          "bytes": 5500
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d53b4e10fa3bf1f1b7216cfeb1c84410a736e6001c58e47d3711bac9e3ff03e0",
+          "bytes": 15625
+        },
+        {
+          "path": "tests/smoke/role-worktree-isolation.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0b37a200e779279148fa49fc0666990ae39b345e3079a71ff5f0f7cc14e3079f",
+          "bytes": 9003
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:4373a6648a15975a289ac5768d03c83e0b5b0f5321a53bbbe84c767818ec335d",
+          "bytes": 94041
+        },
+        {
+          "path": "tests/run.mjs",
+          "role": "test_file",
+          "sha256": "sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
+          "bytes": 2037
+        },
+        {
+          "path": "src/session/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:e253b9e9f260e38115acbde7e4e5243ede258ddc5e59ac8297bbda6c36b7b716",
+          "bytes": 6965
+        },
+        {
+          "path": "src/session/links.ts",
+          "role": "code_file",
+          "sha256": "sha256:8ea18d36d59a8cc0781f2fbf79191f4838b030fe37a9068793d6c9665a59da50",
+          "bytes": 5210
+        },
+        {
+          "path": "src/session/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:4d8e1229de429357e80b36d0cc6a491f2bc1e9f8df1751fcb3c4c9c4546d434f",
+          "bytes": 4764
+        },
+        {
+          "path": "src/session/claims.ts",
+          "role": "code_file",
+          "sha256": "sha256:3b6a050c7cdbabedee5139217bca04ab272b91544151d47d0eb4f7238cee32a4",
+          "bytes": 38355
+        },
+        {
+          "path": "src/session/worktree-isolation.ts",
+          "role": "code_file",
+          "sha256": "sha256:424df49687a320d860294cc5d0ecd5d872677d22f4184f8ba67474da53bd7542",
+          "bytes": 7410
+        },
+        {
+          "path": "src/session/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:469c6be7f52bf668c2495072daaad33f0ad80a946468c8bbb1b58e9ab900d678",
+          "bytes": 2219
+        },
+        {
+          "path": "src/session/artifact-status-tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
+          "bytes": 1450
+        },
+        {
+          "path": "src/adapters/pi/artifact-wake.ts",
+          "role": "code_file",
+          "sha256": "sha256:9f34dacfd5692f9d78ef8aada21ecea1f739fd92383ae2a8fa0090f049ab8db0",
+          "bytes": 4177
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:08977eda9151869b5d099e30233166cad531e349ac0fbeb3a4d5efcb2b5b3aba",
+          "bytes": 18892
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:45ac766e0d34bce8fed07609853ed8689cecb84207c27e5c4f2e61a3da2cebca",
+          "bytes": 33664
+        },
+        {
+          "path": "src/adapters/pi/session.ts",
+          "role": "code_file",
+          "sha256": "sha256:b4c96643f4e3bad4c2098821cd420b0e63001fef0f2bdee0224fe4b2a6b690f9",
+          "bytes": 2150
+        },
+        {
+          "path": "src/adapters/pi/tools/artifact-status.ts",
+          "role": "code_file",
+          "sha256": "sha256:e4e4c1386d2566ccc639d993ffe3ffc3e873af612804c96d821300cf57618c29",
+          "bytes": 2629
+        },
+        {
+          "path": "src/adapters/pi/tools/session.ts",
+          "role": "code_file",
+          "sha256": "sha256:cd3a2cf86d3603e86e8673a3cd09195f18e7882c5e242dc15aa37becbfa1fa04",
+          "bytes": 630
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:d3ba728cf7c9180954c3bd40bd9d18eb45b67c01c051b76a4b8737199c6490cd",
+          "bytes": 73569
+        },
+        {
+          "path": "src/adapters/pi/ui/theme.ts",
+          "role": "code_file",
+          "sha256": "sha256:6e84d356536fb8fa613ffbef91b42dd3bec2d88a0b8e28b5bcd6c0ad1a629003",
+          "bytes": 8000
+        },
+        {
+          "path": "src/application/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:45609f78626cf5c5a7e6aaabc976344c51b211568966d7c13379e84a27586221",
+          "bytes": 94528
+        },
+        {
+          "path": "src/application/graph/rebuilder.ts",
+          "role": "code_file",
+          "sha256": "sha256:dea4fc7d319ffcde92a74822a901a9d7c719aa15f4c654773369b554d89d1771",
+          "bytes": 11360
+        },
+        {
+          "path": "src/application/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:c457869fde217e6a71bfb0d7f69468b9dc42f31a5259a2404bc2a99c18d86c2e",
+          "bytes": 17162
+        },
+        {
+          "path": "src/application/state-builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:b8587cc7533be154eef1ce83fbda1746a96d8de1b855c89961775eccb8819a05",
+          "bytes": 45808
+        },
+        {
+          "path": "src/application/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:b7216cbadf3191b04004d5e8676a87fb10fa15ca9eb1176d32aa0b4dc4518019",
+          "bytes": 13714
+        },
+        {
+          "path": "src/application/tools/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:755e9d17d53d220bc96084e9c1367ebf62521cbf224d50479d4d5160732b0bf0",
+          "bytes": 1551
+        },
+        {
+          "path": "src/build/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:d65b3cad0acd53e3d6573ffa8c170829b6cd4641ff646c1aa032075671007517",
+          "bytes": 5565
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:0c0dd0b80e8dfd04b0f7b6e2b70680545279ce533500808c06987e5cdb83fb4a",
+          "bytes": 639
+        },
+        {
+          "path": "src/domain/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:a5cafa4649dc1bfa4254adfc956590a6f31d0406dafe7ee76aceff74e3639993",
+          "bytes": 9716
+        },
+        {
+          "path": "src/project/context.ts",
+          "role": "code_file",
+          "sha256": "sha256:19537139a3a0432043f0648150c990bbaad6621165d4cd9122236036a02d9286",
+          "bytes": 10084
+        },
+        {
+          "path": "src/validation/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:0ce765578b55696899bee30bf403b4c4742ffebfebbee7447df13fc3b093732d",
+          "bytes": 40624
+        },
+        {
+          "path": "src/validation/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:1474f09e41b4228e5da33d68053ee48c086381c957486208d51a05277261be7e",
+          "bytes": 1854
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-028",
+      "source_build": ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/session/types.ts",
+          "src/session/links.ts",
+          "src/session/runtime.ts",
+          "src/session/claims.ts",
+          "src/session/worktree-isolation.ts",
+          "src/session/tool.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/adapters/pi/artifact-wake.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/session.ts",
+          "src/adapters/pi/tools/artifact-status.ts",
+          "src/adapters/pi/tools/session.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/resume-context.ts",
+          "src/application/state-builders.ts",
+          "src/application/state.ts",
+          "src/application/tools/resume-context.ts",
+          "src/build/types.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "src/project/context.ts",
+          "src/validation/report.ts",
+          "src/validation/types.ts",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/run.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-028",
+        "restore_command": "/wiki-restore TASK-028"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs -> pass",
+        "npm run typecheck -> pass",
+        "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+        "npm run check:architecture -> pass",
+        "npm run test:smoke -> pass",
+        "npm run test:features -> pass (30 passed, 0 failed)",
+        "npm run test:pack -> pass",
+        "git diff --check -> pass",
+        "codewiki_state refresh task_id=TASK-028 -> green",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-028 -> semantic profiles pass; changed warnings only dirty generated read models"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

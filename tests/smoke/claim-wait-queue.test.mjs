@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { mutateChangeClaims, readyWaitersForSession } from "../../src/application/claims.ts";
+import { mutateChangeClaims, readyWaitersForSession } from "../../src/session/claims.ts";
 import { notifyReadyArtifactWaiters } from "../../src/adapters/pi/artifact-wake.ts";
 import { buildGraph } from "../../src/application/graph.ts";
 
@@ -45,7 +45,7 @@ try {
 		role: "builder",
 		taskId: "TASK-080",
 		summary: "Hold claim wait test scope.",
-		scopes: [{ layer: "code", path: "src/application/claims.ts" }],
+		scopes: [{ layer: "code", path: "src/session/claims.ts" }],
 	}, { sessionId: "holder-session", agentName: "Holder" });
 
 	assert.equal(holder.claim.id, "CLAIM-001");
@@ -57,7 +57,7 @@ try {
 		role: "builder",
 		taskId: "TASK-081",
 		summary: "Wait for claim wait test scope.",
-		scopes: [{ layer: "code", path: "src/application/claims.ts" }],
+		scopes: [{ layer: "code", path: "src/session/claims.ts" }],
 	}, { sessionId: "waiter-session", agentName: "Waiter" });
 
 	assert.equal(waiting.waiter.id, "WAIT-001");
@@ -91,7 +91,7 @@ try {
 		role: "builder",
 		taskId: "TASK-081",
 		summary: "Claim after wait is ready.",
-		scopes: [{ layer: "code", path: "src/application/claims.ts" }],
+		scopes: [{ layer: "code", path: "src/session/claims.ts" }],
 	}, { sessionId: "waiter-session", agentName: "Waiter" });
 	assert.equal(readyClaim.claim.id, "CLAIM-002");
 

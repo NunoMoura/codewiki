@@ -4,9 +4,9 @@ import type {
 	ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
 import { readFile, writeFile, appendFile } from "node:fs/promises";
-import type { TaskSessionAction, TaskSessionLinkRecord } from "../../domain/session/types.ts";
-import type { SessionPorts } from "../../application/session.ts";
-import { findLatestTaskSessionLink } from "../../domain/shared/session.ts";
+import type { TaskSessionAction, TaskSessionLinkRecord } from "../../session/types.ts";
+import type { SessionPorts } from "../../session/runtime.ts";
+import { findLatestTaskSessionLink } from "../../session/links.ts";
 
 export function currentTaskLink(
 	ctx: ExtensionContext | ExtensionCommandContext,
