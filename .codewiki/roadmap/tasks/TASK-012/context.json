@@ -1,15 +1,15 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T03:08:29Z",
+  "generated_at": "2026-05-27T21:14:40Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-012/context.json",
   "task": {
     "id": "TASK-012",
     "title": "Select first concept-root migration boundary",
-    "status": "in_progress",
+    "status": "cancelled",
     "priority": "medium",
     "kind": "architecture",
     "change_type": "task",
-    "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
+    "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
     "labels": [
       "file-structure",
       "concept-root",

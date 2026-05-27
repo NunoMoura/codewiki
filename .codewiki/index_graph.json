@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T21:13:14.369Z",
+  "generated_at": "2026-05-27T21:14:50.801Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5515,9 +5515,9 @@
       "kind": "roadmap_task",
       "title": "Select first concept-root migration boundary",
       "layer": "roadmap",
-      "status": "in_progress",
+      "status": "cancelled",
       "change_type": "task",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -66563,13 +66563,12 @@
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 3,
+                "count": 2,
                 "refs": [
-                  "TASK-012",
                   "TASK-031",
                   "TASK-033"
                 ],
-                "ref_count": 3
+                "ref_count": 2
               },
               {
                 "id": "done_tasks",
@@ -66705,10 +66704,10 @@
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-012",
-          "source_id": "task:TASK-012",
+          "item_id": "reconcile:task:TASK-031",
+          "source_id": "task:TASK-031",
           "loop": "implementation",
-          "reason": "TASK-012 is open implementation delta below knowledge."
+          "reason": "TASK-031 is open implementation delta below knowledge."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -69765,7 +69764,83 @@
             "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -78087,17 +78162,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:task:TASK-012",
-            "source_id": "task:TASK-012",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-012",
-            "reason": "TASK-012 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-031",
             "source_id": "task:TASK-031",
             "state": "drift",
@@ -78313,12 +78377,10 @@
         "TASK-033"
       ],
       "open_task_ids": [
-        "TASK-012",
         "TASK-031",
         "TASK-033"
       ],
       "in_progress_task_ids": [
-        "TASK-012",
         "TASK-033"
       ],
       "todo_task_ids": [
@@ -78327,12 +78389,13 @@
       "blocked_task_ids": [],
       "done_task_ids": [],
       "cancelled_task_ids": [
+        "TASK-012",
         "TASK-023"
       ],
       "status_counts": {
-        "in_progress": 2,
-        "cancelled": 1,
-        "todo": 1
+        "cancelled": 2,
+        "todo": 1,
+        "in_progress": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -90386,7 +90449,83 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -90401,7 +90540,6 @@
           "TASK-033"
         ],
         "open_task_ids": [
-          "TASK-012",
           "TASK-031",
           "TASK-033"
         ],
@@ -90608,9 +90746,7 @@
           "task_ids": [
             "TASK-012"
           ],
-          "open_task_ids": [
-            "TASK-012"
-          ],
+          "open_task_ids": [],
           "sprint_ids": [],
           "spec_paths": [
             ".codewiki/kb/system/file-structure.md",
@@ -90778,10 +90914,10 @@
     },
     "workflow_cursor": {
       "active_loop": "implementation",
-      "reason": "TASK-012 is open implementation delta below knowledge.",
+      "reason": "TASK-031 is open implementation delta below knowledge.",
       "input_refs": [
-        "task:TASK-012",
-        "TASK-012"
+        "task:TASK-031",
+        "TASK-031"
       ],
       "expected_output": "implementation_build",
       "exit_gate": "validation pass or explicit user decision",
@@ -90801,8 +90937,8 @@
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "task:TASK-012",
-        "TASK-012"
+        "task:TASK-031",
+        "TASK-031"
       ]
     },
     "gc": {
@@ -90816,7 +90952,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-012",
             "TASK-031",
             "TASK-033"
           ],
@@ -90940,6 +91075,7 @@
         },
         "cold": {
           "task_ids": [
+            "TASK-012",
             "TASK-023"
           ],
           "build_paths": [
@@ -91654,17 +91790,6 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
-          "id": "reconcile:task:TASK-012",
-          "source_id": "task:TASK-012",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-012",
-          "reason": "TASK-012 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-031",
           "source_id": "task:TASK-031",
           "state": "drift",
@@ -91688,13 +91813,13 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 3
+        "implementation": 2
       },
       "next_action": {
         "loop": "implementation",
-        "command": "/wiki-resume TASK-012",
-        "reason": "TASK-012 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-012",
+        "command": "/wiki-resume TASK-031",
+        "reason": "TASK-031 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-031",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -91708,8 +91833,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-012",
-          "TASK-012"
+          "task:TASK-031",
+          "TASK-031"
         ]
       },
       "layer_states": {
@@ -91723,7 +91848,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T21:13:14.268Z",
+      "generated_at": "2026-05-27T21:14:50.685Z",
       "counts": {
         "large-doc": 2
       },
@@ -91744,7 +91869,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T21:13:14Z",
+      "generated_at": "2026-05-27T21:14:50Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -91756,13 +91881,13 @@
       },
       "summary": {
         "task_count": 4,
-        "open_count": 3,
+        "open_count": 2,
         "sprint_count": 4,
         "active_sprint_count": 4,
         "status_counts": {
-          "in_progress": 2,
-          "cancelled": 1,
-          "todo": 1
+          "cancelled": 2,
+          "todo": 1,
+          "in_progress": 1
         },
         "priority_counts": {
           "medium": 1,
@@ -91777,12 +91902,10 @@
           "TASK-033"
         ],
         "open_task_ids": [
-          "TASK-012",
           "TASK-033",
           "TASK-031"
         ],
         "executable_open_task_ids": [
-          "TASK-012",
           "TASK-033",
           "TASK-031"
         ],
@@ -91985,11 +92108,9 @@
           }
         ],
         "in_progress_task_ids": [
-          "TASK-012",
           "TASK-033"
         ],
         "executable_in_progress_task_ids": [
-          "TASK-012",
           "TASK-033"
         ],
         "todo_task_ids": [
@@ -92001,12 +92122,13 @@
         "blocked_task_ids": [],
         "done_task_ids": [],
         "cancelled_task_ids": [
+          "TASK-012",
           "TASK-023"
         ],
         "recent_task_ids": [
+          "TASK-012",
           "TASK-033",
           "TASK-023",
-          "TASK-012",
           "TASK-031"
         ]
       },
@@ -92014,11 +92136,11 @@
         "TASK-012": {
           "id": "TASK-012",
           "title": "Select first concept-root migration boundary",
-          "status": "in_progress",
+          "status": "cancelled",
           "priority": "medium",
           "kind": "architecture",
           "change_type": "task",
-          "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
+          "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
           "labels": [
             "file-structure",
             "concept-root",
@@ -92080,7 +92202,7 @@
             "src/state/graph.ts",
             "src/audit/tool.ts"
           ],
-          "updated": "2026-05-27T03:08:29Z",
+          "updated": "2026-05-27T21:14:40Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -92439,7 +92561,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T21:13:14Z",
+      "generated_at": "2026-05-27T21:14:50Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -92454,13 +92576,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 30,
-        "tracked_specs": 5,
+        "aligned_specs": 32,
+        "tracked_specs": 3,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
         "task_count": 4,
-        "open_task_count": 3,
+        "open_task_count": 2,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 7
@@ -92468,8 +92590,8 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 5,
-          "total": 5,
+          "value": 3,
+          "total": 3,
           "percent": 100
         },
         "roadmap_done": {
@@ -92487,21 +92609,16 @@
       },
       "views": {
         "risky_spec_paths": [
-          ".codewiki/kb/product/overview.md",
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/knowledge.md"
         ],
         "top_risky_spec_paths": [
-          ".codewiki/kb/product/overview.md",
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/knowledge.md"
         ],
         "open_task_ids": [
-          "TASK-012",
           "TASK-033",
           "TASK-031"
         ],
@@ -92520,16 +92637,16 @@
       },
       "next_step": {
         "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-012",
-        "reason": "TASK-012 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-012"
+        "command": "/wiki-resume TASK-031",
+        "reason": "TASK-031 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-031"
       },
       "workflow_cursor": {
         "active_loop": "implementation",
-        "reason": "TASK-012 is open implementation delta below knowledge.",
+        "reason": "TASK-031 is open implementation delta below knowledge.",
         "input_refs": [
-          "task:TASK-012",
-          "TASK-012"
+          "task:TASK-031",
+          "TASK-031"
         ],
         "expected_output": "implementation_build",
         "exit_gate": "validation pass or explicit user decision",
@@ -92549,8 +92666,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-012",
-          "TASK-012"
+          "task:TASK-031",
+          "TASK-031"
         ]
       },
       "gc": {
@@ -92564,7 +92681,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-012",
               "TASK-031",
               "TASK-033"
             ],
@@ -92688,6 +92804,7 @@
           },
           "cold": {
             "task_ids": [
+              "TASK-012",
               "TASK-023"
             ],
             "build_paths": [
@@ -92772,12 +92889,12 @@
         ]
       },
       "direction": [
-        "TASK-012 is open implementation delta below knowledge.",
+        "TASK-031 is open implementation delta below knowledge.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=task, approval=task, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 5/5.",
+        "Tracked drift coverage: 3/3.",
         "File-structure drift: 0 actionable item(s), 7 approved migration delta(s)."
       ],
       "file_structure": {
@@ -92821,34 +92938,6 @@
       },
       "specs": [
         {
-          "path": ".codewiki/kb/product/overview.md",
-          "title": "Product",
-          "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/kb/product"
-          ],
-          "code_area": ".codewiki/kb/product",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-012"
-          ],
-          "primary_task": {
-            "id": "TASK-012",
-            "status": "in_progress",
-            "title": "Select first concept-root migration boundary"
-          },
-          "revision": {
-            "digest": "d31384639b90918aedd191fe18f5516a5492034cc6b0ba4e3e9bdd5f1ff12d9a",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-012"
-        },
-        {
           "path": ".codewiki/kb/system/api.md",
           "title": "CodeWiki API",
           "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -92882,36 +92971,6 @@
           "note": "tracked by TASK-031"
         },
         {
-          "path": ".codewiki/kb/system/control-room-ui.md",
-          "title": "CodeWiki UI",
-          "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/ui/web",
-            "src/adapters/pi/commands",
-            "src/application"
-          ],
-          "code_area": "src +2 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-012"
-          ],
-          "primary_task": {
-            "id": "TASK-012",
-            "status": "in_progress",
-            "title": "Select first concept-root migration boundary"
-          },
-          "revision": {
-            "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-012"
-        },
-        {
           "path": ".codewiki/kb/system/file-structure.md",
           "title": "File Structure",
           "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -92928,19 +92987,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-012",
             "TASK-031"
           ],
           "primary_task": {
-            "id": "TASK-012",
-            "status": "in_progress",
-            "title": "Select first concept-root migration boundary"
+            "id": "TASK-031",
+            "status": "todo",
+            "title": "Add API facade and remove remaining layer-first shims"
           },
           "revision": {
             "digest": "cc80253b54be45edf8330bd3e9f186c7ae816026552b1263c64d217aad666b5e",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-012"
+          "note": "tracked by TASK-031"
         },
         {
           "path": ".codewiki/kb/system/knowledge.md",
@@ -92991,6 +93049,28 @@
           "primary_task": null,
           "revision": {
             "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/product/overview.md",
+          "title": "Product",
+          "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/kb/product"
+          ],
+          "code_area": ".codewiki/kb/product",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "d31384639b90918aedd191fe18f5516a5492034cc6b0ba4e3e9bdd5f1ff12d9a",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -93528,6 +93608,30 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/control-room-ui.md",
+          "title": "CodeWiki UI",
+          "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/ui/web",
+            "src/adapters/pi/commands",
+            "src/application"
+          ],
+          "code_area": "src +2 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/diagrams/README.md",
           "title": "System Diagram Raw Data",
           "summary": "Agent-editable raw data contract for project diagrams rendered by CodeWiki UIs.",
@@ -93710,7 +93814,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T21:13:14Z",
+        "generated_at": "2026-05-27T21:14:50Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -93765,12 +93869,16 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:13:14Z",
+            "checked_at": "2026-05-27T21:14:50Z",
             "revision": {
               "git": {
-                "head": "cdbdec9afd889b6b777cabcb5ec0eabc9992b849",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4220d84a627015ad2f5a80b81b48f2c100d74b51",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-012/context.json",
+                  ".codewiki/roadmap/tasks/TASK-012/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -93873,14 +93981,14 @@
                 }
               },
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
-              "task_digest": "2d08e17acb515d6e35dc2f576cfd2e2d9babecb97aa51f6de7117e29d60a7a71",
-              "code_digest": "f20091e2367023f2408c4b39d9c8cbf48316e86d14a28b47056c4a839ef760b8",
-              "digest": "1e2b67ef729863967b8e84402d6817273a7a235f440af854ba082979d90062bb"
+              "task_digest": "19939873bcafe285bc5918f304ef4f56b55729f4dc66e5ef1e5b124f6a945d53",
+              "code_digest": "4f269230e7165dadad091466b722e96611508a89a341a022041135c1c09126f4",
+              "digest": "a5bbf90dd81051ed73922a6af6b6bb0cc144cd11d5e9607cab85a2f201f80433"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:13:14Z",
+              "checked_at": "2026-05-27T21:14:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -93901,7 +94009,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/adapters.md",
@@ -93912,6 +94019,7 @@
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph.md",
@@ -93989,21 +94097,18 @@
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-012",
               "TASK-031",
               "TASK-033"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/product/overview.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 29,
-              "tracked_specs": 5,
+              "aligned_specs": 31,
+              "tracked_specs": 3,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -94028,12 +94133,16 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T21:13:14Z",
+            "checked_at": "2026-05-27T21:14:50Z",
             "revision": {
               "git": {
-                "head": "cdbdec9afd889b6b777cabcb5ec0eabc9992b849",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4220d84a627015ad2f5a80b81b48f2c100d74b51",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-012/context.json",
+                  ".codewiki/roadmap/tasks/TASK-012/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "f3e1ea69355aacbb716dae5311006f04d501eb0d",
@@ -94115,20 +94224,19 @@
                 }
               },
               "spec_digest": "0f6a577cba7904921e5bc3fcda94751171f534b65a6cb40c30809073eb5727f6",
-              "task_digest": "2d08e17acb515d6e35dc2f576cfd2e2d9babecb97aa51f6de7117e29d60a7a71",
-              "code_digest": "5ccadb715a6779fd23a83a7095c5fcae32b12fec348226eb7a13b99e710e9ad7",
-              "digest": "2db395edd61b4b6c701b6ccd869df154f097a775250f39b08eb06222dcd01dd4"
+              "task_digest": "19939873bcafe285bc5918f304ef4f56b55729f4dc66e5ef1e5b124f6a945d53",
+              "code_digest": "a692ef8b611ba9d782c31dee3b560c0af932d6e2ed11ea60ccb67e0b2bfb3c91",
+              "digest": "10894884a8c8777b77271d374b63829ee537839a2171a8075031ae07039d033b"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:13:14Z",
+              "checked_at": "2026-05-27T21:14:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/adapters.md",
@@ -94139,6 +94247,7 @@
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph.md",
@@ -94154,8 +94263,6 @@
               "src/session",
               "src/state",
               "src/adapters",
-              "src/ui/web",
-              "src/adapters/pi/commands",
               ".codewiki/kb",
               "src",
               "skills/codewiki",
@@ -94185,6 +94292,8 @@
               "src/build/types.ts",
               "src/roadmap/runtime.ts",
               "src/roadmap/task.ts",
+              "src/ui/web",
+              "src/adapters/pi/commands",
               "src/knowledge/diagram-parser.ts",
               "src/ui/web/control-room.ts",
               "src/adapters/pi/ui/manager.ts",
@@ -94210,20 +94319,18 @@
             ],
             "code_area": "src, .codewiki +3 more",
             "open_task_ids": [
-              "TASK-012",
               "TASK-031",
               "TASK-033"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 15,
-              "tracked_specs": 4,
+              "aligned_specs": 16,
+              "tracked_specs": 3,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -94248,12 +94355,16 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:13:14Z",
+            "checked_at": "2026-05-27T21:14:50Z",
             "revision": {
               "git": {
-                "head": "cdbdec9afd889b6b777cabcb5ec0eabc9992b849",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "4220d84a627015ad2f5a80b81b48f2c100d74b51",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-012/context.json",
+                  ".codewiki/roadmap/tasks/TASK-012/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -94356,14 +94467,14 @@
                 }
               },
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
-              "task_digest": "2d08e17acb515d6e35dc2f576cfd2e2d9babecb97aa51f6de7117e29d60a7a71",
-              "code_digest": "f20091e2367023f2408c4b39d9c8cbf48316e86d14a28b47056c4a839ef760b8",
-              "digest": "1e2b67ef729863967b8e84402d6817273a7a235f440af854ba082979d90062bb"
+              "task_digest": "19939873bcafe285bc5918f304ef4f56b55729f4dc66e5ef1e5b124f6a945d53",
+              "code_digest": "4f269230e7165dadad091466b722e96611508a89a341a022041135c1c09126f4",
+              "digest": "a5bbf90dd81051ed73922a6af6b6bb0cc144cd11d5e9607cab85a2f201f80433"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:13:14Z",
+              "checked_at": "2026-05-27T21:14:50Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -94384,7 +94495,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/adapters.md",
@@ -94395,6 +94505,7 @@
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph.md",
@@ -94472,21 +94583,18 @@
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-012",
               "TASK-031",
               "TASK-033"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/product/overview.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 29,
-              "tracked_specs": 5,
+              "aligned_specs": 31,
+              "tracked_specs": 3,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -94501,18 +94609,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-012",
+        "task_id": "TASK-033",
         "lane_id": "",
-        "heading": "TASK-012 — Select first concept-root migration boundary",
-        "command": "/wiki-resume TASK-012",
+        "heading": "TASK-033 — Deprecate frontmatter code-path links",
+        "command": "/wiki-resume TASK-033",
         "reason": "Resume roadmap task (in_progress).",
         "status": "in_progress",
-        "verification": "codewiki_audit profiles=file-structure,alignment,generated-parity,changed",
+        "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-27T21:13:14Z",
+        "generated_at": "2026-05-27T21:14:50Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -94535,34 +94643,6 @@
       },
       "wiki": {
         "rows": [
-          {
-            "path": ".codewiki/kb/product/overview.md",
-            "title": "Product",
-            "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/kb/product"
-            ],
-            "code_area": ".codewiki/kb/product",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-012"
-            ],
-            "primary_task": {
-              "id": "TASK-012",
-              "status": "in_progress",
-              "title": "Select first concept-root migration boundary"
-            },
-            "revision": {
-              "digest": "d31384639b90918aedd191fe18f5516a5492034cc6b0ba4e3e9bdd5f1ff12d9a",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-012"
-          },
           {
             "path": ".codewiki/kb/system/api.md",
             "title": "CodeWiki API",
@@ -94597,36 +94677,6 @@
             "note": "tracked by TASK-031"
           },
           {
-            "path": ".codewiki/kb/system/control-room-ui.md",
-            "title": "CodeWiki UI",
-            "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/ui/web",
-              "src/adapters/pi/commands",
-              "src/application"
-            ],
-            "code_area": "src +2 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-012"
-            ],
-            "primary_task": {
-              "id": "TASK-012",
-              "status": "in_progress",
-              "title": "Select first concept-root migration boundary"
-            },
-            "revision": {
-              "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-012"
-          },
-          {
             "path": ".codewiki/kb/system/file-structure.md",
             "title": "File Structure",
             "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -94643,19 +94693,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-012",
               "TASK-031"
             ],
             "primary_task": {
-              "id": "TASK-012",
-              "status": "in_progress",
-              "title": "Select first concept-root migration boundary"
+              "id": "TASK-031",
+              "status": "todo",
+              "title": "Add API facade and remove remaining layer-first shims"
             },
             "revision": {
               "digest": "cc80253b54be45edf8330bd3e9f186c7ae816026552b1263c64d217aad666b5e",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-012"
+            "note": "tracked by TASK-031"
           },
           {
             "path": ".codewiki/kb/system/knowledge.md",
@@ -94706,6 +94755,28 @@
             "primary_task": null,
             "revision": {
               "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/product/overview.md",
+            "title": "Product",
+            "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/kb/product"
+            ],
+            "code_area": ".codewiki/kb/product",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "d31384639b90918aedd191fe18f5516a5492034cc6b0ba4e3e9bdd5f1ff12d9a",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -95243,6 +95314,30 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/control-room-ui.md",
+            "title": "CodeWiki UI",
+            "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/ui/web",
+              "src/adapters/pi/commands",
+              "src/application"
+            ],
+            "code_area": "src +2 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/diagrams/README.md",
             "title": "System Diagram Raw Data",
             "summary": "Agent-editable raw data contract for project diagrams rendered by CodeWiki UIs.",
@@ -95433,7 +95528,7 @@
                 "path": ".codewiki/kb/product/overview.md",
                 "title": "Product",
                 "summary": "Product intent and navigation for CodeWiki's users, stories, and visual UIs.",
-                "drift_status": "tracked",
+                "drift_status": "aligned",
                 "code_paths": [
                   ".codewiki/kb/product"
                 ],
@@ -95443,19 +95538,13 @@
                   "warnings": 0,
                   "total": 0
                 },
-                "related_task_ids": [
-                  "TASK-012"
-                ],
-                "primary_task": {
-                  "id": "TASK-012",
-                  "status": "in_progress",
-                  "title": "Select first concept-root migration boundary"
-                },
+                "related_task_ids": [],
+                "primary_task": null,
                 "revision": {
                   "digest": "d31384639b90918aedd191fe18f5516a5492034cc6b0ba4e3e9bdd5f1ff12d9a",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-012"
+                "note": "no deterministic drift signals"
               },
               {
                 "path": ".codewiki/kb/product/stories/automation.md",
@@ -95816,36 +95905,6 @@
                 "note": "tracked by TASK-031"
               },
               {
-                "path": ".codewiki/kb/system/control-room-ui.md",
-                "title": "CodeWiki UI",
-                "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/ui/web",
-                  "src/adapters/pi/commands",
-                  "src/application"
-                ],
-                "code_area": "src +2 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-012"
-                ],
-                "primary_task": {
-                  "id": "TASK-012",
-                  "status": "in_progress",
-                  "title": "Select first concept-root migration boundary"
-                },
-                "revision": {
-                  "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-012"
-              },
-              {
                 "path": ".codewiki/kb/system/file-structure.md",
                 "title": "File Structure",
                 "summary": "Target knowledge-base and package file structure for CodeWiki.",
@@ -95862,19 +95921,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-012",
                   "TASK-031"
                 ],
                 "primary_task": {
-                  "id": "TASK-012",
-                  "status": "in_progress",
-                  "title": "Select first concept-root migration boundary"
+                  "id": "TASK-031",
+                  "status": "todo",
+                  "title": "Add API facade and remove remaining layer-first shims"
                 },
                 "revision": {
                   "digest": "cc80253b54be45edf8330bd3e9f186c7ae816026552b1263c64d217aad666b5e",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-012"
+                "note": "tracked by TASK-031"
               },
               {
                 "path": ".codewiki/kb/system/knowledge.md",
@@ -96143,6 +96201,30 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/control-room-ui.md",
+                "title": "CodeWiki UI",
+                "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/ui/web",
+                  "src/adapters/pi/commands",
+                  "src/application"
+                ],
+                "code_area": "src +2 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "6a2b952a99df8af760a6197694ab16f399a4931df634260b12e412bac6631a59",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/diagrams/README.md",
                 "title": "System Diagram Raw Data",
                 "summary": "Agent-editable raw data contract for project diagrams rendered by CodeWiki UIs.",
@@ -96333,13 +96415,12 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-012",
+        "focused_task_id": "TASK-033",
         "blocked_task_ids": [],
         "in_progress_task_ids": [
-          "TASK-012",
           "TASK-033"
         ],
-        "next_task_id": "TASK-012",
+        "next_task_id": "TASK-033",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -96549,7 +96630,6 @@
             "id": "implement",
             "label": "Implement",
             "task_ids": [
-              "TASK-012",
               "TASK-033"
             ]
           },

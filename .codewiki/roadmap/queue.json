@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-27T21:12:46Z",
+  "updated": "2026-05-27T21:14:40Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -11,10 +11,10 @@
     "TASK-012": {
       "id": "TASK-012",
       "title": "Select first concept-root migration boundary",
-      "status": "in_progress",
+      "status": "cancelled",
       "priority": "medium",
       "kind": "architecture",
-      "summary": "Keep TASK-012 cancelled after stale audit code path reconciliation; TASK-021 owns active audit migration implementation.",
+      "summary": "Cancel stale non-atomic TASK-012; split work already lives in TASK-013/TASK-014 and downstream source-root tasks.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -84,7 +84,7 @@
         "closure": "Task closes when first migration target/order is approved or explicitly deferred with owner/trigger/rationale.\nRefinement: Task closes when maintainers can inspect intended/current/delta/drift data in an existing CodeWiki human surface with source refs."
       },
       "created": "2026-05-23",
-      "updated": "2026-05-27T03:08:29Z"
+      "updated": "2026-05-27T21:14:40Z"
     },
     "TASK-023": {
       "id": "TASK-023",
