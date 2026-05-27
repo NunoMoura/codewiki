@@ -2,7 +2,7 @@ import { assessDecisionPropagation } from "../build/decision-propagation.ts";
 import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import { normalizeChangeType, normalizeTraceabilityExemption } from "../change/traceability.ts";
 import type { WikiProject } from "../project/types.ts";
-import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { ChangeClaimsFile } from "../session/types.ts";
 import type {
 	GraphEdge,

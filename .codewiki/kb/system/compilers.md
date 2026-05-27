@@ -12,8 +12,8 @@ code_paths:
   - src/build/tool.ts
   - src/build/types.ts
   - src/validation/report.ts
-  - src/application/roadmap.ts
-  - src/application/task.ts
+  - src/roadmap/runtime.ts
+  - src/roadmap/task.ts
   - skills/codewiki-decision/SKILL.md
   - skills/codewiki-planning/SKILL.md
   - skills/codewiki-implementation/SKILL.md

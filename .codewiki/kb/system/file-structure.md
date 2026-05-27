@@ -83,15 +83,15 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | CodeWiki UI | `control-room-ui.md` | `src/ui/web/**`, local UI launch commands |
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
-| CodeWiki API | `api.md` | `src/application/tools/**`, focused application use-case modules, domain contracts |
+| CodeWiki API | `api.md` | concept tool modules such as `src/roadmap/tool.ts`, remaining `src/application/tools/**`, focused use-case modules, and stable contracts |
 | Agency controller | `agency.md` | application use cases and adapter-exposed agency entrypoints |
-| Compilers | `compilers.md` | `src/build/**`, `src/application/roadmap.ts`, `src/application/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
+| Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/validation/**`, `src/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |
 | Audits | `audits.md` | `src/audit/**`, `/audit [flags]`, `codewiki_audit`, gateway-required audit profiles |
-| Roadmap | `roadmap.md` | `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
+| Roadmap | `roadmap.md` | `src/roadmap/**`, `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `src/session/**`, `.codewiki/session/queue.json`, artifact statuses, generated session views |
 | Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/application/state*.ts`, `src/application/graph/**`, `src/domain/state/**` |
 | File-structure map and drift lens | `file-structure.md` | `.codewiki/kb/system/diagrams/file-structure-map.yaml`, repository tree audit inputs, source-layout migration deltas |
@@ -131,12 +131,12 @@ Architecture and audit checks use these classes to prevent dogfood state, genera
 
 ## Package target layout
 
-The accepted vNext direction is concept-root source ownership: main concepts live in `src/<concept>/**` with model, use cases, tool/API entrypoints, and local implementation nearby. Adapters and UI remain exposure layers; shared code stays primitive-only; no top-level `infrastructure/` exists.
+Accepted direction: concept-root source ownership. Main concepts live in `src/<concept>/**` with models, use cases, tool/API entrypoints, and local implementation nearby. Adapters and UI stay exposure layers; shared code stays primitive-only; no top-level `infrastructure/` exists.
 
-Current implementation is hybrid: agency, audit, build, validation, gateway, TASK-024 project/bootstrap roots, the TASK-025 knowledge parser root, TASK-026 change/diff-table root, TASK-027 GC root, and TASK-028 session coordination root live under concept roots; remaining concepts stay in domain/application until their migration tasks close.
+Current source roots:
 
 ```text
-src/{agency,audit,domain,application,adapters,ui}/
+src/{agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,domain,application,adapters,ui}/
 ```
 
 Target roots:
@@ -146,13 +146,9 @@ src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,
 src/{adapters,ui}/
 ```
 
-Primary deltas move domain/application pairs into concept roots: session, state/graph/resume, roadmap, build, validation/gateway, audit, project, knowledge, GC, change, and concept-owned tool entrypoints behind an API facade.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), and `session` (TASK-028). TASK-029 moves roadmap/task/sprint types, status/task-id helpers, task-boundary checks, roadmap mutation, task use cases, sprint mutation, and `codewiki_task` execution into `src/roadmap/**` while preserving roadmap JSON and tool behavior. Remaining work: state/graph/resume and final API/shared cleanup under FS-ROOT-CONCEPTS.
 
-`agency` is the validated pilot. TASK-015 introduced `src/agency/**`; TASK-020 removed the old `src/domain/agency/types.ts`, `src/application/agency.ts`, and `src/application/tools/agency.ts` shims. Old agency shims must not be recreated.
-
-TASK-021 closed audit by moving types/tool execution to `src/audit/**` and removing old audit shims. TASK-022 closed build, validation, and gateway by moving ownership to `src/build/**`, `src/validation/**`, and `src/gateway/**` with task-close validation `.codewiki/validation/2026-05-26-task-close-pass-task-022.json`. TASK-024 closed project/bootstrap by moving project loading, root resolution, setup/bootstrap use cases, starter templates, file store/filesystem, and git cache into `src/project/**`, removing old project/bootstrap owner paths, and leaving Pi registration in the adapter. TASK-025 closed knowledge parser ownership by moving markdown/frontmatter/link parsing, system diagram parsing, diagram-ref validation, and file-structure drift helpers into `src/knowledge/**` while preserving graph/audit behavior. TASK-026 closed change/diff-table ownership by moving change traceability types/helpers plus runtime diff-table storage, mutation, and `codewiki_diff_table` tool execution into `src/change/**` while preserving decision-row approval behavior. TASK-027 closed GC ownership by moving GC types, dry-run/purge use case, restore-ledger writing, candidate detection, and `codewiki_gc` tool execution into `src/gc/**` while preserving GC proof and purge semantics. TASK-028 closed session coordination ownership by moving session focus, task-session link normalization, artifact-status claim queues, worktree-isolation helpers, and `codewiki_session`/`codewiki_artifact_status` tool execution into `src/session/**` while preserving runtime queue format, conflict/wait semantics, TTL, heartbeat/release behavior, and isolation policy. Remaining tasks stage roadmap, state/graph/resume, and final API/shared cleanup under FS-ROOT-CONCEPTS.
-
-Skills own agent workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
+Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
 ## Dependency direction
 

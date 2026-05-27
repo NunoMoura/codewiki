@@ -261,6 +261,28 @@ nodes:
       - src/application/worktree-isolation.ts
       - src/application/tools/session.ts
       - src/application/tools/artifact-status.ts
+  - id: roadmap_concept_root_boundary
+    label: Roadmap/task concept-root migration
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/file-structure.md
+    requires_doc: true
+    status: implementation_pending_validation_by_task_029
+    task_id: TASK-029
+    cleanup_state: old_roadmap_task_paths_removed
+    paths:
+      - src/roadmap/**
+      - tests/tasks/TASK-029/roadmap-source-root.test.mjs
+      - tests/smoke/roadmap-task-boundary.test.mjs
+      - tests/smoke/package-smoke.test.mjs
+    removed_paths:
+      - src/domain/roadmap/types.ts
+      - src/domain/roadmap/status.ts
+      - src/domain/roadmap/task-id.ts
+      - src/domain/roadmap/task-boundary.ts
+      - src/application/roadmap.ts
+      - src/application/task.ts
+      - src/application/tools/task.ts
   - id: api_facade
     label: Stable API facade
     group: source_target
@@ -405,8 +427,8 @@ nodes:
     owner: maintainers
     trigger: TASK-022 build/validation/gateway migration task-close validation and file-structure audit evidence
     trigger_state: satisfied_by_.codewiki/validation/2026-05-26-task-close-pass-task-022.json
-    next_boundary: roadmap_state_api_shared
-    active_boundary: TASK-029_roadmap_migration_pending
+    next_boundary: state_api_shared
+    active_boundary: TASK-029_roadmap_migration_pending_validation
     completed_boundaries:
       - TASK-024_project_root_migration_task_close_validated
       - TASK-025_knowledge_parser_migration_task_close_validated

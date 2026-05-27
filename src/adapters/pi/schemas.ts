@@ -16,7 +16,7 @@ import {
 	SPRINT_STATUS_VALUES,
 	TASK_EVIDENCE_RESULT_VALUES,
 	TOOL_TASK_STATUS_VALUES,
-} from "../../domain/roadmap/types.ts";
+} from "../../roadmap/types.ts";
 import {
 	ARTIFACT_STATUS_ACTION_VALUES,
 	CHANGE_CLAIM_LAYER_VALUES,

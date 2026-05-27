@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { assessRoadmapTaskBoundary, assertExecutableRoadmapTask } from "../../src/domain/roadmap/task-boundary.ts";
-import { runTaskClosePreflight } from "../../src/application/roadmap.ts";
+import { assessRoadmapTaskBoundary, assertExecutableRoadmapTask } from "../../src/roadmap/task-boundary.ts";
+import { runTaskClosePreflight } from "../../src/roadmap/runtime.ts";
 
 const boundedTask = {
 	id: "TASK-900",

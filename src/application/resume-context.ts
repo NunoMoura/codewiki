@@ -15,16 +15,16 @@ import {
 	readRoadmapFile,
 	resolveRoadmapTask,
 	taskLoopEvidenceLine,
-} from "./roadmap.ts";
+} from "../roadmap/runtime.ts";
 import {
 	loadCodewikiStateArtifacts,
 	maybeReadTaskContext,
 } from "./state-artifacts.ts";
 import { stableAgentName } from "./state-builders.ts";
-import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { unique } from "../domain/shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
-import type { RoadmapFile, RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { RoadmapFile, RoadmapTaskRecord } from "../roadmap/types.ts";
 import type {
 	ArtifactStatusRecord,
 	ChangeClaimScope,

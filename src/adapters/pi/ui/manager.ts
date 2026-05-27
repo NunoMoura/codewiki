@@ -70,8 +70,8 @@ import {
     taskLoopEvidenceLine,
     isTaskBlocked,
     taskBoardColumn,
-} from "../../../application/roadmap.ts";
-import { taskIdCandidates } from "../../../domain/roadmap/task-id.ts";
+} from "../../../roadmap/runtime.ts";
+import { taskIdCandidates } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, setTaskSessionStatusText } from "../session.ts";
 import { maybeReadStatusState, maybeReadRoadmapState } from "../../../application/state-artifacts.ts";
 import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";

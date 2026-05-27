@@ -8,7 +8,7 @@ import { registerResumeCommand } from "./commands/resume.ts";
 import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
 import { currentTaskLink } from "./session.ts";
-import { readRoadmapTask } from "../../application/roadmap.ts";
+import { readRoadmapTask } from "../../roadmap/runtime.ts";
 import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject } from "../../project/context.ts";
 import { executeCodewikiBuildTool } from "../../build/tool.ts";
 import { executeCodewikiValidationTool } from "../../validation/tool.ts";

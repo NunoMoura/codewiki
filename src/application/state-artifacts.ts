@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import type { WikiProject } from "../project/types.ts";
-import type { RoadmapStatus, ToolTaskStatus } from "../domain/roadmap/types.ts";
+import type { RoadmapStatus, ToolTaskStatus } from "../roadmap/types.ts";
 import type {
 	StatusStateFile,
 	RoadmapStateFile,

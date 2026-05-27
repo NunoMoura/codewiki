@@ -1,5 +1,5 @@
 import { resolve, dirname, basename } from "node:path";
-import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../session/types.ts";
 import type { ResolvedStatusDockProject, StatusDockPrefs } from "../domain/state/types.ts";
 import {
@@ -122,7 +122,7 @@ export async function appendTaskSessionEvent(
 	link: TaskSessionLinkRecord,
 	sessionId: string,
 ): Promise<void> {
-	const { appendProjectEvent } = await import("../application/roadmap.ts");
+	const { appendProjectEvent } = await import("../roadmap/runtime.ts");
 	await appendProjectEvent(project, {
 		ts: nowIso(),
 		kind: "roadmap_task_session_link",

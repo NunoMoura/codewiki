@@ -9,6 +9,8 @@ updated: "2026-05-19"
 code_paths:
   - src/application
   - src/domain
+  - src/roadmap
+  - src/session
   - src/adapters
 ---
 
@@ -117,7 +119,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 
 ## API boundary
 
-The API belongs in `src/application/tools/**` and domain contracts. Application tools call focused use cases for builds, validation, roadmap/session operations, state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into those tools. Local runtime services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until an external adapter needs its own boundary.
+The API currently lives in concept tool modules such as `src/roadmap/tool.ts` and `src/session/tool.ts`, plus remaining transitional `src/application/tools/**` modules and stable contracts. Tool modules call focused use cases for builds, validation, roadmap/session operations, state/graph work, and local runtime behavior. Adapters, UI transport, CLI/MCP wrappers, and skills translate external inputs and outputs into those tools. Local runtime services handle filesystem, Git, process, persistence, patch application, and state rebuild/query ports until an external adapter needs its own boundary.
 
 The API should stay stable while adapter protocols change.
 

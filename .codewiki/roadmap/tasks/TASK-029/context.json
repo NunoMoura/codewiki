@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-26T03:23:22Z",
+  "generated_at": "2026-05-27T00:27:46Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-029/context.json",
   "task": {
     "id": "TASK-029",
     "title": "Migrate roadmap and task source root",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

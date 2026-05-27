@@ -96,7 +96,7 @@ async function main() {
 	);
 	initTheme("dark", false);
 	process.env.PI_CODEWIKI_SKIP_VERIFIER = "1";
-	const roadmapSource = readFileSync(resolve(repoRoot, "src", "application", "roadmap.ts"), "utf8");
+	const roadmapSource = readFileSync(resolve(repoRoot, "src", "roadmap", "runtime.ts"), "utf8");
 	const taskAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
 	assert.match(roadmapSource, /TaskVerifierProfile = "task-close"/, "Verifier gateway should define task-close profile contract");
 	assert.match(roadmapSource, /runTaskClosePreflight/, "Verifier gateway should run deterministic task-close preflight");
@@ -345,10 +345,23 @@ async function main() {
 		assert.match(sessionAdapterSource, /session\/types/, "Pi session tool should read input types from the session source-root module");
 		assert.doesNotMatch(artifactStatusAdapterSource, /application\/tools\/artifact-status|application\/claims|domain\/session/, "Artifact-status package path should not delegate through old session/claims shims");
 		assert.doesNotMatch(sessionAdapterSource, /application\/tools\/session|application\/session|domain\/session/, "Session package path should not delegate through old session shims");
-		for (const adapterFile of ["state", "task"]) {
-			const adapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", `${adapterFile}.ts`), "utf8");
-			assert.match(adapterSource, /application\/tools/, `Pi ${adapterFile} tool should delegate to application tool module`);
+		for (const removedRoadmapShim of [
+			"src/domain/roadmap/types.ts",
+			"src/domain/roadmap/status.ts",
+			"src/domain/roadmap/task-id.ts",
+			"src/domain/roadmap/task-boundary.ts",
+			"src/application/roadmap.ts",
+			"src/application/task.ts",
+			"src/application/tools/task.ts",
+		]) {
+			assert.ok(!existsSync(resolve(repoRoot, removedRoadmapShim)), `${removedRoadmapShim} should not be packaged after roadmap migration`);
 		}
+		assert.match(schemaSource, /roadmap\/types/, "Pi schemas should read roadmap values from the roadmap source-root module");
+		const stateAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "state.ts"), "utf8");
+		assert.match(stateAdapterSource, /application\/tools/, "Pi state tool should delegate to application tool module until TASK-030 moves state ownership");
+		const taskToolAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
+		assert.match(taskToolAdapterSource, /roadmap\/tool/, "Pi task tool should delegate to roadmap source-root tool module");
+		assert.doesNotMatch(taskToolAdapterSource, /application\/tools\/task|application\/task|domain\/roadmap/, "Pi task tool should not delegate through old roadmap/task shims");
 		for (const removedTool of [
 			"codewiki_rebuild",
 			"codewiki_status",

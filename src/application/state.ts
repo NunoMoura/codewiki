@@ -5,7 +5,7 @@
  * Accepts ports instead of Pi ExtensionContext so any agent harness can call it.
  */
 import type { WikiProject } from "../project/types.ts";
-import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord } from "../session/types.ts";
 import type {
 	CodewikiStateSection,
@@ -15,7 +15,7 @@ import type {
 	RoadmapStateTaskSummary,
 } from "../domain/state/types.ts";
 import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./state-artifacts.ts";
-import { readRoadmapTask } from "./roadmap.ts";
+import { readRoadmapTask } from "../roadmap/runtime.ts";
 import { findLatestTaskSessionLink } from "../session/links.ts";
 import type { FileStore, RebuildRunner, SessionStore } from "./ports.ts";
 

@@ -1,7 +1,7 @@
 {
   "id": "TASK-023",
   "title": "Migrate project and bootstrap source root",
-  "status": "cancelled",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "TASK-023 cancelled as superseded aggregate; continue with TASK-029.",
@@ -43,13 +43,13 @@
     "src/session/claims.ts",
     "src/session/tool.ts",
     "src/session/artifact-status-tool.ts",
-    "src/domain/roadmap/types.ts",
-    "src/domain/roadmap/status.ts",
-    "src/domain/roadmap/task-id.ts",
-    "src/domain/roadmap/task-boundary.ts",
-    "src/application/roadmap.ts",
-    "src/application/task.ts",
-    "src/application/tools/task.ts",
+    "src/roadmap/types.ts",
+    "src/roadmap/status.ts",
+    "src/roadmap/task-id.ts",
+    "src/roadmap/task-boundary.ts",
+    "src/roadmap/runtime.ts",
+    "src/roadmap/task.ts",
+    "src/roadmap/tool.ts",
     "src/domain/state/types.ts",
     "src/application/state.ts",
     "src/application/state-artifacts.ts",
@@ -190,5 +190,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-27T00:07:45Z"
+  "updated": "2026-05-27T00:21:58Z"
 }

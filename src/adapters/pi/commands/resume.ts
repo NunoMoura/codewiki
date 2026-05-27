@@ -23,9 +23,9 @@ import {
     updateRoadmapTask,
     resolveRoadmapTask,
     isClosedRoadmapStatus,
-} from "../../../application/roadmap.ts";
-import { assessRoadmapTaskBoundary } from "../../../domain/roadmap/task-boundary.ts";
-import { isRoadmapTaskToken } from "../../../domain/roadmap/task-id.ts";
+} from "../../../roadmap/runtime.ts";
+import { assessRoadmapTaskBoundary } from "../../../roadmap/task-boundary.ts";
+import { isRoadmapTaskToken } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
 import { recordSessionTaskAction } from "../../../session/runtime.ts";
 import {
@@ -49,7 +49,7 @@ import {
 } from "../ui/theme.ts";
 import { buildResumeContextForTask } from "../../../application/resume-context.ts";
 import type { WikiProject } from "../../../project/types.ts";
-import type { RoadmapFile, RoadmapTaskRecord, RoadmapStatus } from "../../../domain/roadmap/types.ts";
+import type { RoadmapFile, RoadmapTaskRecord, RoadmapStatus } from "../../../roadmap/types.ts";
 import type {
 	TaskSessionLinkRecord,
 	TaskSessionAction,

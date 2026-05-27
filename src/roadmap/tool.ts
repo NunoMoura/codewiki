@@ -4,12 +4,12 @@ import { appendFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/p
 import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
-import type { WikiProject } from "../../project/types.ts";
-import type { CodewikiTaskToolInput } from "../../domain/roadmap/types.ts";
-import { nowIso } from "../../domain/shared/utils.ts";
-import { withLockedPaths } from "../../mutation-queue.ts";
-import { buildCodewikiTaskDetail } from "../state.ts";
-import { maybeReadRoadmapState, maybeReadTaskContext, runRebuild } from "../state-artifacts.ts";
+import type { WikiProject } from "../project/types.ts";
+import type { CodewikiTaskToolInput } from "./types.ts";
+import { nowIso } from "../domain/shared/utils.ts";
+import { withLockedPaths } from "../mutation-queue.ts";
+import { buildCodewikiTaskDetail } from "../application/state.ts";
+import { maybeReadRoadmapState, maybeReadTaskContext, runRebuild } from "../application/state-artifacts.ts";
 import {
 	appendCodewikiTaskEvidence,
 	appendProjectEvent,
@@ -21,7 +21,7 @@ import {
 	updateTaskLoop,
 	upsertRoadmapSprint,
 	writeRoadmapFile,
-} from "../roadmap.ts";
+} from "./runtime.ts";
 import {
 	appendTaskEvidence as appendTaskEvidenceUseCase,
 	cancelCodewikiTask,
@@ -29,7 +29,7 @@ import {
 	createCodewikiTasks,
 	patchCodewikiTask,
 	type TaskMutationPorts,
-} from "../task.ts";
+} from "./task.ts";
 
 const execFileAsync = promisify(execFile);
 

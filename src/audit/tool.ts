@@ -16,7 +16,7 @@ import type { WikiProject } from "../project/types.ts";
 import { AUDIT_PROFILE_VALUES } from "./types.ts";
 import { formatError, nowIso, unique } from "../domain/shared/utils.ts";
 import { pathExists } from "../project/local/filesystem.ts";
-import { assessRoadmapTaskBoundary } from "../domain/roadmap/task-boundary.ts";
+import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { parseDoc } from "../knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport, validateSystemDiagramRefs } from "../knowledge/diagram-parser.ts";
 
@@ -220,7 +220,7 @@ function exportedStringArray(source: string, exportName: string): string[] | nul
 
 function pushArrayEqualsIssue(issues: AuditIssue[], actual: string[] | null, exportName: string): void {
 	if (!actual) {
-		issues.push(createIssue("file-structure", "error", "workflow-drift", `Missing ${exportName} export.`, "src/domain/roadmap/types.ts"));
+		issues.push(createIssue("file-structure", "error", "workflow-drift", `Missing ${exportName} export.`, "src/roadmap/types.ts"));
 		return;
 	}
 	if (JSON.stringify(actual) !== JSON.stringify(CANONICAL_ROADMAP_STATUSES)) {
@@ -229,7 +229,7 @@ function pushArrayEqualsIssue(issues: AuditIssue[], actual: string[] | null, exp
 			"error",
 			"workflow-drift",
 			`${exportName} = ${JSON.stringify(actual)}, expected ${JSON.stringify(CANONICAL_ROADMAP_STATUSES)}.`,
-			"src/domain/roadmap/types.ts",
+			"src/roadmap/types.ts",
 		));
 	}
 }
@@ -244,15 +244,15 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 		issues.push(createIssue(profile, "warning", "missing-source-tree", "No TypeScript source files found under src/.", "src"));
 	}
 
-	const roadmapTypesPath = resolve(project.root, "src/domain/roadmap/types.ts");
+	const roadmapTypesPath = resolve(project.root, "src/roadmap/types.ts");
 	const typesText = await maybeReadText(roadmapTypesPath);
 	if (typesText) {
 		pushArrayEqualsIssue(issues, exportedStringArray(typesText, "ROADMAP_STATUS_VALUES"), "ROADMAP_STATUS_VALUES");
 		if (/TASK_PHASE_VALUES|TaskPhase|phase\?:/.test(typesText)) {
-			issues.push(createIssue(profile, "error", "workflow-drift", "Task phases must not be canonical types; use roadmap status plus build/validation gates.", "src/domain/roadmap/types.ts"));
+			issues.push(createIssue(profile, "error", "workflow-drift", "Task phases must not be canonical types; use roadmap status plus build/validation gates.", "src/roadmap/types.ts"));
 		}
 	} else {
-		issues.push(createIssue(profile, "warning", "missing-types", "Unable to read shared domain types.", "src/domain/roadmap/types.ts"));
+		issues.push(createIssue(profile, "warning", "missing-types", "Unable to read shared domain types.", "src/roadmap/types.ts"));
 	}
 
 	const schemaText = await maybeReadText(resolve(project.root, "src/adapters/pi/schemas.ts"));
@@ -342,7 +342,7 @@ async function auditFileStructure(project: WikiProject, input: CodewikiAuditInpu
 
 	const fingerprints = await fingerprintFiles(project, [
 		"src/audit/tool.ts",
-		"src/domain/roadmap/types.ts",
+		"src/roadmap/types.ts",
 		"src/domain/shared/types.ts",
 		"src/adapters/pi/schemas.ts",
 		"src/adapters/pi/index.ts",

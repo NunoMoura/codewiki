@@ -5,10 +5,10 @@
  * Links runtime agent session state to the CodeWiki roadmap without importing Pi types.
  */
 import type { WikiProject } from "../project/types.ts";
-import type { RoadmapTaskRecord } from "../domain/roadmap/types.ts";
+import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord, TaskSessionAction, TaskSessionLinkInput } from "./types.ts";
 import { findLatestTaskSessionLink, normalizeTaskSessionLinkInput } from "./links.ts";
-import { readRoadmapTask } from "../application/roadmap.ts";
+import { readRoadmapTask } from "../roadmap/runtime.ts";
 import { unique } from "../domain/shared/utils.ts";
 import type { FileStore, SessionStore, UserNotifier } from "../application/ports.ts";
 

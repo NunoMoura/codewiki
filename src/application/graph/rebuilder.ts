@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, mkdirSy
 import { join, relative, resolve } from "node:path";
 import { GitCache } from "../../project/local/git-cache.ts";
 import type { WikiProject } from "../../project/types.ts";
-import type { RoadmapTaskRecord } from "../../domain/roadmap/types.ts";
+import type { RoadmapTaskRecord } from "../../roadmap/types.ts";
 import type { RoadmapStateFile } from "../../domain/state/types.ts";
 import { buildGraph } from "../graph.ts";
 import { buildLintReport } from "../lint.ts";

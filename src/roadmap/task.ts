@@ -1,5 +1,5 @@
 /**
- * application/task.ts
+ * roadmap/task.ts
  *
  * Task mutation use cases — create, update, close, append evidence.
  * Orchestrates roadmap task mutation helpers behind port interfaces.
@@ -13,10 +13,10 @@ import type {
 	CodewikiTaskPatchInput,
 	CodewikiTaskEvidenceInput,
 	RoadmapStatus,
-} from "../domain/roadmap/types.ts";
-import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./roadmap.ts";
-import { maybeReadRoadmapState } from "./state-artifacts.ts";
-import type { FileStore, RebuildRunner, MessageBus } from "./ports.ts";
+} from "./types.ts";
+import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./runtime.ts";
+import { maybeReadRoadmapState } from "../application/state-artifacts.ts";
+import type { FileStore, RebuildRunner, MessageBus } from "../application/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Port dependencies

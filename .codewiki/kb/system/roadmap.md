@@ -9,7 +9,7 @@ updated: "2026-05-19"
 code_paths:
   - .codewiki/roadmap/queue.json
   - .codewiki/roadmap
-  - src/application/roadmap.ts
+  - src/roadmap/runtime.ts
 ---
 
 # Roadmap

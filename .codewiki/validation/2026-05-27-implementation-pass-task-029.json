@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T00:27:34Z",
+  "profile": "implementation",
+  "task_id": "TASK-029",
+  "verdict": "pass",
+  "rationale": "TASK-029 implementation passes. Source refs show roadmap/task/sprint and codewiki_task ownership now lives under src/roadmap/**: src/roadmap/types.ts owns roadmap/task/sprint/tool input types; src/roadmap/status.ts owns status helpers; src/roadmap/task-id.ts owns task id helpers; src/roadmap/task-boundary.ts owns executable task assessment; src/roadmap/runtime.ts owns roadmap file mutation, task context/preflight helpers, archive/checkpoint helpers, and sprint mutation; src/roadmap/task.ts owns task create/update/close/cancel/evidence use cases; and src/roadmap/tool.ts owns codewiki_task execution. Old src/domain/roadmap/**, src/application/roadmap.ts, src/application/task.ts, and src/application/tools/task.ts owner paths are removed without shims. State/resume/session/adapters/tests/package smoke/docs consume src/roadmap/** or stable non-roadmap APIs. TASK-specific guard verifies owner paths, removed paths, no legacy imports, stable status/priority/evidence/sprint values, task-id helpers, task-boundary gates, runtime/use-case/tool exports, and codewiki_task create/update/sprint/cancel behavior on a temp queue. Roadmap task-boundary smoke, package smoke, broad smoke/features/pack, typecheck, and architecture checks pass. CodeWiki state is green. The only CodeWiki audit warnings are dirty generated files before commit and a stale in-process audit warning for a removed old path; fresh npm check:architecture using current source passes with 0 issues.",
+  "checks": [
+    "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run check:architecture -> pass",
+    "npm run test:smoke -> pass",
+    "npm run test:features -> pass (31 passed, 0 failed)",
+    "npm run test:pack -> pass",
+    "git diff --check -> pass",
+    "codewiki_state refresh task_id=TASK-029 -> green",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-029 -> alignment/stale-reference/generated-parity/task pass; fresh check:architecture passes; changed warnings only dirty generated read models; in-process file-structure warning cites removed old path"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Changed-profile warnings are limited to generated read models and dirty implementation artifacts before commit; post-commit audit should clear them."
+    },
+    {
+      "severity": "low",
+      "summary": "In-process codewiki_audit file-structure warning still references deleted src/domain/roadmap/types.ts; fresh npm run check:architecture uses current source and passes. No compatibility shim was kept."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "stale-reference",
+    "generated-parity",
+    "task"
+  ],
+  "audit_refs": [
+    "approval:user:2026-05-27 Great. Please continue",
+    "build:.codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+    "planning:.codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "decision:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+    "validation:.codewiki/validation/2026-05-22-decision-pass.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+    "validation:.codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+    "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed",
+    "profile:task",
+    "npm:check:architecture",
+    "working_tree_digest:sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee"
+  ],
+  "audit_reports": [
+    "npm run check:architecture pass: file-structure profile checked 94 TypeScript source files, architecture wrapper boundaries, 205 diagram refs, 9 approved migration deltas, 0 actionable drift items.",
+    "codewiki_state refresh task_id=TASK-029 pass: health green, 0 errors, 0 warnings.",
+    "codewiki_audit alignment pass: generated graph health and roadmap queue reachability.",
+    "codewiki_audit stale-reference pass: scanned 52 active markdown/source text files.",
+    "codewiki_audit generated-parity pass: generated graph presence/freshness and 4 active roadmap task views.",
+    "codewiki_audit task TASK-029 pass.",
+    "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+    "codewiki_audit file-structure warning: in-process audit cache still reports missing src/domain/roadmap/types.ts, while fresh npm check:architecture using current source passes; no shim was kept."
+  ],
+  "content_proof_refs": [
+    "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-029",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:2026-05-27 Great. Please continue"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Implementation validation consumed implementation build, source refs, required checks, current architecture audit, CodeWiki audit evidence, explicit user approval, and deterministic dirty working-tree digest; task-close still requires clean commit/tree proof.",
+    "role": "validator"
+  }
+}

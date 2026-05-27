@@ -1,0 +1,1216 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-27T00:25:56Z",
+  "source": "TASK-029",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+  "task_id": "TASK-029",
+  "task": {
+    "id": "TASK-029",
+    "title": "Migrate roadmap and task source root",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Move roadmap task/sprint models, task boundary helpers, roadmap mutation logic, task tool execution, and roadmap generated-view integration into src/roadmap/**.",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/roadmap/types.ts",
+      "src/roadmap/status.ts",
+      "src/roadmap/task-id.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/task.ts",
+      "src/roadmap/tool.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/application/state.ts",
+      "src/application/resume-context.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/state/types.ts",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Roadmap queue/task/sprint ownership lives under src/roadmap/** while codewiki_task behavior, task-boundary policy, and generated task views remain unchanged.",
+      "acceptance": [
+        "Create src/roadmap/** owner modules for roadmap/task/sprint types, status helpers, task-id helpers, task-boundary assessment, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution.",
+        "Update state/resume/session/adapters/tests to import roadmap behavior from src/roadmap/** or stable public API paths.",
+        "Remove old roadmap/task owner paths or retain only explicit temporary shims with TASK-specific tests.",
+        "Preserve codewiki_task schema/result behavior, roadmap queue/archive JSON semantics, task context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage.",
+        "Add TASK-specific guard proving legacy roadmap/task imports are gone or explicitly shimmed."
+      ],
+      "non_goals": [
+        "Do not migrate project, knowledge, session coordination, state/graph/resume internals, GC, change/diff-table, adapters/UI, or skills beyond roadmap consumer import updates.",
+        "Do not change roadmap JSON schema, task ids/status values, sprint metadata schema, task-close policy, package metadata, or public tool behavior."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "TASK-specific roadmap guard",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-03T00:25:56.000Z",
+    "purge_after": "2026-06-10T00:25:56.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "TASK-029-implementation",
+    "supersedes": [],
+    "status": "builder_checks_passed"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "src/roadmap/** owns roadmap/task/sprint types, status helpers, task-id helpers, task-boundary assessment, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution.",
+      "State/resume/session/adapters/tests/package smoke consume roadmap behavior from src/roadmap/** or stable non-roadmap APIs.",
+      "Old src/domain/roadmap/**, src/application/roadmap.ts, src/application/task.ts, and src/application/tools/task.ts owner paths are removed without shims.",
+      "codewiki_task schema/result behavior, roadmap queue/archive JSON semantics, task context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage remain stable.",
+      "Required checks pass and CodeWiki state is green before validation."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [
+      "profile:file-structure",
+      "profile:alignment",
+      "profile:stale-reference",
+      "profile:generated-parity",
+      "profile:changed",
+      "profile:task",
+      "npm:check:architecture",
+      "working_tree_digest:sha256:f83d415d85fbb00d3f8b8b6b6f237b4788a4a8e892bd0724ac0aed3d7fe36a84"
+    ],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "artifact-status-write-claim",
+        "reason": "TASK-029 moves roadmap/task source owners and shared callers.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "codewiki_artifact_status mark task_id=TASK-029 -> no conflicts"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context",
+        "reason": "Implementation validation must consume build/checks/content proof, not builder chat.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "implementation_build for TASK-029",
+          "working_tree_digest:sha256:f83d415d85fbb00d3f8b8b6b6f237b4788a4a8e892bd0724ac0aed3d7fe36a84",
+          "codewiki_state green",
+          "npm run check:architecture pass"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "post-validation-task-close",
+        "reason": "Task close requires clean commit/tree proof after implementation validation.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "TASK-029-R1",
+      "text": "Create src/roadmap/** owner modules for roadmap/task/sprint types, status helpers, task-id helpers, task-boundary assessment, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-029/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-029-R2",
+      "text": "Update state/resume/session/adapters/tests to import roadmap behavior from src/roadmap/** or stable public API paths.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-029/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-029-R3",
+      "text": "Remove old roadmap/task owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-029/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-029-R4",
+      "text": "Preserve codewiki_task schema/result behavior, roadmap queue/archive JSON semantics, task context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-029/task.json"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "TASK-029-R5",
+      "text": "Add TASK-specific guard proving legacy roadmap/task imports are gone or explicitly shimmed.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-029/task.json"
+      ],
+      "state": "satisfied"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "src/roadmap/** owner modules exist and own roadmap/task behavior",
+      "evidence": "src/roadmap/types.ts defines roadmap/task/sprint and codewiki_task input types; src/roadmap/status.ts owns status helpers; src/roadmap/task-id.ts owns id helpers; src/roadmap/task-boundary.ts owns executable task assessment; src/roadmap/runtime.ts owns roadmap file mutation, task context/preflight helpers, sprint mutation, archive/checkpoint helpers; src/roadmap/task.ts owns create/update/close/cancel/evidence use cases; src/roadmap/tool.ts owns codewiki_task execution.",
+      "requirement_ids": [
+        "TASK-029-R1"
+      ],
+      "source_refs": [
+        "src/roadmap/types.ts",
+        "src/roadmap/status.ts",
+        "src/roadmap/task-id.ts",
+        "src/roadmap/task-boundary.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/task.ts",
+        "src/roadmap/tool.ts"
+      ]
+    },
+    {
+      "criterion": "Callers import from src/roadmap/** or stable non-roadmap APIs",
+      "evidence": "Updated Pi task adapter, schemas, ports, resume command, index, UI manager/theme, application state/resume/graph/lint/prompt/build/project/session consumers, package smoke, task-boundary smoke, roadmap docs, file-structure docs, graph, and skill tool catalog to use src/roadmap/**.",
+      "requirement_ids": [
+        "TASK-029-R2"
+      ],
+      "source_refs": [
+        "src/adapters/pi/tools/task.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/application/state.ts",
+        "src/application/resume-context.ts",
+        "src/application/graph.ts",
+        "src/build/writer.ts",
+        "src/project/context.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "skills/codewiki/references/tool-catalog.md"
+      ]
+    },
+    {
+      "criterion": "Legacy roadmap/task owner paths removed and guarded",
+      "evidence": "src/domain/roadmap/types.ts, src/domain/roadmap/status.ts, src/domain/roadmap/task-id.ts, src/domain/roadmap/task-boundary.ts, src/application/roadmap.ts, src/application/task.ts, and src/application/tools/task.ts are removed with no shims; tests/tasks/TASK-029/roadmap-source-root.test.mjs asserts removed paths do not exist and import specifiers no longer target them.",
+      "requirement_ids": [
+        "TASK-029-R3",
+        "TASK-029-R5"
+      ],
+      "source_refs": [
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+      ]
+    },
+    {
+      "criterion": "codewiki_task behavior, roadmap schema, task-boundary gates, package loading, and direct Node execution preserved",
+      "evidence": "TASK-029 guard verifies stable status/priority/evidence/sprint values, task-id helpers, boundary checks, roadmap runtime/use-case/tool exports, codewiki_task create/update/sprint/cancel behavior on a temp roadmap queue, no legacy imports, and removed-path absence. Package smoke, roadmap-task-boundary smoke, full smoke/features/pack, typecheck, and architecture checks pass.",
+      "requirement_ids": [
+        "TASK-029-R4"
+      ],
+      "source_refs": [
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ]
+    }
+  ],
+  "audit_refs": [
+    "profile:file-structure",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed",
+    "profile:task",
+    "npm:check:architecture",
+    "working_tree_digest:sha256:f83d415d85fbb00d3f8b8b6b6f237b4788a4a8e892bd0724ac0aed3d7fe36a84"
+  ],
+  "audit_reports": [
+    "npm run check:architecture pass: file-structure profile checked 94 TypeScript files, architecture wrapper boundaries, 205 diagram refs, 9 approved migration deltas, 0 actionable drift items.",
+    "codewiki_state refresh task_id=TASK-029 pass: health green, 0 errors, 0 warnings.",
+    "codewiki_audit alignment pass: generated graph health and roadmap queue reachability.",
+    "codewiki_audit stale-reference pass: scanned 52 active markdown/source text files.",
+    "codewiki_audit generated-parity pass: generated graph presence/freshness and 4 active roadmap task views.",
+    "codewiki_audit task TASK-029 pass.",
+    "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
+    "codewiki_audit file-structure warning: in-process audit cache still reports missing src/domain/roadmap/types.ts, while fresh npm check:architecture using current source passes; no shim was kept."
+  ],
+  "agent_assessment": "TASK-029 implementation is ready for fresh validation. Remaining risk is limited to expected dirty generated-file warnings before commit and a stale in-process codewiki_audit warning that fresh check:architecture disproves.",
+  "summary": "Implement TASK-029 roadmap/task source-root migration",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-029"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-22-decision-pass.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-022.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-024.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-025.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-026.json",
+      ".codewiki/validation/2026-05-26-task-close-pass-task-027.json",
+      ".codewiki/validation/2026-05-27-task-close-pass-task-028.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/roadmap/tasks/TASK-029/context.json"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      "skills/codewiki/references/tool-catalog.md"
+    ],
+    "roadmap": [
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-023/task.json",
+      ".codewiki/roadmap/tasks/TASK-023/context.json",
+      ".codewiki/roadmap/tasks/TASK-029/task.json",
+      ".codewiki/roadmap/tasks/TASK-029/context.json"
+    ],
+    "code": [
+      "src/roadmap/types.ts",
+      "src/roadmap/status.ts",
+      "src/roadmap/task-id.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/task.ts",
+      "src/roadmap/tool.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/application/graph.ts",
+      "src/application/graph/rebuilder.ts",
+      "src/application/lint.ts",
+      "src/application/prompt.ts",
+      "src/application/resume-context.ts",
+      "src/application/state-artifacts.ts",
+      "src/application/state-builders.ts",
+      "src/application/state.ts",
+      "src/audit/tool.ts",
+      "src/build/writer.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/state/types.ts",
+      "src/project/context.ts",
+      "src/session/runtime.ts"
+    ],
+    "tests": [
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/efficiency-ui.test.mjs",
+      "tests/run.mjs"
+    ],
+    "validation": [
+      "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+      "npm run typecheck -> pass",
+      "npm run check:architecture -> pass",
+      "npm run test:smoke -> pass",
+      "npm run test:features -> pass (31 passed, 0 failed)",
+      "npm run test:pack -> pass",
+      "codewiki_state refresh task_id=TASK-029 -> green",
+      "codewiki_audit required profiles -> alignment/stale-reference/generated-parity/task pass; file-structure warning is stale in-process audit path, fresh npm architecture audit passes; changed warnings only dirty generated read models"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-029"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+    "spec_paths": [
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+      ".codewiki/validation/2026-05-22-decision-pass.json"
+    ],
+    "code_paths": [
+      "src/roadmap/types.ts",
+      "src/roadmap/status.ts",
+      "src/roadmap/task-id.ts",
+      "src/roadmap/task-boundary.ts",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/task.ts",
+      "src/roadmap/tool.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/application/state.ts",
+      "src/application/resume-context.ts",
+      "src/domain/shared/types.ts",
+      "src/domain/state/types.ts",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/efficiency-ui.test.mjs",
+    "tests/run.mjs"
+  ],
+  "code_files": [
+    "src/roadmap/types.ts",
+    "src/roadmap/status.ts",
+    "src/roadmap/task-id.ts",
+    "src/roadmap/task-boundary.ts",
+    "src/roadmap/runtime.ts",
+    "src/roadmap/task.ts",
+    "src/roadmap/tool.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/tools/task.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/lint.ts",
+    "src/application/prompt.ts",
+    "src/application/resume-context.ts",
+    "src/application/state-artifacts.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/audit/tool.ts",
+    "src/build/writer.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/project/context.ts",
+    "src/session/runtime.ts"
+  ],
+  "files_changed": [
+    "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/efficiency-ui.test.mjs",
+    "tests/run.mjs",
+    "src/roadmap/types.ts",
+    "src/roadmap/status.ts",
+    "src/roadmap/task-id.ts",
+    "src/roadmap/task-boundary.ts",
+    "src/roadmap/runtime.ts",
+    "src/roadmap/task.ts",
+    "src/roadmap/tool.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/tools/task.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/application/graph.ts",
+    "src/application/graph/rebuilder.ts",
+    "src/application/lint.ts",
+    "src/application/prompt.ts",
+    "src/application/resume-context.ts",
+    "src/application/state-artifacts.ts",
+    "src/application/state-builders.ts",
+    "src/application/state.ts",
+    "src/audit/tool.ts",
+    "src/build/writer.ts",
+    "src/domain/shared/types.ts",
+    "src/domain/state/types.ts",
+    "src/project/context.ts",
+    "src/session/runtime.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+    "npm run typecheck -> pass",
+    "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+    "npm run check:architecture -> pass",
+    "npm run test:smoke -> pass",
+    "npm run test:features -> pass (31 passed, 0 failed)",
+    "npm run test:pack -> pass",
+    "git diff --check -> pass",
+    "codewiki_state refresh task_id=TASK-029 -> green",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-029 -> semantic profiles pass except stale in-process file-structure warning; fresh check:architecture passes; changed warnings only dirty generated read models"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-029",
+      "test_files": [
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/efficiency-ui.test.mjs",
+        "tests/run.mjs"
+      ],
+      "evidence": [
+        "Added TASK-029 guard before final broad checks to verify roadmap owner files, removed legacy owner paths, stable status/priority/evidence/sprint values, task-id helpers, task-boundary checks, runtime/use-case/tool exports, codewiki_task create/update/sprint/cancel behavior on a temp roadmap queue, no legacy import specifiers, and legacy text absence outside allowed removed-path assertions.",
+        "Kept existing roadmap-task-boundary smoke and package smoke as behavioral regression coverage for task-boundary gates and package loading."
+      ],
+      "notes": [
+        "TASK-029 guard intentionally allows old roadmap path text only in itself and package-smoke removed-path assertions while scanning import specifiers for removed owner imports.",
+        "codewiki_audit tool warning for src/domain/roadmap/types.ts appears to be from in-process loaded audit code; fresh npm run check:architecture uses current source and passes without creating a shim."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+      "roadmap_task_id": "TASK-029",
+      "code_files": [
+        "src/roadmap/types.ts",
+        "src/roadmap/status.ts",
+        "src/roadmap/task-id.ts",
+        "src/roadmap/task-boundary.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/task.ts",
+        "src/roadmap/tool.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/tools/task.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/application/graph.ts",
+        "src/application/graph/rebuilder.ts",
+        "src/application/lint.ts",
+        "src/application/prompt.ts",
+        "src/application/resume-context.ts",
+        "src/application/state-artifacts.ts",
+        "src/application/state-builders.ts",
+        "src/application/state.ts",
+        "src/audit/tool.ts",
+        "src/build/writer.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "src/project/context.ts",
+        "src/session/runtime.ts"
+      ],
+      "evidence": [
+        "Moved roadmap/task/sprint types into src/roadmap/types.ts.",
+        "Moved status helpers into src/roadmap/status.ts and task-id helpers into src/roadmap/task-id.ts.",
+        "Moved task-boundary assessment into src/roadmap/task-boundary.ts.",
+        "Moved roadmap file mutation, task context/preflight helpers, archive/checkpoint helpers, and sprint mutation into src/roadmap/runtime.ts.",
+        "Moved task create/update/close/cancel/evidence use cases into src/roadmap/task.ts and codewiki_task execution into src/roadmap/tool.ts.",
+        "Updated all direct roadmap consumers and removed old owner paths without shims."
+      ],
+      "notes": [
+        "No public codewiki_task tool name, schema fields, result shape, roadmap queue/archive JSON schema, task ids/status values, sprint metadata schema, task-close policy, package metadata, or public command behavior changed.",
+        "Cancelled aggregate TASK-023 code_paths were refreshed to src/roadmap/** so generated graph no longer warns on removed roadmap owner paths."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added TASK-029 guard before final broad checks to verify roadmap owner files, removed legacy owner paths, stable status/priority/evidence/sprint values, task-id helpers, task-boundary checks, runtime/use-case/tool exports, codewiki_task create/update/sprint/cancel behavior on a temp roadmap queue, no legacy import specifiers, and legacy text absence outside allowed removed-path assertions.",
+    "Kept existing roadmap-task-boundary smoke and package smoke as behavioral regression coverage for task-boundary gates and package loading."
+  ],
+  "code_change_evidence": [
+    "Moved roadmap/task/sprint types into src/roadmap/types.ts.",
+    "Moved status helpers into src/roadmap/status.ts and task-id helpers into src/roadmap/task-id.ts.",
+    "Moved task-boundary assessment into src/roadmap/task-boundary.ts.",
+    "Moved roadmap file mutation, task context/preflight helpers, archive/checkpoint helpers, and sprint mutation into src/roadmap/runtime.ts.",
+    "Moved task create/update/close/cancel/evidence use cases into src/roadmap/task.ts and codewiki_task execution into src/roadmap/tool.ts.",
+    "Updated all direct roadmap consumers and removed old owner paths without shims."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Create src/roadmap/** owner modules for roadmap/task/sprint types, status helpers, task-id helpers, task-boundary assessment, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution.",
+      "evidence": "Moved owner modules to src/roadmap/types.ts, status.ts, task-id.ts, task-boundary.ts, runtime.ts, task.ts, and tool.ts; TASK-029 guard verifies exports and behavior."
+    },
+    {
+      "criterion": "Update state/resume/session/adapters/tests to import roadmap behavior from src/roadmap/** or stable public API paths.",
+      "evidence": "Updated Pi adapters/schemas/ports/UI, state/resume/graph/lint/prompt/build/project/session consumers, domain barrels, smoke tests, docs, graph, and skill catalog; typecheck, architecture, smoke, features, package smoke, and pack pass."
+    },
+    {
+      "criterion": "Remove old roadmap/task owner paths or retain only explicit temporary shims with TASK-specific tests.",
+      "evidence": "Old roadmap/task owner paths deleted with no shims; TASK-029 guard and package smoke assert removed paths do not exist and no import specifiers target old owners."
+    },
+    {
+      "criterion": "Preserve codewiki_task schema/result behavior, roadmap queue/archive JSON semantics, task context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage.",
+      "evidence": "TASK-029 guard, roadmap-task-boundary smoke, package smoke, full smoke/features/pack, typecheck, and check:architecture pass."
+    },
+    {
+      "criterion": "Add TASK-specific guard proving legacy roadmap/task imports are gone or explicitly shimmed.",
+      "evidence": "tests/tasks/TASK-029/roadmap-source-root.test.mjs added and passing."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue after TASK-028 closure, cancel superseded aggregate TASK-023, and implement TASK-029 roadmap/task source-root migration.",
+    "implemented_changes": [
+      "Cancelled superseded aggregate TASK-023 and refreshed its code path refs after TASK-029 moves.",
+      "Created src/roadmap/** owner modules for roadmap/task/sprint types, status/task-id helpers, task-boundary checks, roadmap runtime mutation, task use cases, and codewiki_task tool execution.",
+      "Removed old roadmap/task owner paths without shims and updated imports/callers/tests/package smoke/docs.",
+      "Preserved codewiki_task behavior, roadmap queue/archive schema, task-context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        "skills/codewiki/references/tool-catalog.md"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-023/task.json",
+        ".codewiki/roadmap/tasks/TASK-023/context.json",
+        ".codewiki/roadmap/tasks/TASK-029/task.json",
+        ".codewiki/roadmap/tasks/TASK-029/context.json"
+      ],
+      "code": [
+        "src/roadmap/**",
+        "src/adapters/pi/**",
+        "src/application/**",
+        "src/audit/tool.ts",
+        "src/build/writer.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "src/project/context.ts",
+        "src/session/runtime.ts"
+      ],
+      "tests": [
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "validation": [
+        "codewiki_state green",
+        "check:architecture pass",
+        "codewiki_audit required profiles -> semantic pass with stale audit warning and dirty generated warnings"
+      ]
+    },
+    "acceptance_evidence": [
+      "TASK-029 guard passes.",
+      "Required npm/typecheck/architecture/smoke/features/pack/package-smoke checks pass.",
+      "CodeWiki state is green; generated graph has no warnings."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+      "npm run typecheck -> pass",
+      "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass",
+      "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+      "npm run check:architecture -> pass",
+      "npm run test:smoke -> pass",
+      "npm run test:features -> pass (31 passed, 0 failed)",
+      "npm run test:pack -> pass",
+      "git diff --check -> pass",
+      "codewiki_state refresh task_id=TASK-029 -> green"
+    ],
+    "non_goals_preserved": [
+      "Did not migrate project, knowledge, session coordination, state/graph/resume internals, GC, change/diff-table, adapters/UI beyond direct roadmap consumer import updates, or skills beyond tool catalog/docs updates needed for TASK-029.",
+      "Did not change roadmap JSON schema, task ids/status values, sprint metadata schema, task-close policy, package metadata, or public tool behavior."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation and task-close validation/commit proof remain."
+    ]
+  },
+  "risks": [
+    "Implementation validation still requires fresh context/content proof; task close still requires clean commit/tree proof after implementation commit.",
+    "One in-process codewiki_audit warning may disappear only in a fresh tool process/session because it references the removed path that fresh source no longer uses."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-029",
+      "task_id": "TASK-029",
+      "next_focus_task_id": "TASK-023",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-029",
+        "title": "Migrate roadmap and task source root",
+        "summary": "Implement TASK-029 roadmap/task source-root migration",
+        "spec_paths": [
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json"
+        ],
+        "code_paths": [
+          "src/roadmap/types.ts",
+          "src/roadmap/status.ts",
+          "src/roadmap/task-id.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/task.ts",
+          "src/roadmap/tool.ts",
+          "src/adapters/pi/tools/task.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/application/state.ts",
+          "src/application/resume-context.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/lint.ts",
+          "src/application/prompt.ts",
+          "src/application/state-artifacts.ts",
+          "src/application/state-builders.ts",
+          "src/audit/tool.ts",
+          "src/build/writer.ts",
+          "src/project/context.ts",
+          "src/session/runtime.ts"
+        ],
+        "acceptance": [
+          "Create src/roadmap/** owner modules for roadmap/task/sprint types, status helpers, task-id helpers, task-boundary assessment, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution.",
+          "Update state/resume/session/adapters/tests to import roadmap behavior from src/roadmap/** or stable public API paths.",
+          "Remove old roadmap/task owner paths or retain only explicit temporary shims with TASK-specific tests.",
+          "Preserve codewiki_task schema/result behavior, roadmap queue/archive JSON semantics, task context generation, task-boundary gates, package loading, direct Node execution, and smoke/feature coverage.",
+          "Add TASK-specific guard proving legacy roadmap/task imports are gone or explicitly shimmed."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "TASK-specific roadmap guard",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+          "npm run typecheck -> pass",
+          "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+          "npm run check:architecture -> pass",
+          "npm run test:smoke -> pass",
+          "npm run test:features -> pass (31 passed, 0 failed)",
+          "npm run test:pack -> pass",
+          "git diff --check -> pass",
+          "codewiki_state refresh task_id=TASK-029 -> green",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-029 -> semantic profiles pass except stale in-process file-structure warning; fresh check:architecture passes; changed warnings only dirty generated read models"
+        ],
+        "test_design_evidence": [
+          "Added TASK-029 guard before final broad checks to verify roadmap owner files, removed legacy owner paths, stable status/priority/evidence/sprint values, task-id helpers, task-boundary checks, runtime/use-case/tool exports, codewiki_task create/update/sprint/cancel behavior on a temp roadmap queue, no legacy import specifiers, and legacy text absence outside allowed removed-path assertions.",
+          "Kept existing roadmap-task-boundary smoke and package smoke as behavioral regression coverage for task-boundary gates and package loading."
+        ],
+        "code_change_evidence": [
+          "Moved roadmap/task/sprint types into src/roadmap/types.ts.",
+          "Moved status helpers into src/roadmap/status.ts and task-id helpers into src/roadmap/task-id.ts.",
+          "Moved task-boundary assessment into src/roadmap/task-boundary.ts.",
+          "Moved roadmap file mutation, task context/preflight helpers, archive/checkpoint helpers, and sprint mutation into src/roadmap/runtime.ts.",
+          "Moved task create/update/close/cancel/evidence use cases into src/roadmap/task.ts and codewiki_task execution into src/roadmap/tool.ts.",
+          "Updated all direct roadmap consumers and removed old owner paths without shims."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-029",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-029",
+      "show_build": "git show refs/codewiki/archive/task/TASK-029:.codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+        ".codewiki/validation/2026-05-22-decision-pass.json",
+        "src/roadmap/types.ts",
+        "src/roadmap/status.ts",
+        "src/roadmap/task-id.ts",
+        "src/roadmap/task-boundary.ts",
+        "src/roadmap/runtime.ts",
+        "src/roadmap/task.ts",
+        "src/roadmap/tool.ts",
+        "src/adapters/pi/tools/task.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/application/state.ts",
+        "src/application/resume-context.ts",
+        "src/domain/shared/types.ts",
+        "src/domain/state/types.ts",
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "Migrate roadmap task source root",
+      "body": "TASK-029 moves roadmap/task ownership into src/roadmap/**. Roadmap/task/sprint types, status and task-id helpers, task-boundary checks, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution now live under src/roadmap/**.\n\nOld src/domain/roadmap/**, src/application/roadmap.ts, src/application/task.ts, and src/application/tools/task.ts owner paths are removed without shims. State/resume/session/adapters/tests/package smoke/docs now consume src/roadmap/** or stable non-roadmap APIs. Cancelled aggregate TASK-023 path refs are refreshed so generated graph does not track removed owner paths.\n\nChecks: TASK-029 guard, roadmap task-boundary smoke, package smoke, typecheck, architecture, smoke, features, pack, git diff --check, CodeWiki state green.",
+      "trailers": [
+        "CodeWiki-Task: TASK-029",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass, npm run typecheck -> pass, node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass, npm run check:architecture -> pass, npm run test:smoke -> pass, npm run test:features -> pass (31 passed, 0 failed), npm run test:pack -> pass, git diff --check -> pass, codewiki_state refresh task_id=TASK-029 -> green, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-029 -> semantic profiles pass except stale in-process file-structure warning; fresh check:architecture passes; changed warnings only dirty generated read models",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-029",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-029",
+        "CodeWiki-Digest: sha256:873087f10a94d99c08d5d08392f6389febdc2271c49bf71e94bb1d80e4028e07",
+        "CodeWiki-Restore: /wiki-restore TASK-029"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "Migrate roadmap task source root",
+      "body": "TASK-029 moves roadmap/task ownership into src/roadmap/**. Roadmap/task/sprint types, status and task-id helpers, task-boundary checks, roadmap file mutation, task create/update/close/cancel use cases, sprint metadata mutation, and codewiki_task tool execution now live under src/roadmap/**.\n\nOld src/domain/roadmap/**, src/application/roadmap.ts, src/application/task.ts, and src/application/tools/task.ts owner paths are removed without shims. State/resume/session/adapters/tests/package smoke/docs now consume src/roadmap/** or stable non-roadmap APIs. Cancelled aggregate TASK-023 path refs are refreshed so generated graph does not track removed owner paths.\n\nChecks: TASK-029 guard, roadmap task-boundary smoke, package smoke, typecheck, architecture, smoke, features, pack, git diff --check, CodeWiki state green."
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-029",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-029"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-029",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-029",
+        "show_build": "git show refs/codewiki/archive/task/TASK-029:.codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
+          ".codewiki/validation/2026-05-22-decision-pass.json",
+          "src/roadmap/types.ts",
+          "src/roadmap/status.ts",
+          "src/roadmap/task-id.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/task.ts",
+          "src/roadmap/tool.ts",
+          "src/adapters/pi/tools/task.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/application/state.ts",
+          "src/application/resume-context.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/smoke/package-smoke.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-029",
+      "build_path": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-029",
+      "commit_sha": "",
+      "digest": "sha256:873087f10a94d99c08d5d08392f6389febdc2271c49bf71e94bb1d80e4028e07",
+      "restore_command": "/wiki-restore TASK-029"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
+          "bytes": 32591
+        },
+        {
+          "path": "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+          "bytes": 10891
+        },
+        {
+          "path": "tests/smoke/roadmap-task-boundary.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:775b07924b806d03beca64d8433685982871a89372a31dd3577d631c02a35e98",
+          "bytes": 2190
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:2f44ffe1ab75fbf75477a5781a977b5728ece96174fbe3b04dacaa183177e640",
+          "bytes": 94984
+        },
+        {
+          "path": "tests/smoke/resume-scheduler.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:5d71ecd5246d8658249538f61fd2516dc4e17a80d8c897dcde116df61a776c67",
+          "bytes": 3674
+        },
+        {
+          "path": "tests/smoke/efficiency-ui.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:761fce9a3a684e169632c1e5704bdeb722b6657458ee055c2080b08fa5a3d0fa",
+          "bytes": 3820
+        },
+        {
+          "path": "tests/run.mjs",
+          "role": "test_file",
+          "sha256": "sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
+          "bytes": 2037
+        },
+        {
+          "path": "src/roadmap/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
+          "bytes": 4838
+        },
+        {
+          "path": "src/roadmap/status.ts",
+          "role": "code_file",
+          "sha256": "sha256:a67a199967d63b58318ec210e8727301f38b0c8eaf5135800fadc2090e29169e",
+          "bytes": 364
+        },
+        {
+          "path": "src/roadmap/task-id.ts",
+          "role": "code_file",
+          "sha256": "sha256:adfe65ea07ecea0fa6baee6db2f80c5b8b814d1ca2c1acd576a2960139c380c0",
+          "bytes": 760
+        },
+        {
+          "path": "src/roadmap/task-boundary.ts",
+          "role": "code_file",
+          "sha256": "sha256:1855b5e1c6cfc4d25f9e529de3635bf57dc7b25570164afb9fa8bd6681f12adf",
+          "bytes": 4624
+        },
+        {
+          "path": "src/roadmap/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:b8731c4d43c5bfd4bd8c3182d2022ac70ec4a15e68f6ee839feb8764efb0f551",
+          "bytes": 48969
+        },
+        {
+          "path": "src/roadmap/task.ts",
+          "role": "code_file",
+          "sha256": "sha256:c976f440c2edcaa6a34220fd098cc8a01fba9e82a1964b1b02d421a4933d04de",
+          "bytes": 6504
+        },
+        {
+          "path": "src/roadmap/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:687883e6b05b3c47424ef8b32445b11141fdd657c3d5183ba518dde9c1d57385",
+          "bytes": 11346
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:c2d4b83634e90acc780c148a051c5a97ec9cf960cec550921a1de1724677f113",
+          "bytes": 18867
+        },
+        {
+          "path": "src/adapters/pi/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:635e05c39f7ae5d65372fd67f9bc2055220eb2bca5a808cb05a4cc9881fc025c",
+          "bytes": 15267
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:da19d074c37114774285515cb57d28f05c896b87eff1ffdfb0b318977a0b9d02",
+          "bytes": 33657
+        },
+        {
+          "path": "src/adapters/pi/tools/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:f776d38adb398d112c110cf8c317591de81277e3fd690f54eb47bdc926bfe19a",
+          "bytes": 1690
+        },
+        {
+          "path": "src/adapters/pi/tools/task.ts",
+          "role": "code_file",
+          "sha256": "sha256:3123cb40833208e1f7065c0f2061570d4ad48a8ca61874c60d151946f4178921",
+          "bytes": 593
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:1fc1d60e35022025c9c0f467feea5f1bc85ebb44ddcb9b2c3e7af348b6369464",
+          "bytes": 73558
+        },
+        {
+          "path": "src/adapters/pi/ui/theme.ts",
+          "role": "code_file",
+          "sha256": "sha256:21035e96c42bb88415380afa08ac83d6f609de0be7d191a5b0c1fabb9a86593e",
+          "bytes": 7996
+        },
+        {
+          "path": "src/application/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:0c45fcd20351223a2c4f83bed362351620ec7fef00e03351b66c4e9227d82469",
+          "bytes": 94521
+        },
+        {
+          "path": "src/application/graph/rebuilder.ts",
+          "role": "code_file",
+          "sha256": "sha256:90a85d4d847eabf9f4d2f6a75ad41badc46855460623e7ffaf143a1fd0be9ed0",
+          "bytes": 11353
+        },
+        {
+          "path": "src/application/lint.ts",
+          "role": "code_file",
+          "sha256": "sha256:150d4703caa6af266047368969069bcec03097b99b5de924eac0ee4073d1550b",
+          "bytes": 19646
+        },
+        {
+          "path": "src/application/prompt.ts",
+          "role": "code_file",
+          "sha256": "sha256:ba02cccd1edcfb91a87c1e95084972f7d6216305953c8fb9af53e680cd978830",
+          "bytes": 9641
+        },
+        {
+          "path": "src/application/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:523eb869e1be1e70ada6208d9ec3437067ac8e11eb1e6386bb462074ccba1dd9",
+          "bytes": 17157
+        },
+        {
+          "path": "src/application/state-artifacts.ts",
+          "role": "code_file",
+          "sha256": "sha256:c47020441f4a668599673837df6c541c2294f689cd153c34341f6e72ff9e191e",
+          "bytes": 4770
+        },
+        {
+          "path": "src/application/state-builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:deda951521511a8b12b2fa090563d571a0975a776e46f6fffec0b445a2145315",
+          "bytes": 45794
+        },
+        {
+          "path": "src/application/state.ts",
+          "role": "code_file",
+          "sha256": "sha256:b2b43ed8ac8cf48f9df9a961f80b93f04f51d7e90be9f3514c6c2aca730ae87d",
+          "bytes": 13716
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:397c48e9e71da3c1ac61d096ada95c9232f58acd70d90ae17e9f95a6dfb1ea29",
+          "bytes": 40539
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:7c4ca4d46e8474d79fd846bc8e11da0e2cdb477f87ab10e1fe010482eed52e21",
+          "bytes": 31191
+        },
+        {
+          "path": "src/domain/shared/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:d6947e62c38406c72bb11fa8baeda0318d28ef74552277e8807a9686e55c9c3b",
+          "bytes": 635
+        },
+        {
+          "path": "src/domain/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:a3ad39289ca07f16862c4c5511828a9c6aff992c8ce33890f435ff2357ba0440",
+          "bytes": 9719
+        },
+        {
+          "path": "src/project/context.ts",
+          "role": "code_file",
+          "sha256": "sha256:032d61eba4198bfa37dbee4f43c667cfeda5bc4d50e2b3dfb8e317b4a513b8e4",
+          "bytes": 10073
+        },
+        {
+          "path": "src/session/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:a549c416d2f5eacd6042f838ffdedc1fd6fd5de52adb7236329371d14a344a31",
+          "bytes": 4753
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-029",
+      "source_build": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/roadmap/types.ts",
+          "src/roadmap/status.ts",
+          "src/roadmap/task-id.ts",
+          "src/roadmap/task-boundary.ts",
+          "src/roadmap/runtime.ts",
+          "src/roadmap/task.ts",
+          "src/roadmap/tool.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/adapters/pi/index.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/tools/task.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/application/graph.ts",
+          "src/application/graph/rebuilder.ts",
+          "src/application/lint.ts",
+          "src/application/prompt.ts",
+          "src/application/resume-context.ts",
+          "src/application/state-artifacts.ts",
+          "src/application/state-builders.ts",
+          "src/application/state.ts",
+          "src/audit/tool.ts",
+          "src/build/writer.ts",
+          "src/domain/shared/types.ts",
+          "src/domain/state/types.ts",
+          "src/project/context.ts",
+          "src/session/runtime.ts",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "tests/smoke/roadmap-task-boundary.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/efficiency-ui.test.mjs",
+          "tests/run.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-029",
+        "restore_command": "/wiki-restore TASK-029"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs -> pass",
+        "npm run typecheck -> pass",
+        "node --experimental-strip-types ./tests/smoke/roadmap-task-boundary.test.mjs -> pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs -> pass",
+        "npm run check:architecture -> pass",
+        "npm run test:smoke -> pass",
+        "npm run test:features -> pass (31 passed, 0 failed)",
+        "npm run test:pack -> pass",
+        "git diff --check -> pass",
+        "codewiki_state refresh task_id=TASK-029 -> green",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-029 -> semantic profiles pass except stale in-process file-structure warning; fresh check:architecture passes; changed warnings only dirty generated read models"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
