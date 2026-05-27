@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T21:08:05.283Z",
+  "generated_at": "2026-05-27T21:09:05.400Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -30433,6 +30433,105 @@
       "kind": "audit_evidence",
       "path": "codewiki_audit alignment warning only because graph health has large-doc warnings in api.md and graph.md.",
       "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "verdict": "block",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+        "validated_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+        "tree_sha": "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation after clean local commit proof; no remote publication.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+          "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+          "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+        ],
+        "content_proof_refs": [
+          "2e61f2b410074518a8c458f350364d63e3a4a73d",
+          "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "kind": "audit_evidence",
+      "path": "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "kind": "audit_evidence",
+      "path": "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:.codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "kind": "audit_evidence",
+      "path": ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "kind": "content_proof",
+      "path": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "kind": "content_proof",
+      "path": "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
     },
@@ -66206,6 +66305,77 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "source:.codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:.codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "audit:codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "content_proof:2e61f2b410074518a8c458f350364d63e3a4a73d",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "content_proof:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+      "to": "task:TASK-032"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
       "to": "source:.codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
       "default_hidden": true
@@ -66755,28 +66925,28 @@
             "id": "proof",
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
-            "state": "aligned",
+            "state": "blocked",
             "item_count": 1,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 92
+                "count": 93
               },
               {
                 "id": "fail_or_block_validation",
                 "label": "fail/block validation",
-                "count": 16
+                "count": 17
               },
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 392
+                "count": 396
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 859
+                "count": 861
               },
               {
                 "id": "traceability_gaps",
@@ -66800,11 +66970,11 @@
             "collapsed": 76
           },
           "validations": {
-            "total": 92,
+            "total": 93,
             "pass": 76,
-            "fail_or_block": 16,
-            "hot": 5,
-            "collapsed": 92
+            "fail_or_block": 17,
+            "hot": 6,
+            "collapsed": 93
           }
         },
         "next_action": {
@@ -70012,6 +70182,7 @@
           ".codewiki/runtime/diff-tables.json",
           ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
           ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
           "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
           "Accepted documentation build for TASK-006 hotfix.",
           "DT-2026-05-24-9",
@@ -75135,6 +75306,30 @@
             "isolation_status": "legacy"
           },
           {
+            "path": ".codewiki/validation/2026-05-27-task-close-block-task-032.json",
+            "verdict": "block",
+            "profile": "task-close",
+            "task_id": "TASK-032",
+            "source_refs": [
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+              "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+            ],
+            "content_proof_refs": [
+              "2e61f2b410074518a8c458f350364d63e3a4a73d",
+              "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-27-task-close-pass-task-028.json",
             "verdict": "pass",
             "profile": "task-close",
@@ -76681,6 +76876,25 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-27-task-close-block-task-032.json",
+            "task_id": "TASK-032",
+            "verdict": "block",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+            "validated_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "2e61f2b410074518a8c458f350364d63e3a4a73d",
+              "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+            ],
+            "publisher_result_refs": [
+              "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-05-27-task-close-pass-task-028.json",
             "task_id": "TASK-028",
             "verdict": "pass",
@@ -76727,6 +76941,7 @@
           ".codewiki/validation/2026-05-22-decision-pass.json",
           ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
           ".codewiki/validation/2026-05-23-planning-fail.json",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
           "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js:sendCustomMessage",
           "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
           "CodeWiki audit warning after documentation/roadmap updates: stale-reference, generated-parity, file-structure pass; warnings are generated graph/task view dirty and one graph-health warning from uncommitted generated state.",
@@ -76841,6 +77056,7 @@
           "codewiki_audit alignment pass: generated graph health and roadmap queue reachability.",
           "codewiki_audit alignment warning only because graph health has large-doc lint warnings; no unresolved stale-reference or generated-parity errors.",
           "codewiki_audit alignment warning only because graph health has large-doc warnings in api.md and graph.md.",
+          "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
           "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
           "codewiki_audit changed,task,generated-parity,stale-reference,alignment TASK-032",
           "codewiki_audit changed,task,generated-parity,stale-reference,alignment task_id=TASK-032",
@@ -76934,6 +77150,7 @@
           "codewiki_state refresh=true",
           "codewiki_state refresh=true -> health yellow, 0 errors, 4 warnings.",
           "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
+          "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
           "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
           "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
           "commit:8266b38028d7317de640668dce0bb4697e1b8674",
@@ -77066,6 +77283,7 @@
           "tree:0281c24b6a58032cd8ea3bb87d808547756ce98e",
           "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
           "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
+          "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
           "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
           "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
           "tree:abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
@@ -77255,6 +77473,7 @@
           "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
           "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
           "2e05f19ffbd671c95b8a0c70e55994d80e88a961",
+          "2e61f2b410074518a8c458f350364d63e3a4a73d",
           "301e7f5373522d6371bee8be22af818132f02937",
           "3541f0071755739dfe0f4d44783913447f3da890",
           "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
@@ -77273,6 +77492,7 @@
           "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
           "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
           "70fe31dfa738406d95b557ade97fa20f3ae5922a",
+          "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
           "7f6c8a0a68902dd587b932e598e2fdc723373728",
           "8266b38028d7317de640668dce0bb4697e1b8674",
           "89b181ac7811619bab15d054894dd787f1abd371",
@@ -77975,6 +78195,19 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24"
         ],
         "reconciliation_items": [
+          {
+            "id": "reconcile:validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+            "source_id": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+            "state": "blocked",
+            "direction": "gateway",
+            "from_layer": "validation",
+            "to_layer": "validation",
+            "next_loop": "validation",
+            "failure_class": "evidence_missing",
+            "recommended_next_loop": "validation",
+            "task_id": "TASK-032",
+            "reason": "Validation block (evidence_missing); route to validation."
+          },
           {
             "id": "reconcile:task:TASK-012",
             "source_id": "task:TASK-012",
@@ -81052,6 +81285,25 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-27-task-close-block-task-032.json",
+          "task_id": "TASK-032",
+          "verdict": "block",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+          "validated_sha": "2e61f2b410074518a8c458f350364d63e3a4a73d",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "2e61f2b410074518a8c458f350364d63e3a4a73d",
+            "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+          ],
+          "publisher_result_refs": [
+            "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-05-27-task-close-pass-task-028.json",
           "task_id": "TASK-028",
           "verdict": "pass",
@@ -81260,6 +81512,7 @@
         ".codewiki/runtime/diff-tables.json",
         ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
         ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
+        ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
         "Accepted HND-006..HND-009 and planning build for TASK-006 session-boundary policy refinement.",
         "Accepted documentation build for TASK-006 hotfix.",
         "DT-2026-05-24-9",
@@ -81609,6 +81862,7 @@
         ".codewiki/validation/2026-05-22-decision-pass.json",
         ".codewiki/validation/2026-05-22-implementation-pass-task-010.json",
         ".codewiki/validation/2026-05-23-planning-fail.json",
+        ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
         "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js:sendCustomMessage",
         "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
         "CodeWiki audit warning after documentation/roadmap updates: stale-reference, generated-parity, file-structure pass; warnings are generated graph/task view dirty and one graph-health warning from uncommitted generated state.",
@@ -81723,6 +81977,7 @@
         "codewiki_audit alignment pass: generated graph health and roadmap queue reachability.",
         "codewiki_audit alignment warning only because graph health has large-doc lint warnings; no unresolved stale-reference or generated-parity errors.",
         "codewiki_audit alignment warning only because graph health has large-doc warnings in api.md and graph.md.",
+        "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
         "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
         "codewiki_audit changed,task,generated-parity,stale-reference,alignment TASK-032",
         "codewiki_audit changed,task,generated-parity,stale-reference,alignment task_id=TASK-032",
@@ -81816,6 +82071,7 @@
         "codewiki_state refresh=true",
         "codewiki_state refresh=true -> health yellow, 0 errors, 4 warnings.",
         "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
+        "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
         "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
         "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
         "commit:8266b38028d7317de640668dce0bb4697e1b8674",
@@ -81948,6 +82204,7 @@
         "tree:0281c24b6a58032cd8ea3bb87d808547756ce98e",
         "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
         "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
+        "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
         "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
         "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
         "tree:abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
@@ -82137,6 +82394,7 @@
         "2ae3fbc1142f37ea5a5b48074b1489018ed6dfaa",
         "2bf0c2c8a36ae25e6bb358316ad7f59b52a723e5",
         "2e05f19ffbd671c95b8a0c70e55994d80e88a961",
+        "2e61f2b410074518a8c458f350364d63e3a4a73d",
         "301e7f5373522d6371bee8be22af818132f02937",
         "3541f0071755739dfe0f4d44783913447f3da890",
         "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
@@ -82155,6 +82413,7 @@
         "6a0d8ed0ea81dfd5daf8d2f0c37d4c7c51196529",
         "6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
         "70fe31dfa738406d95b557ade97fa20f3ae5922a",
+        "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
         "7f6c8a0a68902dd587b932e598e2fdc723373728",
         "8266b38028d7317de640668dce0bb4697e1b8674",
         "89b181ac7811619bab15d054894dd787f1abd371",
@@ -85255,6 +85514,30 @@
           ],
           "content_proof_refs": [],
           "isolation_status": "legacy"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-27-task-close-block-task-032.json",
+          "verdict": "block",
+          "profile": "task-close",
+          "task_id": "TASK-032",
+          "source_refs": [
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
+            "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+          ],
+          "content_proof_refs": [
+            "2e61f2b410074518a8c458f350364d63e3a4a73d",
+            "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c"
+          ],
+          "isolation_status": "isolated"
         },
         {
           "path": ".codewiki/validation/2026-05-27-task-close-pass-task-028.json",
@@ -90825,7 +91108,8 @@
             ".codewiki/validation/2026-05-22-planning-block.json",
             ".codewiki/validation/2026-05-23-planning-fail.json",
             ".codewiki/validation/2026-05-24-decision-block.json",
-            ".codewiki/validation/2026-05-27-implementation-block-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-block-task-032.json"
           ],
           "claim_ids": [
             "CLAIM-180"
@@ -91646,6 +91930,19 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
+          "id": "reconcile:validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+          "source_id": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
+          "state": "blocked",
+          "direction": "gateway",
+          "from_layer": "validation",
+          "to_layer": "validation",
+          "next_loop": "validation",
+          "failure_class": "evidence_missing",
+          "recommended_next_loop": "validation",
+          "task_id": "TASK-032",
+          "reason": "Validation block (evidence_missing); route to validation."
+        },
+        {
           "id": "reconcile:task:TASK-012",
           "source_id": "task:TASK-012",
           "state": "drift",
@@ -91691,6 +91988,7 @@
         }
       ],
       "counts_by_loop": {
+        "validation": 1,
         "implementation": 4
       },
       "next_action": {
@@ -91720,13 +92018,13 @@
         "knowledge": "aligned",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "aligned"
+        "validation": "drift"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T21:08:05.158Z",
+      "generated_at": "2026-05-27T21:09:05.283Z",
       "counts": {
         "large-doc": 2
       },
@@ -91747,7 +92045,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T21:08:05Z",
+      "generated_at": "2026-05-27T21:09:05Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -92616,7 +92914,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T21:08:05Z",
+      "generated_at": "2026-05-27T21:09:05Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -92772,7 +93070,8 @@
               ".codewiki/validation/2026-05-22-planning-block.json",
               ".codewiki/validation/2026-05-23-planning-fail.json",
               ".codewiki/validation/2026-05-24-decision-block.json",
-              ".codewiki/validation/2026-05-27-implementation-block-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-block-task-032.json"
             ],
             "claim_ids": [
               "CLAIM-180"
@@ -93941,7 +94240,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T21:08:05Z",
+        "generated_at": "2026-05-27T21:09:05Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -93996,10 +94295,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:08:05Z",
+            "checked_at": "2026-05-27T21:09:05Z",
             "revision": {
               "git": {
-                "head": "703f35c7c73f0d2cc4eca1d71769b30542806734",
+                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -94106,12 +94405,12 @@
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
               "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
               "code_digest": "826b46f14ddaa36d33197da057039f5ef8813a53ac2067bc8f38cf16d069798c",
-              "digest": "18aa114bba3d75dec1ef561bcaf60b51980fcae6afcb3628fe7a5ffed7176adb"
+              "digest": "506af75a285eec383b6e0999aee780c34fdd343652996de83cc2a78634a5416d"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:08:05Z",
+              "checked_at": "2026-05-27T21:09:05Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -94267,10 +94566,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T21:08:05Z",
+            "checked_at": "2026-05-27T21:09:05Z",
             "revision": {
               "git": {
-                "head": "703f35c7c73f0d2cc4eca1d71769b30542806734",
+                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -94356,12 +94655,12 @@
               "spec_digest": "0f6a577cba7904921e5bc3fcda94751171f534b65a6cb40c30809073eb5727f6",
               "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
               "code_digest": "e6437ed17c8699d967b595ef6ffa33317d01de55f5da6dbdf4aa31dbf8cf1d54",
-              "digest": "7dfda8d8a63e6109bde7589a94d45722d6990d35133627862a98dd81f7b6554b"
+              "digest": "17774a6af712ddb0430b91f6d29ea379867412b474f3a4bb3099de56d3c1aacd"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:08:05Z",
+              "checked_at": "2026-05-27T21:09:05Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -94494,10 +94793,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:08:05Z",
+            "checked_at": "2026-05-27T21:09:05Z",
             "revision": {
               "git": {
-                "head": "703f35c7c73f0d2cc4eca1d71769b30542806734",
+                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -94604,12 +94903,12 @@
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
               "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
               "code_digest": "826b46f14ddaa36d33197da057039f5ef8813a53ac2067bc8f38cf16d069798c",
-              "digest": "18aa114bba3d75dec1ef561bcaf60b51980fcae6afcb3628fe7a5ffed7176adb"
+              "digest": "506af75a285eec383b6e0999aee780c34fdd343652996de83cc2a78634a5416d"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:08:05Z",
+              "checked_at": "2026-05-27T21:09:05Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -94766,7 +95065,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-27T21:08:05Z",
+        "generated_at": "2026-05-27T21:09:05Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
