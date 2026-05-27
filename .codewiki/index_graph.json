@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T22:59:29.779Z",
+  "generated_at": "2026-05-27T22:59:51.985Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -25740,76 +25740,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-187",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-187",
-      "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-      "agent_name": "Robin",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Edit large system docs to clear graph large-doc warnings.",
-      "expires_at": "2026-05-28T00:55:08.881Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-        "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-        "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-035"
-        },
-        {
-          "layer": "source",
-          "path": ".codewiki/kb/system/api.md"
-        },
-        {
-          "layer": "source",
-          "path": ".codewiki/kb/system/graph.md"
-        },
-        {
-          "layer": "source",
-          "path": ".codewiki/kb/system/overview.md"
-        },
-        {
-          "layer": "build",
-          "description": "TASK-035 implementation build"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-035",
-      "kind": "change_claim_scope",
-      "path": "TASK-035",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/api.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/api.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/graph.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/graph.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/overview.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/overview.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-035 implementation build",
-      "kind": "change_claim_scope",
-      "path": "TASK-035 implementation build",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -77777,36 +77707,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-187",
-      "to": "task:TASK-035"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-187",
-      "to": "claim_scope:TASK-035"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-187",
-      "to": "claim_scope:.codewiki/kb/system/api.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-187",
-      "to": "claim_scope:.codewiki/kb/system/graph.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-187",
-      "to": "claim_scope:.codewiki/kb/system/overview.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-187",
-      "to": "claim_scope:TASK-035 implementation build"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -87525,7 +87425,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 12,
+            "item_count": 6,
             "badges": [
               {
                 "id": "open_tasks",
@@ -87550,7 +87450,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -87559,11 +87459,7 @@
               "sprint:SPRINT-003",
               "sprint:SPRINT-004",
               "task:TASK-012",
-              "task:TASK-023",
-              "claim:CLAIM-187",
-              "claim_scope:TASK-035",
-              "claim_scope:.codewiki/kb/system/api.md",
-              "claim_scope:.codewiki/kb/system/graph.md"
+              "task:TASK-023"
             ],
             "collapsed": true
           },
@@ -87683,85 +87579,7 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -97563,349 +97381,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-187",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-035",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-          "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-187",
-          "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-          "agent_name": "Robin",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Edit large system docs to clear graph large-doc warnings.",
-          "task_id": "TASK-035",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-            "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-            "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-035"
-            },
-            {
-              "layer": "source",
-              "path": ".codewiki/kb/system/api.md"
-            },
-            {
-              "layer": "source",
-              "path": ".codewiki/kb/system/graph.md"
-            },
-            {
-              "layer": "source",
-              "path": ".codewiki/kb/system/overview.md"
-            },
-            {
-              "layer": "build",
-              "description": "TASK-035 implementation build"
-            }
-          ],
-          "created_at": "2026-05-27T22:55:08Z",
-          "updated_at": "2026-05-27T22:55:08Z",
-          "expires_at": "2026-05-28T00:55:08.881Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/api.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/overview.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-035"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-035 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/api.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/graph.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": ".codewiki/kb/system/overview.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-035"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-035 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-187",
-              "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "agent_name": "Robin",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-035",
-              "summary": "Edit large system docs to clear graph large-doc warnings.",
-              "expires_at": "2026-05-28T00:55:08.881Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -106190,85 +105684,7 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -106631,9 +106047,7 @@
             ".codewiki/validation/2026-05-23-planning-fail.json",
             ".codewiki/validation/2026-05-24-decision-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-187"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -107541,13 +106955,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T22:59:29.675Z",
+      "generated_at": "2026-05-27T22:59:51.874Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T22:59:29Z",
+      "generated_at": "2026-05-27T22:59:51Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -108085,7 +107499,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T22:59:29Z",
+      "generated_at": "2026-05-27T22:59:52Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -108193,9 +107607,7 @@
               ".codewiki/validation/2026-05-23-planning-fail.json",
               ".codewiki/validation/2026-05-24-decision-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-187"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -108396,7 +107808,7 @@
       },
       "direction": [
         "No open deterministic drift requires action right now.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=task, approval=task, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 20/20.",
@@ -110981,7 +110393,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T22:59:29Z",
+        "generated_at": "2026-05-27T22:59:52Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -111036,14 +110448,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T22:59:29Z",
+            "checked_at": "2026-05-27T22:59:52Z",
             "revision": {
               "git": {
-                "head": "45a25184f228998e6ced17cbeeadfed5109ba0ca",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "637c06c2ec3d7847440402400de6c4d11e57ccd5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -111088,7 +110498,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "fe441bf5ef0392304f712537adc73905c4292be0",
+                  ".codewiki/roadmap/queue.json": "175127154bcb24da25fb4b6baa38ea73872a6943",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -111242,13 +110652,13 @@
               },
               "spec_digest": "8c33beb65672c46919e87ac8f03f12389cf5dcaf5f661f19859e9ea57e7b428f",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "da4ee89cb81b20daf3233064f6d48e38470669b1b07d3248a8e9e8f444ca01f3",
-              "digest": "18b8ab114c8b236f274dbd969490817b5c1b171749b8a4be3a49b0982adc0ed6"
+              "code_digest": "1a2a6f9d304019a81e612733529b2297c21441de67278e37b533b58a5767bdfa",
+              "digest": "a780729b4160697d725c79fa0a69ff7d5ce43587975759111ed97dcc7db2615d"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:59:29Z",
+              "checked_at": "2026-05-27T22:59:52Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -111645,14 +111055,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T22:59:29Z",
+            "checked_at": "2026-05-27T22:59:52Z",
             "revision": {
               "git": {
-                "head": "45a25184f228998e6ced17cbeeadfed5109ba0ca",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "637c06c2ec3d7847440402400de6c4d11e57ccd5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -111681,7 +111089,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "fe441bf5ef0392304f712537adc73905c4292be0",
+                  ".codewiki/roadmap/queue.json": "175127154bcb24da25fb4b6baa38ea73872a6943",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -111828,13 +111236,13 @@
               },
               "spec_digest": "829bf15ef81f01b690e9c5c36784bdcb24bf45bd56d1682b10698d4c6ad11d90",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "64dd07f734532f04b18696810c0245dcf44b4be6881f6e221fcfe4553bf04faa",
-              "digest": "ef66fb55dcbc8e0a19388e3dff3df4246eaf0c98cf1d14536cdeefe90e37c4a4"
+              "code_digest": "9c747c1d05346ea60f582bb23ea6ba40b6e14fce7aa2408f936cb81f642a8ac4",
+              "digest": "42a3fa94b866abb5609808d48b635c028880a78792677e6858f3c12481bec293"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:59:29Z",
+              "checked_at": "2026-05-27T22:59:52Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -112208,14 +111616,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T22:59:29Z",
+            "checked_at": "2026-05-27T22:59:52Z",
             "revision": {
               "git": {
-                "head": "45a25184f228998e6ced17cbeeadfed5109ba0ca",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "637c06c2ec3d7847440402400de6c4d11e57ccd5",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -112260,7 +111666,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "fe441bf5ef0392304f712537adc73905c4292be0",
+                  ".codewiki/roadmap/queue.json": "175127154bcb24da25fb4b6baa38ea73872a6943",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -112414,13 +111820,13 @@
               },
               "spec_digest": "8c33beb65672c46919e87ac8f03f12389cf5dcaf5f661f19859e9ea57e7b428f",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "da4ee89cb81b20daf3233064f6d48e38470669b1b07d3248a8e9e8f444ca01f3",
-              "digest": "18b8ab114c8b236f274dbd969490817b5c1b171749b8a4be3a49b0982adc0ed6"
+              "code_digest": "1a2a6f9d304019a81e612733529b2297c21441de67278e37b533b58a5767bdfa",
+              "digest": "a780729b4160697d725c79fa0a69ff7d5ce43587975759111ed97dcc7db2615d"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:59:29Z",
+              "checked_at": "2026-05-27T22:59:52Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -112818,198 +112224,21 @@
         "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-27T22:59:29Z",
+        "generated_at": "2026-05-27T22:59:52Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-187",
-            "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-            "agent_name": "Robin",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Edit large system docs to clear graph large-doc warnings.",
-            "task_id": "TASK-035",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-              "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-035"
-              },
-              {
-                "layer": "source",
-                "path": ".codewiki/kb/system/api.md"
-              },
-              {
-                "layer": "source",
-                "path": ".codewiki/kb/system/graph.md"
-              },
-              {
-                "layer": "source",
-                "path": ".codewiki/kb/system/overview.md"
-              },
-              {
-                "layer": "build",
-                "description": "TASK-035 implementation build"
-              }
-            ],
-            "created_at": "2026-05-27T22:55:08Z",
-            "updated_at": "2026-05-27T22:55:08Z",
-            "expires_at": "2026-05-28T00:55:08.881Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "source",
-              "path": ".codewiki/kb/system/api.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-187",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-035",
-                "summary": "Edit large system docs to clear graph large-doc warnings.",
-                "expires_at": "2026-05-28T00:55:08.881Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": ".codewiki/kb/system/graph.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-187",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-035",
-                "summary": "Edit large system docs to clear graph large-doc warnings.",
-                "expires_at": "2026-05-28T00:55:08.881Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": ".codewiki/kb/system/overview.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-187",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-035",
-                "summary": "Edit large system docs to clear graph large-doc warnings.",
-                "expires_at": "2026-05-28T00:55:08.881Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-035"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-187",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-035",
-                "summary": "Edit large system docs to clear graph large-doc warnings.",
-                "expires_at": "2026-05-28T00:55:08.881Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "description": "TASK-035 implementation build"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-187",
-                "session_id": "019e58db-70a0-7883-bf13-53059e1bfb2b",
-                "agent_name": "Robin",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-035",
-                "summary": "Edit large system docs to clear graph large-doc warnings.",
-                "expires_at": "2026-05-28T00:55:08.881Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "branch": "codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b",
-                  "notes": "factory=role-worktree; task=TASK-035; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-187 release or validated publisher/patch ref for codewiki/TASK-035/builder/019e58db-70a0-7883-bf13-53059e1bfb2b; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
