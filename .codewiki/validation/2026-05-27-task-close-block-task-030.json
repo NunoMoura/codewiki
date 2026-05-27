@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T21:11:31Z",
+  "profile": "task-close",
+  "task_id": "TASK-030",
+  "verdict": "block",
+  "rationale": "TASK-030 task-close validation passes against clean local commit proof. HEAD 280342c5ed31c376db33af53187b336ed710e441 contains implementation commit 703f35c and subsequent generated/validation/closure evidence; implementation validation passed in .codewiki/validation/2026-05-27-implementation-pass-task-030.json. Source implementation build .codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json has accepted planning traceability and complete acceptance mapping. State, graph, rebuild, lint, prompt, resume-context, status dock prefs, and codewiki_state/codewiki_resume_context execution now live under src/state/**; legacy state/graph/resume owner paths are removed without shims; TASK-specific guard and full checks pass. Required task-close audits pass except existing graph-health warnings, which are non-blocking roadmap hygiene and not changed-file drift. Policy blocks task-close validation until risk_approval:user_approval:security-migration-publication are recorded.",
+  "checks": [
+    "git status --porcelain=v1 | wc -l — 0 before validation report write",
+    "git rev-parse HEAD — 280342c5ed31c376db33af53187b336ed710e441",
+    "git rev-parse HEAD^{tree} — 0e1f40791668d5953e6e2106c9fdd475337d601f",
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-030 — changed/task/generated-parity pass; alignment warning only",
+    "implementation validation pass exists: .codewiki/validation/2026-05-27-implementation-pass-task-030.json",
+    "implementation checks reviewed: TASK-030 guard, typecheck, check:architecture, test:smoke, test:features, test:pack, validation-preflight all pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports 2 graph-health warnings; changed, task, and generated-parity pass, and worktree was clean before report write."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed; local commit proof only."
+    },
+    {
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+  "policy_profile": "task-close",
+  "failure_class": "risk_approval_missing",
+  "recommended_next_loop": "decision",
+  "routing": {
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "commit:280342c5ed31c376db33af53187b336ed710e441",
+    "tree:0e1f40791668d5953e6e2106c9fdd475337d601f",
+    ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+    ".codewiki/validation/2026-05-27-implementation-pass-task-030.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-030: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+  ],
+  "content_proof_refs": [
+    "280342c5ed31c376db33af53187b336ed710e441",
+    "0e1f40791668d5953e6e2106c9fdd475337d601f"
+  ],
+  "failed_criteria": [
+    "risk_approval"
+  ],
+  "blocking_questions": [
+    "Record explicit user approval for risk tier security-migration-publication before lower-layer promotion."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "0e1f40791668d5953e6e2106c9fdd475337d601f"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "escalate",
+    "profile": "task-close",
+    "task_id": "TASK-030",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [
+        "user_approval:security-migration-publication"
+      ]
+    },
+    "issues": [
+      {
+        "kind": "risk-approval",
+        "severity": "high",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "evidence": [
+          "user_approval:security-migration-publication"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [],
+      "approval_missing": [
+        "user_approval:security-migration-publication"
+      ],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "280342c5ed31c376db33af53187b336ed710e441",
+    "validated_sha": "280342c5ed31c376db33af53187b336ed710e441",
+    "tree_sha": "0e1f40791668d5953e6e2106c9fdd475337d601f",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation after clean local commit proof; no remote publication.",
+    "role": "validator"
+  }
+}
