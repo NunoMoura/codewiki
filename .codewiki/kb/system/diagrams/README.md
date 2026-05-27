@@ -7,10 +7,6 @@ owners:
   - architecture
   - design
 updated: "2026-05-26"
-code_paths:
-  - src/knowledge/diagram-parser.ts
-  - src/ui/web/control-room.ts
-  - src/adapters/pi/ui/manager.ts
 ---
 
 # System Diagram Raw Data

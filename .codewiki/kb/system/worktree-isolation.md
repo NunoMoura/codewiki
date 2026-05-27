@@ -15,6 +15,7 @@ code_paths:
   - src/validation/report.ts
   - src/build/writer.ts
   - src/adapters/pi/tools
+code_paths_mode: explicit_override
 ---
 
 # Role Worktree Isolation

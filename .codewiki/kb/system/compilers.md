@@ -7,17 +7,6 @@ owners:
   - architecture
   - product
 updated: "2026-05-26"
-code_paths:
-  - src/build/writer.ts
-  - src/build/tool.ts
-  - src/build/types.ts
-  - src/validation/report.ts
-  - src/roadmap/runtime.ts
-  - src/roadmap/task.ts
-  - skills/codewiki-decision/SKILL.md
-  - skills/codewiki-planning/SKILL.md
-  - skills/codewiki-implementation/SKILL.md
-  - skills/codewiki-validation/SKILL.md
 ---
 
 # Compilers

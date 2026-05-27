@@ -7,15 +7,6 @@ owners:
   - architecture
   - engineering
 updated: "2026-05-16"
-code_paths:
-  - src/index.ts
-  - src/project/bootstrap.ts
-  - src/project/templates.ts
-  - src/adapters/pi/bootstrap.ts
-  - src/state/prompt.ts
-  - src/adapters/pi
-  - skills/codewiki
-  - tests/smoke/package-smoke.test.mjs
 ---
 
 # Extension

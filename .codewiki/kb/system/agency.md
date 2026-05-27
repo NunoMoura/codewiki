@@ -12,6 +12,7 @@ code_paths:
   - src/project/types.ts
   - src/adapters/pi
   - src/state/resume-context.ts
+code_paths_mode: explicit_override
 ---
 
 # Agency Controller

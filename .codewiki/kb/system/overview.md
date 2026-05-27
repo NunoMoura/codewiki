@@ -6,9 +6,6 @@ summary: Main runtime areas and ownership boundaries for CodeWiki.
 owners:
   - architecture
 updated: "2026-05-22"
-code_paths:
-  - src
-  - skills
 ---
 
 # System Overview

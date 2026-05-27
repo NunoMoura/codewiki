@@ -10,6 +10,7 @@ updated: '2026-05-12'
 code_paths:
 - skills/codewiki/playbooks/view-audit.md
 - skills/codewiki/playbooks/architecture.md
+code_paths_mode: explicit_override
 ---
 
 # Prevent Horizontal and Vertical Drift

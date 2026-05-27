@@ -7,16 +7,6 @@ owners:
   - architecture
   - product
 updated: "2026-05-26"
-code_paths:
-  - src/state/graph.ts
-  - src/build
-  - src/validation
-  - src/state/lint.ts
-  - src/gateway
-  - skills/codewiki-decision/SKILL.md
-  - skills/codewiki-planning/SKILL.md
-  - skills/codewiki-implementation/SKILL.md
-  - skills/codewiki-validation/SKILL.md
 ---
 
 # Alignment Model

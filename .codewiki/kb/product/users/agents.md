@@ -10,6 +10,7 @@ updated: '2026-05-16'
 code_paths:
 - skills
 - src
+code_paths_mode: explicit_override
 ---
 
 # Agents and Subagents

@@ -6,13 +6,6 @@ summary: Harness-independent application-tool contract for CodeWiki state, compi
 owners:
   - architecture
 updated: "2026-05-27"
-code_paths:
-  - src/application
-  - src/domain
-  - src/roadmap
-  - src/session
-  - src/state
-  - src/adapters
 ---
 
 # CodeWiki API

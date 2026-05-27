@@ -8,8 +8,6 @@ owners:
 - product
 - architecture
 updated: '2026-05-16'
-code_paths:
-- .codewiki/kb
 ---
 
 # Lexicon

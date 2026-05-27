@@ -10,6 +10,7 @@ updated: '2026-05-27'
 code_paths:
 - skills/codewiki-implementation/SKILL.md
 - skills/codewiki-decision/SKILL.md
+code_paths_mode: explicit_override
 ---
 
 # Use Gated Agency

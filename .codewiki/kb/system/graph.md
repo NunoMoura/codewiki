@@ -6,13 +6,6 @@ summary: Generated state/graph representation for reconciliation, routing, fresh
 owners:
   - architecture
 updated: "2026-05-27"
-code_paths:
-  - .codewiki/index_graph.json
-  - src/state/graph.ts
-  - src/state/graph/rebuilder.ts
-  - src/state/builders.ts
-  - src/state/reader.ts
-  - src/domain/shared/types.ts
 ---
 
 # Graph

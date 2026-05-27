@@ -6,11 +6,6 @@ summary: Pure build-validation gateway for horizontal and vertical alignment bef
 owners:
   - architecture
 updated: "2026-05-26"
-code_paths:
-  - src/validation
-  - src/gateway
-  - src/validation/tool.ts
-  - skills/codewiki-validation/SKILL.md
 ---
 
 # Validation Gateway

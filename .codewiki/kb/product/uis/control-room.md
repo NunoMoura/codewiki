@@ -7,9 +7,6 @@ owners:
   - product
   - design
 updated: "2026-05-16"
-code_paths:
-  - src/ui/web
-  - src/adapters/pi/commands
 ---
 
 # CodeWiki UI

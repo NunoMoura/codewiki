@@ -6,10 +6,6 @@ summary: Work truth for active items, priority, status, blockers, progress, and 
 owners:
   - architecture
 updated: "2026-05-27"
-code_paths:
-  - .codewiki/roadmap/queue.json
-  - .codewiki/roadmap
-  - src/roadmap/runtime.ts
 ---
 
 # Roadmap

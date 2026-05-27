@@ -10,6 +10,7 @@ updated: '2026-05-16'
 code_paths:
 - src/ui/web
 - src/adapters/pi/ui/manager.ts
+code_paths_mode: explicit_override
 ---
 
 # Map Navigation UI

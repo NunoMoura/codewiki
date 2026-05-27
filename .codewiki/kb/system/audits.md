@@ -7,12 +7,6 @@ owners:
   - architecture
   - security
 updated: "2026-05-25"
-code_paths:
-  - src/audit
-  - src/adapters/pi/commands/audit.ts
-  - src/adapters/pi/tools/audit.ts
-  - src/adapters/pi/schemas.ts
-  - scripts/check-architecture.mjs
 ---
 
 # Audits

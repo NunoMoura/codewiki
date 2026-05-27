@@ -8,6 +8,7 @@ owners:
 updated: '2026-05-22'
 code_paths:
 - .codewiki/kb/product
+code_paths_mode: explicit_override
 ---
 
 # Product

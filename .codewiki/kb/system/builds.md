@@ -12,6 +12,7 @@ code_paths:
   - src/state/graph.ts
   - src/domain/shared/types.ts
   - src/adapters/pi/schemas.ts
+code_paths_mode: explicit_override
 ---
 
 # Builds

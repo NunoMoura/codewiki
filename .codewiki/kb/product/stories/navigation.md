@@ -10,6 +10,7 @@ updated: '2026-05-09'
 code_paths:
 - skills/codewiki/SKILL.md
 - src/adapters/pi/ui
+code_paths_mode: explicit_override
 ---
 
 # Navigate With Low Token Cost

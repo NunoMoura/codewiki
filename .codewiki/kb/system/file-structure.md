@@ -6,10 +6,6 @@ summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
 updated: "2026-05-26"
-code_paths:
-  - .codewiki/kb
-  - src
-  - skills/codewiki
 diagram_refs:
   - file-structure-map:intended_file_structure
   - file-structure-map:current_layered_source

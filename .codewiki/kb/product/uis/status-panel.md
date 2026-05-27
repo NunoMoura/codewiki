@@ -9,6 +9,7 @@ owners:
 updated: "2026-05-16"
 code_paths:
   - src/adapters/pi/ui
+code_paths_mode: explicit_override
 ---
 
 # Status Panel UI

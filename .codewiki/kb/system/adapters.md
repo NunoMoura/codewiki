@@ -6,10 +6,6 @@ summary: Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code
 owners:
   - architecture
 updated: "2026-05-27"
-code_paths:
-  - src/adapters
-  - src/application
-  - skills/codewiki
 ---
 
 # Adapters

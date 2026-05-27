@@ -7,11 +7,6 @@ owners:
   - architecture
   - product
 updated: "2026-05-27"
-code_paths:
-  - .codewiki/kb
-  - src/knowledge
-  - src/state/graph.ts
-  - src/state/lint.ts
 ---
 
 # Knowledge

@@ -10,6 +10,7 @@ updated: '2026-05-16'
 code_paths:
 - tests/smoke/package-smoke.test.mjs
 - src/state/lint.ts
+code_paths_mode: explicit_override
 ---
 
 # Sanitize Historical State

@@ -7,14 +7,6 @@ owners:
   - architecture
   - product
 updated: "2026-05-26"
-code_paths:
-  - skills/codewiki-decision/SKILL.md
-  - skills/codewiki-planning/SKILL.md
-  - skills/codewiki-implementation/SKILL.md
-  - skills/codewiki-validation/SKILL.md
-  - src/build
-  - src/validation
-  - src/state/graph.ts
 ---
 
 # Change Lifecycle

@@ -9,6 +9,7 @@ owners:
 updated: '2026-05-09'
 code_paths:
 - skills
+code_paths_mode: explicit_override
 ---
 
 # Future External Users

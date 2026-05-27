@@ -10,6 +10,7 @@ updated: '2026-05-09'
 code_paths:
 - src/index.ts
 - package.json
+code_paths_mode: explicit_override
 ---
 
 # Extension and Workflow Authors
