@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T00:03:19.771Z",
+  "generated_at": "2026-05-27T00:07:57.171Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5219,9 +5219,9 @@
       "kind": "roadmap_task",
       "title": "Migrate project and bootstrap source root",
       "layer": "roadmap",
-      "status": "in_progress",
+      "status": "cancelled",
       "change_type": "system",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -58767,14 +58767,13 @@
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 4,
+                "count": 3,
                 "refs": [
-                  "TASK-023",
                   "TASK-029",
                   "TASK-030",
                   "TASK-031"
                 ],
-                "ref_count": 4
+                "ref_count": 3
               },
               {
                 "id": "done_tasks",
@@ -58909,10 +58908,10 @@
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-023",
-          "source_id": "task:TASK-023",
+          "item_id": "reconcile:task:TASK-029",
+          "source_id": "task:TASK-029",
           "loop": "implementation",
-          "reason": "TASK-023 is open implementation delta below knowledge."
+          "reason": "TASK-029 is open implementation delta below knowledge."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -60616,7 +60615,77 @@
             "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -67917,17 +67986,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:task:TASK-023",
-            "source_id": "task:TASK-023",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-023",
-            "reason": "TASK-023 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-029",
             "source_id": "task:TASK-029",
             "state": "drift",
@@ -68159,14 +68217,11 @@
         "TASK-031"
       ],
       "open_task_ids": [
-        "TASK-023",
         "TASK-029",
         "TASK-030",
         "TASK-031"
       ],
-      "in_progress_task_ids": [
-        "TASK-023"
-      ],
+      "in_progress_task_ids": [],
       "todo_task_ids": [
         "TASK-029",
         "TASK-030",
@@ -68175,11 +68230,11 @@
       "blocked_task_ids": [],
       "done_task_ids": [],
       "cancelled_task_ids": [
-        "TASK-012"
+        "TASK-012",
+        "TASK-023"
       ],
       "status_counts": {
-        "cancelled": 1,
-        "in_progress": 1,
+        "cancelled": 2,
         "todo": 3
       },
       "sprint_ids": [
@@ -77505,7 +77560,77 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -77521,7 +77646,6 @@
           "TASK-031"
         ],
         "open_task_ids": [
-          "TASK-023",
           "TASK-029",
           "TASK-030",
           "TASK-031"
@@ -77713,9 +77837,7 @@
           "task_ids": [
             "TASK-023"
           ],
-          "open_task_ids": [
-            "TASK-023"
-          ],
+          "open_task_ids": [],
           "sprint_ids": [],
           "spec_paths": [
             ".codewiki/kb/system/file-structure.md",
@@ -77887,10 +78009,10 @@
     },
     "workflow_cursor": {
       "active_loop": "implementation",
-      "reason": "TASK-023 is open implementation delta below knowledge.",
+      "reason": "TASK-029 is open implementation delta below knowledge.",
       "input_refs": [
-        "task:TASK-023",
-        "TASK-023"
+        "task:TASK-029",
+        "TASK-029"
       ],
       "expected_output": "implementation_build",
       "exit_gate": "validation pass or explicit user decision",
@@ -77910,8 +78032,8 @@
       },
       "context_boundary": "none",
       "handoff_refs": [
-        "task:TASK-023",
-        "TASK-023"
+        "task:TASK-029",
+        "TASK-029"
       ]
     },
     "gc": {
@@ -77925,7 +78047,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-023",
             "TASK-029",
             "TASK-030",
             "TASK-031"
@@ -78042,7 +78163,8 @@
         },
         "cold": {
           "task_ids": [
-            "TASK-012"
+            "TASK-012",
+            "TASK-023"
           ],
           "build_paths": [
             ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
@@ -78684,17 +78806,6 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
-          "id": "reconcile:task:TASK-023",
-          "source_id": "task:TASK-023",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-023",
-          "reason": "TASK-023 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-029",
           "source_id": "task:TASK-029",
           "state": "drift",
@@ -78729,13 +78840,13 @@
         }
       ],
       "counts_by_loop": {
-        "implementation": 4
+        "implementation": 3
       },
       "next_action": {
         "loop": "implementation",
-        "command": "/wiki-resume TASK-023",
-        "reason": "TASK-023 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-023",
+        "command": "/wiki-resume TASK-029",
+        "reason": "TASK-029 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-029",
         "isolation_required": false,
         "isolation": {
           "required": false,
@@ -78749,8 +78860,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-023",
-          "TASK-023"
+          "task:TASK-029",
+          "TASK-029"
         ]
       },
       "layer_states": {
@@ -78764,13 +78875,13 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T00:03:19.683Z",
+      "generated_at": "2026-05-27T00:07:57.090Z",
       "counts": {},
       "issues": []
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T00:03:19Z",
+      "generated_at": "2026-05-27T00:07:57Z",
       "health": {
         "color": "green",
         "errors": 0,
@@ -78782,12 +78893,11 @@
       },
       "summary": {
         "task_count": 5,
-        "open_count": 4,
+        "open_count": 3,
         "sprint_count": 3,
         "active_sprint_count": 3,
         "status_counts": {
-          "cancelled": 1,
-          "in_progress": 1,
+          "cancelled": 2,
           "todo": 3
         },
         "priority_counts": {
@@ -78804,13 +78914,11 @@
           "TASK-031"
         ],
         "open_task_ids": [
-          "TASK-023",
           "TASK-029",
           "TASK-030",
           "TASK-031"
         ],
         "executable_open_task_ids": [
-          "TASK-023",
           "TASK-029",
           "TASK-030",
           "TASK-031"
@@ -78969,12 +79077,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-023"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-023"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [
           "TASK-029",
           "TASK-030",
@@ -78988,7 +79092,8 @@
         "blocked_task_ids": [],
         "done_task_ids": [],
         "cancelled_task_ids": [
-          "TASK-012"
+          "TASK-012",
+          "TASK-023"
         ],
         "recent_task_ids": [
           "TASK-023",
@@ -79083,11 +79188,11 @@
         "TASK-023": {
           "id": "TASK-023",
           "title": "Migrate project and bootstrap source root",
-          "status": "in_progress",
+          "status": "cancelled",
           "priority": "high",
           "kind": "migration",
           "change_type": "system",
-          "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
+          "summary": "TASK-023 cancelled as superseded aggregate; continue with TASK-029.",
           "labels": [
             "concept-root-migration",
             "project-root",
@@ -79265,7 +79370,7 @@
             "scripts/check-architecture.mjs",
             "tests/tasks/TASK-076/restructure.test.mjs"
           ],
-          "updated": "2026-05-26T23:55:17Z",
+          "updated": "2026-05-27T00:07:45Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -79488,7 +79593,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T00:03:19Z",
+      "generated_at": "2026-05-27T00:07:57Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -79503,13 +79608,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 29,
-        "tracked_specs": 6,
+        "aligned_specs": 31,
+        "tracked_specs": 4,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
         "task_count": 5,
-        "open_task_count": 4,
+        "open_task_count": 3,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 11
@@ -79517,8 +79622,8 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 6,
-          "total": 6,
+          "value": 4,
+          "total": 4,
           "percent": 100
         },
         "roadmap_done": {
@@ -79537,22 +79642,17 @@
       "views": {
         "risky_spec_paths": [
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/change-lifecycle.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/roadmap.md",
-          ".codewiki/kb/system/worktree-isolation.md"
+          ".codewiki/kb/system/roadmap.md"
         ],
         "top_risky_spec_paths": [
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/change-lifecycle.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/roadmap.md",
-          ".codewiki/kb/system/worktree-isolation.md"
+          ".codewiki/kb/system/roadmap.md"
         ],
         "open_task_ids": [
-          "TASK-023",
           "TASK-029",
           "TASK-030",
           "TASK-031"
@@ -79570,16 +79670,16 @@
       },
       "next_step": {
         "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-023",
-        "reason": "TASK-023 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-023"
+        "command": "/wiki-resume TASK-029",
+        "reason": "TASK-029 is open implementation delta below knowledge.",
+        "item_id": "reconcile:task:TASK-029"
       },
       "workflow_cursor": {
         "active_loop": "implementation",
-        "reason": "TASK-023 is open implementation delta below knowledge.",
+        "reason": "TASK-029 is open implementation delta below knowledge.",
         "input_refs": [
-          "task:TASK-023",
-          "TASK-023"
+          "task:TASK-029",
+          "TASK-029"
         ],
         "expected_output": "implementation_build",
         "exit_gate": "validation pass or explicit user decision",
@@ -79599,8 +79699,8 @@
         },
         "context_boundary": "none",
         "handoff_refs": [
-          "task:TASK-023",
-          "TASK-023"
+          "task:TASK-029",
+          "TASK-029"
         ]
       },
       "gc": {
@@ -79614,7 +79714,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
@@ -79731,7 +79830,8 @@
           },
           "cold": {
             "task_ids": [
-              "TASK-012"
+              "TASK-012",
+              "TASK-023"
             ],
             "build_paths": [
               ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
@@ -79808,11 +79908,11 @@
         ]
       },
       "direction": [
-        "TASK-023 is open implementation delta below knowledge.",
+        "TASK-029 is open implementation delta below knowledge.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 6/6.",
+        "Tracked drift coverage: 4/4.",
         "File-structure drift: 0 actionable item(s), 11 approved migration delta(s)."
       ],
       "file_structure": {
@@ -79876,55 +79976,20 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-023",
             "TASK-029",
             "TASK-030",
             "TASK-031"
           ],
           "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
+            "id": "TASK-029",
+            "status": "todo",
+            "title": "Migrate roadmap and task source root"
           },
           "revision": {
             "digest": "8902c3d950ae79c982e3c37c910f146d696a58666389e1346e515242015ddbcb",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-023"
-        },
-        {
-          "path": ".codewiki/kb/system/change-lifecycle.md",
-          "title": "Change Lifecycle",
-          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-validation/SKILL.md",
-            "src/build",
-            "src/validation",
-            "src/application/graph.ts"
-          ],
-          "code_area": "skills, src",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-023"
-          ],
-          "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
-          },
-          "revision": {
-            "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-023"
+          "note": "tracked by TASK-029"
         },
         {
           "path": ".codewiki/kb/system/file-structure.md",
@@ -79943,21 +80008,20 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-023",
             "TASK-029",
             "TASK-030",
             "TASK-031"
           ],
           "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
+            "id": "TASK-029",
+            "status": "todo",
+            "title": "Migrate roadmap and task source root"
           },
           "revision": {
             "digest": "aaf860775d1fc6d47a9ea36c3c1b9648664f633880bc9394cf2c259202f1af7f",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-023"
+          "note": "tracked by TASK-029"
         },
         {
           "path": ".codewiki/kb/system/graph.md",
@@ -79979,19 +80043,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-023",
             "TASK-030"
           ],
           "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
+            "id": "TASK-030",
+            "status": "todo",
+            "title": "Migrate state graph and resume source root"
           },
           "revision": {
             "digest": "13fee789c1b7e1b538ca59ec7b29e5299f1767940f5004c48768bc8819a7066e",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-023"
+          "note": "tracked by TASK-030"
         },
         {
           "path": ".codewiki/kb/system/roadmap.md",
@@ -80010,54 +80073,18 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-023",
             "TASK-029"
           ],
           "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
+            "id": "TASK-029",
+            "status": "todo",
+            "title": "Migrate roadmap and task source root"
           },
           "revision": {
             "digest": "5f41ede746120214ca1727250c4e480085f1a966955f4fb410c763fdd62e1469",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-023"
-        },
-        {
-          "path": ".codewiki/kb/system/worktree-isolation.md",
-          "title": "Role Worktree Isolation",
-          "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/session/claims.ts",
-            "src/session/artifact-status-tool.ts",
-            "src/session/worktree-isolation.ts",
-            "src/application/resume-context.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/validation/report.ts",
-            "src/build/writer.ts",
-            "src/adapters/pi/tools"
-          ],
-          "code_area": "src +7 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-023"
-          ],
-          "primary_task": {
-            "id": "TASK-023",
-            "status": "in_progress",
-            "title": "Migrate project and bootstrap source root"
-          },
-          "revision": {
-            "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-023"
+          "note": "tracked by TASK-029"
         },
         {
           "path": ".codewiki/kb/lexicon.md",
@@ -80552,6 +80579,34 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/change-lifecycle.md",
+          "title": "Change Lifecycle",
+          "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md",
+            "src/build",
+            "src/validation",
+            "src/application/graph.ts"
+          ],
+          "code_area": "skills, src",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/compilers.md",
           "title": "Compilers",
           "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -80752,10 +80807,39 @@
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/worktree-isolation.md",
+          "title": "Role Worktree Isolation",
+          "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/session/claims.ts",
+            "src/session/artifact-status-tool.ts",
+            "src/session/worktree-isolation.ts",
+            "src/application/resume-context.ts",
+            "src/adapters/pi/commands/resume.ts",
+            "src/validation/report.ts",
+            "src/build/writer.ts",
+            "src/adapters/pi/tools"
+          ],
+          "code_area": "src +7 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T00:03:19Z",
+        "generated_at": "2026-05-27T00:07:57Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -80783,12 +80867,16 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T00:03:19Z",
+            "checked_at": "2026-05-27T00:07:57Z",
             "revision": {
               "git": {
-                "head": "f70ba57e4cfe01edf1c7fde7d55a62f82de8120d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "314f8ef5966c628a77d93e3c9a29e0b179cda737",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-023/context.json",
+                  ".codewiki/roadmap/tasks/TASK-023/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -80886,14 +80974,14 @@
                 }
               },
               "spec_digest": "b1fd5072eb1d862b412bb2af06f995f2ce0234bb89325fc6f799c8f8550f6035",
-              "task_digest": "c8d6bdf63066cba38e51649b34d5617c5d23c654d304858c9631c308c0a68ebf",
-              "code_digest": "f74afe2175d8141e1663ed2e908f9a8253cfca795c1d3cd70f58aa73bef0197c",
-              "digest": "4ffe5134fed25901c6d73efe8e9b429615c93ff2ff1d3aced01a2bbdcf36a24f"
+              "task_digest": "3610c67a19d01ad05336a36c42f45385235146ac37775a9a13690972469a5934",
+              "code_digest": "6fea2eeb79b7837eab9dc250a074e81f3066045f45b0d2a7a60ebcefb055b252",
+              "digest": "54f523baf9f555ffcebf3d4625759dd2e2e358499b8174742df6aafffe0f7737"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T00:03:19Z",
+              "checked_at": "2026-05-27T00:07:57Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -80914,16 +81002,15 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -80931,7 +81018,8 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/validation-gateway.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -80953,14 +81041,10 @@
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -80968,21 +81052,19 @@
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
               "src/application/roadmap.ts",
-              "src/session/claims.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/session/worktree-isolation.ts",
-              "src/application/resume-context.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/validation/report.ts",
-              "src/build/writer.ts",
-              "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
               "src/build/tool.ts",
               "src/build/types.ts",
               "src/application/task.ts",
@@ -80993,27 +81075,30 @@
               "src/adapters/pi/bootstrap.ts",
               "src/application/prompt.ts",
               "src/knowledge",
-              "src/validation/tool.ts"
+              "src/validation/tool.ts",
+              "src/session/claims.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/session/worktree-isolation.ts",
+              "src/application/resume-context.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md"
+              ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 28,
-              "tracked_specs": 6,
+              "aligned_specs": 30,
+              "tracked_specs": 4,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -81038,12 +81123,16 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T00:03:19Z",
+            "checked_at": "2026-05-27T00:07:57Z",
             "revision": {
               "git": {
-                "head": "f70ba57e4cfe01edf1c7fde7d55a62f82de8120d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "314f8ef5966c628a77d93e3c9a29e0b179cda737",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-023/context.json",
+                  ".codewiki/roadmap/tasks/TASK-023/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "2eb416b44ca0a374ef86452d9074fb82882619f7",
@@ -81120,29 +81209,28 @@
                 }
               },
               "spec_digest": "0e6737f350cc2a22557f0490593dda327e713bbf6367324e35d8dedaee4973cd",
-              "task_digest": "c8d6bdf63066cba38e51649b34d5617c5d23c654d304858c9631c308c0a68ebf",
-              "code_digest": "89dcc7e79c70a536d280714fad5099f446c6b00ee5ffbe3efdd220ac5817563c",
-              "digest": "12835200135189f5b7755eb0e28e0b4cb0777a989c6bdd8b0fcfd5dd1d4847aa"
+              "task_digest": "3610c67a19d01ad05336a36c42f45385235146ac37775a9a13690972469a5934",
+              "code_digest": "30ca253206621aa05ac16a5108184ca55eacdddc90b42a0ece6173ad69103896",
+              "digest": "a70d04a571a5e895c257812a59ba53781a195f3a30347e033fb748fac2f356ec"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T00:03:19Z",
+              "checked_at": "2026-05-27T00:07:57Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -81150,23 +81238,18 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/validation-gateway.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "src",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -81174,22 +81257,22 @@
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
               "src/application/roadmap.ts",
-              "src/session/claims.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/session/worktree-isolation.ts",
-              "src/application/resume-context.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/validation/report.ts",
-              "src/build/writer.ts",
-              "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/application/lint.ts",
               "src/gateway",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
               "src/build/tool.ts",
               "src/build/types.ts",
               "src/application/task.ts",
@@ -81206,27 +81289,30 @@
               "tests/smoke/package-smoke.test.mjs",
               "src/knowledge",
               "skills",
-              "src/validation/tool.ts"
+              "src/validation/tool.ts",
+              "src/session/claims.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/session/worktree-isolation.ts",
+              "src/application/resume-context.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/tools"
             ],
-            "code_area": "src, skills +3 more",
+            "code_area": "src, .codewiki +3 more",
             "open_task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md"
+              ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 13,
-              "tracked_specs": 6,
+              "aligned_specs": 15,
+              "tracked_specs": 4,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -81251,12 +81337,16 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T00:03:19Z",
+            "checked_at": "2026-05-27T00:07:57Z",
             "revision": {
               "git": {
-                "head": "f70ba57e4cfe01edf1c7fde7d55a62f82de8120d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "314f8ef5966c628a77d93e3c9a29e0b179cda737",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-023/context.json",
+                  ".codewiki/roadmap/tasks/TASK-023/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -81354,14 +81444,14 @@
                 }
               },
               "spec_digest": "b1fd5072eb1d862b412bb2af06f995f2ce0234bb89325fc6f799c8f8550f6035",
-              "task_digest": "c8d6bdf63066cba38e51649b34d5617c5d23c654d304858c9631c308c0a68ebf",
-              "code_digest": "f74afe2175d8141e1663ed2e908f9a8253cfca795c1d3cd70f58aa73bef0197c",
-              "digest": "4ffe5134fed25901c6d73efe8e9b429615c93ff2ff1d3aced01a2bbdcf36a24f"
+              "task_digest": "3610c67a19d01ad05336a36c42f45385235146ac37775a9a13690972469a5934",
+              "code_digest": "6fea2eeb79b7837eab9dc250a074e81f3066045f45b0d2a7a60ebcefb055b252",
+              "digest": "54f523baf9f555ffcebf3d4625759dd2e2e358499b8174742df6aafffe0f7737"
             },
             "freshness": {
               "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-27T00:03:19Z",
+              "checked_at": "2026-05-27T00:07:57Z",
               "reason": "revision anchors unchanged since previous agency",
               "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
@@ -81382,16 +81472,15 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
@@ -81399,7 +81488,8 @@
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/knowledge.md",
               ".codewiki/kb/system/overview.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/validation-gateway.md",
+              ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
               ".codewiki/kb/product",
@@ -81421,14 +81511,10 @@
               "src/application",
               "src/domain",
               "src/adapters",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts",
               ".codewiki/kb",
               "skills/codewiki",
               ".codewiki/index_graph.json",
+              "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/state-builders.ts",
               "src/application/state.ts",
@@ -81436,21 +81522,19 @@
               ".codewiki/roadmap/queue.json",
               ".codewiki/roadmap",
               "src/application/roadmap.ts",
-              "src/session/claims.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/session/worktree-isolation.ts",
-              "src/application/resume-context.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/validation/report.ts",
-              "src/build/writer.ts",
-              "src/adapters/pi/tools",
               "src/adapters/pi",
+              "src/build",
+              "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
               "src/build/tool.ts",
               "src/build/types.ts",
               "src/application/task.ts",
@@ -81461,27 +81545,30 @@
               "src/adapters/pi/bootstrap.ts",
               "src/application/prompt.ts",
               "src/knowledge",
-              "src/validation/tool.ts"
+              "src/validation/tool.ts",
+              "src/session/claims.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/session/worktree-isolation.ts",
+              "src/application/resume-context.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, skills +4 more",
             "open_task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/roadmap.md",
-              ".codewiki/kb/system/worktree-isolation.md"
+              ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 28,
-              "tracked_specs": 6,
+              "aligned_specs": 30,
+              "tracked_specs": 4,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -81496,18 +81583,18 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-023",
+        "task_id": "TASK-029",
         "lane_id": "",
-        "heading": "TASK-023 — Migrate project and bootstrap source root",
-        "command": "/wiki-resume TASK-023",
-        "reason": "Resume roadmap task (in_progress).",
-        "status": "in_progress",
+        "heading": "TASK-029 — Migrate roadmap and task source root",
+        "command": "/wiki-resume TASK-029",
+        "reason": "Resume roadmap task (todo).",
+        "status": "todo",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-27T00:03:19Z",
+        "generated_at": "2026-05-27T00:07:57Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -81547,55 +81634,20 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
+              "id": "TASK-029",
+              "status": "todo",
+              "title": "Migrate roadmap and task source root"
             },
             "revision": {
               "digest": "8902c3d950ae79c982e3c37c910f146d696a58666389e1346e515242015ddbcb",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-023"
-          },
-          {
-            "path": ".codewiki/kb/system/change-lifecycle.md",
-            "title": "Change Lifecycle",
-            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
-              "src/build",
-              "src/validation",
-              "src/application/graph.ts"
-            ],
-            "code_area": "skills, src",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-023"
-            ],
-            "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
-            },
-            "revision": {
-              "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-023"
+            "note": "tracked by TASK-029"
           },
           {
             "path": ".codewiki/kb/system/file-structure.md",
@@ -81614,21 +81666,20 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-023",
               "TASK-029",
               "TASK-030",
               "TASK-031"
             ],
             "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
+              "id": "TASK-029",
+              "status": "todo",
+              "title": "Migrate roadmap and task source root"
             },
             "revision": {
               "digest": "aaf860775d1fc6d47a9ea36c3c1b9648664f633880bc9394cf2c259202f1af7f",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-023"
+            "note": "tracked by TASK-029"
           },
           {
             "path": ".codewiki/kb/system/graph.md",
@@ -81650,19 +81701,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-023",
               "TASK-030"
             ],
             "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
+              "id": "TASK-030",
+              "status": "todo",
+              "title": "Migrate state graph and resume source root"
             },
             "revision": {
               "digest": "13fee789c1b7e1b538ca59ec7b29e5299f1767940f5004c48768bc8819a7066e",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-023"
+            "note": "tracked by TASK-030"
           },
           {
             "path": ".codewiki/kb/system/roadmap.md",
@@ -81681,54 +81731,18 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-023",
               "TASK-029"
             ],
             "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
+              "id": "TASK-029",
+              "status": "todo",
+              "title": "Migrate roadmap and task source root"
             },
             "revision": {
               "digest": "5f41ede746120214ca1727250c4e480085f1a966955f4fb410c763fdd62e1469",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-023"
-          },
-          {
-            "path": ".codewiki/kb/system/worktree-isolation.md",
-            "title": "Role Worktree Isolation",
-            "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/session/claims.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/session/worktree-isolation.ts",
-              "src/application/resume-context.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/validation/report.ts",
-              "src/build/writer.ts",
-              "src/adapters/pi/tools"
-            ],
-            "code_area": "src +7 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-023"
-            ],
-            "primary_task": {
-              "id": "TASK-023",
-              "status": "in_progress",
-              "title": "Migrate project and bootstrap source root"
-            },
-            "revision": {
-              "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-023"
+            "note": "tracked by TASK-029"
           },
           {
             "path": ".codewiki/kb/lexicon.md",
@@ -82223,6 +82237,34 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/change-lifecycle.md",
+            "title": "Change Lifecycle",
+            "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
+              "src/build",
+              "src/validation",
+              "src/application/graph.ts"
+            ],
+            "code_area": "skills, src",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/compilers.md",
             "title": "Compilers",
             "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
@@ -82420,6 +82462,35 @@
             "primary_task": null,
             "revision": {
               "digest": "f683a0299b5b5de7c457ddd0be435c2b04afe4cd6983c33979901d08ca5ec97c",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/worktree-isolation.md",
+            "title": "Role Worktree Isolation",
+            "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/session/claims.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/session/worktree-isolation.ts",
+              "src/application/resume-context.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
+              "src/adapters/pi/tools"
+            ],
+            "code_area": "src +7 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -82794,55 +82865,20 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-023",
                   "TASK-029",
                   "TASK-030",
                   "TASK-031"
                 ],
                 "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
+                  "id": "TASK-029",
+                  "status": "todo",
+                  "title": "Migrate roadmap and task source root"
                 },
                 "revision": {
                   "digest": "8902c3d950ae79c982e3c37c910f146d696a58666389e1346e515242015ddbcb",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-023"
-              },
-              {
-                "path": ".codewiki/kb/system/change-lifecycle.md",
-                "title": "Change Lifecycle",
-                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "src/build",
-                  "src/validation",
-                  "src/application/graph.ts"
-                ],
-                "code_area": "skills, src",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-023"
-                ],
-                "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
-                },
-                "revision": {
-                  "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-023"
+                "note": "tracked by TASK-029"
               },
               {
                 "path": ".codewiki/kb/system/file-structure.md",
@@ -82861,21 +82897,20 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-023",
                   "TASK-029",
                   "TASK-030",
                   "TASK-031"
                 ],
                 "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
+                  "id": "TASK-029",
+                  "status": "todo",
+                  "title": "Migrate roadmap and task source root"
                 },
                 "revision": {
                   "digest": "aaf860775d1fc6d47a9ea36c3c1b9648664f633880bc9394cf2c259202f1af7f",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-023"
+                "note": "tracked by TASK-029"
               },
               {
                 "path": ".codewiki/kb/system/graph.md",
@@ -82897,19 +82932,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-023",
                   "TASK-030"
                 ],
                 "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
+                  "id": "TASK-030",
+                  "status": "todo",
+                  "title": "Migrate state graph and resume source root"
                 },
                 "revision": {
                   "digest": "13fee789c1b7e1b538ca59ec7b29e5299f1767940f5004c48768bc8819a7066e",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-023"
+                "note": "tracked by TASK-030"
               },
               {
                 "path": ".codewiki/kb/system/roadmap.md",
@@ -82928,54 +82962,18 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-023",
                   "TASK-029"
                 ],
                 "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
+                  "id": "TASK-029",
+                  "status": "todo",
+                  "title": "Migrate roadmap and task source root"
                 },
                 "revision": {
                   "digest": "5f41ede746120214ca1727250c4e480085f1a966955f4fb410c763fdd62e1469",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-023"
-              },
-              {
-                "path": ".codewiki/kb/system/worktree-isolation.md",
-                "title": "Role Worktree Isolation",
-                "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/session/claims.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "src/session/worktree-isolation.ts",
-                  "src/application/resume-context.ts",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/validation/report.ts",
-                  "src/build/writer.ts",
-                  "src/adapters/pi/tools"
-                ],
-                "code_area": "src +7 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-023"
-                ],
-                "primary_task": {
-                  "id": "TASK-023",
-                  "status": "in_progress",
-                  "title": "Migrate project and bootstrap source root"
-                },
-                "revision": {
-                  "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-023"
+                "note": "tracked by TASK-029"
               },
               {
                 "path": ".codewiki/kb/lexicon.md",
@@ -83124,6 +83122,34 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "6db8fe75dd7e2853cefcc3daee439e514614b3a81ad984326e78fa69e1284114",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/change-lifecycle.md",
+                "title": "Change Lifecycle",
+                "summary": "Decision classification and propagation rules for semantic CodeWiki changes.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "src/build",
+                  "src/validation",
+                  "src/application/graph.ts"
+                ],
+                "code_area": "skills, src",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -83329,6 +83355,35 @@
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/worktree-isolation.md",
+                "title": "Role Worktree Isolation",
+                "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/session/claims.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "src/session/worktree-isolation.ts",
+                  "src/application/resume-context.ts",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/validation/report.ts",
+                  "src/build/writer.ts",
+                  "src/adapters/pi/tools"
+                ],
+                "code_area": "src +7 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "32a62e14c3eaa2ae32220b95edd97b05478043c87e7f22e5328783fc65504e09",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
               }
             ]
           },
@@ -83340,12 +83395,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-023",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-023"
-        ],
-        "next_task_id": "TASK-023",
+        "in_progress_task_ids": [],
+        "next_task_id": "TASK-029",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -83512,9 +83565,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-023"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",

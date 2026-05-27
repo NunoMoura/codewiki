@@ -1,10 +1,10 @@
 {
   "id": "TASK-023",
   "title": "Migrate project and bootstrap source root",
-  "status": "in_progress",
+  "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Re-cancel superseded aggregate TASK-023 after path refresh.",
+  "summary": "TASK-023 cancelled as superseded aggregate; continue with TASK-029.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -190,5 +190,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-26T23:55:17Z"
+  "updated": "2026-05-27T00:07:45Z"
 }
