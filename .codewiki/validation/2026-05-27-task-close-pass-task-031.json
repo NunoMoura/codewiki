@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T22:34:34Z",
+  "profile": "task-close",
+  "task_id": "TASK-031",
+  "verdict": "pass",
+  "rationale": "TASK-031 task-close validation passes against clean local commit proof. Commit f5fa6eff83926532d89ad51ee5426ae0a70709f3 contains the API/shared facade implementation, source/test/KB migration, implementation build, implementation validation pass, and generated graph state. Accepted decision/planning approval covers concept-root migration and final API/shared cleanup. Acceptance evidence proves src/api/** facade exists, shared primitives moved to src/shared/**, residual src/domain/**/src/application/**/src/mutation-queue.ts owner paths are removed, adapters/scripts/tests route through src/api/** or src/shared/**, and architecture/file-structure guards fail old roots. Required task-close audits pass except existing large-doc graph-health warnings, which are non-blocking hygiene and not changed-file drift.",
+  "checks": [
+    "git status --porcelain=v1 | wc -l — 0 before validation report write",
+    "git rev-parse HEAD — f5fa6eff83926532d89ad51ee5426ae0a70709f3",
+    "git rev-parse HEAD^{tree} — 3bfdeddb1f152bcc81d80cbe187020c72def12ac",
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-031 — changed/task/generated-parity pass; alignment warning only",
+    "implementation validation pass exists: .codewiki/validation/2026-05-27-implementation-pass-task-031.json",
+    "implementation checks reviewed: TASK-031 guard, TASK-076 guard, package-smoke, typecheck, check:architecture, test:smoke, test:features, test:pack all pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports 3 graph-health warnings for large docs; changed, task, and generated-parity pass, and worktree was clean before report write."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed; local commit proof only."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "approval:user:accepted decision build .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json includes FS-ROOT-CONCEPTS approved",
+    "approval:user:2026-05-28 reloaded Pi and requested compact/proceed with roadmap",
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "commit:f5fa6eff83926532d89ad51ee5426ae0a70709f3",
+    "tree:3bfdeddb1f152bcc81d80cbe187020c72def12ac",
+    ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+    ".codewiki/validation/2026-05-27-implementation-pass-task-031.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-031: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings."
+  ],
+  "content_proof_refs": [
+    "f5fa6eff83926532d89ad51ee5426ae0a70709f3",
+    "3bfdeddb1f152bcc81d80cbe187020c72def12ac"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "3bfdeddb1f152bcc81d80cbe187020c72def12ac"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-031",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:accepted decision build .codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json includes FS-ROOT-CONCEPTS approved",
+        "approval:user:2026-05-28 reloaded Pi and requested compact/proceed with roadmap"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "f5fa6eff83926532d89ad51ee5426ae0a70709f3",
+    "validated_sha": "f5fa6eff83926532d89ad51ee5426ae0a70709f3",
+    "tree_sha": "3bfdeddb1f152bcc81d80cbe187020c72def12ac",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation after clean local commit proof; no remote publication.",
+    "role": "validator"
+  }
+}
