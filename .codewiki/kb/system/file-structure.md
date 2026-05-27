@@ -146,7 +146,7 @@ src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,
 src/{adapters,ui}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), and `session` (TASK-028). TASK-029 moves roadmap/task/sprint types, status/task-id helpers, task-boundary checks, roadmap mutation, task use cases, sprint mutation, and `codewiki_task` execution into `src/roadmap/**` while preserving roadmap JSON and tool behavior. Remaining work: state/graph/resume and final API/shared cleanup under FS-ROOT-CONCEPTS.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), and `roadmap` (TASK-029). TASK-029 moved roadmap/task/sprint types, status/task-id helpers, task-boundary checks, roadmap mutation, task use cases, sprint mutation, and `codewiki_task` execution into `src/roadmap/**` while preserving roadmap JSON and tool behavior. Remaining work: state/graph/resume and final API/shared cleanup under FS-ROOT-CONCEPTS.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
