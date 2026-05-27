@@ -1,0 +1,561 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-27T22:57:42Z",
+  "source": "TASK-035 created from release-prep graph health warnings",
+  "task_id": "TASK-035",
+  "task": {
+    "id": "TASK-035",
+    "title": "Reduce large-doc graph warnings",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "docs",
+    "summary": "Split or trim oversized CodeWiki system docs so graph health no longer reports large-doc warnings.",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/overview.md"
+    ],
+    "code_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/overview.md"
+    ],
+    "goal": {
+      "outcome": "CodeWiki graph health no longer reports large-doc warnings for system docs.",
+      "acceptance": [
+        "api.md, graph.md, and overview.md are reduced or split below the lint large-doc threshold.",
+        "Any moved detail remains reachable from the original docs through links or focused docs.",
+        "Graph/generated-parity audits pass with no large-doc graph-health warnings."
+      ],
+      "non_goals": [
+        "Do not change package runtime behavior.",
+        "Do not broaden lint thresholds to hide oversized docs.",
+        "Do not push or publish."
+      ],
+      "verification": [
+        "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task",
+        "direct CodewikiRebuilder rebuild lint inspection"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-03T22:57:42.000Z",
+    "purge_after": "2026-06-10T22:57:42.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "initial",
+    "supersedes": [],
+    "status": "ready-for-validation"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "api.md, graph.md, and overview.md are below large-doc lint threshold.",
+      "Moved detail remains reachable from original docs through focused companion docs.",
+      "Graph/generated-parity/stale-reference/task audits pass and graph health has no large-doc warnings."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "generated-parity",
+      "stale-reference",
+      "task"
+    ],
+    "audit_refs": [
+      "codewiki_audit alignment,generated-parity,stale-reference,changed,task TASK-035"
+    ],
+    "audit_reports": [
+      "alignment/generated-parity/stale-reference/task pass; changed warnings only pre-commit generated files/task views."
+    ],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "roadmap-task",
+        "reason": "Docs maintenance task scoped to oversized system docs.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "TASK-035 created from graph health warnings"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "checked dirty tree",
+        "reason": "Docs validation needs source refs and generated graph proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "working_tree_digest 4e9e32086be672c29a564144b9d2c429c5f6fb1cbf77b1223fc3d43dc61f9077"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-035 large-doc graph-health cleanup: split oversized API, graph, and overview system docs into focused companion docs while preserving links and source refs; graph lint health is now green with no large-doc warnings.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": false,
+    "requires_accepted_build": false,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-035"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/overview.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/graph-transition-traceability.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/system-truth-and-compilers.md"
+    ],
+    "roadmap": [],
+    "code": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/api-vnext-tools.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/graph-transition-traceability.md",
+      ".codewiki/kb/system/overview.md",
+      ".codewiki/kb/system/system-truth-and-compilers.md"
+    ],
+    "tests": [],
+    "validation": [
+      "Fresh validation should inspect this build plus split docs and generated graph health.",
+      "direct CodewikiRebuilder rebuild lint inspection",
+      "codewiki_audit alignment,generated-parity,stale-reference,changed,task TASK-035"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-035"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": "",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/overview.md"
+    ],
+    "code_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/overview.md"
+    ]
+  },
+  "test_files": [],
+  "code_files": [
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/api-vnext-tools.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/graph-transition-traceability.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/system-truth-and-compilers.md"
+  ],
+  "files_changed": [
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/api-vnext-tools.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/graph-transition-traceability.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/system-truth-and-compilers.md"
+  ],
+  "checks_run": [
+    "direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty",
+    "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-035",
+      "test_files": [],
+      "evidence": [
+        "Docs-only maintenance used deterministic graph rebuild and CodeWiki audits rather than code tests."
+      ],
+      "notes": [
+        "No runtime/package code changed.",
+        "Graph health green after direct rebuild; stale-reference audit passes across 55 active markdown/source files."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-035",
+      "code_files": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/graph-transition-traceability.md",
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/system-truth-and-compilers.md"
+      ],
+      "evidence": [
+        "Split API vNext tool surface into api-vnext-tools.md.",
+        "Split graph transition/hot-state/traceability detail into graph-transition-traceability.md.",
+        "Split overview truth boundaries/compiler model into system-truth-and-compilers.md."
+      ],
+      "notes": [
+        "No push or package publication performed.",
+        "Worktree dirty with TASK-035 docs/generated/build state."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Docs-only maintenance used deterministic graph rebuild and CodeWiki audits rather than code tests."
+  ],
+  "code_change_evidence": [
+    "Split API vNext tool surface into api-vnext-tools.md.",
+    "Split graph transition/hot-state/traceability detail into graph-transition-traceability.md.",
+    "Split overview truth boundaries/compiler model into system-truth-and-compilers.md."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "api.md, graph.md, and overview.md are reduced or split below the lint large-doc threshold.",
+      "evidence": "api.md now 1483 words, graph.md 1170 words, overview.md 951 words; generated graph lint counts are empty after rebuild."
+    },
+    {
+      "criterion": "Any moved detail remains reachable from the original docs through links or focused docs.",
+      "evidence": "api.md links to api-vnext-tools.md; graph.md links to graph-transition-traceability.md; overview.md links to system-truth-and-compilers.md; new companion docs link back and include related docs."
+    },
+    {
+      "criterion": "Graph/generated-parity audits pass with no large-doc graph-health warnings.",
+      "evidence": "Direct rebuild reports health green with 0 warnings; codewiki_audit alignment/generated-parity/stale-reference/task pass."
+    }
+  ],
+  "validation_refs": [
+    "Fresh validation should inspect this build plus split docs and generated graph health."
+  ],
+  "closure_brief": {
+    "user_intent": "Address remaining graph warnings after release prep.",
+    "implemented_changes": [
+      "Split large API, graph, and overview docs into focused companion docs.",
+      "Rebuilt graph; graph health is green with no large-doc warnings."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/api-vnext-tools.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/graph-transition-traceability.md",
+        ".codewiki/kb/system/overview.md",
+        ".codewiki/kb/system/system-truth-and-compilers.md"
+      ],
+      "roadmap": [
+        "TASK-035"
+      ],
+      "code": [],
+      "tests": [],
+      "validation": [
+        "checks listed in implementation build",
+        "Fresh validation should inspect this build plus split docs and generated graph health."
+      ]
+    },
+    "acceptance_evidence": [
+      "direct graph rebuild health green",
+      "codewiki_audit alignment/generated-parity/stale-reference/task pass"
+    ],
+    "checks": [
+      "direct CodewikiRebuilder rebuild",
+      "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task"
+    ],
+    "non_goals_preserved": [
+      "No runtime behavior changes.",
+      "No lint threshold broadening.",
+      "No push or publication."
+    ],
+    "remaining_risks": [
+      "Task-close needs clean commit/tree proof."
+    ]
+  },
+  "risks": [
+    "Splitting docs changes navigation but preserves moved content through explicit links.",
+    "Future docs may grow again; lint will catch recurrence."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-035",
+      "task_id": "TASK-035",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-035",
+        "title": "Reduce large-doc graph warnings",
+        "summary": "Implemented TASK-035 large-doc graph-health cleanup: split oversized API, graph, and overview system docs into focused companion docs while preserving links and source refs; graph lint health is now green with no large-doc warnings.",
+        "spec_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/overview.md"
+        ],
+        "code_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/overview.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/graph-transition-traceability.md",
+          ".codewiki/kb/system/system-truth-and-compilers.md"
+        ],
+        "acceptance": [
+          "api.md, graph.md, and overview.md are reduced or split below the lint large-doc threshold.",
+          "Any moved detail remains reachable from the original docs through links or focused docs.",
+          "Graph/generated-parity audits pass with no large-doc graph-health warnings."
+        ],
+        "verification": [
+          "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task",
+          "direct CodewikiRebuilder rebuild lint inspection"
+        ],
+        "source_planning_build": "",
+        "checks_run": [
+          "direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty",
+          "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views"
+        ],
+        "test_design_evidence": [
+          "Docs-only maintenance used deterministic graph rebuild and CodeWiki audits rather than code tests."
+        ],
+        "code_change_evidence": [
+          "Split API vNext tool surface into api-vnext-tools.md.",
+          "Split graph transition/hot-state/traceability detail into graph-transition-traceability.md.",
+          "Split overview truth boundaries/compiler model into system-truth-and-compilers.md."
+        ],
+        "validation_refs": [
+          "Fresh validation should inspect this build plus split docs and generated graph health."
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-035",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-035",
+      "show_build": "git show refs/codewiki/archive/task/TASK-035:.codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/overview.md"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-035 Reduce large-doc graph warnings implementation evidence",
+      "body": "Implemented TASK-035 large-doc graph-health cleanup: split oversized API, graph, and overview system docs into focused companion docs while preserving links and source refs; graph lint health is now green with no large-doc warnings.\n\nChecks: direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty, codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views\nValidation: Fresh validation should inspect this build plus split docs and generated graph health.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-035\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json\nCodeWiki-Checks: direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty, codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views\nCodeWiki-Validation: Fresh validation should inspect this build plus split docs and generated graph health.\nCodeWiki-Recover: /wiki-restore TASK-035\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-035\nCodeWiki-Digest: sha256:4eb4a5ad1576d77f298e6bb63c6ca5a0f7c74b2dcaa17b39fdbf3fb535467d37\nCodeWiki-Restore: /wiki-restore TASK-035",
+      "trailers": [
+        "CodeWiki-Task: TASK-035",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+        "CodeWiki-Checks: direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty, codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views",
+        "CodeWiki-Validation: Fresh validation should inspect this build plus split docs and generated graph health.",
+        "CodeWiki-Recover: /wiki-restore TASK-035",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-035",
+        "CodeWiki-Digest: sha256:4eb4a5ad1576d77f298e6bb63c6ca5a0f7c74b2dcaa17b39fdbf3fb535467d37",
+        "CodeWiki-Restore: /wiki-restore TASK-035"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-035 Reduce large-doc graph warnings implementation evidence",
+      "body": "Implemented TASK-035 large-doc graph-health cleanup: split oversized API, graph, and overview system docs into focused companion docs while preserving links and source refs; graph lint health is now green with no large-doc warnings.\n\nChecks: direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty, codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views\nValidation: Fresh validation should inspect this build plus split docs and generated graph health.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-035\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json\nCodeWiki-Checks: direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty, codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views\nCodeWiki-Validation: Fresh validation should inspect this build plus split docs and generated graph health.\nCodeWiki-Recover: /wiki-restore TASK-035\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-035\nCodeWiki-Digest: sha256:4eb4a5ad1576d77f298e6bb63c6ca5a0f7c74b2dcaa17b39fdbf3fb535467d37\nCodeWiki-Restore: /wiki-restore TASK-035"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-035",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-035"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-035",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-035",
+        "show_build": "git show refs/codewiki/archive/task/TASK-035:.codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/overview.md"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-035",
+      "build_path": ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-035",
+      "commit_sha": "",
+      "digest": "sha256:4eb4a5ad1576d77f298e6bb63c6ca5a0f7c74b2dcaa17b39fdbf3fb535467d37",
+      "restore_command": "/wiki-restore TASK-035"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:cefe2d5d10020147aacbbc9f8c358a484bd5d1e19a734875f00c5d97321e5895",
+          "bytes": 11134
+        },
+        {
+          "path": ".codewiki/kb/system/api-vnext-tools.md",
+          "role": "code_file",
+          "sha256": "sha256:140ed87849331971718f70f88e6aa9001a57faa0b5bc31a24301a2e8ee4d8f67",
+          "bytes": 2548
+        },
+        {
+          "path": ".codewiki/kb/system/graph.md",
+          "role": "code_file",
+          "sha256": "sha256:63ef32dfb55f0939210e8dbc9c0834b66fed6733e1b6daff13af16906647d79b",
+          "bytes": 9283
+        },
+        {
+          "path": ".codewiki/kb/system/graph-transition-traceability.md",
+          "role": "code_file",
+          "sha256": "sha256:69985b9ae53fcb1f2fbecfedab1afb0b2b981144953a3d49a9c9581e84748020",
+          "bytes": 4700
+        },
+        {
+          "path": ".codewiki/kb/system/overview.md",
+          "role": "code_file",
+          "sha256": "sha256:bdd97bc58ab4a106b26a6d1bca9fd64d8a08f533c9bc06b746a1a3da317e86e2",
+          "bytes": 8015
+        },
+        {
+          "path": ".codewiki/kb/system/system-truth-and-compilers.md",
+          "role": "code_file",
+          "sha256": "sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
+          "bytes": 5945
+        }
+      ],
+      "skipped": [
+        {
+          "path": "Fresh validation should inspect this build plus split docs and generated graph health.",
+          "role": "validation_ref",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-035",
+      "source_build": ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/api-vnext-tools.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/graph-transition-traceability.md",
+          ".codewiki/kb/system/overview.md",
+          ".codewiki/kb/system/system-truth-and-compilers.md"
+        ],
+        "validation_refs": [
+          "Fresh validation should inspect this build plus split docs and generated graph health."
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-035",
+        "restore_command": "/wiki-restore TASK-035"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty",
+        "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — alignment/generated-parity/stale-reference/task pass; changed warning only generated files/task views"
+      ],
+      "validation_refs": [
+        "Fresh validation should inspect this build plus split docs and generated graph health."
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

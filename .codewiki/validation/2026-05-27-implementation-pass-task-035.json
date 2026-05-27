@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T22:58:20Z",
+  "profile": "implementation",
+  "task_id": "TASK-035",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passed for TASK-035. Oversized API, graph, and overview system docs were split into focused companion docs with backlinks and related-doc links. Direct graph rebuild reports green health with empty lint counts; required audits pass. Changed warnings are only pre-commit generated files/task views.",
+  "checks": [
+    "read implementation build .codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+    "read split docs",
+    "direct CodewikiRebuilder rebuild — pass; graph health green; lint counts empty",
+    "codewiki_audit profiles=alignment,generated-parity,stale-reference,changed,task task_id=TASK-035 — pass with changed warnings only"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Working tree is dirty; implementation validation uses working_tree_digest only. Task-close still needs clean commit/tree proof."
+    },
+    {
+      "severity": "low",
+      "summary": "No runtime/package code changed; no push/publication performed."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "generated-parity",
+    "stale-reference",
+    "task"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:generated-parity",
+    "profile:stale-reference",
+    "profile:changed",
+    "profile:task",
+    "codewiki_audit:alignment,generated-parity,stale-reference,changed,task:TASK-035",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/api-vnext-tools.md",
+    ".codewiki/kb/system/graph.md",
+    ".codewiki/kb/system/graph-transition-traceability.md",
+    ".codewiki/kb/system/overview.md",
+    ".codewiki/kb/system/system-truth-and-compilers.md"
+  ],
+  "audit_reports": [
+    "alignment: pass — graph health green after rebuild",
+    "generated-parity: pass",
+    "stale-reference: pass — 55 active markdown/source files scanned",
+    "task: pass — TASK-035 checked",
+    "changed: warning — dirty generated index/task views before commit only"
+  ],
+  "content_proof_refs": [
+    "536254c934595eb58c9e23ae3f5e7ea63ea92d0975ce5f2f6d689cf647cd0cc9"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "generated-parity",
+      "stale-reference",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-035",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "536254c934595eb58c9e23ae3f5e7ea63ea92d0975ce5f2f6d689cf647cd0cc9",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Dirty pre-commit docs validation with generated graph proof.",
+    "role": "validator"
+  }
+}
