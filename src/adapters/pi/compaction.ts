@@ -43,6 +43,13 @@ export interface CodewikiCompactionSummary {
 	kickoff: CodewikiResumeKickoffMessage;
 }
 
+export interface CodewikiContextRefreshDeferredNotice {
+	key: string;
+	message: string;
+	level: "info" | "warning";
+	shouldNotify: boolean;
+}
+
 let pendingContextRefresh: CodewikiContextRefreshRequest | null = null;
 let activeContextRefresh: CodewikiContextRefreshRequest | null = null;
 let preparedContextRefreshSummary: CodewikiCompactionSummary | null = null;
@@ -80,8 +87,30 @@ export function shouldTriggerCodewikiThresholdRefresh(
 	);
 }
 
+export function formatCodewikiContextRefreshDeferredNotice(
+	request: CodewikiContextRefreshRequest,
+	reason: string,
+	previousKey: string | null | undefined,
+): CodewikiContextRefreshDeferredNotice {
+	const normalizedReason = reason.trim() || "unsafe reset boundary";
+	const key = JSON.stringify([
+		request.reason.trim() || "context-refresh",
+		request.taskId?.trim() || "",
+		request.followUpIntent?.trim() || "",
+		request.requestedAt || "",
+		normalizedReason,
+	]);
+	return {
+		key,
+		message: `${CONTEXT_REFRESH_PREFIX} deferred: ${normalizedReason}`,
+		level: normalizedReason === "agent is not idle" ? "info" : "warning",
+		shouldNotify: key !== previousKey,
+	};
+}
+
 export function installCodewikiCompaction(pi: ExtensionAPI): void {
 	let previousContextPercent: number | null | undefined;
+	let lastDeferredNoticeKey: string | null = null;
 
 	pi.on("session_before_compact", async (event: any, ctx: ExtensionContext) => {
 		const request = activeContextRefresh ??
@@ -141,19 +170,23 @@ export function installCodewikiCompaction(pi: ExtensionAPI): void {
 			ctx,
 			resolvedProject.project,
 		);
-		if (!lifecycle.allowed) {
-			if (ctx.hasUI)
-				ctx.ui.notify(
-					`${CONTEXT_REFRESH_PREFIX} deferred: ${lifecycle.reason}`,
-					"warning",
-				);
-			return;
-		}
-
 		const request = pending ?? {
 			reason: `context-usage-${Math.round(usage?.percent ?? 0)}pct`,
 			requestedAt: nowIso(),
 		};
+		if (!lifecycle.allowed) {
+			if (ctx.hasUI) {
+				const notice = formatCodewikiContextRefreshDeferredNotice(
+					request,
+					lifecycle.reason,
+					lastDeferredNoticeKey,
+				);
+				lastDeferredNoticeKey = notice.key;
+				if (notice.shouldNotify) ctx.ui.notify(notice.message, notice.level);
+			}
+			return;
+		}
+		lastDeferredNoticeKey = null;
 		if (pending) takePendingCodewikiContextRefresh();
 		let summary: CodewikiCompactionSummary | null = null;
 		try {

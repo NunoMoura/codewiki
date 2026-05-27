@@ -1,0 +1,537 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-27T22:49:58Z",
+  "source": "TASK-034 created from dogfood warning UX report",
+  "task_id": "TASK-034",
+  "task": {
+    "id": "TASK-034",
+    "title": "Debounce context refresh deferred warnings",
+    "status": "todo",
+    "priority": "high",
+    "kind": "bug",
+    "summary": "Reduce noisy CodeWiki context-refresh deferred notifications while preserving safe reset boundary checks.",
+    "spec_paths": [
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/agency.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/compaction.ts",
+      "tests/smoke/codewiki-compaction.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Context refresh deferral no longer warns every turn while still refusing unsafe reset boundaries.",
+      "acceptance": [
+        "Repeated non-idle deferrals for the same pending refresh notify at most once until a safe boundary or new reason occurs.",
+        "Deferral notification is downgraded from warning to info for normal non-idle retries.",
+        "Hard safety gates remain unchanged: no auto-pickup when agent is not idle or pending messages exist.",
+        "Smoke guard covers deferred-warning debounce behavior."
+      ],
+      "non_goals": [
+        "Do not bypass idle/pending-message safety checks.",
+        "Do not change context reset configuration defaults.",
+        "Do not alter publication or remote push behavior."
+      ],
+      "verification": [
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "npm run typecheck",
+        "npm run test:smoke"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-03T22:49:58.000Z",
+    "purge_after": "2026-06-10T22:49:58.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "attempt": "initial",
+    "supersedes": [],
+    "status": "ready-for-validation"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [
+      "Repeated non-idle deferred refresh notifications are emitted at most once per pending request/reason.",
+      "Normal agent-not-idle deferrals use info severity instead of warning.",
+      "Adapter capability/other unsafe-boundary deferrals can still warn.",
+      "Reset lifecycle gate remains unchanged and still blocks unsafe context reset/pickup."
+    ],
+    "required_audits": [
+      "alignment",
+      "changed",
+      "file-structure",
+      "stale-reference",
+      "generated-parity",
+      "task"
+    ],
+    "audit_refs": [
+      "codewiki_audit file-structure,alignment,stale-reference,generated-parity,changed,task TASK-034"
+    ],
+    "audit_reports": [
+      "file-structure/stale-reference/generated-parity/task pass; alignment warning only existing large-doc graph health; changed warning only pre-commit dirty generated files/task views."
+    ],
+    "isolation": {
+      "loop_start": {
+        "required": true,
+        "mode": "roadmap-task",
+        "reason": "Small dogfood bugfix follows roadmap task boundary.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful",
+          "TASK-034 created from user dogfood warning report"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh context or checked dirty tree",
+        "reason": "Implementation validation needs checked source/test evidence.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest",
+          "working_tree_digest 21dd908514d1fa9bba7fc0445d3e2766d157de351f5d80a80be805bde60a7eab"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-034 noisy context-refresh deferral UX fix: repeated unsafe-boundary notifications for the same pending refresh are debounced, normal non-idle deferrals are downgraded to info, and hard reset lifecycle safety checks remain unchanged.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": false,
+    "requires_accepted_build": false,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-034"
+    ],
+    "validation": [],
+    "source": [
+      "src/adapters/pi/compaction.ts",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/agency.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/adapters/pi/compaction.ts"
+    ],
+    "tests": [
+      "tests/smoke/codewiki-compaction.test.mjs"
+    ],
+    "validation": [
+      "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.",
+      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run check:architecture",
+      "codewiki_audit file-structure,alignment,stale-reference,generated-parity,changed,task TASK-034"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-034"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": "",
+    "spec_paths": [
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/agency.md"
+    ],
+    "code_paths": [
+      "src/adapters/pi/compaction.ts",
+      "tests/smoke/codewiki-compaction.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/codewiki-compaction.test.mjs"
+  ],
+  "code_files": [
+    "src/adapters/pi/compaction.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "src/adapters/pi/compaction.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "git diff --check — pass",
+    "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-034",
+      "test_files": [
+        "tests/smoke/codewiki-compaction.test.mjs"
+      ],
+      "evidence": [
+        "Added unit-level smoke assertions for notice key/severity/debounce without needing Pi runtime event loop.",
+        "Kept existing no slash-command/no assistant-leaf/followUp auto-pickup reset guards."
+      ],
+      "notes": [
+        "This patch fixes the user's repeated 'Warning: CodeWiki context refresh deferred: agent is not idle' dogfood pain by turning normal non-idle retry into one info notification per request.",
+        "No config default or reset safety behavior changed."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": "",
+      "roadmap_task_id": "TASK-034",
+      "code_files": [
+        "src/adapters/pi/compaction.ts"
+      ],
+      "evidence": [
+        "Added CodewikiContextRefreshDeferredNotice type and formatCodewikiContextRefreshDeferredNotice helper.",
+        "installCodewikiCompaction now stores lastDeferredNoticeKey, emits info for normal non-idle deferral, and suppresses repeats until safe boundary or new request key.",
+        "Safe lifecycle gate is still evaluated before consuming pending refresh and before ctx.compact."
+      ],
+      "notes": [
+        "No push or publication performed.",
+        "Worktree dirty with TASK-034 source/test/roadmap/generated/build changes."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added unit-level smoke assertions for notice key/severity/debounce without needing Pi runtime event loop.",
+    "Kept existing no slash-command/no assistant-leaf/followUp auto-pickup reset guards."
+  ],
+  "code_change_evidence": [
+    "Added CodewikiContextRefreshDeferredNotice type and formatCodewikiContextRefreshDeferredNotice helper.",
+    "installCodewikiCompaction now stores lastDeferredNoticeKey, emits info for normal non-idle deferral, and suppresses repeats until safe boundary or new request key.",
+    "Safe lifecycle gate is still evaluated before consuming pending refresh and before ctx.compact."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Repeated non-idle deferrals for the same pending refresh notify at most once until a safe boundary or new reason occurs.",
+      "evidence": "src/adapters/pi/compaction.ts tracks lastDeferredNoticeKey per installed compaction handler; formatCodewikiContextRefreshDeferredNotice builds a key from request metadata and lifecycle reason; tests assert repeated same non-idle request returns shouldNotify=false while a new request notifies."
+    },
+    {
+      "criterion": "Deferral notification is downgraded from warning to info for normal non-idle retries.",
+      "evidence": "formatCodewikiContextRefreshDeferredNotice returns level=info when reason is agent is not idle; smoke test asserts this."
+    },
+    {
+      "criterion": "Hard safety gates remain unchanged: no auto-pickup when agent is not idle or pending messages exist.",
+      "evidence": "evaluateCodewikiResetLifecycleBoundary and evaluateCodewikiAutoPickupBoundary logic unchanged; deferred path still returns before compact; existing reset safety assertions pass."
+    },
+    {
+      "criterion": "Smoke guard covers deferred-warning debounce behavior.",
+      "evidence": "tests/smoke/codewiki-compaction.test.mjs imports the formatter and asserts first notification, repeated debounce, new-request notification, and adapter-capability warning severity."
+    }
+  ],
+  "validation_refs": [
+    "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs."
+  ],
+  "closure_brief": {
+    "user_intent": "Fix noisy dogfood warning: 'CodeWiki context refresh deferred: agent is not idle'.",
+    "implemented_changes": [
+      "Debounced repeated context-refresh deferred notifications for same request/reason.",
+      "Downgraded normal non-idle deferrals from warning to info.",
+      "Added smoke guard for debounce/severity behavior."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [
+        "TASK-034"
+      ],
+      "code": [
+        "src/adapters/pi/compaction.ts"
+      ],
+      "tests": [
+        "tests/smoke/codewiki-compaction.test.mjs"
+      ],
+      "validation": [
+        "checks listed in implementation build",
+        "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs."
+      ]
+    },
+    "acceptance_evidence": [
+      "codewiki-compaction smoke pass",
+      "typecheck pass",
+      "test:smoke pass",
+      "check:architecture pass"
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run check:architecture"
+    ],
+    "non_goals_preserved": [
+      "No reset safety bypass.",
+      "No config default change.",
+      "No publish/push."
+    ],
+    "remaining_risks": [
+      "Fresh validation and clean commit/tree proof still required before close."
+    ]
+  },
+  "risks": [
+    "Some other unsafe-boundary reasons still warn once per request; this is intentional for adapter capability/pending-message safety visibility.",
+    "If Pi emits a new context-refresh request every turn with a unique requestedAt, users may still see one info per new request; repeated same pending request is debounced."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-034",
+      "task_id": "TASK-034",
+      "next_focus_task_id": "",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-034",
+        "title": "Debounce context refresh deferred warnings",
+        "summary": "Implemented TASK-034 noisy context-refresh deferral UX fix: repeated unsafe-boundary notifications for the same pending refresh are debounced, normal non-idle deferrals are downgraded to info, and hard reset lifecycle safety checks remain unchanged.",
+        "spec_paths": [
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/agency.md"
+        ],
+        "code_paths": [
+          "src/adapters/pi/compaction.ts",
+          "tests/smoke/codewiki-compaction.test.mjs"
+        ],
+        "acceptance": [
+          "Repeated non-idle deferrals for the same pending refresh notify at most once until a safe boundary or new reason occurs.",
+          "Deferral notification is downgraded from warning to info for normal non-idle retries.",
+          "Hard safety gates remain unchanged: no auto-pickup when agent is not idle or pending messages exist.",
+          "Smoke guard covers deferred-warning debounce behavior."
+        ],
+        "verification": [
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+          "npm run typecheck",
+          "npm run test:smoke"
+        ],
+        "source_planning_build": "",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+          "npm run typecheck — pass",
+          "npm run test:smoke — pass",
+          "npm run check:architecture — pass",
+          "git diff --check — pass",
+          "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+        ],
+        "test_design_evidence": [
+          "Added unit-level smoke assertions for notice key/severity/debounce without needing Pi runtime event loop.",
+          "Kept existing no slash-command/no assistant-leaf/followUp auto-pickup reset guards."
+        ],
+        "code_change_evidence": [
+          "Added CodewikiContextRefreshDeferredNotice type and formatCodewikiContextRefreshDeferredNotice helper.",
+          "installCodewikiCompaction now stores lastDeferredNoticeKey, emits info for normal non-idle deferral, and suppresses repeats until safe boundary or new request key.",
+          "Safe lifecycle gate is still evaluated before consuming pending refresh and before ctx.compact."
+        ],
+        "validation_refs": [
+          "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs."
+        ]
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-034",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-034",
+      "show_build": "git show refs/codewiki/archive/task/TASK-034:.codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/agency.md",
+        "src/adapters/pi/compaction.ts",
+        "tests/smoke/codewiki-compaction.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-034 Debounce context refresh deferred warnings implementation evidence",
+      "body": "Implemented TASK-034 noisy context-refresh deferral UX fix: repeated unsafe-boundary notifications for the same pending refresh are debounced, normal non-idle deferrals are downgraded to info, and hard reset lifecycle safety checks remain unchanged.\n\nChecks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nValidation: Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-034\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nCodeWiki-Validation: Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.\nCodeWiki-Recover: /wiki-restore TASK-034\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-034\nCodeWiki-Digest: sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d\nCodeWiki-Restore: /wiki-restore TASK-034",
+      "trailers": [
+        "CodeWiki-Task: TASK-034",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only",
+        "CodeWiki-Validation: Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.",
+        "CodeWiki-Recover: /wiki-restore TASK-034",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-034",
+        "CodeWiki-Digest: sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d",
+        "CodeWiki-Restore: /wiki-restore TASK-034"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "validation refs recorded"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-034 Debounce context refresh deferred warnings implementation evidence",
+      "body": "Implemented TASK-034 noisy context-refresh deferral UX fix: repeated unsafe-boundary notifications for the same pending refresh are debounced, normal non-idle deferrals are downgraded to info, and hard reset lifecycle safety checks remain unchanged.\n\nChecks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nValidation: Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-034\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check — pass, codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only\nCodeWiki-Validation: Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.\nCodeWiki-Recover: /wiki-restore TASK-034\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-034\nCodeWiki-Digest: sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d\nCodeWiki-Restore: /wiki-restore TASK-034"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-034",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-034"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-034",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-034",
+        "show_build": "git show refs/codewiki/archive/task/TASK-034:.codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/agency.md",
+          "src/adapters/pi/compaction.ts",
+          "tests/smoke/codewiki-compaction.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-034",
+      "build_path": ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-034",
+      "commit_sha": "",
+      "digest": "sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d",
+      "restore_command": "/wiki-restore TASK-034"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0368e803e31ed7f08f3f179e09d6f05da181ca75a90c122d166b22972114d5ec",
+          "bytes": 10971
+        },
+        {
+          "path": "src/adapters/pi/compaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:e106c4a3c3297ff6d072986087be363b77a3cedf4c70a0665c49f93ce617fbb8",
+          "bytes": 13860
+        }
+      ],
+      "skipped": [
+        {
+          "path": "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs.",
+          "role": "validation_ref",
+          "reason": "missing"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "ready_for_publisher",
+      "task_id": "TASK-034",
+      "source_build": ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/adapters/pi/compaction.ts",
+          "tests/smoke/codewiki-compaction.test.mjs"
+        ],
+        "validation_refs": [
+          "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs."
+        ],
+        "archive_ref": "refs/codewiki/archive/task/TASK-034",
+        "restore_command": "/wiki-restore TASK-034"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+        "npm run typecheck — pass",
+        "npm run test:smoke — pass",
+        "npm run check:architecture — pass",
+        "git diff --check — pass",
+        "codewiki_audit profiles=file-structure,alignment,stale-reference,generated-parity,changed,task task_id=TASK-034 — file-structure/stale-reference/generated-parity/task pass; alignment/changed warnings only"
+      ],
+      "validation_refs": [
+        "Fresh implementation validation should inspect this build plus src/adapters/pi/compaction.ts and tests/smoke/codewiki-compaction.test.mjs."
+      ],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

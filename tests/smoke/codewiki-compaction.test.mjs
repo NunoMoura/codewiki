@@ -12,6 +12,7 @@ import {
 	evaluateCodewikiAutoPickupBoundary,
 	evaluateCodewikiResetLifecycleBoundary,
 	formatCodewikiCompactionInstruction,
+	formatCodewikiContextRefreshDeferredNotice,
 	requestCodewikiContextRefresh,
 	shouldTriggerCodewikiThresholdRefresh,
 	takePendingCodewikiContextRefresh,
@@ -79,6 +80,55 @@ assert.equal(
 	}),
 	"CodeWiki context refresh: implementation-build-boundary; task=TASK-001; intent=continue validation",
 	"CodeWiki compaction instruction should preserve boundary metadata",
+);
+
+const deferredNotice = formatCodewikiContextRefreshDeferredNotice(
+	{
+		reason: "implementation-build-boundary",
+		taskId: "TASK-001",
+		followUpIntent: "continue validation",
+		requestedAt: "2026-05-20T00:00:00Z",
+	},
+	"agent is not idle",
+	null,
+);
+assert.equal(deferredNotice.shouldNotify, true, "first non-idle deferred refresh should notify");
+assert.equal(deferredNotice.level, "info", "normal non-idle deferred refresh should not be a warning");
+assert.equal(
+	formatCodewikiContextRefreshDeferredNotice(
+		{
+			reason: "implementation-build-boundary",
+			taskId: "TASK-001",
+			followUpIntent: "continue validation",
+			requestedAt: "2026-05-20T00:00:00Z",
+		},
+		"agent is not idle",
+		deferredNotice.key,
+	).shouldNotify,
+	false,
+	"repeated non-idle deferred refresh for same request should be debounced",
+);
+assert.equal(
+	formatCodewikiContextRefreshDeferredNotice(
+		{
+			reason: "validation-pass",
+			taskId: "TASK-001",
+			requestedAt: "2026-05-20T00:01:00Z",
+		},
+		"agent is not idle",
+		deferredNotice.key,
+	).shouldNotify,
+	true,
+	"new deferred refresh request should notify once",
+);
+assert.equal(
+	formatCodewikiContextRefreshDeferredNotice(
+		{ reason: "implementation-build-boundary", requestedAt: "2026-05-20T00:00:00Z" },
+		"adapter cannot report idle boundary",
+		null,
+	).level,
+	"warning",
+	"adapter capability deferrals should remain warnings",
 );
 
 const compactionSource = readFileSync(
