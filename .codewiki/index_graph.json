@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T21:09:05.400Z",
+  "generated_at": "2026-05-27T21:10:04.586Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5871,40 +5871,6 @@
       "lens_family": "work"
     },
     {
-      "id": "task:TASK-032",
-      "kind": "roadmap_task",
-      "title": "Protocol-safe reset auto-pickup and agency levels",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:src/adapters/pi/index.ts",
-      "kind": "code_path",
-      "path": "src/adapters/pi/index.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/codewiki-compaction.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/codewiki-compaction.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/resume-scheduler.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/resume-scheduler.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
       "id": "task:TASK-033",
       "kind": "roadmap_task",
       "title": "Deprecate frontmatter code-path links",
@@ -7263,6 +7229,13 @@
       "id": "code:src/adapters/pi/tools/session-handoff.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/tools/session-handoff.ts",
+      "layer": "code",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/adapters/pi/index.ts",
+      "kind": "code_path",
+      "path": "src/adapters/pi/index.ts",
       "layer": "code",
       "lens_family": "execution"
     },
@@ -23033,7 +23006,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-032",
       "superseded_by": [
@@ -23300,25 +23273,6 @@
       "lens_family": "proof"
     },
     {
-      "id": "code:src/adapters/pi/ui/theme.ts",
-      "kind": "code_path",
-      "path": "src/adapters/pi/ui/theme.ts",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:.codewiki/config.json",
-      "kind": "code_path",
-      "path": ".codewiki/config.json",
-      "layer": "code",
-      "lens_family": "execution"
-    },
-    {
-      "id": "closure:TASK-032",
-      "kind": "closure_brief",
-      "path": "TASK-032"
-    },
-    {
       "id": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
@@ -23452,7 +23406,7 @@
       "layer": "build",
       "lifecycle_state": "accepted",
       "alignment_state": "aligned",
-      "compacted": false,
+      "compacted": true,
       "default_hidden": true,
       "archive_ref": "refs/codewiki/archive/task/TASK-032",
       "superseded_by": [
@@ -30772,6 +30726,90 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+        "validated_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+        "tree_sha": "49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation after clean local commit proof; no remote publication.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "commit:079cf6de55f2f32394616a146f94621f1a342af9",
+          "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+          "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+        ],
+        "content_proof_refs": [
+          "079cf6de55f2f32394616a146f94621f1a342af9",
+          "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:commit:079cf6de55f2f32394616a146f94621f1a342af9",
+      "kind": "audit_evidence",
+      "path": "commit:079cf6de55f2f32394616a146f94621f1a342af9",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "kind": "audit_evidence",
+      "path": "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "kind": "audit_evidence",
+      "path": ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:079cf6de55f2f32394616a146f94621f1a342af9",
+      "kind": "content_proof",
+      "path": "079cf6de55f2f32394616a146f94621f1a342af9",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "kind": "content_proof",
+      "path": "49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
     }
   ],
   "edges": [
@@ -36786,96 +36824,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-031",
       "to": "code:tests/tasks/TASK-076/restructure.test.mjs"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/validation/2026-05-27-decision-pass.json"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/kb/system/agency.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/kb/system/adapters.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/kb/product/stories/automation.md"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-032",
-      "to": "doc:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/adapters/pi/index.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/project/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/project/templates.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/project/tool.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/agency/types.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/agency/planning.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-032",
-      "to": "code:src/adapters/pi/commands/config.ts"
     },
     {
       "kind": "task_spec",
@@ -57488,211 +57436,6 @@
       "default_hidden": true
     },
     {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "build:.codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "build:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "task:TASK-032"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "build:.codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
-    },
-    {
-      "kind": "build_consumes_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:.codewiki/validation/2026-05-27-decision-pass.json"
-    },
-    {
-      "kind": "build_consumes_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:.codewiki/validation/2026-05-27-planning-pass.json"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/agency/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/agency/planning.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/project/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/project/templates.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/adapters/pi/ui/theme.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/state/builders.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:src/state/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "source:.codewiki/config.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/agency/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/agency/planning.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/project/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/project/templates.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/adapters/pi/ui/theme.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/state/builders.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:src/state/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "code:.codewiki/config.json"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "test:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "test:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:Fresh implementation validation should inspect this v2 implementation build, TASK-032 task/context, code/test files, checks, and latest working_tree_digest after build write."
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:targeted smoke tests"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:typecheck"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:test:smoke"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:test:features"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "validation:check:architecture"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-      "to": "closure:TASK-032"
-    },
-    {
       "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
       "to": "source:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
@@ -58097,211 +57840,6 @@
       "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-032",
       "default_hidden": true
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "build:.codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
-    },
-    {
-      "kind": "build_derives_from",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "build:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json"
-    },
-    {
-      "kind": "build_consumes_task",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "task:TASK-032"
-    },
-    {
-      "kind": "build_consumes_planning",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "build:.codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json"
-    },
-    {
-      "kind": "build_consumes_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:.codewiki/validation/2026-05-27-decision-pass.json"
-    },
-    {
-      "kind": "build_consumes_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:.codewiki/validation/2026-05-27-planning-pass.json"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/agency/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/agency/planning.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/project/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/project/templates.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/adapters/pi/ui/theme.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/state/builders.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:src/state/types.ts"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "build_consumes_source",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "source:.codewiki/config.json"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/agency/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/agency/planning.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/project/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/project/templates.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/adapters/pi/ui/theme.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/state/builders.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:src/state/types.ts"
-    },
-    {
-      "kind": "build_produces_code",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "code:.codewiki/config.json"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "test:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "build_produces_test",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "test:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest."
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:targeted smoke tests"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:typecheck"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:test:smoke"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:test:features"
-    },
-    {
-      "kind": "build_produces_validation",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "validation:check:architecture"
-    },
-    {
-      "kind": "build_produces_closure",
-      "from": "build:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-      "to": "closure:TASK-032"
     },
     {
       "kind": "claim_task",
@@ -66731,6 +66269,83 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
       "to": "task:TASK-029"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:commit:079cf6de55f2f32394616a146f94621f1a342af9",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:.codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:.codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "audit:codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "content_proof:079cf6de55f2f32394616a146f94621f1a342af9",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "content_proof:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+      "to": "task:TASK-032"
     }
   ],
   "views": {
@@ -66827,20 +66442,19 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 14,
+            "item_count": 13,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 5,
+                "count": 4,
                 "refs": [
                   "TASK-012",
                   "TASK-030",
                   "TASK-031",
-                  "TASK-032",
                   "TASK-033"
                 ],
-                "ref_count": 5
+                "ref_count": 4
               },
               {
                 "id": "done_tasks",
@@ -66874,8 +66488,8 @@
               "task:TASK-023",
               "task:TASK-030",
               "task:TASK-031",
-              "task:TASK-032",
-              "task:TASK-033"
+              "task:TASK-033",
+              "claim:CLAIM-180"
             ],
             "collapsed": true
           },
@@ -66884,12 +66498,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 255,
+            "item_count": 251,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 215
+                "count": 211
               },
               {
                 "id": "test_files",
@@ -66925,13 +66539,13 @@
             "id": "proof",
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
-            "state": "blocked",
+            "state": "aligned",
             "item_count": 1,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 93
+                "count": 94
               },
               {
                 "id": "fail_or_block_validation",
@@ -66941,12 +66555,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 396
+                "count": 399
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 861
+                "count": 863
               },
               {
                 "id": "traceability_gaps",
@@ -66970,11 +66584,11 @@
             "collapsed": 76
           },
           "validations": {
-            "total": 93,
-            "pass": 76,
+            "total": 94,
+            "pass": 77,
             "fail_or_block": 17,
-            "hot": 6,
-            "collapsed": 93
+            "hot": 4,
+            "collapsed": 94
           }
         },
         "next_action": {
@@ -69137,7 +68751,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69256,7 +68871,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69375,7 +68991,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69494,7 +69111,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69613,7 +69231,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69732,7 +69351,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69851,7 +69471,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -69970,7 +69591,8 @@
               "targeted reset smoke tests",
               "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
               ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
             ],
             "audit_evidence_refs": [
               "codewiki_audit task,generated-parity TASK-032",
@@ -70024,7 +69646,83 @@
             "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -75412,6 +75110,31 @@
               "0281c24b6a58032cd8ea3bb87d808547756ce98e"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-032",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "commit:079cf6de55f2f32394616a146f94621f1a342af9",
+              "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+              "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+            ],
+            "content_proof_refs": [
+              "079cf6de55f2f32394616a146f94621f1a342af9",
+              "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -76931,11 +76654,31 @@
             "publisher_result_refs": [
               "0281c24b6a58032cd8ea3bb87d808547756ce98e"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+            "task_id": "TASK-032",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+            "validated_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "079cf6de55f2f32394616a146f94621f1a342af9",
+              "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+            ],
+            "publisher_result_refs": [
+              "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+            ]
           }
         ],
         "audit_evidence_refs": [
           ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
           ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
           ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
           ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
           ".codewiki/validation/2026-05-22-decision-pass.json",
@@ -77149,6 +76892,7 @@
           "codewiki_state refresh task_id=TASK-030 pass: health green, 0 errors, 0 warnings.",
           "codewiki_state refresh=true",
           "codewiki_state refresh=true -> health yellow, 0 errors, 4 warnings.",
+          "commit:079cf6de55f2f32394616a146f94621f1a342af9",
           "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
           "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
           "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
@@ -77282,6 +77026,7 @@
           "tests/smoke/resume-scheduler.test.mjs",
           "tree:0281c24b6a58032cd8ea3bb87d808547756ce98e",
           "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+          "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
           "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
           "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
           "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
@@ -77459,6 +77204,7 @@
           ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
           ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
           "0281c24b6a58032cd8ea3bb87d808547756ce98e",
+          "079cf6de55f2f32394616a146f94621f1a342af9",
           "08a913f4488a5a686170aa3918d095683a98821f",
           "11a758300a54fc99c585b1c47ae9ae0b90767151",
           "11b76ed63996785ba5fb12e77933963f075425ac",
@@ -77479,6 +77225,7 @@
           "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
           "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
           "49da5ecb95e0787c81d722711cd51277269b0900",
+          "49f97324c5f0b8635a62163f88a5b82505f7eeb2",
           "4c10b340cecee13d5f8446d6540153573c2d2df6",
           "4cd9a63dc1c78c4d3bda0e27dbfce8f136aae0df",
           "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
@@ -78196,19 +77943,6 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
-            "source_id": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
-            "state": "blocked",
-            "direction": "gateway",
-            "from_layer": "validation",
-            "to_layer": "validation",
-            "next_loop": "validation",
-            "failure_class": "evidence_missing",
-            "recommended_next_loop": "validation",
-            "task_id": "TASK-032",
-            "reason": "Validation block (evidence_missing); route to validation."
-          },
-          {
             "id": "reconcile:task:TASK-012",
             "source_id": "task:TASK-012",
             "state": "drift",
@@ -78444,20 +78178,17 @@
         "TASK-023",
         "TASK-030",
         "TASK-031",
-        "TASK-032",
         "TASK-033"
       ],
       "open_task_ids": [
         "TASK-012",
         "TASK-030",
         "TASK-031",
-        "TASK-032",
         "TASK-033"
       ],
       "in_progress_task_ids": [
         "TASK-012",
         "TASK-030",
-        "TASK-032",
         "TASK-033"
       ],
       "todo_task_ids": [
@@ -78469,7 +78200,7 @@
         "TASK-023"
       ],
       "status_counts": {
-        "in_progress": 4,
+        "in_progress": 3,
         "cancelled": 1,
         "todo": 1
       },
@@ -78636,7 +78367,6 @@
             "TASK-033"
           ],
           "open_task_ids": [
-            "TASK-032",
             "TASK-033"
           ],
           "budget": {
@@ -79480,7 +79210,6 @@
         "src/adapters/pi/commands/config.ts",
         "src/adapters/pi/commands/resume.ts",
         "src/adapters/pi/compaction.ts",
-        "src/adapters/pi/index.ts",
         "src/adapters/pi/schemas.ts",
         "src/adapters/pi/tools",
         "src/adapters/pi/tools/audit.ts",
@@ -79584,9 +79313,7 @@
         "tests",
         "tests/**",
         "tests/smoke",
-        "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/resume-scheduler.test.mjs",
         "tests/tasks",
         "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
         "tests/tasks/TASK-076/restructure.test.mjs"
@@ -81340,6 +81067,25 @@
           "publisher_result_refs": [
             "0281c24b6a58032cd8ea3bb87d808547756ce98e"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+          "task_id": "TASK-032",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+          "validated_sha": "079cf6de55f2f32394616a146f94621f1a342af9",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "079cf6de55f2f32394616a146f94621f1a342af9",
+            "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+          ],
+          "publisher_result_refs": [
+            "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
+          ]
         }
       ]
     },
@@ -81857,6 +81603,7 @@
       "audit_evidence_refs": [
         ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
         ".codewiki/builds/decision/2026-05-23-decision-propagation-planning-gateway.json",
+        ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
         ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
         ".codewiki/validation/2026-05-21-implementation-pass-task-008.json",
         ".codewiki/validation/2026-05-22-decision-pass.json",
@@ -82070,6 +81817,7 @@
         "codewiki_state refresh task_id=TASK-030 pass: health green, 0 errors, 0 warnings.",
         "codewiki_state refresh=true",
         "codewiki_state refresh=true -> health yellow, 0 errors, 4 warnings.",
+        "commit:079cf6de55f2f32394616a146f94621f1a342af9",
         "commit:2e05f19ffbd671c95b8a0c70e55994d80e88a961",
         "commit:2e61f2b410074518a8c458f350364d63e3a4a73d",
         "commit:5486adacf56008abb2ae5e624f93cb4350a3731a",
@@ -82203,6 +81951,7 @@
         "tests/smoke/resume-scheduler.test.mjs",
         "tree:0281c24b6a58032cd8ea3bb87d808547756ce98e",
         "tree:149cb22ef9dd1fa87ace8b91fa0a38de70b78573",
+        "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
         "tree:6e11921e2b35aa3ea1e1e1f43b1394200f4448a2",
         "tree:7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
         "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
@@ -82380,6 +82129,7 @@
         ".codewiki/validation/2026-05-25-planning-pass-task-019.json@sha256:6bf932f2b34d256b47a53761b349e66b9a1a3ac128d230f1091f26ec56668d22",
         ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
         "0281c24b6a58032cd8ea3bb87d808547756ce98e",
+        "079cf6de55f2f32394616a146f94621f1a342af9",
         "08a913f4488a5a686170aa3918d095683a98821f",
         "11a758300a54fc99c585b1c47ae9ae0b90767151",
         "11b76ed63996785ba5fb12e77933963f075425ac",
@@ -82400,6 +82150,7 @@
         "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
         "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
         "49da5ecb95e0787c81d722711cd51277269b0900",
+        "49f97324c5f0b8635a62163f88a5b82505f7eeb2",
         "4c10b340cecee13d5f8446d6540153573c2d2df6",
         "4cd9a63dc1c78c4d3bda0e27dbfce8f136aae0df",
         "535cceef12d12d0f3446da7938ecc23ac28d0c5e",
@@ -85620,6 +85371,31 @@
           "content_proof_refs": [
             "8266b38028d7317de640668dce0bb4697e1b8674",
             "0281c24b6a58032cd8ea3bb87d808547756ce98e"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-27-task-close-pass-task-032.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-032",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "commit:079cf6de55f2f32394616a146f94621f1a342af9",
+            "tree:49f97324c5f0b8635a62163f88a5b82505f7eeb2",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+          ],
+          "content_proof_refs": [
+            "079cf6de55f2f32394616a146f94621f1a342af9",
+            "49f97324c5f0b8635a62163f88a5b82505f7eeb2"
           ],
           "isolation_status": "isolated"
         }
@@ -89690,7 +89466,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -89809,7 +89586,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -89928,7 +89706,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90047,7 +89826,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90166,7 +89946,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90285,7 +90066,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90404,7 +90186,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90523,7 +90306,8 @@
             "targeted reset smoke tests",
             "Fresh implementation validation should inspect this implementation build, TASK-032 task/context, code/test files, checks, and working_tree_digest.",
             ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json"
+            ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
+            ".codewiki/validation/2026-05-27-task-close-pass-task-032.json"
           ],
           "audit_evidence_refs": [
             "codewiki_audit task,generated-parity TASK-032",
@@ -90577,7 +90361,83 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -90590,14 +90450,12 @@
           "TASK-023",
           "TASK-030",
           "TASK-031",
-          "TASK-032",
           "TASK-033"
         ],
         "open_task_ids": [
           "TASK-012",
           "TASK-030",
           "TASK-031",
-          "TASK-032",
           "TASK-033"
         ],
         "sprint_ids": [
@@ -90762,7 +90620,6 @@
             "TASK-033"
           ],
           "open_task_ids": [
-            "TASK-032",
             "TASK-033"
           ],
           "budget": {
@@ -90984,41 +90841,6 @@
             "tests/tasks/TASK-076/restructure.test.mjs"
           ]
         },
-        "TASK-032": {
-          "kind": "task",
-          "id": "TASK-032",
-          "task_ids": [
-            "TASK-032"
-          ],
-          "open_task_ids": [
-            "TASK-032"
-          ],
-          "sprint_ids": [
-            "SPRINT-004"
-          ],
-          "spec_paths": [
-            ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
-            ".codewiki/validation/2026-05-27-decision-pass.json",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/product/stories/automation.md",
-            ".codewiki/kb/system/roadmap.md"
-          ],
-          "code_paths": [
-            "src/adapters/pi/compaction.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/adapters/pi/index.ts",
-            "tests/smoke/codewiki-compaction.test.mjs",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "src/project/types.ts",
-            "src/project/templates.ts",
-            "src/project/tool.ts",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/adapters/pi/commands/config.ts"
-          ]
-        },
         "TASK-033": {
           "kind": "task",
           "id": "TASK-033",
@@ -91093,7 +90915,6 @@
             "TASK-012",
             "TASK-030",
             "TASK-031",
-            "TASK-032",
             "TASK-033"
           ],
           "sprint_ids": [
@@ -91107,9 +90928,7 @@
             ".codewiki/validation/2026-05-22-decision-block.json",
             ".codewiki/validation/2026-05-22-planning-block.json",
             ".codewiki/validation/2026-05-23-planning-fail.json",
-            ".codewiki/validation/2026-05-24-decision-block.json",
-            ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-            ".codewiki/validation/2026-05-27-task-close-block-task-032.json"
+            ".codewiki/validation/2026-05-24-decision-block.json"
           ],
           "claim_ids": [
             "CLAIM-180"
@@ -91285,7 +91104,9 @@
             ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
             ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
             ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
           ]
         },
         "purgeable": {
@@ -91919,7 +91740,9 @@
           ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
           ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
           ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+          ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -91929,19 +91752,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
-          "source_id": "validation:.codewiki/validation/2026-05-27-task-close-block-task-032.json",
-          "state": "blocked",
-          "direction": "gateway",
-          "from_layer": "validation",
-          "to_layer": "validation",
-          "next_loop": "validation",
-          "failure_class": "evidence_missing",
-          "recommended_next_loop": "validation",
-          "task_id": "TASK-032",
-          "reason": "Validation block (evidence_missing); route to validation."
-        },
         {
           "id": "reconcile:task:TASK-012",
           "source_id": "task:TASK-012",
@@ -91988,7 +91798,6 @@
         }
       ],
       "counts_by_loop": {
-        "validation": 1,
         "implementation": 4
       },
       "next_action": {
@@ -92018,13 +91827,13 @@
         "knowledge": "aligned",
         "roadmap": "drift",
         "code": "drift",
-        "validation": "drift"
+        "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T21:09:05.283Z",
+      "generated_at": "2026-05-27T21:10:04.497Z",
       "counts": {
         "large-doc": 2
       },
@@ -92045,7 +91854,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T21:09:05Z",
+      "generated_at": "2026-05-27T21:10:04Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -92056,19 +91865,18 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 6,
-        "open_count": 5,
+        "task_count": 5,
+        "open_count": 4,
         "sprint_count": 4,
         "active_sprint_count": 4,
         "status_counts": {
-          "in_progress": 4,
+          "in_progress": 3,
           "cancelled": 1,
           "todo": 1
         },
         "priority_counts": {
           "medium": 1,
-          "high": 4,
-          "critical": 1
+          "high": 4
         }
       },
       "views": {
@@ -92077,20 +91885,17 @@
           "TASK-023",
           "TASK-030",
           "TASK-031",
-          "TASK-032",
           "TASK-033"
         ],
         "open_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033",
           "TASK-031"
         ],
         "executable_open_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033",
           "TASK-031"
         ],
@@ -92258,7 +92063,6 @@
               "TASK-033"
             ],
             "open_task_ids": [
-              "TASK-032",
               "TASK-033"
             ],
             "budget": {
@@ -92297,13 +92101,11 @@
         "in_progress_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033"
         ],
         "executable_in_progress_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033"
         ],
         "todo_task_ids": [
@@ -92318,7 +92120,6 @@
           "TASK-023"
         ],
         "recent_task_ids": [
-          "TASK-032",
           "TASK-033",
           "TASK-023",
           "TASK-030",
@@ -92769,85 +92570,6 @@
             "evidence": null
           }
         },
-        "TASK-032": {
-          "id": "TASK-032",
-          "title": "Protocol-safe reset auto-pickup and agency levels",
-          "status": "in_progress",
-          "priority": "critical",
-          "kind": "architecture",
-          "change_type": "system",
-          "summary": "Implement CodeWiki reset auto-pickup from source-backed protocol-safe kickoff messages and add configurable task/sprint/roadmap agency levels that govern continuation.",
-          "labels": [
-            "context-reset",
-            "auto-pickup",
-            "pi-adapter",
-            "bugfix",
-            "agency",
-            "config",
-            "approval-cadence",
-            "roadmap"
-          ],
-          "goal": {
-            "outcome": "CodeWiki reset auto-picks up through a protocol-safe source-backed kickoff when configured agency level allows continuation; agency level task/sprint/roadmap controls approval cadence while hard gates remain mandatory.",
-            "acceptance": [
-              "Same-session CodeWiki compaction delivers a minimal resume-context kickoff with auto turn triggering when safe.",
-              "Fresh-session resume seeds the replacement session with the same source-backed kickoff while preserving manual /wiki-resume UX.",
-              "Reset defers or refuses auto-pickup when pending tool/message state or adapter capability cannot guarantee a valid next-turn boundary.",
-              "No reset path injects slash-command text through follow-up chat or calls continuation from an assistant-role leaf.",
-              "Regression tests reproduce invalid assistant-leaf risk and prove safe kickoff/fallback behavior.",
-              "Config schema/defaults expose agency level, approval cadence, context reset auto-pickup, budgets, and hard stop gates.",
-              "Agency planner interprets task, sprint, and roadmap levels as continuation boundaries, not permission to bypass validation/risk/publication/destructive gates.",
-              "Status/config surfaces show effective agency level and reset auto-pickup policy.",
-              "Roadmap-level agency remains budgeted and stops on semantic decisions, validation blocks, artifact conflicts, risk escalation, publication/destructive actions, or unsafe reset boundaries."
-            ],
-            "non_goals": [
-              "Do not implement parallel subagent orchestration unless already supported by existing agency machinery.",
-              "Do not grant automatic publication or remote push permission.",
-              "Do not publish or push changes."
-            ],
-            "verification": [
-              "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
-              "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs",
-              "npm run typecheck",
-              "npm run test:smoke",
-              "npm run test:features",
-              "npm run check:architecture"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
-            ".codewiki/validation/2026-05-27-decision-pass.json",
-            ".codewiki/kb/system/agency.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/product/stories/automation.md",
-            ".codewiki/kb/system/roadmap.md"
-          ],
-          "code_paths": [
-            "src/adapters/pi/compaction.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/adapters/pi/index.ts",
-            "tests/smoke/codewiki-compaction.test.mjs",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "src/project/types.ts",
-            "src/project/templates.ts",
-            "src/project/tool.ts",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/adapters/pi/commands/config.ts"
-          ],
-          "updated": "2026-05-27T21:02:00Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-032/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
-        },
         "TASK-033": {
           "id": "TASK-033",
           "title": "Deprecate frontmatter code-path links",
@@ -92914,7 +92636,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T21:09:05Z",
+      "generated_at": "2026-05-27T21:10:04Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -92929,13 +92651,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 24,
-        "tracked_specs": 11,
+        "aligned_specs": 29,
+        "tracked_specs": 6,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 6,
-        "open_task_count": 5,
+        "task_count": 5,
+        "open_task_count": 4,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 7
@@ -92943,14 +92665,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 11,
-          "total": 11,
+          "value": 6,
+          "total": 6,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 6,
+          "total": 5,
           "percent": 0
         },
         "spec_mapping": {
@@ -92963,24 +92685,15 @@
       "views": {
         "risky_spec_paths": [
           ".codewiki/kb/product/overview.md",
-          ".codewiki/kb/product/stories/automation.md",
-          ".codewiki/kb/system/adapters.md",
-          ".codewiki/kb/system/agency.md",
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
           ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
-          ".codewiki/kb/system/knowledge.md",
-          ".codewiki/kb/system/roadmap.md"
+          ".codewiki/kb/system/knowledge.md"
         ],
         "top_risky_spec_paths": [
           ".codewiki/kb/product/overview.md",
-          ".codewiki/kb/product/stories/automation.md",
-          ".codewiki/kb/system/adapters.md",
-          ".codewiki/kb/system/agency.md",
           ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
           ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
@@ -92989,7 +92702,6 @@
         "open_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033",
           "TASK-031"
         ],
@@ -93055,7 +92767,6 @@
               "TASK-012",
               "TASK-030",
               "TASK-031",
-              "TASK-032",
               "TASK-033"
             ],
             "sprint_ids": [
@@ -93069,9 +92780,7 @@
               ".codewiki/validation/2026-05-22-decision-block.json",
               ".codewiki/validation/2026-05-22-planning-block.json",
               ".codewiki/validation/2026-05-23-planning-fail.json",
-              ".codewiki/validation/2026-05-24-decision-block.json",
-              ".codewiki/validation/2026-05-27-implementation-block-task-032.json",
-              ".codewiki/validation/2026-05-27-task-close-block-task-032.json"
+              ".codewiki/validation/2026-05-24-decision-block.json"
             ],
             "claim_ids": [
               "CLAIM-180"
@@ -93247,7 +92956,9 @@
               ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
               ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
               ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json"
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
             ]
           },
           "purgeable": {
@@ -93269,7 +92980,7 @@
         "Agency policy: level=task, approval=task, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 11/11.",
+        "Tracked drift coverage: 6/6.",
         "File-structure drift: 0 actionable item(s), 7 approved migration delta(s)."
       ],
       "file_structure": {
@@ -93341,96 +93052,6 @@
           "note": "tracked by TASK-012"
         },
         {
-          "path": ".codewiki/kb/product/stories/automation.md",
-          "title": "Use Gated Agency",
-          "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-decision/SKILL.md"
-          ],
-          "code_area": "skills +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-032"
-          ],
-          "primary_task": {
-            "id": "TASK-032",
-            "status": "in_progress",
-            "title": "Protocol-safe reset auto-pickup and agency levels"
-          },
-          "revision": {
-            "digest": "da007e47080711440efca2dfa378322288a789830411885596bf9821d17d6889",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-032"
-        },
-        {
-          "path": ".codewiki/kb/system/adapters.md",
-          "title": "Adapters",
-          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters",
-            "src/application",
-            "skills/codewiki"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-032"
-          ],
-          "primary_task": {
-            "id": "TASK-032",
-            "status": "in_progress",
-            "title": "Protocol-safe reset auto-pickup and agency levels"
-          },
-          "revision": {
-            "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-032"
-        },
-        {
-          "path": ".codewiki/kb/system/agency.md",
-          "title": "Agency Controller",
-          "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/agency",
-            "src/project/types.ts",
-            "src/adapters/pi",
-            "src/state/resume-context.ts"
-          ],
-          "code_area": "src +3 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-032"
-          ],
-          "primary_task": {
-            "id": "TASK-032",
-            "status": "in_progress",
-            "title": "Protocol-safe reset auto-pickup and agency levels"
-          },
-          "revision": {
-            "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-032"
-        },
-        {
           "path": ".codewiki/kb/system/api.md",
           "title": "CodeWiki API",
           "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -93463,43 +93084,6 @@
             "basis": "source_content"
           },
           "note": "tracked by TASK-030"
-        },
-        {
-          "path": ".codewiki/kb/system/compilers.md",
-          "title": "Compilers",
-          "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/build/writer.ts",
-            "src/build/tool.ts",
-            "src/build/types.ts",
-            "src/validation/report.ts",
-            "src/roadmap/runtime.ts",
-            "src/roadmap/task.ts",
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-validation/SKILL.md"
-          ],
-          "code_area": "src, skills",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-032"
-          ],
-          "primary_task": {
-            "id": "TASK-032",
-            "status": "in_progress",
-            "title": "Protocol-safe reset auto-pickup and agency levels"
-          },
-          "revision": {
-            "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-032"
         },
         {
           "path": ".codewiki/kb/system/control-room-ui.md",
@@ -93628,36 +93212,6 @@
           "note": "tracked by TASK-033"
         },
         {
-          "path": ".codewiki/kb/system/roadmap.md",
-          "title": "Roadmap",
-          "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/roadmap/queue.json",
-            ".codewiki/roadmap",
-            "src/roadmap/runtime.ts"
-          ],
-          "code_area": ".codewiki, src",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-032"
-          ],
-          "primary_task": {
-            "id": "TASK-032",
-            "status": "in_progress",
-            "title": "Protocol-safe reset auto-pickup and agency levels"
-          },
-          "revision": {
-            "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-032"
-        },
-        {
           "path": ".codewiki/kb/lexicon.md",
           "title": "Lexicon",
           "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -93675,6 +93229,29 @@
           "primary_task": null,
           "revision": {
             "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/product/stories/automation.md",
+          "title": "Use Gated Agency",
+          "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-decision/SKILL.md"
+          ],
+          "code_area": "skills +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "da007e47080711440efca2dfa378322288a789830411885596bf9821d17d6889",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -93976,6 +93553,55 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/adapters.md",
+          "title": "Adapters",
+          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters",
+            "src/application",
+            "skills/codewiki"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "title": "Agency Controller",
+          "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/agency",
+            "src/project/types.ts",
+            "src/adapters/pi",
+            "src/state/resume-context.ts"
+          ],
+          "code_area": "src +3 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/alignment-model.md",
           "title": "Alignment Model",
           "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
@@ -94086,6 +93712,37 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/compilers.md",
+          "title": "Compilers",
+          "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/build/writer.ts",
+            "src/build/tool.ts",
+            "src/build/types.ts",
+            "src/validation/report.ts",
+            "src/roadmap/runtime.ts",
+            "src/roadmap/task.ts",
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-validation/SKILL.md"
+          ],
+          "code_area": "src, skills",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/control-room-ui-details.md",
           "title": "CodeWiki UI Implementation Details",
           "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
@@ -94185,6 +93842,30 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/roadmap.md",
+          "title": "Roadmap",
+          "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/roadmap/queue.json",
+            ".codewiki/roadmap",
+            "src/roadmap/runtime.ts"
+          ],
+          "code_area": ".codewiki, src",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/validation-gateway.md",
           "title": "Validation Gateway",
           "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
@@ -94240,7 +93921,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T21:09:05Z",
+        "generated_at": "2026-05-27T21:10:04Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -94295,12 +93976,17 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:09:05Z",
+            "checked_at": "2026-05-27T21:10:04Z",
             "revision": {
               "git": {
-                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "079cf6de55f2f32394616a146f94621f1a342af9",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-032/context.json",
+                  ".codewiki/roadmap/tasks/TASK-032/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -94403,16 +94089,16 @@
                 }
               },
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
-              "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
-              "code_digest": "826b46f14ddaa36d33197da057039f5ef8813a53ac2067bc8f38cf16d069798c",
-              "digest": "506af75a285eec383b6e0999aee780c34fdd343652996de83cc2a78634a5416d"
+              "task_digest": "af7ec1079b140c806dceaea61f5fa1067f505be8aa2626b096858c003253ac1a",
+              "code_digest": "93ef9d899eef403307e296b69ccfb99fe3ca9c729bc0b50e5e46a9919c9a8dce",
+              "digest": "97be9606d01e4c3b6aafd1d2af96cdcda98eda16b2825065e188269fdda33198"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:09:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-27T21:10:04Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -94430,23 +94116,23 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
@@ -94467,26 +94153,14 @@
               "src",
               "src/index.ts",
               "package.json",
-              "src/adapters",
               "src/application",
-              "skills/codewiki",
-              "src/agency",
-              "src/project/types.ts",
-              "src/adapters/pi",
-              "src/state/resume-context.ts",
               "src/domain",
               "src/roadmap",
               "src/session",
               "src/state",
-              "src/build/writer.ts",
-              "src/build/tool.ts",
-              "src/build/types.ts",
-              "src/validation/report.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
+              "src/adapters",
               ".codewiki/kb",
+              "skills/codewiki",
               ".codewiki/index_graph.json",
               "src/state/graph.ts",
               "src/state/graph/rebuilder.ts",
@@ -94494,22 +94168,34 @@
               "src/state/reader.ts",
               "src/domain/shared/types.ts",
               "src/knowledge",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap",
+              "src/agency",
+              "src/project/types.ts",
+              "src/adapters/pi",
+              "src/state/resume-context.ts",
               "src/build",
               "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
+              "src/build/tool.ts",
+              "src/build/types.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
               "src/knowledge/diagram-parser.ts",
               "src/ui/web/control-room.ts",
               "src/project/bootstrap.ts",
               "src/project/templates.ts",
               "src/adapters/pi/bootstrap.ts",
               "src/state/prompt.ts",
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap",
               "src/validation/tool.ts",
               "src/session/claims.ts",
               "src/session/artifact-status-tool.ts",
@@ -94522,26 +94208,20 @@
               "TASK-012",
               "TASK-030",
               "TASK-031",
-              "TASK-032",
               "TASK-033"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 23,
-              "tracked_specs": 11,
+              "aligned_specs": 28,
+              "tracked_specs": 6,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -94566,12 +94246,17 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T21:09:05Z",
+            "checked_at": "2026-05-27T21:10:04Z",
             "revision": {
               "git": {
-                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "079cf6de55f2f32394616a146f94621f1a342af9",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-032/context.json",
+                  ".codewiki/roadmap/tasks/TASK-032/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/system/adapters.md": "f3e1ea69355aacbb716dae5311006f04d501eb0d",
@@ -94653,64 +94338,50 @@
                 }
               },
               "spec_digest": "0f6a577cba7904921e5bc3fcda94751171f534b65a6cb40c30809073eb5727f6",
-              "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
-              "code_digest": "e6437ed17c8699d967b595ef6ffa33317d01de55f5da6dbdf4aa31dbf8cf1d54",
-              "digest": "17774a6af712ddb0430b91f6d29ea379867412b474f3a4bb3099de56d3c1aacd"
+              "task_digest": "af7ec1079b140c806dceaea61f5fa1067f505be8aa2626b096858c003253ac1a",
+              "code_digest": "9bcb0f0c8c9c24978b12bde25057e05dca7b3f2d1109fa6543437a03fda65862",
+              "digest": "5f1a06f71345169d93247e0cc08b10c612f19f40854a97952bc27627e07c8d18"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:09:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-27T21:10:04Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "src/adapters",
               "src/application",
-              "skills/codewiki",
-              "src/agency",
-              "src/project/types.ts",
-              "src/adapters/pi",
-              "src/state/resume-context.ts",
               "src/domain",
               "src/roadmap",
               "src/session",
               "src/state",
-              "src/build/writer.ts",
-              "src/build/tool.ts",
-              "src/build/types.ts",
-              "src/validation/report.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
+              "src/adapters",
               "src/ui/web",
               "src/adapters/pi/commands",
               ".codewiki/kb",
               "src",
+              "skills/codewiki",
               ".codewiki/index_graph.json",
               "src/state/graph.ts",
               "src/state/graph/rebuilder.ts",
@@ -94719,16 +94390,28 @@
               "src/domain/shared/types.ts",
               "src/knowledge",
               "src/state/lint.ts",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap",
+              "src/agency",
+              "src/project/types.ts",
+              "src/adapters/pi",
+              "src/state/resume-context.ts",
               "src/build",
               "src/validation",
               "src/gateway",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
+              "src/build/tool.ts",
+              "src/build/types.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
               "src/knowledge/diagram-parser.ts",
               "src/ui/web/control-room.ts",
               "src/adapters/pi/ui/manager.ts",
@@ -94739,6 +94422,8 @@
               "src/state/prompt.ts",
               "tests/smoke/package-smoke.test.mjs",
               "skills",
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap",
               "src/validation/tool.ts",
               "src/session/claims.ts",
               "src/session/artifact-status-tool.ts",
@@ -94746,29 +94431,24 @@
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools"
             ],
-            "code_area": "src, skills +3 more",
+            "code_area": "src, .codewiki +3 more",
             "open_task_ids": [
               "TASK-012",
               "TASK-030",
               "TASK-031",
-              "TASK-032",
               "TASK-033"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 10,
-              "tracked_specs": 9,
+              "aligned_specs": 14,
+              "tracked_specs": 5,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -94793,12 +94473,17 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T21:09:05Z",
+            "checked_at": "2026-05-27T21:10:04Z",
             "revision": {
               "git": {
-                "head": "2e61f2b410074518a8c458f350364d63e3a4a73d",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "079cf6de55f2f32394616a146f94621f1a342af9",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/archive.jsonl",
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap/tasks/TASK-032/context.json",
+                  ".codewiki/roadmap/tasks/TASK-032/task.json"
+                ],
                 "paths": {
                   ".codewiki/kb": "",
                   ".codewiki/kb/product": "",
@@ -94901,16 +94586,16 @@
                 }
               },
               "spec_digest": "99f81f4517239f64a7020455f7dabe3af1913f9cdd8b557a9b1f79d6d7ad1f15",
-              "task_digest": "0ed90af5779e80aca031652418a264c1dacc293c1c43e2db28b6c4483b6bd27a",
-              "code_digest": "826b46f14ddaa36d33197da057039f5ef8813a53ac2067bc8f38cf16d069798c",
-              "digest": "506af75a285eec383b6e0999aee780c34fdd343652996de83cc2a78634a5416d"
+              "task_digest": "af7ec1079b140c806dceaea61f5fa1067f505be8aa2626b096858c003253ac1a",
+              "code_digest": "93ef9d899eef403307e296b69ccfb99fe3ca9c729bc0b50e5e46a9919c9a8dce",
+              "digest": "97be9606d01e4c3b6aafd1d2af96cdcda98eda16b2825065e188269fdda33198"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T21:09:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-27T21:10:04Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -94928,23 +94613,23 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
+              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/overview.md",
+              ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
@@ -94965,26 +94650,14 @@
               "src",
               "src/index.ts",
               "package.json",
-              "src/adapters",
               "src/application",
-              "skills/codewiki",
-              "src/agency",
-              "src/project/types.ts",
-              "src/adapters/pi",
-              "src/state/resume-context.ts",
               "src/domain",
               "src/roadmap",
               "src/session",
               "src/state",
-              "src/build/writer.ts",
-              "src/build/tool.ts",
-              "src/build/types.ts",
-              "src/validation/report.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-validation/SKILL.md",
+              "src/adapters",
               ".codewiki/kb",
+              "skills/codewiki",
               ".codewiki/index_graph.json",
               "src/state/graph.ts",
               "src/state/graph/rebuilder.ts",
@@ -94992,22 +94665,34 @@
               "src/state/reader.ts",
               "src/domain/shared/types.ts",
               "src/knowledge",
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap",
+              "src/agency",
+              "src/project/types.ts",
+              "src/adapters/pi",
+              "src/state/resume-context.ts",
               "src/build",
               "src/validation",
               "src/gateway",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-validation/SKILL.md",
               "src/audit",
               "src/adapters/pi/commands/audit.ts",
               "src/adapters/pi/tools/audit.ts",
               "src/adapters/pi/schemas.ts",
               "scripts/check-architecture.mjs",
+              "src/validation/report.ts",
+              "src/build/writer.ts",
+              "src/build/tool.ts",
+              "src/build/types.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
               "src/knowledge/diagram-parser.ts",
               "src/ui/web/control-room.ts",
               "src/project/bootstrap.ts",
               "src/project/templates.ts",
               "src/adapters/pi/bootstrap.ts",
               "src/state/prompt.ts",
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap",
               "src/validation/tool.ts",
               "src/session/claims.ts",
               "src/session/artifact-status-tool.ts",
@@ -95020,26 +94705,20 @@
               "TASK-012",
               "TASK-030",
               "TASK-031",
-              "TASK-032",
               "TASK-033"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/product/stories/automation.md",
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
-              ".codewiki/kb/system/knowledge.md",
-              ".codewiki/kb/system/roadmap.md"
+              ".codewiki/kb/system/knowledge.md"
             ],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 23,
-              "tracked_specs": 11,
+              "aligned_specs": 28,
+              "tracked_specs": 6,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -95065,7 +94744,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-27T21:09:05Z",
+        "generated_at": "2026-05-27T21:10:04Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -95232,96 +94911,6 @@
             "note": "tracked by TASK-012"
           },
           {
-            "path": ".codewiki/kb/product/stories/automation.md",
-            "title": "Use Gated Agency",
-            "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-decision/SKILL.md"
-            ],
-            "code_area": "skills +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-032"
-            ],
-            "primary_task": {
-              "id": "TASK-032",
-              "status": "in_progress",
-              "title": "Protocol-safe reset auto-pickup and agency levels"
-            },
-            "revision": {
-              "digest": "da007e47080711440efca2dfa378322288a789830411885596bf9821d17d6889",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-032"
-          },
-          {
-            "path": ".codewiki/kb/system/adapters.md",
-            "title": "Adapters",
-            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters",
-              "src/application",
-              "skills/codewiki"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-032"
-            ],
-            "primary_task": {
-              "id": "TASK-032",
-              "status": "in_progress",
-              "title": "Protocol-safe reset auto-pickup and agency levels"
-            },
-            "revision": {
-              "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-032"
-          },
-          {
-            "path": ".codewiki/kb/system/agency.md",
-            "title": "Agency Controller",
-            "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/agency",
-              "src/project/types.ts",
-              "src/adapters/pi",
-              "src/state/resume-context.ts"
-            ],
-            "code_area": "src +3 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-032"
-            ],
-            "primary_task": {
-              "id": "TASK-032",
-              "status": "in_progress",
-              "title": "Protocol-safe reset auto-pickup and agency levels"
-            },
-            "revision": {
-              "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-032"
-          },
-          {
             "path": ".codewiki/kb/system/api.md",
             "title": "CodeWiki API",
             "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -95354,43 +94943,6 @@
               "basis": "source_content"
             },
             "note": "tracked by TASK-030"
-          },
-          {
-            "path": ".codewiki/kb/system/compilers.md",
-            "title": "Compilers",
-            "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/build/writer.ts",
-              "src/build/tool.ts",
-              "src/build/types.ts",
-              "src/validation/report.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-validation/SKILL.md"
-            ],
-            "code_area": "src, skills",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-032"
-            ],
-            "primary_task": {
-              "id": "TASK-032",
-              "status": "in_progress",
-              "title": "Protocol-safe reset auto-pickup and agency levels"
-            },
-            "revision": {
-              "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-032"
           },
           {
             "path": ".codewiki/kb/system/control-room-ui.md",
@@ -95519,36 +95071,6 @@
             "note": "tracked by TASK-033"
           },
           {
-            "path": ".codewiki/kb/system/roadmap.md",
-            "title": "Roadmap",
-            "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/roadmap/queue.json",
-              ".codewiki/roadmap",
-              "src/roadmap/runtime.ts"
-            ],
-            "code_area": ".codewiki, src",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-032"
-            ],
-            "primary_task": {
-              "id": "TASK-032",
-              "status": "in_progress",
-              "title": "Protocol-safe reset auto-pickup and agency levels"
-            },
-            "revision": {
-              "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-032"
-          },
-          {
             "path": ".codewiki/kb/lexicon.md",
             "title": "Lexicon",
             "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -95566,6 +95088,29 @@
             "primary_task": null,
             "revision": {
               "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/product/stories/automation.md",
+            "title": "Use Gated Agency",
+            "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-decision/SKILL.md"
+            ],
+            "code_area": "skills +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "da007e47080711440efca2dfa378322288a789830411885596bf9821d17d6889",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -95867,6 +95412,55 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/adapters.md",
+            "title": "Adapters",
+            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters",
+              "src/application",
+              "skills/codewiki"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/agency.md",
+            "title": "Agency Controller",
+            "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/agency",
+              "src/project/types.ts",
+              "src/adapters/pi",
+              "src/state/resume-context.ts"
+            ],
+            "code_area": "src +3 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/alignment-model.md",
             "title": "Alignment Model",
             "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
@@ -95977,6 +95571,37 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/compilers.md",
+            "title": "Compilers",
+            "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/build/writer.ts",
+              "src/build/tool.ts",
+              "src/build/types.ts",
+              "src/validation/report.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-validation/SKILL.md"
+            ],
+            "code_area": "src, skills",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/control-room-ui-details.md",
             "title": "CodeWiki UI Implementation Details",
             "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
@@ -96076,6 +95701,30 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/roadmap.md",
+            "title": "Roadmap",
+            "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/roadmap/queue.json",
+              ".codewiki/roadmap",
+              "src/roadmap/runtime.ts"
+            ],
+            "code_area": ".codewiki, src",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/validation-gateway.md",
             "title": "Validation Gateway",
             "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
@@ -96167,7 +95816,7 @@
                 "path": ".codewiki/kb/product/stories/automation.md",
                 "title": "Use Gated Agency",
                 "summary": "CodeWiki should let agents advance roadmap work automatically inside explicit user-visible gates.",
-                "drift_status": "tracked",
+                "drift_status": "aligned",
                 "code_paths": [
                   "skills/codewiki-implementation/SKILL.md",
                   "skills/codewiki-decision/SKILL.md"
@@ -96178,19 +95827,13 @@
                   "warnings": 0,
                   "total": 0
                 },
-                "related_task_ids": [
-                  "TASK-032"
-                ],
-                "primary_task": {
-                  "id": "TASK-032",
-                  "status": "in_progress",
-                  "title": "Protocol-safe reset auto-pickup and agency levels"
-                },
+                "related_task_ids": [],
+                "primary_task": null,
                 "revision": {
                   "digest": "da007e47080711440efca2dfa378322288a789830411885596bf9821d17d6889",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-032"
+                "note": "no deterministic drift signals"
               },
               {
                 "path": ".codewiki/kb/product/stories/drift.md",
@@ -96495,67 +96138,6 @@
             "label": "System",
             "rows": [
               {
-                "path": ".codewiki/kb/system/adapters.md",
-                "title": "Adapters",
-                "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters",
-                  "src/application",
-                  "skills/codewiki"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-032"
-                ],
-                "primary_task": {
-                  "id": "TASK-032",
-                  "status": "in_progress",
-                  "title": "Protocol-safe reset auto-pickup and agency levels"
-                },
-                "revision": {
-                  "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-032"
-              },
-              {
-                "path": ".codewiki/kb/system/agency.md",
-                "title": "Agency Controller",
-                "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/agency",
-                  "src/project/types.ts",
-                  "src/adapters/pi",
-                  "src/state/resume-context.ts"
-                ],
-                "code_area": "src +3 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-032"
-                ],
-                "primary_task": {
-                  "id": "TASK-032",
-                  "status": "in_progress",
-                  "title": "Protocol-safe reset auto-pickup and agency levels"
-                },
-                "revision": {
-                  "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-032"
-              },
-              {
                 "path": ".codewiki/kb/system/api.md",
                 "title": "CodeWiki API",
                 "summary": "Harness-independent application-tool contract for CodeWiki state, compilers, builds, validation, session queue, and publication support.",
@@ -96588,43 +96170,6 @@
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-030"
-              },
-              {
-                "path": ".codewiki/kb/system/compilers.md",
-                "title": "Compilers",
-                "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/build/writer.ts",
-                  "src/build/tool.ts",
-                  "src/build/types.ts",
-                  "src/validation/report.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/roadmap/task.ts",
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-validation/SKILL.md"
-                ],
-                "code_area": "src, skills",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-032"
-                ],
-                "primary_task": {
-                  "id": "TASK-032",
-                  "status": "in_progress",
-                  "title": "Protocol-safe reset auto-pickup and agency levels"
-                },
-                "revision": {
-                  "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-032"
               },
               {
                 "path": ".codewiki/kb/system/control-room-ui.md",
@@ -96753,36 +96298,6 @@
                 "note": "tracked by TASK-033"
               },
               {
-                "path": ".codewiki/kb/system/roadmap.md",
-                "title": "Roadmap",
-                "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  ".codewiki/roadmap",
-                  "src/roadmap/runtime.ts"
-                ],
-                "code_area": ".codewiki, src",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-032"
-                ],
-                "primary_task": {
-                  "id": "TASK-032",
-                  "status": "in_progress",
-                  "title": "Protocol-safe reset auto-pickup and agency levels"
-                },
-                "revision": {
-                  "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-032"
-              },
-              {
                 "path": ".codewiki/kb/lexicon.md",
                 "title": "Lexicon",
                 "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -96800,6 +96315,55 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/adapters.md",
+                "title": "Adapters",
+                "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters",
+                  "src/application",
+                  "skills/codewiki"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/agency.md",
+                "title": "Agency Controller",
+                "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/agency",
+                  "src/project/types.ts",
+                  "src/adapters/pi",
+                  "src/state/resume-context.ts"
+                ],
+                "code_area": "src +3 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -96915,6 +96479,37 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/compilers.md",
+                "title": "Compilers",
+                "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/build/writer.ts",
+                  "src/build/tool.ts",
+                  "src/build/types.ts",
+                  "src/validation/report.ts",
+                  "src/roadmap/runtime.ts",
+                  "src/roadmap/task.ts",
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-validation/SKILL.md"
+                ],
+                "code_area": "src, skills",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "8235a1398d42a7663b35e6d5e345f0ea191d4e2f5039c357bee62196bc12b911",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/control-room-ui-details.md",
                 "title": "CodeWiki UI Implementation Details",
                 "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
@@ -97014,6 +96609,30 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/roadmap.md",
+                "title": "Roadmap",
+                "summary": "Work truth for active items, priority, status, blockers, progress, and closure.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  ".codewiki/roadmap",
+                  "src/roadmap/runtime.ts"
+                ],
+                "code_area": ".codewiki, src",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "6427d82909200403ad5670f8e7a9f2b2a0d1ddf2064e6333cf4f190f15f83fc0",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/validation-gateway.md",
                 "title": "Validation Gateway",
                 "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
@@ -97082,7 +96701,6 @@
         "in_progress_task_ids": [
           "TASK-012",
           "TASK-030",
-          "TASK-032",
           "TASK-033"
         ],
         "next_task_id": "TASK-012",
@@ -97249,7 +96867,6 @@
               "TASK-033"
             ],
             "open_task_ids": [
-              "TASK-032",
               "TASK-033"
             ],
             "budget": {
@@ -97299,7 +96916,6 @@
             "task_ids": [
               "TASK-012",
               "TASK-030",
-              "TASK-032",
               "TASK-033"
             ]
           },
