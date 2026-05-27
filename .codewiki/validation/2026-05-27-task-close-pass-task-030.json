@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-27T21:12:33Z",
+  "profile": "task-close",
+  "task_id": "TASK-030",
+  "verdict": "pass",
+  "rationale": "TASK-030 task-close validation passes against clean local commit proof and explicit user approval to proceed with the current roadmap batch. HEAD 1d55123ed90e2c892ef44d03710192c4653139d5 contains implementation commit 703f35c and subsequent generated/validation/closure evidence. Source implementation build .codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json has accepted planning traceability and complete acceptance mapping. State, graph, rebuild, lint, prompt, resume-context, status dock prefs, and codewiki_state/codewiki_resume_context execution now live under src/state/**; legacy state/graph/resume owner paths are removed without shims; TASK-specific guard and full checks pass. Required task-close audits pass except existing graph-health warnings, which are non-blocking roadmap hygiene and not changed-file drift. Supersedes the previous TASK-030 task-close block by citing current user approval evidence.",
+  "checks": [
+    "approval:user:2026-05-28 Okay, great, proceed — current roadmap batch close approved; no push",
+    "git status --porcelain=v1 | wc -l — 0 before validation report write",
+    "git rev-parse HEAD — 1d55123ed90e2c892ef44d03710192c4653139d5",
+    "git rev-parse HEAD^{tree} — 1432ffd2816bd28f5e29ec2941271753574086e5",
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-030 — changed/task/generated-parity pass; alignment warning only",
+    "implementation validation pass exists: .codewiki/validation/2026-05-27-implementation-pass-task-030.json",
+    "implementation checks reviewed: TASK-030 guard, typecheck, check:architecture, test:smoke, test:features, test:pack, validation-preflight all pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports 2 graph-health warnings; changed, task, and generated-parity pass, and worktree was clean before report write."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed; local commit proof only."
+    },
+    {
+      "severity": "low",
+      "summary": "Supersedes .codewiki/validation/2026-05-27-task-close-block-task-030.json by adding explicit user approval evidence."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "approval:user:2026-05-28 Okay, great, proceed — local commit/roadmap batch close approved; no push",
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "commit:1d55123ed90e2c892ef44d03710192c4653139d5",
+    "tree:1432ffd2816bd28f5e29ec2941271753574086e5",
+    ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+    ".codewiki/validation/2026-05-27-implementation-pass-task-030.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-030: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings."
+  ],
+  "content_proof_refs": [
+    "1d55123ed90e2c892ef44d03710192c4653139d5",
+    "1432ffd2816bd28f5e29ec2941271753574086e5"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "1432ffd2816bd28f5e29ec2941271753574086e5"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-030",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:2026-05-28 Okay, great, proceed — local commit/roadmap batch close approved; no push",
+        "approval:user:2026-05-28 Okay, great, proceed — current roadmap batch close approved; no push"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "1d55123ed90e2c892ef44d03710192c4653139d5",
+    "validated_sha": "1d55123ed90e2c892ef44d03710192c4653139d5",
+    "tree_sha": "1432ffd2816bd28f5e29ec2941271753574086e5",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation after clean local commit proof; no remote publication.",
+    "role": "validator"
+  }
+}
