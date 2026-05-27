@@ -1,10 +1,9 @@
 {
   "version": 2,
-  "updated": "2026-05-27T22:50:43Z",
+  "updated": "2026-05-27T22:51:36Z",
   "order": [
     "TASK-012",
-    "TASK-023",
-    "TASK-034"
+    "TASK-023"
   ],
   "tasks": {
     "TASK-012": {
@@ -296,55 +295,6 @@
       },
       "created": "2026-05-26",
       "updated": "2026-05-27T22:19:13Z"
-    },
-    "TASK-034": {
-      "id": "TASK-034",
-      "title": "Debounce context refresh deferred warnings",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "bug",
-      "summary": "Reduce noisy CodeWiki context-refresh deferred notifications while preserving safe reset boundary checks.",
-      "spec_paths": [
-        ".codewiki/kb/system/adapters.md",
-        ".codewiki/kb/system/agency.md"
-      ],
-      "code_paths": [
-        "src/adapters/pi/compaction.ts",
-        "tests/smoke/codewiki-compaction.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "dogfood",
-        "context-reset",
-        "ux"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Context refresh deferral no longer warns every turn while still refusing unsafe reset boundaries.",
-        "acceptance": [
-          "Repeated non-idle deferrals for the same pending refresh notify at most once until a safe boundary or new reason occurs.",
-          "Deferral notification is downgraded from warning to info for normal non-idle retries.",
-          "Hard safety gates remain unchanged: no auto-pickup when agent is not idle or pending messages exist.",
-          "Smoke guard covers deferred-warning debounce behavior."
-        ],
-        "non_goals": [
-          "Do not bypass idle/pending-message safety checks.",
-          "Do not change context reset configuration defaults.",
-          "Do not alter publication or remote push behavior."
-        ],
-        "verification": [
-          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
-          "npm run typecheck",
-          "npm run test:smoke"
-        ]
-      },
-      "delta": {
-        "desired": "",
-        "current": "",
-        "closure": ""
-      },
-      "created": "2026-05-27",
-      "updated": "2026-05-27T22:50:43Z"
     }
   },
   "sprints": {

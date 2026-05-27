@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-27T22:50:44.006Z",
+  "generated_at": "2026-05-27T22:51:37.317Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4662,7 +4662,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4763,7 +4763,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -5887,7 +5887,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -6226,24 +6226,6 @@
       "path": "src/adapters/pi/commands/config.ts",
       "layer": "code",
       "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "task:TASK-034",
-      "kind": "roadmap_task",
-      "title": "Debounce context refresh deferred warnings",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:tests/smoke/codewiki-compaction.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/codewiki-compaction.test.mjs",
-      "layer": "code",
-      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -33610,6 +33592,106 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "head_sha": "c011a63605448444267f0335cdd205f11421c451",
+        "validated_sha": "c011a63605448444267f0335cdd205f11421c451",
+        "tree_sha": "b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation after clean local commit proof; no remote publication.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "commit:c011a63605448444267f0335cdd205f11421c451",
+          "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+          ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+          "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings."
+        ],
+        "content_proof_refs": [
+          "c011a63605448444267f0335cdd205f11421c451",
+          "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:commit:c011a63605448444267f0335cdd205f11421c451",
+      "kind": "audit_evidence",
+      "path": "commit:c011a63605448444267f0335cdd205f11421c451",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "kind": "audit_evidence",
+      "path": "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:.codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "kind": "audit_evidence",
+      "path": ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:.codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+      "kind": "audit_evidence",
+      "path": ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:c011a63605448444267f0335cdd205f11421c451",
+      "kind": "content_proof",
+      "path": "c011a63605448444267f0335cdd205f11421c451",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "kind": "content_proof",
+      "path": "b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
     }
   ],
   "edges": [
@@ -46440,54 +46522,6 @@
       "kind": "task_code_path",
       "from": "task:TASK-023",
       "to": "code:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-034",
-      "to": "doc:.codewiki/kb/system/adapters.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/adapters/pi/compaction.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-034"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:tests/smoke/codewiki-compaction.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-034"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-034",
-      "to": "doc:.codewiki/kb/system/agency.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/agency.md",
-      "to": "code:src/adapters/pi/compaction.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-034"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/agency.md",
-      "to": "code:tests/smoke/codewiki-compaction.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-034"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-034",
-      "to": "code:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-034",
-      "to": "code:tests/smoke/codewiki-compaction.test.mjs"
     },
     {
       "kind": "doc_code_path",
@@ -86103,6 +86137,83 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-033.json",
       "to": "task:TASK-033"
+    },
+    {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:commit:c011a63605448444267f0335cdd205f11421c451",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:.codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:.codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "audit:codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "content_proof:c011a63605448444267f0335cdd205f11421c451",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "content_proof:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+      "to": "task:TASK-034"
     }
   ],
   "views": {
@@ -86190,16 +86301,12 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 12,
+            "item_count": 11,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 1,
-                "refs": [
-                  "TASK-034"
-                ],
-                "ref_count": 1
+                "count": 0
               },
               {
                 "id": "done_tasks",
@@ -86229,10 +86336,10 @@
               "sprint:SPRINT-004",
               "task:TASK-012",
               "task:TASK-023",
-              "task:TASK-034",
               "claim:CLAIM-186",
               "claim_scope:TASK-034",
-              "claim_scope:src/adapters/pi/compaction.ts"
+              "claim_scope:src/adapters/pi/compaction.ts",
+              "claim_scope:tests/smoke/codewiki-compaction.test.mjs"
             ],
             "collapsed": true
           },
@@ -86240,13 +86347,13 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "drift",
-            "item_count": 367,
+            "state": "aligned",
+            "item_count": 366,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 327
+                "count": 326
               },
               {
                 "id": "test_files",
@@ -86261,12 +86368,7 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 2,
-                "refs": [
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs"
-                ],
-                "ref_count": 2
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -86293,7 +86395,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 102
+                "count": 103
               },
               {
                 "id": "fail_or_block_validation",
@@ -86303,12 +86405,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 457
+                "count": 462
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 913
+                "count": 915
               },
               {
                 "id": "traceability_gaps",
@@ -86332,18 +86434,18 @@
             "collapsed": 79
           },
           "validations": {
-            "total": 102,
-            "pass": 83,
+            "total": 103,
+            "pass": 84,
             "fail_or_block": 19,
             "hot": 4,
-            "collapsed": 102
+            "collapsed": 103
           }
         },
         "next_action": {
-          "item_id": "reconcile:task:TASK-034",
-          "source_id": "task:TASK-034",
-          "loop": "implementation",
-          "reason": "TASK-034 is open implementation delta below knowledge."
+          "item_id": null,
+          "source_id": null,
+          "loop": "observe",
+          "reason": "No reconciliation item currently requires a compiler loop."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -86432,46 +86534,6 @@
               ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
               ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/adapters/pi/compaction.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "tests/smoke/codewiki-compaction.test.mjs",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
             ],
             "gaps": []
           }
@@ -92301,6 +92363,31 @@
               "c1b353f123a42dee0429fe221d76fa498e10a129"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-034",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "commit:c011a63605448444267f0335cdd205f11421c451",
+              "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+              ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+              ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+              "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings."
+            ],
+            "content_proof_refs": [
+              "c011a63605448444267f0335cdd205f11421c451",
+              "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -93971,6 +94058,25 @@
             "publisher_result_refs": [
               "c1b353f123a42dee0429fe221d76fa498e10a129"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+            "task_id": "TASK-034",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "head_sha": "c011a63605448444267f0335cdd205f11421c451",
+            "validated_sha": "c011a63605448444267f0335cdd205f11421c451",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "c011a63605448444267f0335cdd205f11421c451",
+              "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+            ],
+            "publisher_result_refs": [
+              "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -93980,6 +94086,7 @@
           ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
           ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+          ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
           ".codewiki/kb/system/api.md",
           ".codewiki/kb/system/diagrams/data-model.yaml",
@@ -93994,6 +94101,7 @@
           ".codewiki/validation/2026-05-27-implementation-pass-task-031.json",
           ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
           ".codewiki/validation/2026-05-27-implementation-pass-task-033.json",
+          ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
           "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js:sendCustomMessage",
           "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
           "CodeWiki audit warning after documentation/roadmap updates: stale-reference, generated-parity, file-structure pass; warnings are generated graph/task view dirty and one graph-health warning from uncommitted generated state.",
@@ -94122,6 +94230,7 @@
           "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-031: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
           "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
           "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-033: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 large-doc warnings.",
+          "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
           "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
           "codewiki_audit changed,task,generated-parity,stale-reference,alignment TASK-032",
           "codewiki_audit changed,task,generated-parity,stale-reference,alignment task_id=TASK-032",
@@ -94229,6 +94338,7 @@
           "commit:6169cf254e3ef39fffd2e3932df85cbc4c6631b0",
           "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
           "commit:8266b38028d7317de640668dce0bb4697e1b8674",
+          "commit:c011a63605448444267f0335cdd205f11421c451",
           "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
           "commit:cbb6739480e429e0005b93234b1c7df792856af3",
           "commit:e2f073db7ad0df3000fa4cc2280d763c1205112c",
@@ -94387,6 +94497,7 @@
           "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
           "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
           "tree:abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
+          "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
           "tree:c1b353f123a42dee0429fe221d76fa498e10a129",
           "tree:c87a3bd5c59ea42afdc315aebb753853c3e3e0f6",
           "tree:e0a5b88d2e7567541bf3d5ed00cd6c5605b030e8",
@@ -94622,11 +94733,13 @@
           "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
           "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
           "af9fa72cef338813a4d128375d4e8db15ad18c9e",
+          "b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
           "b5527b51bece34d670daa246b84d46fc4902eed2",
           "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
           "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
           "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
           "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+          "c011a63605448444267f0335cdd205f11421c451",
           "c1b353f123a42dee0429fe221d76fa498e10a129",
           "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
           "c31533b8cd58de08c2b937acf58db1df228c3608",
@@ -95347,19 +95460,7 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24"
         ],
-        "reconciliation_items": [
-          {
-            "id": "reconcile:task:TASK-034",
-            "source_id": "task:TASK-034",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-034",
-            "reason": "TASK-034 is open implementation delta below knowledge."
-          }
-        ],
+        "reconciliation_items": [],
         "traceability_gaps": [],
         "semantic_change_gaps": [],
         "file_structure_drift": {
@@ -95535,15 +95636,10 @@
     "roadmap": {
       "task_ids": [
         "TASK-012",
-        "TASK-023",
-        "TASK-034"
+        "TASK-023"
       ],
-      "open_task_ids": [
-        "TASK-034"
-      ],
-      "in_progress_task_ids": [
-        "TASK-034"
-      ],
+      "open_task_ids": [],
+      "in_progress_task_ids": [],
       "todo_task_ids": [],
       "blocked_task_ids": [],
       "done_task_ids": [],
@@ -95552,8 +95648,7 @@
         "TASK-023"
       ],
       "status_counts": {
-        "cancelled": 2,
-        "in_progress": 1
+        "cancelled": 2
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -96064,7 +96159,6 @@
         "tests/smoke/alignment-drift-fixtures.test.mjs",
         "tests/smoke/builds.test.mjs",
         "tests/smoke/claim-wait-queue.test.mjs",
-        "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/diagram-refs.test.mjs",
         "tests/smoke/efficiency-ui.test.mjs",
         "tests/smoke/hot-retention.test.mjs",
@@ -96085,10 +96179,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": [
-        "src/adapters/pi/compaction.ts",
-        "tests/smoke/codewiki-compaction.test.mjs"
-      ]
+      "dirty_paths": []
     },
     "claims": {
       "active_claim_count": 1,
@@ -98046,6 +98137,25 @@
           "publisher_result_refs": [
             "c1b353f123a42dee0429fe221d76fa498e10a129"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+          "task_id": "TASK-034",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "head_sha": "c011a63605448444267f0335cdd205f11421c451",
+          "validated_sha": "c011a63605448444267f0335cdd205f11421c451",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "c011a63605448444267f0335cdd205f11421c451",
+            "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+          ],
+          "publisher_result_refs": [
+            "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+          ]
         }
       ]
     },
@@ -98602,6 +98712,7 @@
         ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
         ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
         ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+        ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
         ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
         ".codewiki/kb/system/api.md",
         ".codewiki/kb/system/diagrams/data-model.yaml",
@@ -98616,6 +98727,7 @@
         ".codewiki/validation/2026-05-27-implementation-pass-task-031.json",
         ".codewiki/validation/2026-05-27-implementation-pass-task-032.json",
         ".codewiki/validation/2026-05-27-implementation-pass-task-033.json",
+        ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
         "/home/nunoc/.nvm/versions/node/v26.1.0/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js:sendCustomMessage",
         "CodeWiki audit pass: profiles alignment, changed, task, generated-parity, stale-reference, file-structure; changed=0 files; task TASK-006 pass",
         "CodeWiki audit warning after documentation/roadmap updates: stale-reference, generated-parity, file-structure pass; warnings are generated graph/task view dirty and one graph-health warning from uncommitted generated state.",
@@ -98744,6 +98856,7 @@
         "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-031: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
         "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-032: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 warnings.",
         "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-033: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 2 large-doc warnings.",
+        "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings.",
         "codewiki_audit changed warning: dirty generated read models before commit; expected for implementation validation and to clear after commit.",
         "codewiki_audit changed,task,generated-parity,stale-reference,alignment TASK-032",
         "codewiki_audit changed,task,generated-parity,stale-reference,alignment task_id=TASK-032",
@@ -98851,6 +98964,7 @@
         "commit:6169cf254e3ef39fffd2e3932df85cbc4c6631b0",
         "commit:7f6c8a0a68902dd587b932e598e2fdc723373728",
         "commit:8266b38028d7317de640668dce0bb4697e1b8674",
+        "commit:c011a63605448444267f0335cdd205f11421c451",
         "commit:c31533b8cd58de08c2b937acf58db1df228c3608",
         "commit:cbb6739480e429e0005b93234b1c7df792856af3",
         "commit:e2f073db7ad0df3000fa4cc2280d763c1205112c",
@@ -99009,6 +99123,7 @@
         "tree:932065b9e7412be9c435844ca47ff9da8b8a1af3",
         "tree:96213363ccf4ff3e01d21a088b61ea0042f63aa1",
         "tree:abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
+        "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
         "tree:c1b353f123a42dee0429fe221d76fa498e10a129",
         "tree:c87a3bd5c59ea42afdc315aebb753853c3e3e0f6",
         "tree:e0a5b88d2e7567541bf3d5ed00cd6c5605b030e8",
@@ -99244,11 +99359,13 @@
         "abb3c4d23b853f0e11c3e05d67f39c9ab01f3cd3",
         "ae5f4acfd9533c87e3a6743b969abd6051a63ec2",
         "af9fa72cef338813a4d128375d4e8db15ad18c9e",
+        "b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
         "b5527b51bece34d670daa246b84d46fc4902eed2",
         "b971268904dcba6173a9a82f1d4f15b0c9a2dcc4",
         "beba9dec5a3e0c1a5d6bc7591882095c12bb9bb7",
         "bfa17e488debd42fb1cf14e18a8dd36af1c228e3",
         "bfa8eee4a9c74ee3002528bb04e8966b97a731c5",
+        "c011a63605448444267f0335cdd205f11421c451",
         "c1b353f123a42dee0429fe221d76fa498e10a129",
         "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
         "c31533b8cd58de08c2b937acf58db1df228c3608",
@@ -102744,6 +102861,31 @@
             "c1b353f123a42dee0429fe221d76fa498e10a129"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-27-task-close-pass-task-034.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-034",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "commit:c011a63605448444267f0335cdd205f11421c451",
+            "tree:b1309a6839bdde26c68a4aad68b2b92d3cb220a9",
+            ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
+            ".codewiki/validation/2026-05-27-implementation-pass-task-034.json",
+            "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-034: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 3 large-doc warnings."
+          ],
+          "content_proof_refs": [
+            "c011a63605448444267f0335cdd205f11421c451",
+            "b1309a6839bdde26c68a4aad68b2b92d3cb220a9"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -104548,46 +104690,6 @@
             ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
           ],
           "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/compaction.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
-          ],
-          "gaps": []
-        },
-        {
-          "path": "tests/smoke/codewiki-compaction.test.mjs",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json"
-          ],
-          "gaps": []
         }
       ],
       "semantic_change_gaps": [],
@@ -104599,12 +104701,9 @@
         "kind": "roadmap",
         "task_ids": [
           "TASK-012",
-          "TASK-023",
-          "TASK-034"
+          "TASK-023"
         ],
-        "open_task_ids": [
-          "TASK-034"
-        ],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -104910,56 +105009,28 @@
             "src/agency/planning.ts",
             "src/adapters/pi/commands/config.ts"
           ]
-        },
-        "TASK-034": {
-          "kind": "task",
-          "id": "TASK-034",
-          "task_ids": [
-            "TASK-034"
-          ],
-          "open_task_ids": [
-            "TASK-034"
-          ],
-          "sprint_ids": [],
-          "spec_paths": [
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/agency.md"
-          ],
-          "code_paths": [
-            "src/adapters/pi/compaction.ts",
-            "tests/smoke/codewiki-compaction.test.mjs"
-          ]
         }
       }
     },
     "workflow_cursor": {
-      "active_loop": "implementation",
-      "reason": "TASK-034 is open implementation delta below knowledge.",
-      "input_refs": [
-        "task:TASK-034",
-        "TASK-034"
-      ],
-      "expected_output": "implementation_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "sprint",
         "id": "SPRINT-001"
       },
       "isolation": {
         "required": false,
-        "mode": "agent-owned-new-session",
-        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-        "evidence": [
-          "source build/task refs read",
-          "new_session or context_refresh when useful"
-        ],
-        "handoff": "implementation_loop context boundary"
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
       "context_boundary": "none",
-      "handoff_refs": [
-        "task:TASK-034",
-        "TASK-034"
-      ]
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -104971,9 +105042,7 @@
       },
       "classes": {
         "hot": {
-          "task_ids": [
-            "TASK-034"
-          ],
+          "task_ids": [],
           "sprint_ids": [
             "SPRINT-001",
             "SPRINT-002"
@@ -105852,56 +105921,35 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:task:TASK-034",
-          "source_id": "task:TASK-034",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-034",
-          "reason": "TASK-034 is open implementation delta below knowledge."
-        }
-      ],
-      "counts_by_loop": {
-        "implementation": 1
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "implementation",
-        "command": "/wiki-resume TASK-034",
-        "reason": "TASK-034 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-034",
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
         "isolation_required": false,
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "implementation_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "task:TASK-034",
-          "TASK-034"
-        ]
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
         "knowledge": "aligned",
-        "roadmap": "drift",
-        "code": "drift",
+        "roadmap": "aligned",
+        "code": "aligned",
         "validation": "aligned"
       }
     }
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-27T22:50:43.888Z",
+      "generated_at": "2026-05-27T22:51:37.200Z",
       "counts": {
         "large-doc": 3
       },
@@ -105928,7 +105976,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-27T22:50:44Z",
+      "generated_at": "2026-05-27T22:51:37Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -105939,31 +105987,25 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 3,
-        "open_count": 1,
+        "task_count": 2,
+        "open_count": 0,
         "sprint_count": 4,
         "active_sprint_count": 2,
         "status_counts": {
-          "cancelled": 2,
-          "in_progress": 1
+          "cancelled": 2
         },
         "priority_counts": {
           "medium": 1,
-          "high": 2
+          "high": 1
         }
       },
       "views": {
         "ordered_task_ids": [
           "TASK-012",
-          "TASK-023",
-          "TASK-034"
+          "TASK-023"
         ],
-        "open_task_ids": [
-          "TASK-034"
-        ],
-        "executable_open_task_ids": [
-          "TASK-034"
-        ],
+        "open_task_ids": [],
+        "executable_open_task_ids": [],
         "container_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
@@ -106156,12 +106198,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-034"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-034"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [],
         "executable_todo_task_ids": [],
         "blocked_task_ids": [],
@@ -106171,7 +106209,6 @@
           "TASK-023"
         ],
         "recent_task_ids": [
-          "TASK-034",
           "TASK-023",
           "TASK-012"
         ]
@@ -106472,64 +106509,12 @@
             "updated_at": "",
             "evidence": null
           }
-        },
-        "TASK-034": {
-          "id": "TASK-034",
-          "title": "Debounce context refresh deferred warnings",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "bug",
-          "change_type": "system",
-          "summary": "Reduce noisy CodeWiki context-refresh deferred notifications while preserving safe reset boundary checks.",
-          "labels": [
-            "dogfood",
-            "context-reset",
-            "ux"
-          ],
-          "goal": {
-            "outcome": "Context refresh deferral no longer warns every turn while still refusing unsafe reset boundaries.",
-            "acceptance": [
-              "Repeated non-idle deferrals for the same pending refresh notify at most once until a safe boundary or new reason occurs.",
-              "Deferral notification is downgraded from warning to info for normal non-idle retries.",
-              "Hard safety gates remain unchanged: no auto-pickup when agent is not idle or pending messages exist.",
-              "Smoke guard covers deferred-warning debounce behavior."
-            ],
-            "non_goals": [
-              "Do not bypass idle/pending-message safety checks.",
-              "Do not change context reset configuration defaults.",
-              "Do not alter publication or remote push behavior."
-            ],
-            "verification": [
-              "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
-              "npm run typecheck",
-              "npm run test:smoke"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/agency.md"
-          ],
-          "code_paths": [
-            "src/adapters/pi/compaction.ts",
-            "tests/smoke/codewiki-compaction.test.mjs"
-          ],
-          "updated": "2026-05-27T22:50:43Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-034/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
         }
       }
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-27T22:50:44Z",
+      "generated_at": "2026-05-27T22:51:37Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -106544,13 +106529,13 @@
       "summary": {
         "total_specs": 17,
         "mapped_specs": 17,
-        "aligned_specs": 33,
-        "tracked_specs": 2,
+        "aligned_specs": 35,
+        "tracked_specs": 0,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 3,
-        "open_task_count": 1,
+        "task_count": 2,
+        "open_task_count": 0,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 0
@@ -106558,14 +106543,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 2,
-          "total": 2,
+          "value": 0,
+          "total": 0,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 3,
+          "total": 2,
           "percent": 0
         },
         "spec_mapping": {
@@ -106576,17 +106561,9 @@
         }
       },
       "views": {
-        "risky_spec_paths": [
-          ".codewiki/kb/system/adapters.md",
-          ".codewiki/kb/system/agency.md"
-        ],
-        "top_risky_spec_paths": [
-          ".codewiki/kb/system/adapters.md",
-          ".codewiki/kb/system/agency.md"
-        ],
-        "open_task_ids": [
-          "TASK-034"
-        ],
+        "risky_spec_paths": [],
+        "top_risky_spec_paths": [],
+        "open_task_ids": [],
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -106599,39 +106576,29 @@
         ]
       },
       "next_step": {
-        "kind": "reconciliation:implementation",
-        "command": "/wiki-resume TASK-034",
-        "reason": "TASK-034 is open implementation delta below knowledge.",
-        "item_id": "reconcile:task:TASK-034"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "implementation",
-        "reason": "TASK-034 is open implementation delta below knowledge.",
-        "input_refs": [
-          "task:TASK-034",
-          "TASK-034"
-        ],
-        "expected_output": "implementation_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "sprint",
           "id": "SPRINT-001"
         },
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "implementation_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "task:TASK-034",
-          "TASK-034"
-        ]
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -106643,9 +106610,7 @@
         },
         "classes": {
           "hot": {
-            "task_ids": [
-              "TASK-034"
-            ],
+            "task_ids": [],
             "sprint_ids": [
               "SPRINT-001",
               "SPRINT-002"
@@ -106857,12 +106822,12 @@
         ]
       },
       "direction": [
-        "TASK-034 is open implementation delta below knowledge.",
+        "No open deterministic drift requires action right now.",
         "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=task, approval=task, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 17/17.",
-        "Tracked drift coverage: 2/2.",
+        "No tracked spec drift is open.",
         "File-structure drift: 0 actionable item(s), 0 approved migration delta(s)."
       ],
       "file_structure": {
@@ -106897,136 +106862,6 @@
         "residuals": []
       },
       "specs": [
-        {
-          "path": ".codewiki/kb/system/adapters.md",
-          "title": "Adapters",
-          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/**",
-            "src/ui/**",
-            "src/adapters/pi/compaction.ts",
-            "tests/smoke/codewiki-compaction.test.mjs",
-            "src/application/tools/session-handoff.ts",
-            "src/adapters/pi/tools/session-handoff.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/knowledge/doc-parser.ts",
-            "src/state/graph.ts",
-            "src/state/lint.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, tests",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-034"
-          ],
-          "primary_task": {
-            "id": "TASK-034",
-            "status": "in_progress",
-            "title": "Debounce context refresh deferred warnings"
-          },
-          "revision": {
-            "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-034"
-        },
-        {
-          "path": ".codewiki/kb/system/agency.md",
-          "title": "Agency Controller",
-          "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/agency",
-            "src/project/types.ts",
-            "src/adapters/pi",
-            "src/state/resume-context.ts",
-            "src/project/context.ts",
-            "src/project/root.ts",
-            "src/project/bootstrap.ts",
-            "src/project/tool.ts",
-            "src/project/templates.ts",
-            "src/project/local/filesystem.ts",
-            "src/project/local/file-store.ts",
-            "src/project/local/git-cache.ts",
-            "src/knowledge/doc-parser.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/change/types.ts",
-            "src/change/traceability.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "src/gc/types.ts",
-            "src/gc/runtime.ts",
-            "src/gc/tool.ts",
-            "src/session/types.ts",
-            "src/session/links.ts",
-            "src/session/worktree-isolation.ts",
-            "src/session/runtime.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "src/roadmap/types.ts",
-            "src/roadmap/status.ts",
-            "src/roadmap/task-id.ts",
-            "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
-            "src/roadmap/task.ts",
-            "src/roadmap/tool.ts",
-            "src/state/types.ts",
-            "src/state/reader.ts",
-            "src/state/artifacts.ts",
-            "src/state/builders.ts",
-            "src/state/rebuild.ts",
-            "src/state/graph.ts",
-            "src/state/graph/rebuilder.ts",
-            "src/state/lint.ts",
-            "src/state/prompt.ts",
-            "src/state/skill-assets.ts",
-            "src/state/local/rebuild-runner.ts",
-            "src/state/local/status-dock-prefs.ts",
-            "src/state/tool.ts",
-            "src/state/resume-tool.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "src/shared/ports.ts",
-            "src/shared/utils.ts",
-            "src/shared/lock.ts",
-            "src/index.ts",
-            "scripts/check-architecture.mjs",
-            "tests/tasks/TASK-076/restructure.test.mjs",
-            "src/agency/types.ts",
-            "src/agency/planning.ts",
-            "src/adapters/pi/commands/config.ts",
-            "src/adapters/pi/compaction.ts",
-            "tests/smoke/codewiki-compaction.test.mjs",
-            "src/application/tools/session-handoff.ts",
-            "src/adapters/pi/tools/session-handoff.ts",
-            "src/adapters/pi/schemas.ts"
-          ],
-          "code_area": "src, scripts +1 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-034"
-          ],
-          "primary_task": {
-            "id": "TASK-034",
-            "status": "in_progress",
-            "title": "Debounce context refresh deferred warnings"
-          },
-          "revision": {
-            "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-034"
-        },
         {
           "path": ".codewiki/kb/lexicon.md",
           "title": "Lexicon",
@@ -107591,6 +107426,120 @@
           "primary_task": null,
           "revision": {
             "digest": "77b79518df7afd80bcec491cd8ee2047ea29be1789ce5a747a6746e670558dd4",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "title": "Adapters",
+          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/**",
+            "src/ui/**",
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/knowledge/doc-parser.ts",
+            "src/state/graph.ts",
+            "src/state/lint.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src +8 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "title": "Agency Controller",
+          "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/agency",
+            "src/project/types.ts",
+            "src/adapters/pi",
+            "src/state/resume-context.ts",
+            "src/project/context.ts",
+            "src/project/root.ts",
+            "src/project/bootstrap.ts",
+            "src/project/tool.ts",
+            "src/project/templates.ts",
+            "src/project/local/filesystem.ts",
+            "src/project/local/file-store.ts",
+            "src/project/local/git-cache.ts",
+            "src/knowledge/doc-parser.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/change/types.ts",
+            "src/change/traceability.ts",
+            "src/change/diff-table.ts",
+            "src/change/tool.ts",
+            "src/gc/types.ts",
+            "src/gc/runtime.ts",
+            "src/gc/tool.ts",
+            "src/session/types.ts",
+            "src/session/links.ts",
+            "src/session/worktree-isolation.ts",
+            "src/session/runtime.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "src/roadmap/types.ts",
+            "src/roadmap/status.ts",
+            "src/roadmap/task-id.ts",
+            "src/roadmap/task-boundary.ts",
+            "src/roadmap/runtime.ts",
+            "src/roadmap/task.ts",
+            "src/roadmap/tool.ts",
+            "src/state/types.ts",
+            "src/state/reader.ts",
+            "src/state/artifacts.ts",
+            "src/state/builders.ts",
+            "src/state/rebuild.ts",
+            "src/state/graph.ts",
+            "src/state/graph/rebuilder.ts",
+            "src/state/lint.ts",
+            "src/state/prompt.ts",
+            "src/state/skill-assets.ts",
+            "src/state/local/rebuild-runner.ts",
+            "src/state/local/status-dock-prefs.ts",
+            "src/state/tool.ts",
+            "src/state/resume-tool.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "src/shared/ports.ts",
+            "src/shared/utils.ts",
+            "src/shared/lock.ts",
+            "src/index.ts",
+            "scripts/check-architecture.mjs",
+            "tests/tasks/TASK-076/restructure.test.mjs",
+            "src/agency/types.ts",
+            "src/agency/planning.ts",
+            "src/adapters/pi/commands/config.ts",
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts"
+          ],
+          "code_area": "src, scripts +1 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -109358,7 +109307,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-27T22:50:44Z",
+        "generated_at": "2026-05-27T22:51:37Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -109413,15 +109362,13 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T22:50:44Z",
+            "checked_at": "2026-05-27T22:51:37Z",
             "revision": {
               "git": {
-                "head": "4122919c3fc419c36c0119f4569c9143a3f12969",
+                "head": "c011a63605448444267f0335cdd205f11421c451",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -109464,7 +109411,7 @@
                   ".codewiki/kb/system/roadmap.md": "f86b7d6884a99d774d023786e29950c6176d8e5d",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "eaae0def8e9b026d2ea89c9a43f8b1fc3a4cc54b",
+                  ".codewiki/roadmap/queue.json": "7cf0c450052fb2e40389096218ad78509f69ce44",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -109496,7 +109443,7 @@
                   "src/adapters/pi/commands/resume.ts": "da9f9ece9e4a8cab3ad496bd42fd9338df4fb4ce",
                   "src/adapters/pi/commands/status.ts": "bb02b6ac9f177060c74c1af3c8a2c9ba7e91a56e",
                   "src/adapters/pi/commands/ui.ts": "f84a7266f722a098c135984c7fc2cd645fae6603",
-                  "src/adapters/pi/compaction.ts": "c425d5ef21f3c5b490e11a87acdd2b211d753c3a",
+                  "src/adapters/pi/compaction.ts": "451fdc50e5b481cb9495e4e5e3eb5fefb1827bcc",
                   "src/adapters/pi/index.ts": "358429f1ef5bd092a7ae9dd0b7f9176ec8e18dca",
                   "src/adapters/pi/schemas.ts": "97622d8a79fc74eb8bb5a11138d3d72270e88303",
                   "src/adapters/pi/session.ts": "03bedd2e201b6701b6c537b6cd372ef373a0c515",
@@ -109596,7 +109543,6 @@
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "06e648e8fb921c3c458841467bd10080e8265e13",
                   "tests/smoke/builds.test.mjs": "dfac2b847b03545c8188904dd40653c9300b4ca1",
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
-                  "tests/smoke/codewiki-compaction.test.mjs": "33a3961fbe5425651e539c636aeba5bfc4afc4c2",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/hot-retention.test.mjs": "78f34d1b254baa90969b9700ef2200ea0daf14ea",
@@ -109618,15 +109564,15 @@
                 }
               },
               "spec_digest": "c8322b17b0e4a373dc08626c0f933a74e08ed9a250bfdc10fd208e98e996b9a9",
-              "task_digest": "1dc21431e4d0605b21b4155a4535476e25586f599031768ed66b667072630cc0",
-              "code_digest": "d0fc6ec684c2425c21b009c8848011e3847331942831c0e72570d9a6696f1bc6",
-              "digest": "0dbe8a6fe67d2e977ba060038de474ca9a60f1884b523bf75db4dba9484ac072"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "cd5726644eb97bf661f351e418404ccfff98ba5d12c03f231fd667cbf8ac080b",
+              "digest": "6ab3b69c29d800b092fb7d80e5b76f960461d66aad7da945957c77c6ce7dd3c8"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:50:44Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-27T22:51:37Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -109757,7 +109703,6 @@
               "package.json",
               "src/adapters/**",
               "src/ui/**",
-              "tests/smoke/codewiki-compaction.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
               "src/agency",
@@ -109983,17 +109928,12 @@
               "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, src +12 more",
-            "open_task_ids": [
-              "TASK-034"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 32,
-              "tracked_specs": 2,
+              "aligned_specs": 34,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -110018,15 +109958,13 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-27T22:50:44Z",
+            "checked_at": "2026-05-27T22:51:37Z",
             "revision": {
               "git": {
-                "head": "4122919c3fc419c36c0119f4569c9143a3f12969",
+                "head": "c011a63605448444267f0335cdd205f11421c451",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -110053,7 +109991,7 @@
                   ".codewiki/kb/system/roadmap.md": "f86b7d6884a99d774d023786e29950c6176d8e5d",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "eaae0def8e9b026d2ea89c9a43f8b1fc3a4cc54b",
+                  ".codewiki/roadmap/queue.json": "7cf0c450052fb2e40389096218ad78509f69ce44",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -110080,7 +110018,7 @@
                   "src/adapters/pi/commands/resume.ts": "da9f9ece9e4a8cab3ad496bd42fd9338df4fb4ce",
                   "src/adapters/pi/commands/status.ts": "bb02b6ac9f177060c74c1af3c8a2c9ba7e91a56e",
                   "src/adapters/pi/commands/ui.ts": "f84a7266f722a098c135984c7fc2cd645fae6603",
-                  "src/adapters/pi/compaction.ts": "c425d5ef21f3c5b490e11a87acdd2b211d753c3a",
+                  "src/adapters/pi/compaction.ts": "451fdc50e5b481cb9495e4e5e3eb5fefb1827bcc",
                   "src/adapters/pi/index.ts": "358429f1ef5bd092a7ae9dd0b7f9176ec8e18dca",
                   "src/adapters/pi/schemas.ts": "97622d8a79fc74eb8bb5a11138d3d72270e88303",
                   "src/adapters/pi/session.ts": "03bedd2e201b6701b6c537b6cd372ef373a0c515",
@@ -110178,7 +110116,6 @@
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "06e648e8fb921c3c458841467bd10080e8265e13",
                   "tests/smoke/builds.test.mjs": "dfac2b847b03545c8188904dd40653c9300b4ca1",
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
-                  "tests/smoke/codewiki-compaction.test.mjs": "33a3961fbe5425651e539c636aeba5bfc4afc4c2",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/hot-retention.test.mjs": "78f34d1b254baa90969b9700ef2200ea0daf14ea",
@@ -110200,15 +110137,15 @@
                 }
               },
               "spec_digest": "212d8e2df2eb38e5926d297c42ec0d677c43164bde8561170e20ec245ca2ed9e",
-              "task_digest": "1dc21431e4d0605b21b4155a4535476e25586f599031768ed66b667072630cc0",
-              "code_digest": "c02430bf065fd7d77847ce96bd365240db26ce8097ae4987c746566cf1b8a05d",
-              "digest": "0577d9c94ec01204bb21cd8e42c389b80177fdbc5dcaaed01e42574ec2160e5f"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "90713db64e45645228b5d3ad16e8bd1789c883aa3b86abedbfeff98063464c02",
+              "digest": "36573625d8edf4495131d0a5fc05af6becb5321037768cf5d15dc77008780951"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:50:44Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-27T22:51:37Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -110235,8 +110172,6 @@
             "code_paths": [
               "src/adapters/**",
               "src/ui/**",
-              "src/adapters/pi/compaction.ts",
-              "tests/smoke/codewiki-compaction.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
               "src/adapters/pi/schemas.ts",
@@ -110378,6 +110313,7 @@
               "src/domain/state/types.ts",
               "src/adapters/pi/tools/state.ts",
               "src/adapters/pi/tools/resume-context.ts",
+              "src/adapters/pi/compaction.ts",
               "tests/setup-env.mjs",
               "src/application/ports.ts (deleted)",
               "src/domain/shared/types.ts (deleted)",
@@ -110541,18 +110477,13 @@
               ".codewiki/kb/**/*.yaml",
               "src/adapters/pi/tools"
             ],
-            "code_area": "src, tests +12 more",
-            "open_task_ids": [
-              "TASK-034"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md"
-            ],
+            "code_area": "src, scripts +12 more",
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 19,
-              "aligned_specs": 17,
-              "tracked_specs": 2,
+              "aligned_specs": 19,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -110577,15 +110508,13 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-27T22:50:44Z",
+            "checked_at": "2026-05-27T22:51:37Z",
             "revision": {
               "git": {
-                "head": "4122919c3fc419c36c0119f4569c9143a3f12969",
+                "head": "c011a63605448444267f0335cdd205f11421c451",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -110628,7 +110557,7 @@
                   ".codewiki/kb/system/roadmap.md": "f86b7d6884a99d774d023786e29950c6176d8e5d",
                   ".codewiki/kb/system/validation-gateway.md": "c90ca66a3bccf2909ef66f1f7944afb34924119e",
                   ".codewiki/kb/system/worktree-isolation.md": "5f9fa536768ca8a62e1a4413c4fed2ecabea10b4",
-                  ".codewiki/roadmap/queue.json": "eaae0def8e9b026d2ea89c9a43f8b1fc3a4cc54b",
+                  ".codewiki/roadmap/queue.json": "7cf0c450052fb2e40389096218ad78509f69ce44",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   "README.md": "b9000fe85b03e6bc0b6e4b60c1df06f67dc35735",
@@ -110660,7 +110589,7 @@
                   "src/adapters/pi/commands/resume.ts": "da9f9ece9e4a8cab3ad496bd42fd9338df4fb4ce",
                   "src/adapters/pi/commands/status.ts": "bb02b6ac9f177060c74c1af3c8a2c9ba7e91a56e",
                   "src/adapters/pi/commands/ui.ts": "f84a7266f722a098c135984c7fc2cd645fae6603",
-                  "src/adapters/pi/compaction.ts": "c425d5ef21f3c5b490e11a87acdd2b211d753c3a",
+                  "src/adapters/pi/compaction.ts": "451fdc50e5b481cb9495e4e5e3eb5fefb1827bcc",
                   "src/adapters/pi/index.ts": "358429f1ef5bd092a7ae9dd0b7f9176ec8e18dca",
                   "src/adapters/pi/schemas.ts": "97622d8a79fc74eb8bb5a11138d3d72270e88303",
                   "src/adapters/pi/session.ts": "03bedd2e201b6701b6c537b6cd372ef373a0c515",
@@ -110760,7 +110689,6 @@
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "06e648e8fb921c3c458841467bd10080e8265e13",
                   "tests/smoke/builds.test.mjs": "dfac2b847b03545c8188904dd40653c9300b4ca1",
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
-                  "tests/smoke/codewiki-compaction.test.mjs": "33a3961fbe5425651e539c636aeba5bfc4afc4c2",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/hot-retention.test.mjs": "78f34d1b254baa90969b9700ef2200ea0daf14ea",
@@ -110782,15 +110710,15 @@
                 }
               },
               "spec_digest": "c8322b17b0e4a373dc08626c0f933a74e08ed9a250bfdc10fd208e98e996b9a9",
-              "task_digest": "1dc21431e4d0605b21b4155a4535476e25586f599031768ed66b667072630cc0",
-              "code_digest": "d0fc6ec684c2425c21b009c8848011e3847331942831c0e72570d9a6696f1bc6",
-              "digest": "0dbe8a6fe67d2e977ba060038de474ca9a60f1884b523bf75db4dba9484ac072"
+              "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+              "code_digest": "cd5726644eb97bf661f351e418404ccfff98ba5d12c03f231fd667cbf8ac080b",
+              "digest": "6ab3b69c29d800b092fb7d80e5b76f960461d66aad7da945957c77c6ce7dd3c8"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-27T22:50:44Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-27T22:51:37Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -110921,7 +110849,6 @@
               "package.json",
               "src/adapters/**",
               "src/ui/**",
-              "tests/smoke/codewiki-compaction.test.mjs",
               "src/application/tools/session-handoff.ts",
               "src/adapters/pi/tools/session-handoff.ts",
               "src/agency",
@@ -111147,17 +111074,12 @@
               "src/adapters/pi/tools"
             ],
             "code_area": ".codewiki, src +12 more",
-            "open_task_ids": [
-              "TASK-034"
-            ],
-            "risky_spec_paths": [
-              ".codewiki/kb/system/adapters.md",
-              ".codewiki/kb/system/agency.md"
-            ],
+            "open_task_ids": [],
+            "risky_spec_paths": [],
             "stats": {
               "total_specs": 34,
-              "aligned_specs": 32,
-              "tracked_specs": 2,
+              "aligned_specs": 34,
+              "tracked_specs": 0,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -111171,19 +111093,19 @@
         ]
       },
       "resume": {
-        "source": "task",
-        "task_id": "TASK-034",
-        "lane_id": "",
-        "heading": "TASK-034 — Debounce context refresh deferred warnings",
-        "command": "/wiki-resume TASK-034",
-        "reason": "Resume roadmap task (in_progress).",
+        "source": "agency",
+        "task_id": "",
+        "lane_id": "product_system",
+        "heading": "Product ↔ System",
+        "command": "/wiki-status",
+        "reason": "Resume from stale agency lane.",
         "status": "in_progress",
-        "verification": "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Roadmap task should stay grounded in current agency cues."
+        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-27T22:50:44Z",
+        "generated_at": "2026-05-27T22:51:37Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -111352,136 +111274,6 @@
       },
       "wiki": {
         "rows": [
-          {
-            "path": ".codewiki/kb/system/adapters.md",
-            "title": "Adapters",
-            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/**",
-              "src/ui/**",
-              "src/adapters/pi/compaction.ts",
-              "tests/smoke/codewiki-compaction.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, tests",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-034"
-            ],
-            "primary_task": {
-              "id": "TASK-034",
-              "status": "in_progress",
-              "title": "Debounce context refresh deferred warnings"
-            },
-            "revision": {
-              "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-034"
-          },
-          {
-            "path": ".codewiki/kb/system/agency.md",
-            "title": "Agency Controller",
-            "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/agency",
-              "src/project/types.ts",
-              "src/adapters/pi",
-              "src/state/resume-context.ts",
-              "src/project/context.ts",
-              "src/project/root.ts",
-              "src/project/bootstrap.ts",
-              "src/project/tool.ts",
-              "src/project/templates.ts",
-              "src/project/local/filesystem.ts",
-              "src/project/local/file-store.ts",
-              "src/project/local/git-cache.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/change/types.ts",
-              "src/change/traceability.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "src/gc/types.ts",
-              "src/gc/runtime.ts",
-              "src/gc/tool.ts",
-              "src/session/types.ts",
-              "src/session/links.ts",
-              "src/session/worktree-isolation.ts",
-              "src/session/runtime.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "src/roadmap/types.ts",
-              "src/roadmap/status.ts",
-              "src/roadmap/task-id.ts",
-              "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "src/roadmap/tool.ts",
-              "src/state/types.ts",
-              "src/state/reader.ts",
-              "src/state/artifacts.ts",
-              "src/state/builders.ts",
-              "src/state/rebuild.ts",
-              "src/state/graph.ts",
-              "src/state/graph/rebuilder.ts",
-              "src/state/lint.ts",
-              "src/state/prompt.ts",
-              "src/state/skill-assets.ts",
-              "src/state/local/rebuild-runner.ts",
-              "src/state/local/status-dock-prefs.ts",
-              "src/state/tool.ts",
-              "src/state/resume-tool.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "src/shared/ports.ts",
-              "src/shared/utils.ts",
-              "src/shared/lock.ts",
-              "src/index.ts",
-              "scripts/check-architecture.mjs",
-              "tests/tasks/TASK-076/restructure.test.mjs",
-              "src/agency/types.ts",
-              "src/agency/planning.ts",
-              "src/adapters/pi/commands/config.ts",
-              "src/adapters/pi/compaction.ts",
-              "tests/smoke/codewiki-compaction.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
-              "src/adapters/pi/schemas.ts"
-            ],
-            "code_area": "src, scripts +1 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-034"
-            ],
-            "primary_task": {
-              "id": "TASK-034",
-              "status": "in_progress",
-              "title": "Debounce context refresh deferred warnings"
-            },
-            "revision": {
-              "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-034"
-          },
           {
             "path": ".codewiki/kb/lexicon.md",
             "title": "Lexicon",
@@ -112046,6 +111838,120 @@
             "primary_task": null,
             "revision": {
               "digest": "77b79518df7afd80bcec491cd8ee2047ea29be1789ce5a747a6746e670558dd4",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/adapters.md",
+            "title": "Adapters",
+            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/**",
+              "src/ui/**",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src +8 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/agency.md",
+            "title": "Agency Controller",
+            "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/agency",
+              "src/project/types.ts",
+              "src/adapters/pi",
+              "src/state/resume-context.ts",
+              "src/project/context.ts",
+              "src/project/root.ts",
+              "src/project/bootstrap.ts",
+              "src/project/tool.ts",
+              "src/project/templates.ts",
+              "src/project/local/filesystem.ts",
+              "src/project/local/file-store.ts",
+              "src/project/local/git-cache.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/change/types.ts",
+              "src/change/traceability.ts",
+              "src/change/diff-table.ts",
+              "src/change/tool.ts",
+              "src/gc/types.ts",
+              "src/gc/runtime.ts",
+              "src/gc/tool.ts",
+              "src/session/types.ts",
+              "src/session/links.ts",
+              "src/session/worktree-isolation.ts",
+              "src/session/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/roadmap/types.ts",
+              "src/roadmap/status.ts",
+              "src/roadmap/task-id.ts",
+              "src/roadmap/task-boundary.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
+              "src/roadmap/tool.ts",
+              "src/state/types.ts",
+              "src/state/reader.ts",
+              "src/state/artifacts.ts",
+              "src/state/builders.ts",
+              "src/state/rebuild.ts",
+              "src/state/graph.ts",
+              "src/state/graph/rebuilder.ts",
+              "src/state/lint.ts",
+              "src/state/prompt.ts",
+              "src/state/skill-assets.ts",
+              "src/state/local/rebuild-runner.ts",
+              "src/state/local/status-dock-prefs.ts",
+              "src/state/tool.ts",
+              "src/state/resume-tool.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "src/shared/ports.ts",
+              "src/shared/utils.ts",
+              "src/shared/lock.ts",
+              "src/index.ts",
+              "scripts/check-architecture.mjs",
+              "tests/tasks/TASK-076/restructure.test.mjs",
+              "src/agency/types.ts",
+              "src/agency/planning.ts",
+              "src/adapters/pi/commands/config.ts",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
+              "src/adapters/pi/schemas.ts"
+            ],
+            "code_area": "src, scripts +1 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -114333,15 +114239,72 @@
             "label": "System",
             "rows": [
               {
+                "path": ".codewiki/kb/lexicon.md",
+                "title": "Lexicon",
+                "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/builds/decision/**",
+                  ".codewiki/builds/implementation/**",
+                  ".codewiki/builds/planning/**",
+                  ".codewiki/index_graph.json",
+                  ".codewiki/kb/**",
+                  ".codewiki/kb/product/uis/**",
+                  ".codewiki/kb/system/adapters.md",
+                  ".codewiki/kb/system/api.md",
+                  ".codewiki/session/queue.json",
+                  ".codewiki/validation/**",
+                  "src/domain/shared/types.ts",
+                  "src/domain/shared/session.ts",
+                  "src/application/builds.ts",
+                  "src/application/lint.ts",
+                  "src/application/graph.ts",
+                  "src/application/graph/rebuilder.ts",
+                  "src/application/agency.ts",
+                  "src/application/diff-table.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/templates.ts",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-decision/references/tools.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-planning/references/tools.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-implementation/references/tools.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "README.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/state/graph.ts",
+                  "src/state/lint.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": ".codewiki, src +2 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/adapters.md",
                 "title": "Adapters",
                 "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-                "drift_status": "tracked",
+                "drift_status": "aligned",
                 "code_paths": [
                   "src/adapters/**",
                   "src/ui/**",
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs",
                   "src/application/tools/session-handoff.ts",
                   "src/adapters/pi/tools/session-handoff.ts",
                   "src/adapters/pi/schemas.ts",
@@ -114350,31 +114313,25 @@
                   "src/state/lint.ts",
                   "src/project/templates.ts"
                 ],
-                "code_area": "src, tests",
+                "code_area": "src +8 more",
                 "issue_counts": {
                   "errors": 0,
                   "warnings": 0,
                   "total": 0
                 },
-                "related_task_ids": [
-                  "TASK-034"
-                ],
-                "primary_task": {
-                  "id": "TASK-034",
-                  "status": "in_progress",
-                  "title": "Debounce context refresh deferred warnings"
-                },
+                "related_task_ids": [],
+                "primary_task": null,
                 "revision": {
                   "digest": "52b6eea52494b5e5431496a1f22ebfa7221c0572941d05e186a50b207d5c81fe",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-034"
+                "note": "no deterministic drift signals"
               },
               {
                 "path": ".codewiki/kb/system/agency.md",
                 "title": "Agency Controller",
                 "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
-                "drift_status": "tracked",
+                "drift_status": "aligned",
                 "code_paths": [
                   "src/agency",
                   "src/project/types.ts",
@@ -114436,8 +114393,6 @@
                   "src/agency/types.ts",
                   "src/agency/planning.ts",
                   "src/adapters/pi/commands/config.ts",
-                  "src/adapters/pi/compaction.ts",
-                  "tests/smoke/codewiki-compaction.test.mjs",
                   "src/application/tools/session-handoff.ts",
                   "src/adapters/pi/tools/session-handoff.ts",
                   "src/adapters/pi/schemas.ts"
@@ -114448,75 +114403,10 @@
                   "warnings": 0,
                   "total": 0
                 },
-                "related_task_ids": [
-                  "TASK-034"
-                ],
-                "primary_task": {
-                  "id": "TASK-034",
-                  "status": "in_progress",
-                  "title": "Debounce context refresh deferred warnings"
-                },
-                "revision": {
-                  "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-034"
-              },
-              {
-                "path": ".codewiki/kb/lexicon.md",
-                "title": "Lexicon",
-                "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
-                "drift_status": "aligned",
-                "code_paths": [
-                  ".codewiki/builds/decision/**",
-                  ".codewiki/builds/implementation/**",
-                  ".codewiki/builds/planning/**",
-                  ".codewiki/index_graph.json",
-                  ".codewiki/kb/**",
-                  ".codewiki/kb/product/uis/**",
-                  ".codewiki/kb/system/adapters.md",
-                  ".codewiki/kb/system/api.md",
-                  ".codewiki/session/queue.json",
-                  ".codewiki/validation/**",
-                  "src/domain/shared/types.ts",
-                  "src/domain/shared/session.ts",
-                  "src/application/builds.ts",
-                  "src/application/lint.ts",
-                  "src/application/graph.ts",
-                  "src/application/graph/rebuilder.ts",
-                  "src/application/agency.ts",
-                  "src/application/diff-table.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/templates.ts",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-decision/references/tools.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-planning/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-implementation/references/tools.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "skills/codewiki-validation/references/tools.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "skills/codewiki/prompts/resume-implementation.md",
-                  "README.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/state/graph.ts",
-                  "src/state/lint.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": ".codewiki, src +2 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
                 "related_task_ids": [],
                 "primary_task": null,
                 "revision": {
-                  "digest": "eba5e725fef927b0525a128e2fc5f0be84ebf2566220cbfb5f689a6760c4e8ec",
+                  "digest": "fa9d69b2daef7b2f410745804728baf2a426cd0953ac158b7106dbdb83fe654f",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -116292,12 +116182,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-034",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-034"
-        ],
-        "next_task_id": "TASK-034",
+        "in_progress_task_ids": [],
+        "next_task_id": "",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -116498,9 +116386,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-034"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
