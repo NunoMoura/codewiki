@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T21:22:28.939Z",
+  "generated_at": "2026-05-28T21:24:48.576Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -28916,156 +28916,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-208",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-208",
-      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-      "expires_at": "2026-05-28T21:32:47.417Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-041"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/api.md"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/index.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/schemas.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/commands/audit.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/commands/config.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/commands/status.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/commands/ui.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/compaction.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/artifact-wake.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/package-smoke.test.mjs"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/codewiki-compaction.test.mjs"
-        },
-        {
-          "layer": "build",
-          "description": "TASK-041 implementation build"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-041",
-      "kind": "change_claim_scope",
-      "path": "TASK-041",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/api.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/api.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/index.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/index.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/schemas.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/schemas.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/audit.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/audit.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/config.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/config.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/status.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/status.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/ui.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/ui.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/compaction.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/compaction.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/artifact-wake.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/artifact-wake.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/package-smoke.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/codewiki-compaction.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/codewiki-compaction.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-041 implementation build",
-      "kind": "change_claim_scope",
-      "path": "TASK-041 implementation build",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -90450,76 +90300,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-208",
-      "to": "task:TASK-041"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:TASK-041"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:.codewiki/kb/system/api.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/index.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/schemas.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/commands/audit.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/commands/config.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/commands/status.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/commands/ui.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:src/adapters/pi/artifact-wake.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:tests/smoke/codewiki-compaction.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-208",
-      "to": "claim_scope:TASK-041 implementation build"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -101454,7 +101234,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 31,
+            "item_count": 17,
             "badges": [
               {
                 "id": "open_tasks",
@@ -101489,7 +101269,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -102467,88 +102247,6 @@
           }
         ],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-            ],
-            "gaps": []
-          },
           {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
@@ -114740,813 +114438,25 @@
       ]
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-208",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-041",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-208",
-          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-          "task_id": "TASK-041",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-041"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/api.md"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/index.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/audit.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/config.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/status.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/ui.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/artifact-wake.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/codewiki-compaction.test.mjs"
-            },
-            {
-              "layer": "build",
-              "description": "TASK-041 implementation build"
-            }
-          ],
-          "created_at": "2026-05-28T19:32:47Z",
-          "updated_at": "2026-05-28T19:32:47Z",
-          "expires_at": "2026-05-28T21:32:47.417Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/api.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/artifact-wake.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/audit.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/config.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/status.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/ui.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/index.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-041"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-041 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/codewiki-compaction.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/api.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/artifact-wake.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/audit.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/config.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/status.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/ui.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/index.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/schemas.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-041"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-041 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/codewiki-compaction.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-208",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-041",
-              "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-              "expires_at": "2026-05-28T21:32:47.417Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -125850,88 +124760,6 @@
       ],
       "semantic_change_rows": [
         {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-          ],
-          "gaps": []
-        },
-        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -126768,9 +125596,7 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-208"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -127934,7 +126760,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T21:22:28.809Z",
+      "generated_at": "2026-05-28T21:24:48.439Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 3
@@ -127968,7 +126794,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T21:22:28Z",
+      "generated_at": "2026-05-28T21:24:48Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -129241,7 +128067,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T21:22:29Z",
+      "generated_at": "2026-05-28T21:24:48Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -129390,9 +128216,7 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-208"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -129625,7 +128449,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -132570,7 +131394,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T21:22:29Z",
+        "generated_at": "2026-05-28T21:24:48Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -132625,13 +131449,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T21:22:28Z",
+            "checked_at": "2026-05-28T21:24:48Z",
             "revision": {
               "git": {
-                "head": "cd2c3a33b8198d383016b860e0c116baaffa8bb5",
+                "head": "e87fd03265fa0ec7da5e720192ca58cfc665879b",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -132680,7 +131503,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5c15e3c189915cc44cf5e54ddbdb5cbbe72b4eae",
+                  ".codewiki/roadmap/queue.json": "137440c763858dff60ae81957df13a81cb7e03b6",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -132854,15 +131677,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "1ca79959466355561617637744b4380a6826a4ca9b6a2101c1bfb275c341afa0",
-              "code_digest": "5942a890502994d996d209f4006f23de785256d90c9fc0fd411cb0a0a7240529",
-              "digest": "a6cb31318f938b4aa49e668c26fe72012a8de4f2f9b2a8c8b2cf3732ef82c05a"
+              "code_digest": "5e879969320f938e5acb44c7ad46246214257ef9b79bd2a434c1ac834c056744",
+              "digest": "0865fea8083c701495a10895d754d2e0e562b341b98aba6ec569b4eb4b74365d"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T21:22:28Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T21:24:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -133287,13 +132110,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T21:22:28Z",
+            "checked_at": "2026-05-28T21:24:48Z",
             "revision": {
               "git": {
-                "head": "cd2c3a33b8198d383016b860e0c116baaffa8bb5",
+                "head": "e87fd03265fa0ec7da5e720192ca58cfc665879b",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -133326,7 +132148,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5c15e3c189915cc44cf5e54ddbdb5cbbe72b4eae",
+                  ".codewiki/roadmap/queue.json": "137440c763858dff60ae81957df13a81cb7e03b6",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -133493,15 +132315,15 @@
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
               "task_digest": "1ca79959466355561617637744b4380a6826a4ca9b6a2101c1bfb275c341afa0",
-              "code_digest": "d4a4e328b8f48cce8869ba6f2bf270d6b9038ae57891352b41aa5015422fba88",
-              "digest": "966823a31f128a615459359f30890791ff38d3cf6423801005735f353e6be95f"
+              "code_digest": "9a8cec22c1fb6593d26ab6eee2c926bdf553a1c88b1b22bd125fa24846ce3c42",
+              "digest": "5a7c5136e98dd80579c59222800439b63f115b35e54b5665121ad429b33c845e"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T21:22:28Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T21:24:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/file-structure.md",
@@ -133902,13 +132724,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T21:22:29Z",
+            "checked_at": "2026-05-28T21:24:48Z",
             "revision": {
               "git": {
-                "head": "cd2c3a33b8198d383016b860e0c116baaffa8bb5",
+                "head": "e87fd03265fa0ec7da5e720192ca58cfc665879b",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -133957,7 +132778,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5c15e3c189915cc44cf5e54ddbdb5cbbe72b4eae",
+                  ".codewiki/roadmap/queue.json": "137440c763858dff60ae81957df13a81cb7e03b6",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -134131,15 +132952,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "1ca79959466355561617637744b4380a6826a4ca9b6a2101c1bfb275c341afa0",
-              "code_digest": "5942a890502994d996d209f4006f23de785256d90c9fc0fd411cb0a0a7240529",
-              "digest": "a6cb31318f938b4aa49e668c26fe72012a8de4f2f9b2a8c8b2cf3732ef82c05a"
+              "code_digest": "5e879969320f938e5acb44c7ad46246214257ef9b79bd2a434c1ac834c056744",
+              "digest": "0865fea8083c701495a10895d754d2e0e562b341b98aba6ec569b4eb4b74365d"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T21:22:29Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T21:24:48Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -134565,446 +133386,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T21:22:29Z",
+        "generated_at": "2026-05-28T21:24:48Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-208",
-            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-            "task_id": "TASK-041",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-041"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/api.md"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/index.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/schemas.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/commands/audit.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/commands/config.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/commands/status.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/commands/ui.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/compaction.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/artifact-wake.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/package-smoke.test.mjs"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/codewiki-compaction.test.mjs"
-              },
-              {
-                "layer": "build",
-                "description": "TASK-041 implementation build"
-              }
-            ],
-            "created_at": "2026-05-28T19:32:47Z",
-            "updated_at": "2026-05-28T19:32:47Z",
-            "expires_at": "2026-05-28T21:32:47.417Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/api.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/artifact-wake.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/audit.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/config.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/status.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/ui.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/index.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/schemas.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-041"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "description": "TASK-041 implementation build"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/codewiki-compaction.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-208",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-041",
-                "summary": "Clean adapter schemas and command helpers without schema/command behavior drift.",
-                "expires_at": "2026-05-28T21:32:47.417Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-041; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-208 release or validated publisher/patch ref for codewiki/TASK-041/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
