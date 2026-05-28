@@ -1,0 +1,70 @@
+{
+  "id": "TASK-038",
+  "title": "Enforce compiler promotion gates and gateway boundaries",
+  "status": "in_progress",
+  "priority": "critical",
+  "kind": "architecture",
+  "summary": "Add mechanical preflight enforcement for decision/planning/implementation promotion gates while preserving gateway/audit boundary safety fixes.",
+  "spec_paths": [
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/builds.md",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+  ],
+  "code_paths": [
+    "src/build",
+    "src/validation",
+    "src/gateway",
+    "src/audit",
+    "src/roadmap",
+    "src/state/resume-context.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-validation/SKILL.md",
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/audit.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "pipeline-gates",
+    "decision-gateway-required",
+    "planning-gateway-required",
+    "promotion-preflight",
+    "ambiguity-backrouting",
+    "gateway-audit-hardening"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "CodeWiki blocks lower-layer promotion and routes ambiguity back to decision when required upstream evidence is missing, stale, failed, blocked, or semantically incomplete.",
+    "acceptance": [
+      "Planning preflight requires a decision_build plus decision-gateway pass unless the change declares and validates a mechanical/runtime/generated exemption.",
+      "Implementation/resume preflight requires a planning_build plus planning-gateway pass before selecting an executable roadmap task.",
+      "Ambiguous lower-loop cases block and route to decision with deterministic decision-question evidence instead of agent inference.",
+      "Task close/publication still requires implementation validation/content proof and is not weakened by the new checks.",
+      "Gateway/audit dynamic-regex and boundary safety findings remain addressed or explicitly covered by the same validation path.",
+      "Smoke tests prove missing, stale, failed, blocked, and ambiguous upstream evidence prevents promotion while valid upstream-pass paths continue."
+    ],
+    "non_goals": [
+      "Do not implement UI approval surfaces in this task.",
+      "Do not implement agency runner automation in this task.",
+      "Do not implement production quality thresholds in this task beyond preserving existing validation proof requirements."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "targeted validation-preflight/builds/resume scheduler tests",
+      "rerun relevant dynamic-regexp/gateway review checks"
+    ]
+  },
+  "delta": {
+    "desired": "Promotion gates and ambiguity back-routes are enforced by preflight/tool/runtime checks, not only by agent instructions.",
+    "current": "Docs require gated loop order and ambiguity routing, but tools can still create or consume lower-layer artifacts without hard upstream gateway proof.",
+    "closure": "Task closes when tests prove invalid promotion paths block and valid upstream-pass paths continue."
+  },
+  "created": "2026-05-28",
+  "updated": "2026-05-28T03:40:00Z"
+}

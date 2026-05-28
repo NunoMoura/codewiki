@@ -24,7 +24,7 @@ code_paths_mode: explicit_override
 
 Role worktree isolation prevents parallel CodeWiki agents from blocking each other through a shared dirty root worktree. It is a coordination and publication contract layered on top of roadmap tasks, artifact status, validation, and Git proof.
 
-The repository root remains the coordination and publisher surface unless an explicit solo-mode override is safe. Builder, validator, publisher, and cleanup roles should use per-task role worktrees or branch refs for parallel write work.
+The repository root remains the coordination and publisher surface unless an explicit solo-mode override is safe. Builder, validator, publisher, and cleanup roles should use per-task role worktrees or branch refs for parallel write work. A parallel scheduler may allocate one worker per non-conflicting sprint or task only after comparing declared write scopes, acquiring artifact claims, and assigning isolated role refs.
 
 ## Worktree factory
 
@@ -50,7 +50,7 @@ validator worktree -> immutable validation proof
 publisher role -> merge/ref apply -> generated-state refresh -> commit/tree proof
 ```
 
-The publisher serializes final merge, generated CodeWiki state updates, commit creation, and clean proof. Task-close, publication, publish, release, and tracked GC gates consume the publisher result instead of waiting for an unrelated shared-root dirty state to clear.
+The publisher serializes final merge, generated CodeWiki state updates, commit creation, and clean proof. Task-close, publication, publish, release, and tracked GC gates consume the publisher result instead of waiting for an unrelated shared-root dirty state to clear. Parallel sprint agents must not close tasks or publish from their worker roots until the publisher queue records the accepted merge/content proof.
 
 ## Wait and wake records
 

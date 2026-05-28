@@ -23,7 +23,7 @@ decision -> decision_build -> validation
     -> implementation -> implementation_build -> validation/publication
 ```
 
-The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Gateway verdicts validate each handoff and route failures to the smallest loop that can fix them. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
+The arrows are promotion gates, not a one-way-only pipeline. The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Gateway verdicts validate each handoff, and any loop can route backward to the smallest upstream loop that can resolve missing semantics, failed evidence, or policy ambiguity. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
 
 ## Alignment cycles
 
@@ -39,7 +39,7 @@ The decision loop captures user intent critically. It helps the agent and user f
 
 It should surface tradeoffs, blind spots, pitfalls, simpler alternatives, conflicts with current truth, affected layers, focused questions, and blunt disagreement when the requested direction harms the project.
 
-The decision loop presents a Change row table before canonical edits. Each Change row shows current state, desired state, rationale, affected layers, risk, and a user action such as approve, edit, reject, or defer. Below the table, the agent should provide a first-principles assessment in the best interest of the project. Approved Change rows and accepted assessment compile into a `decision_build`.
+The decision loop presents a Change row table before canonical edits. Each Change row shows current state, desired state, rationale, affected layers, risk, and a user action such as approve, edit, reject, or defer. In interactive adapters, this approval surface should be an inline UI with row-level actions rather than prose-only chat. Below the table, the agent should provide a first-principles assessment in the best interest of the project. Approved Change rows and accepted assessment compile into a `decision_build`.
 
 Pending, rejected, or deferred Change rows can remain in runtime/session UI state or be summarized as open questions, non-goals, or future candidates. They must not silently become downstream requirements.
 
@@ -56,7 +56,7 @@ Product intent updates product knowledge first, then system impact. System inten
 
 ## Planning loop
 
-The planning loop consumes a validated `decision_build` and aligns roadmap work with the updated knowledge. It produces a `planning_build` as the implementation-context handoff.
+The planning loop consumes a decision-gateway-passed `decision_build` and aligns roadmap work with the updated knowledge. It produces a `planning_build` as the implementation-context handoff. If planning finds a requirement that is not unequivocally defined in the accepted decision build and knowledge base, it must route back to the decision loop instead of guessing.
 
 The planning loop identifies executable requirements, creates or refines roadmap tasks without duplicating full briefs, defines outcome/acceptance/non-goals/verification/blockers, proposes candidate code/test paths, outlines TDD or test-design strategy, maps acceptance to requirement ids and knowledge refs, and preserves active task ids when intent refines existing work.
 
@@ -68,7 +68,7 @@ Planning is the boundary between knowledge alignment and executable work. It is 
 
 ## Implementation loop
 
-The implementation loop consumes a validated `planning_build`, linked knowledge, and roadmap work item state. It creates or updates tests and code, runs checks, collects evidence, and produces an `implementation_build` with a compact closure brief for user review and publication.
+The implementation loop consumes a planning-gateway-passed `planning_build`, linked knowledge, and roadmap work item state. It creates or updates tests and code, runs checks, collects evidence, and produces an `implementation_build` with a compact closure brief for user review and publication. If implementation finds missing or ambiguous intent not covered by the accepted decision/planning evidence, it must block the lower loop and route a decision question back to the user.
 
 The implementation loop is TDD-aligned where practical:
 
@@ -98,7 +98,7 @@ When CodeWiki uses CodeWiki to refactor itself:
 
 ## Gated agency
 
-Gated agency may advance roadmap work automatically by invoking compiler cycles inside explicit token, time, cost, write, session, risk, validation, policy, configured agency level, and approval gates. The agency mechanism selects bounded steps and may continue from task to sprint to roadmap scope only when the user-approved agency level allows that cadence. Task level stops after one task, sprint level may continue through the active sprint, and roadmap level may continue across active roadmap work until completion, budget exhaustion, or a hard gate.
+Gated agency may advance roadmap work automatically by invoking compiler cycles inside explicit token, time, cost, write, session, risk, validation, policy, configured agency level, and approval gates. The agency mechanism selects bounded steps, acquires coordination claims, runs the needed compiler, submits gateway validation, uses CodeWiki-owned compaction or session boundaries when useful, and may continue from task to sprint to roadmap scope only when the user-approved agency level allows that cadence. Task level stops after one task, sprint level may continue through the active sprint, and roadmap level may continue across active roadmap work until completion, budget exhaustion, or a hard gate.
 
 Compilers remain deterministic build producers. They do not own autonomous scheduling, budget policy, or publication approval.
 

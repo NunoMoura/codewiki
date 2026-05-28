@@ -20,7 +20,7 @@ The gateway does not define requirements, write canonical truth, create plans, c
 
 A gateway run should receive the build path/kind, policy profile, requirement ids, exit criteria, source refs, evidence mapping, graph/state routing context, required audits, content proof, check results, and required isolation data.
 
-When a gateway returns `fail` or `block`, it classifies the failure and recommends the smallest safe next loop. The gateway inspects only enough source truth to decide; the next compiler cycle owns any revised build.
+When a gateway returns `fail` or `block`, it classifies the failure and recommends the smallest safe next loop. The gateway inspects only enough source truth to decide; the next compiler cycle owns any revised build. Lower-layer promotion is not allowed while an upstream build is missing, stale, failed, blocked, or not yet validated by its required gateway profile.
 
 ## Gate points
 
@@ -62,13 +62,15 @@ Vertical alignment traces work across layers:
 user intent -> decision_build -> knowledge/diagrams -> planning_build -> roadmap task -> tests/code -> implementation_build
 ```
 
+This trace is bidirectional for routing. When planning or implementation exposes ambiguous or missing intent, the gateway routes back to decision; when implementation exposes task-boundary or propagation gaps, it routes back to planning; when evidence or content proof is missing, it routes back to the local producer or validation proof step.
+
 Horizontal alignment checks coherence inside one layer: docs with docs, planning with roadmap, tasks with tasks, code with code, tests with intended behavior, and builds with their source layer/policy. Requirement ids and evidence mappings should use explicit refs over prose similarity. Graph context helps routing and freshness; canonical sources and content proof remain authoritative.
 
 ## Planning validation
 
 For planning builds, the gateway validates decision propagation before implementation can consume the plan. Every accepted decision row, requirement, and downstream planning question that has executable impact must map to one of: knowledge-only completion, roadmap task, sprint/cohort metadata, or explicit deferral with owner, trigger, and rationale. A planning build that leaves accepted work only in open questions, assumptions, or chat memory fails or blocks.
 
-Planning validation should require a row-to-roadmap propagation map for semantic decisions. If a first atomic task is valid but other accepted rows remain, the gateway may pass only when those other rows are represented by durable sprint metadata, follow-up tasks, or an explicit deferred state. Otherwise the producing planner must create a superseding planning build and iterate until the gateway passes.
+Planning validation should require a row-to-roadmap propagation map for semantic decisions. If a first atomic task is valid but other accepted rows remain, the gateway may pass only when those other rows are represented by durable sprint metadata, follow-up tasks, or an explicit deferred state. Otherwise the producing planner must create a superseding planning build and iterate until the gateway passes. Roadmap tasks and resume contexts created before planning validation are not implementation-consumable until the planning gateway has passed or a documented mechanical/runtime exemption applies.
 
 Task-close and roadmap-empty contexts should also consider residual accepted-decision propagation. If closing a task leaves no open roadmap work while an accepted decision still has unmapped executable rows or downstream planning questions, the gateway routes back to planning instead of treating the roadmap as complete.
 
@@ -77,7 +79,8 @@ Task-close and roadmap-empty contexts should also consider residual accepted-dec
 For vNext decision builds, the gateway validates that:
 
 - every semantic KB change maps to an approved decision row,
-- every approved row is reflected in product/system knowledge or explicitly deferred with rationale,
+- every approved row has an explicit approved, rejected, deferred, or edited user action and pending rows are not promoted,
+- every approved row is reflected in product/system knowledge or explicitly deferred/no-op with owner, trigger, rationale, and diagram impact evidence,
 - product-first changes include system-impact or no-system-impact evidence,
 - system-first changes include product-impact or no-product-impact evidence,
 - system docs changed by the decision have valid diagram refs once the diagram-ref migration is enabled,

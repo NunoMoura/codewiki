@@ -20,13 +20,13 @@ Roadmap garbage collection is post-commit. Task or sprint closure first produces
 
 ## Planning-loop ownership
 
-The planning loop owns roadmap alignment. It consumes a validated `decision_build` and produces a `planning_build` that creates or refines executable roadmap tasks.
+The planning loop owns roadmap alignment. It consumes a decision-gateway-passed `decision_build` and produces a `planning_build` that creates or refines executable roadmap tasks. If planning discovers unclear intent or a missing requirement, it routes a decision question back to the user instead of creating tasks from an assumption.
 
-A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly.
+A planning build decides which requirements need work, whether to refine active tasks or create a new one, task outcomes and acceptance, candidate files, TDD strategy, and requirement-to-task/test traceability. Documentation builds update knowledge; planning builds align work; implementation builds prove tests/code changed correctly. Tasks are implementation-ready only after planning validation passes or a documented mechanical/runtime exemption applies.
 
 ## Progressive refinement
 
-When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking.
+When new intent arrives, inspect active tasks and active sprint scope before creating work. Refine an active task when paths, labels, or intent overlap. Create a new task only when the intent is unrelated, previous work is closed/cancelled, or the user asks for separate tracking. When an interactive adapter is available, candidate tasks and sprint changes should be shown as row-level approval items before canonical roadmap mutation.
 
 Gated agency uses roadmap state as work truth. The state engine derives scoped views, queue order, and next-action routing; the agency controller owns budgets, agency level, approval cadence, stop conditions, and autonomous execution gates.
 
@@ -42,7 +42,7 @@ A roadmap task is an actionable, self-contained unit of work with a direct outco
 
 Tasks must not exist only to group, coordinate, sequence, or close other tasks. Umbrellas, epics, parent tasks, and sprint-level coordination belong in sprint metadata or planning builds. Acceptance criteria mostly about other `TASK-###` items closing or validating indicate a container task and should block planning, implementation, or task-close validation.
 
-Task boundaries forbid overlapping ownership, not shared files. Two tasks may touch the same file when outcomes, acceptance, and evidence remain independent. Resume and agency routing should select executable tasks only; non-executable container tasks should be rejected, skipped, or blocked.
+Task boundaries forbid overlapping ownership, not shared files. Two tasks may touch the same file when outcomes, acceptance, and evidence remain independent. Resume and agency routing should select executable tasks only. Non-executable container tasks should be rejected, skipped, or blocked, and tasks whose source planning build is missing, stale, failed, or blocked should not be selected for implementation.
 
 ## Roadmap item contents
 

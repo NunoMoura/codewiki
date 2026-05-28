@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-28",
+  "context_path": ".codewiki/roadmap/tasks/TASK-042/context.json",
+  "task": {
+    "id": "TASK-042",
+    "title": "Strengthen state graph read models",
+    "status": "todo",
+    "priority": "high",
+    "kind": "refactor",
+    "change_type": "code",
+    "summary": "Reduce any usage and cognitive complexity in graph, builders, reader, and lint code while preserving generated CodeWiki state outputs.",
+    "labels": [
+      "graph-read-model-hardening",
+      "generated-state-typing",
+      "state-builder-split"
+    ],
+    "goal": {
+      "outcome": "State graph/read-model ownership has stronger typing and smaller focused modules without generated output drift.",
+      "acceptance": [
+        "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
+        "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
+        "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in the graph owner file.",
+        "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests."
+      ],
+      "non_goals": [
+        "Do not redesign the graph JSON schema.",
+        "Do not move state ownership out of src/state/**.",
+        "Do not change resume task-selection logic; TASK-040 owns that boundary."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "rerun type-coverage and complexity review for state files"
+      ]
+    },
+    "delta": {
+      "desired": "State read models are typed and modular enough for maintainable follow-up changes.",
+      "current": "State graph/builders/reader/lint files are top complexity and any-typed hotspots.",
+      "closure": "Task closes when tests pass and review metrics improve for targeted state files."
+    }
+  }
+}

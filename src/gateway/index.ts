@@ -35,7 +35,11 @@ interface WalkEntry {
 	bytes: number;
 }
 
-function walk(repo: string, gateway: GatewayConfig, start = ".codewiki"): WalkEntry[] {
+function walk(
+	repo: string,
+	gateway: GatewayConfig,
+	start = ".codewiki",
+): WalkEntry[] {
 	const out: WalkEntry[] = [];
 	const stack = [path.join(repo, start)];
 	while (stack.length) {
@@ -75,7 +79,9 @@ function makeApi(repo: string, gateway: GatewayConfig) {
 		readText: readAllowedText,
 		readJson: (file: string) => JSON.parse(readAllowedText(file)),
 		grep: (pattern: string, start = ".codewiki") => {
-			const regex = new RegExp(pattern, "i");
+			const needle = pattern.trim();
+			if (!needle) return [];
+			const regex = new RegExp(escapeRegExp(needle), "i");
 			return walk(repo, gateway, start).flatMap((entry) => {
 				const text = readAllowedText(entry.path);
 				return text.split(/\r?\n/).flatMap((line, index) =>
@@ -86,12 +92,16 @@ function makeApi(repo: string, gateway: GatewayConfig) {
 									line: index + 1,
 									text: line.slice(0, 300),
 								},
-						  ]
+							]
 						: [],
 				);
 			});
 		},
 	};
+}
+
+function escapeRegExp(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function capabilityManifest() {
@@ -115,9 +125,7 @@ function capabilityManifest() {
 					"Create, update, close, cancel, or append evidence to roadmap tasks.",
 				args_schema: "codewikiTaskToolInputSchema",
 				result_schema: "CodeWiki task mutation result",
-				writes: [
-					".codewiki/roadmap/queue.json",
-				],
+				writes: [".codewiki/roadmap/queue.json"],
 				audit: [
 					"repo",
 					"action",
@@ -154,7 +162,11 @@ function capabilityManifest() {
 					"Apply exact-text knowledge patches or append-only source/research patches.",
 				args_schema: "patch v1 JSON",
 				result_schema: "patch apply result",
-				writes: [".codewiki/kb/**/*.md", ".codewiki/sources/**/*.jsonl", ".codewiki/research/**/*.jsonl"],
+				writes: [
+					".codewiki/kb/**/*.md",
+					".codewiki/sources/**/*.jsonl",
+					".codewiki/research/**/*.jsonl",
+				],
 				audit: ["repo", "summary", "ops", "paths"],
 			},
 			{
@@ -176,7 +188,10 @@ function capabilityManifest() {
 }
 
 function currentTaskPack(repo: string, taskId?: string) {
-	const indexGraph = readJson(path.join(repo, ".codewiki", "index_graph.json"), {});
+	const indexGraph = readJson(
+		path.join(repo, ".codewiki", "index_graph.json"),
+		{},
+	);
 	const status = indexGraph.lenses?.status ?? {};
 	const roadmap = indexGraph.lenses?.roadmap ?? {};
 	const id =
@@ -185,7 +200,7 @@ function currentTaskPack(repo: string, taskId?: string) {
 		? readJson(
 				path.join(repo, ".codewiki", "roadmap", "tasks", id, "context.json"),
 				null,
-		  )
+			)
 		: null;
 	return {
 		project: status?.project?.name ?? path.basename(repo),
@@ -197,7 +212,11 @@ function currentTaskPack(repo: string, taskId?: string) {
 	};
 }
 
-async function runUserScript(repo: string, gateway: GatewayConfig, scriptPath: string) {
+async function runUserScript(
+	repo: string,
+	gateway: GatewayConfig,
+	scriptPath: string,
+) {
 	const script = readFileSync(path.resolve(scriptPath), "utf8");
 	const logs: string[] = [];
 	const api = makeApi(repo, gateway);
@@ -209,7 +228,10 @@ async function runUserScript(repo: string, gateway: GatewayConfig, scriptPath: s
 		);
 
 	const context = vm.createContext({ api, print, console: { log: print } });
-	const result = await vm.runInContext(`(async () => {\n${script}\n})()`, context);
+	const result = await vm.runInContext(
+		`(async () => {\n${script}\n})()`,
+		context,
+	);
 
 	if (result !== undefined)
 		logs.push(
@@ -220,10 +242,11 @@ async function runUserScript(repo: string, gateway: GatewayConfig, scriptPath: s
 
 export async function gatewayMain(args: string[]) {
 	const [command, first, second] = args;
-	if (!command || command === "--help" || command === "-h")
-		return usage();
+	if (!command || command === "--help" || command === "-h") return usage();
 	if (command === "run") {
-		throw new Error("Gateway command 'run' was removed because Node vm is not a security sandbox. Use 'unsafe-run' with CODEWIKI_ALLOW_UNSAFE_RUN=1, or prefer think-code.");
+		throw new Error(
+			"Gateway command 'run' was removed because Node vm is not a security sandbox. Use 'unsafe-run' with CODEWIKI_ALLOW_UNSAFE_RUN=1, or prefer think-code.",
+		);
 	}
 	const repoArg =
 		command === "unsafe-run" || command === "apply"
@@ -255,7 +278,9 @@ export async function gatewayMain(args: string[]) {
 		);
 	else if (command === "unsafe-run") {
 		if (process.env.CODEWIKI_ALLOW_UNSAFE_RUN !== "1") {
-			throw new Error("unsafe-run requires CODEWIKI_ALLOW_UNSAFE_RUN=1 and should only execute trusted local scripts.");
+			throw new Error(
+				"unsafe-run requires CODEWIKI_ALLOW_UNSAFE_RUN=1 and should only execute trusted local scripts.",
+			);
 		}
 		output = await runUserScript(repo, gateway, first);
 	} else throw new Error(`Unknown command: ${command}`);

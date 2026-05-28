@@ -23,6 +23,7 @@ import {
 import { stableAgentName } from "./builders.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { unique } from "../shared/utils.ts";
+import { roadmapImplementationReadiness } from "../build/shared.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapFile, RoadmapTaskRecord } from "../roadmap/types.ts";
 import type {
@@ -31,14 +32,32 @@ import type {
 	ChangeClaimState,
 	TaskSessionLinkRecord,
 } from "../session/types.ts";
-import type { GraphFile, RoadmapStateFile, RoadmapTaskContextPacket } from "./types.ts";
+import type {
+	GraphFile,
+	RoadmapStateFile,
+	RoadmapTaskContextPacket,
+} from "./types.ts";
 import type { LintReport } from "../validation/types.ts";
 
 export interface ResumeSelection {
 	task: RoadmapTaskRecord | null;
-	source: "explicit" | "session-focus" | "persisted-focus" | "roadmap-order" | "none";
+	source:
+		| "explicit"
+		| "session-focus"
+		| "persisted-focus"
+		| "roadmap-order"
+		| "none";
 	artifact_statuses: ArtifactStatusRecord[];
 	skipped: string[];
+}
+
+export type TaskImplementationReadiness = Record<string, string[]>;
+
+function taskReadinessGaps(
+	task: RoadmapTaskRecord,
+	readiness: TaskImplementationReadiness = {},
+): string[] {
+	return readiness[task.id] ?? [];
 }
 
 export interface BuildCodewikiResumeContextInput {
@@ -85,24 +104,40 @@ export interface CodewikiResumeContextUnavailable {
 	source_refs: string[];
 }
 
-export type CodewikiResumeContextResult = CodewikiResumeContextPacket | CodewikiResumeContextUnavailable;
+export type CodewikiResumeContextResult =
+	| CodewikiResumeContextPacket
+	| CodewikiResumeContextUnavailable;
 
 export async function buildCodewikiResumeContext(
 	project: WikiProject,
 	input: BuildCodewikiResumeContextInput = {},
 ): Promise<CodewikiResumeContextResult> {
-	const artifacts = await loadCodewikiStateArtifacts(project, input.refresh ?? true);
+	const artifacts = await loadCodewikiStateArtifacts(
+		project,
+		input.refresh ?? true,
+	);
 	if (!artifacts.report) {
-		throw new Error("CodeWiki resume context requires generated graph lint state. Re-run with refresh=true.");
+		throw new Error(
+			"CodeWiki resume context requires generated graph lint state. Re-run with refresh=true.",
+		);
 	}
 	const report = artifacts.report;
-	const roadmap = await readRoadmapFile(resolve(project.root, project.roadmapPath));
+	const roadmap = await readRoadmapFile(
+		resolve(project.root, project.roadmapPath),
+	);
 	const requestedTaskId = normalizeOptionalTaskId(input.requestedTaskId);
 	const persistedFocusTaskId = requestedTaskId
 		? null
-		: String(artifacts.statusState?.resume?.task_id || artifacts.statusState?.roadmap?.focused_task_id || "").trim() || null;
-	const sessionId = String(input.sessionId || "resume-context").trim() || "resume-context";
-	const artifactState = buildChangeClaimState(await readChangeClaimsFile(project));
+		: String(
+				artifacts.statusState?.resume?.task_id ||
+					artifacts.statusState?.roadmap?.focused_task_id ||
+					"",
+			).trim() || null;
+	const sessionId =
+		String(input.sessionId || "resume-context").trim() || "resume-context";
+	const artifactState = buildChangeClaimState(
+		await readChangeClaimsFile(project),
+	);
 	const selection = resolveImplementationTask(
 		roadmap,
 		input.activeLink ?? null,
@@ -110,9 +145,15 @@ export async function buildCodewikiResumeContext(
 		persistedFocusTaskId,
 		artifactState,
 		sessionId,
+		roadmapImplementationReadiness(project, roadmap),
 	);
 	if (!selection.task) {
-		return unavailableResumeContext(project, report, selection, input.followUpIntent || "");
+		return unavailableResumeContext(
+			project,
+			report,
+			selection,
+			input.followUpIntent || "",
+		);
 	}
 	return buildResumeContextForTask(project, {
 		task: selection.task,
@@ -121,7 +162,8 @@ export async function buildCodewikiResumeContext(
 		roadmapState: artifacts.roadmapState,
 		graph: artifacts.graph,
 		followUpIntent: input.followUpIntent || "",
-		usageSummary: "read-only resume context build; no artifact-status claim marked",
+		usageSummary:
+			"read-only resume context build; no artifact-status claim marked",
 	});
 }
 
@@ -138,13 +180,25 @@ export async function buildResumeContextForTask(
 	},
 ): Promise<CodewikiResumeContextPacket> {
 	const runtimeTask = input.roadmapState?.tasks?.[input.task.id] ?? null;
-	const taskContext = await maybeReadTaskContext(project, input.task.id, runtimeTask);
-	const usageSummary = input.usageSummary || "read-only resume context build; no artifact-status claim marked";
+	const taskContext = await maybeReadTaskContext(
+		project,
+		input.task.id,
+		runtimeTask,
+	);
+	const usageSummary =
+		input.usageSummary ||
+		"read-only resume context build; no artifact-status claim marked";
 	const evidence = [
 		taskLoopEvidenceLine(runtimeTask),
 		await taskBuildEvidence(project, input.task.id),
-		describeArtifactPromptContext(input.selection.artifact_statuses, usageSummary, input.selection.skipped),
-	].filter(Boolean).join("\n");
+		describeArtifactPromptContext(
+			input.selection.artifact_statuses,
+			usageSummary,
+			input.selection.skipped,
+		),
+	]
+		.filter(Boolean)
+		.join("\n");
 	const prompt = renderResumePrompt(
 		project,
 		input.graph,
@@ -177,7 +231,15 @@ export function renderResumePrompt(
 	taskContext: RoadmapTaskContextPacket | null,
 	followUpIntent = "",
 ): string {
-	return codePrompt(project, graph, report, task, evidence, taskContext, followUpIntent);
+	return codePrompt(
+		project,
+		graph,
+		report,
+		task,
+		evidence,
+		taskContext,
+		followUpIntent,
+	);
 }
 
 export function resolveImplementationTask(
@@ -187,61 +249,144 @@ export function resolveImplementationTask(
 	persistedFocusTaskId: string | null = null,
 	artifactState: ChangeClaimState,
 	sessionId: string,
+	implementationReadiness: TaskImplementationReadiness = {},
 ): ResumeSelection {
 	const ordered = roadmap.order
 		.map((taskId) => roadmap.tasks[taskId])
 		.filter((task): task is RoadmapTaskRecord => Boolean(task));
 	if (requestedTaskId) {
 		const requestedTask = resolveRoadmapTask(roadmap, requestedTaskId);
-		if (!requestedTask) throw new Error(`Roadmap task not found: ${requestedTaskId}`);
-		if (isClosedRoadmapStatus(requestedTask.status)) throw new Error(`Roadmap task already closed: ${requestedTask.id}`);
+		if (!requestedTask)
+			throw new Error(`Roadmap task not found: ${requestedTaskId}`);
+		if (isClosedRoadmapStatus(requestedTask.status))
+			throw new Error(`Roadmap task already closed: ${requestedTask.id}`);
 		const requestedBoundary = assessRoadmapTaskBoundary(requestedTask);
 		if (!requestedBoundary.executable) {
-			throw new Error(`Roadmap task ${requestedTask.id} is not executable work. Use a sprint for grouping. ${requestedBoundary.reasons.join("; ")}`);
+			throw new Error(
+				`Roadmap task ${requestedTask.id} is not executable work. Use a sprint for grouping. ${requestedBoundary.reasons.join("; ")}`,
+			);
 		}
-		const artifactStatuses = artifactStatusesForScopes(taskArtifactScopes(requestedTask), artifactState, sessionId, "write");
+		const readinessGaps = taskReadinessGaps(
+			requestedTask,
+			implementationReadiness,
+		);
+		if (readinessGaps.length > 0) {
+			throw new Error(
+				`Roadmap task ${requestedTask.id} is not implementation-ready. ${readinessGaps.join("; ")}`,
+			);
+		}
+		const artifactStatuses = artifactStatusesForScopes(
+			taskArtifactScopes(requestedTask),
+			artifactState,
+			sessionId,
+			"write",
+		);
 		if (hasBlockingArtifactStatus(artifactStatuses)) {
-			throw new Error(`Roadmap task ${requestedTask.id} cannot start yet. ${formatBlockingArtifactStatuses(artifactStatuses)}`);
+			throw new Error(
+				`Roadmap task ${requestedTask.id} cannot start yet. ${formatBlockingArtifactStatuses(artifactStatuses)}`,
+			);
 		}
-		return { task: requestedTask, source: "explicit", artifact_statuses: artifactStatuses, skipped: [] };
+		return {
+			task: requestedTask,
+			source: "explicit",
+			artifact_statuses: artifactStatuses,
+			skipped: [],
+		};
 	}
 
-	const candidates = resumeCandidates(roadmap, activeLink, persistedFocusTaskId);
+	const candidates = resumeCandidates(
+		roadmap,
+		activeLink,
+		persistedFocusTaskId,
+	);
 	const skipped: string[] = [];
 	for (const candidate of candidates) {
-		const artifactStatuses = artifactStatusesForScopes(taskArtifactScopes(candidate.task), artifactState, sessionId, "write");
+		const artifactStatuses = artifactStatusesForScopes(
+			taskArtifactScopes(candidate.task),
+			artifactState,
+			sessionId,
+			"write",
+		);
 		if (!candidate.boundary.executable) {
-			skipped.push(`${candidate.task.id}: non-executable container task (${candidate.boundary.reasons.join("; ")})`);
+			skipped.push(
+				`${candidate.task.id}: non-executable container task (${candidate.boundary.reasons.join("; ")})`,
+			);
+			continue;
+		}
+		const readinessGaps = taskReadinessGaps(
+			candidate.task,
+			implementationReadiness,
+		);
+		if (readinessGaps.length > 0) {
+			skipped.push(
+				`${candidate.task.id}: not implementation-ready (${readinessGaps.join("; ")})`,
+			);
 			continue;
 		}
 		if (hasBlockingArtifactStatus(artifactStatuses)) {
-			skipped.push(`${candidate.task.id}: ${formatBlockingArtifactStatuses(artifactStatuses)}`);
+			skipped.push(
+				`${candidate.task.id}: ${formatBlockingArtifactStatuses(artifactStatuses)}`,
+			);
 			continue;
 		}
-		return { task: candidate.task, source: candidate.source, artifact_statuses: artifactStatuses, skipped };
+		return {
+			task: candidate.task,
+			source: candidate.source,
+			artifact_statuses: artifactStatuses,
+			skipped,
+		};
 	}
 
-	for (const task of ordered.filter((item) => !isClosedRoadmapStatus(item.status))) {
+	for (const task of ordered.filter(
+		(item) => !isClosedRoadmapStatus(item.status),
+	)) {
 		const boundary = assessRoadmapTaskBoundary(task);
 		if (!boundary.executable) {
-			skipped.push(`${task.id}: non-executable container task (${boundary.reasons.join("; ")})`);
+			skipped.push(
+				`${task.id}: non-executable container task (${boundary.reasons.join("; ")})`,
+			);
 			continue;
 		}
-		const artifactStatuses = artifactStatusesForScopes(taskArtifactScopes(task), artifactState, sessionId, "write");
+		const readinessGaps = taskReadinessGaps(task, implementationReadiness);
+		if (readinessGaps.length > 0) {
+			skipped.push(
+				`${task.id}: not implementation-ready (${readinessGaps.join("; ")})`,
+			);
+			continue;
+		}
+		const artifactStatuses = artifactStatusesForScopes(
+			taskArtifactScopes(task),
+			artifactState,
+			sessionId,
+			"write",
+		);
 		if (!hasBlockingArtifactStatus(artifactStatuses)) {
-			return { task, source: "roadmap-order", artifact_statuses: artifactStatuses, skipped };
+			return {
+				task,
+				source: "roadmap-order",
+				artifact_statuses: artifactStatuses,
+				skipped,
+			};
 		}
 	}
 	return { task: null, source: "none", artifact_statuses: [], skipped };
 }
 
-async function taskBuildEvidence(project: WikiProject, taskId: string): Promise<string> {
+async function taskBuildEvidence(
+	project: WikiProject,
+	taskId: string,
+): Promise<string> {
 	const dirs = [
 		".codewiki/builds/implementation",
 		".codewiki/builds/planning",
 		".codewiki/builds/decision",
 	];
-	const refs: Array<{ path: string; kind: string; summary: string; checks: string[] }> = [];
+	const refs: Array<{
+		path: string;
+		kind: string;
+		summary: string;
+		checks: string[];
+	}> = [];
 	for (const dir of dirs) {
 		const absDir = resolve(project.root, dir);
 		let names: string[] = [];
@@ -254,16 +399,25 @@ async function taskBuildEvidence(project: WikiProject, taskId: string): Promise<
 			const relPath = `${dir}/${name}`;
 			try {
 				const data = JSON.parse(await readFile(join(absDir, name), "utf8"));
-				const taskIds = [String(data?.task_id || ""), ...stringArray(data?.task_ids), ...stringArray(data?.consumes?.roadmap), ...stringArray(data?.produces?.roadmap)];
+				const taskIds = [
+					String(data?.task_id || ""),
+					...stringArray(data?.task_ids),
+					...stringArray(data?.consumes?.roadmap),
+					...stringArray(data?.produces?.roadmap),
+				];
 				if (!taskIds.includes(taskId)) continue;
 				refs.push({
 					path: relPath,
-					kind: String(data?.kind || data?.build_kind || dir.split("/").pop() || "build"),
-					summary: String(data?.summary || data?.closure_brief?.user_intent || "").trim(),
+					kind: String(
+						data?.kind || data?.build_kind || dir.split("/").pop() || "build",
+					),
+					summary: String(
+						data?.summary || data?.closure_brief?.user_intent || "",
+					).trim(),
 					checks: stringArray(data?.checks_run || data?.closure_brief?.checks),
 				});
-			} catch {
-				continue;
+			} catch (error) {
+				void error;
 			}
 		}
 	}
@@ -272,7 +426,10 @@ async function taskBuildEvidence(project: WikiProject, taskId: string): Promise<
 	return [
 		"Recent task build evidence:",
 		...latest.map((item) => {
-			const checks = item.checks.length > 0 ? ` checks=${item.checks.slice(0, 5).join("; ")}` : "";
+			const checks =
+				item.checks.length > 0
+					? ` checks=${item.checks.slice(0, 5).join("; ")}`
+					: "";
 			const summary = item.summary ? ` — ${item.summary}` : "";
 			return `- ${item.path} (${item.kind})${summary}${checks}`;
 		}),
@@ -280,7 +437,9 @@ async function taskBuildEvidence(project: WikiProject, taskId: string): Promise<
 }
 
 function stringArray(value: unknown): string[] {
-	return Array.isArray(value) ? value.map((item) => String(item || "").trim()).filter(Boolean) : [];
+	return Array.isArray(value)
+		? value.map((item) => String(item || "").trim()).filter(Boolean)
+		: [];
 }
 
 export function describeResumeSelection(
@@ -288,48 +447,84 @@ export function describeResumeSelection(
 	task: RoadmapTaskRecord,
 	selection: ResumeSelection,
 ): string {
-	if (requestedTaskId) return `User requested ${task.id} explicitly; artifact status allowed start.`;
-	const skipped = selection.skipped.length > 0 ? ` Skipped ${selection.skipped.slice(0, 3).join("; ")}.` : "";
-	if (selection.source === "session-focus") return `Continuing session-focused ${task.status} work after artifact-status check.${skipped}`;
-	if (selection.source === "persisted-focus") return `Continuing persisted ${task.status} focus after artifact-status check.${skipped}`;
+	if (requestedTaskId)
+		return `User requested ${task.id} explicitly; artifact status allowed start.`;
+	const skipped =
+		selection.skipped.length > 0
+			? ` Skipped ${selection.skipped.slice(0, 3).join("; ")}.`
+			: "";
+	if (selection.source === "session-focus")
+		return `Continuing session-focused ${task.status} work after artifact-status check.${skipped}`;
+	if (selection.source === "persisted-focus")
+		return `Continuing persisted ${task.status} focus after artifact-status check.${skipped}`;
 	return `Selected next artifact-available ${task.status} task from fresh roadmap/session queue state.${skipped}`;
 }
 
-export function taskArtifactScopes(task: RoadmapTaskRecord): ChangeClaimScope[] {
+export function taskArtifactScopes(
+	task: RoadmapTaskRecord,
+): ChangeClaimScope[] {
 	return normalizeScopes([
 		{ layer: "roadmap", task_id: task.id },
-		...task.spec_paths.map((path) => ({ layer: layerForArtifactPath(path, "knowledge"), path: pathScope(path) })),
-		...task.code_paths.map((path) => ({ layer: layerForArtifactPath(path, "code"), path: pathScope(path) })),
+		...task.spec_paths.map((path) => ({
+			layer: layerForArtifactPath(path, "knowledge"),
+			path: pathScope(path),
+		})),
+		...task.code_paths.map((path) => ({
+			layer: layerForArtifactPath(path, "code"),
+			path: pathScope(path),
+		})),
 	]);
 }
 
-export async function markResumeArtifactsInUse(project: WikiProject, task: RoadmapTaskRecord, sessionId: string): Promise<string> {
+export async function markResumeArtifactsInUse(
+	project: WikiProject,
+	task: RoadmapTaskRecord,
+	sessionId: string,
+): Promise<string> {
 	const state = buildChangeClaimState(await readChangeClaimsFile(project));
-	if (state.claims.some((claim) => claim.session_id === sessionId && claim.task_id === task.id)) {
+	if (
+		state.claims.some(
+			(claim) => claim.session_id === sessionId && claim.task_id === task.id,
+		)
+	) {
 		return `Artifact status: already in-use by this session for ${task.id}.`;
 	}
 	const scopes = taskArtifactScopes(task);
-	if (scopes.length === 0) return "Artifact status: no scoped artifacts declared for this task.";
-	await mutateChangeClaims(project, {
-		action: "claim",
-		mode: "write",
-		role: "builder",
-		taskId: task.id,
-		summary: `Artifact usage for ${task.id} via /wiki-resume.`,
-		scopes,
-		ttl_minutes: 240,
-	}, { sessionId, agentName: stableAgentName(sessionId) });
+	if (scopes.length === 0)
+		return "Artifact status: no scoped artifacts declared for this task.";
+	await mutateChangeClaims(
+		project,
+		{
+			action: "claim",
+			mode: "write",
+			role: "builder",
+			taskId: task.id,
+			summary: `Artifact usage for ${task.id} via /wiki-resume.`,
+			scopes,
+			ttl_minutes: 240,
+		},
+		{ sessionId, agentName: stableAgentName(sessionId) },
+	);
 	return `Artifact status: marked in-use by this session for ${scopes.length} artifact(s).`;
 }
 
-export function describeArtifactPromptContext(statuses: ArtifactStatusRecord[], usageSummary: string, skipped: string[]): string {
+export function describeArtifactPromptContext(
+	statuses: ArtifactStatusRecord[],
+	usageSummary: string,
+	skipped: string[],
+): string {
 	const lines = [
 		"Artifact status preflight:",
 		`- Temporary session usage record: ${usageSummary}`,
 		...statuses.slice(0, 10).map(describeArtifactStatusLine),
 	];
 	if (skipped.length > 0) {
-		lines.push("Skipped artifact conflicts or coordination tasks:", ...unique(skipped).slice(0, 8).map((item) => `- ${item}`));
+		lines.push(
+			"Skipped artifact conflicts or coordination tasks:",
+			...unique(skipped)
+				.slice(0, 8)
+				.map((item) => `- ${item}`),
+		);
 	}
 	return lines.join("\n");
 }
@@ -347,10 +542,17 @@ function unavailableResumeContext(
 		task: null,
 		selection,
 		preflight: preflightSummary(report),
-		evidence: selection.skipped.length > 0 ? `Skipped: ${unique(selection.skipped).join("; ")}` : "No artifact-available executable roadmap task found.",
+		evidence:
+			selection.skipped.length > 0
+				? `Skipped: ${unique(selection.skipped).join("; ")}`
+				: "No artifact-available executable roadmap task found.",
 		follow_up_intent: followUpIntent,
 		context_path: null,
-		source_refs: [project.roadmapPath, project.graphPath.replace(`${project.root}/`, ""), project.statusStatePath],
+		source_refs: [
+			project.roadmapPath,
+			project.graphPath.replace(`${project.root}/`, ""),
+			project.statusStatePath,
+		],
 	};
 }
 
@@ -358,33 +560,63 @@ function resumeCandidates(
 	roadmap: RoadmapFile,
 	activeLink: TaskSessionLinkRecord | null,
 	persistedFocusTaskId: string | null,
-): Array<{ task: RoadmapTaskRecord; source: ResumeSelection["source"]; boundary: ReturnType<typeof assessRoadmapTaskBoundary> }> {
+): Array<{
+	task: RoadmapTaskRecord;
+	source: ResumeSelection["source"];
+	boundary: ReturnType<typeof assessRoadmapTaskBoundary>;
+}> {
 	const ordered = roadmap.order
 		.map((taskId) => roadmap.tasks[taskId])
-		.filter((task): task is RoadmapTaskRecord => Boolean(task) && !isClosedRoadmapStatus(task.status));
-	const candidates: Array<{ task: RoadmapTaskRecord; source: ResumeSelection["source"]; boundary: ReturnType<typeof assessRoadmapTaskBoundary> }> = [];
-	const add = (task: RoadmapTaskRecord | null, source: ResumeSelection["source"]) => {
+		.filter(
+			(task): task is RoadmapTaskRecord =>
+				Boolean(task) && !isClosedRoadmapStatus(task.status),
+		);
+	const candidates: Array<{
+		task: RoadmapTaskRecord;
+		source: ResumeSelection["source"];
+		boundary: ReturnType<typeof assessRoadmapTaskBoundary>;
+	}> = [];
+	const add = (
+		task: RoadmapTaskRecord | null,
+		source: ResumeSelection["source"],
+	) => {
 		if (!task || isClosedRoadmapStatus(task.status)) return;
 		if (candidates.some((item) => item.task.id === task.id)) return;
-		candidates.push({ task, source, boundary: assessRoadmapTaskBoundary(task) });
+		candidates.push({
+			task,
+			source,
+			boundary: assessRoadmapTaskBoundary(task),
+		});
 	};
-	if (activeLink) add(resolveRoadmapTask(roadmap, activeLink.taskId), "session-focus");
-	if (persistedFocusTaskId) add(resolveRoadmapTask(roadmap, persistedFocusTaskId), "persisted-focus");
+	if (activeLink)
+		add(resolveRoadmapTask(roadmap, activeLink.taskId), "session-focus");
+	if (persistedFocusTaskId)
+		add(resolveRoadmapTask(roadmap, persistedFocusTaskId), "persisted-focus");
 	for (const task of ordered) add(task, "roadmap-order");
 	return candidates;
 }
 
-function layerForArtifactPath(path: string, fallback: ChangeClaimScope["layer"]): ChangeClaimScope["layer"] {
+function layerForArtifactPath(
+	path: string,
+	fallback: ChangeClaimScope["layer"],
+): ChangeClaimScope["layer"] {
 	if (path.startsWith(".codewiki/kb/")) return "knowledge";
 	if (path.startsWith(".codewiki/roadmap/")) return "roadmap";
 	if (path.startsWith(".codewiki/builds/")) return "build";
 	if (path.startsWith(".codewiki/validation/")) return "validation";
-	if (path === ".codewiki/index_graph.json" || path.startsWith(".codewiki/views/")) return "graph";
+	if (
+		path === ".codewiki/index_graph.json" ||
+		path.startsWith(".codewiki/views/")
+	)
+		return "graph";
 	return fallback;
 }
 
 function pathScope(path: string): string {
-	const normalized = path.replace(/^\.\//, "").replace(/\\/g, "/").replace(/\/+/g, "/");
+	const normalized = path
+		.replace(/^\.\//, "")
+		.replace(/\\/g, "/")
+		.replace(/\/+/g, "/");
 	const last = normalized.split("/").pop() || "";
 	if (normalized.includes("*")) return normalized;
 	if (normalized.endsWith("/")) return `${normalized}**`;
@@ -392,21 +624,35 @@ function pathScope(path: string): string {
 	return `${normalized}/**`;
 }
 
-function formatBlockingArtifactStatuses(statuses: ArtifactStatusRecord[]): string {
+function formatBlockingArtifactStatuses(
+	statuses: ArtifactStatusRecord[],
+): string {
 	const blocking = statuses.filter((status) => status.status === "conflict");
 	if (blocking.length === 0) return "Artifact status is available.";
-	return `Artifact conflict: ${blocking.slice(0, 4).map((status) => {
-		const holders = status.holders.map((holder) => `${holder.record_id}:${holder.session_id}`).join(", ") || "unknown holder";
-		return `${artifactScopeLabel(status.artifact)} in-use by ${holders}`;
-	}).join("; ")}.`;
+	return `Artifact conflict: ${blocking
+		.slice(0, 4)
+		.map((status) => {
+			const holders =
+				status.holders
+					.map((holder) => `${holder.record_id}:${holder.session_id}`)
+					.join(", ") || "unknown holder";
+			return `${artifactScopeLabel(status.artifact)} in-use by ${holders}`;
+		})
+		.join("; ")}.`;
 }
 
 function describeArtifactStatusLine(status: ArtifactStatusRecord): string {
 	const holders = status.holders
-		.map((holder) => `${holder.record_id}:${holder.session_id}${holder.agent_name ? `/${holder.agent_name}` : ""}`)
+		.map(
+			(holder) =>
+				`${holder.record_id}:${holder.session_id}${holder.agent_name ? `/${holder.agent_name}` : ""}`,
+		)
 		.join(", ");
 	const waiters = status.waiters
-		.map((waiter) => `${waiter.record_id}:${waiter.session_id}${waiter.agent_name ? `/${waiter.agent_name}` : ""}`)
+		.map(
+			(waiter) =>
+				`${waiter.record_id}:${waiter.session_id}${waiter.agent_name ? `/${waiter.agent_name}` : ""}`,
+		)
 		.join(", ");
 	return [
 		`- ${artifactScopeLabel(status.artifact)}: ${status.status}`,
@@ -415,7 +661,9 @@ function describeArtifactStatusLine(status: ArtifactStatusRecord): string {
 	].join("; ");
 }
 
-function preflightSummary(report: LintReport): CodewikiResumeContextPacket["preflight"] {
+function preflightSummary(
+	report: LintReport,
+): CodewikiResumeContextPacket["preflight"] {
 	return {
 		color: statusColor(report),
 		errors: Number(report.counts.error || 0),
@@ -433,13 +681,16 @@ function resumeContextSourceRefs(
 		project.roadmapPath,
 		project.statusStatePath,
 		project.graphPath.replace(`${project.root}/`, ""),
-		taskContext?.context_path || `.codewiki/roadmap/tasks/${task.id}/context.json`,
+		taskContext?.context_path ||
+			`.codewiki/roadmap/tasks/${task.id}/context.json`,
 		...task.spec_paths,
 		...task.code_paths,
 	]);
 }
 
-function normalizeOptionalTaskId(value: string | null | undefined): string | null {
+function normalizeOptionalTaskId(
+	value: string | null | undefined,
+): string | null {
 	const trimmed = String(value || "").trim();
 	return trimmed || null;
 }

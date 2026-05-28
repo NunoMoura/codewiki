@@ -29,13 +29,13 @@ states:
     label: Decision rows proposed
     kind: decision_gate
   - id: decision_build_accepted
-    label: Decision build accepted
+    label: Decision build accepted and gateway passed
     kind: build
   - id: knowledge_updated
     label: Knowledge updated
     kind: durable_truth
   - id: planning_build_accepted
-    label: Planning build accepted
+    label: Planning build accepted and gateway passed
     kind: build
   - id: task_todo
     label: Roadmap task todo
@@ -50,7 +50,7 @@ states:
     label: Task verify
     kind: gate
   - id: implementation_build_accepted
-    label: Implementation build accepted
+    label: Implementation build accepted and gateway passed
     kind: evidence
   - id: task_done
     label: Task done
@@ -79,7 +79,7 @@ transitions:
     gate: failure_class and recommended_next_loop
   - from: decision_build_accepted
     to: planning_build_accepted
-    trigger: planning compiler creates or refines roadmap work
+    trigger: planning compiler creates/refines roadmap work and planning validation passes
   - from: planning_build_accepted
     to: planning_build_accepted
     trigger: planning validation fails locally and planner emits a superseding planning build
@@ -90,7 +90,7 @@ transitions:
     gate: failure_class and recommended_next_loop
   - from: planning_build_accepted
     to: task_todo
-    trigger: roadmap task created or refined
+    trigger: validated planning output makes roadmap task implementation-ready
   - from: task_todo
     to: task_in_progress
     trigger: implementation resumes task

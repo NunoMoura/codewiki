@@ -14,13 +14,13 @@ updated: "2026-05-27"
 
 Adapters translate external harness capabilities and protocol surfaces into application tools and translate CodeWiki results back into commands, tools, messages, protocols, or sessions.
 
-Adapters do not own CodeWiki semantics. Domain and application layers own semantics, including compiler behavior, gateway policy, state-engine behavior, session queue semantics, and the built-in local runtime. Adapters only translate external harness or protocol concerns into those semantics.
+Adapters do not own CodeWiki semantics. Domain and application layers own semantics, including compiler behavior, gateway policy, decision row state, state-engine behavior, session queue semantics, and the built-in local runtime. Adapters only translate external harness or protocol concerns into those semantics.
 
 ## Access surfaces and UIs
 
 Tools, commands, skills, CLI, MCP, package APIs, and harness integrations are adapter or API access surfaces. They are not product UIs unless they render a visual screen, panel, board, graph view, or editor interface for a human.
 
-Visual UI expectations live under product `uis/**` and system UI docs. Browser UI source belongs under `src/ui/**`, not under `src/adapters/**`. Adapter, launch, protocol, and harness mechanics live here and in [CodeWiki API](api.md).
+Visual UI expectations live under product `uis/**` and system UI docs. Browser UI source belongs under `src/ui/**`, not under `src/adapters/**`. Harness-native approval controls such as Pi TUI decision cards belong in adapters but must write through CodeWiki capabilities such as `codewiki_diff_table`; they must not bypass decision builds or gateway validation. Adapter, launch, protocol, and harness mechanics live here and in [CodeWiki API](api.md).
 
 ## Current adapter
 
@@ -29,6 +29,7 @@ Pi is the only implemented harness adapter now. It packages:
 - commands,
 - tools,
 - compact visual status UI,
+- interactive decision/task approval surfaces when the harness TUI supports them,
 - skills,
 - session integration,
 - session boundary and handoff control,

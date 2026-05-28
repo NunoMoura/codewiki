@@ -1,9 +1,22 @@
 {
   "version": 2,
-  "updated": "2026-05-27T22:59:29Z",
+  "updated": "2026-05-28T03:40:00Z",
   "order": [
     "TASK-012",
-    "TASK-023"
+    "TASK-023",
+    "TASK-036",
+    "TASK-037",
+    "TASK-038",
+    "TASK-039",
+    "TASK-040",
+    "TASK-041",
+    "TASK-042",
+    "TASK-043",
+    "TASK-044",
+    "TASK-045",
+    "TASK-046",
+    "TASK-047",
+    "TASK-048"
   ],
   "tasks": {
     "TASK-012": {
@@ -295,6 +308,923 @@
       },
       "created": "2026-05-26",
       "updated": "2026-05-27T22:19:13Z"
+    },
+    "TASK-036": {
+      "id": "TASK-036",
+      "title": "Calibrate booboo static analysis inputs",
+      "status": "cancelled",
+      "priority": "high",
+      "kind": "tooling",
+      "summary": "Cancel accidental non-atomic aggregate created during roadmap planning; replace with atomic sprint tasks.",
+      "spec_paths": [
+        ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md",
+        "package.json",
+        "README.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/control-room-ui-details.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/change-lifecycle.md"
+      ],
+      "code_paths": [
+        "package.json",
+        ".pi-lens",
+        "src/index.ts",
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "scripts/codewiki-gateway.mjs",
+        "src/gateway/index.ts",
+        "src/ui/web/control-room.ts",
+        "src/gateway/transaction.ts",
+        "src/audit/tool.ts",
+        "src/knowledge/diagram-parser.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/roadmap/tool.ts",
+        "src/state/graph/rebuilder.ts",
+        "tests/smoke",
+        "README.md",
+        "CHANGELOG.md",
+        "tests/smoke/package-smoke.test.mjs",
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-context.ts",
+        "src/state/resume-selection.ts",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/validation/report.ts",
+        "src/session/types.ts",
+        "src/roadmap/types.ts",
+        "src/state/graph.ts",
+        "src/state/builders.ts",
+        "src/state/reader.ts",
+        "src/state/types.ts",
+        "src/state/lint.ts",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "src/adapters/pi/tools",
+        "tests/smoke/control-room.test.mjs",
+        "src/state/rebuild.ts",
+        "src/roadmap/runtime.ts",
+        "src/session/claims.ts",
+        "src/session/tool.ts",
+        "src/session/artifact-status-tool.ts",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/roadmap-task-boundary.test.mjs",
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/smoke/efficiency-ui.test.mjs",
+        "src/audit/types.ts",
+        "src/validation/tool.ts",
+        "src/validation/preflight.ts",
+        "tests/smoke/audit.test.mjs",
+        "tests/smoke/audit-drift.test.mjs",
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "booboo",
+        "static-analysis",
+        "knip",
+        "tooling",
+        "quality-gate",
+        "security",
+        "error-handling",
+        "regex",
+        "review-fix",
+        "release-readiness",
+        "package",
+        "docs",
+        "duplicate-code",
+        "resume",
+        "state",
+        "refactor",
+        "adapter",
+        "schema",
+        "type-coverage",
+        "graph",
+        "any",
+        "ui",
+        "complexity",
+        "lint",
+        "roadmap",
+        "session",
+        "artifact-status",
+        "control-room",
+        "tui",
+        "audit",
+        "validation",
+        "gateway"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "booboo dead-code and production-readiness findings are calibrated to CodeWiki package entrypoints and dynamic runtime loading.",
+        "acceptance": [
+          "Static analysis config or package metadata declares the real entrypoints: Pi extension, public API facade, scripts, tests, and dynamically imported gateway code.",
+          "Dynamic dependency usage such as cytoscape asset loading and scripts/codewiki-gateway.mjs is either visible to the tool or intentionally ignored with a documented reason.",
+          "Rerun evidence shows the dead-code list no longer flags known package/runtime entrypoints as unused.",
+          "No package behavior or Pi extension loading semantics change except documented metadata/configuration.",
+          "User- or config-controlled regular expressions are escaped, bounded, validated, or renamed to explicit regex APIs with invalid-pattern handling.",
+          "Glob-to-regex helpers remain covered by tests for *, **, exact path, prefix, and invalid/special-character cases.",
+          "Empty catch blocks in roadmap checkpoint and graph rebuild paths are replaced with useful fallback logging, structured warning evidence, or deliberate documented suppression.",
+          "Existing gateway, audit, graph rebuild, diagram parsing, and UI smoke behavior remains compatible.",
+          "package.json has accurate author/metadata additions that do not break package smoke tests.",
+          "CHANGELOG.md exists with an initial entry for current package history or an explicit unreleased baseline.",
+          "README or package docs explain Pi extension loading and any intentional absence/presence of npm exports/main/module.",
+          "Production-readiness review no longer reports stale or misleading metadata gaps, or remaining gaps are documented as intentional.",
+          "A shared module owns resolveImplementationTask, resumeCandidates, task artifact scopes, and shared blocking-status formatting as appropriate.",
+          "The command adapter and resume-context tool import shared logic instead of carrying duplicate functions.",
+          "Tests cover explicit task selection, session focus, persisted focus, roadmap order fallback, artifact conflict skip, and non-executable task skip.",
+          "Existing resume prompt, artifact-status, and status-dock behavior remains compatible.",
+          "Duplicate adapter registration blocks are replaced with small data-driven helpers where this improves clarity.",
+          "Schema/type duplicate blocks are consolidated only when names and validation semantics remain explicit.",
+          "UI theme duplicate helpers are shared or intentionally left duplicated with a short rationale when readability wins.",
+          "jscpd duplicate percentage decreases or remaining duplicates are documented as acceptable declaration symmetry.",
+          "Major JSON and graph input reads parse as unknown and narrow through local guards or existing domain types.",
+          "High-count as any casts in state/builders and state/reader are removed or replaced with narrower typed helpers.",
+          "Generated graph/status/task context snapshots remain schema-compatible with existing tests.",
+          "Type coverage for state graph/read model files improves measurably in the next review.",
+          "Control-room model builders expose typed structures instead of any-heavy object assembly.",
+          "Pi UI manager helper inputs/outputs are typed enough to remove easy as any casts.",
+          "Adapter tool registration casts are narrowed or centralized behind typed helper functions.",
+          "Type coverage for UI/adapter hotspots improves measurably in the next review.",
+          "Graph input collection, graph node/edge construction, reconciliation/scope view construction, and file writing are separated into focused modules or helpers.",
+          "Existing public imports continue through stable state/API facades where needed.",
+          "Generated graph output is byte-stable or differences are explained and covered by tests.",
+          "Complexity review shows lower cognitive load for src/state/graph.ts or equivalent split modules.",
+          "Roadmap lane/resume/session-state builders are extracted from generic state/builders catch-all code.",
+          "Lint category construction and issue creation have focused ownership with typed helper boundaries.",
+          "Existing generated status/roadmap/lint outputs remain compatible with smoke tests.",
+          "Complexity review shows lower cognitive complexity for state/builders and state/lint owner files.",
+          "Roadmap task mutation, sprint mutation, archive/checkpoint handling, and verifier prompt logic have focused module boundaries.",
+          "Artifact-status scope normalization, conflict detection, wait queue handling, and mutation persistence have focused module boundaries.",
+          "codewiki_task, codewiki_session, and codewiki_artifact_status tool results remain schema-compatible.",
+          "Claim/wait queue and roadmap boundary tests continue to pass.",
+          "Pi UI manager responsibilities are split into focused modules or helpers for status dock, config panel, roadmap/detail panes, channel editor, and architecture/graph readers.",
+          "Web control-room model building is separated from HTTP serving/assets and HTML/JS rendering concerns.",
+          "The existing Alt+W/status dock, /wiki-ui, control-room graph asset, and smoke behavior remain compatible.",
+          "Complexity review shows reduced nesting/cognitive load in the UI owner files.",
+          "Audit profile normalization, file-structure checks, alignment checks, package checks, changed-file checks, and fingerprinting are separated enough to lower fan-out.",
+          "Validation preflight, report persistence, verdict handling, and gateway policy checks have clear module boundaries.",
+          "Existing audit/validation smoke tests and source-root guard tests remain compatible.",
+          "Complexity review shows lower cognitive complexity in audit/tool and validation/report owner files."
+        ],
+        "non_goals": [
+          "Do not delete exports based only on the current Knip list.",
+          "Do not change product behavior or roadmap semantics.",
+          "Do not edit generated CodeWiki graph/task views by hand.",
+          "Do not perform broad parser or gateway redesign.",
+          "Do not change CodeWiki policy semantics.",
+          "Do not add noisy logs for expected missing optional files.",
+          "Do not publish the package.",
+          "Do not change package version unless a release task explicitly approves it.",
+          "Do not add a build pipeline unless required by package consumers.",
+          "Do not redesign roadmap scheduling policy.",
+          "Do not change artifact-status semantics.",
+          "Do not alter Pi command names or tool schemas.",
+          "Do not refactor the large UI manager in this task.",
+          "Do not change public tool schemas or deprecated compatibility aliases.",
+          "Do not chase every small duplicate when extraction would reduce readability.",
+          "Do not rewrite graph algorithms or split modules in this task unless required for typing.",
+          "Do not change generated graph JSON semantics.",
+          "Do not silence type errors with broader casts.",
+          "Do not split UI files deeply in this task; that belongs to later decomposition tasks.",
+          "Do not change TUI/web visual behavior except harmless text stability needed by tests.",
+          "Do not remove compatibility exports solely for type cleanliness.",
+          "Do not redesign graph schema.",
+          "Do not move state root ownership out of src/state/**.",
+          "Do not combine this with roadmap/session runtime refactors.",
+          "Do not change lint policy semantics.",
+          "Do not alter CodeWiki graph schema.",
+          "Do not remove compatibility exports unless callers are updated through stable facades.",
+          "Do not change roadmap task-boundary policy.",
+          "Do not change artifact-status conflict semantics.",
+          "Do not close or archive tasks as part of refactor.",
+          "Do not redesign UI visuals or add new product features.",
+          "Do not change Cytoscape dependency strategy except as needed by review-tool calibration.",
+          "Do not move generated CodeWiki truth into UI modules.",
+          "Do not change validation pass/fail/block semantics.",
+          "Do not weaken required audit/profile policy.",
+          "Do not merge gateway sandbox/security changes beyond targeted safety fixes already covered by the safety task."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm test",
+          "rerun booboo or Knip-equivalent review and compare false-positive reduction",
+          "npm run test:smoke",
+          "targeted tests for regex/glob and fallback handling",
+          "npm run test:pack",
+          "targeted resume scheduler tests",
+          "rerun jscpd/booboo duplicate-code check",
+          "rerun type-coverage review and compare state hotspot counts",
+          "control-room smoke tests",
+          "rerun type-coverage review and compare UI/adapter hotspot counts",
+          "npm run test:features",
+          "rerun complexity review for state graph files",
+          "rerun complexity review for state/builders and state/lint",
+          "relevant TASK-028/TASK-029 guard tests",
+          "rerun complexity review for roadmap/session files",
+          "control-room and efficiency UI smoke tests",
+          "rerun complexity review for UI files",
+          "audit and validation preflight smoke tests",
+          "rerun complexity review for audit/validation files"
+        ]
+      },
+      "delta": {
+        "desired": "review tooling has enough project knowledge to make future dead-code findings actionable.\nRefinement: Additional outcome: Concrete safety findings from the review are resolved with bounded regex behavior and observable fallback errors.\nRefinement: safety-sensitive review findings have direct fixes and tests.\nRefinement: Additional outcome: Package metadata and docs accurately describe CodeWiki release/readiness posture without confusing Pi-only loading with missing application entrypoints.\nRefinement: package readiness metadata is accurate and review output has fewer release hygiene warnings.\nRefinement: Additional outcome: /wiki-resume and codewiki_resume_context use one tested implementation for explicit, focused, persisted, roadmap-order, blocked, and non-executable task selection.\nRefinement: one shared resolver prevents future drift between command and tool behavior.\nRefinement: Additional outcome: Low-risk duplicate blocks identified by jscpd are reduced without obscuring simple declarations or weakening public schemas.\nRefinement: remaining low-risk duplication is either removed or intentionally documented.\nRefinement: Additional outcome: State graph/build/read model code uses typed intermediate structures instead of broad any casts while preserving generated graph output shape.\nRefinement: state read models have stronger local typing and fewer any casts.\nRefinement: Additional outcome: UI and adapter boundary code has typed view-model/port seams and fewer broad casts while keeping Pi and web UI behavior stable.\nRefinement: UI and adapter seams are typed enough to reduce any pressure before deeper refactors.\nRefinement: Additional outcome: Graph rebuild code is modular enough to lower cognitive complexity without changing generated graph schema or rebuild behavior.\nRefinement: graph rebuild responsibilities are separated behind stable behavior-preserving seams.\nRefinement: Additional outcome: Generated state builder and lint code is split into small, testable units with no generated-state drift.\nRefinement: state builders and lint helpers have clear ownership and lower complexity.\nRefinement: Additional outcome: Roadmap and session runtime logic is modular while preserving canonical roadmap mutation and artifact-status coordination behavior.\nRefinement: runtime services have smaller focused modules and stable tool behavior.\nRefinement: Additional outcome: UI code is organized into data/read, model, render, and interaction seams with lower nesting and cognitive complexity.\nRefinement: UI responsibilities are separated enough for maintainable follow-up changes.\nRefinement: Additional outcome: Audit and validation code has smaller focused rule/preflight/report modules while preserving gateway policy and report outputs.\nRefinement: audit and validation responsibilities are decomposed without policy drift.",
+        "current": "booboo reports 363 Knip findings, including known dynamic entrypoints and runtime assets.\nRefinement: booboo flags six dynamic regex sites plus swallowed/obscured errors in roadmap and graph rebuild code.\nRefinement: booboo reports missing CHANGELOG, author/entrypoint/build-script concerns, and one stale description warning.\nRefinement: booboo finds 100% semantic duplicate resume selection functions in command and state layers.\nRefinement: booboo reports 25 duplicate blocks, with the largest actionable area already covered by the resume task.\nRefinement: booboo reports state graph/builders/reader as top any-typed identifier hotspots.\nRefinement: booboo reports UI/control-room, Pi manager, validation/report, and adapter/index as any-heavy files.\nRefinement: src/state/graph.ts is 3326 lines with cognitive complexity 1322 and MI 0.\nRefinement: src/state/builders.ts and src/state/lint.ts are large complexity/type hotspots.\nRefinement: src/roadmap/runtime.ts and src/session/claims.ts are high-complexity hotspots.\nRefinement: src/adapters/pi/ui/manager.ts and src/ui/web/control-room.ts are MI 0/high-complexity hotspots.\nRefinement: src/audit/tool.ts and src/validation/report.ts are high-complexity hotspots.",
+        "closure": "Task closes when calibrated review output and tests prove known entrypoints are no longer false positives or are explicitly documented ignores.\nRefinement: Task closes when those findings are gone or explicitly justified by tests and comments.\nRefinement: Task closes with package smoke/pack evidence and documented decisions for any intentionally unresolved readiness warnings.\nRefinement: Task closes when duplicate functions are gone and parity tests pass.\nRefinement: Task closes when duplicate-code review output is reduced and tests confirm behavior compatibility.\nRefinement: Task closes when typecheck/tests pass and review evidence shows reduced any usage in targeted files.\nRefinement: Task closes when tests pass and targeted any usage drops.\nRefinement: Task closes when graph tests and feature tests pass and complexity drops in the graph owner file.\nRefinement: Task closes when state tests pass and complexity/type metrics improve.\nRefinement: Task closes when tests pass and complexity drops for roadmap/session owner files.\nRefinement: Task closes when UI tests pass and complexity/nesting metrics improve.\nRefinement: Task closes when audit/validation tests pass and complexity metrics improve."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T00:53:56Z"
+    },
+    "TASK-037": {
+      "id": "TASK-037",
+      "title": "Calibrate static analysis entrypoints",
+      "status": "todo",
+      "priority": "high",
+      "kind": "tooling",
+      "summary": "Make PyLens/Knip-style review inputs aware of CodeWiki package entrypoints, public API facades, scripts, and tests.",
+      "spec_paths": [
+        "package.json",
+        "README.md"
+      ],
+      "code_paths": [
+        "package.json",
+        "src/index.ts",
+        "src/api/index.ts",
+        "src/api/tools.ts",
+        "scripts/codewiki-gateway.mjs",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "static-analysis-calibration",
+        "knip-config",
+        "package-entrypoints"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Future dead-code review output no longer flags known package entrypoints and script surfaces as unused.",
+        "acceptance": [
+          "Static analysis configuration or package metadata declares Pi extension, public API facade, CLI scripts, and test files as entrypoints.",
+          "Dynamic script import usage such as scripts/codewiki-gateway.mjs is visible to the tool or documented as an intentional ignore.",
+          "Review evidence shows known runtime/package entrypoints are not reported as dead code, or each remaining false positive has an explicit rationale.",
+          "Package smoke and pack checks remain compatible."
+        ],
+        "non_goals": [
+          "Do not delete exports based only on the current review.",
+          "Do not change product behavior.",
+          "Do not handle UI asset dependency calibration; the UI task owns control-room asset behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:pack",
+          "rerun booboo or Knip-equivalent review"
+        ]
+      },
+      "delta": {
+        "desired": "Static analysis output separates real unused code from CodeWiki package entrypoints/scripts.",
+        "current": "Dead-code review output includes known dynamic entrypoints and package script surfaces.",
+        "closure": "Task closes when calibrated review evidence is recorded and package tests pass."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T01:08:39Z"
+    },
+    "TASK-038": {
+      "id": "TASK-038",
+      "title": "Enforce compiler promotion gates and gateway boundaries",
+      "status": "in_progress",
+      "priority": "critical",
+      "kind": "architecture",
+      "summary": "Add mechanical preflight enforcement for decision/planning/implementation promotion gates while preserving gateway/audit boundary safety fixes.",
+      "spec_paths": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+      ],
+      "code_paths": [
+        "src/build",
+        "src/validation",
+        "src/gateway",
+        "src/audit",
+        "src/roadmap",
+        "src/state/resume-context.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-implementation/SKILL.md",
+        "skills/codewiki-validation/SKILL.md",
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/audit.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "pipeline-gates",
+        "decision-gateway-required",
+        "planning-gateway-required",
+        "promotion-preflight",
+        "ambiguity-backrouting",
+        "gateway-audit-hardening"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki blocks lower-layer promotion and routes ambiguity back to decision when required upstream evidence is missing, stale, failed, blocked, or semantically incomplete.",
+        "acceptance": [
+          "Planning preflight requires a decision_build plus decision-gateway pass unless the change declares and validates a mechanical/runtime/generated exemption.",
+          "Implementation/resume preflight requires a planning_build plus planning-gateway pass before selecting an executable roadmap task.",
+          "Ambiguous lower-loop cases block and route to decision with deterministic decision-question evidence instead of agent inference.",
+          "Task close/publication still requires implementation validation/content proof and is not weakened by the new checks.",
+          "Gateway/audit dynamic-regex and boundary safety findings remain addressed or explicitly covered by the same validation path.",
+          "Smoke tests prove missing, stale, failed, blocked, and ambiguous upstream evidence prevents promotion while valid upstream-pass paths continue."
+        ],
+        "non_goals": [
+          "Do not implement UI approval surfaces in this task.",
+          "Do not implement agency runner automation in this task.",
+          "Do not implement production quality thresholds in this task beyond preserving existing validation proof requirements."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "targeted validation-preflight/builds/resume scheduler tests",
+          "rerun relevant dynamic-regexp/gateway review checks"
+        ]
+      },
+      "delta": {
+        "desired": "Promotion gates and ambiguity back-routes are enforced by preflight/tool/runtime checks, not only by agent instructions.",
+        "current": "Docs require gated loop order and ambiguity routing, but tools can still create or consume lower-layer artifacts without hard upstream gateway proof.",
+        "closure": "Task closes when tests prove invalid promotion paths block and valid upstream-pass paths continue."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T03:40:00Z"
+    },
+    "TASK-039": {
+      "id": "TASK-039",
+      "title": "Add release-readiness changelog baseline",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "docs",
+      "summary": "Add the missing changelog baseline and document package-readiness decisions that the review surfaced for this Pi package.",
+      "spec_paths": [
+        "README.md"
+      ],
+      "code_paths": [
+        "CHANGELOG.md",
+        "README.md"
+      ],
+      "research_ids": [],
+      "labels": [
+        "changelog-baseline",
+        "release-readiness-docs"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Release-readiness documentation covers changelog history and intentional package entrypoint/build-script decisions.",
+        "acceptance": [
+          "CHANGELOG.md exists with an initial current-version or unreleased baseline.",
+          "README or package docs explain Pi extension loading and any intentional npm entrypoint/build-script posture.",
+          "Any package metadata change needed for author/description hygiene is included without breaking package smoke tests.",
+          "Remaining production-readiness review warnings are either resolved or documented as intentional."
+        ],
+        "non_goals": [
+          "Do not publish a release.",
+          "Do not bump package version without explicit release approval.",
+          "Do not add a build pipeline unless the package-readiness review proves it is required."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:pack",
+          "npm run test:smoke",
+          "rerun production-readiness review section"
+        ]
+      },
+      "delta": {
+        "desired": "Release-readiness docs and metadata accurately describe this Pi package.",
+        "current": "Review reports missing changelog and package-readiness warnings.",
+        "closure": "Task closes with changelog/docs/package smoke evidence and remaining warnings classified."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28"
+    },
+    "TASK-040": {
+      "id": "TASK-040",
+      "title": "Consolidate resume task selection",
+      "status": "todo",
+      "priority": "high",
+      "kind": "refactor",
+      "summary": "Replace duplicated /wiki-resume and codewiki_resume_context task-selection logic with one shared resolver and parity tests.",
+      "spec_paths": [
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-context.ts",
+        "src/state/resume-selection.ts",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "resume-selection",
+        "semantic-duplicate",
+        "state-resume"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "/wiki-resume and codewiki_resume_context share one tested task-selection implementation.",
+        "acceptance": [
+          "A shared module owns resolveImplementationTask and resumeCandidates, plus task artifact scope/blocking helpers where appropriate.",
+          "The command adapter and resume-context tool import the shared resolver instead of carrying duplicate functions.",
+          "Tests cover explicit task selection, session focus, persisted focus, roadmap-order fallback, artifact conflict skip, and non-executable task skip.",
+          "Existing resume prompt, artifact-status, status-dock, and source-root guard behavior remains compatible."
+        ],
+        "non_goals": [
+          "Do not redesign roadmap scheduling policy.",
+          "Do not change artifact-status semantics.",
+          "Do not rename Pi commands or tool schemas."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "resume scheduler smoke tests",
+          "rerun semantic similarity duplicate check"
+        ]
+      },
+      "delta": {
+        "desired": "One resolver prevents command/tool scheduling drift.",
+        "current": "Review reports 100% duplicate resume selection functions in command and state layers.",
+        "closure": "Task closes when duplicate functions are removed and parity tests pass."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T01:08:45Z"
+    },
+    "TASK-041": {
+      "id": "TASK-041",
+      "title": "Clean adapter schemas and command helpers",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "refactor",
+      "summary": "Reduce low-risk duplication and helper cleanup findings in Pi adapter schemas, registration, commands, and compaction glue without changing public tool schemas or command behavior.",
+      "spec_paths": [
+        ".codewiki/kb/system/api.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/commands/config.ts",
+        "src/adapters/pi/commands/status.ts",
+        "src/adapters/pi/commands/ui.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "adapter-registration-dedupe",
+        "schema-dedupe",
+        "adapter-command-cleanup"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Adapter/schema duplicate-code and small command-helper findings drop while public schemas and Pi command behavior remain compatible.",
+        "acceptance": [
+          "Repeated adapter registration blocks are extracted into small behavior-preserving helpers where clarity improves.",
+          "Schema duplicate blocks are consolidated only when validation semantics and deprecated compatibility aliases remain explicit.",
+          "Async helpers without await are made synchronous unless an interface requires Promise behavior, and touched boolean parameters become options objects where call-site clarity improves.",
+          "Package, command, and compaction smoke behavior remains compatible."
+        ],
+        "non_goals": [
+          "Do not refactor Pi UI manager/theme modules in this task.",
+          "Do not change public tool schemas, command names, flags, or compatibility aliases.",
+          "Do not touch roadmap/session/validation runtime behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "package and compaction smoke tests",
+          "rerun jscpd/async/boolean-param review checks for adapter files"
+        ]
+      },
+      "delta": {
+        "desired": "Adapter exposure-layer code is cleaner without external behavior drift.",
+        "current": "Review reports duplicate adapter/schema blocks plus small async/boolean/helper findings in adapter commands and compaction.",
+        "closure": "Task closes when targeted review output improves and package/compaction smoke coverage passes."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T01:08:52Z"
+    },
+    "TASK-042": {
+      "id": "TASK-042",
+      "title": "Strengthen state graph read models",
+      "status": "todo",
+      "priority": "high",
+      "kind": "refactor",
+      "summary": "Reduce any usage and cognitive complexity in graph, builders, reader, and lint code while preserving generated CodeWiki state outputs.",
+      "spec_paths": [
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/file-structure.md"
+      ],
+      "code_paths": [
+        "src/state/graph.ts",
+        "src/state/builders.ts",
+        "src/state/reader.ts",
+        "src/state/lint.ts",
+        "src/state/types.ts",
+        "src/state/graph/rebuilder.ts",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "graph-read-model-hardening",
+        "generated-state-typing",
+        "state-builder-split"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "State graph/read-model ownership has stronger typing and smaller focused modules without generated output drift.",
+        "acceptance": [
+          "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
+          "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
+          "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in the graph owner file.",
+          "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests."
+        ],
+        "non_goals": [
+          "Do not redesign the graph JSON schema.",
+          "Do not move state ownership out of src/state/**.",
+          "Do not change resume task-selection logic; TASK-040 owns that boundary."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "rerun type-coverage and complexity review for state files"
+        ]
+      },
+      "delta": {
+        "desired": "State read models are typed and modular enough for maintainable follow-up changes.",
+        "current": "State graph/builders/reader/lint files are top complexity and any-typed hotspots.",
+        "closure": "Task closes when tests pass and review metrics improve for targeted state files."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28"
+    },
+    "TASK-043": {
+      "id": "TASK-043",
+      "title": "Reduce diagram parser complexity",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "refactor",
+      "summary": "Extract focused helpers from knowledge diagram parsing while preserving diagram reference and drift outputs.",
+      "spec_paths": [
+        ".codewiki/kb/system/diagrams/component-map.yaml"
+      ],
+      "code_paths": [
+        "src/knowledge/diagram-parser.ts",
+        "src/knowledge/doc-parser.ts",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/tasks/TASK-025/knowledge-source-root.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "knowledge-diagram-parser",
+        "mermaid-parser",
+        "diagram-ref-maintenance"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Knowledge diagram parser internals are safer and easier to maintain with unchanged diagram-ref behavior.",
+        "acceptance": [
+          "Mermaid node/edge parsing, class membership parsing, file-structure rules, and drift entry parsing have focused helpers where practical.",
+          "Pattern construction handles special characters safely and rejects or ignores malformed input predictably.",
+          "Diagram-ref validation and package source-root guard tests remain compatible.",
+          "Complexity review improves for knowledge parser files or remaining complexity is documented with parser-specific rationale."
+        ],
+        "non_goals": [
+          "Do not change canonical diagram YAML/Markdown formats.",
+          "Do not move knowledge ownership out of src/knowledge/**.",
+          "Do not update unrelated KB content."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "diagram refs smoke tests",
+          "rerun complexity review for knowledge files"
+        ]
+      },
+      "delta": {
+        "desired": "Parser logic is split into focused helpers with stable outputs.",
+        "current": "Knowledge diagram parsing has low maintainability, deep nesting, and parser safety findings.",
+        "closure": "Task closes when diagram tests pass and parser review findings improve."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28"
+    },
+    "TASK-044": {
+      "id": "TASK-044",
+      "title": "Implement parallel scheduler and publisher queue",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "feature",
+      "summary": "Add safe parallel roadmap execution through sprint/task partitioning, artifact claims, role worktrees or refs, fresh validation, and serialized publisher queue proof.",
+      "spec_paths": [
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+      ],
+      "code_paths": [
+        "src/session/claims.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/session/worktree-isolation.ts",
+        "src/agency/planning.ts",
+        "src/roadmap/runtime.ts",
+        "src/validation/report.ts",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "parallel-scheduler",
+        "role-worktrees",
+        "publisher-queue",
+        "sprint-parallelism"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki can safely allocate non-conflicting sprint/task workers and serialize final merge/closure through publisher proof.",
+        "acceptance": [
+          "Scheduler computes non-conflicting sprint/task partitions from declared write scopes and artifact-status availability.",
+          "Builder, validator, and publisher roles record worktree/branch/ref metadata and claims with TTL/heartbeat/release semantics.",
+          "Fresh validation consumes immutable refs from worker outputs and does not reuse builder chat context.",
+          "Publisher queue serializes merge/apply, generated-state refresh, final commit/tree proof, and task-close/publication readiness.",
+          "Tests cover non-conflicting parallel allocation, write/write conflict blocking, wait/wake readiness, validation isolation, and publisher serialization."
+        ],
+        "non_goals": [
+          "Do not implement generic cloud/remote worker infrastructure.",
+          "Do not bypass Git/content proof or validation isolation.",
+          "Do not allow shared-root parallel writes when role worktrees/refs are required."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "claim wait queue and role worktree isolation tests",
+          "roadmap/session source-root guard tests"
+        ]
+      },
+      "delta": {
+        "desired": "Scheduler/worktree/publisher machinery makes one-agent-per-sprint style work safe and machine-enforced.",
+        "current": "Docs describe parallel execution, but runtime mostly exposes claims/waits and plan-only spawn hints.",
+        "closure": "Task closes when tests prove parallel scheduling, conflict handling, validation isolation, and publisher proof."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T02:45:13Z"
+    },
+    "TASK-045": {
+      "id": "TASK-045",
+      "title": "Build inline approval UI and split UI modules",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "feature",
+      "summary": "Add Pi/CodeWiki decision/task approval cards backed by CodeWiki tools while decomposing UI modules enough to keep the approval surface maintainable.",
+      "spec_paths": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/system/control-room-ui.md",
+        ".codewiki/kb/system/control-room-ui-details.md",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+      ],
+      "code_paths": [
+        "src/adapters/pi/ui/decision-approval.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/ui/web/control-room.ts",
+        "src/change/diff-table.ts",
+        "src/change/tool.ts",
+        "src/roadmap/tool.ts",
+        "tests/smoke/control-room.test.mjs",
+        "tests/smoke/efficiency-ui.test.mjs",
+        "tests/smoke/decision-approval-ui.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "inline-approval-ui",
+        "decision-row-cards",
+        "task-candidate-approval",
+        "ui-manager-split",
+        "control-room-models"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Users can approve, edit, reject, or defer individual decision rows and task candidates inline while UI ownership stays modular.",
+        "acceptance": [
+          "Pi TUI or compact panel shows pending decision rows with current state, desired state, affected layers, risk, and alternatives.",
+          "Inline actions call CodeWiki diff-table actions and leave machine-readable approval evidence before decision_build creation.",
+          "Planning task/sprint candidates can be presented for approval before canonical roadmap mutation when the adapter supports the surface; non-interactive fallback remains explicit typed approval.",
+          "UI data/read, model, render, and interaction seams are separated enough to avoid further expanding the existing UI manager/control-room monoliths.",
+          "Tests cover approve, edit/defer/reject states, build eligibility only for approved rows, fallback behavior, and existing UI smoke behavior."
+        ],
+        "non_goals": [
+          "Do not bypass codewiki_diff_table or codewiki_task tools.",
+          "Do not remove chat fallback until UI is available in all adapters.",
+          "Do not implement agency runner or scheduler logic in UI modules."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "control-room and efficiency UI smoke tests",
+          "targeted UI/diff-table approval tests"
+        ]
+      },
+      "delta": {
+        "desired": "Row/task approvals are first-class inline UI actions backed by CodeWiki state and maintainable UI seams.",
+        "current": "Decision/task approvals are primarily prose/chat or runtime JSON, and UI modules are already complexity hotspots.",
+        "closure": "Task closes when approved rows and task candidates flow through UI actions to machine-readable state and tests pass."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T02:43:37Z"
+    },
+    "TASK-046": {
+      "id": "TASK-046",
+      "title": "Simplify project bootstrap and template flows",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "refactor",
+      "summary": "Reduce complexity in project resolution, bootstrap/setup, template generation, and local git/file helpers while preserving bootstrap output.",
+      "spec_paths": [
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/product/overview.md"
+      ],
+      "code_paths": [
+        "src/project/context.ts",
+        "src/project/root.ts",
+        "src/project/bootstrap.ts",
+        "src/project/templates.ts",
+        "src/project/local/git-cache.ts",
+        "src/project/local/file-store.ts",
+        "tests/smoke/project-resolution.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/tasks/TASK-024/project-source-root.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "project-bootstrap-maintenance",
+        "template-complexity",
+        "project-root"
+      ],
+      "change_type": "code",
+      "goal": {
+        "outcome": "Project/bootstrap/template code has clearer helper boundaries and lower complexity without changing starter output or project resolution behavior.",
+        "acceptance": [
+          "Project root/config resolution, bootstrap/setup orchestration, starter template rendering, and local git/file helpers have focused helper boundaries where practical.",
+          "Long parameter lists in template helpers are replaced with options objects when it improves clarity.",
+          "Bootstrap starter output and package smoke behavior remain compatible.",
+          "Complexity review improves for project/context, project/bootstrap, project/templates, and project/root/git-cache hotspots."
+        ],
+        "non_goals": [
+          "Do not change starter taxonomy semantics.",
+          "Do not move project ownership out of src/project/**.",
+          "Do not alter Pi package install behavior."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "project source-root guard tests",
+          "rerun complexity review for project files"
+        ]
+      },
+      "delta": {
+        "desired": "Project support flows are easier to maintain with unchanged outputs.",
+        "current": "Project/bootstrap/template files appear in complexity and long-parameter review findings.",
+        "closure": "Task closes when project tests pass and review metrics improve for targeted project files."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28"
+    },
+    "TASK-047": {
+      "id": "TASK-047",
+      "title": "Implement bounded agency runner",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "feature",
+      "summary": "Upgrade codewiki_agency from planner output to a bounded runner that selects work, claims scopes, invokes compiler steps, submits gateway checks, and uses CodeWiki-owned compaction within task/sprint/roadmap scope.",
+      "spec_paths": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+      ],
+      "code_paths": [
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/agency/types.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/state/resume-context.ts",
+        "src/adapters/pi/compaction.ts",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "agency-runner",
+        "automatic-loop-advancement",
+        "codewiki-compaction-runner",
+        "workflow-efficiency-evidence"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Agency can run bounded compiler/gateway steps automatically inside approved task, sprint, or roadmap scope without bypassing hard gates.",
+        "acceptance": [
+          "codewiki_agency work mode can plan and execute one safe compiler/gateway step when budgets, agency level, and approval cadence allow it.",
+          "Runner acquires and releases artifact-status claims for touched scopes and stops on conflicts, ambiguity, validation blocks, risk escalation, destructive/publication gates, or budget exhaustion.",
+          "Runner uses codewiki_resume_context and CodeWiki-owned compaction/session-boundary kickoff at safe boundaries when context reset is needed.",
+          "Workflow-efficiency evidence records user interruptions avoided/required, manual commands avoided, session boundaries used, and platform-limited steps.",
+          "Existing agency source-root, compaction, and resume scheduler behavior remains compatible."
+        ],
+        "non_goals": [
+          "Do not spawn parallel workers in this task; scheduler/worktree work owns that.",
+          "Do not bypass decision/planning/implementation validation gates.",
+          "Do not perform destructive, publication, push, or release actions automatically."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "agency source-root tests",
+          "compaction/resume scheduler tests",
+          "new agency runner tests for stop gates and budget limits"
+        ]
+      },
+      "delta": {
+        "desired": "Agency orchestrates routine compiler/gateway progression inside explicit limits while preserving hard gates.",
+        "current": "codewiki_agency mostly reports next steps and stop gates; agents still manually sequence compilers and gateways.",
+        "closure": "Task closes when runner tests prove allowed steps execute and blocked steps stop with clear evidence."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28T02:44:53Z"
+    },
+    "TASK-048": {
+      "id": "TASK-048",
+      "title": "Define production quality profile",
+      "status": "todo",
+      "priority": "high",
+      "kind": "quality",
+      "summary": "Create a policy-backed quality profile for implementation/task-close promotion using deterministic checks, review thresholds, content proof, and explicit waivers.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+      ],
+      "code_paths": [
+        "src/quality/production-profile.ts",
+        "src/quality/tool.ts",
+        "tests/smoke/quality-profile.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "production-quality-profile-new",
+        "review-budget-profile",
+        "waiver-ledger"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Implementation and task-close gates can require a consistent production-ready quality profile with explicit evidence or waivers.",
+        "acceptance": [
+          "Quality profile defines required checks/audits by change class and risk tier, including typecheck, tests, package/pack checks, review-tool findings, content proof, and drift audits where applicable.",
+          "Validation integration blocks promotion when required checks, thresholds, content proof, or fresh validation evidence are missing, unless an explicit waiver is recorded with rationale and owner.",
+          "Implementation builds can map acceptance criteria to quality evidence and remaining risk/waiver records.",
+          "Tests cover pass, missing-evidence block, waiver-required block/pass, and package/readiness scenarios."
+        ],
+        "non_goals": [
+          "Do not require all review findings to be zero immediately; use thresholds or explicit waivers.",
+          "Do not replace existing task-specific verification criteria.",
+          "Do not perform publication or release."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "targeted quality-profile tests"
+        ]
+      },
+      "delta": {
+        "desired": "Promotion/closure has deterministic quality evidence requirements and explicit waiver handling.",
+        "current": "Quality checks exist across tasks and audits but there is no unified production-ready gate profile.",
+        "closure": "Task closes when quality profile tests prove required evidence and waivers are enforced."
+      },
+      "created": "2026-05-28",
+      "updated": "2026-05-28"
     }
   },
   "sprints": {
@@ -480,6 +1410,237 @@
       ],
       "created": "2026-05-27T19:46:42Z",
       "updated": "2026-05-27T19:46:42Z"
+    },
+    "SPRINT-005": {
+      "id": "SPRINT-005",
+      "title": "Review signal and release hygiene",
+      "status": "planned",
+      "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
+      "task_ids": [
+        "TASK-037",
+        "TASK-039"
+      ],
+      "scope": {
+        "knowledge": [
+          ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md",
+          "README.md"
+        ],
+        "code": [
+          "package.json",
+          "src/index.ts",
+          "src/api/index.ts",
+          "src/api/tools.ts",
+          "scripts/codewiki-gateway.mjs",
+          "CHANGELOG.md",
+          "tests/smoke/package-smoke.test.mjs"
+        ]
+      },
+      "budget": {
+        "maxCycles": 2,
+        "maxSessions": 2,
+        "risk": "low"
+      },
+      "gates": [
+        "decision/planning/implementation promotion gates verified before implementation",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:pack",
+        "rerun static-analysis or production-readiness review subset"
+      ],
+      "created": "2026-05-28T01:01:40Z",
+      "updated": "2026-05-28T02:47:23Z"
+    },
+    "SPRINT-006": {
+      "id": "SPRINT-006",
+      "title": "Safety and exposure-boundary cleanup",
+      "status": "planned",
+      "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
+      "task_ids": [
+        "TASK-041"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/api.md"
+        ],
+        "code": [
+          "src/adapters/pi",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs"
+        ]
+      },
+      "budget": {
+        "maxCycles": 2,
+        "maxSessions": 2,
+        "risk": "medium"
+      },
+      "gates": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "rerun duplicate-code, async, and boolean-param review subsets"
+      ],
+      "created": "2026-05-28T01:01:48Z",
+      "updated": "2026-05-28T02:47:35Z"
+    },
+    "SPRINT-007": {
+      "id": "SPRINT-007",
+      "title": "State and resume hardening",
+      "status": "planned",
+      "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
+      "task_ids": [
+        "TASK-040",
+        "TASK-042"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/file-structure.md"
+        ],
+        "code": [
+          "src/state",
+          "src/adapters/pi/commands/resume.ts",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs"
+        ]
+      },
+      "budget": {
+        "maxCycles": 4,
+        "maxSessions": 3,
+        "risk": "medium"
+      },
+      "gates": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "rerun semantic-similarity, type-coverage, and complexity review subsets for state/resume"
+      ],
+      "created": "2026-05-28T01:01:55Z",
+      "updated": "2026-05-28T01:01:55Z"
+    },
+    "SPRINT-008": {
+      "id": "SPRINT-008",
+      "title": "Runtime parser and support decomposition",
+      "status": "planned",
+      "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
+      "task_ids": [
+        "TASK-043",
+        "TASK-046"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/file-structure.md"
+        ],
+        "code": [
+          "src/knowledge",
+          "src/project",
+          "tests/smoke",
+          "tests/tasks"
+        ]
+      },
+      "budget": {
+        "maxCycles": 3,
+        "maxSessions": 3,
+        "risk": "medium"
+      },
+      "gates": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "rerun complexity and fact-rules review subsets for touched roots"
+      ],
+      "created": "2026-05-28T01:02:04Z",
+      "updated": "2026-05-28T02:47:45Z"
+    },
+    "SPRINT-009": {
+      "id": "SPRINT-009",
+      "title": "Pipeline foundation and quality gates",
+      "status": "active",
+      "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
+      "task_ids": [
+        "TASK-038",
+        "TASK-045",
+        "TASK-048"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/control-room-ui.md"
+        ],
+        "code": [
+          "src/build",
+          "src/validation",
+          "src/gateway",
+          "src/audit",
+          "src/roadmap",
+          "src/state",
+          "src/adapters/pi",
+          "src/change",
+          "src/quality",
+          "tests/smoke"
+        ]
+      },
+      "budget": {
+        "maxCycles": 5,
+        "maxSessions": 3,
+        "risk": "high"
+      },
+      "gates": [
+        "decision gateway pass for pipeline hardening build",
+        "planning gateway pass for this sprint",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "targeted validation/resume/UI/quality tests",
+        "no implementation task selected without planning-gateway proof"
+      ],
+      "created": "2026-05-28T02:47:54Z",
+      "updated": "2026-05-28T02:47:54Z"
+    },
+    "SPRINT-010": {
+      "id": "SPRINT-010",
+      "title": "Agency automation and parallel execution",
+      "status": "planned",
+      "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
+      "task_ids": [
+        "TASK-047",
+        "TASK-044"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md"
+        ],
+        "code": [
+          "src/agency",
+          "src/session",
+          "src/roadmap",
+          "src/state/resume-context.ts",
+          "src/adapters/pi/compaction.ts",
+          "tests/smoke",
+          "tests/tasks"
+        ]
+      },
+      "budget": {
+        "maxCycles": 5,
+        "maxSessions": 4,
+        "risk": "high"
+      },
+      "gates": [
+        "SPRINT-009 pipeline gates complete or explicitly waived by validation",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "agency runner tests",
+        "claim/wait/role-worktree/publisher tests",
+        "fresh validation proof for parallel outputs"
+      ],
+      "created": "2026-05-28T02:48:04Z",
+      "updated": "2026-05-28T02:48:04Z"
     }
   }
 }

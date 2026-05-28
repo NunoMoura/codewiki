@@ -45,6 +45,7 @@ import { statusColor, statusLevel } from "../ui/theme.ts";
 import { buildResumeContextForTask } from "../../../state/resume-context.ts";
 import { buildCodewikiResumeKickoff } from "../compaction.ts";
 import { effectiveAgencyPolicy } from "../../../agency/types.ts";
+import { roadmapImplementationReadiness } from "../../../build/shared.ts";
 import type { WikiProject } from "../../../project/types.ts";
 import type {
 	RoadmapFile,
@@ -109,6 +110,7 @@ async function runResumeCommand(
 		persistedFocusTaskId,
 		artifactState,
 		sessionId,
+		roadmapImplementationReadiness(project, roadmap),
 	);
 	if (!selection.task) {
 		ctx.ui.notify(
@@ -441,6 +443,15 @@ export interface ResumeSelection {
 	skipped: string[];
 }
 
+export type TaskImplementationReadiness = Record<string, string[]>;
+
+function taskReadinessGaps(
+	task: RoadmapTaskRecord,
+	readiness: TaskImplementationReadiness = {},
+): string[] {
+	return readiness[task.id] ?? [];
+}
+
 export function resolveImplementationTask(
 	roadmap: RoadmapFile,
 	activeLink: TaskSessionLinkRecord | null,
@@ -448,6 +459,7 @@ export function resolveImplementationTask(
 	persistedFocusTaskId: string | null = null,
 	artifactState: ChangeClaimState,
 	sessionId: string,
+	implementationReadiness: TaskImplementationReadiness = {},
 ): ResumeSelection {
 	const ordered = roadmap.order
 		.map((taskId) => roadmap.tasks[taskId])
@@ -462,6 +474,15 @@ export function resolveImplementationTask(
 		if (!requestedBoundary.executable) {
 			throw new Error(
 				`Roadmap task ${requestedTask.id} is not executable work. Use a sprint for grouping. ${requestedBoundary.reasons.join("; ")}`,
+			);
+		}
+		const readinessGaps = taskReadinessGaps(
+			requestedTask,
+			implementationReadiness,
+		);
+		if (readinessGaps.length > 0) {
+			throw new Error(
+				`Roadmap task ${requestedTask.id} is not implementation-ready. ${readinessGaps.join("; ")}`,
 			);
 		}
 		const artifactStatuses = artifactStatusesForScopes(
@@ -502,6 +523,16 @@ export function resolveImplementationTask(
 			);
 			continue;
 		}
+		const readinessGaps = taskReadinessGaps(
+			candidate.task,
+			implementationReadiness,
+		);
+		if (readinessGaps.length > 0) {
+			skipped.push(
+				`${candidate.task.id}: not implementation-ready (${readinessGaps.join("; ")})`,
+			);
+			continue;
+		}
 		if (hasBlockingArtifactStatus(artifactStatuses)) {
 			skipped.push(
 				`${candidate.task.id}: ${formatBlockingArtifactStatuses(artifactStatuses)}`,
@@ -523,6 +554,13 @@ export function resolveImplementationTask(
 		if (!boundary.executable) {
 			skipped.push(
 				`${task.id}: non-executable container task (${boundary.reasons.join("; ")})`,
+			);
+			continue;
+		}
+		const readinessGaps = taskReadinessGaps(task, implementationReadiness);
+		if (readinessGaps.length > 0) {
+			skipped.push(
+				`${task.id}: not implementation-ready (${readinessGaps.join("; ")})`,
 			);
 			continue;
 		}

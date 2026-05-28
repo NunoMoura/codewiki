@@ -17,6 +17,11 @@ import {
 	shouldTriggerCodewikiThresholdRefresh,
 	takePendingCodewikiContextRefresh,
 } from "../../src/adapters/pi/compaction.ts";
+import {
+	writeDecisionBuild,
+	writePlanningBuild,
+} from "../../src/build/writer.ts";
+import { writeValidationReport } from "../../src/validation/report.ts";
 import { loadProject } from "../../src/project/context.ts";
 
 assert.equal(
@@ -92,8 +97,16 @@ const deferredNotice = formatCodewikiContextRefreshDeferredNotice(
 	"agent is not idle",
 	null,
 );
-assert.equal(deferredNotice.shouldNotify, true, "first non-idle deferred refresh should notify");
-assert.equal(deferredNotice.level, "info", "normal non-idle deferred refresh should not be a warning");
+assert.equal(
+	deferredNotice.shouldNotify,
+	true,
+	"first non-idle deferred refresh should notify",
+);
+assert.equal(
+	deferredNotice.level,
+	"info",
+	"normal non-idle deferred refresh should not be a warning",
+);
 assert.equal(
 	formatCodewikiContextRefreshDeferredNotice(
 		{
@@ -123,7 +136,10 @@ assert.equal(
 );
 assert.equal(
 	formatCodewikiContextRefreshDeferredNotice(
-		{ reason: "implementation-build-boundary", requestedAt: "2026-05-20T00:00:00Z" },
+		{
+			reason: "implementation-build-boundary",
+			requestedAt: "2026-05-20T00:00:00Z",
+		},
 		"adapter cannot report idle boundary",
 		null,
 	).level,
@@ -346,7 +362,81 @@ async function createCompactionFixture({ openTask = true } = {}) {
 			2,
 		),
 	);
-	return { root, project: await loadProject(root) };
+	const project = await loadProject(root);
+	if (openTask) {
+		const decision = await writeDecisionBuild(project, {
+			kind: "decision",
+			summary: "Compaction resume proof decision.",
+			diff_table: [
+				{
+					id: "COMPACTION-RESUME",
+					current_state: "TASK-001 lacks planning proof.",
+					desired_state:
+						"TASK-001 has validated planning proof for compaction resume.",
+					rationale:
+						"Resume context enforcement requires planning-gateway proof.",
+					affected_layers: ["roadmap"],
+					user_action: "approved",
+				},
+			],
+			row_to_kb_mappings: [
+				{
+					row_id: "COMPACTION-RESUME",
+					knowledge_refs: [".codewiki/kb/system/graph.md"],
+					evidence: "Fixture graph doc captures compaction resume proof.",
+				},
+			],
+			propagation: {
+				direction: "system-first",
+				no_product_impact: "Smoke fixture only.",
+				downstream_planning_questions: ["Plan TASK-001 compaction resume."],
+			},
+			knowledge_changes: [".codewiki/kb/system/graph.md"],
+		});
+		await writeValidationReport(project, {
+			profile: "decision",
+			verdict: "pass",
+			rationale: "Decision pass for compaction resume proof.",
+			source: decision.path,
+			audit_refs: ["audit:alignment", "audit:stale-reference", "approval:user"],
+		});
+		const planning = await writePlanningBuild(project, {
+			kind: "planning",
+			summary: "Compaction resume proof planning.",
+			source_decision_build: decision.path,
+			task_ids: ["TASK-001"],
+			task_changes: ["TASK-001 is implementation-ready for compaction resume."],
+			decision_row_resolutions: [
+				{
+					row_id: "COMPACTION-RESUME",
+					resolution: "roadmap-task",
+					task_ids: ["TASK-001"],
+					evidence: "TASK-001 carries compaction resume proof.",
+					source_refs: [decision.path, "TASK-001"],
+				},
+			],
+			downstream_question_resolutions: [
+				{
+					question: "Plan TASK-001 compaction resume.",
+					resolution: "roadmap-task",
+					task_ids: ["TASK-001"],
+					evidence: "TASK-001 answers compaction resume question.",
+					source_refs: [decision.path, "TASK-001"],
+				},
+			],
+			tdd_plan: ["Compaction smoke uses planning proof."],
+			candidate_test_files: ["tests/smoke/codewiki-compaction.test.mjs"],
+			candidate_code_paths: ["src/adapters/pi/compaction.ts"],
+		});
+		await writeValidationReport(project, {
+			profile: "planning",
+			verdict: "pass",
+			rationale: "Planning pass for compaction resume proof.",
+			source: planning.path,
+			audit_refs: ["audit:alignment", "approval:user"],
+		});
+	}
+	return { root, project };
 }
 
 {

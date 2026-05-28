@@ -3,8 +3,15 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { writeDecisionBuild, writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
-import { buildValidationPreflight, writeValidationReport } from "../../src/validation/report.ts";
+import {
+	writeDecisionBuild,
+	writeImplementationBuild,
+	writePlanningBuild,
+} from "../../src/build/writer.ts";
+import {
+	buildValidationPreflight,
+	writeValidationReport,
+} from "../../src/validation/report.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-validation-preflight-"));
 
@@ -36,30 +43,157 @@ const project = {
 };
 
 const implementationAuditRefs = ["audit:alignment", "audit:changed"];
-const publicationAuditRefs = ["audit:alignment", "audit:package", "audit:security"];
+const decisionAuditRefs = ["audit:alignment", "audit:stale-reference"];
+const planningAuditRefs = ["audit:alignment"];
+const publicationAuditRefs = [
+	"audit:alignment",
+	"audit:package",
+	"audit:security",
+];
+
+async function writeGatewayPass(profile, source, options = {}) {
+	return writeValidationReport(project, {
+		profile,
+		verdict: "pass",
+		rationale: `${profile} gateway pass for fixture ${source}.`,
+		source,
+		audit_refs:
+			options.audit_refs ??
+			(profile === "decision"
+				? decisionAuditRefs
+				: profile === "planning"
+					? planningAuditRefs
+					: implementationAuditRefs),
+		task_id: options.task_id,
+		isolation: options.isolation,
+	});
+}
 
 try {
 	const decision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept validation preflight risk policy.",
-		diff_table: [{ id: "VAL-PREFLIGHT", current_state: "Validation preflight is weaker.", desired_state: "Validation preflight enforces semantic metadata.", rationale: "Smoke coverage needs accepted intent.", affected_layers: ["system", "roadmap", "code"], user_action: "approved" }],
-		row_to_kb_mappings: [{ row_id: "VAL-PREFLIGHT", knowledge_refs: [".codewiki/kb/system/validation-gateway.md"], evidence: "Validation gateway docs capture accepted intent." }],
-		propagation: { direction: "system-first", product_impact: ["Agents see stricter validation routes."], downstream_planning_questions: ["Plan TASK-777 implementation."] },
+		diff_table: [
+			{
+				id: "VAL-PREFLIGHT",
+				current_state: "Validation preflight is weaker.",
+				desired_state: "Validation preflight enforces semantic metadata.",
+				rationale: "Smoke coverage needs accepted intent.",
+				affected_layers: ["system", "roadmap", "code"],
+				user_action: "approved",
+			},
+		],
+		row_to_kb_mappings: [
+			{
+				row_id: "VAL-PREFLIGHT",
+				knowledge_refs: [".codewiki/kb/system/validation-gateway.md"],
+				evidence: "Validation gateway docs capture accepted intent.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Agents see stricter validation routes."],
+			downstream_planning_questions: ["Plan TASK-777 implementation."],
+		},
 		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
 		roadmap_changes: ["TASK-777"],
 	});
+	await writeGatewayPass("decision", decision.path);
 	const planning = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Plan validation preflight risk policy.",
 		source_decision_build: decision.path,
 		task_ids: ["TASK-777"],
 		task_changes: ["TASK-777 covers validation preflight."],
-		decision_row_resolutions: [{ row_id: "VAL-PREFLIGHT", resolution: "roadmap-task", task_ids: ["TASK-777"], evidence: "TASK-777 implements accepted validation preflight policy.", source_refs: [decision.path, "TASK-777"] }],
-		downstream_question_resolutions: [{ question: "Plan TASK-777 implementation.", resolution: "roadmap-task", task_ids: ["TASK-777"], evidence: "TASK-777 is the implementation route for the downstream question.", source_refs: [decision.path, "TASK-777"] }],
+		decision_row_resolutions: [
+			{
+				row_id: "VAL-PREFLIGHT",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-777"],
+				evidence: "TASK-777 implements accepted validation preflight policy.",
+				source_refs: [decision.path, "TASK-777"],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question: "Plan TASK-777 implementation.",
+				resolution: "roadmap-task",
+				task_ids: ["TASK-777"],
+				evidence:
+					"TASK-777 is the implementation route for the downstream question.",
+				source_refs: [decision.path, "TASK-777"],
+			},
+		],
 		tdd_plan: ["Add gateway/preflight smoke coverage."],
 		candidate_test_files: ["tests/smoke/validation-preflight.test.mjs"],
 		candidate_code_paths: ["src/build/writer.ts"],
 	});
+
+	const planningWithoutGatewayImplementation = await writeImplementationBuild(
+		project,
+		{
+			kind: "implementation",
+			summary: "Implement before planning gateway.",
+			source_planning_build: planning.path,
+			task_id: "TASK-777",
+			change_type: "system",
+			test_files: ["tests/smoke/validation-preflight.test.mjs"],
+			code_files: ["src/build/writer.ts"],
+			checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
+			acceptance_mapping: [
+				{
+					criterion: "Planning gateway required",
+					evidence: "Preflight blocks missing planning gateway pass.",
+				},
+			],
+			closure_brief: {
+				user_intent: "Prove planning gateway is required.",
+				implemented_changes: ["Added fixture before planning pass."],
+				acceptance_evidence: ["Preflight blocks missing planning pass."],
+				checks: ["node tests/smoke/validation-preflight.test.mjs"],
+			},
+		},
+	);
+	const missingPlanningGateway = buildValidationPreflight(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Planning gateway pass is required.",
+		source: planningWithoutGatewayImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:dirty",
+		},
+	});
+	assert.ok(
+		missingPlanningGateway.missing.upstream_builds.some((entry) =>
+			entry.includes("missing_planning_validation_pass"),
+		),
+	);
+	const missingPlanningGatewayReport = await writeValidationReport(project, {
+		profile: "implementation",
+		task_id: "TASK-777",
+		verdict: "pass",
+		rationale: "Planning gateway pass is required.",
+		source: planningWithoutGatewayImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:dirty",
+		},
+	});
+	assert.equal(missingPlanningGatewayReport.data.verdict, "block");
+	assert.ok(
+		missingPlanningGatewayReport.data.failed_criteria.includes(
+			"upstream_gateway",
+		),
+	);
+	await writeGatewayPass("planning", planning.path);
 
 	const semanticImplementation = await writeImplementationBuild(project, {
 		kind: "implementation",
@@ -70,7 +204,13 @@ try {
 		test_files: ["tests/smoke/validation-preflight.test.mjs"],
 		code_files: ["src/build/writer.ts", "src/validation/tool.ts"],
 		checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
-		acceptance_mapping: [{ criterion: "Preflight reports missing metadata", evidence: "Smoke assertions cover missing audit/content/source evidence." }],
+		acceptance_mapping: [
+			{
+				criterion: "Preflight reports missing metadata",
+				evidence:
+					"Smoke assertions cover missing audit/content/source evidence.",
+			},
+		],
 		closure_brief: {
 			user_intent: "Implement validation preflight.",
 			implemented_changes: ["Added validation preflight risk policy."],
@@ -95,9 +235,15 @@ try {
 	assert.equal(missingMetadata.status, "blocked");
 	assert.ok(missingMetadata.missing.audit_evidence.includes("audit:alignment"));
 	assert.ok(missingMetadata.missing.audit_evidence.includes("audit:changed"));
-	assert.ok(missingMetadata.missing.content_proof.includes("fresh_context=true"));
+	assert.ok(
+		missingMetadata.missing.content_proof.includes("fresh_context=true"),
+	);
 	assert.equal(missingMetadata.risk.tier, "semantic-system");
-	assert.ok(missingMetadata.risk.approval_evidence.some((entry) => entry.includes(planning.path)));
+	assert.ok(
+		missingMetadata.risk.approval_evidence.some((entry) =>
+			entry.includes(planning.path),
+		),
+	);
 
 	const staleSource = buildValidationPreflight(project, {
 		profile: "implementation",
@@ -106,19 +252,48 @@ try {
 		rationale: "Preflight only.",
 		source: ".codewiki/builds/implementation/missing.json",
 		audit_refs: implementationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: false, working_tree_digest: "sha256:dirty" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:dirty",
+		},
 	});
 	assert.equal(staleSource.status, "blocked");
-	assert.ok(staleSource.missing.stale_refs.some((entry) => entry.includes("missing.json")));
+	assert.ok(
+		staleSource.missing.stale_refs.some((entry) =>
+			entry.includes("missing.json"),
+		),
+	);
 
 	const unresolvedDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept unresolved propagation fixture.",
-		diff_table: [{ id: "UNMAPPED-ROW", current_state: "Question-only planning can pass.", desired_state: "Question-only planning must fail.", rationale: "Regression fixture.", affected_layers: ["roadmap", "code"], user_action: "approved" }],
-		row_to_kb_mappings: [{ row_id: "UNMAPPED-ROW", knowledge_refs: [".codewiki/kb/system/validation-gateway.md"], evidence: "Gateway docs capture the rule." }],
-		propagation: { direction: "system-first", product_impact: ["Planning validates stricter mapping."], downstream_planning_questions: ["Who owns UNMAPPED-ROW?" ] },
+		diff_table: [
+			{
+				id: "UNMAPPED-ROW",
+				current_state: "Question-only planning can pass.",
+				desired_state: "Question-only planning must fail.",
+				rationale: "Regression fixture.",
+				affected_layers: ["roadmap", "code"],
+				user_action: "approved",
+			},
+		],
+		row_to_kb_mappings: [
+			{
+				row_id: "UNMAPPED-ROW",
+				knowledge_refs: [".codewiki/kb/system/validation-gateway.md"],
+				evidence: "Gateway docs capture the rule.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Planning validates stricter mapping."],
+			downstream_planning_questions: ["Who owns UNMAPPED-ROW?"],
+		},
 		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
 	});
+	await writeGatewayPass("decision", unresolvedDecision.path);
 	const unresolvedPlan = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Leave propagation unresolved.",
@@ -134,7 +309,11 @@ try {
 		audit_refs: ["audit:alignment"],
 	});
 	assert.equal(propagationBlocked.status, "blocked");
-	assert.ok(propagationBlocked.missing.decision_propagation.some((entry) => entry.includes("UNMAPPED-ROW")));
+	assert.ok(
+		propagationBlocked.missing.decision_propagation.some((entry) =>
+			entry.includes("UNMAPPED-ROW"),
+		),
+	);
 	assert.equal(propagationBlocked.routing.failure_class, "planning_gap");
 	assert.equal(propagationBlocked.routing.recommended_next_loop, "planning");
 	const propagationBlockedReport = await writeValidationReport(project, {
@@ -158,31 +337,130 @@ try {
 	});
 	assert.equal(explicitRouteReport.data.failure_class, "planning_gap");
 	assert.equal(explicitRouteReport.data.recommended_next_loop, "planning");
-	assert.equal(explicitRouteReport.data.stop_reason, "Planner must refine roadmap work before retry.");
+	assert.equal(
+		explicitRouteReport.data.stop_reason,
+		"Planner must refine roadmap work before retry.",
+	);
+
+	const pendingApprovedDecision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "Accept pending approved id fixture.",
+		diff_table: [
+			{
+				id: "PENDING-APPROVED",
+				current_state: "Pending rows can be promoted.",
+				desired_state: "Pending rows cannot be promoted.",
+				rationale: "Regression fixture.",
+				affected_layers: ["system"],
+				user_action: "pending",
+			},
+		],
+		approved_diff_rows: ["PENDING-APPROVED"],
+		row_to_kb_mappings: [
+			{
+				row_id: "PENDING-APPROVED",
+				knowledge_refs: [".codewiki/kb/system/validation-gateway.md"],
+				evidence: "Mapping alone is not enough without approved row action.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Agents see precise approval state."],
+		},
+		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
+	});
+	const pendingApprovedPreflight = buildValidationPreflight(project, {
+		profile: "decision",
+		verdict: "pass",
+		rationale: "Pending approved rows must block.",
+		source: pendingApprovedDecision.path,
+		audit_refs: decisionAuditRefs,
+	});
+	assert.equal(pendingApprovedPreflight.status, "blocked");
+	assert.ok(
+		pendingApprovedPreflight.missing.decision_mappings.some((entry) =>
+			entry.includes("user_action_not_approved"),
+		),
+	);
+	assert.equal(
+		pendingApprovedPreflight.routing.recommended_next_loop,
+		"decision",
+	);
 
 	const deferredDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept knowledge-only and deferred propagation fixture.",
 		diff_table: [
-			{ id: "KNOWLEDGE-ONLY", current_state: "Docs are unclear.", desired_state: "Docs are updated only.", rationale: "No executable work.", affected_layers: ["knowledge"], user_action: "approved" },
-			{ id: "EXPLICIT-DEFER", current_state: "Migration target undecided.", desired_state: "Migration can be deferred with owner and trigger.", rationale: "No safe target yet.", affected_layers: ["roadmap"], user_action: "approved" },
+			{
+				id: "KNOWLEDGE-ONLY",
+				current_state: "Docs are unclear.",
+				desired_state: "Docs are updated only.",
+				rationale: "No executable work.",
+				affected_layers: ["knowledge"],
+				user_action: "approved",
+			},
+			{
+				id: "EXPLICIT-DEFER",
+				current_state: "Migration target undecided.",
+				desired_state: "Migration can be deferred with owner and trigger.",
+				rationale: "No safe target yet.",
+				affected_layers: ["roadmap"],
+				user_action: "approved",
+			},
 		],
 		row_to_kb_mappings: [
-			{ row_id: "KNOWLEDGE-ONLY", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "Lifecycle docs capture knowledge-only resolution." },
-			{ row_id: "EXPLICIT-DEFER", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "Lifecycle docs capture deferral policy." },
+			{
+				row_id: "KNOWLEDGE-ONLY",
+				knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"],
+				evidence: "Lifecycle docs capture knowledge-only resolution.",
+			},
+			{
+				row_id: "EXPLICIT-DEFER",
+				knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"],
+				evidence: "Lifecycle docs capture deferral policy.",
+			},
 		],
-		propagation: { direction: "system-first", product_impact: ["Agents can record no-op/deferred planning."], downstream_planning_questions: ["When should EXPLICIT-DEFER resume?"] },
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Agents can record no-op/deferred planning."],
+			downstream_planning_questions: ["When should EXPLICIT-DEFER resume?"],
+		},
 		knowledge_changes: [".codewiki/kb/system/change-lifecycle.md"],
 	});
+	await writeGatewayPass("decision", deferredDecision.path);
 	const deferredPlan = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Resolve knowledge-only and deferred rows.",
 		source_decision_build: deferredDecision.path,
 		decision_row_resolutions: [
-			{ row_id: "KNOWLEDGE-ONLY", resolution: "knowledge-only", knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"], evidence: "The accepted row is complete in KB only.", source_refs: [deferredDecision.path] },
-			{ row_id: "EXPLICIT-DEFER", resolution: "deferred", owner: "maintainers", trigger: "first migration target approved", rationale: "Migration target needs a later decision.", evidence: "Deferred record has owner, trigger, and rationale.", source_refs: [deferredDecision.path] },
+			{
+				row_id: "KNOWLEDGE-ONLY",
+				resolution: "knowledge-only",
+				knowledge_refs: [".codewiki/kb/system/change-lifecycle.md"],
+				evidence: "The accepted row is complete in KB only.",
+				source_refs: [deferredDecision.path],
+			},
+			{
+				row_id: "EXPLICIT-DEFER",
+				resolution: "deferred",
+				owner: "maintainers",
+				trigger: "first migration target approved",
+				rationale: "Migration target needs a later decision.",
+				evidence: "Deferred record has owner, trigger, and rationale.",
+				source_refs: [deferredDecision.path],
+			},
 		],
-		downstream_question_resolutions: [{ question: "When should EXPLICIT-DEFER resume?", resolution: "deferred", owner: "maintainers", trigger: "first migration target approved", rationale: "Same as EXPLICIT-DEFER row deferral.", evidence: "Question is explicitly deferred with owner and trigger.", source_refs: [deferredDecision.path] }],
+		downstream_question_resolutions: [
+			{
+				question: "When should EXPLICIT-DEFER resume?",
+				resolution: "deferred",
+				owner: "maintainers",
+				trigger: "first migration target approved",
+				rationale: "Same as EXPLICIT-DEFER row deferral.",
+				evidence: "Question is explicitly deferred with owner and trigger.",
+				source_refs: [deferredDecision.path],
+			},
+		],
 	});
 	const deferredPreflight = buildValidationPreflight(project, {
 		profile: "planning",
@@ -195,21 +473,66 @@ try {
 	assert.deepEqual(deferredPreflight.missing.decision_propagation, []);
 
 	await mkdir(join(root, ".codewiki/kb/system/diagrams"), { recursive: true });
-	await writeFile(join(root, ".codewiki/kb/system/diagrams/file-structure-map.yaml"), `version: 1\nid: file-structure-map\ntitle: File structure\ncategories: [approved_migration_delta]\nnodes:\n  - id: deferred_concept_roots\n    label: Deferred concept roots after agency pilot\n    group: drift\n    kind: policy\n    status: accepted_target\n    defer_status: trigger_satisfied_needs_followup_planning\n    trigger_state: satisfied_by_TASK_015_task_close\n    trigger: agency pilot task-close validation and compatibility evidence\n    paths: [src/audit/**]\nedges: []\n`);
+	await writeFile(
+		join(root, ".codewiki/kb/system/diagrams/file-structure-map.yaml"),
+		`version: 1\nid: file-structure-map\ntitle: File structure\ncategories: [approved_migration_delta]\nnodes:\n  - id: deferred_concept_roots\n    label: Deferred concept roots after agency pilot\n    group: drift\n    kind: policy\n    status: accepted_target\n    defer_status: trigger_satisfied_needs_followup_planning\n    trigger_state: satisfied_by_TASK_015_task_close\n    trigger: agency pilot task-close validation and compatibility evidence\n    paths: [src/audit/**]\nedges: []\n`,
+	);
 	const triggerSatisfiedDecision = await writeDecisionBuild(project, {
 		kind: "decision",
 		summary: "Accept trigger-satisfied deferred propagation fixture.",
-		diff_table: [{ id: "TRIGGER-DEFER", current_state: "Deferred work can remain hidden after trigger.", desired_state: "Satisfied deferral trigger routes to planning.", rationale: "Regression fixture.", affected_layers: ["roadmap"], user_action: "approved" }],
-		row_to_kb_mappings: [{ row_id: "TRIGGER-DEFER", knowledge_refs: [".codewiki/kb/system/file-structure.md"], evidence: "File-structure docs capture deferred trigger policy." }],
-		propagation: { direction: "system-first", product_impact: ["Agents see triggered deferred work."], downstream_planning_questions: ["When should TRIGGER-DEFER resume?"] },
+		diff_table: [
+			{
+				id: "TRIGGER-DEFER",
+				current_state: "Deferred work can remain hidden after trigger.",
+				desired_state: "Satisfied deferral trigger routes to planning.",
+				rationale: "Regression fixture.",
+				affected_layers: ["roadmap"],
+				user_action: "approved",
+			},
+		],
+		row_to_kb_mappings: [
+			{
+				row_id: "TRIGGER-DEFER",
+				knowledge_refs: [".codewiki/kb/system/file-structure.md"],
+				evidence: "File-structure docs capture deferred trigger policy.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			product_impact: ["Agents see triggered deferred work."],
+			downstream_planning_questions: ["When should TRIGGER-DEFER resume?"],
+		},
 		knowledge_changes: [".codewiki/kb/system/file-structure.md"],
 	});
+	await writeGatewayPass("decision", triggerSatisfiedDecision.path);
 	const triggerSatisfiedPlan = await writePlanningBuild(project, {
 		kind: "planning",
 		summary: "Resolve trigger-satisfied row as deferred fixture.",
 		source_decision_build: triggerSatisfiedDecision.path,
-		decision_row_resolutions: [{ row_id: "TRIGGER-DEFER", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Wait for pilot close.", evidence: "Deferred root waits on agency pilot.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
-		downstream_question_resolutions: [{ question: "When should TRIGGER-DEFER resume?", resolution: "deferred", owner: "maintainers", trigger: "agency pilot task-close validation and compatibility evidence", rationale: "Same deferral as row.", evidence: "Deferred question points at the same trigger.", source_refs: ["file-structure-map:deferred_concept_roots"] }],
+		decision_row_resolutions: [
+			{
+				row_id: "TRIGGER-DEFER",
+				resolution: "deferred",
+				owner: "maintainers",
+				trigger:
+					"agency pilot task-close validation and compatibility evidence",
+				rationale: "Wait for pilot close.",
+				evidence: "Deferred root waits on agency pilot.",
+				source_refs: ["file-structure-map:deferred_concept_roots"],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question: "When should TRIGGER-DEFER resume?",
+				resolution: "deferred",
+				owner: "maintainers",
+				trigger:
+					"agency pilot task-close validation and compatibility evidence",
+				rationale: "Same deferral as row.",
+				evidence: "Deferred question points at the same trigger.",
+				source_refs: ["file-structure-map:deferred_concept_roots"],
+			},
+		],
 	});
 	const triggerSatisfiedPreflight = buildValidationPreflight(project, {
 		profile: "planning",
@@ -219,7 +542,12 @@ try {
 		audit_refs: ["audit:alignment"],
 	});
 	assert.equal(triggerSatisfiedPreflight.status, "blocked");
-	assert.ok(triggerSatisfiedPreflight.missing.decision_propagation.some((entry) => entry.includes("TRIGGER-DEFER") && entry.includes("trigger_satisfied")));
+	assert.ok(
+		triggerSatisfiedPreflight.missing.decision_propagation.some(
+			(entry) =>
+				entry.includes("TRIGGER-DEFER") && entry.includes("trigger_satisfied"),
+		),
+	);
 	assert.equal(triggerSatisfiedPreflight.routing.failure_class, "planning_gap");
 
 	const mechanicalImplementation = await writeImplementationBuild(project, {
@@ -230,7 +558,12 @@ try {
 		test_design_evidence: ["Generated refresh reviewed by graph parity audit."],
 		code_files: [".codewiki/index_graph.json"],
 		checks_run: ["codewiki_state refresh=true"],
-		acceptance_mapping: [{ criterion: "Graph refreshed", evidence: "Generated output was refreshed." }],
+		acceptance_mapping: [
+			{
+				criterion: "Graph refreshed",
+				evidence: "Generated output was refreshed.",
+			},
+		],
 		closure_brief: {
 			user_intent: "Refresh generated graph.",
 			implemented_changes: ["Regenerated graph output."],
@@ -245,7 +578,12 @@ try {
 		rationale: "Mechanical fast path.",
 		source: mechanicalImplementation.path,
 		audit_refs: implementationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: false, working_tree_digest: "sha256:mechanical" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:mechanical",
+		},
 	});
 	assert.equal(mechanicalPreflight.status, "ready");
 	assert.equal(mechanicalPreflight.risk.tier, "mechanical-docs");
@@ -259,7 +597,12 @@ try {
 		rationale: "Mechanical fast path remains gateway validated.",
 		source: mechanicalImplementation.path,
 		audit_refs: implementationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: false, working_tree_digest: "sha256:mechanical" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:mechanical",
+		},
 	});
 	assert.equal(mechanicalReport.data.verdict, "pass");
 	assert.equal(mechanicalReport.data.preflight.risk.fast_path.eligible, true);
@@ -271,11 +614,24 @@ try {
 		rationale: "Publication needs approval.",
 		source: semanticImplementation.path,
 		audit_refs: publicationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: true, published_sha: "def5678", package_digest: "sha256:package" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			published_sha: "def5678",
+			package_digest: "sha256:package",
+		},
 	});
 	assert.equal(publicationPreflight.status, "escalate");
-	assert.equal(publicationPreflight.risk.tier, "security-migration-publication");
-	assert.ok(publicationPreflight.missing.user_approval.includes("user_approval:security-migration-publication"));
+	assert.equal(
+		publicationPreflight.risk.tier,
+		"security-migration-publication",
+	);
+	assert.ok(
+		publicationPreflight.missing.user_approval.includes(
+			"user_approval:security-migration-publication",
+		),
+	);
 
 	const publicationBlocked = await writeValidationReport(project, {
 		profile: "publication",
@@ -284,7 +640,13 @@ try {
 		rationale: "Publication cannot pass without explicit user approval.",
 		source: semanticImplementation.path,
 		audit_refs: publicationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: true, published_sha: "def5678", package_digest: "sha256:package" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			published_sha: "def5678",
+			package_digest: "sha256:package",
+		},
 	});
 	assert.equal(publicationBlocked.data.verdict, "block");
 	assert.ok(publicationBlocked.data.failed_criteria.includes("risk_approval"));
@@ -298,10 +660,21 @@ try {
 		rationale: "Publication approval and proof present.",
 		source: semanticImplementation.path,
 		audit_refs: [...publicationAuditRefs, "approval:user"],
-		isolation: { role: "validator", fresh_context: true, clean: true, published_sha: "def5678", package_digest: "sha256:package" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: true,
+			published_sha: "def5678",
+			package_digest: "sha256:package",
+		},
 	});
 	assert.equal(publicationPassed.data.verdict, "pass");
-	assert.equal(publicationPassed.data.preflight.risk.approval_evidence.includes("approval:user"), true);
+	assert.equal(
+		publicationPassed.data.preflight.risk.approval_evidence.includes(
+			"approval:user",
+		),
+		true,
+	);
 
 	const destructivePreflight = buildValidationPreflight(project, {
 		profile: "implementation",
@@ -311,7 +684,12 @@ try {
 		rationale: "Destructive work requires approval.",
 		source: semanticImplementation.path,
 		audit_refs: implementationAuditRefs,
-		isolation: { role: "validator", fresh_context: true, clean: false, working_tree_digest: "sha256:dirty" },
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:dirty",
+		},
 	});
 	assert.equal(destructivePreflight.status, "escalate");
 	assert.equal(destructivePreflight.risk.tier, "destructive");

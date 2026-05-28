@@ -175,6 +175,49 @@ assert.throws(
 	"explicit /wiki-resume TASK-### should block on real artifact conflict",
 );
 
+const readinessSelection = resolveImplementationTask(
+	board,
+	null,
+	null,
+	"TASK-083",
+	state(),
+	"session-helper",
+	{
+		"TASK-083": [
+			"accepted_planning_build_ref:missing_planning_validation_pass",
+		],
+	},
+);
+assert.equal(
+	readinessSelection.task?.id,
+	"TASK-085",
+	"implicit /wiki-resume should skip tasks without planning-gateway proof",
+);
+assert.ok(
+	readinessSelection.skipped.some((item) =>
+		/TASK-083: not implementation-ready/.test(item),
+	),
+	"selection should explain missing planning-gateway proof",
+);
+assert.throws(
+	() =>
+		resolveImplementationTask(
+			board,
+			null,
+			"TASK-083",
+			"TASK-077",
+			state(),
+			"session-helper",
+			{
+				"TASK-083": [
+					"accepted_planning_build_ref:missing_planning_validation_pass",
+				],
+			},
+		),
+	/not implementation-ready/i,
+	"explicit /wiki-resume TASK-### should block without planning-gateway proof",
+);
+
 const defaultAgency = effectiveAgencyPolicy({ codewiki: { agency: {} } });
 assert.equal(
 	defaultAgency.level,

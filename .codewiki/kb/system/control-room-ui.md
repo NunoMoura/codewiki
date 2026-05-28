@@ -58,7 +58,7 @@ The CodeWiki UI should use typed CodeWiki API capabilities or thin HTTP endpoint
 - contextual build, validation, diff-table, or source detail only when linked from the active view,
 - repo-backed preference summary and option mapping derived from `.codewiki/config.json` for the header Settings page.
 
-Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as decision diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations.
+Write endpoints should be added only when the view needs a real action. They must route through existing application use cases such as decision diff-table actions, roadmap task actions, session queue coordination actions, build writing, validation writing, graph rebuilds, and safe config mutations. Decision and planning approval controls should render row/task cards with approve, edit, reject, and defer actions, then write through `codewiki_diff_table` or roadmap planning use cases rather than treating chat prose as canonical approval.
 
 ## Status contract
 
@@ -107,7 +107,7 @@ The renderer should arrange diagrams with readable spacing, route edges around n
 
 Board is a retro terminal Kanban board with deterministic lanes such as `Now`, `Ready`, `Blocked`, and `Gate/Done recent`. Lane assignment comes from roadmap status, active focus, blockers, validation gates, content-proof gates, and recent closure evidence; the browser must not invent hidden workflow state.
 
-Detailed builds, validation reports, and decisions surface through task/evidence links and value-first source disclosure rather than their own permanent top-level sections.
+Detailed builds, validation reports, pending decisions, and task-candidate approval surfaces appear through Board/evidence links and value-first source disclosure rather than their own permanent top-level sections. Pending decision rows or task candidates should be actionable inline cards when user approval is required.
 
 ## Map contract
 

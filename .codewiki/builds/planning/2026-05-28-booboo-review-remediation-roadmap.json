@@ -1,0 +1,559 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-28T01:03:55Z",
+  "source": "Planning compiled from decision build approving a sprint-organized remediation roadmap for booboo review findings.",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-11T01:03:55.000Z",
+    "purge_after": "2026-06-25T01:03:55.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Roadmap must address high-signal safety findings before broad refactors.",
+      "source_refs": [
+        ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "R2",
+      "text": "Roadmap must reduce false-positive review noise before deleting dead code.",
+      "source_refs": [
+        ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "R3",
+      "text": "Roadmap must remove real duplicate resume scheduling logic with parity tests.",
+      "source_refs": [
+        ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "R4",
+      "text": "Roadmap must improve type coverage and complexity hotspots through path-specific tasks.",
+      "source_refs": [
+        ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "R5",
+      "text": "Related work must be organized through sprint metadata rather than umbrella tasks.",
+      "source_refs": [
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki-planning/SKILL.md"
+      ],
+      "state": "satisfied"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Static analysis signal and package release hygiene are represented.",
+      "evidence": "SPRINT-005 contains TASK-037 and TASK-039.",
+      "requirement_ids": [
+        "R2"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Safety and exposure boundary cleanup are represented.",
+      "evidence": "SPRINT-006 contains TASK-038 and TASK-041.",
+      "requirement_ids": [
+        "R1"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Resume duplication and state graph/type hotspots are represented.",
+      "evidence": "SPRINT-007 contains TASK-040 and TASK-042.",
+      "requirement_ids": [
+        "R3",
+        "R4"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Remaining runtime/parser/UI/project/agency/GC complexity hotspots are represented.",
+      "evidence": "SPRINT-008 contains TASK-043, TASK-044, TASK-045, TASK-046, and TASK-047.",
+      "requirement_ids": [
+        "R4"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "No umbrella/container task remains active.",
+      "evidence": "Accidental aggregate TASK-036 was cancelled; sprints group executable tasks directly.",
+      "requirement_ids": [
+        "R5"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "PyLens booboo review remediation roadmap with sprint-organized atomic tasks",
+  "task_ids": [
+    "TASK-037",
+    "TASK-038",
+    "TASK-039",
+    "TASK-040",
+    "TASK-041",
+    "TASK-042",
+    "TASK-043",
+    "TASK-044",
+    "TASK-045",
+    "TASK-046",
+    "TASK-047"
+  ],
+  "task_changes": [
+    "Created TASK-037 Calibrate static analysis entrypoints.",
+    "Created TASK-038 Harden gateway audit and validation boundaries.",
+    "Created TASK-039 Add release-readiness changelog baseline.",
+    "Created TASK-040 Consolidate resume task selection.",
+    "Created TASK-041 Clean adapter schemas and command helpers.",
+    "Created TASK-042 Strengthen state graph read models.",
+    "Created TASK-043 Reduce diagram parser complexity.",
+    "Created TASK-044 Split roadmap and session runtime services.",
+    "Created TASK-045 Split Pi UI and control-room modules.",
+    "Created TASK-046 Simplify project bootstrap and template flows.",
+    "Created TASK-047 Simplify agency and GC support flows.",
+    "Created SPRINT-005 Review signal and release hygiene with TASK-037 and TASK-039; status active.",
+    "Created SPRINT-006 Safety and exposure-boundary cleanup with TASK-038 and TASK-041; status planned.",
+    "Created SPRINT-007 State and resume hardening with TASK-040 and TASK-042; status planned.",
+    "Created SPRINT-008 Runtime parser and UI decomposition with TASK-043 through TASK-047; status planned.",
+    "Cancelled accidental aggregate TASK-036 because bulk creation collapsed unrelated work into one non-atomic task."
+  ],
+  "roadmap_changes": [
+    "Created TASK-037 Calibrate static analysis entrypoints.",
+    "Created TASK-038 Harden gateway audit and validation boundaries.",
+    "Created TASK-039 Add release-readiness changelog baseline.",
+    "Created TASK-040 Consolidate resume task selection.",
+    "Created TASK-041 Clean adapter schemas and command helpers.",
+    "Created TASK-042 Strengthen state graph read models.",
+    "Created TASK-043 Reduce diagram parser complexity.",
+    "Created TASK-044 Split roadmap and session runtime services.",
+    "Created TASK-045 Split Pi UI and control-room modules.",
+    "Created TASK-046 Simplify project bootstrap and template flows.",
+    "Created TASK-047 Simplify agency and GC support flows.",
+    "Created SPRINT-005 Review signal and release hygiene with TASK-037 and TASK-039; status active.",
+    "Created SPRINT-006 Safety and exposure-boundary cleanup with TASK-038 and TASK-041; status planned.",
+    "Created SPRINT-007 State and resume hardening with TASK-040 and TASK-042; status planned.",
+    "Created SPRINT-008 Runtime parser and UI decomposition with TASK-043 through TASK-047; status planned.",
+    "Cancelled accidental aggregate TASK-036 because bulk creation collapsed unrelated work into one non-atomic task."
+  ],
+  "tdd_plan": [
+    "Each implementation task must add or extend focused smoke/feature tests listed in its verification criteria before or alongside code changes.",
+    "For refactors, use existing smoke/source-root tests as characterization tests before moving logic.",
+    "For review-tool calibration, rerun the relevant booboo/Knip/jscpd/type-coverage subset and record comparison evidence."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/smoke/audit-drift.test.mjs",
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/smoke/roadmap-task-boundary.test.mjs",
+    "tests/smoke/control-room.test.mjs",
+    "tests/smoke/efficiency-ui.test.mjs",
+    "tests/tasks/TASK-024/project-source-root.test.mjs",
+    "tests/tasks/TASK-027/gc-source-root.test.mjs",
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+  ],
+  "candidate_code_paths": [
+    "package.json",
+    "CHANGELOG.md",
+    "src/gateway",
+    "src/audit",
+    "src/validation",
+    "src/adapters/pi",
+    "src/state",
+    "src/knowledge",
+    "src/roadmap",
+    "src/session",
+    "src/ui/web",
+    "src/project",
+    "src/agency",
+    "src/gc"
+  ],
+  "decision_row_resolutions": [
+    {
+      "row_id": "ROW-001",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-037",
+        "TASK-038",
+        "TASK-039",
+        "TASK-040",
+        "TASK-041",
+        "TASK-042",
+        "TASK-043",
+        "TASK-044",
+        "TASK-045",
+        "TASK-046",
+        "TASK-047"
+      ],
+      "sprint_ids": [
+        "SPRINT-005",
+        "SPRINT-006",
+        "SPRINT-007",
+        "SPRINT-008"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Review findings became atomic tasks grouped by sprint metadata.",
+      "evidence": "Roadmap queue contains 11 open remediation tasks and four new sprint records.",
+      "inferred": false
+    },
+    {
+      "row_id": "ROW-002",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-037",
+        "TASK-039"
+      ],
+      "sprint_ids": [
+        "SPRINT-005"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Signal calibration and release hygiene are first sprint work before code deletion decisions.",
+      "evidence": "SPRINT-005 contains TASK-037 and TASK-039.",
+      "inferred": false
+    },
+    {
+      "row_id": "ROW-003",
+      "question_id": "",
+      "question": "",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-040"
+      ],
+      "sprint_ids": [
+        "SPRINT-007"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Resume duplication is isolated into one implementation task with parity tests.",
+      "evidence": "TASK-040 owns shared resolver extraction and resume scheduler tests.",
+      "inferred": false
+    },
+    {
+      "row_id": "ROW-004",
+      "question_id": "",
+      "question": "",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-038",
+        "TASK-041",
+        "TASK-042",
+        "TASK-043",
+        "TASK-044",
+        "TASK-045",
+        "TASK-046",
+        "TASK-047"
+      ],
+      "sprint_ids": [
+        "SPRINT-006",
+        "SPRINT-007",
+        "SPRINT-008"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Complexity/type hotspots are grouped by code ownership path to avoid overlapping umbrella tasks.",
+      "evidence": "Sprints 006-008 group safety/exposure, state/resume, and runtime/parser/UI decomposition work.",
+      "inferred": false
+    }
+  ],
+  "downstream_question_resolutions": [
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which sprint should be active first?",
+      "resolution": "sprint",
+      "task_ids": [
+        "TASK-037",
+        "TASK-039"
+      ],
+      "sprint_ids": [
+        "SPRINT-005"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Review signal calibration and release hygiene reduce false positives before code deletion/refactors.",
+      "evidence": "SPRINT-005 status is active.",
+      "inferred": false
+    },
+    {
+      "row_id": "",
+      "question_id": "",
+      "question": "Which task should implementation start with after planning validation?",
+      "resolution": "roadmap-task",
+      "task_ids": [
+        "TASK-037"
+      ],
+      "sprint_ids": [
+        "SPRINT-005"
+      ],
+      "knowledge_refs": [],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "rationale": "Static-analysis calibration makes future review evidence more reliable and is low-risk.",
+      "evidence": "TASK-037 is first task in active SPRINT-005.",
+      "inferred": false
+    }
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Static analysis signal and package release hygiene are represented.",
+      "evidence": "SPRINT-005 contains TASK-037 and TASK-039.",
+      "requirement_ids": [
+        "R2"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Safety and exposure boundary cleanup are represented.",
+      "evidence": "SPRINT-006 contains TASK-038 and TASK-041.",
+      "requirement_ids": [
+        "R1"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Resume duplication and state graph/type hotspots are represented.",
+      "evidence": "SPRINT-007 contains TASK-040 and TASK-042.",
+      "requirement_ids": [
+        "R3",
+        "R4"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "Remaining runtime/parser/UI/project/agency/GC complexity hotspots are represented.",
+      "evidence": "SPRINT-008 contains TASK-043, TASK-044, TASK-045, TASK-046, and TASK-047.",
+      "requirement_ids": [
+        "R4"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    },
+    {
+      "criterion": "No umbrella/container task remains active.",
+      "evidence": "Accidental aggregate TASK-036 was cancelled; sprints group executable tasks directly.",
+      "requirement_ids": [
+        "R5"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json"
+      ]
+    }
+  ],
+  "assumptions": [
+    "User approval to create roadmap/sprint metadata is sufficient planning source for this low-risk roadmap-only mutation.",
+    "No code implementation starts until a specific task is selected for implementation.",
+    "Existing old sprints are left unchanged; new remediation work starts at SPRINT-005."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not delete code based only on current dead-code findings.",
+    "Do not implement any code changes in this planning loop.",
+    "Do not close or rewrite historical closed/cancelled roadmap tasks."
+  ],
+  "risks": [
+    "Some future tasks intentionally touch large files; implementation should use artifact-status coordination before editing.",
+    "Review findings include false positives; TASK-037 must run before dead-code deletion decisions."
+  ],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-28-booboo-review-roadmap-intent.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-037",
+      "TASK-038",
+      "TASK-039",
+      "TASK-040",
+      "TASK-041",
+      "TASK-042",
+      "TASK-043",
+      "TASK-044",
+      "TASK-045",
+      "TASK-046",
+      "TASK-047"
+    ],
+    "validation": [],
+    "source": [
+      ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-037",
+      "TASK-038",
+      "TASK-039",
+      "TASK-040",
+      "TASK-041",
+      "TASK-042",
+      "TASK-043",
+      "TASK-044",
+      "TASK-045",
+      "TASK-046",
+      "TASK-047",
+      ".codewiki/roadmap/queue.json",
+      "SPRINT-005",
+      "SPRINT-006",
+      "SPRINT-007",
+      "SPRINT-008"
+    ],
+    "code": [
+      "package.json",
+      "CHANGELOG.md",
+      "src/gateway",
+      "src/audit",
+      "src/validation",
+      "src/adapters/pi",
+      "src/state",
+      "src/knowledge",
+      "src/roadmap",
+      "src/session",
+      "src/ui/web",
+      "src/project",
+      "src/agency",
+      "src/gc"
+    ],
+    "tests": [
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/smoke/audit-drift.test.mjs",
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/control-room.test.mjs",
+      "tests/smoke/efficiency-ui.test.mjs",
+      "tests/tasks/TASK-024/project-source-root.test.mjs",
+      "tests/tasks/TASK-027/gc-source-root.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

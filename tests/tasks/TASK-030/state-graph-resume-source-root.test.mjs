@@ -4,6 +4,11 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+	writeDecisionBuild,
+	writePlanningBuild,
+} from "../../../src/build/writer.ts";
+import { writeValidationReport } from "../../../src/validation/report.ts";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const requiredStateOwners = [
@@ -402,6 +407,79 @@ try {
 		eventsPath: resolve(metaRoot, "events.jsonl"),
 		configPath: resolve(metaRoot, "config.json"),
 	};
+	const decision = await writeDecisionBuild(project, {
+		kind: "decision",
+		summary: "State resume source-root proof decision.",
+		diff_table: [
+			{
+				id: "TASK-030-RESUME",
+				current_state: "TASK-900 lacks planning proof.",
+				desired_state: "TASK-900 has validated planning proof before resume.",
+				rationale: "Resume enforcement requires planning-gateway proof.",
+				affected_layers: ["roadmap"],
+				user_action: "approved",
+			},
+		],
+		row_to_kb_mappings: [
+			{
+				row_id: "TASK-030-RESUME",
+				knowledge_refs: [".codewiki/kb/system/graph.md"],
+				evidence: "Graph docs own state resume behavior.",
+			},
+		],
+		propagation: {
+			direction: "system-first",
+			no_product_impact: "Source-root guard only.",
+			downstream_planning_questions: ["Plan TASK-900 resume proof."],
+		},
+		knowledge_changes: [".codewiki/kb/system/graph.md"],
+	});
+	await writeValidationReport(project, {
+		profile: "decision",
+		verdict: "pass",
+		rationale: "Decision pass for TASK-030 resume proof.",
+		source: decision.path,
+		audit_refs: ["audit:alignment", "audit:stale-reference", "approval:user"],
+	});
+	const planning = await writePlanningBuild(project, {
+		kind: "planning",
+		summary: "State resume source-root proof planning.",
+		source_decision_build: decision.path,
+		task_ids: [task.id],
+		task_changes: [
+			`${task.id} is implementation-ready for source-root resume guard.`,
+		],
+		decision_row_resolutions: [
+			{
+				row_id: "TASK-030-RESUME",
+				resolution: "roadmap-task",
+				task_ids: [task.id],
+				evidence: "TASK-900 has validated planning proof.",
+				source_refs: [decision.path, task.id],
+			},
+		],
+		downstream_question_resolutions: [
+			{
+				question: "Plan TASK-900 resume proof.",
+				resolution: "roadmap-task",
+				task_ids: [task.id],
+				evidence: "TASK-900 answers the resume proof question.",
+				source_refs: [decision.path, task.id],
+			},
+		],
+		tdd_plan: ["Source-root guard uses planning proof."],
+		candidate_test_files: [
+			"tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+		],
+		candidate_code_paths: ["src/state/resume-context.ts"],
+	});
+	await writeValidationReport(project, {
+		profile: "planning",
+		verdict: "pass",
+		rationale: "Planning pass for TASK-030 resume proof.",
+		source: planning.path,
+		audit_refs: ["audit:alignment", "approval:user"],
+	});
 	const ports = {
 		fileStore: {},
 		rebuildRunner: {

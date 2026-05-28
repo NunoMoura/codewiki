@@ -41,11 +41,7 @@ import {
 	maybeLoadProject,
 	rememberStatusDockProject,
 } from "../../../project/context.ts";
-import {
-	formatError,
-	cycleIndex,
-	unique,
-} from "../../../shared/utils.ts";
+import { formatError, cycleIndex, unique } from "../../../shared/utils.ts";
 import { maybeReadJsonSync } from "../../../project/local/filesystem.ts";
 import { padToWidth, truncatePlain } from "./text.ts";
 import { STATUS_DOCK_MODE_VALUES } from "../../../state/types.ts";
@@ -1210,9 +1206,7 @@ export function readArchitecturePanelData(project: WikiProject): {
 	return { mermaid, components };
 }
 
-export function readSystemDiagramCatalog(
-	project: WikiProject,
-): Array<{
+export function readSystemDiagramCatalog(project: WikiProject): Array<{
 	id: string;
 	title: string;
 	kind: string;
@@ -1254,7 +1248,8 @@ function diagramCatalogRank(name: string): number {
 }
 
 function frontmatterLikeYaml(raw: string, key: string): string | null {
-	const match = new RegExp(`^${key}:\\s*(.+)$`, "m").exec(raw);
+	const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const match = new RegExp(`^${safeKey}:\\s*(.+)$`, "m").exec(raw);
 	return match ? match[1].trim().replace(/^['"]|['"]$/g, "") : null;
 }
 

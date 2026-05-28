@@ -1,12 +1,24 @@
 import { readFile, readdir } from "node:fs/promises";
-import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import {
+	createServer,
+	type IncomingMessage,
+	type ServerResponse,
+} from "node:http";
 import { createRequire } from "node:module";
 import type { AddressInfo } from "node:net";
 import { basename, relative, resolve } from "node:path";
 import { load as loadYaml } from "js-yaml";
 import type { WikiProject } from "../../project/types.ts";
-import { maybeReadGraph, maybeReadRoadmapState, maybeReadStatusState } from "../../state/artifacts.ts";
-import { maybeReadJson, pathExists, readText } from "../../project/local/filesystem.ts";
+import {
+	maybeReadGraph,
+	maybeReadRoadmapState,
+	maybeReadStatusState,
+} from "../../state/artifacts.ts";
+import {
+	maybeReadJson,
+	pathExists,
+	readText,
+} from "../../project/local/filesystem.ts";
 
 const nodeRequire = createRequire(import.meta.url);
 let cytoscapeAssetCache: Promise<string> | null = null;
@@ -133,7 +145,13 @@ export interface ControlRoomBoardModel {
 		done: number;
 		blocked: number;
 	};
-	active_sprints: Array<{ id: string; title: string; status: string; task_ids: string[]; open_task_ids: string[] }>;
+	active_sprints: Array<{
+		id: string;
+		title: string;
+		status: string;
+		task_ids: string[];
+		open_task_ids: string[];
+	}>;
 	tasks: Array<{
 		id: string;
 		title: string;
@@ -164,7 +182,8 @@ export interface ControlRoomSystemDiagramSummary {
 	purpose: string;
 }
 
-export interface ControlRoomSystemDiagram extends ControlRoomSystemDiagramSummary {
+export interface ControlRoomSystemDiagram
+	extends ControlRoomSystemDiagramSummary {
 	source_docs: string[];
 	nodes: ControlRoomSystemDiagramNode[];
 	edges: ControlRoomSystemDiagramEdge[];
@@ -271,30 +290,59 @@ export async function startControlRoomServer(
 	};
 }
 
-export async function buildControlRoomStateModel(project: WikiProject): Promise<ControlRoomStateModel> {
-	const graph = await maybeReadGraph(project.graphPath) as any;
-	const status = await maybeReadStatusState(project.statusStatePath) as any;
-	const roadmapState = await maybeReadRoadmapState(project.roadmapStatePath) as any;
-	const rawRoadmap = await maybeReadJson<any>(resolve(project.root, project.roadmapPath));
-	const roadmap = roadmapState?.tasks ? roadmapState : rawRoadmap?.tasks ? rawRoadmap : graph?.lenses?.roadmap ?? graph?.views?.roadmap ?? null;
+export async function buildControlRoomStateModel(
+	project: WikiProject,
+): Promise<ControlRoomStateModel> {
+	const graph = (await maybeReadGraph(project.graphPath)) as any;
+	const status = (await maybeReadStatusState(project.statusStatePath)) as any;
+	const roadmapState = (await maybeReadRoadmapState(
+		project.roadmapStatePath,
+	)) as any;
+	const rawRoadmap = await maybeReadJson<any>(
+		resolve(project.root, project.roadmapPath),
+	);
+	const roadmap = roadmapState?.tasks
+		? roadmapState
+		: rawRoadmap?.tasks
+			? rawRoadmap
+			: (graph?.lenses?.roadmap ?? graph?.views?.roadmap ?? null);
 	const lint = graph?.lenses?.lint ?? graph?.lint ?? null;
 	const health = status?.health ?? lint?.summary ?? graph?.views?.health ?? {};
 	const issueCounts = status?.issue_counts ?? health ?? {};
 	const roadmapSummary = status?.roadmap ?? roadmap?.summary ?? roadmap ?? {};
-	const nextAction = status?.next_action ?? graph?.views?.reconciliation?.next_action ?? {};
-	const claims = status?.claims ?? graph?.views?.coordination?.claims ?? graph?.views?.coordination ?? {};
+	const nextAction =
+		status?.next_action ?? graph?.views?.reconciliation?.next_action ?? {};
+	const claims =
+		status?.claims ??
+		graph?.views?.coordination?.claims ??
+		graph?.views?.coordination ??
+		{};
 	const reconciliationItems = graph?.views?.reconciliation?.items ?? [];
 	const defaultLens = graph?.views?.lenses?.default ?? null;
-	const defaultLensFamilies = Array.isArray(defaultLens?.families) ? defaultLens.families : [];
+	const defaultLensFamilies = Array.isArray(defaultLens?.families)
+		? defaultLens.families
+		: [];
 	const graphNodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
 	const visibleGraphNodes = graphNodes.filter(isDefaultGraphNodeVisible);
-	const visibleGraphNodeIds = new Set<string>(visibleGraphNodes.map((node: any) => String(node.id ?? "")));
-	const validationNodes = visibleGraphNodes.filter((node: any) => String(node.kind ?? "").includes("validation"));
+	const visibleGraphNodeIds = new Set<string>(
+		visibleGraphNodes.map((node: any) => String(node.id ?? "")),
+	);
+	const validationNodes = visibleGraphNodes.filter((node: any) =>
+		String(node.kind ?? "").includes("validation"),
+	);
 	const latestValidation = validationNodes.at(-1);
-	const openTasks = Object.values(roadmap?.tasks ?? {}).filter((task: any) => isOpenTaskStatus(task?.status));
-	const blockedTasks = openTasks.filter((task: any) => String(task?.status ?? "") === "blocked" || task?.blocked === true);
+	const openTasks = Object.values(roadmap?.tasks ?? {}).filter((task: any) =>
+		isOpenTaskStatus(task?.status),
+	);
+	const blockedTasks = openTasks.filter(
+		(task: any) =>
+			String(task?.status ?? "") === "blocked" || task?.blocked === true,
+	);
 	const fileStructure = buildControlRoomFileStructureModel(
-		graph?.views?.file_structure ?? status?.file_structure ?? graph?.views?.lenses?.audit?.file_structure_drift ?? null,
+		graph?.views?.file_structure ??
+			status?.file_structure ??
+			graph?.views?.lenses?.audit?.file_structure_drift ??
+			null,
 	);
 
 	return {
@@ -303,107 +351,221 @@ export async function buildControlRoomStateModel(project: WikiProject): Promise<
 			root: project.root,
 		},
 		health: {
-			color: String(health.color ?? (issueCounts.errors ? "red" : issueCounts.warnings ? "yellow" : "green")),
+			color: String(
+				health.color ??
+					(issueCounts.errors
+						? "red"
+						: issueCounts.warnings
+							? "yellow"
+							: "green"),
+			),
 			errors: numberFrom(issueCounts.errors ?? health.errors),
 			warnings: numberFrom(issueCounts.warnings ?? health.warnings),
-			total: numberFrom(issueCounts.total ?? health.total_issues ?? health.total),
+			total: numberFrom(
+				issueCounts.total ?? health.total_issues ?? health.total,
+			),
 		},
 		roadmap: {
-			open: numberFrom(roadmapSummary.open_task_count ?? roadmapSummary.open ?? roadmap?.summary?.open_count ?? roadmap?.open_task_count ?? openTasks.length),
-			done: numberFrom(roadmapSummary.done_task_count ?? roadmapSummary.done ?? roadmap?.summary?.status_counts?.done ?? status?.summary?.done_task_count),
-			blocked: numberFrom(roadmapSummary.blocked_task_count ?? roadmapSummary.blocked ?? roadmap?.summary?.status_counts?.blocked ?? blockedTasks.length),
-			next: stringOrNull(roadmapSummary.next_task_id ?? roadmapSummary.next ?? roadmap?.next_task_id),
-			focused: stringOrNull(roadmapSummary.focused_task_id ?? status?.resume?.task_id),
+			open: numberFrom(
+				roadmapSummary.open_task_count ??
+					roadmapSummary.open ??
+					roadmap?.summary?.open_count ??
+					roadmap?.open_task_count ??
+					openTasks.length,
+			),
+			done: numberFrom(
+				roadmapSummary.done_task_count ??
+					roadmapSummary.done ??
+					roadmap?.summary?.status_counts?.done ??
+					status?.summary?.done_task_count,
+			),
+			blocked: numberFrom(
+				roadmapSummary.blocked_task_count ??
+					roadmapSummary.blocked ??
+					roadmap?.summary?.status_counts?.blocked ??
+					blockedTasks.length,
+			),
+			next: stringOrNull(
+				roadmapSummary.next_task_id ??
+					roadmapSummary.next ??
+					roadmap?.next_task_id,
+			),
+			focused: stringOrNull(
+				roadmapSummary.focused_task_id ?? status?.resume?.task_id,
+			),
 		},
 		claims: {
-			active: numberFrom(claims.active_claim_count ?? claims.active ?? status?.active_claim_count),
-			warnings: numberFrom(claims.warning_count ?? claims.warnings ?? status?.claim_warning_count),
-			conflicts: numberFrom(claims.conflict_count ?? claims.conflicts ?? status?.claim_conflict_count),
+			active: numberFrom(
+				claims.active_claim_count ??
+					claims.active ??
+					status?.active_claim_count,
+			),
+			warnings: numberFrom(
+				claims.warning_count ?? claims.warnings ?? status?.claim_warning_count,
+			),
+			conflicts: numberFrom(
+				claims.conflict_count ??
+					claims.conflicts ??
+					status?.claim_conflict_count,
+			),
 		},
 		graph: {
 			generated_at: stringOrNull(graph?.generated_at),
 			nodes: defaultLensFamilies.length || visibleGraphNodes.length,
-			edges: defaultLensFamilies.length ? Math.max(0, defaultLensFamilies.length - 1) : (Array.isArray(graph?.edges) ? graph.edges.filter((edge: any) => isDefaultGraphEdgeVisible(edge, visibleGraphNodeIds)).length : 0),
-			stale: Array.isArray(graph?.lenses?.freshness?.issues) ? graph.lenses.freshness.issues.length : numberFrom(status?.summary?.stale_count),
-			drift: Array.isArray(reconciliationItems) ? reconciliationItems.length : numberFrom(status?.summary?.drift_count),
+			edges: defaultLensFamilies.length
+				? Math.max(0, defaultLensFamilies.length - 1)
+				: Array.isArray(graph?.edges)
+					? graph.edges.filter((edge: any) =>
+							isDefaultGraphEdgeVisible(edge, visibleGraphNodeIds),
+						).length
+					: 0,
+			stale: Array.isArray(graph?.lenses?.freshness?.issues)
+				? graph.lenses.freshness.issues.length
+				: numberFrom(status?.summary?.stale_count),
+			drift: Array.isArray(reconciliationItems)
+				? reconciliationItems.length
+				: numberFrom(status?.summary?.drift_count),
 		},
 		gates: {
 			blocked: blockedTasks.length,
 			validation: validationNodes.length,
 		},
 		file_structure: fileStructure,
-		latest_signal: stringOrNull(latestValidation?.title ?? latestValidation?.path ?? status?.latest_validation?.summary ?? status?.checks?.latest),
+		latest_signal: stringOrNull(
+			latestValidation?.title ??
+				latestValidation?.path ??
+				status?.latest_validation?.summary ??
+				status?.checks?.latest,
+		),
 		next_action: {
 			kind: String(nextAction.kind ?? nextAction.type ?? "observe"),
-			summary: String(nextAction.summary ?? nextAction.reason ?? nextAction.label ?? "Inspect CodeWiki state."),
+			summary: String(
+				nextAction.summary ??
+					nextAction.reason ??
+					nextAction.label ??
+					"Inspect CodeWiki state.",
+			),
 			command: stringOrNull(nextAction.command),
 		},
 	};
 }
 
-function buildControlRoomFileStructureModel(raw: any): ControlRoomFileStructureModel | null {
+function buildControlRoomFileStructureModel(
+	raw: any,
+): ControlRoomFileStructureModel | null {
 	if (!raw || typeof raw !== "object") return null;
 	const mapPath = stringOrNull(raw.map_path);
-	const approvedEntries = normalizeFileStructureEntries(raw.approved_migration_deltas, mapPath);
-	const actionableEntries = normalizeFileStructureEntries(raw.actionable_entries, mapPath);
+	const approvedEntries = normalizeFileStructureEntries(
+		raw.approved_migration_deltas,
+		mapPath,
+	);
+	const actionableEntries = normalizeFileStructureEntries(
+		raw.actionable_entries,
+		mapPath,
+	);
 	const parseIssues = Array.isArray(raw.parse_issues) ? raw.parse_issues : [];
-	const sourceRefs = fileStructureSourceRefs(raw, mapPath, [...approvedEntries, ...actionableEntries]);
+	const sourceRefs = fileStructureSourceRefs(raw, mapPath, [
+		...approvedEntries,
+		...actionableEntries,
+	]);
 	return {
 		available: raw.available !== false,
 		source: String(raw.source ?? "file-structure-map"),
 		map_path: mapPath,
 		source_refs: sourceRefs,
-		categories: Array.isArray(raw.categories) ? raw.categories.map((category: unknown) => String(category)).filter(Boolean) : Object.keys(raw.counts ?? {}),
+		categories: Array.isArray(raw.categories)
+			? raw.categories
+					.map((category: unknown) => String(category))
+					.filter(Boolean)
+			: Object.keys(raw.counts ?? {}),
 		counts: normalizeNumberRecord(raw.counts),
 		path_rule_counts: {
-			intended: normalizeArray(raw.intended_paths ?? raw.intended_path_rules).length,
-			current: normalizeArray(raw.current_paths ?? raw.current_path_rules).length,
+			intended: normalizeArray(raw.intended_paths ?? raw.intended_path_rules)
+				.length,
+			current: normalizeArray(raw.current_paths ?? raw.current_path_rules)
+				.length,
 			target: normalizeArray(raw.target_paths ?? raw.target_path_rules).length,
 		},
-		intended_paths: normalizeFileStructurePathRules(raw.intended_paths ?? raw.intended_path_rules, sourceRefs),
-		current_paths: normalizeFileStructurePathRules(raw.current_paths ?? raw.current_path_rules, sourceRefs),
-		target_paths: normalizeFileStructurePathRules(raw.target_paths ?? raw.target_path_rules, sourceRefs),
-		approved_delta_edges: normalizeFileStructureDeltaEdges(raw.approved_delta_edges),
+		intended_paths: normalizeFileStructurePathRules(
+			raw.intended_paths ?? raw.intended_path_rules,
+			sourceRefs,
+		),
+		current_paths: normalizeFileStructurePathRules(
+			raw.current_paths ?? raw.current_path_rules,
+			sourceRefs,
+		),
+		target_paths: normalizeFileStructurePathRules(
+			raw.target_paths ?? raw.target_path_rules,
+			sourceRefs,
+		),
+		approved_delta_edges: normalizeFileStructureDeltaEdges(
+			raw.approved_delta_edges,
+		),
 		approved_migration_deltas: approvedEntries,
 		actionable_entries: actionableEntries,
 		parse_issues: parseIssues,
 	};
 }
 
-function normalizeFileStructurePathRules(value: unknown, fallbackRefs: string[]): ControlRoomFileStructurePathRule[] {
-	return normalizeArray(value).map((rule: any) => ({
-		pattern: String(rule.pattern ?? ""),
-		owner_id: stringOrNull(rule.owner_id),
-		owner_label: stringOrNull(rule.owner_label),
-		group: stringOrNull(rule.group),
-		status: stringOrNull(rule.status),
-		role: stringOrNull(rule.role),
-		approved_delta: Boolean(rule.approved_delta),
-		refs: uniqueSorted([...normalizeArray(rule.refs).map((ref: unknown) => String(ref)), stringOrNull(rule.source) ?? "", ...fallbackRefs]),
-	})).filter((rule) => rule.pattern);
+function normalizeFileStructurePathRules(
+	value: unknown,
+	fallbackRefs: string[],
+): ControlRoomFileStructurePathRule[] {
+	return normalizeArray(value)
+		.map((rule: any) => ({
+			pattern: String(rule.pattern ?? ""),
+			owner_id: stringOrNull(rule.owner_id),
+			owner_label: stringOrNull(rule.owner_label),
+			group: stringOrNull(rule.group),
+			status: stringOrNull(rule.status),
+			role: stringOrNull(rule.role),
+			approved_delta: Boolean(rule.approved_delta),
+			refs: uniqueSorted([
+				...normalizeArray(rule.refs).map((ref: unknown) => String(ref)),
+				stringOrNull(rule.source) ?? "",
+				...fallbackRefs,
+			]),
+		}))
+		.filter((rule) => rule.pattern);
 }
 
-function normalizeFileStructureEntries(value: unknown, mapPath: string | null): ControlRoomFileStructureEntry[] {
-	return normalizeArray(value).map((entry: any) => ({
-		category: String(entry.category ?? "unknown"),
-		severity: String(entry.severity ?? "info"),
-		path: String(entry.path ?? ""),
-		message: String(entry.message ?? ""),
-		owner_id: stringOrNull(entry.owner_id),
-		owner_label: stringOrNull(entry.owner_label),
-		refs: uniqueSorted([...normalizeArray(entry.refs).map((ref: unknown) => String(ref)), mapPath ?? ""]),
-	})).filter((entry) => entry.path || entry.message);
+function normalizeFileStructureEntries(
+	value: unknown,
+	mapPath: string | null,
+): ControlRoomFileStructureEntry[] {
+	return normalizeArray(value)
+		.map((entry: any) => ({
+			category: String(entry.category ?? "unknown"),
+			severity: String(entry.severity ?? "info"),
+			path: String(entry.path ?? ""),
+			message: String(entry.message ?? ""),
+			owner_id: stringOrNull(entry.owner_id),
+			owner_label: stringOrNull(entry.owner_label),
+			refs: uniqueSorted([
+				...normalizeArray(entry.refs).map((ref: unknown) => String(ref)),
+				mapPath ?? "",
+			]),
+		}))
+		.filter((entry) => entry.path || entry.message);
 }
 
-function normalizeFileStructureDeltaEdges(value: unknown): Array<{ from: string; to: string; label: string }> {
-	return normalizeArray(value).map((edge: any) => ({
-		from: String(edge.from ?? ""),
-		to: String(edge.to ?? ""),
-		label: String(edge.label ?? "approved migration delta"),
-	})).filter((edge) => edge.from || edge.to || edge.label);
+function normalizeFileStructureDeltaEdges(
+	value: unknown,
+): Array<{ from: string; to: string; label: string }> {
+	return normalizeArray(value)
+		.map((edge: any) => ({
+			from: String(edge.from ?? ""),
+			to: String(edge.to ?? ""),
+			label: String(edge.label ?? "approved migration delta"),
+		}))
+		.filter((edge) => edge.from || edge.to || edge.label);
 }
 
-function fileStructureSourceRefs(raw: any, mapPath: string | null, entries: ControlRoomFileStructureEntry[]): string[] {
+function fileStructureSourceRefs(
+	raw: any,
+	mapPath: string | null,
+	entries: ControlRoomFileStructureEntry[],
+): string[] {
 	return uniqueSorted([
 		mapPath ?? "",
 		...normalizeArray(raw.source_refs).map((ref: unknown) => String(ref)),
@@ -425,63 +587,132 @@ function normalizeArray(value: unknown): any[] {
 	return Array.isArray(value) ? value : [];
 }
 
-export async function buildControlRoomProductModel(project: WikiProject): Promise<ControlRoomProductModel> {
+export async function buildControlRoomProductModel(
+	project: WikiProject,
+): Promise<ControlRoomProductModel> {
 	const categories = [
-		{ id: "users" as const, label: "Users", summary: "Who the project serves and what they need." },
-		{ id: "stories" as const, label: "Stories", summary: "User outcomes and success signals." },
-		{ id: "uis" as const, label: "UI surfaces", summary: "Visual surfaces that support those outcomes." },
+		{
+			id: "users" as const,
+			label: "Users",
+			summary: "Who the project serves and what they need.",
+		},
+		{
+			id: "stories" as const,
+			label: "Stories",
+			summary: "User outcomes and success signals.",
+		},
+		{
+			id: "uis" as const,
+			label: "UI surfaces",
+			summary: "Visual surfaces that support those outcomes.",
+		},
 	];
 	return {
-		categories: await Promise.all(categories.map(async (category) => ({
-			...category,
-			items: await readProductItems(project, category.id),
-		}))),
+		categories: await Promise.all(
+			categories.map(async (category) => ({
+				...category,
+				items: await readProductItems(project, category.id),
+			})),
+		),
 	};
 }
 
-export async function buildControlRoomBoardModel(project: WikiProject): Promise<ControlRoomBoardModel> {
-	const graph = await maybeReadGraph(project.graphPath) as any;
-	const roadmapState = await maybeReadRoadmapState(project.roadmapStatePath) as any;
-	const rawRoadmap = await maybeReadJson<any>(resolve(project.root, project.roadmapPath));
-	const roadmap = roadmapState?.tasks ? roadmapState : rawRoadmap?.tasks ? rawRoadmap : graph?.lenses?.roadmap ?? graph?.views?.roadmap ?? null;
+export async function buildControlRoomBoardModel(
+	project: WikiProject,
+): Promise<ControlRoomBoardModel> {
+	const graph = (await maybeReadGraph(project.graphPath)) as any;
+	const roadmapState = (await maybeReadRoadmapState(
+		project.roadmapStatePath,
+	)) as any;
+	const rawRoadmap = await maybeReadJson<any>(
+		resolve(project.root, project.roadmapPath),
+	);
+	const roadmap = roadmapState?.tasks
+		? roadmapState
+		: rawRoadmap?.tasks
+			? rawRoadmap
+			: (graph?.lenses?.roadmap ?? graph?.views?.roadmap ?? null);
 	const tasks = Object.values(roadmap?.tasks ?? {}) as any[];
 	const openTasks = tasks.filter((task) => isOpenTaskStatus(task.status));
-	const focused = stringOrNull(roadmap?.summary?.focused_task_id ?? roadmap?.focused_task_id);
+	const focused = stringOrNull(
+		roadmap?.summary?.focused_task_id ?? roadmap?.focused_task_id,
+	);
 	const orderedOpenTasks = [...openTasks].sort((a, b) => {
 		if (focused && a.id === focused) return -1;
 		if (focused && b.id === focused) return 1;
 		return String(a.id).localeCompare(String(b.id));
 	});
-	const sprints = Object.values(roadmap?.sprints ?? roadmap?.views?.sprints ?? {}) as any[];
+	const sprints = Object.values(
+		roadmap?.sprints ?? roadmap?.views?.sprints ?? {},
+	) as any[];
 	return {
 		stats: {
-			open: numberFrom(roadmap?.summary?.open_count ?? roadmap?.summary?.open_task_count ?? roadmap?.open_task_count ?? roadmap?.open ?? openTasks.length),
-			done: numberFrom(roadmap?.summary?.status_counts?.done ?? roadmap?.summary?.done_task_count ?? roadmap?.done_task_count),
-			blocked: numberFrom(roadmap?.summary?.status_counts?.blocked ?? roadmap?.summary?.blocked_task_count ?? roadmap?.blocked_task_count ?? openTasks.filter((task) => String(task.status) === "blocked").length),
+			open: numberFrom(
+				roadmap?.summary?.open_count ??
+					roadmap?.summary?.open_task_count ??
+					roadmap?.open_task_count ??
+					roadmap?.open ??
+					openTasks.length,
+			),
+			done: numberFrom(
+				roadmap?.summary?.status_counts?.done ??
+					roadmap?.summary?.done_task_count ??
+					roadmap?.done_task_count,
+			),
+			blocked: numberFrom(
+				roadmap?.summary?.status_counts?.blocked ??
+					roadmap?.summary?.blocked_task_count ??
+					roadmap?.blocked_task_count ??
+					openTasks.filter((task) => String(task.status) === "blocked").length,
+			),
 		},
-		active_sprints: sprints.filter((sprint) => ["active", "planned", "in_progress"].includes(String(sprint.status ?? ""))).slice(0, 5).map((sprint) => ({
-			id: String(sprint.id ?? "sprint"),
-			title: String(sprint.title ?? sprint.id ?? "Sprint"),
-			status: String(sprint.status ?? "unknown"),
-			task_ids: Array.isArray(sprint.task_ids) ? sprint.task_ids.map(String) : [],
-			open_task_ids: Array.isArray(sprint.open_task_ids) ? sprint.open_task_ids.map(String) : [],
-		})),
+		active_sprints: sprints
+			.filter((sprint) =>
+				["active", "planned", "in_progress"].includes(
+					String(sprint.status ?? ""),
+				),
+			)
+			.slice(0, 5)
+			.map((sprint) => ({
+				id: String(sprint.id ?? "sprint"),
+				title: String(sprint.title ?? sprint.id ?? "Sprint"),
+				status: String(sprint.status ?? "unknown"),
+				task_ids: Array.isArray(sprint.task_ids)
+					? sprint.task_ids.map(String)
+					: [],
+				open_task_ids: Array.isArray(sprint.open_task_ids)
+					? sprint.open_task_ids.map(String)
+					: [],
+			})),
 		tasks: orderedOpenTasks.slice(0, 12).map((task) => ({
 			id: String(task.id ?? ""),
 			title: String(task.title ?? task.id ?? "Task"),
 			status: String(task.status ?? "unknown"),
 			priority: String(task.priority ?? "medium"),
 			summary: String(task.summary ?? ""),
-			acceptance: Array.isArray(task.goal?.acceptance) ? task.goal.acceptance.slice(0, 4).map(String) : [],
-			verification: Array.isArray(task.goal?.verification) ? task.goal.verification.slice(0, 4).map(String) : [],
-			spec_paths: Array.isArray(task.spec_paths) ? task.spec_paths.slice(0, 6).map(String) : [],
-			code_paths: Array.isArray(task.code_paths) ? task.code_paths.slice(0, 6).map(String) : [],
+			acceptance: Array.isArray(task.goal?.acceptance)
+				? task.goal.acceptance.slice(0, 4).map(String)
+				: [],
+			verification: Array.isArray(task.goal?.verification)
+				? task.goal.verification.slice(0, 4).map(String)
+				: [],
+			spec_paths: Array.isArray(task.spec_paths)
+				? task.spec_paths.slice(0, 6).map(String)
+				: [],
+			code_paths: Array.isArray(task.code_paths)
+				? task.code_paths.slice(0, 6).map(String)
+				: [],
 		})),
 	};
 }
 
-export async function buildControlRoomSystemModel(project: WikiProject): Promise<ControlRoomSystemModel> {
-	const architecturePath = resolve(project.root, ".codewiki/kb/system/architecture.mmd");
+export async function buildControlRoomSystemModel(
+	project: WikiProject,
+): Promise<ControlRoomSystemModel> {
+	const architecturePath = resolve(
+		project.root,
+		".codewiki/kb/system/architecture.mmd",
+	);
 	const source = await readTextIfExists(architecturePath);
 	const parsed = parseArchitectureMermaid(source);
 	const componentClasses = parseClassMembership(source, "component");
@@ -514,17 +745,37 @@ export async function buildControlRoomSystemModel(project: WikiProject): Promise
 	return {
 		architecture_path: relative(project.root, architecturePath),
 		source,
-		diagram_catalog: diagrams.map(({ id, title, kind, path, purpose }) => ({ id, title, kind, path, purpose })),
+		diagram_catalog: diagrams.map(({ id, title, kind, path, purpose }) => ({
+			id,
+			title,
+			kind,
+			path,
+			purpose,
+		})),
 		diagrams,
 		components,
 		edges: parsed.edges.map((edge) => ({ ...edge, kind: "architecture" })),
 	};
 }
 
-export async function buildControlRoomSettingsModel(project: WikiProject): Promise<ControlRoomSettingsModel> {
+export async function buildControlRoomSettingsModel(
+	project: WikiProject,
+): Promise<ControlRoomSettingsModel> {
 	const sourcePath = ".codewiki/config.json";
 	const rows = flattenConfigRows(project.config || {}, sourcePath);
-	const groupOrder = ["project", "paths", "roadmap", "generated", "lint", "gateway", "runtime", "rebuild", "agency", "gc", "other"];
+	const groupOrder = [
+		"project",
+		"paths",
+		"roadmap",
+		"generated",
+		"lint",
+		"gateway",
+		"runtime",
+		"rebuild",
+		"agency",
+		"gc",
+		"other",
+	];
 	const grouped = new Map<string, ControlRoomSettingsRow[]>();
 	for (const row of rows) {
 		const id = row.category;
@@ -553,16 +804,27 @@ export async function buildControlRoomGraphModel(
 	const allNodes = Array.isArray(graph?.nodes) ? graph.nodes : [];
 	const allEdges = Array.isArray(graph?.edges) ? graph.edges : [];
 	const defaultLens = graph?.views?.lenses?.default ?? null;
-	const familyNodes: Record<string, unknown>[] = Array.isArray(defaultLens?.families) ? defaultLens.families.map(normalizeLensFamilyNode) : [];
-	const familyEdges: Record<string, unknown>[] = familyNodes.slice(0, -1).map((node: Record<string, unknown>, index: number) => ({
-		from: String(node.id),
-		to: String(familyNodes[index + 1]?.id ?? ""),
-		kind: "lens_flow",
-		label: "default lens order",
-	})).filter((edge: Record<string, unknown>) => Boolean(edge.to));
+	const familyNodes: Record<string, unknown>[] = Array.isArray(
+		defaultLens?.families,
+	)
+		? defaultLens.families.map(normalizeLensFamilyNode)
+		: [];
+	const familyEdges: Record<string, unknown>[] = familyNodes
+		.slice(0, -1)
+		.map((node: Record<string, unknown>, index: number) => ({
+			from: String(node.id),
+			to: String(familyNodes[index + 1]?.id ?? ""),
+			kind: "lens_flow",
+			label: "default lens order",
+		}))
+		.filter((edge: Record<string, unknown>) => Boolean(edge.to));
 	const visibleNodes = allNodes.filter(isDefaultGraphNodeVisible);
-	const visibleNodeIds = new Set<string>(visibleNodes.map((node: any) => String(node.id ?? "")));
-	const visibleEdges = allEdges.filter((edge: any) => isDefaultGraphEdgeVisible(edge, visibleNodeIds));
+	const visibleNodeIds = new Set<string>(
+		visibleNodes.map((node: any) => String(node.id ?? "")),
+	);
+	const visibleEdges = allEdges.filter((edge: any) =>
+		isDefaultGraphEdgeVisible(edge, visibleNodeIds),
+	);
 	const nodes = [...familyNodes, ...visibleNodes.map(normalizeGraphNode)];
 	const edges = [...familyEdges, ...visibleEdges.map(normalizeGraphEdge)];
 	return {
@@ -576,8 +838,12 @@ export async function buildControlRoomGraphModel(
 			hidden_cold_edges: allEdges.length - visibleEdges.length,
 			truncated: false,
 		},
-		node_kinds: uniqueSorted(nodes.map((node: any) => String(node.kind ?? "unknown"))),
-		edge_kinds: uniqueSorted(edges.map((edge: any) => String(edge.kind ?? "edge"))),
+		node_kinds: uniqueSorted(
+			nodes.map((node: any) => String(node.kind ?? "unknown")),
+		),
+		edge_kinds: uniqueSorted(
+			edges.map((edge: any) => String(edge.kind ?? "edge")),
+		),
 		nodes,
 		edges,
 	};
@@ -591,28 +857,57 @@ async function handleControlRoomRequest(
 	const requestUrl = new URL(req.url || "/", "http://127.0.0.1");
 	try {
 		if (req.method !== "GET") {
-			writeTextResponse(res, 405, "Method not allowed", "text/plain; charset=utf-8");
+			writeTextResponse(
+				res,
+				405,
+				"Method not allowed",
+				"text/plain; charset=utf-8",
+			);
 			return;
 		}
 		switch (requestUrl.pathname) {
 			case "/":
 			case "/index.html":
-				writeTextResponse(res, 200, CONTROL_ROOM_HTML, "text/html; charset=utf-8");
+				writeTextResponse(
+					res,
+					200,
+					CONTROL_ROOM_HTML,
+					"text/html; charset=utf-8",
+				);
 				return;
 			case "/assets/control-room.css":
-				writeTextResponse(res, 200, CONTROL_ROOM_CSS, "text/css; charset=utf-8");
+				writeTextResponse(
+					res,
+					200,
+					CONTROL_ROOM_CSS,
+					"text/css; charset=utf-8",
+				);
 				return;
 			case "/assets/control-room.js":
-				writeTextResponse(res, 200, CONTROL_ROOM_JS, "text/javascript; charset=utf-8");
+				writeTextResponse(
+					res,
+					200,
+					CONTROL_ROOM_JS,
+					"text/javascript; charset=utf-8",
+				);
 				return;
 			case "/assets/vendor/cytoscape.min.js":
-				writeTextResponse(res, 200, await readCytoscapeVendorAsset(), "text/javascript; charset=utf-8");
+				writeTextResponse(
+					res,
+					200,
+					await readCytoscapeVendorAsset(),
+					"text/javascript; charset=utf-8",
+				);
 				return;
 			case "/api/state":
 				writeJsonResponse(res, 200, await buildControlRoomStateModel(project));
 				return;
 			case "/api/product":
-				writeJsonResponse(res, 200, await buildControlRoomProductModel(project));
+				writeJsonResponse(
+					res,
+					200,
+					await buildControlRoomProductModel(project),
+				);
 				return;
 			case "/api/system":
 				writeJsonResponse(res, 200, await buildControlRoomSystemModel(project));
@@ -621,7 +916,11 @@ async function handleControlRoomRequest(
 				writeJsonResponse(res, 200, await buildControlRoomBoardModel(project));
 				return;
 			case "/api/settings":
-				writeJsonResponse(res, 200, await buildControlRoomSettingsModel(project));
+				writeJsonResponse(
+					res,
+					200,
+					await buildControlRoomSettingsModel(project),
+				);
 				return;
 			case "/api/graph":
 				writeJsonResponse(res, 200, await buildControlRoomGraphModel(project));
@@ -633,28 +932,42 @@ async function handleControlRoomRequest(
 				writeJsonResponse(res, 404, { error: "Not found" });
 		}
 	} catch (error) {
-		writeJsonResponse(res, 500, { error: String(error instanceof Error ? error.message : error) });
+		writeJsonResponse(res, 500, {
+			error: String(error instanceof Error ? error.message : error),
+		});
 	}
 }
 
 function readCytoscapeVendorAsset(): Promise<string> {
-	cytoscapeAssetCache ??= readFile(nodeRequire.resolve("cytoscape/dist/cytoscape.min.js"), "utf8");
+	cytoscapeAssetCache ??= readFile(
+		nodeRequire.resolve("cytoscape/dist/cytoscape.min.js"),
+		"utf8",
+	);
 	return cytoscapeAssetCache;
 }
 
-function flattenConfigRows(value: unknown, sourcePath: string, prefix: string[] = []): ControlRoomSettingsRow[] {
+function flattenConfigRows(
+	value: unknown,
+	sourcePath: string,
+	prefix: string[] = [],
+): ControlRoomSettingsRow[] {
 	if (value && typeof value === "object" && !Array.isArray(value)) {
-		return Object.entries(value as Record<string, unknown>).flatMap(([key, nested]) => flattenConfigRows(nested, sourcePath, [...prefix, key]));
+		return Object.entries(value as Record<string, unknown>).flatMap(
+			([key, nested]) =>
+				flattenConfigRows(nested, sourcePath, [...prefix, key]),
+		);
 	}
 	const optionPath = prefix.join(".");
-	return [{
-		path: optionPath,
-		value: formatConfigValue(value),
-		category: settingsCategory(prefix),
-		purpose: settingsPurpose(prefix),
-		source_path: sourcePath,
-		editability: settingsEditability(prefix),
-	}];
+	return [
+		{
+			path: optionPath,
+			value: formatConfigValue(value),
+			category: settingsCategory(prefix),
+			purpose: settingsPurpose(prefix),
+			source_path: sourcePath,
+			editability: settingsEditability(prefix),
+		},
+	];
 }
 
 function formatConfigValue(value: unknown): string {
@@ -666,8 +979,26 @@ function formatConfigValue(value: unknown): string {
 
 function settingsCategory(path: string[]): string {
 	const joined = path.join(".");
-	if (["project_name", "version", "template", "index_title"].includes(path[0] || "")) return "project";
-	if (["docs_root", "specs_root", "evidence_root", "research_root", "meta_root", "views_root", "sources_root", "roadmap_path", "roadmap_doc_path"].includes(path[0] || "")) return "paths";
+	if (
+		["project_name", "version", "template", "index_title"].includes(
+			path[0] || "",
+		)
+	)
+		return "project";
+	if (
+		[
+			"docs_root",
+			"specs_root",
+			"evidence_root",
+			"research_root",
+			"meta_root",
+			"views_root",
+			"sources_root",
+			"roadmap_path",
+			"roadmap_doc_path",
+		].includes(path[0] || "")
+	)
+		return "paths";
 	if (path[0] === "roadmap_retention") return "roadmap";
 	if (path[0] === "generated_files") return "generated";
 	if (path[0] === "lint") return "lint";
@@ -681,37 +1012,97 @@ function settingsCategory(path: string[]): string {
 
 function settingsPurpose(path: string[]): string {
 	const joined = path.join(".");
-	if (joined === "project_name") return "Display name for this CodeWiki project.";
-	if (joined.endsWith("_root") || joined.endsWith("_path")) return "Repository-relative source or generated artifact location.";
-	if (path[0] === "generated_files") return "Generated files rebuilt from canonical sources.";
-	if (path[0] === "roadmap_retention") return "Closed-work retention and archive policy.";
+	if (joined === "project_name")
+		return "Display name for this CodeWiki project.";
+	if (joined.endsWith("_root") || joined.endsWith("_path"))
+		return "Repository-relative source or generated artifact location.";
+	if (path[0] === "generated_files")
+		return "Generated files rebuilt from canonical sources.";
+	if (path[0] === "roadmap_retention")
+		return "Closed-work retention and archive policy.";
 	if (path[0] === "lint") return "Knowledge/documentation lint policy.";
-	if (joined.startsWith("codewiki.gateway")) return "Gateway read/write, deny, and generated-readonly policy.";
-	if (joined.startsWith("codewiki.runtime")) return "Runtime adapter and patch behavior.";
-	if (joined.startsWith("codewiki.rebuild")) return "Rebuild freshness, debounce, and verbosity controls.";
-	if (joined.startsWith("codewiki.agency.budgets")) return "Bounded agency budget limit.";
-	if (joined.startsWith("codewiki.agency.parallelism")) return "Parallel session and sprint execution limit.";
-	if (joined.startsWith("codewiki.agency")) return "Default agency planning scope.";
-	if (joined.startsWith("codewiki.gc")) return "Hot/warm/cold/purge artifact lifecycle policy.";
+	if (joined.startsWith("codewiki.gateway"))
+		return "Gateway read/write, deny, and generated-readonly policy.";
+	if (joined.startsWith("codewiki.runtime"))
+		return "Runtime adapter and patch behavior.";
+	if (joined.startsWith("codewiki.rebuild"))
+		return "Rebuild freshness, debounce, and verbosity controls.";
+	if (joined.startsWith("codewiki.agency.budgets"))
+		return "Bounded agency budget limit.";
+	if (joined.startsWith("codewiki.agency.parallelism"))
+		return "Parallel session and sprint execution limit.";
+	if (joined.startsWith("codewiki.agency"))
+		return "Default agency planning scope.";
+	if (joined.startsWith("codewiki.gc"))
+		return "Hot/warm/cold/purge artifact lifecycle policy.";
 	return "CodeWiki configuration option.";
 }
 
-function settingsEditability(path: string[]): ControlRoomSettingsRow["editability"] {
+function settingsEditability(
+	path: string[],
+): ControlRoomSettingsRow["editability"] {
 	const joined = path.join(".");
-	if (joined.startsWith("codewiki.gateway") || joined.startsWith("codewiki.runtime") || joined.includes("deny_paths") || joined.includes("write_paths")) return "policy-gated";
-	if (path[0] === "project_name" || path[0] === "lint" || joined.startsWith("codewiki.agency.budgets") || joined.startsWith("codewiki.rebuild")) return "safe-edit";
+	if (
+		joined.startsWith("codewiki.gateway") ||
+		joined.startsWith("codewiki.runtime") ||
+		joined.includes("deny_paths") ||
+		joined.includes("write_paths")
+	)
+		return "policy-gated";
+	if (
+		path[0] === "project_name" ||
+		path[0] === "lint" ||
+		joined.startsWith("codewiki.agency.budgets") ||
+		joined.startsWith("codewiki.rebuild")
+	)
+		return "safe-edit";
 	return "read-only";
 }
 
 function settingsGroupLabel(id: string): string {
-	return ({ project: "Project", paths: "Paths", roadmap: "Roadmap retention", generated: "Generated files", lint: "Lint", gateway: "Gateway policy", runtime: "Runtime", rebuild: "Rebuild", agency: "Agency", gc: "GC / archival", other: "Other" } as Record<string, string>)[id] || id;
+	return (
+		(
+			{
+				project: "Project",
+				paths: "Paths",
+				roadmap: "Roadmap retention",
+				generated: "Generated files",
+				lint: "Lint",
+				gateway: "Gateway policy",
+				runtime: "Runtime",
+				rebuild: "Rebuild",
+				agency: "Agency",
+				gc: "GC / archival",
+				other: "Other",
+			} as Record<string, string>
+		)[id] || id
+	);
 }
 
 function settingsGroupSummary(id: string): string {
-	return ({ project: "Identity and template metadata.", paths: "Canonical and generated repository locations.", roadmap: "Closed-task retention and archive behavior.", generated: "Generated files rebuilt by CodeWiki.", lint: "Warnings and documentation quality policy.", gateway: "Sandbox/read/write/deny/generated path policy.", runtime: "Adapter and patch runtime settings.", rebuild: "Rebuild freshness and noise controls.", agency: "Default agency scope, budget, and parallelism.", gc: "Artifact lifecycle and archive thresholds.", other: "Additional config values." } as Record<string, string>)[id] || "Config values.";
+	return (
+		(
+			{
+				project: "Identity and template metadata.",
+				paths: "Canonical and generated repository locations.",
+				roadmap: "Closed-task retention and archive behavior.",
+				generated: "Generated files rebuilt by CodeWiki.",
+				lint: "Warnings and documentation quality policy.",
+				gateway: "Sandbox/read/write/deny/generated path policy.",
+				runtime: "Adapter and patch runtime settings.",
+				rebuild: "Rebuild freshness and noise controls.",
+				agency: "Default agency scope, budget, and parallelism.",
+				gc: "Artifact lifecycle and archive thresholds.",
+				other: "Additional config values.",
+			} as Record<string, string>
+		)[id] || "Config values."
+	);
 }
 
-async function readProductItems(project: WikiProject, category: "users" | "stories" | "uis"): Promise<ControlRoomProductItem[]> {
+async function readProductItems(
+	project: WikiProject,
+	category: "users" | "stories" | "uis",
+): Promise<ControlRoomProductItem[]> {
 	const dir = resolve(project.root, ".codewiki/kb/product", category);
 	if (!(await pathExists(dir))) return [];
 	const entries = (await readdir(dir, { withFileTypes: true }))
@@ -723,12 +1114,14 @@ async function readProductItems(project: WikiProject, category: "users" | "stori
 		const absolute = resolve(dir, name);
 		const raw = await readText(absolute);
 		const { frontmatter, body } = parseMarkdownFrontmatter(raw);
-		const title = frontmatter.title || markdownTitle(body) || titleFromFilename(name);
+		const title =
+			frontmatter.title || markdownTitle(body) || titleFromFilename(name);
 		items.push({
 			id: `${category}:${name.replace(/\.md$/, "")}`,
 			path: relative(project.root, absolute),
 			title,
-			summary: frontmatter.summary || firstParagraph(body) || "No summary found.",
+			summary:
+				frontmatter.summary || firstParagraph(body) || "No summary found.",
 			state: frontmatter.state || null,
 			updated: frontmatter.updated || null,
 			sections: extractMarkdownSections(body).slice(0, 4),
@@ -737,19 +1130,25 @@ async function readProductItems(project: WikiProject, category: "users" | "stori
 	return items;
 }
 
-async function readSystemDiagrams(project: WikiProject): Promise<ControlRoomSystemDiagram[]> {
+async function readSystemDiagrams(
+	project: WikiProject,
+): Promise<ControlRoomSystemDiagram[]> {
 	const dir = resolve(project.root, ".codewiki/kb/system/diagrams");
 	if (!(await pathExists(dir))) return [];
 	const entries = (await readdir(dir, { withFileTypes: true }))
 		.filter((entry) => entry.isFile() && /\.ya?ml$/i.test(entry.name))
 		.map((entry) => entry.name)
-		.sort((a, b) => diagramSortRank(a) - diagramSortRank(b) || a.localeCompare(b));
+		.sort(
+			(a, b) => diagramSortRank(a) - diagramSortRank(b) || a.localeCompare(b),
+		);
 	const diagrams: ControlRoomSystemDiagram[] = [];
 	for (const name of entries) {
 		const absolute = resolve(dir, name);
 		try {
 			const raw = loadYaml(await readText(absolute)) as any;
-			diagrams.push(normalizeSystemDiagram(raw || {}, relative(project.root, absolute)));
+			diagrams.push(
+				normalizeSystemDiagram(raw || {}, relative(project.root, absolute)),
+			);
 		} catch {
 			// Invalid diagram YAML should not block the whole Control Room.
 		}
@@ -758,12 +1157,21 @@ async function readSystemDiagrams(project: WikiProject): Promise<ControlRoomSyst
 }
 
 function diagramSortRank(name: string): number {
-	const order = ["context-map", "component-map", "key-flow", "data-model", "state-lifecycle"];
+	const order = [
+		"context-map",
+		"component-map",
+		"key-flow",
+		"data-model",
+		"state-lifecycle",
+	];
 	const index = order.findIndex((item) => name.startsWith(item));
 	return index >= 0 ? index : order.length;
 }
 
-function normalizeSystemDiagram(raw: any, path: string): ControlRoomSystemDiagram {
+function normalizeSystemDiagram(
+	raw: any,
+	path: string,
+): ControlRoomSystemDiagram {
 	const kind = String(raw.kind || "diagram");
 	const nodes = normalizeDiagramNodes(raw, kind);
 	return {
@@ -772,46 +1180,96 @@ function normalizeSystemDiagram(raw: any, path: string): ControlRoomSystemDiagra
 		kind,
 		path,
 		purpose: String(raw.purpose || "System diagram."),
-		source_docs: Array.isArray(raw.source_docs) ? raw.source_docs.map(String) : [],
+		source_docs: Array.isArray(raw.source_docs)
+			? raw.source_docs.map(String)
+			: [],
 		nodes,
 		edges: normalizeDiagramEdges(raw, kind),
 		raw,
 	};
 }
 
-function normalizeDiagramNodes(raw: any, kind: string): ControlRoomSystemDiagramNode[] {
+function normalizeDiagramNodes(
+	raw: any,
+	kind: string,
+): ControlRoomSystemDiagramNode[] {
 	if (kind === "context_map") {
 		return [
 			...arrayOf(raw.actors).map((node: any) => diagramNode(node, "actor")),
-			...arrayOf(raw.systems).map((node: any) => diagramNode(node, String(node.boundary || "system"))),
+			...arrayOf(raw.systems).map((node: any) =>
+				diagramNode(node, String(node.boundary || "system")),
+			),
 		];
 	}
-	if (kind === "sequence_flow") return arrayOf(raw.participants).map((node: any) => diagramNode(node, String(node.kind || "participant")));
-	if (kind === "data_model") return arrayOf(raw.entities).map((node: any) => diagramNode(node, "entity", node.role || node.storage));
-	if (kind === "state_lifecycle") return arrayOf(raw.states).map((node: any) => diagramNode(node, String(node.kind || "state")));
-	return arrayOf(raw.nodes).map((node: any) => diagramNode(node, String(node.kind || node.group || "node")));
+	if (kind === "sequence_flow")
+		return arrayOf(raw.participants).map((node: any) =>
+			diagramNode(node, String(node.kind || "participant")),
+		);
+	if (kind === "data_model")
+		return arrayOf(raw.entities).map((node: any) =>
+			diagramNode(node, "entity", node.role || node.storage),
+		);
+	if (kind === "state_lifecycle")
+		return arrayOf(raw.states).map((node: any) =>
+			diagramNode(node, String(node.kind || "state")),
+		);
+	return arrayOf(raw.nodes).map((node: any) =>
+		diagramNode(node, String(node.kind || node.group || "node")),
+	);
 }
 
-function normalizeDiagramEdges(raw: any, kind: string): ControlRoomSystemDiagramEdge[] {
-	if (kind === "context_map") return arrayOf(raw.relationships).map((edge: any) => diagramEdge(edge, "relationship"));
-	if (kind === "sequence_flow") return arrayOf(raw.steps).map((edge: any) => diagramEdge(edge, "sequence", edge.message));
-	if (kind === "data_model") return arrayOf(raw.relationships).map((edge: any) => diagramEdge(edge, String(edge.type || "relationship")));
-	if (kind === "state_lifecycle") return arrayOf(raw.transitions).map((edge: any) => diagramEdge(edge, "transition", edge.trigger));
-	return arrayOf(raw.edges).map((edge: any) => diagramEdge(edge, String(edge.kind || "edge")));
+function normalizeDiagramEdges(
+	raw: any,
+	kind: string,
+): ControlRoomSystemDiagramEdge[] {
+	if (kind === "context_map")
+		return arrayOf(raw.relationships).map((edge: any) =>
+			diagramEdge(edge, "relationship"),
+		);
+	if (kind === "sequence_flow")
+		return arrayOf(raw.steps).map((edge: any) =>
+			diagramEdge(edge, "sequence", edge.message),
+		);
+	if (kind === "data_model")
+		return arrayOf(raw.relationships).map((edge: any) =>
+			diagramEdge(edge, String(edge.type || "relationship")),
+		);
+	if (kind === "state_lifecycle")
+		return arrayOf(raw.transitions).map((edge: any) =>
+			diagramEdge(edge, "transition", edge.trigger),
+		);
+	return arrayOf(raw.edges).map((edge: any) =>
+		diagramEdge(edge, String(edge.kind || "edge")),
+	);
 }
 
-function diagramNode(node: any, kind: string, summary?: unknown): ControlRoomSystemDiagramNode {
+function diagramNode(
+	node: any,
+	kind: string,
+	summary?: unknown,
+): ControlRoomSystemDiagramNode {
 	return {
 		id: String(node.id || node.label || "node"),
 		label: String(node.label || node.title || node.id || "node"),
 		kind,
 		doc_path: stringOrNull(node.source || node.doc_path || node.doc),
-		summary: String(summary || node.summary || node.purpose || node.role || node.storage || kind),
+		summary: String(
+			summary ||
+				node.summary ||
+				node.purpose ||
+				node.role ||
+				node.storage ||
+				kind,
+		),
 		raw: node,
 	};
 }
 
-function diagramEdge(edge: any, kind: string, label?: unknown): ControlRoomSystemDiagramEdge {
+function diagramEdge(
+	edge: any,
+	kind: string,
+	label?: unknown,
+): ControlRoomSystemDiagramEdge {
 	return {
 		from: String(edge.from || edge.source || ""),
 		to: String(edge.to || edge.target || ""),
@@ -839,10 +1297,19 @@ function firstParagraph(body: string): string | null {
 }
 
 function titleFromFilename(name: string): string {
-	return name.replace(/\.(md|ya?ml)$/i, "").split(/[-_]/g).map((part) => part ? part[0]!.toUpperCase() + part.slice(1) : part).join(" ");
+	return name
+		.replace(/\.(md|ya?ml)$/i, "")
+		.split(/[-_]/g)
+		.map((part) => (part ? part[0]!.toUpperCase() + part.slice(1) : part))
+		.join(" ");
 }
 
-function writeTextResponse(res: ServerResponse, status: number, body: string, contentType: string): void {
+function writeTextResponse(
+	res: ServerResponse,
+	status: number,
+	body: string,
+	contentType: string,
+): void {
 	res.writeHead(status, {
 		"content-type": contentType,
 		"cache-control": "no-store",
@@ -850,21 +1317,36 @@ function writeTextResponse(res: ServerResponse, status: number, body: string, co
 	res.end(body);
 }
 
-function writeJsonResponse(res: ServerResponse, status: number, body: unknown): void {
-	writeTextResponse(res, status, `${JSON.stringify(body, null, 2)}\n`, "application/json; charset=utf-8");
+function writeJsonResponse(
+	res: ServerResponse,
+	status: number,
+	body: unknown,
+): void {
+	writeTextResponse(
+		res,
+		status,
+		`${JSON.stringify(body, null, 2)}\n`,
+		"application/json; charset=utf-8",
+	);
 }
 
 function parseArchitectureMermaid(source: string): {
 	nodes: Array<{ id: string; label: string; doc: string | null }>;
 	edges: Array<{ from: string; to: string }>;
 } {
-	const nodes = new Map<string, { id: string; label: string; doc: string | null }>();
+	const nodes = new Map<
+		string,
+		{ id: string; label: string; doc: string | null }
+	>();
 	const edges: Array<{ from: string; to: string }> = [];
 	for (const line of source.split(/\r?\n/)) {
 		const nodeMatch = /^\s*([A-Za-z0-9_]+)\["([\s\S]+)"\]/.exec(line);
 		if (nodeMatch) {
 			const id = nodeMatch[1];
-			const labelParts = nodeMatch[2].split(/\\n/).map((part) => part.trim()).filter(Boolean);
+			const labelParts = nodeMatch[2]
+				.split(/\\n/)
+				.map((part) => part.trim())
+				.filter(Boolean);
 			const doc = labelParts.find((part) => part.endsWith(".md")) ?? null;
 			nodes.set(id, { id, label: labelParts[0] ?? id, doc });
 			continue;
@@ -877,10 +1359,18 @@ function parseArchitectureMermaid(source: string): {
 
 function parseClassMembership(source: string, className: string): Set<string> {
 	const set = new Set<string>();
-	const pattern = new RegExp(`^\\s*class\\s+([^;]+)\\s+${className}\\s*;`, "gm");
+	const safeClassName = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const pattern = new RegExp(
+		`^\\s*class\\s+([^;]+)\\s+${safeClassName}\\s*;`,
+		"gm",
+	);
 	let match: RegExpExecArray | null;
 	while ((match = pattern.exec(source))) {
-		for (const id of match[1].split(",").map((part) => part.trim()).filter(Boolean)) set.add(id);
+		for (const id of match[1]
+			.split(",")
+			.map((part) => part.trim())
+			.filter(Boolean))
+			set.add(id);
 	}
 	return set;
 }
@@ -895,7 +1385,10 @@ async function readMarkdownDoc(path: string): Promise<{
 	return { frontmatter, sections: extractMarkdownSections(body) };
 }
 
-function parseMarkdownFrontmatter(raw: string): { frontmatter: Record<string, string>; body: string } {
+function parseMarkdownFrontmatter(raw: string): {
+	frontmatter: Record<string, string>;
+	body: string;
+} {
 	const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(raw);
 	if (!match) return { frontmatter: {}, body: raw };
 	const frontmatter: Record<string, string> = {};
@@ -907,25 +1400,39 @@ function parseMarkdownFrontmatter(raw: string): { frontmatter: Record<string, st
 	return { frontmatter, body: raw.slice(match[0].length) };
 }
 
-function extractMarkdownSections(body: string): Array<{ title: string; body: string }> {
+function extractMarkdownSections(
+	body: string,
+): Array<{ title: string; body: string }> {
 	const sections: Array<{ title: string; body: string }> = [];
 	const lines = body.split(/\r?\n/);
 	let current: { title: string; body: string[] } | null = null;
 	for (const line of lines) {
 		const heading = /^##\s+(.+)$/.exec(line);
 		if (heading) {
-			if (current) sections.push({ title: current.title, body: compactSectionBody(current.body) });
+			if (current)
+				sections.push({
+					title: current.title,
+					body: compactSectionBody(current.body),
+				});
 			current = { title: heading[1].trim(), body: [] };
 			continue;
 		}
 		if (current) current.body.push(line);
 	}
-	if (current) sections.push({ title: current.title, body: compactSectionBody(current.body) });
+	if (current)
+		sections.push({
+			title: current.title,
+			body: compactSectionBody(current.body),
+		});
 	return sections.filter((section) => section.body).slice(0, 6);
 }
 
 function compactSectionBody(lines: string[]): string {
-	return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim().slice(0, 1400);
+	return lines
+		.join("\n")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim()
+		.slice(0, 1400);
 }
 
 function normalizeGraphNode(node: any): Record<string, unknown> {
@@ -970,14 +1477,25 @@ function isDefaultGraphNodeVisible(node: any): boolean {
 	const kind = String(node.kind ?? "");
 	if (kind === "git_archive_ref") return false;
 	if (node.compacted === true) return false;
-	if (kind === "roadmap_task" && ["done", "cancelled", "closed"].includes(String(node.status ?? ""))) return false;
-	if (kind === "validation_report" && String(node.verdict ?? "") === "pass") return false;
+	if (
+		kind === "roadmap_task" &&
+		["done", "cancelled", "closed"].includes(String(node.status ?? ""))
+	)
+		return false;
+	if (kind === "validation_report" && String(node.verdict ?? "") === "pass")
+		return false;
 	return true;
 }
 
-function isDefaultGraphEdgeVisible(edge: any, visibleNodeIds: Set<string>): boolean {
+function isDefaultGraphEdgeVisible(
+	edge: any,
+	visibleNodeIds: Set<string>,
+): boolean {
 	if (!edge || edge.default_hidden === true) return false;
-	return visibleNodeIds.has(String(edge.from ?? "")) && visibleNodeIds.has(String(edge.to ?? ""));
+	return (
+		visibleNodeIds.has(String(edge.from ?? "")) &&
+		visibleNodeIds.has(String(edge.to ?? ""))
+	);
 }
 
 async function readTextIfExists(path: string): Promise<string> {
@@ -995,11 +1513,15 @@ function numberFrom(value: unknown): number {
 }
 
 function isOpenTaskStatus(status: unknown): boolean {
-	return !["done", "cancelled", "closed"].includes(String(status ?? "").toLowerCase());
+	return !["done", "cancelled", "closed"].includes(
+		String(status ?? "").toLowerCase(),
+	);
 }
 
 function uniqueSorted(values: string[]): string[] {
-	return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
+	return Array.from(new Set(values.filter(Boolean))).sort((a, b) =>
+		a.localeCompare(b),
+	);
 }
 
 const CONTROL_ROOM_HTML = `<!doctype html>

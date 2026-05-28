@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-28T03:27:46Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+  "task_id": "TASK-038",
+  "task": {
+    "id": "TASK-038",
+    "title": "Enforce compiler promotion gates and gateway boundaries",
+    "status": "in_progress",
+    "priority": "critical",
+    "kind": "architecture",
+    "summary": "Add mechanical preflight enforcement for decision/planning/implementation promotion gates while preserving gateway/audit boundary safety fixes.",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ],
+    "code_paths": [
+      "src/build",
+      "src/validation",
+      "src/gateway",
+      "src/audit",
+      "src/roadmap",
+      "src/state/resume-context.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/audit.test.mjs"
+    ],
+    "goal": {
+      "outcome": "CodeWiki blocks lower-layer promotion and routes ambiguity back to decision when required upstream evidence is missing, stale, failed, blocked, or semantically incomplete.",
+      "acceptance": [
+        "Planning preflight requires a decision_build plus decision-gateway pass unless the change declares and validates a mechanical/runtime/generated exemption.",
+        "Implementation/resume preflight requires a planning_build plus planning-gateway pass before selecting an executable roadmap task.",
+        "Ambiguous lower-loop cases block and route to decision with deterministic decision-question evidence instead of agent inference.",
+        "Task close/publication still requires implementation validation/content proof and is not weakened by the new checks.",
+        "Gateway/audit dynamic-regex and boundary safety findings remain addressed or explicitly covered by the same validation path.",
+        "Smoke tests prove missing, stale, failed, blocked, and ambiguous upstream evidence prevents promotion while valid upstream-pass paths continue."
+      ],
+      "non_goals": [
+        "Do not implement UI approval surfaces in this task.",
+        "Do not implement agency runner automation in this task.",
+        "Do not implement production quality thresholds in this task beyond preserving existing validation proof requirements."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "targeted validation-preflight/builds/resume scheduler tests",
+        "rerun relevant dynamic-regexp/gateway review checks"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-04T03:27:46.000Z",
+    "purge_after": "2026-06-11T03:27:46.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implement TASK-038 compiler promotion gates and resume readiness enforcement",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-038"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-28-planning-pass.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-038/task.json",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/compilers.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/build/shared.ts",
+      "src/validation/report.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/state/resume-context.ts",
+      "src/gateway/index.ts",
+      "src/audit/tool.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/ui/web/control-room.ts"
+    ],
+    "tests": [
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+    ],
+    "validation": [
+      "fresh implementation validation pending"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-038"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/builds.md",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ],
+    "code_paths": [
+      "src/build",
+      "src/validation",
+      "src/gateway",
+      "src/audit",
+      "src/roadmap",
+      "src/state/resume-context.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/audit.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/build/shared.ts",
+    "src/validation/report.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/state/resume-context.ts",
+    "src/gateway/index.ts",
+    "src/audit/tool.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/ui/web/control-room.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/validation-preflight.test.mjs",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+    "src/build/shared.ts",
+    "src/validation/report.ts",
+    "src/adapters/pi/commands/resume.ts",
+    "src/state/resume-context.ts",
+    "src/gateway/index.ts",
+    "src/audit/tool.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/ui/web/control-room.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+    "npm run typecheck",
+    "npm run test:smoke",
+    "npm run test:features",
+    "npm run test:pack",
+    "npm run check:architecture",
+    "codewiki_audit profiles=alignment,generated-parity changed=true include_fingerprints=true (warning: graph/generated-file warnings; generated-parity pass)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+      "roadmap_task_id": "TASK-038",
+      "test_files": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Added/updated preflight fixtures before relying on implementation behavior: missing planning gateway, pending approved decision row, planning pass setup, and task-close source proof.",
+        "Added resume scheduler assertion for implicit skip and explicit block when planning-gateway proof is missing.",
+        "Updated package/compaction/TASK-030 smoke fixtures to create decision/planning pass evidence before resume contexts, proving valid paths still work."
+      ],
+      "notes": [
+        "TDD evidence came from validation-preflight/resume scheduler/package/compaction/source-root smoke fixtures; no external booboo rerun command was available in this harness."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+      "roadmap_task_id": "TASK-038",
+      "code_files": [
+        "src/build/shared.ts",
+        "src/validation/report.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-context.ts",
+        "src/gateway/index.ts",
+        "src/audit/tool.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/ui/web/control-room.ts"
+      ],
+      "evidence": [
+        "src/build/shared.ts centralizes gateway-pass lookup for build refs and task implementation readiness from planning builds plus planning validation reports.",
+        "src/validation/report.ts blocks pass reports on missing upstream gateway proof, decision row mapping gaps, open semantic questions, task id gaps, stale refs, and preserves routing to decision/planning/validation.",
+        "src/adapters/pi/commands/resume.ts and src/state/resume-context.ts enforce task implementation readiness during explicit and implicit task selection.",
+        "src/gateway/index.ts, src/audit/tool.ts, src/adapters/pi/ui/manager.ts, and src/ui/web/control-room.ts escape dynamic regex inputs."
+      ],
+      "notes": [
+        "Implementation was limited to TASK-038 gate enforcement, resume readiness, validation policy blocking, and regex safety. UI approval surfaces, agency runner, scheduler, and quality profile remain separate tasks."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added/updated preflight fixtures before relying on implementation behavior: missing planning gateway, pending approved decision row, planning pass setup, and task-close source proof.",
+    "Added resume scheduler assertion for implicit skip and explicit block when planning-gateway proof is missing.",
+    "Updated package/compaction/TASK-030 smoke fixtures to create decision/planning pass evidence before resume contexts, proving valid paths still work."
+  ],
+  "code_change_evidence": [
+    "src/build/shared.ts centralizes gateway-pass lookup for build refs and task implementation readiness from planning builds plus planning validation reports.",
+    "src/validation/report.ts blocks pass reports on missing upstream gateway proof, decision row mapping gaps, open semantic questions, task id gaps, stale refs, and preserves routing to decision/planning/validation.",
+    "src/adapters/pi/commands/resume.ts and src/state/resume-context.ts enforce task implementation readiness during explicit and implicit task selection.",
+    "src/gateway/index.ts, src/audit/tool.ts, src/adapters/pi/ui/manager.ts, and src/ui/web/control-room.ts escape dynamic regex inputs."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Planning preflight requires a decision_build plus decision-gateway pass unless the change declares and validates a mechanical/runtime/generated exemption.",
+      "evidence": "src/validation/report.ts now uses acceptedGatewayBuildRefGaps for planning_build source_decision_build refs; tests/smoke/validation-preflight.test.mjs covers missing decision/planning gateway evidence and pass-after-gateway fixtures."
+    },
+    {
+      "criterion": "Implementation/resume preflight requires a planning_build plus planning-gateway pass before selecting an executable roadmap task.",
+      "evidence": "src/build/shared.ts adds implementationReadinessGapsForTask/roadmapImplementationReadiness; src/adapters/pi/commands/resume.ts and src/state/resume-context.ts skip/block tasks lacking planning-gateway pass; resume-scheduler, package-smoke, compaction, and TASK-030 tests cover readiness proof."
+    },
+    {
+      "criterion": "Ambiguous lower-loop cases block and route to decision with deterministic decision-question evidence instead of agent inference.",
+      "evidence": "src/validation/report.ts adds decision mapping and open-question ambiguity gaps, routes decision_mapping/ambiguous_intent to decision_ambiguity, and blocks pass reports with decision_mapping/ambiguity failed criteria."
+    },
+    {
+      "criterion": "Task close/publication still requires implementation validation/content proof and is not weakened by the new checks.",
+      "evidence": "src/validation/report.ts now includes upstream/task/stale preflight gaps in pass policy blocking; package-smoke and loop-isolation-policy tests were updated so task-close pass requires source implementation build plus publisher/content proof."
+    },
+    {
+      "criterion": "Gateway/audit dynamic-regex and boundary safety findings remain addressed or explicitly covered by the same validation path.",
+      "evidence": "src/gateway/index.ts now treats gateway grep as escaped fixed-string search; audit/UI dynamic regex sites now escape export names, YAML keys, and class names before RegExp construction."
+    },
+    {
+      "criterion": "Smoke tests prove missing, stale, failed, blocked, and ambiguous upstream evidence prevents promotion while valid upstream-pass paths continue.",
+      "evidence": "validation-preflight tests cover missing planning gateway pass, pending approved decision row, propagation blocks, deferred pass, satisfied-defer block, and risk gates; resume scheduler tests cover missing planning-gateway proof skip/block; full smoke/features passed."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with TASK-038 implementation from validated pipeline hardening planning build.",
+    "implemented_changes": [
+      "Added gateway-pass-aware upstream build checks for planning and implementation validation preflight.",
+      "Blocked validation pass reports when upstream gateway evidence, decision mapping, ambiguity, task id, or stale refs are missing.",
+      "Made /wiki-resume and codewiki_resume_context skip or reject tasks without planning-gateway pass evidence.",
+      "Escaped dynamic regex inputs in gateway/audit/UI helper paths covered by the task.",
+      "Updated smoke/source-root fixtures to prove invalid promotion blocks and valid gateway-passed paths continue."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/build/shared.ts",
+        "src/validation/report.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-context.ts",
+        "src/gateway/index.ts",
+        "src/audit/tool.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/ui/web/control-room.ts"
+      ],
+      "tests": [
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+      ],
+      "validation": [
+        "fresh implementation validation pending"
+      ]
+    },
+    "acceptance_evidence": [
+      "All six TASK-038 acceptance criteria mapped to tests/code evidence in implementation build acceptance_mapping.",
+      "npm run typecheck, test:smoke, test:features, test:pack, and check:architecture passed."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "npm run check:architecture"
+    ],
+    "non_goals_preserved": [
+      "Did not implement inline approval UI.",
+      "Did not implement bounded agency runner.",
+      "Did not implement parallel scheduler/publisher queue.",
+      "Did not implement production quality thresholds beyond preserving existing validation proof requirements."
+    ],
+    "remaining_risks": [
+      "Requires fresh validation from source refs before task close."
+    ]
+  },
+  "risks": [
+    "Fresh independent implementation validation is still required before closing TASK-038.",
+    "Existing historical tasks without planning-gateway proof will now be skipped/blocked by resume until re-gated or given explicit mechanical/runtime exemption.",
+    "Validation report paths now include source build slug to preserve multiple pass reports per day/profile; downstream code using exact old filenames should use refs from tool output instead."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-038",
+      "task_id": "TASK-038",
+      "next_focus_task_id": "TASK-044",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-038",
+        "title": "Enforce compiler promotion gates and gateway boundaries",
+        "summary": "Implement TASK-038 compiler promotion gates and resume readiness enforcement",
+        "spec_paths": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+        ],
+        "code_paths": [
+          "src/build",
+          "src/validation",
+          "src/gateway",
+          "src/audit",
+          "src/roadmap",
+          "src/state/resume-context.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "src/build/shared.ts",
+          "src/validation/report.ts",
+          "src/gateway/index.ts",
+          "src/audit/tool.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/ui/web/control-room.ts"
+        ],
+        "acceptance": [
+          "Planning preflight requires a decision_build plus decision-gateway pass unless the change declares and validates a mechanical/runtime/generated exemption.",
+          "Implementation/resume preflight requires a planning_build plus planning-gateway pass before selecting an executable roadmap task.",
+          "Ambiguous lower-loop cases block and route to decision with deterministic decision-question evidence instead of agent inference.",
+          "Task close/publication still requires implementation validation/content proof and is not weakened by the new checks.",
+          "Gateway/audit dynamic-regex and boundary safety findings remain addressed or explicitly covered by the same validation path.",
+          "Smoke tests prove missing, stale, failed, blocked, and ambiguous upstream evidence prevents promotion while valid upstream-pass paths continue."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "targeted validation-preflight/builds/resume scheduler tests",
+          "rerun relevant dynamic-regexp/gateway review checks"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "npm run check:architecture",
+          "codewiki_audit profiles=alignment,generated-parity changed=true include_fingerprints=true (warning: graph/generated-file warnings; generated-parity pass)"
+        ],
+        "test_design_evidence": [
+          "Added/updated preflight fixtures before relying on implementation behavior: missing planning gateway, pending approved decision row, planning pass setup, and task-close source proof.",
+          "Added resume scheduler assertion for implicit skip and explicit block when planning-gateway proof is missing.",
+          "Updated package/compaction/TASK-030 smoke fixtures to create decision/planning pass evidence before resume contexts, proving valid paths still work."
+        ],
+        "code_change_evidence": [
+          "src/build/shared.ts centralizes gateway-pass lookup for build refs and task implementation readiness from planning builds plus planning validation reports.",
+          "src/validation/report.ts blocks pass reports on missing upstream gateway proof, decision row mapping gaps, open semantic questions, task id gaps, stale refs, and preserves routing to decision/planning/validation.",
+          "src/adapters/pi/commands/resume.ts and src/state/resume-context.ts enforce task implementation readiness during explicit and implicit task selection.",
+          "src/gateway/index.ts, src/audit/tool.ts, src/adapters/pi/ui/manager.ts, and src/ui/web/control-room.ts escape dynamic regex inputs."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-038",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-038",
+      "show_build": "git show refs/codewiki/archive/task/TASK-038:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/builds.md",
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+        "src/build",
+        "src/validation",
+        "src/gateway",
+        "src/audit",
+        "src/roadmap",
+        "src/state/resume-context.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "skills/codewiki-planning/SKILL.md",
+        "skills/codewiki-implementation/SKILL.md",
+        "skills/codewiki-validation/SKILL.md",
+        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/audit.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "feat(codewiki): enforce compiler promotion gates",
+      "body": "Implement TASK-038 promotion gate enforcement and resume readiness.\n\n- require upstream gateway-pass evidence in validation preflight\n- block validation pass reports on missing upstream, decision mapping, ambiguity, task id, stale refs, or content proof gaps\n- skip or reject resume tasks lacking planning-gateway pass evidence\n- escape dynamic regex inputs in gateway/audit/UI helper paths\n- update smoke/source-root fixtures for new gate requirements\n\nChecks: npm run typecheck; npm run test:smoke; npm run test:features; npm run test:pack; npm run check:architecture\n\nCodeWiki-Task: TASK-038\nCodeWiki-Build: <replace with implementation build path>\nCodeWiki-Checks: npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, npm run check:architecture\nCodeWiki-Validation: <pending fresh validation>\nCodeWiki-Recover: /wiki-restore TASK-038",
+      "trailers": [
+        "CodeWiki-Task: TASK-038",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs, node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs, npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, npm run check:architecture, codewiki_audit profiles=alignment,generated-parity changed=true include_fingerprints=true (warning: graph/generated-file warnings; generated-parity pass)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-038",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-038",
+        "CodeWiki-Digest: sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+        "CodeWiki-Restore: /wiki-restore TASK-038"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "feat(codewiki): enforce compiler promotion gates",
+      "body": "Implement TASK-038 promotion gate enforcement and resume readiness.\n\n- require upstream gateway-pass evidence in validation preflight\n- block validation pass reports on missing upstream, decision mapping, ambiguity, task id, stale refs, or content proof gaps\n- skip or reject resume tasks lacking planning-gateway pass evidence\n- escape dynamic regex inputs in gateway/audit/UI helper paths\n- update smoke/source-root fixtures for new gate requirements\n\nChecks: npm run typecheck; npm run test:smoke; npm run test:features; npm run test:pack; npm run check:architecture\n\nCodeWiki-Task: TASK-038\nCodeWiki-Build: <replace with implementation build path>\nCodeWiki-Checks: npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, npm run check:architecture\nCodeWiki-Validation: <pending fresh validation>\nCodeWiki-Recover: /wiki-restore TASK-038"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-038",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-038"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-038",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-038",
+        "show_build": "git show refs/codewiki/archive/task/TASK-038:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/builds.md",
+          ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+          "src/build",
+          "src/validation",
+          "src/gateway",
+          "src/audit",
+          "src/roadmap",
+          "src/state/resume-context.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "skills/codewiki-planning/SKILL.md",
+          "skills/codewiki-implementation/SKILL.md",
+          "skills/codewiki-validation/SKILL.md",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/audit.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-038",
+      "build_path": ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-038",
+      "commit_sha": "",
+      "digest": "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+      "restore_command": "/wiki-restore TASK-038"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
+          "bytes": 21893
+        },
+        {
+          "path": "tests/smoke/validation-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:57595cb35c3d2838edb560dd9309660c39c465b8593fa3c607ca185802f239c7",
+          "bytes": 22064
+        },
+        {
+          "path": "tests/smoke/resume-scheduler.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c7fb26518352cdfe01be560bd8035d8762cb5f6d12fccd251e496f1e13066881",
+          "bytes": 8236
+        },
+        {
+          "path": "tests/smoke/builds.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:053b2b9321121932b68f39b8bccb9358a04b3f4f8457db7f6b045aff91762049",
+          "bytes": 25856
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:cb7ddc26f857b76c832f2f826de1a90a086740c484aea4bdf3178671bad6aa97",
+          "bytes": 106552
+        },
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:d3f49d663fecd136a93f645b8316848a4ad803fce7bed615ec7c2caa452f00bc",
+          "bytes": 13351
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:85cbf5edf9e41225f9dd8127129e2a13837f27a4bbb344697a9fbeae3e4204e8",
+          "bytes": 16204
+        },
+        {
+          "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f79d23d8cfd37dedb47686ecbcec24aef1b6e81125b0526c319c809eb0e1fe0f",
+          "bytes": 17143
+        },
+        {
+          "path": "src/build/shared.ts",
+          "role": "code_file",
+          "sha256": "sha256:598e1d293a7899a61769d47fe4a31e4e064b151ab8c1cafe5f56b6c287f28687",
+          "bytes": 15663
+        },
+        {
+          "path": "src/validation/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:4b505a6b82841f9420ba34953715dbce8e587fdfc9e56cb377fd9318b40a2e6d",
+          "bytes": 46429
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "role": "code_file",
+          "sha256": "sha256:bf4742be091a88601ba14c308f230917ef5f054db2fb2abfe15266eb553539de",
+          "bytes": 21254
+        },
+        {
+          "path": "src/state/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:9fd7543ecc9e10bf67ae705076ffef3674f7a9c87040be4ec51e39738af5028c",
+          "bytes": 18208
+        },
+        {
+          "path": "src/gateway/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:dd396b62a1ef38bc654538eb8dc3b123b6089c3a92fc975281231438c22302ca",
+          "bytes": 8859
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:30dfda931a48df13322beb4138496430083a43a9ede0a891c3b9cb34ad4e06f3",
+          "bytes": 40646
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
+          "bytes": 75843
+        },
+        {
+          "path": "src/ui/web/control-room.ts",
+          "role": "code_file",
+          "sha256": "sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
+          "bytes": 90643
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-038",
+      "source_build": ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/build/shared.ts",
+          "src/validation/report.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/state/resume-context.ts",
+          "src/gateway/index.ts",
+          "src/audit/tool.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/ui/web/control-room.ts",
+          "tests/smoke/validation-preflight.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-038",
+        "restore_command": "/wiki-restore TASK-038"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/loop-isolation-policy.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "npm run check:architecture",
+        "codewiki_audit profiles=alignment,generated-parity changed=true include_fingerprints=true (warning: graph/generated-file warnings; generated-parity pass)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

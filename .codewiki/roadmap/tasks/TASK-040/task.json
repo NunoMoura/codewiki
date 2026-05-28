@@ -1,0 +1,52 @@
+{
+  "id": "TASK-040",
+  "title": "Consolidate resume task selection",
+  "status": "todo",
+  "priority": "high",
+  "kind": "refactor",
+  "summary": "Replace duplicated /wiki-resume and codewiki_resume_context task-selection logic with one shared resolver and parity tests.",
+  "spec_paths": [
+    ".codewiki/kb/system/roadmap.md"
+  ],
+  "code_paths": [
+    "src/adapters/pi/commands/resume.ts",
+    "src/state/resume-context.ts",
+    "src/state/resume-selection.ts",
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "resume-selection",
+    "semantic-duplicate",
+    "state-resume"
+  ],
+  "change_type": "code",
+  "goal": {
+    "outcome": "/wiki-resume and codewiki_resume_context share one tested task-selection implementation.",
+    "acceptance": [
+      "A shared module owns resolveImplementationTask and resumeCandidates, plus task artifact scope/blocking helpers where appropriate.",
+      "The command adapter and resume-context tool import the shared resolver instead of carrying duplicate functions.",
+      "Tests cover explicit task selection, session focus, persisted focus, roadmap-order fallback, artifact conflict skip, and non-executable task skip.",
+      "Existing resume prompt, artifact-status, status-dock, and source-root guard behavior remains compatible."
+    ],
+    "non_goals": [
+      "Do not redesign roadmap scheduling policy.",
+      "Do not change artifact-status semantics.",
+      "Do not rename Pi commands or tool schemas."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "resume scheduler smoke tests",
+      "rerun semantic similarity duplicate check"
+    ]
+  },
+  "delta": {
+    "desired": "One resolver prevents command/tool scheduling drift.",
+    "current": "Review reports 100% duplicate resume selection functions in command and state layers.",
+    "closure": "Task closes when duplicate functions are removed and parity tests pass."
+  },
+  "created": "2026-05-28",
+  "updated": "2026-05-28T01:08:45Z"
+}

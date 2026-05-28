@@ -1,0 +1,49 @@
+{
+  "id": "TASK-048",
+  "title": "Define production quality profile",
+  "status": "todo",
+  "priority": "high",
+  "kind": "quality",
+  "summary": "Create a policy-backed quality profile for implementation/task-close promotion using deterministic checks, review thresholds, content proof, and explicit waivers.",
+  "spec_paths": [
+    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+  ],
+  "code_paths": [
+    "src/quality/production-profile.ts",
+    "src/quality/tool.ts",
+    "tests/smoke/quality-profile.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "production-quality-profile-new",
+    "review-budget-profile",
+    "waiver-ledger"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Implementation and task-close gates can require a consistent production-ready quality profile with explicit evidence or waivers.",
+    "acceptance": [
+      "Quality profile defines required checks/audits by change class and risk tier, including typecheck, tests, package/pack checks, review-tool findings, content proof, and drift audits where applicable.",
+      "Validation integration blocks promotion when required checks, thresholds, content proof, or fresh validation evidence are missing, unless an explicit waiver is recorded with rationale and owner.",
+      "Implementation builds can map acceptance criteria to quality evidence and remaining risk/waiver records.",
+      "Tests cover pass, missing-evidence block, waiver-required block/pass, and package/readiness scenarios."
+    ],
+    "non_goals": [
+      "Do not require all review findings to be zero immediately; use thresholds or explicit waivers.",
+      "Do not replace existing task-specific verification criteria.",
+      "Do not perform publication or release."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "targeted quality-profile tests"
+    ]
+  },
+  "delta": {
+    "desired": "Promotion/closure has deterministic quality evidence requirements and explicit waiver handling.",
+    "current": "Quality checks exist across tasks and audits but there is no unified production-ready gate profile.",
+    "closure": "Task closes when quality profile tests prove required evidence and waivers are enforced."
+  },
+  "created": "2026-05-28",
+  "updated": "2026-05-28"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "TASK-037",
+  "title": "Calibrate static analysis entrypoints",
+  "status": "todo",
+  "priority": "high",
+  "kind": "tooling",
+  "summary": "Make PyLens/Knip-style review inputs aware of CodeWiki package entrypoints, public API facades, scripts, and tests.",
+  "spec_paths": [
+    "package.json",
+    "README.md"
+  ],
+  "code_paths": [
+    "package.json",
+    "src/index.ts",
+    "src/api/index.ts",
+    "src/api/tools.ts",
+    "scripts/codewiki-gateway.mjs",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "static-analysis-calibration",
+    "knip-config",
+    "package-entrypoints"
+  ],
+  "change_type": "code",
+  "goal": {
+    "outcome": "Future dead-code review output no longer flags known package entrypoints and script surfaces as unused.",
+    "acceptance": [
+      "Static analysis configuration or package metadata declares Pi extension, public API facade, CLI scripts, and test files as entrypoints.",
+      "Dynamic script import usage such as scripts/codewiki-gateway.mjs is visible to the tool or documented as an intentional ignore.",
+      "Review evidence shows known runtime/package entrypoints are not reported as dead code, or each remaining false positive has an explicit rationale.",
+      "Package smoke and pack checks remain compatible."
+    ],
+    "non_goals": [
+      "Do not delete exports based only on the current review.",
+      "Do not change product behavior.",
+      "Do not handle UI asset dependency calibration; the UI task owns control-room asset behavior."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:pack",
+      "rerun booboo or Knip-equivalent review"
+    ]
+  },
+  "delta": {
+    "desired": "Static analysis output separates real unused code from CodeWiki package entrypoints/scripts.",
+    "current": "Dead-code review output includes known dynamic entrypoints and package script surfaces.",
+    "closure": "Task closes when calibrated review evidence is recorded and package tests pass."
+  },
+  "created": "2026-05-28",
+  "updated": "2026-05-28T01:08:39Z"
+}

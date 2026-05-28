@@ -3,7 +3,6 @@ import "../setup-env.mjs";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import {
-	appendFileSync,
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
@@ -96,23 +95,81 @@ async function main() {
 	);
 	initTheme("dark", false);
 	process.env.PI_CODEWIKI_SKIP_VERIFIER = "1";
-	const roadmapSource = readFileSync(resolve(repoRoot, "src", "roadmap", "runtime.ts"), "utf8");
-	const taskAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
-	assert.match(roadmapSource, /TaskVerifierProfile = "task-close"/, "Verifier gateway should define task-close profile contract");
-	assert.match(roadmapSource, /runTaskClosePreflight/, "Verifier gateway should run deterministic task-close preflight");
-	assert.match(roadmapSource, /Malformed verifier JSON output/, "Malformed verifier output should block closure");
-	assert.match(roadmapSource, /strict JSON matching verdict_schema/, "Verifier gateway should require strict JSON without surrounding diagnostics");
-	assert.match(roadmapSource, /compactVerifierContext/, "Verifier gateway should compact context packs before semantic verification");
-	assert.match(roadmapSource, /SemanticTaskVerifierRunner/, "Verifier gateway should depend on an adapter-provided semantic verifier runner");
-	assert.doesNotMatch(roadmapSource, /execFileAsync\(\s*"pi"/, "Verifier gateway should not spawn the Pi CLI directly");
-	assert.doesNotMatch(taskAdapterSource, /createAgentSession/, "Pi task adapter should not run semantic verification from the close path");
-	assert.doesNotMatch(taskAdapterSource, /SessionManager\.inMemory/, "Pi task adapter should not create verifier sessions during task mutation");
-	assert.doesNotMatch(taskAdapterSource, /runSemanticVerifier/, "TaskMutationPorts should not carry deprecated verifier runners");
-	assert.match(roadmapSource, /\["pass", "fail", "block"\]/, "Verifier gateway should cover pass/fail/block verdicts");
+	const roadmapSource = readFileSync(
+		resolve(repoRoot, "src", "roadmap", "runtime.ts"),
+		"utf8",
+	);
+	const taskAdapterSource = readFileSync(
+		resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"),
+		"utf8",
+	);
+	assert.match(
+		roadmapSource,
+		/TaskVerifierProfile = "task-close"/,
+		"Verifier gateway should define task-close profile contract",
+	);
+	assert.match(
+		roadmapSource,
+		/runTaskClosePreflight/,
+		"Verifier gateway should run deterministic task-close preflight",
+	);
+	assert.match(
+		roadmapSource,
+		/Malformed verifier JSON output/,
+		"Malformed verifier output should block closure",
+	);
+	assert.match(
+		roadmapSource,
+		/strict JSON matching verdict_schema/,
+		"Verifier gateway should require strict JSON without surrounding diagnostics",
+	);
+	assert.match(
+		roadmapSource,
+		/compactVerifierContext/,
+		"Verifier gateway should compact context packs before semantic verification",
+	);
+	assert.match(
+		roadmapSource,
+		/SemanticTaskVerifierRunner/,
+		"Verifier gateway should depend on an adapter-provided semantic verifier runner",
+	);
+	assert.doesNotMatch(
+		roadmapSource,
+		/execFileAsync\(\s*"pi"/,
+		"Verifier gateway should not spawn the Pi CLI directly",
+	);
+	assert.doesNotMatch(
+		taskAdapterSource,
+		/createAgentSession/,
+		"Pi task adapter should not run semantic verification from the close path",
+	);
+	assert.doesNotMatch(
+		taskAdapterSource,
+		/SessionManager\.inMemory/,
+		"Pi task adapter should not create verifier sessions during task mutation",
+	);
+	assert.doesNotMatch(
+		taskAdapterSource,
+		/runSemanticVerifier/,
+		"TaskMutationPorts should not carry deprecated verifier runners",
+	);
+	assert.match(
+		roadmapSource,
+		/\["pass", "fail", "block"\]/,
+		"Verifier gateway should cover pass/fail/block verdicts",
+	);
 
-	const verifierParserStart = roadmapSource.indexOf("function taskVerifierBlock");
-	const verifierParserEnd = roadmapSource.indexOf("/**\n * Run the automatic task verifier", verifierParserStart);
-	assert.ok(verifierParserStart >= 0 && verifierParserEnd > verifierParserStart, "Verifier parser source block should be discoverable for golden tests");
+	const verifierParserStart = roadmapSource.indexOf(
+		"function taskVerifierBlock",
+	);
+	const verifierParserEnd = roadmapSource.indexOf(
+		"/**\n * Run the automatic task verifier",
+		verifierParserStart,
+	);
+	assert.ok(
+		verifierParserStart >= 0 && verifierParserEnd > verifierParserStart,
+		"Verifier parser source block should be discoverable for golden tests",
+	);
 	const verifierParserTs = [
 		"type TaskVerifierResult = any;",
 		roadmapSource.slice(verifierParserStart, verifierParserEnd),
@@ -120,33 +177,108 @@ async function main() {
 	].join("\n");
 	const ts = require("typescript");
 	const verifierParserJs = ts.transpileModule(verifierParserTs, {
-		compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 },
+		compilerOptions: {
+			module: ts.ModuleKind.ES2022,
+			target: ts.ScriptTarget.ES2022,
+		},
 	}).outputText;
-	const verifierSmokeDir = mkdtempSync(resolve(tmpdir(), "codewiki-verifier-parser-"));
+	const verifierSmokeDir = mkdtempSync(
+		resolve(tmpdir(), "codewiki-verifier-parser-"),
+	);
 	const verifierSmokeModule = resolve(verifierSmokeDir, "parser.mjs");
 	writeFileSync(verifierSmokeModule, verifierParserJs, "utf8");
 	try {
-		const { extractVerifierJson } = await import(pathToFileURL(verifierSmokeModule).href);
-		const passVerdict = extractVerifierJson('{"verdict":"pass","taskId":"TASK-999","checks":["npm test"],"issues":[],"rationale":"ok"}', "TASK-999");
-		assert.equal(passVerdict.verdict, "pass", "Verifier parser should preserve pass verdicts");
-		const failVerdict = extractVerifierJson('{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"severity":"high","summary":"gap"}],"rationale":"gap remains"}', "TASK-999");
-		assert.equal(failVerdict.verdict, "fail", "Verifier parser should preserve fail verdicts");
-		assert.equal(failVerdict.issues[0].severity, "high", "Verifier parser should preserve issue severity");
-		const blockVerdict = extractVerifierJson('{"verdict":"block","taskId":"TASK-999","checks":["manual"],"issues":[{"severity":"medium","summary":"ambiguous"}],"rationale":"blocked"}', "TASK-999");
-		assert.equal(blockVerdict.verdict, "block", "Verifier parser should preserve strict block verdicts");
-		const diagnosticVerdict = extractVerifierJson('diagnostic before {"verdict":"pass","taskId":"TASK-999","checks":[],"issues":[],"rationale":"ok"}', "TASK-999");
-		assert.equal(diagnosticVerdict.verdict, "block", "Verifier parser should block surrounding diagnostics in strict JSON mode");
+		const { extractVerifierJson } = await import(
+			pathToFileURL(verifierSmokeModule).href
+		);
+		const passVerdict = extractVerifierJson(
+			'{"verdict":"pass","taskId":"TASK-999","checks":["npm test"],"issues":[],"rationale":"ok"}',
+			"TASK-999",
+		);
+		assert.equal(
+			passVerdict.verdict,
+			"pass",
+			"Verifier parser should preserve pass verdicts",
+		);
+		const failVerdict = extractVerifierJson(
+			'{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"severity":"high","summary":"gap"}],"rationale":"gap remains"}',
+			"TASK-999",
+		);
+		assert.equal(
+			failVerdict.verdict,
+			"fail",
+			"Verifier parser should preserve fail verdicts",
+		);
+		assert.equal(
+			failVerdict.issues[0].severity,
+			"high",
+			"Verifier parser should preserve issue severity",
+		);
+		const blockVerdict = extractVerifierJson(
+			'{"verdict":"block","taskId":"TASK-999","checks":["manual"],"issues":[{"severity":"medium","summary":"ambiguous"}],"rationale":"blocked"}',
+			"TASK-999",
+		);
+		assert.equal(
+			blockVerdict.verdict,
+			"block",
+			"Verifier parser should preserve strict block verdicts",
+		);
+		const diagnosticVerdict = extractVerifierJson(
+			'diagnostic before {"verdict":"pass","taskId":"TASK-999","checks":[],"issues":[],"rationale":"ok"}',
+			"TASK-999",
+		);
+		assert.equal(
+			diagnosticVerdict.verdict,
+			"block",
+			"Verifier parser should block surrounding diagnostics in strict JSON mode",
+		);
 		const malformedVerdict = extractVerifierJson("not json", "TASK-999");
-		assert.equal(malformedVerdict.verdict, "block", "Malformed verifier output should become a block verdict");
-		assert.match(malformedVerdict.rationale, /Failed to parse verifier output/, "Malformed verifier output should explain parse failure");
-		const mismatchVerdict = extractVerifierJson('{"verdict":"pass","taskId":"TASK-OTHER","checks":[],"issues":[],"rationale":"wrong task"}', "TASK-999");
-		assert.equal(mismatchVerdict.verdict, "block", "Verifier parser should block task id mismatches");
-		const permissiveIssueVerdict = extractVerifierJson('{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"summary":"missing severity"}],"rationale":"gap"}', "TASK-999");
-		assert.equal(permissiveIssueVerdict.verdict, "block", "Verifier parser should block malformed issue schema instead of coercing it");
-		const extraFieldVerdict = extractVerifierJson('{"verdict":"pass","taskId":"TASK-999","checks":[],"issues":[],"rationale":"ok","extra":true}', "TASK-999");
-		assert.equal(extraFieldVerdict.verdict, "block", "Verifier parser should block extra fields under strict schema validation");
-		const extraIssueFieldVerdict = extractVerifierJson('{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"severity":"high","summary":"gap","extra":"nope"}],"rationale":"gap"}', "TASK-999");
-		assert.equal(extraIssueFieldVerdict.verdict, "block", "Verifier parser should block extra issue fields under strict nested schema validation");
+		assert.equal(
+			malformedVerdict.verdict,
+			"block",
+			"Malformed verifier output should become a block verdict",
+		);
+		assert.match(
+			malformedVerdict.rationale,
+			/Failed to parse verifier output/,
+			"Malformed verifier output should explain parse failure",
+		);
+		const mismatchVerdict = extractVerifierJson(
+			'{"verdict":"pass","taskId":"TASK-OTHER","checks":[],"issues":[],"rationale":"wrong task"}',
+			"TASK-999",
+		);
+		assert.equal(
+			mismatchVerdict.verdict,
+			"block",
+			"Verifier parser should block task id mismatches",
+		);
+		const permissiveIssueVerdict = extractVerifierJson(
+			'{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"summary":"missing severity"}],"rationale":"gap"}',
+			"TASK-999",
+		);
+		assert.equal(
+			permissiveIssueVerdict.verdict,
+			"block",
+			"Verifier parser should block malformed issue schema instead of coercing it",
+		);
+		const extraFieldVerdict = extractVerifierJson(
+			'{"verdict":"pass","taskId":"TASK-999","checks":[],"issues":[],"rationale":"ok","extra":true}',
+			"TASK-999",
+		);
+		assert.equal(
+			extraFieldVerdict.verdict,
+			"block",
+			"Verifier parser should block extra fields under strict schema validation",
+		);
+		const extraIssueFieldVerdict = extractVerifierJson(
+			'{"verdict":"fail","taskId":"TASK-999","checks":["npm test"],"issues":[{"severity":"high","summary":"gap","extra":"nope"}],"rationale":"gap"}',
+			"TASK-999",
+		);
+		assert.equal(
+			extraIssueFieldVerdict.verdict,
+			"block",
+			"Verifier parser should block extra issue fields under strict nested schema validation",
+		);
 	} finally {
 		rmSync(verifierSmokeDir, { recursive: true, force: true });
 	}
@@ -214,7 +346,14 @@ async function main() {
 		const commandNames = [...extension.commands.keys()];
 		ensureIncludes(
 			commandNames,
-			["audit", "wiki-bootstrap", "wiki-config", "wiki-status", "wiki-ui", "wiki-resume"],
+			[
+				"audit",
+				"wiki-bootstrap",
+				"wiki-config",
+				"wiki-status",
+				"wiki-ui",
+				"wiki-resume",
+			],
 			"extension commands",
 		);
 		assert.equal(
@@ -264,64 +403,208 @@ async function main() {
 			],
 			"extension tools",
 		);
-		const skillToolCatalog = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
-		for (const toolName of extensionToolNames.filter((name) => name.startsWith("codewiki_"))) {
-			assert.match(skillToolCatalog, new RegExp(`\\\`${toolName}\\\``), `Skill-facing tool catalog missing ${toolName}`);
+		const skillToolCatalog = readFileSync(
+			resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
+			"utf8",
+		);
+		for (const toolName of extensionToolNames.filter((name) =>
+			name.startsWith("codewiki_"),
+		)) {
+			assert.match(
+				skillToolCatalog,
+				new RegExp(`\\\`${toolName}\\\``),
+				`Skill-facing tool catalog missing ${toolName}`,
+			);
 		}
-		assert.match(skillToolCatalog, /action="sprint"/, "Skill-facing tool catalog should document safe sprint metadata path");
-		const piIndexSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "index.ts"), "utf8");
-		const bootstrapSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "bootstrap.ts"), "utf8");
-		assert.match(piIndexSource, /executeCodewikiBuildTool/, "Pi build registration should delegate to application tool executor");
-		assert.match(piIndexSource, /executeCodewikiValidationTool/, "Pi validation registration should delegate to application tool executor");
-		assert.match(piIndexSource, /executeCodewikiDiffTableTool/, "Pi diff-table registration should delegate to source-root tool executor");
-		assert.match(piIndexSource, /api\/tools/, "Pi diff-table registration should delegate through the API facade");
-		assert.match(piIndexSource, /executeCodewikiGcTool/, "Pi GC registration should delegate to source-root tool executor");
-		assert.match(piIndexSource, /api\/tools/, "Pi GC registration should delegate through the API facade");
-		assert.match(piIndexSource, /installCodewikiCompaction/, "Pi adapter should install CodeWiki-owned compaction soft refresh");
-		assert.match(piIndexSource, /requestCodewikiContextRefresh/, "Loop-boundary tools should request CodeWiki context refresh");
-		assert.match(bootstrapSource, /executeCodewikiSetupTool/, "Pi bootstrap setup tool should delegate through project tool contract");
+		assert.match(
+			skillToolCatalog,
+			/action="sprint"/,
+			"Skill-facing tool catalog should document safe sprint metadata path",
+		);
+		const piIndexSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "index.ts"),
+			"utf8",
+		);
+		const bootstrapSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "bootstrap.ts"),
+			"utf8",
+		);
+		assert.match(
+			piIndexSource,
+			/executeCodewikiBuildTool/,
+			"Pi build registration should delegate to application tool executor",
+		);
+		assert.match(
+			piIndexSource,
+			/executeCodewikiValidationTool/,
+			"Pi validation registration should delegate to application tool executor",
+		);
+		assert.match(
+			piIndexSource,
+			/executeCodewikiDiffTableTool/,
+			"Pi diff-table registration should delegate to source-root tool executor",
+		);
+		assert.match(
+			piIndexSource,
+			/api\/tools/,
+			"Pi diff-table registration should delegate through the API facade",
+		);
+		assert.match(
+			piIndexSource,
+			/executeCodewikiGcTool/,
+			"Pi GC registration should delegate to source-root tool executor",
+		);
+		assert.match(
+			piIndexSource,
+			/api\/tools/,
+			"Pi GC registration should delegate through the API facade",
+		);
+		assert.match(
+			piIndexSource,
+			/installCodewikiCompaction/,
+			"Pi adapter should install CodeWiki-owned compaction soft refresh",
+		);
+		assert.match(
+			piIndexSource,
+			/requestCodewikiContextRefresh/,
+			"Loop-boundary tools should request CodeWiki context refresh",
+		);
+		assert.match(
+			bootstrapSource,
+			/executeCodewikiSetupTool/,
+			"Pi bootstrap setup tool should delegate through project tool contract",
+		);
 		for (const removedAgencyShim of [
 			"src/domain/agency/types.ts",
 			"src/application/agency.ts",
 			"src/application/tools/agency.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedAgencyShim)), `${removedAgencyShim} should not be packaged after agency cleanup`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedAgencyShim)),
+				`${removedAgencyShim} should not be packaged after agency cleanup`,
+			);
 		}
-		const agencyAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "agency.ts"), "utf8");
-		assert.match(agencyAdapterSource, /api\/tools/, "Pi agency tool should delegate through the API facade");
-		assert.match(agencyAdapterSource, /agency\/types/, "Pi agency tool should read types from the agency source-root module");
-		assert.doesNotMatch(agencyAdapterSource, /application\/tools\/agency|application\/agency|domain\/agency\/types/, "Pi agency tool should not delegate through old agency shims");
+		const agencyAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "agency.ts"),
+			"utf8",
+		);
+		assert.match(
+			agencyAdapterSource,
+			/api\/tools/,
+			"Pi agency tool should delegate through the API facade",
+		);
+		assert.match(
+			agencyAdapterSource,
+			/agency\/types/,
+			"Pi agency tool should read types from the agency source-root module",
+		);
+		assert.doesNotMatch(
+			agencyAdapterSource,
+			/application\/tools\/agency|application\/agency|domain\/agency\/types/,
+			"Pi agency tool should not delegate through old agency shims",
+		);
 		for (const removedAuditShim of [
 			"src/domain/audit/types.ts",
 			"src/application/tools/audit.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedAuditShim)), `${removedAuditShim} should not be packaged after audit migration`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedAuditShim)),
+				`${removedAuditShim} should not be packaged after audit migration`,
+			);
 		}
-		const auditAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "audit.ts"), "utf8");
-		const auditCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "audit.ts"), "utf8");
-		const schemaSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "schemas.ts"), "utf8");
-		const architectureScriptSource = readFileSync(resolve(repoRoot, "scripts", "check-architecture.mjs"), "utf8");
-		assert.match(auditAdapterSource, /api\/tools/, "Pi audit tool should delegate through the API facade");
-		assert.match(auditCommandSource, /api\/tools/, "Pi audit command should delegate through the API facade");
-		assert.match(auditCommandSource, /audit\/types/, "Pi audit command should read types from the audit source-root module");
-		assert.match(schemaSource, /audit\/types/, "Pi schemas should read audit values from the audit source-root module");
-		assert.match(schemaSource, /change\/types/, "Pi schemas should read change values from the change source-root module");
-		assert.match(architectureScriptSource, /src\/api\/tools\.ts/, "Architecture script should delegate through the API facade");
-		for (const oldAuditPathSource of [auditAdapterSource, auditCommandSource, schemaSource, architectureScriptSource]) {
-			assert.doesNotMatch(oldAuditPathSource, /application\/tools\/audit|domain\/audit\/types/, "Audit package paths should not delegate through old audit shims");
+		const auditAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "audit.ts"),
+			"utf8",
+		);
+		const auditCommandSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "commands", "audit.ts"),
+			"utf8",
+		);
+		const schemaSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "schemas.ts"),
+			"utf8",
+		);
+		const architectureScriptSource = readFileSync(
+			resolve(repoRoot, "scripts", "check-architecture.mjs"),
+			"utf8",
+		);
+		assert.match(
+			auditAdapterSource,
+			/api\/tools/,
+			"Pi audit tool should delegate through the API facade",
+		);
+		assert.match(
+			auditCommandSource,
+			/api\/tools/,
+			"Pi audit command should delegate through the API facade",
+		);
+		assert.match(
+			auditCommandSource,
+			/audit\/types/,
+			"Pi audit command should read types from the audit source-root module",
+		);
+		assert.match(
+			schemaSource,
+			/audit\/types/,
+			"Pi schemas should read audit values from the audit source-root module",
+		);
+		assert.match(
+			schemaSource,
+			/change\/types/,
+			"Pi schemas should read change values from the change source-root module",
+		);
+		assert.match(
+			architectureScriptSource,
+			/src\/api\/tools\.ts/,
+			"Architecture script should delegate through the API facade",
+		);
+		for (const oldAuditPathSource of [
+			auditAdapterSource,
+			auditCommandSource,
+			schemaSource,
+			architectureScriptSource,
+		]) {
+			assert.doesNotMatch(
+				oldAuditPathSource,
+				/application\/tools\/audit|domain\/audit\/types/,
+				"Audit package paths should not delegate through old audit shims",
+			);
 		}
-		assert.doesNotMatch(piIndexSource, /application\/tools\/diff-table|application\/diff-table|domain\/change/, "Diff-table package paths should not delegate through old change/diff-table shims");
-		assert.doesNotMatch(schemaSource, /domain\/change/, "Schema package paths should not read change values from old change shims");
+		assert.doesNotMatch(
+			piIndexSource,
+			/application\/tools\/diff-table|application\/diff-table|domain\/change/,
+			"Diff-table package paths should not delegate through old change/diff-table shims",
+		);
+		assert.doesNotMatch(
+			schemaSource,
+			/domain\/change/,
+			"Schema package paths should not read change values from old change shims",
+		);
 		for (const removedGcShim of [
 			"src/domain/gc/types.ts",
 			"src/application/gc.ts",
 			"src/application/tools/gc.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedGcShim)), `${removedGcShim} should not be packaged after GC migration`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedGcShim)),
+				`${removedGcShim} should not be packaged after GC migration`,
+			);
 		}
-		assert.match(schemaSource, /gc\/types/, "Pi schemas should read GC values from the GC source-root module");
-		assert.doesNotMatch(piIndexSource, /application\/tools\/gc|application\/gc|domain\/gc/, "GC package paths should not delegate through old GC shims");
-		assert.doesNotMatch(schemaSource, /domain\/gc/, "Schema package paths should not read GC values from old GC shims");
+		assert.match(
+			schemaSource,
+			/gc\/types/,
+			"Pi schemas should read GC values from the GC source-root module",
+		);
+		assert.doesNotMatch(
+			piIndexSource,
+			/application\/tools\/gc|application\/gc|domain\/gc/,
+			"GC package paths should not delegate through old GC shims",
+		);
+		assert.doesNotMatch(
+			schemaSource,
+			/domain\/gc/,
+			"Schema package paths should not read GC values from old GC shims",
+		);
 		for (const removedSessionShim of [
 			"src/domain/session/types.ts",
 			"src/domain/session/links.ts",
@@ -333,18 +616,59 @@ async function main() {
 			"src/application/tools/session.ts",
 			"src/application/tools/artifact-status.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedSessionShim)), `${removedSessionShim} should not be packaged after session migration`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedSessionShim)),
+				`${removedSessionShim} should not be packaged after session migration`,
+			);
 		}
-		assert.match(schemaSource, /session\/types/, "Pi schemas should read session values from the session source-root module");
-		assert.doesNotMatch(schemaSource, /domain\/session/, "Schema package paths should not read session values from old session shims");
-		const artifactStatusAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "artifact-status.ts"), "utf8");
-		const sessionAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "session.ts"), "utf8");
-		assert.match(artifactStatusAdapterSource, /api\/tools/, "Pi artifact-status tool should delegate through the API facade");
-		assert.match(artifactStatusAdapterSource, /session\/types/, "Pi artifact-status tool should read input types from the session source-root module");
-		assert.match(sessionAdapterSource, /api\/tools/, "Pi session tool should delegate through the API facade");
-		assert.match(sessionAdapterSource, /session\/types/, "Pi session tool should read input types from the session source-root module");
-		assert.doesNotMatch(artifactStatusAdapterSource, /application\/tools\/artifact-status|application\/claims|domain\/session/, "Artifact-status package path should not delegate through old session/claims shims");
-		assert.doesNotMatch(sessionAdapterSource, /application\/tools\/session|application\/session|domain\/session/, "Session package path should not delegate through old session shims");
+		assert.match(
+			schemaSource,
+			/session\/types/,
+			"Pi schemas should read session values from the session source-root module",
+		);
+		assert.doesNotMatch(
+			schemaSource,
+			/domain\/session/,
+			"Schema package paths should not read session values from old session shims",
+		);
+		const artifactStatusAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "artifact-status.ts"),
+			"utf8",
+		);
+		const sessionAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "session.ts"),
+			"utf8",
+		);
+		assert.match(
+			artifactStatusAdapterSource,
+			/api\/tools/,
+			"Pi artifact-status tool should delegate through the API facade",
+		);
+		assert.match(
+			artifactStatusAdapterSource,
+			/session\/types/,
+			"Pi artifact-status tool should read input types from the session source-root module",
+		);
+		assert.match(
+			sessionAdapterSource,
+			/api\/tools/,
+			"Pi session tool should delegate through the API facade",
+		);
+		assert.match(
+			sessionAdapterSource,
+			/session\/types/,
+			"Pi session tool should read input types from the session source-root module",
+		);
+		assert.doesNotMatch(
+			artifactStatusAdapterSource,
+			/application\/tools\/artifact-status|application\/claims|domain\/session/,
+			"Artifact-status package path should not delegate through old session/claims shims",
+		);
+		assert.doesNotMatch(
+			sessionAdapterSource,
+			/application\/tools\/session|application\/session|domain\/session/,
+			"Session package path should not delegate through old session shims",
+		);
 		for (const removedRoadmapShim of [
 			"src/domain/roadmap/types.ts",
 			"src/domain/roadmap/status.ts",
@@ -354,9 +678,16 @@ async function main() {
 			"src/application/task.ts",
 			"src/application/tools/task.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedRoadmapShim)), `${removedRoadmapShim} should not be packaged after roadmap migration`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedRoadmapShim)),
+				`${removedRoadmapShim} should not be packaged after roadmap migration`,
+			);
 		}
-		assert.match(schemaSource, /roadmap\/types/, "Pi schemas should read roadmap values from the roadmap source-root module");
+		assert.match(
+			schemaSource,
+			/roadmap\/types/,
+			"Pi schemas should read roadmap values from the roadmap source-root module",
+		);
 		for (const removedStateOwner of [
 			"src/domain/state/types.ts",
 			"src/application/state.ts",
@@ -374,29 +705,109 @@ async function main() {
 			"src/application/tools/state.ts",
 			"src/application/tools/resume-context.ts",
 		]) {
-			assert.ok(!existsSync(resolve(repoRoot, removedStateOwner)), `${removedStateOwner} should not be packaged after state/graph/resume migration`);
+			assert.ok(
+				!existsSync(resolve(repoRoot, removedStateOwner)),
+				`${removedStateOwner} should not be packaged after state/graph/resume migration`,
+			);
 		}
-		const stateAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "state.ts"), "utf8");
-		const resumeContextAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "resume-context.ts"), "utf8");
-		const configCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "config.ts"), "utf8");
-		const statusCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "status.ts"), "utf8");
-		const resumeCommandSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "commands", "resume.ts"), "utf8");
-		const compactionSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "compaction.ts"), "utf8");
-		const uiManagerSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "ui", "manager.ts"), "utf8");
-		assert.match(stateAdapterSource, /api\/tools/, "Pi state tool should delegate through the API facade");
-		assert.match(resumeContextAdapterSource, /api\/tools/, "Pi resume-context tool should delegate through the API facade");
-		assert.match(schemaSource, /state\/types/, "Pi schemas should read state values from the state source-root module");
-		assert.match(configCommandSource, /state\/local\/status-dock-prefs/, "Pi config command should read status dock prefs from state source root");
-		assert.match(statusCommandSource, /state\/artifacts/, "Pi status command should read generated artifacts from state source root");
-		assert.match(resumeCommandSource, /state\/resume-context/, "Pi resume command should build resume packets from state source root");
-		assert.match(compactionSource, /state\/resume-context/, "Pi compaction should build resume packets from state source root");
-		assert.match(uiManagerSource, /state\/artifacts/, "Pi status UI should read generated state artifacts from state source root");
-		for (const statePathSource of [stateAdapterSource, resumeContextAdapterSource, schemaSource, configCommandSource, statusCommandSource, resumeCommandSource, compactionSource, uiManagerSource]) {
-			assert.doesNotMatch(statePathSource, /domain\/state|application\/state|application\/graph|application\/rebuild|application\/lint|application\/resume-context|application\/prompt|application\/skill-assets|application\/local\/(?:rebuild-runner|status-dock-prefs)|application\/tools\/(?:state|resume-context)/, "State package paths should not delegate through old state/graph/resume shims");
+		const stateAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "state.ts"),
+			"utf8",
+		);
+		const resumeContextAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "resume-context.ts"),
+			"utf8",
+		);
+		const configCommandSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "commands", "config.ts"),
+			"utf8",
+		);
+		const statusCommandSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "commands", "status.ts"),
+			"utf8",
+		);
+		const resumeCommandSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "commands", "resume.ts"),
+			"utf8",
+		);
+		const compactionSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "compaction.ts"),
+			"utf8",
+		);
+		const uiManagerSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "ui", "manager.ts"),
+			"utf8",
+		);
+		assert.match(
+			stateAdapterSource,
+			/api\/tools/,
+			"Pi state tool should delegate through the API facade",
+		);
+		assert.match(
+			resumeContextAdapterSource,
+			/api\/tools/,
+			"Pi resume-context tool should delegate through the API facade",
+		);
+		assert.match(
+			schemaSource,
+			/state\/types/,
+			"Pi schemas should read state values from the state source-root module",
+		);
+		assert.match(
+			configCommandSource,
+			/state\/local\/status-dock-prefs/,
+			"Pi config command should read status dock prefs from state source root",
+		);
+		assert.match(
+			statusCommandSource,
+			/state\/artifacts/,
+			"Pi status command should read generated artifacts from state source root",
+		);
+		assert.match(
+			resumeCommandSource,
+			/state\/resume-context/,
+			"Pi resume command should build resume packets from state source root",
+		);
+		assert.match(
+			compactionSource,
+			/state\/resume-context/,
+			"Pi compaction should build resume packets from state source root",
+		);
+		assert.match(
+			uiManagerSource,
+			/state\/artifacts/,
+			"Pi status UI should read generated state artifacts from state source root",
+		);
+		for (const statePathSource of [
+			stateAdapterSource,
+			resumeContextAdapterSource,
+			schemaSource,
+			configCommandSource,
+			statusCommandSource,
+			resumeCommandSource,
+			compactionSource,
+			uiManagerSource,
+		]) {
+			assert.doesNotMatch(
+				statePathSource,
+				/domain\/state|application\/state|application\/graph|application\/rebuild|application\/lint|application\/resume-context|application\/prompt|application\/skill-assets|application\/local\/(?:rebuild-runner|status-dock-prefs)|application\/tools\/(?:state|resume-context)/,
+				"State package paths should not delegate through old state/graph/resume shims",
+			);
 		}
-		const taskToolAdapterSource = readFileSync(resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"), "utf8");
-		assert.match(taskToolAdapterSource, /api\/tools/, "Pi task tool should delegate through the API facade");
-		assert.doesNotMatch(taskToolAdapterSource, /application\/tools\/task|application\/task|domain\/roadmap/, "Pi task tool should not delegate through old roadmap/task shims");
+		const taskToolAdapterSource = readFileSync(
+			resolve(repoRoot, "src", "adapters", "pi", "tools", "task.ts"),
+			"utf8",
+		);
+		assert.match(
+			taskToolAdapterSource,
+			/api\/tools/,
+			"Pi task tool should delegate through the API facade",
+		);
+		assert.doesNotMatch(
+			taskToolAdapterSource,
+			/application\/tools\/task|application\/task|domain\/roadmap/,
+			"Pi task tool should not delegate through old roadmap/task shims",
+		);
 		for (const removedTool of [
 			"codewiki_rebuild",
 			"codewiki_status",
@@ -421,7 +832,13 @@ async function main() {
 		const skills = skillResult.skills.filter((skill) =>
 			skill.filePath.startsWith(repoRoot),
 		);
-		const expectedSkillNames = ["codewiki", "codewiki-decision", "codewiki-implementation", "codewiki-planning", "codewiki-validation"];
+		const expectedSkillNames = [
+			"codewiki",
+			"codewiki-decision",
+			"codewiki-implementation",
+			"codewiki-planning",
+			"codewiki-validation",
+		];
 		assert.deepEqual(
 			skills.map((skill) => skill.name).sort(),
 			expectedSkillNames,
@@ -589,7 +1006,10 @@ async function main() {
 		);
 		const nestedStateResult = await stateTool.definition.execute(
 			"state-tool-nested-repo-path-smoke",
-			{ repoPath: resolve(projectDir, "frontend", "src"), include: ["summary"] },
+			{
+				repoPath: resolve(projectDir, "frontend", "src"),
+				include: ["summary"],
+			},
 			undefined,
 			undefined,
 			outsideToolCtx,
@@ -606,12 +1026,128 @@ async function main() {
 		);
 		const resumeContextTool = extension.tools.get("codewiki_resume_context");
 		assert.ok(
-			resumeContextTool && typeof resumeContextTool.definition?.execute === "function",
+			resumeContextTool &&
+				typeof resumeContextTool.definition?.execute === "function",
 			"Resume context tool missing execute function",
+		);
+		const preResumeBuildTool = extension.tools.get("codewiki_build");
+		const preResumeValidationTool = extension.tools.get("codewiki_validation");
+		assert.ok(
+			preResumeBuildTool && preResumeValidationTool,
+			"Build/validation tools missing for resume proof setup",
+		);
+		const resumeDecision = await preResumeBuildTool.definition.execute(
+			"resume-decision-proof-smoke",
+			{
+				repoPath: projectDir,
+				kind: "decision",
+				summary: "Resume context proof decision.",
+				slug: "resume-proof-decision",
+				diff_table: [
+					{
+						id: "RESUME-PROOF",
+						current_state: "TASK-001 lacks planning proof.",
+						desired_state:
+							"TASK-001 has validated planning proof before resume.",
+						rationale: "Resume enforcement requires planning-gateway proof.",
+						affected_layers: ["roadmap"],
+						user_action: "approved",
+					},
+				],
+				row_to_kb_mappings: [
+					{
+						row_id: "RESUME-PROOF",
+						knowledge_refs: [".codewiki/kb/system/roadmap.md"],
+						evidence: "Roadmap docs require planning proof before resume.",
+					},
+				],
+				propagation: {
+					direction: "system-first",
+					no_product_impact: "Smoke fixture only.",
+					downstream_planning_questions: ["Plan TASK-001 resume proof."],
+				},
+				knowledge_changes: [".codewiki/kb/system/roadmap.md"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		await preResumeValidationTool.definition.execute(
+			"resume-decision-gateway-proof-smoke",
+			{
+				repoPath: projectDir,
+				profile: "decision",
+				verdict: "pass",
+				rationale: "Decision proof for resume smoke.",
+				source: resumeDecision.details.path,
+				audit_refs: [
+					"audit:alignment",
+					"audit:stale-reference",
+					"approval:user",
+				],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		const resumePlanning = await preResumeBuildTool.definition.execute(
+			"resume-planning-proof-smoke",
+			{
+				repoPath: projectDir,
+				kind: "planning",
+				summary: "Resume context proof planning.",
+				slug: "resume-proof-planning",
+				source_decision_build: resumeDecision.details.path,
+				task_ids: ["TASK-001"],
+				task_changes: ["TASK-001 is implementation-ready for resume smoke."],
+				decision_row_resolutions: [
+					{
+						row_id: "RESUME-PROOF",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-001"],
+						evidence: "TASK-001 has validated planning proof.",
+						source_refs: [resumeDecision.details.path, "TASK-001"],
+					},
+				],
+				downstream_question_resolutions: [
+					{
+						question: "Plan TASK-001 resume proof.",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-001"],
+						evidence: "TASK-001 answers the resume proof question.",
+						source_refs: [resumeDecision.details.path, "TASK-001"],
+					},
+				],
+				tdd_plan: ["Resume context smoke uses planning proof."],
+				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
+				candidate_code_paths: ["src/state/resume-context.ts"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		await preResumeValidationTool.definition.execute(
+			"resume-planning-gateway-proof-smoke",
+			{
+				repoPath: projectDir,
+				profile: "planning",
+				verdict: "pass",
+				rationale: "Planning proof for resume smoke.",
+				source: resumePlanning.details.path,
+				audit_refs: ["audit:alignment", "approval:user"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
 		);
 		const resumeContextResult = await resumeContextTool.definition.execute(
 			"resume-context-tool-smoke",
-			{ repoPath: projectDir, taskId: "TASK-001", refresh: true, followUpIntent: "keep context minimal" },
+			{
+				repoPath: projectDir,
+				taskId: "TASK-001",
+				refresh: true,
+				followUpIntent: "keep context minimal",
+			},
 			undefined,
 			undefined,
 			outsideToolCtx,
@@ -676,7 +1212,17 @@ async function main() {
 				action: "propose",
 				table_id: "DT-SMOKE",
 				summary: "Smoke diff rows",
-				rows: [{ id: "DTR-001", current_state: "Old", desired_state: "New", rationale: "Smoke", affected_layers: ["roadmap"], risk: "low", user_action: "pending" }],
+				rows: [
+					{
+						id: "DTR-001",
+						current_state: "Old",
+						desired_state: "New",
+						rationale: "Smoke",
+						affected_layers: ["roadmap"],
+						risk: "low",
+						user_action: "pending",
+					},
+				],
 			},
 			undefined,
 			undefined,
@@ -697,20 +1243,38 @@ async function main() {
 				summary: "Accepted decision smoke build.",
 				slug: "decision-smoke",
 				source: "smoke-test",
-				diff_table: [{
-					id: "DTR-001",
-					current_state: "Decision intent is not persisted as approved diff rows.",
-					desired_state: "Decision builds persist approved rows and KB mappings as durable handoff payloads.",
-					rationale: "The planning loop needs a compact user-approved intent and knowledge contract.",
-					affected_layers: ["decision", "builds"],
-					risk: "low",
-					user_action: "approved",
-				}],
+				diff_table: [
+					{
+						id: "DTR-001",
+						current_state:
+							"Decision intent is not persisted as approved diff rows.",
+						desired_state:
+							"Decision builds persist approved rows and KB mappings as durable handoff payloads.",
+						rationale:
+							"The planning loop needs a compact user-approved intent and knowledge contract.",
+						affected_layers: ["decision", "builds"],
+						risk: "low",
+						user_action: "approved",
+					},
+				],
 				assumptions: ["Smoke fixture can create build artifacts."],
 				knowledge_changes: [".codewiki/kb/system/overview.md"],
 				roadmap_changes: ["TASK-001"],
-				row_to_kb_mappings: [{ row_id: "DTR-001", knowledge_refs: [".codewiki/kb/system/overview.md"], diagram_refs: ["component-map:application"], evidence: "Overview captures accepted decision." }],
-				propagation: { direction: "system-first", product_impact: ["User-visible handoff semantics change."], downstream_planning_questions: ["Create implementation task if code must change."] },
+				row_to_kb_mappings: [
+					{
+						row_id: "DTR-001",
+						knowledge_refs: [".codewiki/kb/system/overview.md"],
+						diagram_refs: ["component-map:application"],
+						evidence: "Overview captures accepted decision.",
+					},
+				],
+				propagation: {
+					direction: "system-first",
+					product_impact: ["User-visible handoff semantics change."],
+					downstream_planning_questions: [
+						"Create implementation task if code must change.",
+					],
+				},
 				diagram_refs: ["component-map:application"],
 				lifecycle: { ttl_days: 7 },
 			},
@@ -718,8 +1282,13 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(buildResult.details.path, /\.codewiki\/builds\/decision\/.*decision-smoke\.json$/);
-		const decisionBuild = JSON.parse(readFileSync(resolve(projectDir, buildResult.details.path), "utf8"));
+		assert.match(
+			buildResult.details.path,
+			/\.codewiki\/builds\/decision\/.*decision-smoke\.json$/,
+		);
+		const decisionBuild = JSON.parse(
+			readFileSync(resolve(projectDir, buildResult.details.path), "utf8"),
+		);
 		assert.equal(decisionBuild.kind, "decision_build");
 		assert.equal(decisionBuild.status, "accepted");
 		assert.equal(decisionBuild.lifecycle.ttl_days, 7);
@@ -739,21 +1308,56 @@ async function main() {
 				source_decision_build: buildResult.details.path,
 				task_ids: ["TASK-001"],
 				task_changes: ["TASK-001 planned for implementation"],
-				decision_row_resolutions: [{ row_id: "DTR-001", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 carries DTR-001 into implementation.", source_refs: [buildResult.details.path, "TASK-001"] }],
-				downstream_question_resolutions: [{ question: "Create implementation task if code must change.", resolution: "roadmap-task", task_ids: ["TASK-001"], evidence: "TASK-001 is the implementation task for the downstream planning question.", source_refs: [buildResult.details.path, "TASK-001"] }],
+				decision_row_resolutions: [
+					{
+						row_id: "DTR-001",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-001"],
+						evidence: "TASK-001 carries DTR-001 into implementation.",
+						source_refs: [buildResult.details.path, "TASK-001"],
+					},
+				],
+				downstream_question_resolutions: [
+					{
+						question: "Create implementation task if code must change.",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-001"],
+						evidence:
+							"TASK-001 is the implementation task for the downstream planning question.",
+						source_refs: [buildResult.details.path, "TASK-001"],
+					},
+				],
 				tdd_plan: ["Derive smoke assertions before code changes."],
 				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
 				candidate_code_paths: ["src/index.ts"],
-				requirements: [{ id: "REQ-SMOKE-001", text: "Decision builds must be durable handoff payloads.", source_refs: [buildResult.details.path] }],
-				evidence_mapping: [{ criterion: "Roadmap task maps to requirement", evidence: "TASK-001 is the implementation target.", requirement_ids: ["REQ-SMOKE-001"], source_refs: [buildResult.details.path] }],
+				requirements: [
+					{
+						id: "REQ-SMOKE-001",
+						text: "Decision builds must be durable handoff payloads.",
+						source_refs: [buildResult.details.path],
+					},
+				],
+				evidence_mapping: [
+					{
+						criterion: "Roadmap task maps to requirement",
+						evidence: "TASK-001 is the implementation target.",
+						requirement_ids: ["REQ-SMOKE-001"],
+						source_refs: [buildResult.details.path],
+					},
+				],
 				lifecycle: { ttl_days: 14 },
 			},
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(planBuildResult.details.path, /\.codewiki\/builds\/planning\/.*plan-smoke\.json$/);
-		const planBuild = JSON.parse(readFileSync(resolve(projectDir, planBuildResult.details.path), "utf8"));
+		assert.match(
+			planBuildResult.details.path,
+			/\.codewiki\/builds\/planning\/.*plan-smoke\.json$/,
+		);
+		const planBuild = JSON.parse(
+			readFileSync(resolve(projectDir, planBuildResult.details.path), "utf8"),
+		);
 		assert.equal(planBuild.kind, "planning_build");
 		assert.deepEqual(planBuild.consumes.decision, [buildResult.details.path]);
 		assert.equal(planBuild.cycle.loop, "planning");
@@ -772,15 +1376,23 @@ async function main() {
 				test_files: ["tests/smoke/package-smoke.test.mjs"],
 				code_files: ["src/index.ts"],
 				checks_run: ["npm test"],
-				acceptance_mapping: [{ criterion: "Schemas exist", evidence: "npm test pass" }],
-				test_design_evidence: ["Tester derived schema assertions from planning build before code changes."],
-				code_change_evidence: ["Builder updated extension surface until smoke assertions passed."],
+				acceptance_mapping: [
+					{ criterion: "Schemas exist", evidence: "npm test pass" },
+				],
+				test_design_evidence: [
+					"Tester derived schema assertions from planning build before code changes.",
+				],
+				code_change_evidence: [
+					"Builder updated extension surface until smoke assertions passed.",
+				],
 				tester_notes: ["No implementation changes in tester role."],
 				builder_notes: ["Builder consumed tester evidence and checks."],
 				validation_refs: [".codewiki/validation/smoke-pass.json"],
 				closure_brief: {
 					user_intent: "Decision builds must be durable handoff payloads.",
-					implemented_changes: ["Recorded implementation build smoke evidence."],
+					implemented_changes: [
+						"Recorded implementation build smoke evidence.",
+					],
 					layers_updated: {
 						roadmap: ["TASK-001"],
 						code: ["src/index.ts"],
@@ -803,37 +1415,106 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(implBuildResult.details.path, /\.codewiki\/builds\/implementation\/.*impl-smoke\.json$/);
-		const implBuild = JSON.parse(readFileSync(resolve(projectDir, implBuildResult.details.path), "utf8"));
+		assert.match(
+			implBuildResult.details.path,
+			/\.codewiki\/builds\/implementation\/.*impl-smoke\.json$/,
+		);
+		const implBuild = JSON.parse(
+			readFileSync(resolve(projectDir, implBuildResult.details.path), "utf8"),
+		);
 		assert.equal(implBuild.kind, "implementation_build");
 		assert.equal(implBuild.task_id, "TASK-001");
 		assert.equal(implBuild.task.id, "TASK-001");
 		assert.equal(implBuild.acceptance_mapping.length, 1);
-		assert.equal(implBuild.validation_refs[0], ".codewiki/validation/smoke-pass.json");
-		assert.equal(implBuild.closure_brief.user_intent, "Decision builds must be durable handoff payloads.");
-		assert.deepEqual(implBuild.consumes.planning, [planBuildResult.details.path]);
+		assert.equal(
+			implBuild.validation_refs[0],
+			".codewiki/validation/smoke-pass.json",
+		);
+		assert.equal(
+			implBuild.closure_brief.user_intent,
+			"Decision builds must be durable handoff payloads.",
+		);
+		assert.deepEqual(implBuild.consumes.planning, [
+			planBuildResult.details.path,
+		]);
 		assert.deepEqual(implBuild.produces.closure, ["TASK-001"]);
-		assert.equal(implBuild.test_design_evidence[0], "Tester derived schema assertions from planning build before code changes.");
-		assert.equal(implBuild.code_change_evidence[0], "Builder updated extension surface until smoke assertions passed.");
+		assert.equal(
+			implBuild.test_design_evidence[0],
+			"Tester derived schema assertions from planning build before code changes.",
+		);
+		assert.equal(
+			implBuild.code_change_evidence[0],
+			"Builder updated extension surface until smoke assertions passed.",
+		);
 		assert.equal(implBuild.role_evidence.tester.role, "tester");
 		assert.equal(implBuild.role_evidence.builder.role, "builder");
-		assert.equal(implBuild.role_evidence.tester.source_planning_build, planBuildResult.details.path);
+		assert.equal(
+			implBuild.role_evidence.tester.source_planning_build,
+			planBuildResult.details.path,
+		);
 		assert.equal(implBuild.role_evidence.builder.code_files[0], "src/index.ts");
 		assert.equal(implBuild.handoff.resume.source, "implementation_build");
 		assert.equal(implBuild.handoff.resume.command, "/wiki-resume TASK-001");
-		assert.equal(implBuild.handoff.resume.context.source, "implementation_build");
+		assert.equal(
+			implBuild.handoff.resume.context.source,
+			"implementation_build",
+		);
 		assert.equal(implBuild.publication.policy.execution, "recommendation_only");
 		assert.equal(implBuild.publication.policy.approval_required, true);
-		assert.equal(implBuild.publication.push_readiness.allowed_by_default, false);
-		assert.equal(implBuild.publication.commit.title, "test: record implementation build smoke evidence");
+		assert.equal(
+			implBuild.publication.push_readiness.allowed_by_default,
+			false,
+		);
+		assert.equal(
+			implBuild.publication.commit.title,
+			"test: record implementation build smoke evidence",
+		);
 
 		// Validation report smoke
 		const validationTool = extension.tools.get("codewiki_validation");
 		assert.ok(
-			validationTool && typeof validationTool.definition?.execute === "function",
+			validationTool &&
+				typeof validationTool.definition?.execute === "function",
 			"Validation tool missing execute function",
 		);
-		const taskCloseAuditRefs = ["audit:alignment", "audit:changed", "audit:task", "audit:generated-parity"];
+		const taskCloseAuditRefs = [
+			"audit:alignment",
+			"audit:changed",
+			"audit:task",
+			"audit:generated-parity",
+		];
+		await validationTool.definition.execute(
+			"decision-gateway-pass-smoke",
+			{
+				repoPath: projectDir,
+				profile: "decision",
+				verdict: "pass",
+				rationale: "Decision gateway passed for smoke planning build.",
+				source: buildResult.details.path,
+				audit_refs: [
+					"audit:alignment",
+					"audit:stale-reference",
+					"approval:user",
+				],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		await validationTool.definition.execute(
+			"planning-gateway-pass-smoke",
+			{
+				repoPath: projectDir,
+				profile: "planning",
+				verdict: "pass",
+				rationale: "Planning gateway passed for smoke implementation build.",
+				source: planBuildResult.details.path,
+				audit_refs: ["audit:alignment", "approval:user"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
 		const passReport = await validationTool.definition.execute(
 			"validation-pass-smoke",
 			{
@@ -842,6 +1523,7 @@ async function main() {
 				task_id: "TASK-001",
 				verdict: "pass",
 				rationale: "All acceptance criteria met.",
+				source: implBuildResult.details.path,
 				checks: ["npm test", "npm run typecheck"],
 				issues: [],
 				audit_refs: taskCloseAuditRefs,
@@ -858,8 +1540,13 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(passReport.details.path, /\.codewiki\/validation\/.*task-close-pass.*\.json$/);
-		const passVal = JSON.parse(readFileSync(resolve(projectDir, passReport.details.path), "utf8"));
+		assert.match(
+			passReport.details.path,
+			/\.codewiki\/validation\/.*task-close-pass.*\.json$/,
+		);
+		const passVal = JSON.parse(
+			readFileSync(resolve(projectDir, passReport.details.path), "utf8"),
+		);
 		assert.equal(passVal.kind, "validation_report");
 		assert.equal(passVal.verdict, "pass");
 
@@ -876,8 +1563,13 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(failReport.details.path, /\.codewiki\/validation\/.*decision-fail.*\.json$/);
-		const failVal = JSON.parse(readFileSync(resolve(projectDir, failReport.details.path), "utf8"));
+		assert.match(
+			failReport.details.path,
+			/\.codewiki\/validation\/.*decision-fail.*\.json$/,
+		);
+		const failVal = JSON.parse(
+			readFileSync(resolve(projectDir, failReport.details.path), "utf8"),
+		);
 		assert.equal(failVal.verdict, "fail");
 		assert.equal(failVal.issues.length, 1);
 
@@ -929,7 +1621,10 @@ async function main() {
 			outsideToolCtx,
 		);
 		const appendedRoadmap = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		const appendedTaskId = Array.isArray(appendedRoadmap.order)
 			? appendedRoadmap.order.find(
@@ -995,7 +1690,10 @@ async function main() {
 			"Task tool should not reuse an unrelated task solely because broad scope overlaps",
 		);
 		const roadmapAfterDistinctCreate = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		const distinctTaskId = Array.isArray(roadmapAfterDistinctCreate.order)
 			? roadmapAfterDistinctCreate.order.find(
@@ -1026,12 +1724,24 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(sprintResult.content?.[0]?.text ?? "", /sprint created SPRINT-\d+/, "Task tool should create sprint metadata through safe action");
-		const roadmapAfterSprint = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+		assert.match(
+			sprintResult.content?.[0]?.text ?? "",
+			/sprint created SPRINT-\d+/,
+			"Task tool should create sprint metadata through safe action",
 		);
-		const smokeSprint = Object.values(roadmapAfterSprint.sprints || {}).find((sprint) => sprint.title === "Smoke related work sprint");
-		assert.ok(smokeSprint, "Sprint metadata should be written through the task tool, not by hand");
+		const roadmapAfterSprint = JSON.parse(
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
+		);
+		const smokeSprint = Object.values(roadmapAfterSprint.sprints || {}).find(
+			(sprint) => sprint.title === "Smoke related work sprint",
+		);
+		assert.ok(
+			smokeSprint,
+			"Sprint metadata should be written through the task tool, not by hand",
+		);
 		assert.deepEqual(smokeSprint.task_ids, [appendedTaskId, distinctTaskId]);
 
 		await taskTool.definition.execute(
@@ -1042,7 +1752,8 @@ async function main() {
 				taskId: appendedTaskId,
 				evidence: {
 					result: "pass",
-					summary: "Implementation evidence recorded; ready for validation gateway.",
+					summary:
+						"Implementation evidence recorded; ready for validation gateway.",
 				},
 			},
 			undefined,
@@ -1065,6 +1776,41 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
+		const appendedImplResult = await buildTool.definition.execute(
+			"task-close-impl-build-smoke",
+			{
+				repoPath: projectDir,
+				kind: "implementation",
+				summary: "Roadmap API smoke task implementation evidence.",
+				task_id: appendedTaskId,
+				change_class: "mechanical",
+				test_design_evidence: [
+					"Roadmap API smoke exercised by package smoke test.",
+				],
+				code_files: [".codewiki/roadmap/queue.json"],
+				checks_run: ["node tests/smoke/package-smoke.test.mjs"],
+				acceptance_mapping: [
+					{
+						criterion: "Generated roadmap view renders goal metadata.",
+						evidence: "Package smoke assertions cover generated task context.",
+					},
+				],
+				closure_brief: {
+					user_intent:
+						"Close smoke-test delta through canonical task tool after validation pass.",
+					implemented_changes: [
+						"Recorded smoke implementation evidence for roadmap task close.",
+					],
+					acceptance_evidence: [
+						"Package smoke assertions covered appended roadmap metadata.",
+					],
+					checks: ["node tests/smoke/package-smoke.test.mjs"],
+				},
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
 		await validationTool.definition.execute(
 			"task-close-validation-smoke",
 			{
@@ -1073,6 +1819,7 @@ async function main() {
 				task_id: appendedTaskId,
 				verdict: "pass",
 				rationale: "Smoke task has immutable close proof.",
+				source: appendedImplResult.details.path,
 				audit_refs: taskCloseAuditRefs,
 				isolation: {
 					role: "validator",
@@ -1155,10 +1902,15 @@ async function main() {
 
 		const artifactStatusTool = extension.tools.get("codewiki_artifact_status");
 		assert.ok(
-			artifactStatusTool && typeof artifactStatusTool.definition?.execute === "function",
+			artifactStatusTool &&
+				typeof artifactStatusTool.definition?.execute === "function",
 			"Artifact status tool missing execute function",
 		);
-		assert.equal(extension.tools.has("codewiki_claim"), false, "Deprecated claim alias should not be registered");
+		assert.equal(
+			extension.tools.has("codewiki_claim"),
+			false,
+			"Deprecated claim alias should not be registered",
+		);
 		const claimResult = await artifactStatusTool.definition.execute(
 			"artifact-status-create-smoke",
 			{
@@ -1174,7 +1926,11 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.match(claimResult.details.claim.id, /^CLAIM-\d+$/, "Artifact status tool should allocate a holder id");
+		assert.match(
+			claimResult.details.claim.id,
+			/^CLAIM-\d+$/,
+			"Artifact status tool should allocate a holder id",
+		);
 		const otherSessionCtx = {
 			...outsideToolCtx,
 			sessionManager: {
@@ -1190,7 +1946,9 @@ async function main() {
 				action: "mark",
 				summary: "Read overlapping product docs for smoke parallel work.",
 				mode: "read",
-				scopes: [{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" }],
+				scopes: [
+					{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" },
+				],
 				ttl_minutes: 30,
 			},
 			undefined,
@@ -1198,23 +1956,28 @@ async function main() {
 			otherSessionCtx,
 		);
 		assert.ok(
-			readOverlapResult.details.conflicts.some((conflict) => conflict.kind === "warning"),
+			readOverlapResult.details.conflicts.some(
+				(conflict) => conflict.kind === "warning",
+			),
 			"Read/write overlap should create a warning",
 		);
 		await assert.rejects(
-			() => artifactStatusTool.definition.execute(
-				"artifact-status-write-conflict-smoke",
-				{
-					repoPath: projectDir,
-					action: "mark",
-					summary: "Conflicting product docs write holder.",
-					mode: "write",
-					scopes: [{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" }],
-				},
-				undefined,
-				undefined,
-				otherSessionCtx,
-			),
+			() =>
+				artifactStatusTool.definition.execute(
+					"artifact-status-write-conflict-smoke",
+					{
+						repoPath: projectDir,
+						action: "mark",
+						summary: "Conflicting product docs write holder.",
+						mode: "write",
+						scopes: [
+							{ layer: "knowledge", path: ".codewiki/kb/product/overview.md" },
+						],
+					},
+					undefined,
+					undefined,
+					otherSessionCtx,
+				),
 			/codewiki_artifact_status conflict/i,
 			"Write/write overlap should block by default",
 		);
@@ -1225,10 +1988,20 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.equal(claimStateResult.details.claims.active_claim_count, 2, "State should expose active artifact records");
-		assert.equal(claimStateResult.details.claims.warning_count, 1, "State should expose artifact overlap warnings");
+		assert.equal(
+			claimStateResult.details.claims.active_claim_count,
+			2,
+			"State should expose active artifact records",
+		);
+		assert.equal(
+			claimStateResult.details.claims.warning_count,
+			1,
+			"State should expose artifact overlap warnings",
+		);
 		assert.ok(
-			claimStateResult.details.claims.artifact_statuses.some((status) => status.status === "in-use"),
+			claimStateResult.details.claims.artifact_statuses.some(
+				(status) => status.status === "in-use",
+			),
 			"State should expose artifact-status records derived from session queue",
 		);
 		const artifactMarkResult = await artifactStatusTool.definition.execute(
@@ -1237,7 +2010,8 @@ async function main() {
 				repoPath: projectDir,
 				action: "mark",
 				taskId: "TASK-001",
-				summary: "Mark source file artifact in use through public artifact-status API.",
+				summary:
+					"Mark source file artifact in use through public artifact-status API.",
 				mode: "write",
 				scopes: [{ layer: "code", path: "src/index.ts" }],
 				ttl_minutes: 30,
@@ -1252,26 +2026,40 @@ async function main() {
 			"Artifact status tool should report artifact-status terminology",
 		);
 		assert.ok(
-			artifactMarkResult.details.artifact_statuses.some((status) => status.artifact.path === "src/index.ts"),
+			artifactMarkResult.details.artifact_statuses.some(
+				(status) => status.artifact.path === "src/index.ts",
+			),
 			"Artifact status tool should return marked artifact status",
 		);
 		await artifactStatusTool.definition.execute(
 			"artifact-status-release-smoke",
-			{ repoPath: projectDir, action: "release", recordId: artifactMarkResult.details.claim.id },
+			{
+				repoPath: projectDir,
+				action: "release",
+				recordId: artifactMarkResult.details.claim.id,
+			},
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
 		await artifactStatusTool.definition.execute(
 			"artifact-status-release-smoke-1",
-			{ repoPath: projectDir, action: "release", recordId: claimResult.details.claim.id },
+			{
+				repoPath: projectDir,
+				action: "release",
+				recordId: claimResult.details.claim.id,
+			},
 			undefined,
 			undefined,
 			outsideToolCtx,
 		);
 		await artifactStatusTool.definition.execute(
 			"artifact-status-release-smoke-2",
-			{ repoPath: projectDir, action: "release", recordId: readOverlapResult.details.claim.id },
+			{
+				repoPath: projectDir,
+				action: "release",
+				recordId: readOverlapResult.details.claim.id,
+			},
 			undefined,
 			undefined,
 			outsideToolCtx,
@@ -1283,8 +2071,17 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.equal(releasedClaimStateResult.details.claims.active_claim_count, 0, "Released claims should leave active state");
-		const smokeClaimsPath = resolve(projectDir, ".codewiki", "session", "queue.json");
+		assert.equal(
+			releasedClaimStateResult.details.claims.active_claim_count,
+			0,
+			"Released claims should leave active state",
+		);
+		const smokeClaimsPath = resolve(
+			projectDir,
+			".codewiki",
+			"session",
+			"queue.json",
+		);
 		const smokeClaims = JSON.parse(readFileSync(smokeClaimsPath, "utf8"));
 		smokeClaims.claims.push({
 			id: "CLAIM-999",
@@ -1306,7 +2103,11 @@ async function main() {
 			undefined,
 			outsideToolCtx,
 		);
-		assert.equal(expiredClaimStateResult.details.claims.active_claim_count, 0, "Expired claims should not be active");
+		assert.equal(
+			expiredClaimStateResult.details.claims.active_claim_count,
+			0,
+			"Expired claims should not be active",
+		);
 
 		const sessionTool = extension.tools.get("codewiki_session");
 		assert.ok(
@@ -1625,6 +2426,113 @@ async function main() {
 			},
 			sessionManager: toolCtx.sessionManager,
 		});
+		const taskTwoDecision = await buildTool.definition.execute(
+			"task-two-resume-decision-proof",
+			{
+				repoPath: projectDir,
+				kind: "decision",
+				summary: "TASK-002 resume proof decision.",
+				slug: "task-002-resume-proof-decision",
+				diff_table: [
+					{
+						id: "TASK-002-RESUME",
+						current_state: "TASK-002 lacks planning proof.",
+						desired_state:
+							"TASK-002 has validated planning proof before explicit resume.",
+						rationale:
+							"Explicit resume should still honor implementation-readiness gates.",
+						affected_layers: ["roadmap"],
+						user_action: "approved",
+					},
+				],
+				row_to_kb_mappings: [
+					{
+						row_id: "TASK-002-RESUME",
+						knowledge_refs: [".codewiki/kb/system/roadmap.md"],
+						evidence: "Roadmap docs require planning proof before resume.",
+					},
+				],
+				propagation: {
+					direction: "system-first",
+					no_product_impact: "Smoke fixture only.",
+					downstream_planning_questions: ["Plan TASK-002 resume proof."],
+				},
+				knowledge_changes: [".codewiki/kb/system/roadmap.md"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		await validationTool.definition.execute(
+			"task-two-resume-decision-pass",
+			{
+				repoPath: projectDir,
+				profile: "decision",
+				verdict: "pass",
+				rationale: "Decision pass for TASK-002 resume proof.",
+				source: taskTwoDecision.details.path,
+				audit_refs: [
+					"audit:alignment",
+					"audit:stale-reference",
+					"approval:user",
+				],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		const taskTwoPlanning = await buildTool.definition.execute(
+			"task-two-resume-planning-proof",
+			{
+				repoPath: projectDir,
+				kind: "planning",
+				summary: "TASK-002 resume proof planning.",
+				slug: "task-002-resume-proof-planning",
+				source_decision_build: taskTwoDecision.details.path,
+				task_ids: ["TASK-002"],
+				task_changes: [
+					"TASK-002 is implementation-ready for explicit resume smoke.",
+				],
+				decision_row_resolutions: [
+					{
+						row_id: "TASK-002-RESUME",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-002"],
+						evidence: "TASK-002 has validated planning proof.",
+						source_refs: [taskTwoDecision.details.path, "TASK-002"],
+					},
+				],
+				downstream_question_resolutions: [
+					{
+						question: "Plan TASK-002 resume proof.",
+						resolution: "roadmap-task",
+						task_ids: ["TASK-002"],
+						evidence: "TASK-002 answers the resume proof question.",
+						source_refs: [taskTwoDecision.details.path, "TASK-002"],
+					},
+				],
+				tdd_plan: ["Explicit resume smoke uses planning proof."],
+				candidate_test_files: ["tests/smoke/package-smoke.test.mjs"],
+				candidate_code_paths: ["src/adapters/pi/commands/resume.ts"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
+		await validationTool.definition.execute(
+			"task-two-resume-planning-pass",
+			{
+				repoPath: projectDir,
+				profile: "planning",
+				verdict: "pass",
+				rationale: "Planning pass for TASK-002 resume proof.",
+				source: taskTwoPlanning.details.path,
+				audit_refs: ["audit:alignment", "approval:user"],
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
 		await resumeCommand.handler("TASK-002", {
 			cwd: projectDir,
 			hasUI: true,
@@ -1646,13 +2554,22 @@ async function main() {
 			},
 			sessionManager: toolCtx.sessionManager,
 			newSession: async (options) => {
-				assert.equal(options.parentSession, resolve(projectDir, ".pi", "sessions", "session-smoke-1.jsonl"));
+				assert.equal(
+					options.parentSession,
+					resolve(projectDir, ".pi", "sessions", "session-smoke-1.jsonl"),
+				);
 				await options.withSession({
 					ui: { notify: () => {}, setStatus: () => {}, setWidget: () => {} },
 					sessionManager: {
 						...toolCtx.sessionManager,
 						getSessionId: () => "session-smoke-fresh",
-						getSessionFile: () => resolve(projectDir, ".pi", "sessions", "session-smoke-fresh.jsonl"),
+						getSessionFile: () =>
+							resolve(
+								projectDir,
+								".pi",
+								"sessions",
+								"session-smoke-fresh.jsonl",
+							),
 					},
 					sendUserMessage: async (prompt) => freshResumePrompts.push(prompt),
 				});
@@ -1686,7 +2603,10 @@ async function main() {
 			outsideToolCtx,
 		);
 		const persistedFocusRoadmap = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		persistedFocusRoadmap.tasks[distinctTaskId].status = "in_progress";
 		writeFileSync(
@@ -1716,7 +2636,10 @@ async function main() {
 			"Session focus should not create a raw roadmap event log",
 		);
 		const namedRegressionRoadmap = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		namedRegressionRoadmap.tasks["TASK-29"] = {
 			id: "TASK-29",
@@ -1759,7 +2682,10 @@ async function main() {
 		);
 
 		const graph = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "index_graph.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "index_graph.json"),
+				"utf8",
+			),
 		);
 		const lint = graph.lenses.lint;
 		const config = JSON.parse(
@@ -1770,23 +2696,19 @@ async function main() {
 			"utf8",
 		);
 		const frontendSpecText = readFileSync(
-			resolve(
-				projectDir,
-				".codewiki",
-				"kb",
-				"system",
-				"frontend.md",
-			),
+			resolve(projectDir, ".codewiki", "kb", "system", "frontend.md"),
 			"utf8",
 		);
 		const roadmapJson = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		const roadmapState = graph.lenses.roadmap;
 		const statusState = graph.lenses.status;
 		const roadmapFolderIndex = roadmapState;
 		const statusView = statusState;
-		const roadmapQueueView = roadmapState;
 		let panelLines = panelState.renderedLines ?? [];
 		assert.ok(
 			!existsSync(resolve(nestedDir, "wiki")),
@@ -1818,7 +2740,9 @@ async function main() {
 			25,
 			`Expected 25 skipped starter files, got ${second.skipped.length}`,
 		);
-		const nonStarterIssues = lint.issues.filter((i) => i.kind !== "unscoped-doc");
+		const nonStarterIssues = lint.issues.filter(
+			(i) => i.kind !== "unscoped-doc",
+		);
 		assert.equal(
 			nonStarterIssues.length,
 			0,
@@ -2188,7 +3112,11 @@ async function main() {
 			2,
 			"Roadmap state should use session-free v2 contract",
 		);
-		const expectedHealthColor = lint.issues.every((i) => i.kind === "unscoped-doc") ? "yellow" : "green";
+		const expectedHealthColor = lint.issues.every(
+			(i) => i.kind === "unscoped-doc",
+		)
+			? "yellow"
+			: "green";
 		assert.equal(
 			roadmapState.health.color,
 			expectedHealthColor,
@@ -2517,7 +3445,8 @@ async function main() {
 				bold: (text) => text,
 			},
 		);
-		const roadmapDetailLines = widgetInstanceAfterRoadmapDetail?.render(100) ?? [];
+		const roadmapDetailLines =
+			widgetInstanceAfterRoadmapDetail?.render(100) ?? [];
 		assert.match(
 			roadmapDetailLines.join("\n"),
 			/Status: |Priority: /i,
@@ -2529,7 +3458,9 @@ async function main() {
 			"Board detail window should expose task actions",
 		);
 		assert.ok(
-			resumeNotifications.some((entry) => /queued in_progress for TASK-001/i.test(entry.message)),
+			resumeNotifications.some((entry) =>
+				/queued in_progress for TASK-001/i.test(entry.message),
+			),
 			"wiki-resume should resume the deterministic task status from the focused roadmap task",
 		);
 		assert.ok(
@@ -2589,7 +3520,10 @@ async function main() {
 			"Archive smoke task should be created",
 		);
 		const archiveRoadmapBeforeClose = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		const archiveTaskId = archiveRoadmapBeforeClose.order.find(
 			(id) =>
@@ -2623,6 +3557,40 @@ async function main() {
 			`${JSON.stringify(retentionConfig, null, 2)}\n`,
 			"utf8",
 		);
+		const archiveImplResult = await buildTool.definition.execute(
+			"task-archive-impl-build-smoke",
+			{
+				repoPath: projectDir,
+				kind: "implementation",
+				summary: "Archive smoke task implementation evidence.",
+				task_id: archiveTaskId,
+				change_class: "mechanical",
+				test_design_evidence: [
+					"Roadmap archive smoke exercised by package smoke test.",
+				],
+				code_files: [".codewiki/roadmap/queue.json"],
+				checks_run: ["node tests/smoke/package-smoke.test.mjs"],
+				acceptance_mapping: [
+					{
+						criterion: "Archive smoke task closes through canonical tool.",
+						evidence: "Package smoke asserts archive retention behavior.",
+					},
+				],
+				closure_brief: {
+					user_intent: "Close archive smoke task.",
+					implemented_changes: [
+						"Recorded archive smoke implementation evidence.",
+					],
+					acceptance_evidence: [
+						"Package smoke asserts archive retention behavior.",
+					],
+					checks: ["node tests/smoke/package-smoke.test.mjs"],
+				},
+			},
+			undefined,
+			undefined,
+			outsideToolCtx,
+		);
 		await validationTool.definition.execute(
 			"task-archive-close-validation-smoke",
 			{
@@ -2631,6 +3599,7 @@ async function main() {
 				task_id: archiveTaskId,
 				verdict: "pass",
 				rationale: "Archive smoke task has immutable close proof.",
+				source: archiveImplResult.details.path,
 				audit_refs: taskCloseAuditRefs,
 				isolation: {
 					role: "validator",
@@ -2658,7 +3627,10 @@ async function main() {
 			outsideToolCtx,
 		);
 		const archiveRoadmapAfterClose = JSON.parse(
-			readFileSync(resolve(projectDir, ".codewiki", "roadmap", "queue.json"), "utf8"),
+			readFileSync(
+				resolve(projectDir, ".codewiki", "roadmap", "queue.json"),
+				"utf8",
+			),
 		);
 		const archiveText = readFileSync(
 			resolve(projectDir, ".codewiki", "roadmap-archive.jsonl"),
@@ -2698,7 +3670,9 @@ async function main() {
 			/v1\.0\.0-smoke/,
 			"Checkpoint JSONL should contain the provided label",
 		);
-		const checkpointRecord = JSON.parse(checkpointText.trim().split(/\r?\n/).pop());
+		const checkpointRecord = JSON.parse(
+			checkpointText.trim().split(/\r?\n/).pop(),
+		);
 		assert.match(
 			checkpointRecord.canonical_digest,
 			/^sha256:[a-f0-9]{64}$/,
