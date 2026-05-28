@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T09:29:17.518Z",
+  "generated_at": "2026-05-28T09:29:42.889Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -125345,7 +125345,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T09:29:17.395Z",
+      "generated_at": "2026-05-28T09:29:42.734Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 5
@@ -125391,7 +125391,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T09:29:17Z",
+      "generated_at": "2026-05-28T09:29:42Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -126795,7 +126795,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T09:29:17Z",
+      "generated_at": "2026-05-28T09:29:42Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -130145,7 +130145,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T09:29:17Z",
+        "generated_at": "2026-05-28T09:29:42Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -130200,10 +130200,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:29:17Z",
+            "checked_at": "2026-05-28T09:29:42Z",
             "revision": {
               "git": {
-                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
+                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
                 "dirty": true,
                 "dirty_paths": [
                   "src/adapters/pi/ui/decision-approval.ts",
@@ -130429,14 +130429,14 @@
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
               "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
-              "digest": "f69ed192c072865c40ec2665f592c5c97ef188191af38cc7f5adf7c890945c25"
+              "digest": "1a6c81c09826c3feab9eef4c4588d15871c7f0e7a22f5a8f0aa103d4279bdfeb"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:17Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T09:29:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -130866,10 +130866,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T09:29:17Z",
+            "checked_at": "2026-05-28T09:29:42Z",
             "revision": {
               "git": {
-                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
+                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
                 "dirty": true,
                 "dirty_paths": [
                   "src/adapters/pi/ui/decision-approval.ts",
@@ -131072,14 +131072,14 @@
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
               "code_digest": "761a857f1a8249846a3e662bac7ab4e6ce58772c491a5b59aef9bb565d4da309",
-              "digest": "384abaa06d0ba2b37365228b0e9ab2e035125b8331bba398c077c31f6e3a7b1c"
+              "digest": "d6713a87fb4f32e1d3a6b1b2501db7674c5044e5191ba603ad224d67612453ae"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:17Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T09:29:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -131485,10 +131485,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:29:17Z",
+            "checked_at": "2026-05-28T09:29:42Z",
             "revision": {
               "git": {
-                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
+                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
                 "dirty": true,
                 "dirty_paths": [
                   "src/adapters/pi/ui/decision-approval.ts",
@@ -131714,14 +131714,14 @@
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
               "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
-              "digest": "f69ed192c072865c40ec2665f592c5c97ef188191af38cc7f5adf7c890945c25"
+              "digest": "1a6c81c09826c3feab9eef4c4588d15871c7f0e7a22f5a8f0aa103d4279bdfeb"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:17Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T09:29:42Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -132152,7 +132152,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T09:29:17Z",
+        "generated_at": "2026-05-28T09:29:42Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
