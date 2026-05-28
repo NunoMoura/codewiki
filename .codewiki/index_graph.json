@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T08:13:28.284Z",
+  "generated_at": "2026-05-28T08:14:44.322Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -28320,116 +28320,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-204",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-204",
-      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-      "expires_at": "2026-05-28T10:10:57.875Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-047"
-        },
-        {
-          "layer": "build",
-          "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-        },
-        {
-          "layer": "code",
-          "path": "src/runtime/**"
-        },
-        {
-          "layer": "code",
-          "path": "src/agency/tool.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/compaction.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/tools/ports.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/resume-kickoff.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/runtime-runner.test.mjs"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-047",
-      "kind": "change_claim_scope",
-      "path": "TASK-047",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/runtime/**",
-      "kind": "change_claim_scope",
-      "path": "src/runtime/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/agency/tool.ts",
-      "kind": "change_claim_scope",
-      "path": "src/agency/tool.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/compaction.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/compaction.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/tools/ports.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/tools/ports.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/resume-kickoff.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/resume-kickoff.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/runtime-runner.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/runtime-runner.test.mjs",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -88736,56 +88626,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-204",
-      "to": "task:TASK-047"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:TASK-047"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:.codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:src/runtime/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:src/agency/tool.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:src/adapters/pi/compaction.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:src/adapters/pi/tools/ports.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:src/state/resume-kickoff.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-204",
-      "to": "claim_scope:tests/smoke/runtime-runner.test.mjs"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -99164,7 +99004,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 31,
+            "item_count": 21,
             "badges": [
               {
                 "id": "open_tasks",
@@ -99202,7 +99042,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -100180,88 +100020,6 @@
           }
         ],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-            ],
-            "gaps": []
-          },
           {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
@@ -112049,581 +111807,25 @@
       ]
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-204",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-047",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-204",
-          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-          "task_id": "TASK-047",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-047"
-            },
-            {
-              "layer": "build",
-              "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-            },
-            {
-              "layer": "code",
-              "path": "src/runtime/**"
-            },
-            {
-              "layer": "code",
-              "path": "src/agency/tool.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/tools/ports.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/resume-kickoff.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/runtime-runner.test.mjs"
-            }
-          ],
-          "created_at": "2026-05-28T08:10:57Z",
-          "updated_at": "2026-05-28T08:10:57Z",
-          "expires_at": "2026-05-28T10:10:57.875Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/tools/ports.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/agency/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/runtime/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-kickoff.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-047"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/runtime-runner.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/compaction.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/tools/ports.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/agency/tool.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/runtime/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-kickoff.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-047"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/runtime-runner.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-204",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-047",
-              "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-              "expires_at": "2026-05-28T10:10:57.875Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -122501,88 +121703,6 @@
       ],
       "semantic_change_rows": [
         {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-          ],
-          "gaps": []
-        },
-        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -123535,9 +122655,7 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-204"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -124722,7 +123840,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T08:13:28.162Z",
+      "generated_at": "2026-05-28T08:14:44.190Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 7
@@ -124780,7 +123898,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T08:13:28Z",
+      "generated_at": "2026-05-28T08:14:44Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -126308,7 +125426,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T08:13:28Z",
+      "generated_at": "2026-05-28T08:14:44Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -126473,9 +125591,7 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-204"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -126698,7 +125814,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -129660,7 +128776,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T08:13:28Z",
+        "generated_at": "2026-05-28T08:14:44Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -129715,13 +128831,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T08:13:28Z",
+            "checked_at": "2026-05-28T08:14:44Z",
             "revision": {
               "git": {
-                "head": "156afe189611a1da02b17b933361e9dd8dfca5bc",
+                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -129770,7 +128885,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a54b3f38b3bee7d0b6aece1d636dde6c1ea90b16",
+                  ".codewiki/roadmap/queue.json": "3f55fc07790063132b4f5cc64c06edc53aa8dc0a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -129943,15 +129058,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "c472e8a2022d716c8c708ef5e899f5c376479e5699d7baf5b6187f81b79821d0",
-              "digest": "b5c64957588ea234217c19671b4b0b5fb2eb9cf2bec418025673077323a169a5"
+              "code_digest": "8063ed6da09bc61755d82c7efd9b56eecec232359e6ffb0961b5d34bff69657f",
+              "digest": "fe7694c82debb914d9c2ede9f58f16566f70d78c70bd6d0f5dbc914689754923"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:13:28Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T08:14:44Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -130383,13 +129498,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T08:13:28Z",
+            "checked_at": "2026-05-28T08:14:44Z",
             "revision": {
               "git": {
-                "head": "156afe189611a1da02b17b933361e9dd8dfca5bc",
+                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -130422,7 +129536,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a54b3f38b3bee7d0b6aece1d636dde6c1ea90b16",
+                  ".codewiki/roadmap/queue.json": "3f55fc07790063132b4f5cc64c06edc53aa8dc0a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -130588,15 +129702,15 @@
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
               "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "641e604604637465d532260c57290d18fad0b80755d5c6f5239d7d9a590beac6",
-              "digest": "88c90d671aa7b535182bb44b026ca42fe02b1b6116882a91892921c92d927e61"
+              "code_digest": "e235077e5c3937a0c98686966872cfb5c2b557a174027f9c0b0fb6643c64b9fc",
+              "digest": "255e6338e04bdd24a3db63c1d99c9b9fcc66e09940f67d622fa1dbc03cee6836"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:13:28Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T08:14:44Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -131004,13 +130118,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T08:13:28Z",
+            "checked_at": "2026-05-28T08:14:44Z",
             "revision": {
               "git": {
-                "head": "156afe189611a1da02b17b933361e9dd8dfca5bc",
+                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -131059,7 +130172,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a54b3f38b3bee7d0b6aece1d636dde6c1ea90b16",
+                  ".codewiki/roadmap/queue.json": "3f55fc07790063132b4f5cc64c06edc53aa8dc0a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -131232,15 +130345,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "c472e8a2022d716c8c708ef5e899f5c376479e5699d7baf5b6187f81b79821d0",
-              "digest": "b5c64957588ea234217c19671b4b0b5fb2eb9cf2bec418025673077323a169a5"
+              "code_digest": "8063ed6da09bc61755d82c7efd9b56eecec232359e6ffb0961b5d34bff69657f",
+              "digest": "fe7694c82debb914d9c2ede9f58f16566f70d78c70bd6d0f5dbc914689754923"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:13:28Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T08:14:44Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -131673,322 +130786,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T08:13:28Z",
+        "generated_at": "2026-05-28T08:14:44Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-204",
-            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-            "task_id": "TASK-047",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-047"
-              },
-              {
-                "layer": "build",
-                "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-              },
-              {
-                "layer": "code",
-                "path": "src/runtime/**"
-              },
-              {
-                "layer": "code",
-                "path": "src/agency/tool.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/compaction.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/tools/ports.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/resume-kickoff.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/runtime-runner.test.mjs"
-              }
-            ],
-            "created_at": "2026-05-28T08:10:57Z",
-            "updated_at": "2026-05-28T08:10:57Z",
-            "expires_at": "2026-05-28T10:10:57.875Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "ref": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/2026-05-28-implementation-pass-task-047-2026-05-28-task-047.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/compaction.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/tools/ports.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/agency/tool.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/runtime/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/resume-kickoff.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-047"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/runtime-runner.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-204",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-047",
-                "summary": "Create local commit/checkpoint proof for TASK-047 implementation and validation evidence; no push/release.",
-                "expires_at": "2026-05-28T10:10:57.875Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-047; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-204 release or validated publisher/patch ref for codewiki/TASK-047/publisher/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
