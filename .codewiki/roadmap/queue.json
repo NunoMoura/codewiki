@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-05-28T23:06:27Z",
+  "updated": "2026-05-28T23:16:07Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-042",
     "TASK-043",
     "TASK-046",
     "TASK-048"
@@ -534,62 +533,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
-    },
-    "TASK-042": {
-      "id": "TASK-042",
-      "title": "Strengthen state graph read models",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "refactor",
-      "summary": "Reduce any usage and cognitive complexity in graph, builders, reader, and lint code while preserving generated CodeWiki state outputs.",
-      "spec_paths": [
-        ".codewiki/kb/system/graph.md",
-        ".codewiki/kb/system/file-structure.md"
-      ],
-      "code_paths": [
-        "src/state/graph.ts",
-        "src/state/builders.ts",
-        "src/state/reader.ts",
-        "src/state/lint.ts",
-        "src/state/types.ts",
-        "src/state/graph/rebuilder.ts",
-        "tests/smoke/graph-lenses.test.mjs",
-        "tests/smoke/alignment-graph.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "graph-read-model-hardening",
-        "generated-state-typing",
-        "state-builder-split"
-      ],
-      "change_type": "code",
-      "goal": {
-        "outcome": "State graph/read-model ownership has stronger typing and smaller focused modules without generated output drift.",
-        "acceptance": [
-          "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
-          "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
-          "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in the graph owner file.",
-          "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests."
-        ],
-        "non_goals": [
-          "Do not redesign the graph JSON schema.",
-          "Do not move state ownership out of src/state/**.",
-          "Do not change resume task-selection logic; TASK-040 owns that boundary."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "npm run test:features",
-          "rerun type-coverage and complexity review for state files"
-        ]
-      },
-      "delta": {
-        "desired": "State read models are typed and modular enough for maintainable follow-up changes.",
-        "current": "State graph/builders/reader/lint files are top complexity and any-typed hotspots.",
-        "closure": "Task closes when tests pass and review metrics improve for targeted state files."
-      },
-      "created": "2026-05-28",
-      "updated": "2026-05-28T23:06:27Z"
     },
     "TASK-043": {
       "id": "TASK-043",
