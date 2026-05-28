@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-05-28T21:20:14Z",
+  "updated": "2026-05-28T21:22:28Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-041",
     "TASK-042",
     "TASK-043",
     "TASK-046",
@@ -535,63 +534,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
-    },
-    "TASK-041": {
-      "id": "TASK-041",
-      "title": "Clean adapter schemas and command helpers",
-      "status": "in_progress",
-      "priority": "medium",
-      "kind": "refactor",
-      "summary": "Reduce low-risk duplication and helper cleanup findings in Pi adapter schemas, registration, commands, and compaction glue without changing public tool schemas or command behavior.",
-      "spec_paths": [
-        ".codewiki/kb/system/api.md"
-      ],
-      "code_paths": [
-        "src/adapters/pi/index.ts",
-        "src/adapters/pi/schemas.ts",
-        "src/adapters/pi/commands/audit.ts",
-        "src/adapters/pi/commands/config.ts",
-        "src/adapters/pi/commands/status.ts",
-        "src/adapters/pi/commands/ui.ts",
-        "src/adapters/pi/compaction.ts",
-        "src/adapters/pi/artifact-wake.ts",
-        "tests/smoke/package-smoke.test.mjs",
-        "tests/smoke/codewiki-compaction.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "adapter-registration-dedupe",
-        "schema-dedupe",
-        "adapter-command-cleanup"
-      ],
-      "change_type": "code",
-      "goal": {
-        "outcome": "Adapter/schema duplicate-code and small command-helper findings drop while public schemas and Pi command behavior remain compatible.",
-        "acceptance": [
-          "Repeated adapter registration blocks are extracted into small behavior-preserving helpers where clarity improves.",
-          "Schema duplicate blocks are consolidated only when validation semantics and deprecated compatibility aliases remain explicit.",
-          "Async helpers without await are made synchronous unless an interface requires Promise behavior, and touched boolean parameters become options objects where call-site clarity improves.",
-          "Package, command, and compaction smoke behavior remains compatible."
-        ],
-        "non_goals": [
-          "Do not refactor Pi UI manager/theme modules in this task.",
-          "Do not change public tool schemas, command names, flags, or compatibility aliases.",
-          "Do not touch roadmap/session/validation runtime behavior."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "package and compaction smoke tests",
-          "rerun jscpd/async/boolean-param review checks for adapter files"
-        ]
-      },
-      "delta": {
-        "desired": "Adapter exposure-layer code is cleaner without external behavior drift.",
-        "current": "Review reports duplicate adapter/schema blocks plus small async/boolean/helper findings in adapter commands and compaction.",
-        "closure": "Task closes when targeted review output improves and package/compaction smoke coverage passes."
-      },
-      "created": "2026-05-28",
-      "updated": "2026-05-28T21:20:14Z"
     },
     "TASK-042": {
       "id": "TASK-042",
