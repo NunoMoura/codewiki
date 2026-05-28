@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T08:13:14Z",
+  "profile": "task-close",
+  "task_id": "TASK-047",
+  "verdict": "pass",
+  "rationale": "TASK-047 is ready to close. Clean detached validation at commit 156afe189611a1da02b17b933361e9dd8dfca5bc confirms the runtime-root bounded agency runner implementation, implementation validation report, upstream decision/planning builds, generated task context, and canonical roadmap state are committed and coherent. The runtime runner executes one bounded step, claims/releases scopes, stops on hard gates, requests source-backed context boundaries through ports, and records workflow-efficiency evidence. Changed, task, and generated-parity audits pass; remaining graph-health/file-structure warnings are non-blocking existing hygiene. Publication/push is not included.",
+  "checks": [
+    "git worktree add --detach /tmp/codewiki-task047-clean.xZAZtx HEAD",
+    "git -C /tmp/codewiki-task047-clean.xZAZtx status --short --untracked-files=all — clean",
+    "npm --prefix /tmp/codewiki-task047-clean.xZAZtx run typecheck — pass",
+    "npm --prefix /tmp/codewiki-task047-clean.xZAZtx run test:smoke — pass",
+    "node --experimental-strip-types /tmp/codewiki-task047-clean.xZAZtx/tests/tasks/TASK-015/agency-source-root.test.mjs — pass",
+    "npm --prefix /tmp/codewiki-task047-clean.xZAZtx run check:architecture — warning only: missing .codewiki/runtime/** and .codewiki/session/** expected paths in clean tree",
+    "git -C /tmp/codewiki-task047-clean.xZAZtx diff --check — pass",
+    "codewiki_audit repoPath=/tmp/codewiki-task047-clean.xZAZtx profiles=alignment,changed,task,generated-parity task_id=TASK-047 changed=true — changed/task/generated-parity pass; alignment graph-health warning",
+    "codewiki_validation task-close preflight — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "information",
+      "summary": "Task-close validates local commit content only; no remote publication/push/release was performed."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports existing graph-health warnings; generated-parity and task audits pass."
+    },
+    {
+      "severity": "warning",
+      "summary": "Architecture check reports missing .codewiki/runtime/** and .codewiki/session/** expected paths in the clean committed tree; this is existing dogfood runtime/session-state absence, not a TASK-047 implementation failure."
+    },
+    {
+      "severity": "information",
+      "summary": "Main worktree still contains unrelated uncommitted local .pi-lens and decision-approval artifacts outside the clean validation worktree."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+  "policy_profile": "task-close",
+  "failure_class": "runtime_conflict",
+  "recommended_next_loop": "observe",
+  "stop_reason": "Wait for scoped runtime coordination to clear before retrying.",
+  "routing": {
+    "failure_class": "runtime_conflict",
+    "recommended_next_loop": "observe",
+    "stop_reason": "Wait for scoped runtime coordination to clear before retrying."
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "approval:user",
+    "codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning"
+  ],
+  "audit_reports": [
+    "codewiki_audit repoPath=/tmp/codewiki-task047-clean.xZAZtx profiles=alignment,changed,task,generated-parity task_id=TASK-047 changed=true include_fingerprints=true"
+  ],
+  "content_proof_refs": [
+    "156afe189611a1da02b17b933361e9dd8dfca5bc",
+    "56866ca60fbee3dec5403c7e158acbf76b7ec4de"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "56866ca60fbee3dec5403c7e158acbf76b7ec4de"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-047",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "runtime_conflict",
+      "recommended_next_loop": "observe",
+      "stop_reason": "Wait for scoped runtime coordination to clear before retrying."
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/tmp/codewiki-task047-clean.xZAZtx",
+    "head_sha": "156afe189611a1da02b17b933361e9dd8dfca5bc",
+    "validated_sha": "156afe189611a1da02b17b933361e9dd8dfca5bc",
+    "tree_sha": "56866ca60fbee3dec5403c7e158acbf76b7ec4de",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh task-close validation used clean detached worktree from committed local checkpoint; main worktree retains unrelated dirty files outside TASK-047 scope.",
+    "role": "validator"
+  }
+}
