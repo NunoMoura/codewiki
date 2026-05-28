@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T21:20:00Z",
+  "profile": "implementation",
+  "task_id": "TASK-041",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes for TASK-041. The Pi adapter now centralizes repeated internal CodeWiki tool registration through `registerProjectTool` while preserving tool names, public schemas, prompt metadata, status refresh behavior, and context-refresh hooks. The schema cleanup consolidates duplicated task delta schema blocks while keeping deprecated `changeClassSchema` compatibility explicit. Command helper cleanup removes the trivial audit profile wrapper, avoids double status project resolution, removes UI browser-open async noise, and replaces a boolean launch-message parameter with an options object. Package, compaction, control-room, full smoke, typecheck, architecture, targeted adapter review, and implementation preflight checks pass.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-28-task-041-adapter-schema-command-cleanup.json — pass",
+    "Read TASK-041 resume context and planning build .codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json — pass",
+    "Read API spec and touched adapter/test files — pass",
+    "lsp_diagnostics touched adapter/test files — pass",
+    "npm run typecheck — pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/control-room.test.mjs — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "targeted adapter review checks — pass: registration helper, schema delta shared, async-noise removed, boolean-param options object, audit profile wrapper removed",
+    "git diff --check — pass",
+    "codewiki_audit profiles=alignment,changed,task,file-structure,package task_id=TASK-041 changed=true — task/file-structure/package pass; alignment/generated-view warnings only",
+    "codewiki_validation implementation preflight — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Full jscpd/booboo rerun was not invoked; targeted adapter review checks cover the TASK-041 findings touched in this implementation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment/changed audits report existing graph-health/generated-view warnings; not blocking pre-commit implementation validation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Working tree includes unrelated dirty/untracked files outside TASK-041 scope; task-close still needs clean committed proof."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-041-adapter-schema-command-cleanup.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:file-structure",
+    "profile:package",
+    "approval:user",
+    "codewiki_audit profiles=alignment,changed,task,file-structure,package TASK-041 — warning: graph/generated views; task/file-structure/package pass"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "d25ba75ea70266887fa9666333cfea21bb6b03f7",
+    "11eb2c929c169835fa497a4376bdd53c8b1ca907",
+    "sha256:35f7908b643a96efa5503aa71ad8ad03ef2a07af2f47ab0dd0ebfffecfce74c6"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-041",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "validated_sha": "d25ba75ea70266887fa9666333cfea21bb6b03f7",
+    "tree_sha": "11eb2c929c169835fa497a4376bdd53c8b1ca907",
+    "working_tree_digest": "sha256:35f7908b643a96efa5503aa71ad8ad03ef2a07af2f47ab0dd0ebfffecfce74c6",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+    "role": "validator"
+  }
+}

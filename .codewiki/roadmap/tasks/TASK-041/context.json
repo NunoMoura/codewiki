@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T01:08:52Z",
+  "generated_at": "2026-05-28T21:20:14Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-041/context.json",
   "task": {
     "id": "TASK-041",
     "title": "Clean adapter schemas and command helpers",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "refactor",
     "change_type": "code",

@@ -218,11 +218,11 @@ edges:
 	assert.deepEqual(buildBrowserOpenCommand("http://127.0.0.1:3000/", "win32"), { command: "cmd", args: ["/c", "start", "", "http://127.0.0.1:3000/"] });
 	assert.equal(buildBrowserOpenCommand("http://127.0.0.1:3000/", "aix"), null);
 	assert.equal(
-		formatControlRoomLaunchMessage("repo", "http://127.0.0.1:3000/", { opened: true }, false),
+		formatControlRoomLaunchMessage("repo", "http://127.0.0.1:3000/", { opened: true }, { alreadyRunning: false }),
 		"repo CodeWiki UI started; opened browser. URL: http://127.0.0.1:3000/",
 	);
 	assert.match(
-		formatControlRoomLaunchMessage("repo", "http://127.0.0.1:3000/", { opened: false, error: "missing" }, true),
+		formatControlRoomLaunchMessage("repo", "http://127.0.0.1:3000/", { opened: false, error: "missing" }, { alreadyRunning: true }),
 		/Open: http:\/\/127\.0\.0\.1:3000\//,
 	);
 

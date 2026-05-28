@@ -137,6 +137,11 @@ export const roadmapTaskGoalSchema = Type.Object({
 		}),
 	),
 });
+const roadmapTaskDeltaSchema = Type.Object({
+	desired: Type.Optional(Type.String()),
+	current: Type.Optional(Type.String()),
+	closure: Type.Optional(Type.String()),
+});
 export const codewikiTaskCreateSchema = Type.Object({
 	title: Type.String({ minLength: 1, description: "Short task title." }),
 	priority: roadmapPrioritySchema,
@@ -156,13 +161,7 @@ export const codewikiTaskCreateSchema = Type.Object({
 	change_type: Type.Optional(changeTypeSchema),
 	change_class: Type.Optional(changeClassSchema),
 	goal: Type.Optional(roadmapTaskGoalSchema),
-	delta: Type.Optional(
-		Type.Object({
-			desired: Type.Optional(Type.String()),
-			current: Type.Optional(Type.String()),
-			closure: Type.Optional(Type.String()),
-		}),
-	),
+	delta: Type.Optional(roadmapTaskDeltaSchema),
 });
 export const toolTaskStatusSchema = Type.Union(
 	TOOL_TASK_STATUS_VALUES.map((value) => Type.Literal(value)),
@@ -340,13 +339,7 @@ export const codewikiTaskPatchSchema = Type.Object({
 	change_type: Type.Optional(changeTypeSchema),
 	change_class: Type.Optional(changeClassSchema),
 	goal: Type.Optional(roadmapTaskGoalSchema),
-	delta: Type.Optional(
-		Type.Object({
-			desired: Type.Optional(Type.String()),
-			current: Type.Optional(Type.String()),
-			closure: Type.Optional(Type.String()),
-		}),
-	),
+	delta: Type.Optional(roadmapTaskDeltaSchema),
 });
 export const codewikiTaskEvidenceSchema = Type.Object({
 	summary: Type.String({

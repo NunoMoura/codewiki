@@ -1,7 +1,15 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { ActiveStatusPanel } from "../../state/types.ts";
 import { registerBootstrapFeatures } from "./bootstrap.ts";
-import { codewikiBuildToolInputSchema, codewikiAgencyToolInputSchema, codewikiDiffTableToolInputSchema, codewikiGcToolInputSchema, codewikiSessionToolInputSchema, codewikiTaskToolInputSchema, codewikiValidationReportSchema } from "./schemas.ts";
+import {
+	codewikiBuildToolInputSchema,
+	codewikiAgencyToolInputSchema,
+	codewikiDiffTableToolInputSchema,
+	codewikiGcToolInputSchema,
+	codewikiSessionToolInputSchema,
+	codewikiTaskToolInputSchema,
+	codewikiValidationReportSchema,
+} from "./schemas.ts";
 import { registerAuditCommand } from "./commands/audit.ts";
 import { registerConfigCommand } from "./commands/config.ts";
 import { registerResumeCommand } from "./commands/resume.ts";
@@ -9,7 +17,11 @@ import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
 import { currentTaskLink } from "./session.ts";
 import { readRoadmapTask } from "../../roadmap/runtime.ts";
-import { rememberStatusDockProject, resolveStatusDockProject, resolveToolProject } from "../../project/context.ts";
+import {
+	rememberStatusDockProject,
+	resolveStatusDockProject,
+	resolveToolProject,
+} from "../../project/context.ts";
 import { executeCodewikiBuildTool } from "../../api/tools.ts";
 import { executeCodewikiValidationTool } from "../../api/tools.ts";
 import { executeCodewikiDiffTableTool } from "../../api/tools.ts";
@@ -20,7 +32,10 @@ import { registerCodewikiAuditTool } from "./tools/audit.ts";
 import { registerCodewikiResumeContextTool } from "./tools/resume-context.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
-import { installCodewikiCompaction, requestCodewikiContextRefresh } from "./compaction.ts";
+import {
+	installCodewikiCompaction,
+	requestCodewikiContextRefresh,
+} from "./compaction.ts";
 import { registerCodewikiStateTool } from "./tools/state.ts";
 import { executeCodewikiTask } from "./tools/task.ts";
 import {
@@ -34,6 +49,63 @@ import {
 } from "./ui/manager.ts";
 
 const COMMAND_PREFIX = "wiki";
+
+interface ProjectToolRegistration {
+	name: string;
+	label: string;
+	description: string;
+	promptSnippet?: string;
+	promptGuidelines?: string[];
+	parameters: unknown;
+	execute: (project: any, params: any, ctx: any) => Promise<any>;
+	details?: (result: any) => unknown;
+	after?: (input: {
+		project: any;
+		params: any;
+		result: any;
+		ctx: any;
+	}) => Promise<void> | void;
+	refreshStatus?: boolean;
+}
+
+function registerProjectTool(
+	pi: ExtensionAPI,
+	registration: ProjectToolRegistration,
+): void {
+	pi.registerTool({
+		name: registration.name,
+		label: registration.label,
+		description: registration.description,
+		promptSnippet: registration.promptSnippet,
+		promptGuidelines: registration.promptGuidelines,
+		parameters: registration.parameters,
+		async execute(
+			_toolCallId: string,
+			params: any,
+			_signal: unknown,
+			_onUpdate: unknown,
+			ctx: any,
+		) {
+			const project = await resolveToolProject(
+				ctx.cwd,
+				params.repoPath,
+				registration.name,
+			);
+			const result = await registration.execute(project, params, ctx);
+			await registration.after?.({ project, params, result, ctx });
+			if (registration.refreshStatus !== false)
+				await refreshStatusDock(project, ctx, currentTaskLink(ctx));
+			return {
+				content: [{ type: "text", text: String(result.summary || "") }],
+				details: registration.details ? registration.details(result) : result,
+			};
+		},
+	} as any);
+}
+
+function resultPayload(result: any): unknown {
+	return result.result;
+}
 
 export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerBootstrapFeatures(pi);
@@ -145,7 +217,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerCodewikiArtifactStatusTool(pi);
 	registerCodewikiAuditTool(pi);
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_gc",
 		label: "Codewiki GC",
 		description:
@@ -159,18 +231,11 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Do not use GC ledger proof as validation/content proof; fail/block/current-policy reports remain hot until policy permits archival.",
 		],
 		parameters: codewikiGcToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_gc");
-			const result = await executeCodewikiGcTool(project, params as any);
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result.result,
-			};
-		},
-	} as any);
+		execute: (project, params) => executeCodewikiGcTool(project, params as any),
+		details: resultPayload,
+	});
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_build",
 		label: "Codewiki Build",
 		description:
@@ -184,23 +249,20 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Decision builds replace the old split intent/knowledge handoff: record approved rows, row-to-KB mappings, product/system propagation, risks, non-goals, and downstream planning questions.",
 		],
 		parameters: codewikiBuildToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_build");
-			const result = await executeCodewikiBuildTool(project, params as any);
+		execute: (project, params) =>
+			executeCodewikiBuildTool(project, params as any),
+		details: resultPayload,
+		after: ({ params, result }) => {
 			requestCodewikiContextRefresh({
 				reason: `${params.kind}-build-boundary`,
 				taskId: params.task_id || params.task_ids?.[0] || null,
-				followUpIntent: `Continue after ${params.kind}_build ${result.result?.path ?? ""}`.trim(),
+				followUpIntent:
+					`Continue after ${params.kind}_build ${result.result?.path ?? ""}`.trim(),
 			});
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result.result,
-			};
 		},
-	} as any);
+	});
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_validation",
 		label: "Codewiki Validation",
 		description:
@@ -213,26 +275,22 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Profile must match a known validation gateway profile: decision, planning, implementation, task-close, drift-audit, or graph-audit.",
 			"Pass reports must cite required audit evidence through audit_refs/audit_reports for the profile.",
 			"Implementation profile requires fresh_context=true, clean state, and checked content proof (SHA/tree or working_tree_digest). Task-close/publication/publish/release require clean=true plus immutable commit/tree/package/archive/remote proof.",
-			"High-risk tiers such as semantic-system, security/migration/publication, and destructive changes require explicit user approval evidence before lower-layer promotion."
+			"High-risk tiers such as semantic-system, security/migration/publication, and destructive changes require explicit user approval evidence before lower-layer promotion.",
 		],
 		parameters: codewikiValidationReportSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_validation");
-			const result = await executeCodewikiValidationTool(project, params as any);
+		execute: (project, params) =>
+			executeCodewikiValidationTool(project, params as any),
+		details: resultPayload,
+		after: ({ params }) => {
 			requestCodewikiContextRefresh({
 				reason: `validation-${params.verdict}`,
 				taskId: params.task_id || null,
 				followUpIntent: `Continue after ${params.profile} validation ${params.verdict}`,
 			});
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result.result,
-			};
 		},
-	} as any);
+	});
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_task",
 		label: "Codewiki Task",
 		description:
@@ -242,53 +300,39 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		promptGuidelines: [
 			"Use this for all canonical roadmap task mutation: create tasks, update metadata, append evidence, close work, cancel work, or maintain sprint metadata.",
 			"Before creating roadmap work, check active tasks/sprints for related intent; prefer refining existing task metadata, docs, and sprint scope over creating duplicates.",
-			"Use action='sprint' with sprint input when accepted intent forms a related executable cohort; never hand-edit roadmap sprint metadata.",
+			"Use action='sprint' with sprint input when accepted intent forms a related executable cohort; never hand-edit sprint metadata.",
 			"Create actions automatically reuse/refine related active tasks when spec paths, code paths, labels, or intent text overlap; pass an explicit taskId/update when you already know the target.",
 			"Prefer evidence.result='pass'|'fail'|'block' when advancing lifecycle with structured execution evidence.",
 			"Use action='close' or action='cancel' instead of patching status directly when intent is final closure.",
 			"Set refresh=false when you need a minimal canonical write and can defer generated graph/status/roadmap view rebuilds.",
 		],
 		parameters: codewikiTaskToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(
-				ctx.cwd,
-				params.repoPath,
-				"codewiki_task",
-			);
-			const result = await executeCodewikiTask(pi, project, ctx, params);
-			if (params.action === "close" || params.action === "cancel") {
-				requestCodewikiContextRefresh({
-					reason: `task-${params.action}`,
-					taskId: params.taskId || result.canonical_task_ids?.[0] || null,
-					followUpIntent: `Continue after task ${params.action}`,
-				});
-			}
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result,
-			};
+		execute: (project, params, ctx) =>
+			executeCodewikiTask(pi, project, ctx, params),
+		after: ({ params, result }) => {
+			if (params.action !== "close" && params.action !== "cancel") return;
+			requestCodewikiContextRefresh({
+				reason: `task-${params.action}`,
+				taskId: params.taskId || result.canonical_task_ids?.[0] || null,
+				followUpIntent: `Continue after task ${params.action}`,
+			});
 		},
-	} as any);
+	});
 
-
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_diff_table",
 		label: "Codewiki Diff Table",
-		description: "Create or update pending decision diff tables before accepted decision builds are compiled.",
-		promptSnippet: "Use pending diff tables for interactive decision approval before writing accepted decision builds.",
+		description:
+			"Create or update pending decision diff tables before accepted decision builds are compiled.",
+		promptSnippet:
+			"Use pending diff tables for interactive decision approval before writing accepted decision builds.",
 		parameters: codewikiDiffTableToolInputSchema,
-		execute: async (_id: string, params: any, _notify: any, _progress: any, ctx: any) => {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_diff_table");
-			const result = await executeCodewikiDiffTableTool(project, params);
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result.result,
-			};
-		},
-	} as any);
+		execute: (project, params) => executeCodewikiDiffTableTool(project, params),
+		details: resultPayload,
+		refreshStatus: false,
+	});
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_session",
 		label: "Codewiki Session",
 		description:
@@ -300,22 +344,11 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"This tool should not be used to close, cancel, or otherwise mutate canonical roadmap truth.",
 		],
 		parameters: codewikiSessionToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(
-				ctx.cwd,
-				params.repoPath,
-				"codewiki_session",
-			);
-			const result = await executeCodewikiSession(pi, project, ctx, params);
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result,
-			};
-		},
-	} as any);
+		execute: (project, params, ctx) =>
+			executeCodewikiSession(pi, project, ctx, params),
+	});
 
-	pi.registerTool({
+	registerProjectTool(pi, {
 		name: "codewiki_agency",
 		label: "Codewiki Agency",
 		description:
@@ -329,18 +362,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Parent agent remains responsible for any canonical writes, commits, pushes, or version bumps.",
 		],
 		parameters: codewikiAgencyToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
-			const project = await resolveToolProject(
-				ctx.cwd,
-				params.repoPath,
-				"codewiki_agency",
-			);
-			const result = await executeCodewikiAgency(project, ctx, params);
-			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-			return {
-				content: [{ type: "text", text: result.summary }],
-				details: result,
-			};
-		},
-	} as any);
+		execute: (project, params, ctx) =>
+			executeCodewikiAgency(project, ctx, params),
+	});
 }

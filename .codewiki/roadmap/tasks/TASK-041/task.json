@@ -1,7 +1,7 @@
 {
   "id": "TASK-041",
   "title": "Clean adapter schemas and command helpers",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "medium",
   "kind": "refactor",
   "summary": "Reduce low-risk duplication and helper cleanup findings in Pi adapter schemas, registration, commands, and compaction glue without changing public tool schemas or command behavior.",
@@ -53,5 +53,5 @@
     "closure": "Task closes when targeted review output improves and package/compaction smoke coverage passes."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28T01:08:52Z"
+  "updated": "2026-05-28T21:20:14Z"
 }

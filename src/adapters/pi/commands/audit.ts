@@ -1,5 +1,8 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { resolveCommandProject, resolveStatusDockProject } from "../../../project/context.ts";
+import {
+	resolveCommandProject,
+	resolveStatusDockProject,
+} from "../../../project/context.ts";
 import { executeCodewikiAudit, formatAuditReport } from "../../../api/tools.ts";
 import type { AuditProfile } from "../../../audit/types.ts";
 import { AUDIT_PROFILE_VALUES } from "../../../audit/types.ts";
@@ -18,9 +21,7 @@ interface AuditCommandInput {
 	pathArg: string | null;
 }
 
-function isProfile(value: string): value is AuditProfile {
-	return (AUDIT_PROFILE_VALUES as readonly string[]).includes(value);
-}
+const AUDIT_PROFILE_SET = new Set<string>(AUDIT_PROFILE_VALUES);
 
 export function parseAuditCommandInput(args: string): AuditCommandInput {
 	const tokens = splitCommandArgs(args);
@@ -56,7 +57,12 @@ export function parseAuditCommandInput(args: string): AuditCommandInput {
 			continue;
 		}
 		if (flag === "--layer") {
-			layers.push(...nextValue().split(",").map((item) => item.trim()).filter(Boolean));
+			layers.push(
+				...nextValue()
+					.split(",")
+					.map((item) => item.trim())
+					.filter(Boolean),
+			);
 			if (!profiles.includes("alignment")) profiles.push("alignment");
 			continue;
 		}
@@ -65,8 +71,8 @@ export function parseAuditCommandInput(args: string): AuditCommandInput {
 			continue;
 		}
 		if (flag.startsWith("--")) {
-			const profile = flag.slice(2);
-			if (isProfile(profile) && !profiles.includes(profile)) {
+			const profile = flag.slice(2) as AuditProfile;
+			if (AUDIT_PROFILE_SET.has(profile) && !profiles.includes(profile)) {
 				profiles.push(profile);
 				continue;
 			}
@@ -95,17 +101,24 @@ export function registerAuditCommand(pi: ExtensionAPI): void {
 				"--stale-reference",
 				"--json",
 			];
-			return options.filter((item) => item.startsWith(prefix)).map((value) => ({ value, label: value }));
+			return options
+				.filter((item) => item.startsWith(prefix))
+				.map((value) => ({ value, label: value }));
 		},
 		handler: async (args, ctx) => {
 			await withUiErrorHandling(ctx, async () => {
 				const input = parseAuditCommandInput(args);
 				const resolved = input.pathArg
-					? { project: await resolveCommandProject(ctx, input.pathArg, "audit") }
+					? {
+							project: await resolveCommandProject(ctx, input.pathArg, "audit"),
+						}
 					: await resolveStatusDockProject(ctx, { allowWhenOff: true });
 				const project = resolved?.project;
 				if (!project) {
-					ctx.ui.notify("No codewiki project resolved. Use /wiki-bootstrap first or pass a repo path.", "warning");
+					ctx.ui.notify(
+						"No codewiki project resolved. Use /wiki-bootstrap first or pass a repo path.",
+						"warning",
+					);
 					return;
 				}
 				const report = await executeCodewikiAudit(project, {
@@ -117,7 +130,16 @@ export function registerAuditCommand(pi: ExtensionAPI): void {
 					full: input.full,
 				});
 				await refreshStatusDock(project, ctx, currentTaskLink(ctx));
-				ctx.ui.notify(input.json ? JSON.stringify(report, null, 2) : formatAuditReport(report), report.status === "fail" ? "error" : report.status === "warning" ? "warning" : "info");
+				ctx.ui.notify(
+					input.json
+						? JSON.stringify(report, null, 2)
+						: formatAuditReport(report),
+					report.status === "fail"
+						? "error"
+						: report.status === "warning"
+							? "warning"
+							: "info",
+				);
 			});
 		},
 	});

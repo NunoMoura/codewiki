@@ -11,9 +11,7 @@ import {
 } from "../ui/manager.ts";
 import { currentTaskLink } from "../session.ts";
 import { maybeReadStatusState } from "../../../state/artifacts.ts";
-import { maybeReadJson } from "../../../project/local/filesystem.ts";
 import type { StatusPanelSection } from "../../../state/types.ts";
-import type { LintReport } from "../../../validation/types.ts";
 
 /**
  * Register the wiki-status command.
@@ -26,22 +24,25 @@ export function registerStatusCommand(pi: ExtensionAPI): void {
 			await withUiErrorHandling(ctx, async () => {
 				const parts = args.trim().split(/\s+/).filter(Boolean);
 				const sectionCandidate = parts[parts.length - 1];
-				const sectionAlias: Record<string, StatusPanelSection> = { status: "home", home: "home", product: "product", system: "system", board: "roadmap", roadmap: "roadmap", graph: "graph" };
+				const sectionAlias: Record<string, StatusPanelSection> = {
+					status: "home",
+					home: "home",
+					product: "product",
+					system: "system",
+					board: "roadmap",
+					roadmap: "roadmap",
+					graph: "graph",
+				};
 				const section = sectionAlias[sectionCandidate || ""] ?? "home";
 				if (sectionCandidate && sectionCandidate in sectionAlias) parts.pop();
 				const pathArg = parts.join(" ") || null;
+				const resolved = pathArg
+					? null
+					: await resolveStatusDockProject(ctx, { allowWhenOff: true });
 				const project = pathArg
-					? await resolveCommandProject(
-							ctx,
-							pathArg,
-							`wiki-status`,
-						)
-					: (await resolveStatusDockProject(ctx, { allowWhenOff: true }))
-							?.project;
-				const source: string = pathArg
-					? "cwd"
-					: ((await resolveStatusDockProject(ctx, { allowWhenOff: true }))
-							?.source ?? "cwd");
+					? await resolveCommandProject(ctx, pathArg, `wiki-status`)
+					: resolved?.project;
+				const source: string = pathArg ? "cwd" : (resolved?.source ?? "cwd");
 				if (!project) {
 					ctx.ui.notify(
 						`No codewiki project resolved. Use /wiki-bootstrap first or work inside a repo with .codewiki/config.json.`,
@@ -62,20 +63,11 @@ export function registerStatusCommand(pi: ExtensionAPI): void {
 					section,
 				);
 				if (!opened) {
-					const state = await maybeReadStatusState(project.statusStatePath);
-					const report = await maybeReadJson<LintReport>(project.lintPath);
-					if (state && report) {
-                        // buildStatusText was removed, but we should probably use a simpler notification if custom UI is unavailable
-						ctx.ui.notify(
-							"Custom UI unavailable. Use codewiki_state output or configure Pi UI mode.",
-							"warning",
-						);
-                    } else {
-						ctx.ui.notify(
-							"Custom UI unavailable. Use codewiki_state output or configure Pi UI mode.",
-							"warning",
-						);
-                    }
+					await maybeReadStatusState(project.statusStatePath);
+					ctx.ui.notify(
+						"Custom UI unavailable. Use codewiki_state output or configure Pi UI mode.",
+						"warning",
+					);
 				}
 			});
 		},
