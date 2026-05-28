@@ -76,6 +76,7 @@ nodes:
       - src/knowledge/**
       - src/project/**
       - src/roadmap/**
+      - src/runtime/**
       - src/session/**
       - src/shared/**
       - src/state/**
@@ -282,6 +283,18 @@ nodes:
       - src/application/roadmap.ts
       - src/application/task.ts
       - src/application/tools/task.ts
+  - id: runtime_orchestration_boundary
+    label: Runtime orchestration concept root
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/runtime.md
+    requires_doc: true
+    status: implementation_in_progress_by_task_047
+    task_id: TASK-047
+    paths:
+      - src/runtime/**
+      - tests/smoke/runtime-runner.test.mjs
+      - tests/tasks/TASK-015/agency-source-root.test.mjs
   - id: state_graph_resume_concept_root_boundary
     label: State, graph, prompt, and resume-context concept-root migration
     group: source_target
@@ -364,7 +377,7 @@ nodes:
       - .codewiki/index_graph.json
       - .codewiki/roadmap/tasks/**
   - id: runtime_session
-    label: Runtime session coordination
+    label: Dogfood runtime/session coordination
     group: generated_runtime
     kind: artifact
     source: .codewiki/kb/system/api.md
@@ -483,6 +496,10 @@ edges:
     from: concept_root_target
     to: first_concept_root_pilot
     label: first approved migration boundary
+  - id: runtime_root_added
+    from: concept_root_target
+    to: runtime_orchestration_boundary
+    label: approved runtime orchestration root
   - id: pilot_uses_compatibility_constraints
     from: migration_compatibility_constraints
     to: first_concept_root_pilot

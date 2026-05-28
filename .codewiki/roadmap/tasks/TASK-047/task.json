@@ -7,27 +7,34 @@
   "summary": "Upgrade codewiki_agency from planner output to a bounded runner that selects work, claims scopes, invokes compiler steps, submits gateway checks, and uses CodeWiki-owned compaction within task/sprint/roadmap scope.",
   "spec_paths": [
     ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/runtime.md",
     ".codewiki/kb/system/api.md",
     ".codewiki/kb/system/compilers.md",
-    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+    ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json"
   ],
   "code_paths": [
     "src/agency/planning.ts",
     "src/agency/tool.ts",
     "src/agency/types.ts",
+    "src/runtime/runner.ts",
+    "src/runtime/ports.ts",
+    "src/runtime/types.ts",
     "src/session/artifact-status-tool.ts",
     "src/state/resume-context.ts",
     "src/adapters/pi/compaction.ts",
+    "src/adapters/pi/tools/ports.ts",
     "tests/tasks/TASK-015/agency-source-root.test.mjs",
     "tests/smoke/codewiki-compaction.test.mjs",
-    "tests/smoke/resume-scheduler.test.mjs"
+    "tests/smoke/resume-scheduler.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs"
   ],
   "research_ids": [],
   "labels": [
-    "agency-runner",
-    "automatic-loop-advancement",
-    "codewiki-compaction-runner",
-    "workflow-efficiency-evidence"
+    "agency",
+    "runtime",
+    "bounded-runner"
   ],
   "change_type": "system",
   "goal": {
@@ -58,5 +65,5 @@
     "closure": "Task closes when runner tests prove allowed steps execute and blocked steps stop with clear evidence."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28T02:44:53Z"
+  "updated": "2026-05-28T06:27:48Z"
 }

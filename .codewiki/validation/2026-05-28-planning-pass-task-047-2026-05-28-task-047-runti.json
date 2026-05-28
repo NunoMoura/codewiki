@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T06:08:22Z",
+  "profile": "planning",
+  "task_id": "TASK-047",
+  "verdict": "pass",
+  "rationale": "Validate runtime-root planning build: accepted decision pass exists, rows/questions resolve to TASK-047 or knowledge-only guidance, and implementation boundary is clear.",
+  "checks": [
+    "Decision validation pass .codewiki/validation/2026-05-28-decision-pass-task-047-2026-05-28-task-047-runti.json exists.",
+    "Decision propagation residual_count=0 in refreshed graph.",
+    "TASK-047 task scope updated with runtime refs.",
+    "codewiki_audit profiles=alignment,changed,task warning: task pass, generated-state warnings only."
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "builder-planning-validation-dirty-state"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "task_id": "TASK-047",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "builder-planning-validation-dirty-state",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Planning validation for runtime-root alignment.",
+    "role": "validator"
+  }
+}

@@ -1,0 +1,788 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-28T06:06:14Z",
+  "source": "Implementation loop for TASK-047 after accepted runtime-root decision and planning build.",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+  "task_id": "TASK-047",
+  "task": {
+    "id": "TASK-047",
+    "title": "Implement bounded agency runner",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "summary": "Upgrade codewiki_agency from planner output to a bounded runner that selects work, claims scopes, invokes compiler steps, submits gateway checks, and uses CodeWiki-owned compaction within task/sprint/roadmap scope.",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+      ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/agency/tool.ts",
+      "src/agency/types.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/types.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/state/resume-context.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Agency can run bounded compiler/gateway steps automatically inside approved task, sprint, or roadmap scope without bypassing hard gates.",
+      "acceptance": [
+        "codewiki_agency work mode can plan and execute one safe compiler/gateway step when budgets, agency level, and approval cadence allow it.",
+        "Runner acquires and releases artifact-status claims for touched scopes and stops on conflicts, ambiguity, validation blocks, risk escalation, destructive/publication gates, or budget exhaustion.",
+        "Runner uses codewiki_resume_context and CodeWiki-owned compaction/session-boundary kickoff at safe boundaries when context reset is needed.",
+        "Workflow-efficiency evidence records user interruptions avoided/required, manual commands avoided, session boundaries used, and platform-limited steps.",
+        "Existing agency source-root, compaction, and resume scheduler behavior remains compatible."
+      ],
+      "non_goals": [
+        "Do not spawn parallel workers in this task; scheduler/worktree work owns that.",
+        "Do not bypass decision/planning/implementation validation gates.",
+        "Do not perform destructive, publication, push, or release actions automatically."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "agency source-root tests",
+        "compaction/resume scheduler tests",
+        "new agency runner tests for stop gates and budget limits"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-04T06:06:14.000Z",
+    "purge_after": "2026-06-11T06:06:14.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "npm run check:architecture: file-structure pass",
+    "codewiki_audit:alignment warning graph-health 8 warnings, residual_count=0",
+    "codewiki_audit:task TASK-047 pass",
+    "codewiki_audit:changed warning generated state files changed"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Complete bounded execution runtime refactor: runtime source root owns one-step orchestration while agency remains policy/planning surface.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+      ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+      ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+      ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json"
+    ],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-047"
+    ],
+    "validation": [],
+    "source": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/file-structure.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "roadmap": [],
+    "code": [
+      "src/runtime/runner.ts",
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/agency/tool.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/state/resume-kickoff.ts",
+      "src/knowledge/diagram-parser.ts",
+      "package.json"
+    ],
+    "tests": [
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs"
+    ],
+    "validation": [
+      "npm run check:architecture pass",
+      "codewiki_audit profiles=alignment,changed,task warning"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-047"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+      ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json"
+    ],
+    "code_paths": [
+      "src/agency/planning.ts",
+      "src/agency/tool.ts",
+      "src/agency/types.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/types.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/state/resume-context.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/resume-scheduler.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/runtime/runner.ts",
+    "src/runtime/types.ts",
+    "src/runtime/ports.ts",
+    "src/agency/tool.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/state/resume-kickoff.ts",
+    "src/knowledge/diagram-parser.ts",
+    "package.json"
+  ],
+  "files_changed": [
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "src/runtime/runner.ts",
+    "src/runtime/types.ts",
+    "src/runtime/ports.ts",
+    "src/agency/tool.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/state/resume-kickoff.ts",
+    "src/knowledge/diagram-parser.ts",
+    "package.json"
+  ],
+  "checks_run": [
+    "lsp_diagnostics touched TypeScript/test files — pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "git diff --check scoped files — pass",
+    "codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+      "roadmap_task_id": "TASK-047",
+      "test_files": [
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Renamed agency runner smoke to tests/smoke/runtime-runner.test.mjs and updated it to import src/runtime/runner.ts.",
+        "Updated tests/tasks/TASK-015/agency-source-root.test.mjs to assert agency no longer owns runner and runtime root owns runner/types/ports.",
+        "Retained compaction and resume scheduler tests as compatibility guards for context-boundary behavior."
+      ],
+      "notes": [
+        "Runtime runner tests use fixture projects and direct runtime ports to keep stop gates deterministic without spawning workers or mutating real package source.",
+        "Validation-preflight path intentionally stops on blocked preflight instead of writing a validation report from builder context.",
+        "Fresh-process npm run check:architecture proves file-structure audit passes after updating the hardcoded drift lens rule for src/runtime/**."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+      "roadmap_task_id": "TASK-047",
+      "code_files": [
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts",
+        "src/runtime/ports.ts",
+        "src/agency/tool.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/state/resume-kickoff.ts",
+        "src/knowledge/diagram-parser.ts",
+        "package.json"
+      ],
+      "evidence": [
+        "Created src/runtime/runner.ts with bounded one-step orchestration, claim/release, resume-context kickoff, validation preflight, budget usage, and workflow-efficiency evidence.",
+        "Created src/runtime/types.ts and src/runtime/ports.ts for runtime result/evidence types and harness capability ports.",
+        "Updated src/agency/tool.ts so codewiki_agency stays the public agency surface but delegates execution to runCodewikiRuntimeStep.",
+        "Removed src/agency/runner.ts and renamed smoke coverage to runtime-runner.",
+        "Updated src/knowledge/diagram-parser.ts so src/runtime/** is allowed package source while nested runtime/session artifacts under src remain forbidden.",
+        "Added runtime KB and updated file-structure/API/agency/component-map/file-structure-map docs."
+      ],
+      "notes": [
+        "No parallel worker spawning, publication, push, release, or destructive action automation was added.",
+        "Runtime performs one bounded step only and releases temporary artifact-status claims before returning.",
+        "codewiki_agency default dryRun behavior remains planner-only; runtime execution requires work mode plus dryRun=false."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Renamed agency runner smoke to tests/smoke/runtime-runner.test.mjs and updated it to import src/runtime/runner.ts.",
+    "Updated tests/tasks/TASK-015/agency-source-root.test.mjs to assert agency no longer owns runner and runtime root owns runner/types/ports.",
+    "Retained compaction and resume scheduler tests as compatibility guards for context-boundary behavior."
+  ],
+  "code_change_evidence": [
+    "Created src/runtime/runner.ts with bounded one-step orchestration, claim/release, resume-context kickoff, validation preflight, budget usage, and workflow-efficiency evidence.",
+    "Created src/runtime/types.ts and src/runtime/ports.ts for runtime result/evidence types and harness capability ports.",
+    "Updated src/agency/tool.ts so codewiki_agency stays the public agency surface but delegates execution to runCodewikiRuntimeStep.",
+    "Removed src/agency/runner.ts and renamed smoke coverage to runtime-runner.",
+    "Updated src/knowledge/diagram-parser.ts so src/runtime/** is allowed package source while nested runtime/session artifacts under src remain forbidden.",
+    "Added runtime KB and updated file-structure/API/agency/component-map/file-structure-map docs."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "codewiki_agency work mode can plan and execute one safe compiler/gateway step when budgets, agency level, and approval cadence allow it.",
+      "evidence": "src/agency/tool.ts keeps codewiki_agency as entrypoint and invokes runCodewikiRuntimeStep when dryRun=false and mode=work; runtime runner executes implementation_loop_kickoff or validation_preflight. tests/smoke/runtime-runner.test.mjs covers allowed one-step execution and validation-preflight block path."
+    },
+    {
+      "criterion": "Runner acquires and releases artifact-status claims for touched scopes and stops on conflicts, ambiguity, validation blocks, risk escalation, destructive/publication gates, or budget exhaustion.",
+      "evidence": "src/runtime/runner.ts preflights taskArtifactScopes, marks write claims, releases in finally, and stops on budget exhaustion, artifact conflicts, validation_preflight blocked/escalate status, dry-run/mode gates, and planner hard stop gates. Runtime runner smoke covers claim/release, budget stop, artifact conflict stop, and validation block stop."
+    },
+    {
+      "criterion": "Runner uses codewiki_resume_context and CodeWiki-owned compaction/session-boundary kickoff at safe boundaries when context reset is needed.",
+      "evidence": "src/runtime/runner.ts builds source-backed resume context, uses shared buildCodewikiResumeKickoff from src/state/resume-kickoff.ts, and requests Pi CodeWiki context refresh through the sessionBoundary port wired in src/adapters/pi/tools/ports.ts. Existing compaction/resume scheduler smoke tests pass."
+    },
+    {
+      "criterion": "Workflow-efficiency evidence records user interruptions avoided/required, manual commands avoided, session boundaries used, and platform-limited steps.",
+      "evidence": "CodewikiRuntimeResult.workflow_efficiency records user_interruptions_avoided/required, manual_commands_avoided/required, session_boundaries_used, platform_limited_steps, and notes; runtime-runner smoke asserts session boundary/manual command evidence."
+    },
+    {
+      "criterion": "Existing agency source-root, compaction, and resume scheduler behavior remains compatible.",
+      "evidence": "TASK-015 agency source-root test now proves agency keeps policy/tool ownership and no longer owns runner; runtime root exports runCodewikiRuntimeStep. codewiki-compaction smoke, resume-scheduler smoke, typecheck, architecture, and full smoke suite pass."
+    },
+    {
+      "criterion": "Runtime is a domain entity and agency is one part of it, not the place where all execution concerns live.",
+      "evidence": "Added .codewiki/kb/system/runtime.md, updated agency/API/file-structure docs and diagrams, moved execution code to src/runtime/**, and updated diagram-parser drift lens so src/runtime/** is package source rather than dogfood runtime artifact."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-047 bounded agency runner, then complete the approved architecture refactor so runtime is a domain entity and agency remains policy/planning.",
+    "implemented_changes": [
+      "Introduced src/runtime/** as CodeWiki bounded execution runtime with runner, ports, and result/evidence types.",
+      "Kept codewiki_agency as planner/tool surface and delegated execution to runtime.",
+      "Added runtime KB and updated agency/API/file-structure docs plus component/file-structure diagrams.",
+      "Updated source-root and smoke tests for runtime boundary and stop gates.",
+      "Updated drift lens so src/runtime/** is valid package source, distinct from .codewiki/runtime/** dogfood state."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [
+        "TASK-047 scope/evidence updated"
+      ],
+      "code": [
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts",
+        "src/runtime/ports.ts",
+        "src/agency/tool.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/state/resume-kickoff.ts",
+        "src/knowledge/diagram-parser.ts",
+        "package.json"
+      ],
+      "tests": [
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+      ],
+      "validation": [
+        "npm run check:architecture pass",
+        "codewiki_audit alignment/changed/task warning"
+      ]
+    },
+    "acceptance_evidence": [
+      "Runtime runner smoke covers allowed execution, budget stop, artifact conflict stop, and validation block stop.",
+      "Source-root, compaction, resume scheduler, typecheck, architecture, and smoke suite pass.",
+      "Decision propagation residual_count=0 after runtime decision/planning build."
+    ],
+    "checks": [
+      "lsp_diagnostics touched TypeScript/test files — pass",
+      "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+      "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass",
+      "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+      "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+      "npm run typecheck — pass",
+      "npm run test:smoke — pass",
+      "npm run check:architecture — pass",
+      "codewiki_audit profiles=alignment,changed,task — warning"
+    ],
+    "non_goals_preserved": [
+      "No parallel workers spawned.",
+      "No validation gates bypassed; implementation validation pass remains fresh-context only.",
+      "No destructive, publication, push, or release actions automated."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation and task close are still pending.",
+      "Generated graph health still has 8 warnings unrelated to the runtime refactor; validator should judge if current/unrelated."
+    ]
+  },
+  "risks": [
+    "codewiki_audit tool in this long-lived builder session may retain stale pre-refactor file-structure logic; fresh Node architecture check passes and fresh validation should rerun from source.",
+    "CodeWiki state remains yellow due existing graph-health warnings and generated state diffs.",
+    "Actual implementation validation pass/close remains a fresh-context gateway step."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-047",
+      "task_id": "TASK-047",
+      "next_focus_task_id": "TASK-037",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-047",
+        "title": "Implement bounded agency runner",
+        "summary": "Complete bounded execution runtime refactor: runtime source root owns one-step orchestration while agency remains policy/planning surface.",
+        "spec_paths": [
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+          ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json"
+        ],
+        "code_paths": [
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/agency/types.ts",
+          "src/runtime/runner.ts",
+          "src/runtime/ports.ts",
+          "src/runtime/types.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/state/resume-context.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "src/state/resume-kickoff.ts",
+          "src/knowledge/diagram-parser.ts",
+          "package.json"
+        ],
+        "acceptance": [
+          "codewiki_agency work mode can plan and execute one safe compiler/gateway step when budgets, agency level, and approval cadence allow it.",
+          "Runner acquires and releases artifact-status claims for touched scopes and stops on conflicts, ambiguity, validation blocks, risk escalation, destructive/publication gates, or budget exhaustion.",
+          "Runner uses codewiki_resume_context and CodeWiki-owned compaction/session-boundary kickoff at safe boundaries when context reset is needed.",
+          "Workflow-efficiency evidence records user interruptions avoided/required, manual commands avoided, session boundaries used, and platform-limited steps.",
+          "Existing agency source-root, compaction, and resume scheduler behavior remains compatible."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "agency source-root tests",
+          "compaction/resume scheduler tests",
+          "new agency runner tests for stop gates and budget limits"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+        "checks_run": [
+          "lsp_diagnostics touched TypeScript/test files — pass",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+          "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+          "npm run typecheck — pass",
+          "npm run test:smoke — pass",
+          "npm run check:architecture — pass",
+          "git diff --check scoped files — pass",
+          "codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0"
+        ],
+        "test_design_evidence": [
+          "Renamed agency runner smoke to tests/smoke/runtime-runner.test.mjs and updated it to import src/runtime/runner.ts.",
+          "Updated tests/tasks/TASK-015/agency-source-root.test.mjs to assert agency no longer owns runner and runtime root owns runner/types/ports.",
+          "Retained compaction and resume scheduler tests as compatibility guards for context-boundary behavior."
+        ],
+        "code_change_evidence": [
+          "Created src/runtime/runner.ts with bounded one-step orchestration, claim/release, resume-context kickoff, validation preflight, budget usage, and workflow-efficiency evidence.",
+          "Created src/runtime/types.ts and src/runtime/ports.ts for runtime result/evidence types and harness capability ports.",
+          "Updated src/agency/tool.ts so codewiki_agency stays the public agency surface but delegates execution to runCodewikiRuntimeStep.",
+          "Removed src/agency/runner.ts and renamed smoke coverage to runtime-runner.",
+          "Updated src/knowledge/diagram-parser.ts so src/runtime/** is allowed package source while nested runtime/session artifacts under src remain forbidden.",
+          "Added runtime KB and updated file-structure/API/agency/component-map/file-structure-map docs."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-047",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-047",
+      "show_build": "git show refs/codewiki/archive/task/TASK-047:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+        ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+        "src/agency/planning.ts",
+        "src/agency/tool.ts",
+        "src/agency/types.ts",
+        "src/runtime/runner.ts",
+        "src/runtime/ports.ts",
+        "src/runtime/types.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/state/resume-context.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/tools/ports.ts",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-047 Implement bounded agency runner implementation evidence",
+      "body": "Complete bounded execution runtime refactor: runtime source root owns one-step orchestration while agency remains policy/planning surface.\n\nChecks: lsp_diagnostics touched TypeScript/test files — pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check scoped files — pass, codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-047\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json\nCodeWiki-Checks: lsp_diagnostics touched TypeScript/test files — pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check scoped files — pass, codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-047\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-047\nCodeWiki-Digest: sha256:7c20ea6355eca0271aabd221dffa66e32f7ec60b4157d8b854839ed3f5c2b684\nCodeWiki-Restore: /wiki-restore TASK-047",
+      "trailers": [
+        "CodeWiki-Task: TASK-047",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+        "CodeWiki-Checks: lsp_diagnostics touched TypeScript/test files — pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check scoped files — pass, codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-047",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-047",
+        "CodeWiki-Digest: sha256:7c20ea6355eca0271aabd221dffa66e32f7ec60b4157d8b854839ed3f5c2b684",
+        "CodeWiki-Restore: /wiki-restore TASK-047"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-047 Implement bounded agency runner implementation evidence",
+      "body": "Complete bounded execution runtime refactor: runtime source root owns one-step orchestration while agency remains policy/planning surface.\n\nChecks: lsp_diagnostics touched TypeScript/test files — pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check scoped files — pass, codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-047\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json\nCodeWiki-Checks: lsp_diagnostics touched TypeScript/test files — pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass, node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass, npm run typecheck — pass, npm run test:smoke — pass, npm run check:architecture — pass, git diff --check scoped files — pass, codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-047\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-047\nCodeWiki-Digest: sha256:7c20ea6355eca0271aabd221dffa66e32f7ec60b4157d8b854839ed3f5c2b684\nCodeWiki-Restore: /wiki-restore TASK-047"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-047",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-047"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-047",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-047",
+        "show_build": "git show refs/codewiki/archive/task/TASK-047:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+          ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+          "src/agency/planning.ts",
+          "src/agency/tool.ts",
+          "src/agency/types.ts",
+          "src/runtime/runner.ts",
+          "src/runtime/ports.ts",
+          "src/runtime/types.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/state/resume-context.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-047",
+      "build_path": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-047",
+      "commit_sha": "",
+      "digest": "sha256:7c20ea6355eca0271aabd221dffa66e32f7ec60b4157d8b854839ed3f5c2b684",
+      "restore_command": "/wiki-restore TASK-047"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:a6558caefaa2d1a04c5ab7f75716c001f06cd2f820e0b99e4a517fe6f5ecc662",
+          "bytes": 8990
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9bf02d7859521b915f2c6ff43b4319a2a3bff339c91b78427561ee386086eae7",
+          "bytes": 7824
+        },
+        {
+          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:a88e931def5f2a47454bda8e2d575053a2b5e12032ca667bc78573d9ec680c30",
+          "bytes": 6163
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "role": "code_file",
+          "sha256": "sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
+          "bytes": 18165
+        },
+        {
+          "path": "src/runtime/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
+          "bytes": 1234
+        },
+        {
+          "path": "src/runtime/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
+          "bytes": 666
+        },
+        {
+          "path": "src/agency/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:a2f1bc9e40445214804c1cc633bfbe9416373c787b73fb3e22b89389ec214210",
+          "bytes": 3333
+        },
+        {
+          "path": "src/adapters/pi/tools/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:430ce90404ce51f6fb186f8b979a3fd53fe2c580413230fd90c4c67a8117ce2e",
+          "bytes": 1883
+        },
+        {
+          "path": "src/adapters/pi/compaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:8738157e1d3f7d36610c775f92b143ec91cdec4a3f8d79850ae82f07697efb6f",
+          "bytes": 12325
+        },
+        {
+          "path": "src/state/resume-kickoff.ts",
+          "role": "code_file",
+          "sha256": "sha256:3788fcec7d13695688561a943789e165892156ca61dbacfd2ceff226924afd36",
+          "bytes": 1920
+        },
+        {
+          "path": "src/knowledge/diagram-parser.ts",
+          "role": "code_file",
+          "sha256": "sha256:b470bd6555c905e5947708629062dff214f6b0d3155c8b64fa0c39a5c6165b9b",
+          "bytes": 37731
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:f20aabdb75a6de2ef7fc19414b690bc0dce882be1295bd03cd2c2d517ef06897",
+          "bytes": 2275
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-047",
+      "source_build": ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/runtime/runner.ts",
+          "src/runtime/types.ts",
+          "src/runtime/ports.ts",
+          "src/agency/tool.ts",
+          "src/adapters/pi/tools/ports.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/state/resume-kickoff.ts",
+          "src/knowledge/diagram-parser.ts",
+          "package.json",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-047",
+        "restore_command": "/wiki-restore TASK-047"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics touched TypeScript/test files — pass",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs — pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs — pass",
+        "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+        "npm run typecheck — pass",
+        "npm run test:smoke — pass",
+        "npm run check:architecture — pass",
+        "git diff --check scoped files — pass",
+        "codewiki_audit profiles=alignment,changed,task — warning: graph health has 8 warnings and generated state files changed; task pass and decision propagation residual_count=0"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

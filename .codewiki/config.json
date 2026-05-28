@@ -118,21 +118,21 @@
           "risk": "medium"
         },
         "roadmap": {
-          "maxCycles": 4,
-          "maxWallSeconds": 900,
-          "maxTokens": 90000,
-          "maxCostUsd": 5,
-          "maxWrites": 40,
-          "maxSessions": 3,
+          "maxCycles": 16,
+          "maxWallSeconds": 7200,
+          "maxTokens": 320000,
+          "maxCostUsd": 20,
+          "maxWrites": 160,
+          "maxSessions": 8,
           "risk": "medium"
         },
         "sprint": {
-          "maxCycles": 3,
-          "maxWallSeconds": 600,
-          "maxTokens": 60000,
-          "maxCostUsd": 3,
-          "maxWrites": 24,
-          "maxSessions": 3,
+          "maxCycles": 8,
+          "maxWallSeconds": 2400,
+          "maxTokens": 160000,
+          "maxCostUsd": 10,
+          "maxWrites": 80,
+          "maxSessions": 4,
           "risk": "medium"
         },
         "task": {
@@ -146,17 +146,17 @@
         }
       },
       "parallelism": {
-        "max_sessions": 3,
+        "max_sessions": 8,
         "session_per_sprint": true,
         "require_claims": true
       },
-      "level": "task",
-      "approval_cadence": "task",
+      "level": "roadmap",
+      "approval_cadence": "roadmap",
       "context_reset": {
         "enabled": true,
         "auto_pickup": true,
         "strategy": "soft-first",
-        "max_resets_per_run": 5,
+        "max_resets_per_run": 16,
         "require_source_backed_kickoff": true,
         "require_idle_boundary": true
       },

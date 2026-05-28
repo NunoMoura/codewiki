@@ -80,7 +80,8 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | Extension | `extension.md` | `src/index.ts`, package support files |
 | Adapters | `adapters.md` | `src/adapters/**`, harness/protocol translation only |
 | CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
-| Agency controller | `agency.md` | agency use cases and adapter-exposed agency entrypoints |
+| Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `codewiki_agency` entrypoint |
+| CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/validation/**`, `src/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
@@ -120,7 +121,7 @@ Legacy nested system KB folders removed by the flattening migration remain inval
 | Generated state/views | `.codewiki/index_graph.json`, `.codewiki/roadmap/tasks/**` | Rebuilt from roadmap queue and KB inputs; never hand-edit. |
 | Transient handoffs | `.codewiki/builds/**` | Compiler build artifacts that can be archived/purged after downstream truth and publication proof. |
 | Validation/audit evidence | `.codewiki/validation/**` and policy-required audit reports | Attestations and deterministic evidence, not content proof by themselves. |
-| Runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Coordination and pending decision UI state; not durable product truth unless compiled into builds. |
+| Dogfood runtime/session state | `.codewiki/session/**`, `.codewiki/runtime/**` | Repo-local coordination and pending decision UI state; not package source and not durable product truth unless compiled into builds. |
 | Publication proof | Git commits/tree SHAs, package digests, archive ledgers, remote refs | Immutable or external proof of content and publication assertions. |
 
 Architecture and audit checks use these classes to prevent dogfood state, generated outputs, and package source drift.
@@ -132,7 +133,7 @@ Accepted direction: concept-root source ownership. Main concepts live in `src/<c
 Current source roots:
 
 ```text
-src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,session,state,validation,shared,adapters,ui}/
+src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,runtime,session,state,validation,shared,adapters,ui}/
 ```
 
 Deprecated roots:
@@ -141,7 +142,7 @@ Deprecated roots:
 src/{domain,application}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a new concept root for bounded CodeWiki execution orchestration; this root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 

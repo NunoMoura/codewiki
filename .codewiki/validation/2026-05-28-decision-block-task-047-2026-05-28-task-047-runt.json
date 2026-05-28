@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T06:07:38Z",
+  "profile": "decision",
+  "task_id": "TASK-047",
+  "verdict": "block",
+  "rationale": "Accepted runtime-root decision rows are approved, mapped to KB/docs/diagrams, and propagated through planning build .codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json. Policy blocks decision validation until audit:alignment, audit:stale-reference are recorded.",
+  "checks": [
+    "Rows RUNTIME-ROOT and AGENCY-RUNTIME-BOUNDARY approved by user.",
+    "row_to_kb_mappings cover runtime, agency, API, file-structure, component-map, and file-structure-map.",
+    "Planning build resolves decision propagation residuals to 0."
+  ],
+  "issues": [
+    {
+      "severity": "high",
+      "summary": "Missing required audit evidence for profiles: alignment, stale-reference."
+    }
+  ],
+  "source": ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+  "policy_profile": "decision",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "npm run check:architecture pass",
+    "codewiki_audit alignment/changed/task warning"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "builder-decision-validation-dirty-state"
+  ],
+  "failed_criteria": [
+    "audit_evidence"
+  ],
+  "blocking_questions": [
+    "Run or cite audit evidence for required profiles: alignment, stale-reference."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": [
+      "alignment",
+      "stale-reference"
+    ]
+  },
+  "preflight": {
+    "version": 1,
+    "status": "blocked",
+    "profile": "decision",
+    "task_id": "TASK-047",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [
+        "audit:alignment",
+        "audit:stale-reference"
+      ],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [
+      {
+        "kind": "audit-evidence",
+        "severity": "high",
+        "summary": "Missing required audit evidence.",
+        "evidence": [
+          "audit:alignment",
+          "audit:stale-reference"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "Rows RUNTIME-ROOT and AGENCY-RUNTIME-BOUNDARY approved by user."
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": false,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "builder-decision-validation-dirty-state",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Decision validation for approved architecture rows; source and planning refs recorded.",
+    "role": "validator"
+  }
+}

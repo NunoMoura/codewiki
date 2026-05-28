@@ -1,0 +1,333 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-28T01:18:46Z",
+  "source": "User requested agency configuration that can run at task, sprint, or roadmap scope and approved enabling roadmap-level continuation before starting the remediation sprints.",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-27T01:18:46.000Z",
+    "purge_after": "2026-07-27T01:18:46.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "AGENCY-R1",
+      "text": "Agency must be configurable at task, sprint, and roadmap scope.",
+      "source_refs": [
+        "chat approval on 2026-05-28",
+        ".codewiki/kb/system/agency.md"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "AGENCY-R2",
+      "text": "Current remediation run should be able to continue across all planned sprints using CodeWiki compaction when needed.",
+      "source_refs": [
+        "chat approval on 2026-05-28",
+        ".codewiki/kb/system/api.md"
+      ],
+      "state": "satisfied"
+    },
+    {
+      "id": "AGENCY-R3",
+      "text": "Roadmap-level continuation must not bypass hard gates, validation, claims, or destructive/publication approval.",
+      "source_refs": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/api.md"
+      ],
+      "state": "satisfied"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Task/sprint/roadmap configuration exists.",
+      "evidence": ".codewiki/config.json contains budgets.task, budgets.sprint, budgets.roadmap and default_scope.kind=roadmap.",
+      "requirement_ids": [
+        "AGENCY-R1"
+      ],
+      "source_refs": [
+        ".codewiki/config.json"
+      ]
+    },
+    {
+      "criterion": "Roadmap-level continuation approved.",
+      "evidence": ".codewiki/config.json has agency.level=roadmap and approval_cadence=roadmap.",
+      "requirement_ids": [
+        "AGENCY-R2"
+      ],
+      "source_refs": [
+        ".codewiki/config.json"
+      ]
+    },
+    {
+      "criterion": "Compaction auto-pickup remains safe.",
+      "evidence": ".codewiki/config.json keeps context_reset.enabled=true, auto_pickup=true, require_source_backed_kickoff=true, require_idle_boundary=true, and max_resets_per_run=16.",
+      "requirement_ids": [
+        "AGENCY-R2",
+        "AGENCY-R3"
+      ],
+      "source_refs": [
+        ".codewiki/config.json"
+      ]
+    },
+    {
+      "criterion": "Hard gates remain active.",
+      "evidence": ".codewiki/config.json keeps stop_gates semantic_decision, validation_block, artifact_conflict, risk_escalation, publication, destructive_action, unsafe_reset_boundary.",
+      "requirement_ids": [
+        "AGENCY-R3"
+      ],
+      "source_refs": [
+        ".codewiki/config.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Approve roadmap-level agency configuration for PyLens remediation sprints",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "ROW-001",
+      "current_state": "CodeWiki agency level and approval cadence are task-scoped, so task_end and sprint_end triggers stop for approval.",
+      "desired_state": "CodeWiki dogfood config uses roadmap-level agency and roadmap approval cadence for the approved PyLens remediation roadmap, while retaining task/sprint/roadmap budget profiles.",
+      "rationale": "The user wants the agent to move across the remediation sprints without routine approval interruptions, using CodeWiki compaction and source-backed auto-pickup when needed.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Medium: broad roadmap-level continuation is allowed only within explicit budgets and existing hard stop gates.",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-002",
+      "current_state": "Context reset budget allows five resets per run.",
+      "desired_state": "Context reset budget allows sixteen resets per run with source-backed kickoff and idle-boundary requirements still enabled.",
+      "rationale": "The active remediation plan has 11 tasks across 4 sprints; reset budget should cover task-to-task and validation boundaries.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Low: reset auto-pickup remains gated by source-backed kickoff and safe idle boundary.",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-003",
+      "current_state": "Parallelism allows three sessions while roadmap budget allows three sessions.",
+      "desired_state": "Parallelism allows up to eight sessions, with require_claims and session_per_sprint still enabled.",
+      "rationale": "Roadmap-level agency may need isolated sprint/task workstreams, but claims remain mandatory for overlapping writes.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Medium: parallelism must still respect artifact-status conflicts and role isolation.",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "ROW-001",
+    "ROW-002",
+    "ROW-003"
+  ],
+  "approved_rows": [
+    {
+      "id": "ROW-001",
+      "current_state": "CodeWiki agency level and approval cadence are task-scoped, so task_end and sprint_end triggers stop for approval.",
+      "desired_state": "CodeWiki dogfood config uses roadmap-level agency and roadmap approval cadence for the approved PyLens remediation roadmap, while retaining task/sprint/roadmap budget profiles.",
+      "rationale": "The user wants the agent to move across the remediation sprints without routine approval interruptions, using CodeWiki compaction and source-backed auto-pickup when needed.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Medium: broad roadmap-level continuation is allowed only within explicit budgets and existing hard stop gates.",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-002",
+      "current_state": "Context reset budget allows five resets per run.",
+      "desired_state": "Context reset budget allows sixteen resets per run with source-backed kickoff and idle-boundary requirements still enabled.",
+      "rationale": "The active remediation plan has 11 tasks across 4 sprints; reset budget should cover task-to-task and validation boundaries.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Low: reset auto-pickup remains gated by source-backed kickoff and safe idle boundary.",
+      "user_action": "pending",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-003",
+      "current_state": "Parallelism allows three sessions while roadmap budget allows three sessions.",
+      "desired_state": "Parallelism allows up to eight sessions, with require_claims and session_per_sprint still enabled.",
+      "rationale": "Roadmap-level agency may need isolated sprint/task workstreams, but claims remain mandatory for overlapping writes.",
+      "affected_layers": [
+        "source",
+        "runtime"
+      ],
+      "risk": "Medium: parallelism must still respect artifact-status conflicts and role isolation.",
+      "user_action": "pending",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Enable roadmap-level agency and roadmap approval cadence for this repository's CodeWiki dogfood state."
+    },
+    {
+      "id": "D2",
+      "summary": "Keep task, sprint, and roadmap budget profiles so agency can still be configured per scope."
+    },
+    {
+      "id": "D3",
+      "summary": "Increase roadmap budget and reset budget for the 11-task remediation plan."
+    },
+    {
+      "id": "D4",
+      "summary": "Keep hard stop gates and claim requirements enabled; this approval does not authorize destructive actions, publication, remote updates, or bypassing validation."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "ROW-001",
+      "knowledge_refs": [
+        ".codewiki/config.json"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated codewiki.agency.level and approval_cadence to roadmap; retained budgets.default, budgets.task, budgets.sprint, and budgets.roadmap profiles.",
+      "deferred": false
+    },
+    {
+      "row_id": "ROW-002",
+      "knowledge_refs": [
+        ".codewiki/config.json"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated codewiki.agency.context_reset.max_resets_per_run to 16 while leaving auto_pickup, require_source_backed_kickoff, and require_idle_boundary true.",
+      "deferred": false
+    },
+    {
+      "row_id": "ROW-003",
+      "knowledge_refs": [
+        ".codewiki/config.json"
+      ],
+      "diagram_refs": [],
+      "evidence": "Updated codewiki.agency.parallelism.max_sessions to 8 while leaving session_per_sprint and require_claims true.",
+      "deferred": false
+    }
+  ],
+  "propagation": {
+    "direction": "system-to-runtime",
+    "product_impact": [],
+    "system_impact": [
+      "Dogfood CodeWiki agency config now permits roadmap-level continuation across the approved remediation sprints."
+    ],
+    "no_product_impact": "No package source behavior or user-facing product behavior changed; this is repository-local dogfood runtime configuration.",
+    "no_system_impact": "Hard stop gates remain active for semantic decision, validation block, artifact conflict, risk escalation, publication, destructive action, and unsafe reset boundary.",
+    "downstream_planning_questions": []
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [],
+  "assumptions": [
+    "The user's approval applies to the PyLens/booboo remediation roadmap and dogfood agency configuration.",
+    "Future implementation tasks may cite this decision as user approval for roadmap-level continuation, but each task still needs its own implementation and validation evidence."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not change package source code in this configuration step.",
+    "Do not disable validation, artifact-status, destructive, publication, or semantic-decision gates.",
+    "Do not force every future run to use roadmap scope; task and sprint scopes remain configured."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": [
+      ".codewiki/config.json",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/api.md",
+      "chat approval on 2026-05-28"
+    ]
+  },
+  "produces": {
+    "knowledge": [
+      ".codewiki/config.json"
+    ],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

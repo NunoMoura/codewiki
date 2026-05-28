@@ -4,7 +4,16 @@ import yaml from "js-yaml";
 import type { WikiProject } from "../project/types.ts";
 import type { ParsedDoc } from "./doc-parser.ts";
 
-export type DiagramRefCategory = "component" | "adapter" | "flow" | "domain_entity" | "lifecycle" | "policy" | "artifact" | "actor" | "external_system";
+export type DiagramRefCategory =
+	| "component"
+	| "adapter"
+	| "flow"
+	| "domain_entity"
+	| "lifecycle"
+	| "policy"
+	| "artifact"
+	| "actor"
+	| "external_system";
 export type DiagramRefMode = "off" | "warn" | "error";
 
 export interface ParsedDiagramRef {
@@ -76,7 +85,8 @@ export const FILE_STRUCTURE_DRIFT_CATEGORY_VALUES = [
 	"compatibility_export_gap",
 ] as const;
 
-export type FileStructureDriftCategory = (typeof FILE_STRUCTURE_DRIFT_CATEGORY_VALUES)[number];
+export type FileStructureDriftCategory =
+	(typeof FILE_STRUCTURE_DRIFT_CATEGORY_VALUES)[number];
 
 export interface ParsedFileStructurePathRule {
 	owner_id: string;
@@ -155,9 +165,42 @@ export interface FileStructureDriftGraphEvidence {
 	available: boolean;
 	categories: FileStructureDriftCategory[];
 	counts: Record<FileStructureDriftCategory, number>;
-	intended_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
-	current_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
-	target_paths: Array<Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta">>;
+	intended_paths: Array<
+		Pick<
+			ParsedFileStructurePathRule,
+			| "pattern"
+			| "owner_id"
+			| "owner_label"
+			| "group"
+			| "status"
+			| "role"
+			| "approved_delta"
+		>
+	>;
+	current_paths: Array<
+		Pick<
+			ParsedFileStructurePathRule,
+			| "pattern"
+			| "owner_id"
+			| "owner_label"
+			| "group"
+			| "status"
+			| "role"
+			| "approved_delta"
+		>
+	>;
+	target_paths: Array<
+		Pick<
+			ParsedFileStructurePathRule,
+			| "pattern"
+			| "owner_id"
+			| "owner_label"
+			| "group"
+			| "status"
+			| "role"
+			| "approved_delta"
+		>
+	>;
 	approved_delta_edges: Array<{ from: string; to: string; label: string }>;
 	approved_migration_deltas: FileStructureDriftEntry[];
 	actionable_entries: FileStructureDriftEntry[];
@@ -166,7 +209,13 @@ export interface FileStructureDriftGraphEvidence {
 }
 
 const FILE_STRUCTURE_MAP_FILE = "file-structure-map.yaml";
-const SOURCE_AREA_PREFIXES = ["src/", "skills/", "tests/", "scripts/", ".codewiki/"];
+const SOURCE_AREA_PREFIXES = [
+	"src/",
+	"skills/",
+	"tests/",
+	"scripts/",
+	".codewiki/",
+];
 const REPOSITORY_WALK_IGNORES = new Set([".git", "node_modules"]);
 const DEFAULT_ROOT_ALLOWED_PATHS = [
 	".gitignore",
@@ -203,23 +252,38 @@ const DEPRECATED_PATH_PATTERNS = [
 ];
 
 function fileStructureMapPath(project: WikiProject): string {
-	return normalizeRel(join(project.docsRoot || ".codewiki/kb", "system", "diagrams", FILE_STRUCTURE_MAP_FILE));
+	return normalizeRel(
+		join(
+			project.docsRoot || ".codewiki/kb",
+			"system",
+			"diagrams",
+			FILE_STRUCTURE_MAP_FILE,
+		),
+	);
 }
 
 function isDriftCategory(value: string): value is FileStructureDriftCategory {
-	return (FILE_STRUCTURE_DRIFT_CATEGORY_VALUES as readonly string[]).includes(value);
+	return (FILE_STRUCTURE_DRIFT_CATEGORY_VALUES as readonly string[]).includes(
+		value,
+	);
 }
 
 function fileStructureCategories(value: unknown): FileStructureDriftCategory[] {
 	const parsed = stringList(value).filter(isDriftCategory);
-	return parsed.length ? Array.from(new Set(parsed)) : [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES];
+	return parsed.length
+		? Array.from(new Set(parsed))
+		: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES];
 }
 
 function isRepositoryPathPattern(value: string): boolean {
 	const pattern = normalizeRel(value);
 	if (!pattern || /\s/.test(pattern)) return false;
 	if (/^[a-z]+:/i.test(pattern)) return false;
-	return pattern.includes("/") || pattern.startsWith(".") || DEFAULT_ROOT_ALLOWED_PATHS.includes(pattern);
+	return (
+		pattern.includes("/") ||
+		pattern.startsWith(".") ||
+		DEFAULT_ROOT_ALLOWED_PATHS.includes(pattern)
+	);
 }
 
 function wildcardPatternToRegex(pattern: string): RegExp {
@@ -239,7 +303,10 @@ function wildcardPatternToRegex(pattern: string): RegExp {
 	return new RegExp(`^${escaped}$`);
 }
 
-function pathMatchesFileStructurePattern(path: string, pattern: string): boolean {
+function pathMatchesFileStructurePattern(
+	path: string,
+	pattern: string,
+): boolean {
 	const normalizedPath = normalizeRel(path);
 	const normalizedPattern = normalizeRel(pattern);
 	if (!normalizedPath || !normalizedPattern) return false;
@@ -247,8 +314,12 @@ function pathMatchesFileStructurePattern(path: string, pattern: string): boolean
 		const prefix = normalizedPattern.slice(0, -3);
 		return normalizedPath === prefix || normalizedPath.startsWith(`${prefix}/`);
 	}
-	if (normalizedPattern.includes("*")) return wildcardPatternToRegex(normalizedPattern).test(normalizedPath);
-	return normalizedPath === normalizedPattern || normalizedPath.startsWith(`${normalizedPattern}/`);
+	if (normalizedPattern.includes("*"))
+		return wildcardPatternToRegex(normalizedPattern).test(normalizedPath);
+	return (
+		normalizedPath === normalizedPattern ||
+		normalizedPath.startsWith(`${normalizedPattern}/`)
+	);
 }
 
 function treeHasPathPattern(paths: Set<string>, pattern: string): boolean {
@@ -256,10 +327,19 @@ function treeHasPathPattern(paths: Set<string>, pattern: string): boolean {
 	if (!normalizedPattern) return false;
 	if (normalizedPattern.endsWith("/**")) {
 		const prefix = normalizedPattern.slice(0, -3);
-		return paths.has(prefix) || [...paths].some((path) => path.startsWith(`${prefix}/`));
+		return (
+			paths.has(prefix) ||
+			[...paths].some((path) => path.startsWith(`${prefix}/`))
+		);
 	}
-	if (normalizedPattern.includes("*")) return [...paths].some((path) => pathMatchesFileStructurePattern(path, normalizedPattern));
-	return paths.has(normalizedPattern) || [...paths].some((path) => path.startsWith(`${normalizedPattern}/`));
+	if (normalizedPattern.includes("*"))
+		return [...paths].some((path) =>
+			pathMatchesFileStructurePattern(path, normalizedPattern),
+		);
+	return (
+		paths.has(normalizedPattern) ||
+		[...paths].some((path) => path.startsWith(`${normalizedPattern}/`))
+	);
 }
 
 function collectRepositoryStructurePaths(repoRoot: string): Set<string> {
@@ -277,8 +357,16 @@ function collectRepositoryStructurePaths(repoRoot: string): Set<string> {
 	return out;
 }
 
-function compatibilityExports(raw: Record<string, unknown>, ownerId: string): FileStructureCompatibilityExport[] {
-	const fields = [raw.compatibility_exports, raw.compatibilityExports, raw.compatibility_paths, raw.compatibilityPaths];
+function compatibilityExports(
+	raw: Record<string, unknown>,
+	ownerId: string,
+): FileStructureCompatibilityExport[] {
+	const fields = [
+		raw.compatibility_exports,
+		raw.compatibilityExports,
+		raw.compatibility_paths,
+		raw.compatibilityPaths,
+	];
 	const out: FileStructureCompatibilityExport[] = [];
 	for (const field of fields) {
 		if (Array.isArray(field)) {
@@ -288,9 +376,23 @@ function compatibilityExports(raw: Record<string, unknown>, ownerId: string): Fi
 					if (path) out.push({ path, owner_id: ownerId });
 				} else if (item && typeof item === "object" && !Array.isArray(item)) {
 					const record = item as Record<string, unknown>;
-					const path = normalizeRel(stringValue(record.path || record.from || record.export || record.compatibility_path));
-					const target = normalizeRel(stringValue(record.target || record.to || record.target_path));
-					if (path) out.push({ path, ...(target ? { target } : {}), owner_id: ownerId });
+					const path = normalizeRel(
+						stringValue(
+							record.path ||
+								record.from ||
+								record.export ||
+								record.compatibility_path,
+						),
+					);
+					const target = normalizeRel(
+						stringValue(record.target || record.to || record.target_path),
+					);
+					if (path)
+						out.push({
+							path,
+							...(target ? { target } : {}),
+							owner_id: ownerId,
+						});
 				}
 			}
 		}
@@ -298,11 +400,15 @@ function compatibilityExports(raw: Record<string, unknown>, ownerId: string): Fi
 	return out;
 }
 
-function parseFileStructureMapNode(raw: Record<string, unknown>): ParsedFileStructureMapNode | null {
+function parseFileStructureMapNode(
+	raw: Record<string, unknown>,
+): ParsedFileStructureMapNode | null {
 	const id = stringValue(raw.id);
 	if (!id) return null;
 	const categories = stringList(raw.categories).filter(isDriftCategory);
-	const paths = stringList(raw.paths).map(normalizeRel).filter(isRepositoryPathPattern);
+	const paths = stringList(raw.paths)
+		.map(normalizeRel)
+		.filter(isRepositoryPathPattern);
 	return {
 		id,
 		label: stringValue(raw.label) || id,
@@ -313,24 +419,55 @@ function parseFileStructureMapNode(raw: Record<string, unknown>): ParsedFileStru
 		paths,
 		categories,
 		compatibility_exports: compatibilityExports(raw, id),
-		metadata: Object.fromEntries(Object.entries(raw).filter(([key]) => !["id", "label", "group", "kind", "status", "source", "paths", "categories", "compatibility_exports", "compatibilityExports", "compatibility_paths", "compatibilityPaths"].includes(key))),
+		metadata: Object.fromEntries(
+			Object.entries(raw).filter(
+				([key]) =>
+					![
+						"id",
+						"label",
+						"group",
+						"kind",
+						"status",
+						"source",
+						"paths",
+						"categories",
+						"compatibility_exports",
+						"compatibilityExports",
+						"compatibility_paths",
+						"compatibilityPaths",
+					].includes(key),
+			),
+		),
 	};
 }
 
-function fileStructureRoleForNode(node: ParsedFileStructureMapNode): "current" | "target" | "intended" {
+function fileStructureRoleForNode(
+	node: ParsedFileStructureMapNode,
+): "current" | "target" | "intended" {
 	const group = node.group.toLowerCase();
 	const status = node.status.toLowerCase();
-	if (group === "source_current" || status.includes("current")) return "current";
+	if (group === "source_current" || status.includes("current"))
+		return "current";
 	if (group === "source_target" || status.includes("target")) return "target";
 	return "intended";
 }
 
-function isApprovedDeltaNode(node: ParsedFileStructureMapNode, approvedNodeIds: Set<string>): boolean {
+function isApprovedDeltaNode(
+	node: ParsedFileStructureMapNode,
+	approvedNodeIds: Set<string>,
+): boolean {
 	const status = node.status.toLowerCase();
-	return approvedNodeIds.has(node.id) || status === "accepted_target" || status === "current_valid_until_migrated";
+	return (
+		approvedNodeIds.has(node.id) ||
+		status === "accepted_target" ||
+		status === "current_valid_until_migrated"
+	);
 }
 
-function pathRulesForNodes(nodes: ParsedFileStructureMapNode[], approvedNodeIds: Set<string>): ParsedFileStructurePathRule[] {
+function pathRulesForNodes(
+	nodes: ParsedFileStructureMapNode[],
+	approvedNodeIds: Set<string>,
+): ParsedFileStructurePathRule[] {
 	return nodes.flatMap((node) => {
 		const role = fileStructureRoleForNode(node);
 		const approved = isApprovedDeltaNode(node, approvedNodeIds);
@@ -348,7 +485,10 @@ function pathRulesForNodes(nodes: ParsedFileStructureMapNode[], approvedNodeIds:
 	});
 }
 
-export function parseFileStructureMap(repoRoot: string, project: WikiProject): ParsedFileStructureMap {
+export function parseFileStructureMap(
+	repoRoot: string,
+	project: WikiProject,
+): ParsedFileStructureMap {
 	const relPath = fileStructureMapPath(project);
 	const parseIssues: SystemDiagramValidationIssue[] = [];
 	if (!existsSync(resolve(repoRoot, relPath))) {
@@ -369,7 +509,12 @@ export function parseFileStructureMap(repoRoot: string, project: WikiProject): P
 	try {
 		loaded = yaml.load(readFileSync(resolve(repoRoot, relPath), "utf8"));
 	} catch (error) {
-		parseIssues.push({ severity: "error", kind: "file-structure-map-yaml-invalid", path: relPath, message: `Invalid file-structure map YAML: ${error instanceof Error ? error.message : String(error)}` });
+		parseIssues.push({
+			severity: "error",
+			kind: "file-structure-map-yaml-invalid",
+			path: relPath,
+			message: `Invalid file-structure map YAML: ${error instanceof Error ? error.message : String(error)}`,
+		});
 		return {
 			path: relPath,
 			id: "",
@@ -385,7 +530,12 @@ export function parseFileStructureMap(repoRoot: string, project: WikiProject): P
 	}
 	const data = plainObject(loaded);
 	if (!data) {
-		parseIssues.push({ severity: "error", kind: "file-structure-map-yaml-invalid", path: relPath, message: "File-structure map YAML must contain an object." });
+		parseIssues.push({
+			severity: "error",
+			kind: "file-structure-map-yaml-invalid",
+			path: relPath,
+			message: "File-structure map YAML must contain an object.",
+		});
 		return {
 			path: relPath,
 			id: "",
@@ -399,20 +549,33 @@ export function parseFileStructureMap(repoRoot: string, project: WikiProject): P
 			parse_issues: parseIssues,
 		};
 	}
-	const nodes = objectList(data.nodes).map(parseFileStructureMapNode).filter((node): node is ParsedFileStructureMapNode => Boolean(node));
+	const nodes = objectList(data.nodes)
+		.map(parseFileStructureMapNode)
+		.filter((node): node is ParsedFileStructureMapNode => Boolean(node));
 	const driftNodeCategories = nodes.flatMap((node) => node.categories);
-	const approvedDeltaEdges = objectList(data.edges).map((edge) => ({
-		from: stringValue(edge.from),
-		to: stringValue(edge.to),
-		label: stringValue(edge.label || edge.kind || edge.type),
-	})).filter((edge) => edge.from && edge.to && /approved.*(?:migration|delta)|migration.*delta/i.test(edge.label));
-	const approvedNodeIds = new Set(approvedDeltaEdges.flatMap((edge) => [edge.from, edge.to]));
+	const approvedDeltaEdges = objectList(data.edges)
+		.map((edge) => ({
+			from: stringValue(edge.from),
+			to: stringValue(edge.to),
+			label: stringValue(edge.label || edge.kind || edge.type),
+		}))
+		.filter(
+			(edge) =>
+				edge.from &&
+				edge.to &&
+				/approved.*(?:migration|delta)|migration.*delta/i.test(edge.label),
+		);
+	const approvedNodeIds = new Set(
+		approvedDeltaEdges.flatMap((edge) => [edge.from, edge.to]),
+	);
 	const allRules = pathRulesForNodes(nodes, approvedNodeIds);
 	return {
 		path: relPath,
 		id: stringValue(data.id),
 		title: stringValue(data.title),
-		categories: driftNodeCategories.length ? Array.from(new Set(driftNodeCategories)) : fileStructureCategories(undefined),
+		categories: driftNodeCategories.length
+			? Array.from(new Set(driftNodeCategories))
+			: fileStructureCategories(undefined),
 		nodes,
 		intended_path_rules: allRules,
 		current_path_rules: allRules.filter((rule) => rule.role === "current"),
@@ -436,16 +599,33 @@ function defaultAllowedPathPatterns(project: WikiProject): string[] {
 		`${normalizeRel(project.metaRoot || ".codewiki")}/index_graph.json`,
 		`${normalizeRel(project.metaRoot || ".codewiki")}/config.json`,
 		project.roadmapPath,
-	].map(normalizeRel).filter(Boolean);
+	]
+		.map(normalizeRel)
+		.filter(Boolean);
 }
 
-function countEntries(entries: FileStructureDriftEntry[]): Record<FileStructureDriftCategory, number> {
-	const counts = Object.fromEntries(FILE_STRUCTURE_DRIFT_CATEGORY_VALUES.map((category) => [category, 0])) as Record<FileStructureDriftCategory, number>;
+function countEntries(
+	entries: FileStructureDriftEntry[],
+): Record<FileStructureDriftCategory, number> {
+	const counts = Object.fromEntries(
+		FILE_STRUCTURE_DRIFT_CATEGORY_VALUES.map((category) => [category, 0]),
+	) as Record<FileStructureDriftCategory, number>;
 	for (const entry of entries) counts[entry.category] += 1;
 	return counts;
 }
 
-function compactPathRule(rule: ParsedFileStructurePathRule): Pick<ParsedFileStructurePathRule, "pattern" | "owner_id" | "owner_label" | "group" | "status" | "role" | "approved_delta"> {
+function compactPathRule(
+	rule: ParsedFileStructurePathRule,
+): Pick<
+	ParsedFileStructurePathRule,
+	| "pattern"
+	| "owner_id"
+	| "owner_label"
+	| "group"
+	| "status"
+	| "role"
+	| "approved_delta"
+> {
 	return {
 		pattern: rule.pattern,
 		owner_id: rule.owner_id,
@@ -459,28 +639,58 @@ function compactPathRule(rule: ParsedFileStructurePathRule): Pick<ParsedFileStru
 
 function isSatisfiedTriggerState(value: unknown): boolean {
 	const normalized = stringValue(value).toLowerCase();
-	return Boolean(normalized && normalized.includes("satisfied") && !normalized.includes("not_satisfied") && !normalized.includes("not satisfied") && !normalized.includes("unsatisfied"));
+	return Boolean(
+		normalized &&
+			normalized.includes("satisfied") &&
+			!normalized.includes("not_satisfied") &&
+			!normalized.includes("not satisfied") &&
+			!normalized.includes("unsatisfied"),
+	);
 }
 
-function satisfiedDeferredTriggerRefs(nodes: ParsedFileStructureMapNode[]): string[] {
-	return Array.from(new Set(nodes.filter((node) => {
-		const triggerState = node.metadata.trigger_state ?? node.metadata.triggerState ?? node.metadata.defer_status ?? node.metadata.deferStatus ?? node.status;
-		return isSatisfiedTriggerState(triggerState);
-	}).flatMap((node) => [
-		node.id,
-		`file-structure-map:${node.id}`,
-		node.label,
-		stringValue(node.metadata.trigger),
-		stringValue(node.metadata.trigger_state ?? node.metadata.triggerState),
-		stringValue(node.metadata.defer_status ?? node.metadata.deferStatus),
-	]).map((value) => stringValue(value)).filter(Boolean)));
+function satisfiedDeferredTriggerRefs(
+	nodes: ParsedFileStructureMapNode[],
+): string[] {
+	return Array.from(
+		new Set(
+			nodes
+				.filter((node) => {
+					const triggerState =
+						node.metadata.trigger_state ??
+						node.metadata.triggerState ??
+						node.metadata.defer_status ??
+						node.metadata.deferStatus ??
+						node.status;
+					return isSatisfiedTriggerState(triggerState);
+				})
+				.flatMap((node) => [
+					node.id,
+					`file-structure-map:${node.id}`,
+					node.label,
+					stringValue(node.metadata.trigger),
+					stringValue(
+						node.metadata.trigger_state ?? node.metadata.triggerState,
+					),
+					stringValue(node.metadata.defer_status ?? node.metadata.deferStatus),
+				])
+				.map((value) => stringValue(value))
+				.filter(Boolean),
+		),
+	);
 }
 
-export function fileStructureSatisfiedDeferredTriggerRefs(repoRoot: string, project: WikiProject): string[] {
-	return satisfiedDeferredTriggerRefs(parseFileStructureMap(repoRoot, project).nodes);
+export function fileStructureSatisfiedDeferredTriggerRefs(
+	repoRoot: string,
+	project: WikiProject,
+): string[] {
+	return satisfiedDeferredTriggerRefs(
+		parseFileStructureMap(repoRoot, project).nodes,
+	);
 }
 
-export function compactFileStructureDriftReport(report: FileStructureDriftReport): FileStructureDriftGraphEvidence {
+export function compactFileStructureDriftReport(
+	report: FileStructureDriftReport,
+): FileStructureDriftGraphEvidence {
 	return {
 		version: 1,
 		source: report.source,
@@ -492,40 +702,70 @@ export function compactFileStructureDriftReport(report: FileStructureDriftReport
 		current_paths: report.current_path_rules.map(compactPathRule),
 		target_paths: report.target_path_rules.map(compactPathRule),
 		approved_delta_edges: report.approved_delta_edges,
-		approved_migration_deltas: report.entries.filter((entry) => entry.category === "approved_migration_delta"),
-		actionable_entries: report.entries.filter((entry) => entry.category !== "approved_migration_delta"),
+		approved_migration_deltas: report.entries.filter(
+			(entry) => entry.category === "approved_migration_delta",
+		),
+		actionable_entries: report.entries.filter(
+			(entry) => entry.category !== "approved_migration_delta",
+		),
 		satisfied_deferred_triggers: report.satisfied_deferred_triggers,
 		parse_issues: report.parse_issues,
 	};
 }
 
 function isManagedStructurePath(path: string): boolean {
-	return SOURCE_AREA_PREFIXES.some((prefix) => path === prefix.slice(0, -1) || path.startsWith(prefix));
+	return SOURCE_AREA_PREFIXES.some(
+		(prefix) => path === prefix.slice(0, -1) || path.startsWith(prefix),
+	);
 }
 
-function isParentOfKnownFileStructurePattern(path: string, patterns: string[]): boolean {
+function isParentOfKnownFileStructurePattern(
+	path: string,
+	patterns: string[],
+): boolean {
 	const normalizedPath = normalizeRel(path);
 	if (!normalizedPath) return false;
 	return patterns.some((pattern) => {
-		const normalizedPattern = normalizeRel(pattern).replace(/\/\*\*$/, "").replace(/\/\*$/, "");
+		const normalizedPattern = normalizeRel(pattern)
+			.replace(/\/\*\*$/, "")
+			.replace(/\/\*$/, "");
 		return normalizedPattern.startsWith(`${normalizedPath}/`);
 	});
 }
 
 function generatedRuntimeSourcePathKind(path: string): string | null {
 	if (!path.startsWith("src/")) return null;
-	if (path.includes("/.codewiki/") || path.endsWith("/.codewiki")) return ".codewiki artifact nested under src";
-	if (path.endsWith("/index_graph.json") || path === "src/index_graph.json") return "generated graph artifact under src";
-	if (path.startsWith("src/runtime/") || path.includes("/runtime/.codewiki/") || path.endsWith("/session/queue.json")) return "runtime/session artifact under src";
+	if (path.includes("/.codewiki/") || path.endsWith("/.codewiki"))
+		return ".codewiki artifact nested under src";
+	if (path.endsWith("/index_graph.json") || path === "src/index_graph.json")
+		return "generated graph artifact under src";
+	if (
+		path.includes("/runtime/.codewiki/") ||
+		path.endsWith("/session/queue.json")
+	)
+		return "runtime/session artifact under src";
 	return null;
 }
 
-function pushDriftEntry(entries: FileStructureDriftEntry[], entry: FileStructureDriftEntry): void {
+function pushDriftEntry(
+	entries: FileStructureDriftEntry[],
+	entry: FileStructureDriftEntry,
+): void {
 	const key = `${entry.category}:${entry.path}:${entry.owner_id || ""}:${entry.message}`;
-	if (!entries.some((candidate) => `${candidate.category}:${candidate.path}:${candidate.owner_id || ""}:${candidate.message}` === key)) entries.push(entry);
+	if (
+		!entries.some(
+			(candidate) =>
+				`${candidate.category}:${candidate.path}:${candidate.owner_id || ""}:${candidate.message}` ===
+				key,
+		)
+	)
+		entries.push(entry);
 }
 
-export function buildFileStructureDriftReport(repoRoot: string, project: WikiProject): FileStructureDriftReport {
+export function buildFileStructureDriftReport(
+	repoRoot: string,
+	project: WikiProject,
+): FileStructureDriftReport {
 	const map = parseFileStructureMap(repoRoot, project);
 	const entries: FileStructureDriftEntry[] = [];
 	const treePaths = collectRepositoryStructurePaths(repoRoot);
@@ -546,7 +786,10 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 			parse_issues: [],
 		};
 	}
-	const knownPatterns = [...map.intended_path_rules.map((rule) => rule.pattern), ...defaultAllowedPathPatterns(project)];
+	const knownPatterns = [
+		...map.intended_path_rules.map((rule) => rule.pattern),
+		...defaultAllowedPathPatterns(project),
+	];
 	for (const rule of map.intended_path_rules) {
 		const exists = treeHasPathPattern(treePaths, rule.pattern);
 		if (!exists && rule.approved_delta) {
@@ -605,7 +848,12 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 				message: `${path} is a ${generatedKind}; generated/runtime artifacts must stay out of package source areas.`,
 			});
 		}
-		if (!knownPatterns.some((pattern) => pathMatchesFileStructurePattern(path, pattern)) && !isParentOfKnownFileStructurePattern(path, knownPatterns)) {
+		if (
+			!knownPatterns.some((pattern) =>
+				pathMatchesFileStructurePattern(path, pattern),
+			) &&
+			!isParentOfKnownFileStructurePattern(path, knownPatterns)
+		) {
 			pushDriftEntry(entries, {
 				category: "unexpected_path",
 				severity: "warning",
@@ -615,14 +863,24 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 			});
 		}
 		if (!path.startsWith("src/")) continue;
-		const strictOwners = map.intended_path_rules.filter((rule) => rule.pattern.startsWith("src/") && !rule.approved_delta && pathMatchesFileStructurePattern(path, rule.pattern));
-		const ownerIds = Array.from(new Set(strictOwners.map((rule) => rule.owner_id)));
+		const strictOwners = map.intended_path_rules.filter(
+			(rule) =>
+				rule.pattern.startsWith("src/") &&
+				!rule.approved_delta &&
+				pathMatchesFileStructurePattern(path, rule.pattern),
+		);
+		const ownerIds = Array.from(
+			new Set(strictOwners.map((rule) => rule.owner_id)),
+		);
 		if (ownerIds.length > 1) {
 			pushDriftEntry(entries, {
 				category: "ownership_mismatch",
 				severity: "warning",
 				path,
-				refs: [map.path, ...strictOwners.flatMap((rule) => rule.source ? [rule.source] : [])],
+				refs: [
+					map.path,
+					...strictOwners.flatMap((rule) => (rule.source ? [rule.source] : [])),
+				],
 				message: `${path} matches multiple strict file-structure owners: ${ownerIds.join(", ")}.`,
 			});
 		}
@@ -642,7 +900,11 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 			}
 		}
 	}
-	const sortedEntries = entries.sort((a, b) => `${a.category}:${a.path}:${a.owner_id || ""}`.localeCompare(`${b.category}:${b.path}:${b.owner_id || ""}`));
+	const sortedEntries = entries.sort((a, b) =>
+		`${a.category}:${a.path}:${a.owner_id || ""}`.localeCompare(
+			`${b.category}:${b.path}:${b.owner_id || ""}`,
+		),
+	);
 	return {
 		version: 1,
 		source: "file-structure-map",
@@ -661,7 +923,11 @@ export function buildFileStructureDriftReport(repoRoot: string, project: WikiPro
 }
 
 function stringValue(value: unknown): string {
-	return typeof value === "string" ? value.trim() : value === undefined || value === null ? "" : String(value).trim();
+	return typeof value === "string"
+		? value.trim()
+		: value === undefined || value === null
+			? ""
+			: String(value).trim();
 }
 
 function stringList(value: unknown): string[] {
@@ -671,11 +937,18 @@ function stringList(value: unknown): string[] {
 }
 
 function objectList(value: unknown): Record<string, unknown>[] {
-	return Array.isArray(value) ? value.filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object" && !Array.isArray(item)) : [];
+	return Array.isArray(value)
+		? value.filter(
+				(item): item is Record<string, unknown> =>
+					Boolean(item) && typeof item === "object" && !Array.isArray(item),
+			)
+		: [];
 }
 
 function plainObject(value: unknown): Record<string, unknown> | null {
-	return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+	return value && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: null;
 }
 
 function normalizeRel(path: string): string {
@@ -688,7 +961,10 @@ function slugForPath(path: string): string {
 }
 
 function safeId(value: string): string {
-	return value.trim().replace(/[^A-Za-z0-9_.:-]+/g, "_").replace(/^_+|_+$/g, "");
+	return value
+		.trim()
+		.replace(/[^A-Za-z0-9_.:-]+/g, "_")
+		.replace(/^_+|_+$/g, "");
 }
 
 function localIdFromEdge(raw: Record<string, unknown>, index: number): string {
@@ -700,16 +976,39 @@ function localIdFromEdge(raw: Record<string, unknown>, index: number): string {
 	return `flow_${index + 1}`;
 }
 
-function classifyComponentKind(rawKind: string, raw: Record<string, unknown>): DiagramRefCategory {
+function classifyComponentKind(
+	rawKind: string,
+	raw: Record<string, unknown>,
+): DiagramRefCategory {
 	const kind = rawKind.toLowerCase();
 	const boundary = stringValue(raw.boundary).toLowerCase();
 	if (kind === "adapter") return "adapter";
 	if (kind === "actor" || kind === "user") return "actor";
-	if (boundary === "external" || kind === "external" || kind === "external_system") return "external_system";
-	if (["entity", "domain", "domain_entity"].includes(kind)) return "domain_entity";
+	if (
+		boundary === "external" ||
+		kind === "external" ||
+		kind === "external_system"
+	)
+		return "external_system";
+	if (["entity", "domain", "domain_entity"].includes(kind))
+		return "domain_entity";
 	if (["state", "lifecycle"].includes(kind)) return "lifecycle";
-	if (["policy", "boundary", "policy_boundary", "gate"].includes(kind)) return "policy";
-	if (["artifact", "build", "handoff_truth", "durable_truth", "generated_state", "executable_truth", "publication", "work_truth", "evidence"].includes(kind)) return "artifact";
+	if (["policy", "boundary", "policy_boundary", "gate"].includes(kind))
+		return "policy";
+	if (
+		[
+			"artifact",
+			"build",
+			"handoff_truth",
+			"durable_truth",
+			"generated_state",
+			"executable_truth",
+			"publication",
+			"work_truth",
+			"evidence",
+		].includes(kind)
+	)
+		return "artifact";
 	return "component";
 }
 
@@ -718,16 +1017,29 @@ function addUnique<T>(items: T[], item: T, key: (value: T) => string): void {
 	if (!items.some((candidate) => key(candidate) === itemKey)) items.push(item);
 }
 
-function refAliases(diagramSlug: string, diagramId: string, localId: string): string[] {
-	return Array.from(new Set([
-		`${diagramSlug}:${localId}`,
-		`${diagramId}:${localId}`,
-		`${diagramSlug}.${localId}`,
-		`${diagramId}.${localId}`,
-	].filter(Boolean)));
+function refAliases(
+	diagramSlug: string,
+	diagramId: string,
+	localId: string,
+): string[] {
+	return Array.from(
+		new Set(
+			[
+				`${diagramSlug}:${localId}`,
+				`${diagramId}:${localId}`,
+				`${diagramSlug}.${localId}`,
+				`${diagramId}.${localId}`,
+			].filter(Boolean),
+		),
+	);
 }
 
-function createDiagramRef(diagram: { slug: string; id: string; path: string }, raw: Record<string, unknown>, category: DiagramRefCategory, localId: string): ParsedDiagramRef | null {
+function createDiagramRef(
+	diagram: { slug: string; id: string; path: string },
+	raw: Record<string, unknown>,
+	category: DiagramRefCategory,
+	localId: string,
+): ParsedDiagramRef | null {
 	const id = stringValue(localId);
 	if (!id) return null;
 	const rawKind = stringValue(raw.kind);
@@ -743,11 +1055,27 @@ function createDiagramRef(diagram: { slug: string; id: string; path: string }, r
 		...(rawKind ? { raw_kind: rawKind } : {}),
 		...(stringValue(raw.source) ? { source: stringValue(raw.source) } : {}),
 		requires_doc: raw.requires_doc === true || raw.requiresDoc === true,
-		metadata: Object.fromEntries(Object.entries(raw).filter(([key]) => !["id", "label", "kind", "source", "requires_doc", "requiresDoc"].includes(key))),
+		metadata: Object.fromEntries(
+			Object.entries(raw).filter(
+				([key]) =>
+					![
+						"id",
+						"label",
+						"kind",
+						"source",
+						"requires_doc",
+						"requiresDoc",
+					].includes(key),
+			),
+		),
 	};
 }
 
-function addRef(refs: ParsedDiagramRef[], issues: SystemDiagramValidationIssue[], ref: ParsedDiagramRef | null): void {
+function addRef(
+	refs: ParsedDiagramRef[],
+	issues: SystemDiagramValidationIssue[],
+	ref: ParsedDiagramRef | null,
+): void {
 	if (!ref) return;
 	const duplicate = refs.find((candidate) => candidate.ref === ref.ref);
 	if (duplicate) {
@@ -763,35 +1091,60 @@ function addRef(refs: ParsedDiagramRef[], issues: SystemDiagramValidationIssue[]
 	refs.push(ref);
 }
 
-function diagramEdges(diagramPath: string, rawEdges: Record<string, unknown>[], kind: string): ParsedDiagramEdge[] {
-	return rawEdges.map((edge, index) => {
-		const from = stringValue(edge.from);
-		const to = stringValue(edge.to);
-		const ref = stringValue(edge.id) || localIdFromEdge(edge, index);
-		return {
-			kind,
-			from,
-			to,
-			...(stringValue(edge.label || edge.message || edge.type || edge.trigger) ? { label: stringValue(edge.label || edge.message || edge.type || edge.trigger) } : {}),
-			...(ref ? { ref } : {}),
-			diagram_path: diagramPath,
-		};
-	}).filter((edge) => edge.from && edge.to);
+function diagramEdges(
+	diagramPath: string,
+	rawEdges: Record<string, unknown>[],
+	kind: string,
+): ParsedDiagramEdge[] {
+	return rawEdges
+		.map((edge, index) => {
+			const from = stringValue(edge.from);
+			const to = stringValue(edge.to);
+			const ref = stringValue(edge.id) || localIdFromEdge(edge, index);
+			return {
+				kind,
+				from,
+				to,
+				...(stringValue(edge.label || edge.message || edge.type || edge.trigger)
+					? {
+							label: stringValue(
+								edge.label || edge.message || edge.type || edge.trigger,
+							),
+						}
+					: {}),
+				...(ref ? { ref } : {}),
+				diagram_path: diagramPath,
+			};
+		})
+		.filter((edge) => edge.from && edge.to);
 }
 
-function parseDiagramFile(repoRoot: string, relPath: string): { diagram?: ParsedSystemDiagram; issues: SystemDiagramValidationIssue[] } {
+function parseDiagramFile(
+	repoRoot: string,
+	relPath: string,
+): { diagram?: ParsedSystemDiagram; issues: SystemDiagramValidationIssue[] } {
 	const issues: SystemDiagramValidationIssue[] = [];
 	const rawText = readFileSync(resolve(repoRoot, relPath), "utf8");
 	let loaded: unknown;
 	try {
 		loaded = yaml.load(rawText);
 	} catch (error) {
-		issues.push({ severity: "error", kind: "diagram-yaml-invalid", path: relPath, message: `Invalid system diagram YAML: ${error instanceof Error ? error.message : String(error)}` });
+		issues.push({
+			severity: "error",
+			kind: "diagram-yaml-invalid",
+			path: relPath,
+			message: `Invalid system diagram YAML: ${error instanceof Error ? error.message : String(error)}`,
+		});
 		return { issues };
 	}
 	const data = plainObject(loaded);
 	if (!data) {
-		issues.push({ severity: "error", kind: "diagram-yaml-invalid", path: relPath, message: "System diagram YAML must contain an object." });
+		issues.push({
+			severity: "error",
+			kind: "diagram-yaml-invalid",
+			path: relPath,
+			message: "System diagram YAML must contain an object.",
+		});
 		return { issues };
 	}
 	const slug = slugForPath(relPath);
@@ -799,8 +1152,17 @@ function parseDiagramFile(repoRoot: string, relPath: string): { diagram?: Parsed
 	const diagram = { slug, id, path: relPath };
 	const refs: ParsedDiagramRef[] = [];
 	const collectionIssues: SystemDiagramValidationIssue[] = [];
-	const addCollection = (value: unknown, category: DiagramRefCategory, idField = "id") => {
-		for (const item of objectList(value)) addRef(refs, collectionIssues, createDiagramRef(diagram, item, category, stringValue(item[idField])));
+	const addCollection = (
+		value: unknown,
+		category: DiagramRefCategory,
+		idField = "id",
+	) => {
+		for (const item of objectList(value))
+			addRef(
+				refs,
+				collectionIssues,
+				createDiagramRef(diagram, item, category, stringValue(item[idField])),
+			);
 	};
 
 	addCollection(data.actors, "actor");
@@ -817,13 +1179,40 @@ function parseDiagramFile(repoRoot: string, relPath: string): { diagram?: Parsed
 	addCollection(data.flows, "flow");
 
 	for (const item of objectList(data.systems)) {
-		addRef(refs, collectionIssues, createDiagramRef(diagram, item, classifyComponentKind(stringValue(item.kind), item), stringValue(item.id)));
+		addRef(
+			refs,
+			collectionIssues,
+			createDiagramRef(
+				diagram,
+				item,
+				classifyComponentKind(stringValue(item.kind), item),
+				stringValue(item.id),
+			),
+		);
 	}
 	for (const item of objectList(data.nodes)) {
-		addRef(refs, collectionIssues, createDiagramRef(diagram, item, classifyComponentKind(stringValue(item.kind), item), stringValue(item.id)));
+		addRef(
+			refs,
+			collectionIssues,
+			createDiagramRef(
+				diagram,
+				item,
+				classifyComponentKind(stringValue(item.kind), item),
+				stringValue(item.id),
+			),
+		);
 	}
 	for (const item of objectList(data.participants)) {
-		addRef(refs, collectionIssues, createDiagramRef(diagram, item, classifyComponentKind(stringValue(item.kind), item), stringValue(item.id)));
+		addRef(
+			refs,
+			collectionIssues,
+			createDiagramRef(
+				diagram,
+				item,
+				classifyComponentKind(stringValue(item.kind), item),
+				stringValue(item.id),
+			),
+		);
 	}
 
 	const flowCollections: Array<[unknown, string]> = [
@@ -836,7 +1225,12 @@ function parseDiagramFile(repoRoot: string, relPath: string): { diagram?: Parsed
 	for (const [collection, kind] of flowCollections) {
 		const items = objectList(collection);
 		for (const item of items) {
-			const ref = createDiagramRef(diagram, item, "flow", localIdFromEdge(item, refs.length));
+			const ref = createDiagramRef(
+				diagram,
+				item,
+				"flow",
+				localIdFromEdge(item, refs.length),
+			);
 			addRef(refs, collectionIssues, ref);
 		}
 		edges.push(...diagramEdges(relPath, items, kind));
@@ -859,7 +1253,9 @@ function parseDiagramFile(repoRoot: string, relPath: string): { diagram?: Parsed
 }
 
 function diagramRoot(project: WikiProject): string {
-	return normalizeRel(join(project.docsRoot || ".codewiki/kb", "system", "diagrams"));
+	return normalizeRel(
+		join(project.docsRoot || ".codewiki/kb", "system", "diagrams"),
+	);
 }
 
 function collectDiagramFiles(repoRoot: string, rootRel: string): string[] {
@@ -870,14 +1266,18 @@ function collectDiagramFiles(repoRoot: string, rootRel: string): string[] {
 		for (const name of readdirSync(dir)) {
 			const abs = resolve(dir, name);
 			if (statSync(abs).isDirectory()) walk(abs);
-			else if (/\.ya?ml$/i.test(name)) out.push(normalizeRel(relative(repoRoot, abs)));
+			else if (/\.ya?ml$/i.test(name))
+				out.push(normalizeRel(relative(repoRoot, abs)));
 		}
 	};
 	walk(rootAbs);
 	return out.sort();
 }
 
-export function parseSystemDiagrams(repoRoot: string, project: WikiProject): SystemDiagramInventory {
+export function parseSystemDiagrams(
+	repoRoot: string,
+	project: WikiProject,
+): SystemDiagramInventory {
 	const diagrams: ParsedSystemDiagram[] = [];
 	const parseIssues: SystemDiagramValidationIssue[] = [];
 	for (const relPath of collectDiagramFiles(repoRoot, diagramRoot(project))) {
@@ -893,7 +1293,10 @@ export function parseSystemDiagrams(repoRoot: string, project: WikiProject): Sys
 	return { diagrams, refs, ref_index: refIndex, parse_issues: parseIssues };
 }
 
-export function resolveDiagramRef(ref: string, inventory: Pick<SystemDiagramInventory, "ref_index">): string | null {
+export function resolveDiagramRef(
+	ref: string,
+	inventory: Pick<SystemDiagramInventory, "ref_index">,
+): string | null {
 	const normalized = stringValue(ref);
 	return normalized ? inventory.ref_index[normalized] || null : null;
 }
@@ -901,22 +1304,27 @@ export function resolveDiagramRef(ref: string, inventory: Pick<SystemDiagramInve
 export function diagramRefMode(project: WikiProject): DiagramRefMode {
 	const raw = stringValue(
 		project.config?.codewiki?.system_diagrams?.diagram_refs?.mode ??
-		project.config?.codewiki?.diagram_refs?.mode ??
-		project.config?.lint?.diagram_refs_mode,
+			project.config?.codewiki?.diagram_refs?.mode ??
+			project.config?.lint?.diagram_refs_mode,
 	).toLowerCase();
 	if (["warn", "warning", "migration"].includes(raw)) return "warn";
 	if (["error", "enforce", "required", "hard"].includes(raw)) return "error";
 	return "off";
 }
 
-function modeSeverity(mode: DiagramRefMode, fallback: "warning" | "error" = "warning"): "warning" | "error" {
+function modeSeverity(
+	mode: DiagramRefMode,
+	fallback: "warning" | "error" = "warning",
+): "warning" | "error" {
 	if (mode === "error") return "error";
 	if (mode === "warn") return "warning";
 	return fallback;
 }
 
 function isSystemDoc(project: WikiProject, doc: ParsedDoc): boolean {
-	const systemRoot = normalizeRel(join(project.docsRoot || ".codewiki/kb", "system"));
+	const systemRoot = normalizeRel(
+		join(project.docsRoot || ".codewiki/kb", "system"),
+	);
 	const path = normalizeRel(doc.path);
 	return path.startsWith(`${systemRoot}/`) && path.endsWith(".md");
 }
@@ -924,17 +1332,29 @@ function isSystemDoc(project: WikiProject, doc: ParsedDoc): boolean {
 function isDiagramRefExemptDoc(project: WikiProject, doc: ParsedDoc): boolean {
 	const docsRoot = normalizeRel(project.docsRoot || ".codewiki/kb");
 	const path = normalizeRel(doc.path);
-	return path === `${docsRoot}/system/overview.md` || path === `${docsRoot}/system/diagrams/README.md` || path.startsWith(`${docsRoot}/system/diagrams/`) || path.endsWith("/overview.md");
+	return (
+		path === `${docsRoot}/system/overview.md` ||
+		path === `${docsRoot}/system/diagrams/README.md` ||
+		path.startsWith(`${docsRoot}/system/diagrams/`) ||
+		path.endsWith("/overview.md")
+	);
 }
 
-export function validateSystemDiagramRefs(repoRoot: string, project: WikiProject, docs: ParsedDoc[]): SystemDiagramValidationResult {
+export function validateSystemDiagramRefs(
+	repoRoot: string,
+	project: WikiProject,
+	docs: ParsedDoc[],
+): SystemDiagramValidationResult {
 	const inventory = parseSystemDiagrams(repoRoot, project);
 	const mode = diagramRefMode(project);
 	const issues: SystemDiagramValidationIssue[] = [...inventory.parse_issues];
 	const docsByRef = new Map<string, string[]>();
 	let systemDocsChecked = 0;
 
-	for (const doc of docs.filter((entry) => isSystemDoc(project, entry) && !isDiagramRefExemptDoc(project, entry))) {
+	for (const doc of docs.filter(
+		(entry) =>
+			isSystemDoc(project, entry) && !isDiagramRefExemptDoc(project, entry),
+	)) {
 		systemDocsChecked += 1;
 		const refs = stringList(doc.frontmatter.diagram_refs);
 		if (refs.length === 0) {
@@ -943,7 +1363,8 @@ export function validateSystemDiagramRefs(repoRoot: string, project: WikiProject
 					severity: modeSeverity(mode),
 					kind: "system-doc-missing-diagram-refs",
 					path: doc.path,
-					message: "System doc must declare at least one diagram_refs entry while diagram-ref migration is enabled.",
+					message:
+						"System doc must declare at least one diagram_refs entry while diagram-ref migration is enabled.",
 				});
 			}
 			continue;
@@ -985,7 +1406,11 @@ export function validateSystemDiagramRefs(repoRoot: string, project: WikiProject
 		mode,
 		system_docs_checked: systemDocsChecked,
 		required_refs: requiredRefs.sort(),
-		docs_by_ref: Object.fromEntries([...docsByRef.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([key, value]) => [key, value.sort()])),
+		docs_by_ref: Object.fromEntries(
+			[...docsByRef.entries()]
+				.sort(([a], [b]) => a.localeCompare(b))
+				.map(([key, value]) => [key, value.sort()]),
+		),
 		issues,
 	};
 }

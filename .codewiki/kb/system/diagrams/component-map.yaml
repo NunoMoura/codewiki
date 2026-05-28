@@ -10,6 +10,7 @@ source_docs:
   - .codewiki/kb/system/api.md
   - .codewiki/kb/system/graph.md
   - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/adapters.md
 renderer:
   preferred: cytoscape
@@ -72,6 +73,11 @@ nodes:
     group: app_layer
     kind: application
     source: .codewiki/kb/system/agency.md
+  - id: runtime
+    label: CodeWiki runtime
+    group: app_layer
+    kind: application
+    source: .codewiki/kb/system/runtime.md
   - id: compilers
     label: Compilers
     group: app_layer
@@ -143,13 +149,22 @@ edges:
     label: emits representation
   - from: api
     to: agency
-    label: controls bounded automation
+    label: plans and gates bounded automation
   - from: agency
+    to: runtime
+    label: authorizes one bounded step
+  - from: runtime
     to: resume_context
     label: requests source-backed reset kickoff
-  - from: agency
+  - from: runtime
     to: roadmap
-    label: applies task/sprint/roadmap approval cadence
+    label: claims task/sprint/roadmap scopes
+  - from: runtime
+    to: compilers
+    label: invokes allowed compiler step
+  - from: runtime
+    to: validation_gateway
+    label: submits gateway preflight
   - from: api
     to: compilers
     label: starts compiler loops

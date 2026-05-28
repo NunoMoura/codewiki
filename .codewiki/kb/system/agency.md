@@ -9,6 +9,7 @@ owners:
 updated: "2026-05-27"
 code_paths:
   - src/agency
+  - src/runtime
   - src/project/types.ts
   - src/adapters/pi
   - src/state/resume-context.ts
@@ -19,9 +20,9 @@ code_paths_mode: explicit_override
 
 ## Responsibility
 
-The agency controller is the system mechanism behind the product need for gated agency. It lets an agent advance roadmap work automatically while enforcing explicit token, time, cost, write, session, risk, validation, policy, and approval gates.
+The agency controller is the system mechanism behind the product need for gated agency. It decides whether CodeWiki may continue automatically while enforcing explicit token, time, cost, write, session, risk, validation, policy, and approval gates.
 
-The product concept is gated agency. The implementation mechanism is the agency controller running bounded agency cycles. An agency cycle observes state, selects safe work, acquires scoped claims, runs one compiler step, submits the required gateway check, records evidence, and stops or routes to the next loop. It may route backward to decision or planning when missing semantics or task-boundary doubts appear.
+The product concept is gated agency. The agency controller owns autonomy level, approval cadence, scope selection, planning, and budget/risk policy. The CodeWiki runtime owns bounded execution mechanics after an agency plan is authorized: acquiring scoped claims, running one compiler or gateway preparation step, requesting context boundaries, recording workflow-efficiency evidence, and stopping or routing to the next loop. Agency may route backward to decision or planning when missing semantics or task-boundary doubts appear, but it should not absorb runtime orchestration concerns.
 
 ## Inputs
 
@@ -35,7 +36,7 @@ The controller reads:
 - configured agency scope such as roadmap, sprint, or task,
 - configured agency autonomy level and approval cadence such as task, sprint, or roadmap,
 - context reset budget and adapter boundary capability for source-backed auto-pickup,
-- harness capabilities exposed through adapters.
+- harness capabilities exposed through adapters through runtime ports.
 
 ## Scopes
 
@@ -87,7 +88,7 @@ A config-level contract may expose:
 | --- | --- |
 | `observe` | Read graph and roadmap state, report next safe action, write nothing. |
 | `maintain` | Refresh generated state or run safe audits inside a small write budget. |
-| `work` | Advance one bounded roadmap/compiler step inside explicit gates, including compiler invocation and gateway submission when policy permits. |
+| `work` | Authorize one bounded runtime step inside explicit gates, including compiler invocation or gateway preparation when policy permits. |
 
 These modes are implementation controls, not product stories. Product docs should describe the user-visible gated agency experience.
 
@@ -108,13 +109,13 @@ The controller must stop when any gate fails:
 
 ## Routing
 
-The controller does not replace the graph, compilers, roadmap, or validation gateway. It coordinates them:
+The controller does not replace the graph, runtime, compilers, roadmap, or validation gateway. It coordinates permission and selection; the CodeWiki runtime coordinates execution:
 
 ```text
-graph state -> scoped roadmap/sprint/task focus -> compiler step -> validation gateway -> build/evidence -> next graph state
-                                ^                  |
-                                |                  v
-                         decision/planning <- ambiguity or failed gate
+graph state -> agency scope/policy -> CodeWiki runtime step -> compiler/gateway preparation -> build/evidence -> next graph state
+                       ^                         |                         |
+                       |                         v                         v
+                decision/planning <- ambiguity, failed gate, or blocked validation
 ```
 
 When intent is unclear, a requirement is not unequivocally represented in the accepted decision build, or KB semantics must change, it routes to the decision loop and blocks lower-layer continuation until the user approves, edits, rejects, or defers the missing semantics. When roadmap/task boundaries are incomplete, it routes to planning. When code/tests must change and planning proof is valid, it routes to implementation. When evidence is ready, it routes to validation or closure. When context is noisy or policy requires a boundary and the session budget allows it, agency should call adapter session-boundary capability instead of asking the user to run a host command manually. If the adapter cannot perform the boundary automatically, the agency output records the platform limitation and next safe action instead of turning the compatibility command into normal user work.
@@ -131,7 +132,7 @@ If the adapter cannot guarantee a valid next-turn boundary, agency must block or
 
 - Agency is always gated; unbounded autonomous editing is not allowed.
 - Agency level grants continuation permission only; it never bypasses budgets, validation, risk, policy, publication, or semantic approval gates.
-- Agency cycles are bounded orchestrator steps, not a fourth compiler; they may invoke decision, planning, implementation, and validation tools but must not fabricate compiler outputs.
+- Agency cycles authorize bounded runtime steps, not a fourth compiler; the runtime may invoke decision, planning, implementation, and validation tools but must not fabricate compiler outputs.
 - The controller must not mutate generated graph state directly.
 - The controller must not bypass validation gateway or policy decisions.
 - Commit, push, release, and remote updates require explicit publication policy approval.

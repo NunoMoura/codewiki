@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T02:44:53Z",
+  "generated_at": "2026-05-28T06:27:48Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-047/context.json",
   "task": {
     "id": "TASK-047",
@@ -11,10 +11,9 @@
     "change_type": "system",
     "summary": "Upgrade codewiki_agency from planner output to a bounded runner that selects work, claims scopes, invokes compiler steps, submits gateway checks, and uses CodeWiki-owned compaction within task/sprint/roadmap scope.",
     "labels": [
-      "agency-runner",
-      "automatic-loop-advancement",
-      "codewiki-compaction-runner",
-      "workflow-efficiency-evidence"
+      "agency",
+      "runtime",
+      "bounded-runner"
     ],
     "goal": {
       "outcome": "Agency can run bounded compiler/gateway steps automatically inside approved task, sprint, or roadmap scope without bypassing hard gates.",
