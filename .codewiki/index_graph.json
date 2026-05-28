@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T03:50:10.320Z",
+  "generated_at": "2026-05-28T04:24:34.147Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4662,7 +4662,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4747,7 +4747,7 @@
       "kind": "code_path",
       "path": "src/agency",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5359,7 +5359,7 @@
       "kind": "code_path",
       "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5383,7 +5383,7 @@
       "kind": "code_path",
       "path": "tests/smoke/role-worktree-isolation.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5679,7 +5679,7 @@
       "kind": "code_path",
       "path": "src/session/worktree-isolation.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6507,7 +6507,7 @@
       "kind": "code_path",
       "path": "src/agency/planning.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -27249,6 +27249,153 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-044",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+          ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+          ".codewiki/roadmap/tasks/TASK-044/task.json",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md",
+          "codewiki_build tool",
+          "src/session/worktree-isolation.ts",
+          "src/agency/planning.ts",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "TASK-044"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json@sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
+          "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+          "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+          "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+          "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+          "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+          "refs/codewiki/archive/task/TASK-044",
+          "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
+        ],
+        "validation_attestation_refs": [
+          "fresh implementation validation pending"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:.codewiki/roadmap/tasks/TASK-044/task.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/roadmap/tasks/TASK-044/task.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+      "kind": "content_proof",
+      "path": "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+      "kind": "content_proof",
+      "path": "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+      "kind": "content_proof",
+      "path": "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+      "kind": "content_proof",
+      "path": "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+      "kind": "content_proof",
+      "path": "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-044",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-044",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+      "kind": "content_proof",
+      "path": "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-044",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-044",
+      "task_id": "TASK-044",
+      "digest": "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+      "restore_command": "/wiki-restore TASK-044",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -35732,6 +35879,61 @@
       "id": "content_proof:sha256:282930a89b4f0ceee8519187e90fc947568dbfccd1623126727a5e2c6dd5c731",
       "kind": "content_proof",
       "path": "sha256:282930a89b4f0ceee8519187e90fc947568dbfccd1623126727a5e2c6dd5c731",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "verdict": "pass",
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Collect or cite required validation/publication content proof before promotion.",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh validation used source refs and reran checks instead of builder chat. Dirty pre-commit implementation validation uses working_tree_digest; closure/publication require later clean immutable proof.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "approval:user",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+          "check:architecture file-structure audit passed with 0 issues"
+        ],
+        "content_proof_refs": [
+          "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
+      "kind": "content_proof",
+      "path": "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true,
@@ -86127,6 +86329,185 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/roadmap/tasks/TASK-044/task.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/kb/system/worktree-isolation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/kb/system/agency.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/kb/system/roadmap.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:.codewiki/kb/system/api.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:src/session/worktree-isolation.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:src/agency/planning.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:tests/smoke/role-worktree-isolation.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:tests/smoke/claim-wait-queue.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:tests/tasks/TASK-028/session-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:tests/tasks/TASK-015/agency-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "source:TASK-044",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json@sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-044",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "content_proof:sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "task:TASK-044"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-044",
+      "default_hidden": true
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -95850,6 +96231,65 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:approval:user",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "audit:check:architecture file-structure audit passed with 0 issues",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "content_proof:sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+      "to": "task:TASK-044"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-28-planning-block.json",
       "to": "source:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
       "default_hidden": true
@@ -96111,7 +96551,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 407,
             "badges": [
               {
@@ -96127,17 +96567,21 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 52
+                "count": 53
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 2,
+                "count": 6,
                 "refs": [
                   ".gitignore",
-                  ".pi/settings.json"
+                  ".pi/settings.json",
+                  "src/agency/planning.ts",
+                  "src/session/worktree-isolation.ts",
+                  "tests/smoke/role-worktree-isolation.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs"
                 ],
-                "ref_count": 2
+                "ref_count": 6
               }
             ],
             "hot_refs": [
@@ -96164,7 +96608,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 110
+                "count": 111
               },
               {
                 "id": "fail_or_block_validation",
@@ -96174,12 +96618,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 488
+                "count": 489
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 947
+                "count": 955
               },
               {
                 "id": "traceability_gaps",
@@ -96196,19 +96640,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 86,
+            "total": 87,
             "decision": 11,
             "planning": 23,
-            "implementation": 52,
+            "implementation": 53,
             "hot": 0,
-            "collapsed": 86
+            "collapsed": 87
           },
           "validations": {
-            "total": 110,
-            "pass": 90,
+            "total": 111,
+            "pass": 91,
             "fail_or_block": 20,
             "hot": 5,
-            "collapsed": 110
+            "collapsed": 111
           }
         },
         "next_action": {
@@ -96270,7 +96714,12 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs"
             ],
             "code_paths": [
               "src/build/shared.ts",
@@ -96280,14 +96729,18 @@
               "src/gateway/index.ts",
               "src/audit/tool.ts",
               "src/adapters/pi/ui/manager.ts",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               "fresh implementation validation pending",
               ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+              ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
             ],
             "audit_evidence_refs": [
@@ -96313,7 +96766,16 @@
               "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
               "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
               "refs/codewiki/archive/task/TASK-038",
-              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+              "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+              "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+              "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+              "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+              "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+              "refs/codewiki/archive/task/TASK-044",
+              "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
             ],
             "gaps": []
           },
@@ -96358,7 +96820,12 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs"
             ],
             "code_paths": [
               "src/build/shared.ts",
@@ -96368,14 +96835,18 @@
               "src/gateway/index.ts",
               "src/audit/tool.ts",
               "src/adapters/pi/ui/manager.ts",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               "fresh implementation validation pending",
               ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+              ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
             ],
             "audit_evidence_refs": [
@@ -96401,7 +96872,16 @@
               "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
               "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
               "refs/codewiki/archive/task/TASK-038",
-              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+              "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+              "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+              "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+              "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+              "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+              "refs/codewiki/archive/task/TASK-044",
+              "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
             ],
             "gaps": []
           },
@@ -96446,7 +96926,12 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs"
             ],
             "code_paths": [
               "src/build/shared.ts",
@@ -96456,14 +96941,18 @@
               "src/gateway/index.ts",
               "src/audit/tool.ts",
               "src/adapters/pi/ui/manager.ts",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               "fresh implementation validation pending",
               ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+              ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
             ],
             "audit_evidence_refs": [
@@ -96489,7 +96978,16 @@
               "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
               "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
               "refs/codewiki/archive/task/TASK-038",
-              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+              "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+              "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+              "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+              "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+              "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+              "refs/codewiki/archive/task/TASK-044",
+              "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
             ],
             "gaps": []
           },
@@ -96534,7 +97032,12 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs"
             ],
             "code_paths": [
               "src/build/shared.ts",
@@ -96544,14 +97047,18 @@
               "src/gateway/index.ts",
               "src/audit/tool.ts",
               "src/adapters/pi/ui/manager.ts",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               "fresh implementation validation pending",
               ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+              ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
             ],
             "audit_evidence_refs": [
@@ -96577,7 +97084,16 @@
               "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
               "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
               "refs/codewiki/archive/task/TASK-038",
-              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+              "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+              "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+              "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+              "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+              "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+              "refs/codewiki/archive/task/TASK-044",
+              "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
             ],
             "gaps": []
           },
@@ -96622,7 +97138,12 @@
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs"
             ],
             "code_paths": [
               "src/build/shared.ts",
@@ -96632,14 +97153,18 @@
               "src/gateway/index.ts",
               "src/audit/tool.ts",
               "src/adapters/pi/ui/manager.ts",
-              "src/ui/web/control-room.ts"
+              "src/ui/web/control-room.ts",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts"
             ],
             "implementation_builds": [
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               "fresh implementation validation pending",
               ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+              ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
             ],
             "audit_evidence_refs": [
@@ -96665,12 +97190,168 @@
               "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
               "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
               "refs/codewiki/archive/task/TASK-038",
-              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+              "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+              "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+              "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+              "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+              "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+              "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+              "refs/codewiki/archive/task/TASK-044",
+              "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
             ],
             "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/agency/planning.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/session/worktree-isolation.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/role-worktree-isolation.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -96738,6 +97419,7 @@
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -96851,6 +97533,7 @@
           ".codewiki/roadmap/tasks/TASK-031/task.json",
           ".codewiki/roadmap/tasks/TASK-033/task.json",
           ".codewiki/roadmap/tasks/TASK-038/task.json",
+          ".codewiki/roadmap/tasks/TASK-044/task.json",
           ".codewiki/runtime/diff-tables.json",
           ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
           ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
@@ -100015,6 +100698,32 @@
               "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
               "TASK-038"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-044"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/roadmap/tasks/TASK-044/task.json",
+              ".codewiki/kb/system/worktree-isolation.md",
+              ".codewiki/kb/system/agency.md",
+              ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/api.md",
+              "codewiki_build tool",
+              "src/session/worktree-isolation.ts",
+              "src/agency/planning.ts",
+              "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-015/agency-source-root.test.mjs",
+              "TASK-044"
+            ]
           }
         ]
       },
@@ -102919,6 +103628,28 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-044",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "approval:user",
+              "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+              "check:architecture file-structure audit passed with 0 issues"
+            ],
+            "content_proof_refs": [
+              "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-planning-block.json",
             "verdict": "block",
             "profile": "planning",
@@ -104716,6 +105447,20 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+            "task_id": "TASK-044",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-planning-block.json",
             "verdict": "block",
             "status": "legacy",
@@ -104948,6 +105693,7 @@
           "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
           "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
           "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
           "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
           "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
           "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-010 => pass, 0 issues",
@@ -105515,6 +106261,7 @@
           "refs/codewiki/archive/task/TASK-034",
           "refs/codewiki/archive/task/TASK-035",
           "refs/codewiki/archive/task/TASK-038",
+          "refs/codewiki/archive/task/TASK-044",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
           "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
@@ -105526,6 +106273,7 @@
           "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
           "sha256:282930a89b4f0ceee8519187e90fc947568dbfccd1623126727a5e2c6dd5c731",
           "sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
+          "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
           "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
           "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33",
           "sha256:319d731d8db99683f24236908e3ab4d7bb84a9577e75201fd3a06e53331cf963",
@@ -105589,6 +106337,7 @@
           "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
           "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
           "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
+          "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
           "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
           "sha256:edb95c5f2d33018999956cee776cd66455025d9a66e6351b47258d477f78d9c3",
           "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
@@ -105750,6 +106499,7 @@
           "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
           "src/agency/planning.ts@sha256:44b74d99fef7ff6194073654d69369b44f832460f3bf9bf585a183feb7a6a223",
           "src/agency/planning.ts@sha256:559cd466ca7172165e1901637e3bf5c10dc6a1325040b0b03310352f7352e783",
+          "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
           "src/agency/planning.ts@sha256:f25960abdba36fba40e5431030717c95e274864eda8756f298b8c8e780e477fa",
           "src/agency/tool.ts@sha256:cbd02929023bf581777736e8a0ea31ac45e9852ca48c7280c5bfda5b0dd5af37",
           "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
@@ -106001,6 +106751,7 @@
           "src/session/tool.ts@sha256:469c6be7f52bf668c2495072daaad33f0ad80a946468c8bbb1b58e9ab900d678",
           "src/session/types.ts@sha256:e253b9e9f260e38115acbde7e4e5243ede258ddc5e59ac8297bbda6c36b7b716",
           "src/session/worktree-isolation.ts@sha256:424df49687a320d860294cc5d0ecd5d872677d22f4184f8ba67474da53bd7542",
+          "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
           "src/shared/lock.ts@sha256:832c26d237474675f5d19ece0bc6c0c015fa734a80354e8ae1f7fa359efe7a1a",
           "src/shared/ports.ts@sha256:d0654456f159c95c54ab53b0a95688cdf980088d1aba1cc9cab36ae85c8f4f9b",
           "src/shared/utils.ts@sha256:b8a5243d476b430f26af8b05c84802c732cca8a38605e6b6a6d9a13125ea625b",
@@ -106069,6 +106820,7 @@
           "tests/smoke/builds.test.mjs@sha256:755e7258f4f1cfa4438ecbd7c28b9a93b60141ec88f78f32cb729392c29399e4",
           "tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:20e4851f4b8fd1c5d65bc92a0bf6726b97a7a0cce0dfc07ac7385f5f16317fdb",
+          "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:54f6b29672e45de13959ced945633c21a3d7a54abcca4790a1a28e5b819a5248",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
           "tests/smoke/codewiki-compaction.test.mjs@sha256:0368e803e31ed7f08f3f179e09d6f05da181ca75a90c122d166b22972114d5ec",
@@ -106148,6 +106900,7 @@
           "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:0b37a200e779279148fa49fc0666990ae39b345e3079a71ff5f0f7cc14e3079f",
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:38b35cac1e2cf9473c96821adc7c85079c29e02ebd70c90f1060b345c41ed92d",
+          "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:691aaa1d1d3c87e06891d26bc14fd097b3544b7372542d0fe9e77a2f6f132613",
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:ecdc9dfd4777658f6217a1b8a113c5b49b3e07a93045c15d8ec8b861baa792d4",
           "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
@@ -106181,6 +106934,7 @@
           "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:4d799bbe8cef87977d0706ba00d84792e0729f7984806140820e747b2cabae14",
           "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:14dff9be327fa2648f5a9ea954a65125747103c7d1cc49204d3771252df93abf",
           "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:6510ebbd61968235bc35e2db78765851b64d62ae7d87dec956805baace6b4b87",
+          "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
           "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
           "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:314892b82ee1d3b7162a7e83b28c36068e63daa4edfe7c678c572574cb8cb50e",
           "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:f79d23d8cfd37dedb47686ecbcec24aef1b6e81125b0526c319c809eb0e1fe0f",
@@ -107910,7 +108664,11 @@
       ],
       "dirty_paths": [
         ".gitignore",
-        ".pi/settings.json"
+        ".pi/settings.json",
+        "src/agency/planning.ts",
+        "src/session/worktree-isolation.ts",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs"
       ]
     },
     "claims": {
@@ -109679,6 +110437,20 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+          "task_id": "TASK-044",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-planning-block.json",
           "verdict": "block",
           "status": "legacy",
@@ -109795,6 +110567,7 @@
         ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
         ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
         ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+        ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -109908,6 +110681,7 @@
         ".codewiki/roadmap/tasks/TASK-031/task.json",
         ".codewiki/roadmap/tasks/TASK-033/task.json",
         ".codewiki/roadmap/tasks/TASK-038/task.json",
+        ".codewiki/roadmap/tasks/TASK-044/task.json",
         ".codewiki/runtime/diff-tables.json",
         ".codewiki/validation/2026-05-20-implementation-pass-task-002.json",
         ".codewiki/validation/2026-05-20-planning-pass-task-007.json",
@@ -110525,6 +111299,7 @@
         "codewiki_audit profiles=alignment,changed task_id=TASK-001: alignment pass; task pass; changed warning only for generated state/view files",
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
         "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
+        "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
         "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
         "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-009 => warning, 1 expected graph-health warning while task remains open, 0 errors",
         "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-010 => pass, 0 issues",
@@ -111092,6 +111867,7 @@
         "refs/codewiki/archive/task/TASK-034",
         "refs/codewiki/archive/task/TASK-035",
         "refs/codewiki/archive/task/TASK-038",
+        "refs/codewiki/archive/task/TASK-044",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
         "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
@@ -111103,6 +111879,7 @@
         "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
         "sha256:282930a89b4f0ceee8519187e90fc947568dbfccd1623126727a5e2c6dd5c731",
         "sha256:2875a969a08036a7130eb6a4c36c824139ce533496b8179fe779a82b9b94dd63",
+        "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e",
         "sha256:2cbb8538902e683845dc1f0dd2c0110fcf8e5798451c1c45d871b26aecf4b188",
         "sha256:2d440b4538a633083e929258ec30c77d3ebacf94fdf9d3b8f21837e6796b6b33",
         "sha256:319d731d8db99683f24236908e3ab4d7bb84a9577e75201fd3a06e53331cf963",
@@ -111166,6 +111943,7 @@
         "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
         "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
         "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
+        "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
         "sha256:e7200dc6d7fd1e3720997492c8817a26ebe2ba11e945f708eb2130eaf57c22fc",
         "sha256:edb95c5f2d33018999956cee776cd66455025d9a66e6351b47258d477f78d9c3",
         "sha256:ef5db2afc28d2ef8f0f6badd42452302e571700aa851307b1336001bf382a549",
@@ -111327,6 +112105,7 @@
         "src/agency/planning.ts@sha256:1f07950cb007bc006784dce8fc9aa16ae9ae678b8d890f747a7181679d680c5d",
         "src/agency/planning.ts@sha256:44b74d99fef7ff6194073654d69369b44f832460f3bf9bf585a183feb7a6a223",
         "src/agency/planning.ts@sha256:559cd466ca7172165e1901637e3bf5c10dc6a1325040b0b03310352f7352e783",
+        "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
         "src/agency/planning.ts@sha256:f25960abdba36fba40e5431030717c95e274864eda8756f298b8c8e780e477fa",
         "src/agency/tool.ts@sha256:cbd02929023bf581777736e8a0ea31ac45e9852ca48c7280c5bfda5b0dd5af37",
         "src/agency/tool.ts@sha256:cc8b2cfa77011acc77049502975c9d4ff3a60c7d09e96d5d305b00bfd16eff05",
@@ -111578,6 +112357,7 @@
         "src/session/tool.ts@sha256:469c6be7f52bf668c2495072daaad33f0ad80a946468c8bbb1b58e9ab900d678",
         "src/session/types.ts@sha256:e253b9e9f260e38115acbde7e4e5243ede258ddc5e59ac8297bbda6c36b7b716",
         "src/session/worktree-isolation.ts@sha256:424df49687a320d860294cc5d0ecd5d872677d22f4184f8ba67474da53bd7542",
+        "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
         "src/shared/lock.ts@sha256:832c26d237474675f5d19ece0bc6c0c015fa734a80354e8ae1f7fa359efe7a1a",
         "src/shared/ports.ts@sha256:d0654456f159c95c54ab53b0a95688cdf980088d1aba1cc9cab36ae85c8f4f9b",
         "src/shared/utils.ts@sha256:b8a5243d476b430f26af8b05c84802c732cca8a38605e6b6a6d9a13125ea625b",
@@ -111646,6 +112426,7 @@
         "tests/smoke/builds.test.mjs@sha256:755e7258f4f1cfa4438ecbd7c28b9a93b60141ec88f78f32cb729392c29399e4",
         "tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:20e4851f4b8fd1c5d65bc92a0bf6726b97a7a0cce0dfc07ac7385f5f16317fdb",
+        "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:54f6b29672e45de13959ced945633c21a3d7a54abcca4790a1a28e5b819a5248",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
         "tests/smoke/codewiki-compaction.test.mjs@sha256:0368e803e31ed7f08f3f179e09d6f05da181ca75a90c122d166b22972114d5ec",
@@ -111725,6 +112506,7 @@
         "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:0b37a200e779279148fa49fc0666990ae39b345e3079a71ff5f0f7cc14e3079f",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:38b35cac1e2cf9473c96821adc7c85079c29e02ebd70c90f1060b345c41ed92d",
+        "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:691aaa1d1d3c87e06891d26bc14fd097b3544b7372542d0fe9e77a2f6f132613",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:ecdc9dfd4777658f6217a1b8a113c5b49b3e07a93045c15d8ec8b861baa792d4",
         "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
@@ -111758,6 +112540,7 @@
         "tests/tasks/TASK-027/gc-source-root.test.mjs@sha256:4d799bbe8cef87977d0706ba00d84792e0729f7984806140820e747b2cabae14",
         "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:14dff9be327fa2648f5a9ea954a65125747103c7d1cc49204d3771252df93abf",
         "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:6510ebbd61968235bc35e2db78765851b64d62ae7d87dec956805baace6b4b87",
+        "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
         "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
         "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:314892b82ee1d3b7162a7e83b28c36068e63daa4edfe7c678c572574cb8cb50e",
         "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:f79d23d8cfd37dedb47686ecbcec24aef1b6e81125b0526c319c809eb0e1fe0f",
@@ -114665,6 +115448,28 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-044",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "approval:user",
+            "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
+            "check:architecture file-structure audit passed with 0 issues"
+          ],
+          "content_proof_refs": [
+            "sha256:292ddc31e7f6697d0ab1c17867b0b371e867d541d16ee386011d25b8c3e3077e"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-planning-block.json",
           "verdict": "block",
           "profile": "planning",
@@ -116499,7 +117304,12 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/loop-isolation-policy.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "tests/smoke/role-worktree-isolation.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs"
           ],
           "code_paths": [
             "src/build/shared.ts",
@@ -116509,14 +117319,18 @@
             "src/gateway/index.ts",
             "src/audit/tool.ts",
             "src/adapters/pi/ui/manager.ts",
-            "src/ui/web/control-room.ts"
+            "src/ui/web/control-room.ts",
+            "src/session/worktree-isolation.ts",
+            "src/agency/planning.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             "fresh implementation validation pending",
             ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+            ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
           ],
           "audit_evidence_refs": [
@@ -116542,7 +117356,16 @@
             "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
             "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
             "refs/codewiki/archive/task/TASK-038",
-            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+            "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+            "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+            "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+            "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+            "refs/codewiki/archive/task/TASK-044",
+            "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
           ],
           "gaps": []
         },
@@ -116587,7 +117410,12 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/loop-isolation-policy.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "tests/smoke/role-worktree-isolation.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs"
           ],
           "code_paths": [
             "src/build/shared.ts",
@@ -116597,14 +117425,18 @@
             "src/gateway/index.ts",
             "src/audit/tool.ts",
             "src/adapters/pi/ui/manager.ts",
-            "src/ui/web/control-room.ts"
+            "src/ui/web/control-room.ts",
+            "src/session/worktree-isolation.ts",
+            "src/agency/planning.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             "fresh implementation validation pending",
             ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+            ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
           ],
           "audit_evidence_refs": [
@@ -116630,7 +117462,16 @@
             "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
             "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
             "refs/codewiki/archive/task/TASK-038",
-            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+            "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+            "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+            "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+            "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+            "refs/codewiki/archive/task/TASK-044",
+            "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
           ],
           "gaps": []
         },
@@ -116675,7 +117516,12 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/loop-isolation-policy.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "tests/smoke/role-worktree-isolation.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs"
           ],
           "code_paths": [
             "src/build/shared.ts",
@@ -116685,14 +117531,18 @@
             "src/gateway/index.ts",
             "src/audit/tool.ts",
             "src/adapters/pi/ui/manager.ts",
-            "src/ui/web/control-room.ts"
+            "src/ui/web/control-room.ts",
+            "src/session/worktree-isolation.ts",
+            "src/agency/planning.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             "fresh implementation validation pending",
             ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+            ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
           ],
           "audit_evidence_refs": [
@@ -116718,7 +117568,16 @@
             "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
             "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
             "refs/codewiki/archive/task/TASK-038",
-            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+            "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+            "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+            "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+            "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+            "refs/codewiki/archive/task/TASK-044",
+            "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
           ],
           "gaps": []
         },
@@ -116763,7 +117622,12 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/loop-isolation-policy.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "tests/smoke/role-worktree-isolation.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs"
           ],
           "code_paths": [
             "src/build/shared.ts",
@@ -116773,14 +117637,18 @@
             "src/gateway/index.ts",
             "src/audit/tool.ts",
             "src/adapters/pi/ui/manager.ts",
-            "src/ui/web/control-room.ts"
+            "src/ui/web/control-room.ts",
+            "src/session/worktree-isolation.ts",
+            "src/agency/planning.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             "fresh implementation validation pending",
             ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+            ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
           ],
           "audit_evidence_refs": [
@@ -116806,7 +117674,16 @@
             "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
             "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
             "refs/codewiki/archive/task/TASK-038",
-            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+            "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+            "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+            "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+            "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+            "refs/codewiki/archive/task/TASK-044",
+            "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
           ],
           "gaps": []
         },
@@ -116851,7 +117728,12 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
             "tests/smoke/loop-isolation-policy.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "tests/smoke/role-worktree-isolation.test.mjs",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs"
           ],
           "code_paths": [
             "src/build/shared.ts",
@@ -116861,14 +117743,18 @@
             "src/gateway/index.ts",
             "src/audit/tool.ts",
             "src/adapters/pi/ui/manager.ts",
-            "src/ui/web/control-room.ts"
+            "src/ui/web/control-room.ts",
+            "src/session/worktree-isolation.ts",
+            "src/agency/planning.ts"
           ],
           "implementation_builds": [
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             "fresh implementation validation pending",
             ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
+            ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json"
           ],
           "audit_evidence_refs": [
@@ -116894,12 +117780,168 @@
             "src/adapters/pi/ui/manager.ts@sha256:05d6383137bd209b83e73a3f4a5889b7b2960a2ed99cfc8dec02e814774a9587",
             "src/ui/web/control-room.ts@sha256:b3dc88cfe849c67621da1a7a8b02f9faa2b05111ebd887481211d6e24f81be1d",
             "refs/codewiki/archive/task/TASK-038",
-            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084"
+            "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
+            "tests/smoke/role-worktree-isolation.test.mjs@sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+            "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+            "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+            "tests/tasks/TASK-015/agency-source-root.test.mjs@sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+            "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+            "src/agency/planning.ts@sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+            "refs/codewiki/archive/task/TASK-044",
+            "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978"
           ],
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/session/worktree-isolation.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/role-worktree-isolation.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -118025,7 +119067,8 @@
             ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
             ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
             ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -118128,7 +119171,8 @@
             ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
             ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
             ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
           ]
         },
         "purgeable": {
@@ -118665,10 +119709,20 @@
           "digest": "sha256:3c485c29111fe53a8e3073749539dab85f19946573a7c9874b0499ae8581c084",
           "restore_command": "/wiki-restore TASK-038",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-044",
+          "build_path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-044",
+          "commit_sha": "",
+          "digest": "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+          "restore_command": "/wiki-restore TASK-044",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 52,
+        "ledger_count": 53,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -118721,7 +119775,8 @@
           "refs/codewiki/archive/task/TASK-033",
           "refs/codewiki/archive/task/TASK-034",
           "refs/codewiki/archive/task/TASK-035",
-          "refs/codewiki/archive/task/TASK-038"
+          "refs/codewiki/archive/task/TASK-038",
+          "refs/codewiki/archive/task/TASK-044"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -118775,7 +119830,8 @@
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-          ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+          ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -118829,7 +119885,8 @@
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-          ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+          ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -119115,7 +120172,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T03:50:10.171Z",
+      "generated_at": "2026-05-28T04:24:34.007Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 9
@@ -119185,7 +120242,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T03:50:10Z",
+      "generated_at": "2026-05-28T04:24:34Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -120677,7 +121734,7 @@
             "tests/tasks/TASK-028/session-source-root.test.mjs",
             "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
           ],
-          "updated": "2026-05-28T02:45:13Z",
+          "updated": "2026-05-28T04:24:33Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -120937,7 +121994,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T03:50:10Z",
+      "generated_at": "2026-05-28T04:24:34Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -121211,7 +122268,8 @@
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
               ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
               ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -121314,7 +122372,8 @@
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
               ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
               ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json"
             ]
           },
           "purgeable": {
@@ -124323,7 +125382,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T03:50:10Z",
+        "generated_at": "2026-05-28T04:24:34Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -124378,12 +125437,18 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T03:50:10Z",
+            "checked_at": "2026-05-28T04:24:34Z",
             "revision": {
               "git": {
-                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "6f64521049325403d1856480ba823ffdcf752ef1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/agency/planning.ts",
+                  "src/session/worktree-isolation.ts",
+                  "tests/smoke/role-worktree-isolation.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -124593,16 +125658,16 @@
                 }
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
-              "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "6d738eabc68b39e88ece7b34dec24c393f0711e75571288bc26a2ad59d9732a9",
-              "digest": "3a3c0cb6ce301a8cbc60985bc8b511c372e710d8d4e06b0fc488875569744de4"
+              "task_digest": "41cc5ab937929d39abcdddc612d2a91029dbec7834eb86274a3ee0d3665df55f",
+              "code_digest": "cf80c2b4c83199aa9d3c0d5d95043f26e208f63de0ef8ad438309ccf2c3901e9",
+              "digest": "b813f836683e90dbb128e9813bed995547d8f554bb45f5479b33681ee57f31dc"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:50:10Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T04:24:34Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -125036,12 +126101,18 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T03:50:10Z",
+            "checked_at": "2026-05-28T04:24:34Z",
             "revision": {
               "git": {
-                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "6f64521049325403d1856480ba823ffdcf752ef1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/agency/planning.ts",
+                  "src/session/worktree-isolation.ts",
+                  "tests/smoke/role-worktree-isolation.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -125228,16 +126299,16 @@
                 }
               },
               "spec_digest": "1cb2c0942c228588c11f5964858847704a0a8066394e7b2bf1417148dbbcfff2",
-              "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "dccd71958fd962b4d23de6349709bb0a631272036c3caa324a12496f3e3e20aa",
-              "digest": "4f0f934a6e237ce49ea74c9fb20f3ead40d96be8d42a951c1134069a20beace6"
+              "task_digest": "41cc5ab937929d39abcdddc612d2a91029dbec7834eb86274a3ee0d3665df55f",
+              "code_digest": "52d4d8362b1338b12b19d2f2117be644f9c093adc8f3accf37b0237647a27dfe",
+              "digest": "9569a50d0b63220a746aedb2851382161e99b8e7928186e2422db058e9716cb8"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:50:10Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T04:24:34Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -125647,12 +126718,18 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T03:50:10Z",
+            "checked_at": "2026-05-28T04:24:34Z",
             "revision": {
               "git": {
-                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "6f64521049325403d1856480ba823ffdcf752ef1",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/agency/planning.ts",
+                  "src/session/worktree-isolation.ts",
+                  "tests/smoke/role-worktree-isolation.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -125862,16 +126939,16 @@
                 }
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
-              "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "6d738eabc68b39e88ece7b34dec24c393f0711e75571288bc26a2ad59d9732a9",
-              "digest": "3a3c0cb6ce301a8cbc60985bc8b511c372e710d8d4e06b0fc488875569744de4"
+              "task_digest": "41cc5ab937929d39abcdddc612d2a91029dbec7834eb86274a3ee0d3665df55f",
+              "code_digest": "cf80c2b4c83199aa9d3c0d5d95043f26e208f63de0ef8ad438309ccf2c3901e9",
+              "digest": "b813f836683e90dbb128e9813bed995547d8f554bb45f5479b33681ee57f31dc"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:50:10Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T04:24:34Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -126306,7 +127383,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T03:50:10Z",
+        "generated_at": "2026-05-28T04:24:34Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],

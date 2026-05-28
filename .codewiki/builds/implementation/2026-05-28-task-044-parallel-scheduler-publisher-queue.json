@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-28T04:18:34Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+  "task_id": "TASK-044",
+  "task": {
+    "id": "TASK-044",
+    "title": "Implement parallel scheduler and publisher queue",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "feature",
+    "summary": "Add safe parallel roadmap execution through sprint/task partitioning, artifact claims, role worktrees or refs, fresh validation, and serialized publisher queue proof.",
+    "spec_paths": [
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ],
+    "code_paths": [
+      "src/session/claims.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/session/worktree-isolation.ts",
+      "src/agency/planning.ts",
+      "src/roadmap/runtime.ts",
+      "src/validation/report.ts",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+    ],
+    "goal": {
+      "outcome": "CodeWiki can safely allocate non-conflicting sprint/task workers and serialize final merge/closure through publisher proof.",
+      "acceptance": [
+        "Scheduler computes non-conflicting sprint/task partitions from declared write scopes and artifact-status availability.",
+        "Builder, validator, and publisher roles record worktree/branch/ref metadata and claims with TTL/heartbeat/release semantics.",
+        "Fresh validation consumes immutable refs from worker outputs and does not reuse builder chat context.",
+        "Publisher queue serializes merge/apply, generated-state refresh, final commit/tree proof, and task-close/publication readiness.",
+        "Tests cover non-conflicting parallel allocation, write/write conflict blocking, wait/wake readiness, validation isolation, and publisher serialization."
+      ],
+      "non_goals": [
+        "Do not implement generic cloud/remote worker infrastructure.",
+        "Do not bypass Git/content proof or validation isolation.",
+        "Do not allow shared-root parallel writes when role worktrees/refs are required."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "claim wait queue and role worktree isolation tests",
+        "roadmap/session source-root guard tests"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-04T04:18:34.000Z",
+    "purge_after": "2026-06-11T04:18:34.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implement TASK-044 parallel scheduler and publisher queue planning proof",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-044"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-28-planning-pass.json"
+    ],
+    "source": [
+      ".codewiki/roadmap/tasks/TASK-044/task.json",
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/session/worktree-isolation.ts",
+      "src/agency/planning.ts"
+    ],
+    "tests": [
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs"
+    ],
+    "validation": [
+      "fresh implementation validation pending"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-044"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+    "spec_paths": [
+      ".codewiki/kb/system/worktree-isolation.md",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/roadmap.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ],
+    "code_paths": [
+      "src/session/claims.ts",
+      "src/session/artifact-status-tool.ts",
+      "src/session/worktree-isolation.ts",
+      "src/agency/planning.ts",
+      "src/roadmap/runtime.ts",
+      "src/validation/report.ts",
+      "tests/smoke/claim-wait-queue.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/session/worktree-isolation.ts",
+    "src/agency/planning.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/smoke/claim-wait-queue.test.mjs",
+    "tests/tasks/TASK-028/session-source-root.test.mjs",
+    "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "src/session/worktree-isolation.ts",
+    "src/agency/planning.ts"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
+    "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+    "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "npm run typecheck",
+    "npm run test:smoke",
+    "npm run test:features",
+    "npm run test:pack",
+    "npm run check:architecture",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true (warning: graph/generated-file warnings; task/generated-parity pass)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+      "roadmap_task_id": "TASK-044",
+      "test_files": [
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Extended role-worktree smoke before relying on behavior: it asserts non-conflicting allocations, partition conflict blocking, artifact status blocking, released-waiter readiness, and publisher serialization.",
+        "Retained source-root guard by asserting scheduler/publisher helpers remain owned by src/session/worktree-isolation.ts."
+      ],
+      "notes": [
+        "No generic cloud/remote worker infrastructure was added.",
+        "Shared-root parallel writes remain blocked by claims and scheduler output requires role worktrees/refs."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+      "roadmap_task_id": "TASK-044",
+      "code_files": [
+        "src/session/worktree-isolation.ts",
+        "src/agency/planning.ts"
+      ],
+      "evidence": [
+        "src/session/worktree-isolation.ts adds declared write-scope derivation, conflict-aware parallel scheduler planning, builder/validator role worktree allocations, wait queue summaries, and global publisher queue serialization proof.",
+        "src/agency/planning.ts integrates computeParallelSchedulerPlan into work-mode output and bounded context so agency planning exposes scheduler allocations, blocked tasks, and publisher queue status."
+      ],
+      "notes": [
+        "Implementation stayed within scheduler/worktree planning and publisher queue proof surfaces. Agency runner execution remains TASK-047 non-goal."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Extended role-worktree smoke before relying on behavior: it asserts non-conflicting allocations, partition conflict blocking, artifact status blocking, released-waiter readiness, and publisher serialization.",
+    "Retained source-root guard by asserting scheduler/publisher helpers remain owned by src/session/worktree-isolation.ts."
+  ],
+  "code_change_evidence": [
+    "src/session/worktree-isolation.ts adds declared write-scope derivation, conflict-aware parallel scheduler planning, builder/validator role worktree allocations, wait queue summaries, and global publisher queue serialization proof.",
+    "src/agency/planning.ts integrates computeParallelSchedulerPlan into work-mode output and bounded context so agency planning exposes scheduler allocations, blocked tasks, and publisher queue status."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Scheduler computes non-conflicting sprint/task partitions from declared write scopes and artifact-status availability.",
+      "evidence": "src/session/worktree-isolation.ts exports computeParallelSchedulerPlan and declaredWriteScopesForTask; role-worktree isolation smoke covers two non-conflicting task allocations plus partition conflict blocking from shared code path."
+    },
+    {
+      "criterion": "Builder, validator, and publisher roles record worktree/branch/ref metadata and claims with TTL/heartbeat/release semantics.",
+      "evidence": "computeParallelSchedulerPlan emits builder/validator role worktree plans and builder claim metadata with ttl_minutes, heartbeat, and release commands; createPublisherQueuePlan emits serialized publisher claim metadata. Existing mutateChangeClaims role/worktree assertions remain covered."
+    },
+    {
+      "criterion": "Fresh validation consumes immutable refs from worker outputs and does not reuse builder chat context.",
+      "evidence": "Publisher queue required_steps now require immutable builder refs and fresh validation refs before publisher serialization; role-worktree validation isolation smoke still asserts validator fresh_context metadata and builder claim linkage."
+    },
+    {
+      "criterion": "Publisher queue serializes merge/apply, generated-state refresh, final commit/tree proof, and task-close/publication readiness.",
+      "evidence": "createPublisherQueuePlan defines serialization_key=publisher:global, max_active=1, active publisher blocking, required publisher steps, and clean published_sha/tree_sha/archive_ref-or-remote_ref proof requirements; tests assert blocked active publisher and serialization text."
+    },
+    {
+      "criterion": "Tests cover non-conflicting parallel allocation, write/write conflict blocking, wait/wake readiness, validation isolation, and publisher serialization.",
+      "evidence": "tests/smoke/role-worktree-isolation.test.mjs now covers non-conflicting allocations, partition conflict, artifact-claim blocking, ready waiter wake allocation, validation isolation, and publisher queue serialization; claim-wait queue test still covers wait/wake mechanics."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue roadmap work with TASK-044 after TASK-038 closure, leaving ESC key behavior unchanged.",
+    "implemented_changes": [
+      "Added mechanical parallel scheduler planning from task write scopes and artifact-status availability.",
+      "Added publisher queue plan with global serialization key, active publisher blocking, and required final proof steps.",
+      "Integrated scheduler plan into codewiki_agency work-mode planning output and bounded context.",
+      "Extended smoke/source-root tests for allocation, conflict blocking, wait/wake readiness, validation isolation, and publisher serialization."
+    ],
+    "layers_updated": {
+      "knowledge": [],
+      "roadmap": [],
+      "code": [
+        "src/session/worktree-isolation.ts",
+        "src/agency/planning.ts"
+      ],
+      "tests": [
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs"
+      ],
+      "validation": [
+        "fresh implementation validation pending"
+      ]
+    },
+    "acceptance_evidence": [
+      "TASK-044 acceptance criteria mapped to scheduler/publisher code and role-worktree/claim tests.",
+      "npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, and npm run check:architecture passed."
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "npm run check:architecture"
+    ],
+    "non_goals_preserved": [
+      "Did not implement generic cloud/remote worker infrastructure.",
+      "Did not bypass Git/content proof or validation isolation.",
+      "Did not allow shared-root parallel writes; scheduler emits role worktrees/refs and artifact claims."
+    ],
+    "remaining_risks": [
+      "Fresh validation and clean task-close proof are pending."
+    ]
+  },
+  "risks": [
+    "Fresh implementation validation still required before task close.",
+    "Scheduler uses declared task code_paths plus explicit scopes as write-scope inputs; tasks with hidden write paths must declare scopes before safe parallel allocation.",
+    "Current worktree has unrelated uncommitted local config/pi-lens artifacts outside TASK-044 changes; validation should use source refs and content proof for the relevant dirty tree."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-044",
+      "task_id": "TASK-044",
+      "next_focus_task_id": "TASK-045",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-044",
+        "title": "Implement parallel scheduler and publisher queue",
+        "summary": "Implement TASK-044 parallel scheduler and publisher queue planning proof",
+        "spec_paths": [
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+        ],
+        "code_paths": [
+          "src/session/claims.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/session/worktree-isolation.ts",
+          "src/agency/planning.ts",
+          "src/roadmap/runtime.ts",
+          "src/validation/report.ts",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+        ],
+        "acceptance": [
+          "Scheduler computes non-conflicting sprint/task partitions from declared write scopes and artifact-status availability.",
+          "Builder, validator, and publisher roles record worktree/branch/ref metadata and claims with TTL/heartbeat/release semantics.",
+          "Fresh validation consumes immutable refs from worker outputs and does not reuse builder chat context.",
+          "Publisher queue serializes merge/apply, generated-state refresh, final commit/tree proof, and task-close/publication readiness.",
+          "Tests cover non-conflicting parallel allocation, write/write conflict blocking, wait/wake readiness, validation isolation, and publisher serialization."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "claim wait queue and role worktree isolation tests",
+          "roadmap/session source-root guard tests"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
+          "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "npm run check:architecture",
+          "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true (warning: graph/generated-file warnings; task/generated-parity pass)"
+        ],
+        "test_design_evidence": [
+          "Extended role-worktree smoke before relying on behavior: it asserts non-conflicting allocations, partition conflict blocking, artifact status blocking, released-waiter readiness, and publisher serialization.",
+          "Retained source-root guard by asserting scheduler/publisher helpers remain owned by src/session/worktree-isolation.ts."
+        ],
+        "code_change_evidence": [
+          "src/session/worktree-isolation.ts adds declared write-scope derivation, conflict-aware parallel scheduler planning, builder/validator role worktree allocations, wait queue summaries, and global publisher queue serialization proof.",
+          "src/agency/planning.ts integrates computeParallelSchedulerPlan into work-mode output and bounded context so agency planning exposes scheduler allocations, blocked tasks, and publisher queue status."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-044",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-044",
+      "show_build": "git show refs/codewiki/archive/task/TASK-044:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/roadmap.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+        "src/session/claims.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/session/worktree-isolation.ts",
+        "src/agency/planning.ts",
+        "src/roadmap/runtime.ts",
+        "src/validation/report.ts",
+        "tests/smoke/claim-wait-queue.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/tasks/TASK-028/session-source-root.test.mjs",
+        "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "feat(codewiki): plan parallel scheduler publishing",
+      "body": "Implement TASK-044 scheduler and publisher queue proof.\n\n- compute non-conflicting task partitions from declared write scopes\n- block allocations on artifact claims, partition conflicts, and session limits\n- emit builder/validator role worktree plans with claim heartbeat/release metadata\n- define serialized publisher queue proof with clean commit/tree requirements\n- surface scheduler output in agency work-mode planning\n- extend smoke tests for scheduler, wait/wake, isolation, and publisher serialization\n\nChecks: npm run typecheck; npm run test:smoke; npm run test:features; npm run test:pack; npm run check:architecture\n\nCodeWiki-Task: TASK-044\nCodeWiki-Build: <replace with implementation build path>\nCodeWiki-Validation: <pending fresh validation>\nCodeWiki-Recover: /wiki-restore TASK-044",
+      "trailers": [
+        "CodeWiki-Task: TASK-044",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs, node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs, npm run typecheck, npm run test:smoke, npm run test:features, npm run test:pack, npm run check:architecture, codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true (warning: graph/generated-file warnings; task/generated-parity pass)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-044",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-044",
+        "CodeWiki-Digest: sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+        "CodeWiki-Restore: /wiki-restore TASK-044"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "feat(codewiki): plan parallel scheduler publishing",
+      "body": "Implement TASK-044 scheduler and publisher queue proof.\n\n- compute non-conflicting task partitions from declared write scopes\n- block allocations on artifact claims, partition conflicts, and session limits\n- emit builder/validator role worktree plans with claim heartbeat/release metadata\n- define serialized publisher queue proof with clean commit/tree requirements\n- surface scheduler output in agency work-mode planning\n- extend smoke tests for scheduler, wait/wake, isolation, and publisher serialization\n\nChecks: npm run typecheck; npm run test:smoke; npm run test:features; npm run test:pack; npm run check:architecture\n\nCodeWiki-Task: TASK-044\nCodeWiki-Build: <replace with implementation build path>\nCodeWiki-Validation: <pending fresh validation>\nCodeWiki-Recover: /wiki-restore TASK-044"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-044",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-044"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-044",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-044",
+        "show_build": "git show refs/codewiki/archive/task/TASK-044:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/roadmap.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+          "src/session/claims.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/session/worktree-isolation.ts",
+          "src/agency/planning.ts",
+          "src/roadmap/runtime.ts",
+          "src/validation/report.ts",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-044",
+      "build_path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-044",
+      "commit_sha": "",
+      "digest": "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
+      "restore_command": "/wiki-restore TASK-044"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
+          "bytes": 21893
+        },
+        {
+          "path": "tests/smoke/role-worktree-isolation.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:4f72cb04ecb021d5f77df6283db76fb1c7716569f626260fcaefdfb3cfeacedc",
+          "bytes": 11876
+        },
+        {
+          "path": "tests/smoke/claim-wait-queue.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
+          "bytes": 5494
+        },
+        {
+          "path": "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
+          "bytes": 15946
+        },
+        {
+          "path": "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
+          "bytes": 10891
+        },
+        {
+          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:3ef8df5e47a15c7029796e53df174a5bddcc8438cfe29a817f743a72c2459de6",
+          "bytes": 4937
+        },
+        {
+          "path": "src/session/worktree-isolation.ts",
+          "role": "code_file",
+          "sha256": "sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
+          "bytes": 21362
+        },
+        {
+          "path": "src/agency/planning.ts",
+          "role": "code_file",
+          "sha256": "sha256:6eb959c42f29ccbe2573b6f2ba8a4c8896c7a5bdf27011613444ed79210989dd",
+          "bytes": 16463
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-044",
+      "source_build": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/session/worktree-isolation.ts",
+          "src/agency/planning.ts",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "tests/tasks/TASK-028/session-source-root.test.mjs",
+          "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-044",
+        "restore_command": "/wiki-restore TASK-044"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/role-worktree-isolation.test.mjs",
+        "node --experimental-strip-types ./tests/smoke/claim-wait-queue.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-028/session-source-root.test.mjs && node --experimental-strip-types ./tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+        "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs",
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "npm run check:architecture",
+        "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true (warning: graph/generated-file warnings; task/generated-parity pass)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

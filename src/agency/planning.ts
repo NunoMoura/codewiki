@@ -15,6 +15,10 @@ import {
 } from "./types.ts";
 import type { WikiProject } from "../project/types.ts";
 import { readCodewikiState } from "../state/reader.ts";
+import {
+	computeParallelSchedulerPlan,
+	type SchedulerTaskInput,
+} from "../session/worktree-isolation.ts";
 import type { ReadStatePorts } from "../state/reader.ts";
 import type { FileStore, RebuildRunner } from "../shared/ports.ts";
 
@@ -139,6 +143,29 @@ function taskIdsForScope(
 				.map(String)
 				.filter((taskId: string) => openTasks.includes(taskId))
 		: [];
+}
+
+function schedulerTaskInputs(
+	taskIds: string[],
+	graph: Record<string, any> | undefined,
+): SchedulerTaskInput[] {
+	const taskViews = graph?.scope_views?.tasks || {};
+	return taskIds.map((taskId) => {
+		const view = taskViews[taskId] || {};
+		return {
+			task_id: taskId,
+			title: String(view.title || ""),
+			sprint_ids: Array.isArray(view.sprint_ids)
+				? view.sprint_ids.map(String)
+				: [],
+			code_paths: Array.isArray(view.code_paths)
+				? view.code_paths.map(String)
+				: [],
+			spec_paths: Array.isArray(view.spec_paths)
+				? view.spec_paths.map(String)
+				: [],
+		};
+	});
 }
 
 function scopeSummary(scope: AgencyScope): string {
@@ -353,6 +380,16 @@ export async function planAgency(
 		Boolean(parallelism.session_per_sprint) &&
 		maxSessions > 1 &&
 		Number(claims.conflict_count || 0) === 0;
+	const schedulerPlan = computeParallelSchedulerPlan(project, {
+		tasks: schedulerTaskInputs(openTasks, graph),
+		artifact_statuses: Array.isArray(claims.artifact_statuses)
+			? claims.artifact_statuses
+			: [],
+		max_sessions: maxSessions,
+		session_id_prefix:
+			scope.kind === "roadmap" ? "roadmap" : `${scope.kind}-${scope.id}`,
+		require_claims: parallelism.require_claims !== false,
+	});
 
 	const needsViewRefresh = Boolean(
 		((health?.total_issues as number | undefined) ?? 0) ||
@@ -456,14 +493,22 @@ export async function planAgency(
 				open_tasks: openTasks,
 				recommended_next_loop:
 					trigger === "sprint_end" ? "decision" : "implementation",
+				scheduler_plan: schedulerPlan,
 				session_spawn_plan: canSpawnSessions
 					? {
-							mode: "plan-only",
+							mode:
+								schedulerPlan.status === "blocked" ? "blocked" : "plan-only",
 							max_sessions: maxSessions,
 							reason:
-								"Config enables session_per_sprint and active claims report no conflicts.",
-							task_ids: openTasks.slice(0, maxSessions),
-							require_claims: parallelism.require_claims !== false,
+								"Config enables session_per_sprint; scheduler selected only non-conflicting declared write scopes.",
+							task_ids: schedulerPlan.allocations.map(
+								(allocation) => allocation.task_id,
+							),
+							blocked_task_ids: schedulerPlan.blocked.map(
+								(item) => item.task_id,
+							),
+							require_claims: schedulerPlan.require_claims,
+							publisher_queue_status: schedulerPlan.publisher_queue.status,
 						}
 					: {
 							mode: "disabled",
@@ -473,6 +518,10 @@ export async function planAgency(
 									: maxSessions <= 1
 										? "Budget allows only one session."
 										: "Claims conflict or config disabled session_per_sprint.",
+							scheduler_status: schedulerPlan.status,
+							blocked_task_ids: schedulerPlan.blocked.map(
+								(item) => item.task_id,
+							),
 						},
 			});
 			stop.condition = "Work cycle planned.";
@@ -520,6 +569,13 @@ export async function planAgency(
 			next_task: nextTask,
 			open_tasks: openTasks,
 			action: cycles[0]?.action ?? "none",
+			scheduler_status: schedulerPlan.status,
+			scheduler_ready_task_ids: schedulerPlan.allocations.map(
+				(allocation) => allocation.task_id,
+			),
+			scheduler_blocked_task_ids: schedulerPlan.blocked.map(
+				(item) => item.task_id,
+			),
 		},
 	};
 }
