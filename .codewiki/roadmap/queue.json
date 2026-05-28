@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-28T08:39:12Z",
+  "updated": "2026-05-28T09:26:52Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -541,7 +541,7 @@
     "TASK-039": {
       "id": "TASK-039",
       "title": "Add release-readiness changelog baseline",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "docs",
       "summary": "Add the missing changelog baseline and document package-readiness decisions that the review surfaced for this Pi package.",
@@ -584,7 +584,7 @@
         "closure": "Task closes with changelog/docs/package smoke evidence and remaining warnings classified."
       },
       "created": "2026-05-28",
-      "updated": "2026-05-28"
+      "updated": "2026-05-28T09:26:52Z"
     },
     "TASK-040": {
       "id": "TASK-040",

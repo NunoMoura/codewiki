@@ -303,6 +303,12 @@ async function main() {
 		"*",
 		"Missing @sinclair/typebox peer dependency",
 	);
+	assert.equal(packageJson.author, "Nuno Moura", "Missing package author");
+	ensureIncludes(
+		packageJson.files ?? [],
+		["CHANGELOG.md"],
+		"Published file whitelist",
+	);
 	assert.ok(packageJson.knip, "Missing Knip static-analysis metadata");
 	ensureIncludes(
 		packageJson.knip.entry ?? [],

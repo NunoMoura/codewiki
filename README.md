@@ -180,6 +180,22 @@ After install, run `/reload` if the session was already open.
 
 CodeWiki rebuild runs through the packaged TypeScript engine. Runtime requires Node.js 20.6 or newer.
 
+## Package entrypoint and build posture
+
+CodeWiki is packaged for Pi first. Pi loads the extension and skills from the `pi.extensions` and `pi.skills` metadata in `package.json`; `src/index.ts` is the extension source entrypoint.
+
+The package intentionally does not declare an npm `main` or `module` entrypoint. The source is TypeScript consumed by Pi's package loader, not a compiled JavaScript library API. Package-local integrations that need a stable facade should import through `src/api/index.ts` or `src/api/tools.ts` from source-aware tooling.
+
+The package also intentionally does not add a build pipeline. Release readiness is checked with:
+
+```bash
+npm run typecheck
+npm run test:smoke
+npm run test:pack
+```
+
+`npm run test:pack` runs `npm pack --dry-run` so packaging drift is caught without publishing. The changelog baseline lives in `CHANGELOG.md`; version bumps, publish, push, and release work require explicit release approval.
+
 ## Quick start
 
 ### New repo

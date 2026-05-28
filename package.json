@@ -22,6 +22,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"license": "MIT",
+	"author": "Nuno Moura",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/NunoMoura/codewiki.git"
@@ -35,6 +36,7 @@
 		"skills",
 		"scripts",
 		"README.md",
+		"CHANGELOG.md",
 		"LICENSE",
 		"package.json"
 	],

@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T09:26:43Z",
+  "profile": "implementation",
+  "task_id": "TASK-039",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes for TASK-039. CHANGELOG.md provides an unreleased/current 0.1.2 baseline; README documents Pi extension loading plus intentional no npm main/module and no-build posture; package.json adds author metadata and publishes CHANGELOG.md; package-smoke asserts the metadata. Typecheck, pack, smoke, production-readiness equivalent, package audit, and implementation preflight pass. Remaining production-readiness warnings for no build script and no entrypoint are documented intentional; unrelated code-quality/test-framework warnings are outside TASK-039 scope.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json — pass",
+    "Read TASK-039 resume context and planning build .codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json — pass",
+    "Read CHANGELOG.md, README.md, package.json, tests/smoke/package-smoke.test.mjs changes — pass",
+    "lsp_diagnostics tests/smoke/package-smoke.test.mjs — pass with one TypeScript hint only",
+    "production-readiness equivalent section — pass: 83/100 Grade B; docs 100/100; remaining deploy warnings documented intentional",
+    "npm run typecheck — pass",
+    "npm run test:pack — pass; tarball includes CHANGELOG.md",
+    "npm run test:smoke — pass",
+    "git diff --check — pass",
+    "codewiki_audit profiles=alignment,changed,task,file-structure,package task_id=TASK-039 changed=true — task/file-structure/package pass; alignment/generated-view warnings only",
+    "codewiki_validation implementation preflight — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Production-readiness equivalent still reports no build script and no main/module entrypoint; README/CHANGELOG document both as intentional Pi package posture."
+    },
+    {
+      "severity": "warning",
+      "summary": "Production-readiness equivalent still reports unrelated code-quality/test-framework warnings outside TASK-039 scope."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment/changed audits report existing graph-health/generated-view warnings; not blocking pre-commit implementation validation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Working tree includes unrelated dirty/untracked files outside TASK-039 scope; task-close still needs clean committed proof."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:file-structure",
+    "profile:package",
+    "approval:user",
+    "codewiki_audit profiles=alignment,changed,task,file-structure,package TASK-039 — warning: graph/generated views; task/file-structure/package pass"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "25e2938267e79daa79ac8bbce8f7cf37034c8abc",
+    "e252c85cadbf10fce7a5a27b06e87c2f2a9de32e",
+    "sha256:bfee4dca5af20464397c8d43ffacd35245f74508e345cd46b7f5db594cb21a48"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-039",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "validated_sha": "25e2938267e79daa79ac8bbce8f7cf37034c8abc",
+    "tree_sha": "e252c85cadbf10fce7a5a27b06e87c2f2a9de32e",
+    "working_tree_digest": "sha256:bfee4dca5af20464397c8d43ffacd35245f74508e345cd46b7f5db594cb21a48",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+    "role": "validator"
+  }
+}

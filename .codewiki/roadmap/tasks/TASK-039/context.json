@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28",
+  "generated_at": "2026-05-28T09:26:52Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-039/context.json",
   "task": {
     "id": "TASK-039",
     "title": "Add release-readiness changelog baseline",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "docs",
     "change_type": "code",
