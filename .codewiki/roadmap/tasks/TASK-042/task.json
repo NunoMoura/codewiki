@@ -1,7 +1,7 @@
 {
   "id": "TASK-042",
   "title": "Strengthen state graph read models",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "refactor",
   "summary": "Reduce any usage and cognitive complexity in graph, builders, reader, and lint code while preserving generated CodeWiki state outputs.",
@@ -52,5 +52,5 @@
     "closure": "Task closes when tests pass and review metrics improve for targeted state files."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28"
+  "updated": "2026-05-28T23:06:27Z"
 }

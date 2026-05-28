@@ -1,0 +1,664 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-28T22:01:21Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+  "task_id": "TASK-042",
+  "task": {
+    "id": "TASK-042",
+    "title": "Strengthen state graph read models",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "refactor",
+    "summary": "Reduce any usage and cognitive complexity in graph, builders, reader, and lint code while preserving generated CodeWiki state outputs.",
+    "spec_paths": [
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "code_paths": [
+      "src/state/graph.ts",
+      "src/state/builders.ts",
+      "src/state/reader.ts",
+      "src/state/lint.ts",
+      "src/state/types.ts",
+      "src/state/graph/rebuilder.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs"
+    ],
+    "goal": {
+      "outcome": "State graph/read-model ownership has stronger typing and smaller focused modules without generated output drift.",
+      "acceptance": [
+        "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
+        "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
+        "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in the graph owner file.",
+        "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests."
+      ],
+      "non_goals": [
+        "Do not redesign the graph JSON schema.",
+        "Do not move state ownership out of src/state/**.",
+        "Do not change resume task-selection logic; TASK-040 owns that boundary."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "rerun type-coverage and complexity review for state files"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-04T22:01:21.000Z",
+    "purge_after": "2026-06-11T22:01:21.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-042 strengthened state graph read models by extracting graph artifact-reference, accumulator, and lens helpers, tightening state/read-model types, and reducing any/as-any hotspots while preserving smoke/feature outputs.",
+  "change_type": "code",
+  "traceability": {
+    "change_type": "code",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-042"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/state/graph.ts",
+      "src/state/graph/artifact-refs.ts",
+      "src/state/graph/collector.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/builders.ts",
+      "src/state/reader.ts",
+      "src/state/lint.ts",
+      "src/state/types.ts"
+    ],
+    "tests": [
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/run.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-042"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+    "spec_paths": [
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ],
+    "code_paths": [
+      "src/state/graph.ts",
+      "src/state/builders.ts",
+      "src/state/reader.ts",
+      "src/state/lint.ts",
+      "src/state/types.ts",
+      "src/state/graph/rebuilder.ts",
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/run.mjs"
+  ],
+  "code_files": [
+    "src/state/graph.ts",
+    "src/state/graph/artifact-refs.ts",
+    "src/state/graph/collector.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/builders.ts",
+    "src/state/reader.ts",
+    "src/state/lint.ts",
+    "src/state/types.ts"
+  ],
+  "files_changed": [
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/run.mjs",
+    "src/state/graph.ts",
+    "src/state/graph/artifact-refs.ts",
+    "src/state/graph/collector.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/builders.ts",
+    "src/state/reader.ts",
+    "src/state/lint.ts",
+    "src/state/types.ts"
+  ],
+  "checks_run": [
+    "npx tsc --noEmit --pretty false --incremental false (pass)",
+    "npm run typecheck (pass)",
+    "npm run test:smoke (pass)",
+    "npm run test:features (pass; 36 passed, 0 failed)",
+    "npm run check:architecture (pass; file-structure audit 0 issues)",
+    "codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt)",
+    "targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "roadmap_task_id": "TASK-042",
+      "test_files": [
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/run.mjs"
+      ],
+      "evidence": [
+        "No new test files were added because TASK-042 is behavior-preserving refactor/read-model hardening; existing schema and lens behavior is covered by smoke/graph-lenses, smoke/alignment-graph, package smoke, feature suite, and architecture file-structure audit.",
+        "Targeted metrics command used for type-coverage review: rg -n \"as any|: any|\\bany\\[\\]|Record<string, any>|Array<any>\" over src/state/graph.ts src/state/graph/*.ts src/state/builders.ts src/state/reader.ts src/state/lint.ts src/state/types.ts."
+      ],
+      "notes": [
+        "Existing feature suite exercises graph lenses, alignment graph, validation preflight, roadmap task boundaries, and package smoke after refactor.",
+        "TypeScript/LSP diagnostics clean except existing deprecation hint for RoadmapTaskRecord.change_class."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "roadmap_task_id": "TASK-042",
+      "code_files": [
+        "src/state/graph.ts",
+        "src/state/graph/artifact-refs.ts",
+        "src/state/graph/collector.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/builders.ts",
+        "src/state/reader.ts",
+        "src/state/lint.ts",
+        "src/state/types.ts"
+      ],
+      "evidence": [
+        "src/state/graph.ts delegates artifact ref normalization, node/edge accumulation, and graph lens construction to new focused modules under src/state/graph/.",
+        "src/state/reader.ts removed raw any/as-any usages by narrowing graph/status read models through record helpers and typed GraphViews fields.",
+        "src/state/lint.ts now treats build/research JSON payloads as unknown/UnknownRecord and narrows before reading fields.",
+        "src/state/builders.ts tightened digest, events, roadmap state, agency lane, and bottom status-view use of typed helpers/read models.",
+        "src/state/types.ts added JsonObject, RoadmapStateSprintSummary, GraphRoadmapView, GraphGcView, GraphLensMap, and more complete roadmap task/status fields."
+      ],
+      "notes": [
+        "Generated CodeWiki outputs were rebuilt with codewiki_state refresh=true after source edits.",
+        "Unrelated pre-existing dirty files outside TASK-042 scope (.gitignore, .pi/settings.json, src/adapters/pi/ui/decision-approval.ts, tests/smoke/decision-approval-ui.test.mjs, .pi-lens/) were left untouched."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "No new test files were added because TASK-042 is behavior-preserving refactor/read-model hardening; existing schema and lens behavior is covered by smoke/graph-lenses, smoke/alignment-graph, package smoke, feature suite, and architecture file-structure audit.",
+    "Targeted metrics command used for type-coverage review: rg -n \"as any|: any|\\bany\\[\\]|Record<string, any>|Array<any>\" over src/state/graph.ts src/state/graph/*.ts src/state/builders.ts src/state/reader.ts src/state/lint.ts src/state/types.ts."
+  ],
+  "code_change_evidence": [
+    "src/state/graph.ts delegates artifact ref normalization, node/edge accumulation, and graph lens construction to new focused modules under src/state/graph/.",
+    "src/state/reader.ts removed raw any/as-any usages by narrowing graph/status read models through record helpers and typed GraphViews fields.",
+    "src/state/lint.ts now treats build/research JSON payloads as unknown/UnknownRecord and narrows before reading fields.",
+    "src/state/builders.ts tightened digest, events, roadmap state, agency lane, and bottom status-view use of typed helpers/read models.",
+    "src/state/types.ts added JsonObject, RoadmapStateSprintSummary, GraphRoadmapView, GraphGcView, GraphLensMap, and more complete roadmap task/status fields."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
+      "evidence": "src/state/types.ts now defines typed GraphViews/RoadmapState sprint/task fields; src/state/reader.ts uses record guards instead of any casts; src/state/lint.ts build data/research inputs narrow from unknown/UnknownRecord helpers; src/state/builders.ts canonical digest/events/roadmap summaries use StateRecord/string guards."
+    },
+    {
+      "criterion": "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
+      "evidence": "Targeted raw any/as-any pattern review after edits: src/state/builders.ts 42, src/state/graph.ts 28, src/state/reader.ts 0, src/state/lint.ts 0, src/state/types.ts 6. Baseline from task-start review was builders 99, graph.ts 48, reader 20, lint 11."
+    },
+    {
+      "criterion": "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in graph owner file.",
+      "evidence": "Extracted src/state/graph/artifact-refs.ts, src/state/graph/collector.ts, and src/state/graph/lenses.ts; src/state/graph.ts now imports those focused modules and uses GraphAccumulator for node/edge ownership."
+    },
+    {
+      "criterion": "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests.",
+      "evidence": "npm run test:smoke passed; npm run test:features passed (36 passed, 0 failed); npm run check:architecture passed; codewiki_state refresh=true rebuilt generated .codewiki/index_graph.json and TASK-042 task context."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Continue TASK-042 after context refresh and implement state graph/read-model hardening until checks pass and implementation evidence is ready for fresh validation.",
+    "implemented_changes": [
+      "Extracted graph artifact-reference helpers, graph node/edge accumulator, and lens construction into focused src/state/graph modules.",
+      "Strengthened GraphViews/RoadmapState/status read-model typing in src/state/types.ts and consumers.",
+      "Removed raw any/as-any usage from src/state/reader.ts and src/state/lint.ts, and reduced builders/graph hotspots."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/index_graph.json"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-042/task.json",
+        ".codewiki/roadmap/tasks/TASK-042/context.json"
+      ],
+      "code": [
+        "src/state/graph.ts",
+        "src/state/graph/artifact-refs.ts",
+        "src/state/graph/collector.ts",
+        "src/state/graph/lenses.ts",
+        "src/state/builders.ts",
+        "src/state/reader.ts",
+        "src/state/lint.ts",
+        "src/state/types.ts"
+      ],
+      "tests": [],
+      "validation": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run check:architecture"
+      ]
+    },
+    "acceptance_evidence": [
+      "npm run typecheck passed.",
+      "npm run test:smoke passed.",
+      "npm run test:features passed with 36 passed, 0 failed.",
+      "npm run check:architecture passed with file-structure audit 0 issues.",
+      "Target any/as-any review shows reader/lint at 0 and builders/graph reduced."
+    ],
+    "checks": [
+      "npx tsc --noEmit --pretty false --incremental false",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run check:architecture",
+      "codewiki_state refresh=true taskId=TASK-042"
+    ],
+    "non_goals_preserved": [
+      "No graph JSON schema redesign.",
+      "State ownership remains under src/state/**.",
+      "No resume task-selection logic changes."
+    ],
+    "remaining_risks": [
+      "Fresh validation required before closing TASK-042."
+    ]
+  },
+  "risks": [
+    "Implementation validation must account for unrelated pre-existing dirty worktree files not modified for TASK-042, or validate only the TASK-042 scoped diff/content proof."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-042",
+      "task_id": "TASK-042",
+      "next_focus_task_id": "TASK-043",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-042",
+        "title": "Strengthen state graph read models",
+        "summary": "TASK-042 strengthened state graph read models by extracting graph artifact-reference, accumulator, and lens helpers, tightening state/read-model types, and reducing any/as-any hotspots while preserving smoke/feature outputs.",
+        "spec_paths": [
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/file-structure.md"
+        ],
+        "code_paths": [
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts",
+          "src/state/lint.ts",
+          "src/state/types.ts",
+          "src/state/graph/rebuilder.ts",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs",
+          "src/state/graph/artifact-refs.ts",
+          "src/state/graph/collector.ts",
+          "src/state/graph/lenses.ts"
+        ],
+        "acceptance": [
+          "Major JSON and graph inputs parse as unknown and narrow through domain guards or existing state/roadmap/session types.",
+          "High-count any/as any usage in state/builders, state/reader, graph, and lint paths is reduced measurably.",
+          "Graph input collection, node/edge construction, reconciliation/scope views, and output writing are separated enough to lower complexity in the graph owner file.",
+          "Generated graph/status/task context/lint outputs remain schema-compatible with existing smoke tests."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "rerun type-coverage and complexity review for state files"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+        "checks_run": [
+          "npx tsc --noEmit --pretty false --incremental false (pass)",
+          "npm run typecheck (pass)",
+          "npm run test:smoke (pass)",
+          "npm run test:features (pass; 36 passed, 0 failed)",
+          "npm run check:architecture (pass; file-structure audit 0 issues)",
+          "codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt)",
+          "targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)"
+        ],
+        "test_design_evidence": [
+          "No new test files were added because TASK-042 is behavior-preserving refactor/read-model hardening; existing schema and lens behavior is covered by smoke/graph-lenses, smoke/alignment-graph, package smoke, feature suite, and architecture file-structure audit.",
+          "Targeted metrics command used for type-coverage review: rg -n \"as any|: any|\\bany\\[\\]|Record<string, any>|Array<any>\" over src/state/graph.ts src/state/graph/*.ts src/state/builders.ts src/state/reader.ts src/state/lint.ts src/state/types.ts."
+        ],
+        "code_change_evidence": [
+          "src/state/graph.ts delegates artifact ref normalization, node/edge accumulation, and graph lens construction to new focused modules under src/state/graph/.",
+          "src/state/reader.ts removed raw any/as-any usages by narrowing graph/status read models through record helpers and typed GraphViews fields.",
+          "src/state/lint.ts now treats build/research JSON payloads as unknown/UnknownRecord and narrows before reading fields.",
+          "src/state/builders.ts tightened digest, events, roadmap state, agency lane, and bottom status-view use of typed helpers/read models.",
+          "src/state/types.ts added JsonObject, RoadmapStateSprintSummary, GraphRoadmapView, GraphGcView, GraphLensMap, and more complete roadmap task/status fields."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-042",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-042",
+      "show_build": "git show refs/codewiki/archive/task/TASK-042:.codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/file-structure.md",
+        "src/state/graph.ts",
+        "src/state/builders.ts",
+        "src/state/reader.ts",
+        "src/state/lint.ts",
+        "src/state/types.ts",
+        "src/state/graph/rebuilder.ts",
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-042 Strengthen state graph read models implementation evidence",
+      "body": "TASK-042 strengthened state graph read models by extracting graph artifact-reference, accumulator, and lens helpers, tightening state/read-model types, and reducing any/as-any hotspots while preserving smoke/feature outputs.\n\nChecks: npx tsc --noEmit --pretty false --incremental false (pass), npm run typecheck (pass), npm run test:smoke (pass), npm run test:features (pass; 36 passed, 0 failed), npm run check:architecture (pass; file-structure audit 0 issues), codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt), targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-042\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json\nCodeWiki-Checks: npx tsc --noEmit --pretty false --incremental false (pass), npm run typecheck (pass), npm run test:smoke (pass), npm run test:features (pass; 36 passed, 0 failed), npm run check:architecture (pass; file-structure audit 0 issues), codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt), targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-042\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-042\nCodeWiki-Digest: sha256:018793cac05e32fd42916651424133cee056116dce9f82dd87a9fd29e5c60785\nCodeWiki-Restore: /wiki-restore TASK-042",
+      "trailers": [
+        "CodeWiki-Task: TASK-042",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+        "CodeWiki-Checks: npx tsc --noEmit --pretty false --incremental false (pass), npm run typecheck (pass), npm run test:smoke (pass), npm run test:features (pass; 36 passed, 0 failed), npm run check:architecture (pass; file-structure audit 0 issues), codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt), targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-042",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-042",
+        "CodeWiki-Digest: sha256:018793cac05e32fd42916651424133cee056116dce9f82dd87a9fd29e5c60785",
+        "CodeWiki-Restore: /wiki-restore TASK-042"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-042 Strengthen state graph read models implementation evidence",
+      "body": "TASK-042 strengthened state graph read models by extracting graph artifact-reference, accumulator, and lens helpers, tightening state/read-model types, and reducing any/as-any hotspots while preserving smoke/feature outputs.\n\nChecks: npx tsc --noEmit --pretty false --incremental false (pass), npm run typecheck (pass), npm run test:smoke (pass), npm run test:features (pass; 36 passed, 0 failed), npm run check:architecture (pass; file-structure audit 0 issues), codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt), targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-042\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json\nCodeWiki-Checks: npx tsc --noEmit --pretty false --incremental false (pass), npm run typecheck (pass), npm run test:smoke (pass), npm run test:features (pass; 36 passed, 0 failed), npm run check:architecture (pass; file-structure audit 0 issues), codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt), targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-042\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-042\nCodeWiki-Digest: sha256:018793cac05e32fd42916651424133cee056116dce9f82dd87a9fd29e5c60785\nCodeWiki-Restore: /wiki-restore TASK-042"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-042",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-042"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-042",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-042",
+        "show_build": "git show refs/codewiki/archive/task/TASK-042:.codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/file-structure.md",
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts",
+          "src/state/lint.ts",
+          "src/state/types.ts",
+          "src/state/graph/rebuilder.ts",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-042",
+      "build_path": ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-042",
+      "commit_sha": "",
+      "digest": "sha256:018793cac05e32fd42916651424133cee056116dce9f82dd87a9fd29e5c60785",
+      "restore_command": "/wiki-restore TASK-042"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+          "bytes": 18016
+        },
+        {
+          "path": "tests/smoke/graph-lenses.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:3f58ad189004fcaf5ce6edcf5f93fe61863ba4ac9c6ee41a210376519299a388",
+          "bytes": 7890
+        },
+        {
+          "path": "tests/smoke/alignment-graph.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:93e8472bf480dda9c36282a951089d195344a8842a49ae38dfbd6ad02925c77a",
+          "bytes": 17364
+        },
+        {
+          "path": "tests/run.mjs",
+          "role": "test_file",
+          "sha256": "sha256:412097fb5944ab7751c54ce73e3acdb02ee86448d4266d7e80695c660ae96230",
+          "bytes": 2037
+        },
+        {
+          "path": "src/state/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:37dcfe3bac6b2a2a93127157b4f8982eb8a2c205431aa123090d0f4f6495315a",
+          "bytes": 86733
+        },
+        {
+          "path": "src/state/graph/artifact-refs.ts",
+          "role": "code_file",
+          "sha256": "sha256:3eccf2c6836779383fa01e3ddb104594ed72a2cccbd582a258a6102faf5d8d99",
+          "bytes": 3654
+        },
+        {
+          "path": "src/state/graph/collector.ts",
+          "role": "code_file",
+          "sha256": "sha256:108bb827104367fb587f59c854435516990efee3f4d2ba90fc8ac09cae1c86f7",
+          "bytes": 860
+        },
+        {
+          "path": "src/state/graph/lenses.ts",
+          "role": "code_file",
+          "sha256": "sha256:75cd4ece52ca29102def7f899917c073886343b69746c2297b1cf740b83519fe",
+          "bytes": 15385
+        },
+        {
+          "path": "src/state/builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:77f84d9ee538f752f13a822f2d0e7127ee049c338d7908a31e5b2a9c18731805",
+          "bytes": 48605
+        },
+        {
+          "path": "src/state/reader.ts",
+          "role": "code_file",
+          "sha256": "sha256:4885f5676743100ab5727c85b549acd30f27de980350bd2e2302a4747e787a12",
+          "bytes": 14744
+        },
+        {
+          "path": "src/state/lint.ts",
+          "role": "code_file",
+          "sha256": "sha256:ea2be1cec7d4d939daed62dd736905005e76eb224a2a53a8a77d4aac8f5d447d",
+          "bytes": 23896
+        },
+        {
+          "path": "src/state/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:7ae27390b63c8a759cc62b8107cdbc838b9be0de56057387212f4ed25b6ab20a",
+          "bytes": 11501
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-042",
+      "source_build": ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/state/graph.ts",
+          "src/state/graph/artifact-refs.ts",
+          "src/state/graph/collector.ts",
+          "src/state/graph/lenses.ts",
+          "src/state/builders.ts",
+          "src/state/reader.ts",
+          "src/state/lint.ts",
+          "src/state/types.ts",
+          "tests/smoke/graph-lenses.test.mjs",
+          "tests/smoke/alignment-graph.test.mjs",
+          "tests/run.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-042",
+        "restore_command": "/wiki-restore TASK-042"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "npx tsc --noEmit --pretty false --incremental false (pass)",
+        "npm run typecheck (pass)",
+        "npm run test:smoke (pass)",
+        "npm run test:features (pass; 36 passed, 0 failed)",
+        "npm run check:architecture (pass; file-structure audit 0 issues)",
+        "codewiki_state refresh=true taskId=TASK-042 (pass; generated outputs rebuilt)",
+        "targeted any/as-any count review (remaining: builders 42, graph.ts 28, graph/rebuilder 10, types 6; reader/lint 0)"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

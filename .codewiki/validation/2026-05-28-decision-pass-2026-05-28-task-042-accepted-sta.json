@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T23:01:25Z",
+  "profile": "decision",
+  "verdict": "pass",
+  "rationale": "TASK-042 decision metadata passes: approved row is explicitly approved, maps to existing system knowledge and TASK-042 planning, preserves non-goals, and required audits have no blocking findings.",
+  "checks": [
+    "Read decision build .codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
+    "codewiki_audit profiles=alignment,stale-reference task_id=TASK-042 include_fingerprints=true (warning: graph health only; stale-reference/task pass)",
+    "Verified approved_diff_rows ROW-001 has row_to_kb_mappings with deferred rationale and propagation.direction=decision-to-planning"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
+  "policy_profile": "decision",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "stale-reference"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:stale-reference",
+    "approval:user"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,stale-reference task_id=TASK-042 include_fingerprints=true returned alignment graph-health warning only; stale-reference pass; task pass"
+  ],
+  "content_proof_refs": [],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "decision validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "stale-reference"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:stale-reference or profile:stale-reference"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "decision",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Decision validation used source refs and deterministic audits; dirty tree includes generated outputs and unrelated pre-existing edits but does not block decision profile.",
+    "role": "validator"
+  }
+}

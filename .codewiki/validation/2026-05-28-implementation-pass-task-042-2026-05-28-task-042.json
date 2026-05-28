@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T23:06:11Z",
+  "profile": "implementation",
+  "task_id": "TASK-042",
+  "verdict": "pass",
+  "rationale": "TASK-042 implementation passes: it consumes a validated planning build, maps every acceptance criterion to checks/evidence, scoped pi-lens/LSP findings are clean, and required checks passed. Validation uses scoped dirty working-tree digest because unrelated pre-existing dirty files remain outside TASK-042 scope; task-close still requires clean commit proof.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+    "Read planning validation .codewiki/validation/2026-05-28-planning-pass-task-042-2026-05-28-task-042-execu.json",
+    "npm run typecheck (pass)",
+    "npm run test:smoke (pass)",
+    "npm run test:features (pass; 36 passed, 0 failed)",
+    "npm run check:architecture (pass)",
+    "lsp_diagnostics scoped state files (0 diagnostics)",
+    "pi-lens dispatch no-delta scoped state files (0E/0W)",
+    "codewiki_audit profiles=alignment,changed task_id=TASK-042 include_fingerprints=true (warnings only; task pass)"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles=alignment,changed task_id=TASK-042 include_fingerprints=true returned task pass; alignment graph-health warning; changed generated-file warnings for refreshed generated outputs"
+  ],
+  "content_proof_refs": [
+    "4e3c8e2fd90b61c1a0f5b6d8587a9219605b1967d7e8ce70503e8fd95a84b56e"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-042",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "4e3c8e2fd90b61c1a0f5b6d8587a9219605b1967d7e8ce70503e8fd95a84b56e",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Scoped TASK-042 content digest over state source files, extracted graph modules, CodeWiki decision/planning/implementation/validation refs, and generated TASK-042 outputs; unrelated dirty files outside TASK-042 scope were excluded from digest and remain a task-close/publication blocker.",
+    "role": "validator"
+  }
+}

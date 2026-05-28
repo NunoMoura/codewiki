@@ -30,6 +30,20 @@ const DEFAULT_WORD_COUNT_WARN = 1000;
 const DEFAULT_WORD_COUNT_EXEMPT = [".codewiki/roadmap.md", "index.md"];
 const OPEN_ROADMAP_STATUSES = new Set(["todo", "in_progress", "blocked"]);
 
+type UnknownRecord = Record<string, unknown>;
+interface ResearchCollection {
+	entries?: Array<{ id?: string }>;
+}
+
+function isRecord(value: unknown): value is UnknownRecord {
+	return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function recordValue(value: unknown): UnknownRecord {
+	if (isRecord(value)) return value;
+	return {};
+}
+
 function isOpenRoadmapStatus(status: string): boolean {
 	return OPEN_ROADMAP_STATUSES.has(String(status || "todo").trim());
 }
@@ -47,23 +61,22 @@ function configuredWordCountWarn(project: WikiProject): number {
 	const value = Number(
 		project.config?.lint?.word_count_warn ?? DEFAULT_WORD_COUNT_WARN,
 	);
-	return Number.isFinite(value) && value > 0 ? value : DEFAULT_WORD_COUNT_WARN;
+	if (Number.isFinite(value) && value > 0) return value;
+	return DEFAULT_WORD_COUNT_WARN;
 }
 
 function configuredWordCountExempt(project: WikiProject): Set<string> {
-	return new Set([
-		...DEFAULT_WORD_COUNT_EXEMPT,
-		...(Array.isArray(project.config?.lint?.word_count_exempt)
-			? project.config.lint.word_count_exempt
-			: []),
-	]);
+	let configured: string[] = [];
+	if (Array.isArray(project.config?.lint?.word_count_exempt)) {
+		configured = project.config.lint.word_count_exempt;
+	}
+	return new Set([...DEFAULT_WORD_COUNT_EXEMPT, ...configured]);
 }
 
 function configuredForbiddenHeadings(project: WikiProject): string[] {
-	return Array.isArray(project.config?.lint?.forbidden_headings) &&
-		project.config.lint.forbidden_headings.length > 0
-		? project.config.lint.forbidden_headings
-		: FORBIDDEN_HEADINGS;
+	const configured = project.config?.lint?.forbidden_headings;
+	if (Array.isArray(configured) && configured.length > 0) return configured;
+	return FORBIDDEN_HEADINGS;
 }
 
 function listFiles(root: string, relDir: string): string[] {
@@ -71,12 +84,12 @@ function listFiles(root: string, relDir: string): string[] {
 	if (!existsSync(start)) return [];
 	const out: string[] = [];
 	const walk = (dir: string) => {
-		for (const name of readdirSync(dir)) {
+		readdirSync(dir).forEach((name) => {
 			const abs = resolve(dir, name);
 			const stats = statSync(abs);
 			if (stats.isDirectory()) walk(abs);
 			else out.push(relative(root, abs).replace(/\\/g, "/"));
-		}
+		});
 	};
 	walk(start);
 	return out.sort();
@@ -123,7 +136,7 @@ export function lintFileContract(
 	docs: ParsedDoc[],
 ): LintIssue[] {
 	const issues: LintIssue[] = [];
-	for (const path of listFiles(repoRoot, ".codewiki/index")) {
+	listFiles(repoRoot, ".codewiki/index").forEach((path) => {
 		issues.push(
 			createIssue(
 				"error",
@@ -132,8 +145,8 @@ export function lintFileContract(
 				".codewiki/index/** is deprecated; use .codewiki/index_graph.json.",
 			),
 		);
-	}
-	for (const path of listFiles(repoRoot, ".codewiki/evidence")) {
+	});
+	listFiles(repoRoot, ".codewiki/evidence").forEach((path) => {
 		issues.push(
 			createIssue(
 				"error",
@@ -142,7 +155,7 @@ export function lintFileContract(
 				".codewiki/evidence/** is deprecated; use implementation builds, validation reports, sources, or research roots.",
 			),
 		);
-	}
+	});
 	const configPath = resolve(
 		repoRoot,
 		project.configPath || ".codewiki/config.json",
@@ -160,7 +173,7 @@ export function lintFileContract(
 			),
 		);
 	}
-	for (const doc of docs) {
+	docs.forEach((doc) => {
 		if (
 			containsStaleDotWikiReference(doc.body) ||
 			containsStaleDotWikiReference(JSON.stringify(doc.frontmatter))
@@ -174,7 +187,7 @@ export function lintFileContract(
 				),
 			);
 		}
-	}
+	});
 	return issues;
 }
 
@@ -189,11 +202,11 @@ export function lintMarkdownDocs(
 	const wordCountExempt = configuredWordCountExempt(project);
 	const forbiddenHeadings = configuredForbiddenHeadings(project);
 
-	for (const doc of docs) {
+	docs.forEach((doc) => {
 		const docId = `doc:${doc.path}`;
 		ids.set(docId, (ids.get(docId) || 0) + 1);
 
-		for (const field of DEFAULT_REQUIRED_FIELDS) {
+		DEFAULT_REQUIRED_FIELDS.forEach((field) => {
 			const val = doc.frontmatter[field];
 			if (
 				val === undefined ||
@@ -210,7 +223,7 @@ export function lintMarkdownDocs(
 					),
 				);
 			}
-		}
+		});
 
 		if ((ids.get(docId) || 0) > 1) {
 			issues.push(
@@ -223,7 +236,7 @@ export function lintMarkdownDocs(
 			);
 		}
 
-		for (const rawTarget of extractLinks(repoRoot, doc.body, doc.path)) {
+		extractLinks(repoRoot, doc.body, doc.path).forEach((rawTarget) => {
 			// Links are pre-normalized by extractLinks
 			const targetAbs = resolve(repoRoot, rawTarget);
 			if (!existsSync(targetAbs)) {
@@ -236,9 +249,9 @@ export function lintMarkdownDocs(
 					),
 				);
 			}
-		}
+		});
 
-		for (const codePath of doc.code_paths) {
+		doc.code_paths.forEach((codePath) => {
 			const candidate = resolve(repoRoot, codePath);
 			if (!existsSync(candidate)) {
 				issues.push(
@@ -250,7 +263,7 @@ export function lintMarkdownDocs(
 					),
 				);
 			}
-		}
+		});
 		if (
 			doc.code_paths.length > 0 &&
 			String(doc.frontmatter.code_paths_mode || "").trim() !==
@@ -267,7 +280,8 @@ export function lintMarkdownDocs(
 		}
 
 		const trimmedBody = doc.body.trim();
-		const wordCount = trimmedBody ? trimmedBody.split(/\s+/).length : 0;
+		let wordCount = 0;
+		if (trimmedBody) wordCount = trimmedBody.split(/\s+/).length;
 		if (!wordCountExempt.has(doc.path) && wordCount > wordCountWarn) {
 			issues.push(
 				createIssue(
@@ -279,7 +293,7 @@ export function lintMarkdownDocs(
 			);
 		}
 
-		for (const heading of forbiddenHeadings) {
+		forbiddenHeadings.forEach((heading) => {
 			if (doc.body.includes(heading)) {
 				issues.push(
 					createIssue(
@@ -290,11 +304,13 @@ export function lintMarkdownDocs(
 					),
 				);
 			}
-		}
+		});
 
-		const scoped =
-			(Array.isArray(doc.code_paths) ? doc.code_paths.length : 0) +
-			(Array.isArray(doc.spec_paths) ? doc.spec_paths.length : 0);
+		let codePathCount = 0;
+		if (Array.isArray(doc.code_paths)) codePathCount = doc.code_paths.length;
+		let specPathCount = 0;
+		if (Array.isArray(doc.spec_paths)) specPathCount = doc.spec_paths.length;
+		const scoped = codePathCount + specPathCount;
 		if (scoped === 0 && !hasGraphDerivedDocScope(repoRoot, project, doc)) {
 			issues.push(
 				createIssue(
@@ -316,18 +332,23 @@ export function lintMarkdownDocs(
 				),
 			);
 		}
-	}
+	});
 
 	return issues;
 }
 
 export interface EvidenceLinkInput {
-	builds?: { path: string; kind: string; taskId?: string; data?: any }[];
+	builds?: {
+		path: string;
+		kind: string;
+		taskId?: string;
+		data?: UnknownRecord;
+	}[];
 	validations?: {
 		path: string;
 		taskId?: string;
 		verdict?: string;
-		data?: any;
+		data?: UnknownRecord;
 	}[];
 	archivedTaskIds?: string[];
 }
@@ -336,7 +357,7 @@ export function lintRoadmapEntries(
 	repoRoot: string,
 	project: WikiProject,
 	entries: RoadmapTaskRecord[],
-	research: any[],
+	research: ResearchCollection[],
 ): LintIssue[] {
 	const issues: LintIssue[] = [];
 	const seenIds = new Set<string>();
@@ -351,15 +372,16 @@ export function lintRoadmapEntries(
 	const sourcePath = project.roadmapPath;
 
 	const researchIds = new Set<string>();
-	for (const collection of research) {
-		for (const entry of collection.entries || []) {
+	research.forEach((collection) => {
+		(collection.entries || []).forEach((entry) => {
 			if (entry.id) researchIds.add(entry.id);
-		}
-	}
+		});
+	});
 
 	entries.forEach((entry, idx) => {
 		const index = idx + 1;
-		const entryId = typeof entry.id === "string" ? entry.id.trim() : "";
+		let entryId = "";
+		if (typeof entry.id === "string") entryId = entry.id.trim();
 
 		if (!entryId) {
 			issues.push(
@@ -405,7 +427,7 @@ export function lintRoadmapEntries(
 			"created",
 			"updated",
 		];
-		for (const field of requiredFields) {
+		requiredFields.forEach((field) => {
 			if (!String(entry[field] || "").trim()) {
 				issues.push(
 					createIssue(
@@ -416,7 +438,7 @@ export function lintRoadmapEntries(
 					),
 				);
 			}
-		}
+		});
 
 		const status = String(entry.status || "todo");
 		if (!allowedStatus.has(status)) {
@@ -444,14 +466,20 @@ export function lintRoadmapEntries(
 
 		const specPaths = entry.spec_paths || [];
 		const codePaths = entry.code_paths || [];
-		const goal = entry.goal || ({} as any);
+		const goal = entry.goal || {
+			outcome: "",
+			acceptance: [],
+			non_goals: [],
+			verification: [],
+		};
 
 		const outcome = String(goal.outcome || "").trim();
-		const acceptance = Array.isArray(goal.acceptance) ? goal.acceptance : [];
-		const verification = Array.isArray(goal.verification)
-			? goal.verification
-			: [];
-		const nonGoals = Array.isArray(goal.non_goals) ? goal.non_goals : [];
+		let acceptance: unknown[] = [];
+		if (Array.isArray(goal.acceptance)) acceptance = goal.acceptance;
+		let verification: unknown[] = [];
+		if (Array.isArray(goal.verification)) verification = goal.verification;
+		let nonGoals: unknown[] = [];
+		if (Array.isArray(goal.non_goals)) nonGoals = goal.non_goals;
 
 		if (
 			Object.keys(goal).length > 0 &&
@@ -508,7 +536,7 @@ export function lintRoadmapEntries(
 			);
 		}
 
-		for (const specPath of specPaths) {
+		specPaths.forEach((specPath) => {
 			if (!existsSync(resolve(repoRoot, specPath))) {
 				issues.push(
 					createIssue(
@@ -519,9 +547,9 @@ export function lintRoadmapEntries(
 					),
 				);
 			}
-		}
+		});
 
-		for (const codePath of codePaths) {
+		codePaths.forEach((codePath) => {
 			if (!existsSync(resolve(repoRoot, codePath))) {
 				issues.push(
 					createIssue(
@@ -532,9 +560,9 @@ export function lintRoadmapEntries(
 					),
 				);
 			}
-		}
+		});
 
-		for (const researchId of entry.research_ids || []) {
+		(entry.research_ids || []).forEach((researchId) => {
 			if (!researchIds.has(researchId)) {
 				issues.push(
 					createIssue(
@@ -545,12 +573,12 @@ export function lintRoadmapEntries(
 					),
 				);
 			}
-		}
+		});
 	});
 
 	const expectedTaskIds = seenIds;
 	const taskViewRoot = ".codewiki/roadmap/tasks";
-	for (const dirName of listDirectories(repoRoot, taskViewRoot)) {
+	listDirectories(repoRoot, taskViewRoot).forEach((dirName) => {
 		const dirPath = `${taskViewRoot}/${dirName}`;
 		if (!expectedTaskIds.has(dirName)) {
 			issues.push(
@@ -561,9 +589,9 @@ export function lintRoadmapEntries(
 					`${dirPath} has no matching task in ${sourcePath}.`,
 				),
 			);
-			continue;
+			return;
 		}
-		for (const fileName of ["task.json", "context.json"]) {
+		["task.json", "context.json"].forEach((fileName) => {
 			const filePath = `${dirPath}/${fileName}`;
 			if (!existsSync(resolve(repoRoot, filePath))) {
 				issues.push(
@@ -575,9 +603,9 @@ export function lintRoadmapEntries(
 					),
 				);
 			}
-		}
-	}
-	for (const taskId of expectedTaskIds) {
+		});
+	});
+	expectedTaskIds.forEach((taskId) => {
 		const dirPath = `${taskViewRoot}/${taskId}`;
 		if (!existsSync(resolve(repoRoot, dirPath))) {
 			issues.push(
@@ -589,34 +617,41 @@ export function lintRoadmapEntries(
 				),
 			);
 		}
-	}
+	});
 
 	return issues;
 }
 
-function list(value: any): any[] {
-	return Array.isArray(value) ? value : [];
+function list(value: unknown): unknown[] {
+	if (Array.isArray(value)) return value;
+	return [];
 }
 
-function isBuildV2(build: { data?: any }): boolean {
+function recordList(value: unknown): UnknownRecord[] {
+	return list(value).filter(isRecord);
+}
+
+function isBuildV2(build: { data?: UnknownRecord }): boolean {
 	return Number(build.data?.schema_version || 0) >= 2;
 }
 
-function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
+function lintDecisionBuildV2(buildPath: string, data: unknown): LintIssue[] {
 	const issues: LintIssue[] = [];
-	const rows = list(data?.diff_table);
+	const buildData = recordValue(data);
+	const lifecycle = recordValue(buildData.lifecycle);
+	const rows = recordList(buildData.diff_table);
+	const approvedRows = list(buildData.approved_diff_rows);
 	const approved = rows.filter(
 		(row) =>
-			String(row?.user_action || "").trim() === "approved" ||
-			list(data?.approved_diff_rows).includes(row?.id),
+			String(row.user_action || "").trim() === "approved" ||
+			approvedRows.includes(row.id),
 	);
-	const mappings = list(data?.row_to_kb_mappings);
-	const mode = String(
-		data?.decision_mode ||
-			(String(data?.status || data?.lifecycle?.state || "") === "proposed"
-				? "proposal"
-				: "accepted"),
-	);
+	const mappings = recordList(buildData.row_to_kb_mappings);
+	let fallbackMode = "accepted";
+	if (String(buildData.status || lifecycle.state || "") === "proposed") {
+		fallbackMode = "proposal";
+	}
+	const mode = String(buildData.decision_mode || fallbackMode);
 	if (rows.length === 0) {
 		issues.push(
 			createIssue(
@@ -631,7 +666,7 @@ function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
 		if (
 			approved.length ||
 			mappings.length ||
-			list(data?.knowledge_changes).length
+			list(buildData.knowledge_changes).length
 		) {
 			issues.push(
 				createIssue(
@@ -669,7 +704,7 @@ function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
 			.map((mapping) => String(mapping?.row_id || "").trim())
 			.filter(Boolean),
 	);
-	for (const row of approved) {
+	approved.forEach((row) => {
 		if (!mappedRows.has(String(row?.id || "").trim())) {
 			issues.push(
 				createIssue(
@@ -680,8 +715,9 @@ function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
 				),
 			);
 		}
-	}
-	if (!String(data?.propagation?.direction || "").trim()) {
+	});
+	const propagation = recordValue(buildData.propagation);
+	if (!String(propagation.direction || "").trim()) {
 		issues.push(
 			createIssue(
 				"error",
@@ -694,16 +730,20 @@ function lintDecisionBuildV2(buildPath: string, data: any): LintIssue[] {
 	return issues;
 }
 
-function lintPlanningBuildV2(buildPath: string, data: any): LintIssue[] {
+function lintPlanningBuildV2(buildPath: string, data: unknown): LintIssue[] {
 	const issues: LintIssue[] = [];
-	const upstreamLoop = String(data?.traceability?.upstream_loop || "")
+	const buildData = recordValue(data);
+	const traceability = recordValue(buildData.traceability);
+	const consumes = recordValue(buildData.consumes);
+	const produces = recordValue(buildData.produces);
+	const upstreamLoop = String(traceability.upstream_loop || "")
 		.trim()
 		.toLowerCase();
 	const requiresDecisionSource = !upstreamLoop || upstreamLoop === "decision";
 	if (
 		requiresDecisionSource &&
-		!String(data?.source_decision_build || "").trim() &&
-		!list(data?.consumes?.decision).length
+		!String(buildData.source_decision_build || "").trim() &&
+		!list(consumes.decision).length
 	) {
 		issues.push(
 			createIssue(
@@ -715,9 +755,9 @@ function lintPlanningBuildV2(buildPath: string, data: any): LintIssue[] {
 		);
 	}
 	if (
-		!list(data?.task_ids).length &&
-		!list(data?.task_changes).length &&
-		!list(data?.produces?.roadmap).length
+		!list(buildData.task_ids).length &&
+		!list(buildData.task_changes).length &&
+		!list(produces.roadmap).length
 	) {
 		issues.push(
 			createIssue(
@@ -729,9 +769,9 @@ function lintPlanningBuildV2(buildPath: string, data: any): LintIssue[] {
 		);
 	}
 	if (
-		!list(data?.tdd_plan).length &&
-		!list(data?.candidate_test_files).length &&
-		!list(data?.evidence_mapping).length
+		!list(buildData.tdd_plan).length &&
+		!list(buildData.candidate_test_files).length &&
+		!list(buildData.evidence_mapping).length
 	) {
 		issues.push(
 			createIssue(
@@ -745,9 +785,15 @@ function lintPlanningBuildV2(buildPath: string, data: any): LintIssue[] {
 	return issues;
 }
 
-function lintImplementationBuildV2(buildPath: string, data: any): LintIssue[] {
+function lintImplementationBuildV2(
+	buildPath: string,
+	data: unknown,
+): LintIssue[] {
 	const issues: LintIssue[] = [];
-	const closure = data?.closure_brief || null;
+	const dataRecord = recordValue(data);
+	const closureValue = dataRecord.closure_brief;
+	let closure: UnknownRecord | null = null;
+	if (isRecord(closureValue)) closure = closureValue;
 	if (!closure) {
 		issues.push(
 			createIssue(
@@ -768,11 +814,7 @@ function lintImplementationBuildV2(buildPath: string, data: any): LintIssue[] {
 				"closure_brief missing user_intent.",
 			),
 		);
-	for (const field of [
-		"implemented_changes",
-		"acceptance_evidence",
-		"checks",
-	]) {
+	["implemented_changes", "acceptance_evidence", "checks"].forEach((field) => {
 		if (!Array.isArray(closure[field]) || closure[field].length === 0) {
 			issues.push(
 				createIssue(
@@ -783,19 +825,20 @@ function lintImplementationBuildV2(buildPath: string, data: any): LintIssue[] {
 				),
 			);
 		}
-	}
+	});
 	return issues;
 }
 
 function lintBuildContractV2(build: {
 	path: string;
 	kind: string;
-	data?: any;
+	data?: UnknownRecord;
 }): LintIssue[] {
 	if (!isBuildV2(build)) return [];
 	const issues: LintIssue[] = [];
-	const consumes = build.data?.consumes || {};
-	const produces = build.data?.produces || {};
+	const buildData = recordValue(build.data);
+	const consumes = recordValue(buildData.consumes);
+	const produces = recordValue(buildData.produces);
 	const consumeCount = Object.values(consumes).reduce<number>(
 		(count, value) => count + list(value).length,
 		0,
@@ -846,7 +889,7 @@ export function lintEvidenceLinks(
 			.filter(Boolean),
 	]);
 
-	for (const build of evidence.builds || []) {
+	(evidence.builds || []).forEach((build) => {
 		issues.push(...lintBuildContractV2(build));
 		const buildPath = String(build.path || "").trim();
 		const taskId = String(
@@ -863,9 +906,10 @@ export function lintEvidenceLinks(
 			);
 		}
 		if (String(build.kind || "") === "implementation_build") {
-			const mapping = Array.isArray(build.data?.acceptance_mapping)
-				? build.data.acceptance_mapping
-				: [];
+			let mapping: unknown[] = [];
+			if (Array.isArray(build.data?.acceptance_mapping)) {
+				mapping = build.data.acceptance_mapping;
+			}
 			if (taskId && mapping.length === 0) {
 				issues.push(
 					createIssue(
@@ -877,9 +921,9 @@ export function lintEvidenceLinks(
 				);
 			}
 		}
-	}
+	});
 
-	for (const validation of evidence.validations || []) {
+	(evidence.validations || []).forEach((validation) => {
 		const validationPath = String(validation.path || "").trim();
 		const taskId = String(
 			validation.taskId ||
@@ -897,7 +941,7 @@ export function lintEvidenceLinks(
 				),
 			);
 		}
-	}
+	});
 
 	return issues;
 }
@@ -907,7 +951,7 @@ export function buildLintReport(
 	project: WikiProject,
 	docs: ParsedDoc[],
 	roadmapEntries: RoadmapTaskRecord[],
-	research: any[],
+	research: ResearchCollection[],
 	evidence: EvidenceLinkInput = {},
 ): LintReport {
 	const diagramValidation = validateSystemDiagramRefs(repoRoot, project, docs);
@@ -922,9 +966,9 @@ export function buildLintReport(
 	];
 
 	const counts: Record<string, number> = {};
-	for (const issue of issues) {
+	issues.forEach((issue) => {
 		counts[issue.kind] = (counts[issue.kind] || 0) + 1;
-	}
+	});
 
 	return {
 		generated_at: new Date().toISOString(),

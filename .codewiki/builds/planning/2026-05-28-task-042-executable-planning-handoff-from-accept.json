@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "planning_build",
+  "created": "2026-05-28T23:01:47Z",
+  "source": "codewiki_build tool",
+  "source_decision_build": ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-11T23:01:47.000Z",
+    "purge_after": "2026-06-25T23:01:47.000Z"
+  },
+  "cycle": {
+    "loop": "planning",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "planning",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "planning_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "planning_build -> implementation_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "P-TASK-042-R1",
+      "text": "Implementation must satisfy TASK-042 acceptance criteria through typed read-model narrowing, reduced any/as-any usage, modular graph helpers, and generated output compatibility.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-042/task.json",
+        ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json"
+      ],
+      "state": "planned"
+    },
+    {
+      "id": "P-TASK-042-R2",
+      "text": "Validation must include typecheck, smoke tests, feature tests, architecture audit, scoped pi-lens dispatch, LSP diagnostics, and CodeWiki state refresh evidence.",
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-042/task.json"
+      ],
+      "state": "planned"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "TASK-042 implementation boundary is executable and non-container.",
+      "evidence": "TASK-042 task.json lists concrete code paths, acceptance criteria, non-goals, and verification commands; task audit passes.",
+      "requirement_ids": [
+        "P-TASK-042-R1"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-042/task.json",
+        "codewiki_audit task pass"
+      ]
+    },
+    {
+      "criterion": "Test strategy is defined before implementation validation.",
+      "evidence": "Planning handoff names graph/alignment smoke tests, feature suite, typecheck, architecture audit, pi-lens dispatch, LSP diagnostics, and CodeWiki state refresh as validation evidence.",
+      "requirement_ids": [
+        "P-TASK-042-R2"
+      ],
+      "source_refs": [
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/run.mjs"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-042 executable planning handoff from accepted state graph read-model decision to implementation evidence.",
+  "task_ids": [
+    "TASK-042"
+  ],
+  "task_changes": [
+    "Use existing TASK-042 roadmap boundary for state graph/read-model hardening implementation and validation."
+  ],
+  "roadmap_changes": [
+    "Use existing TASK-042 roadmap boundary for state graph/read-model hardening implementation and validation."
+  ],
+  "tdd_plan": [
+    "Use existing smoke/feature tests as characterization coverage for graph/status/read-model outputs.",
+    "Use scoped pi-lens dispatch/LSP diagnostics as static quality gates for changed state files.",
+    "Preserve TASK-042 non-goals: no graph schema redesign, no state ownership move, no resume task-selection behavior change."
+  ],
+  "candidate_test_files": [
+    "tests/smoke/graph-lenses.test.mjs",
+    "tests/smoke/alignment-graph.test.mjs",
+    "tests/run.mjs"
+  ],
+  "candidate_code_paths": [
+    "src/state/graph.ts",
+    "src/state/graph/artifact-refs.ts",
+    "src/state/graph/collector.ts",
+    "src/state/graph/lenses.ts",
+    "src/state/builders.ts",
+    "src/state/reader.ts",
+    "src/state/lint.ts",
+    "src/state/types.ts"
+  ],
+  "decision_row_resolutions": [],
+  "downstream_question_resolutions": [],
+  "acceptance_mapping": [
+    {
+      "criterion": "TASK-042 implementation boundary is executable and non-container.",
+      "evidence": "TASK-042 task.json lists concrete code paths, acceptance criteria, non-goals, and verification commands; task audit passes.",
+      "requirement_ids": [
+        "P-TASK-042-R1"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/tasks/TASK-042/task.json",
+        "codewiki_audit task pass"
+      ]
+    },
+    {
+      "criterion": "Test strategy is defined before implementation validation.",
+      "evidence": "Planning handoff names graph/alignment smoke tests, feature suite, typecheck, architecture audit, pi-lens dispatch, LSP diagnostics, and CodeWiki state refresh as validation evidence.",
+      "requirement_ids": [
+        "P-TASK-042-R2"
+      ],
+      "source_refs": [
+        "tests/smoke/graph-lenses.test.mjs",
+        "tests/smoke/alignment-graph.test.mjs",
+        "tests/run.mjs"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "open_questions": [],
+  "non_goals": [],
+  "risks": [],
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": false,
+    "requires_accepted_build": true,
+    "upstream_loop": "decision",
+    "upstream_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json",
+      ".codewiki/validation/2026-05-28-decision-pass-2026-05-28-task-042-accepted-sta.json"
+    ]
+  },
+  "consumes": {
+    "decision": [
+      ".codewiki/builds/decision/2026-05-28-task-042-accepted-state-graph-read-model-hardeni.json"
+    ],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [
+      "TASK-042",
+      ".codewiki/roadmap/tasks/TASK-042/task.json"
+    ],
+    "validation": [
+      ".codewiki/validation/2026-05-28-decision-pass-2026-05-28-task-042-accepted-sta.json"
+    ],
+    "source": [
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/file-structure.md"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-042",
+      "TASK-042 implementation handoff"
+    ],
+    "code": [
+      "src/state/graph.ts",
+      "src/state/graph/artifact-refs.ts",
+      "src/state/graph/collector.ts",
+      "src/state/graph/lenses.ts",
+      "src/state/builders.ts",
+      "src/state/reader.ts",
+      "src/state/lint.ts",
+      "src/state/types.ts",
+      "src/state/graph/**"
+    ],
+    "tests": [
+      "tests/smoke/graph-lenses.test.mjs",
+      "tests/smoke/alignment-graph.test.mjs",
+      "tests/run.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

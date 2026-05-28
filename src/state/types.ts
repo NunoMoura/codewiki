@@ -49,6 +49,8 @@ export interface RoadmapStateTaskSummary {
 	title: string;
 	status: RoadmapStatus;
 	priority: string;
+	kind?: string;
+	change_type?: string;
 	summary: string;
 	updated: string;
 	spec_paths?: string[];
@@ -81,6 +83,24 @@ export interface RoadmapStateHealth {
 	total_issues: number;
 }
 
+export type JsonObject = Record<string, unknown>;
+
+export interface RoadmapStateSprintSummary {
+	id: string;
+	title: string;
+	status: string;
+	outcome: string;
+	task_ids: string[];
+	scope?: {
+		knowledge?: string[];
+		code?: string[];
+	};
+	budget?: unknown;
+	gates?: string[];
+	created?: string;
+	updated?: string;
+}
+
 export interface RoadmapStateFile {
 	version: number;
 	generated_at: string;
@@ -108,7 +128,7 @@ export interface RoadmapStateFile {
 		recent_task_ids: string[];
 		sprint_ids?: string[];
 		active_sprint_ids?: string[];
-		sprints?: any[];
+		sprints?: RoadmapStateSprintSummary[];
 	};
 	tasks: Record<string, RoadmapStateTaskSummary>;
 	source?: {
@@ -135,23 +155,71 @@ export interface GraphNode {
 	kind: string;
 	title?: string;
 	path?: string;
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export interface GraphEdge {
 	from: string;
 	to: string;
 	kind: string;
-	[key: string]: any;
+	[key: string]: unknown;
+}
+
+export interface GraphRoadmapView {
+	task_ids?: string[];
+	open_task_ids?: string[];
+	in_progress_task_ids?: string[];
+	todo_task_ids?: string[];
+	blocked_task_ids?: string[];
+	done_task_ids?: string[];
+	cancelled_task_ids?: string[];
+	recent_task_ids?: string[];
+	sprint_ids?: string[];
+	active_sprint_ids?: string[];
+	status_counts?: Record<string, number>;
+	sprints?: RoadmapStateSprintSummary[];
+}
+
+export interface GraphGcClasses {
+	hot?: JsonObject;
+	warm?: JsonObject;
+	cold?: JsonObject;
+	purgeable?: JsonObject;
+}
+
+export interface GraphGcView {
+	policy?: JsonObject;
+	classes?: GraphGcClasses;
+	[key: string]: unknown;
+}
+
+export interface GraphLensMap {
+	default?: JsonObject;
+	trace?: JsonObject;
+	audit?: JsonObject;
+	[key: string]: unknown;
 }
 
 export interface GraphViews {
-	roadmap?: {
-		task_ids?: string[];
-		open_task_ids?: string[];
-		[key: string]: any;
+	roadmap?: GraphRoadmapView;
+	lenses?: GraphLensMap;
+	reconciliation?: JsonObject;
+	gc?: GraphGcView;
+	claims?: unknown;
+	scope_views?: unknown;
+	workflow_cursor?: WorkflowCursor;
+	file_structure?: unknown;
+	archive?: JsonObject;
+	alignment?: JsonObject;
+	system_diagrams?: JsonObject;
+	traceability?: JsonObject;
+	artifact_status?: JsonObject;
+	validation?: JsonObject;
+	code?: {
+		paths?: string[];
+		dirty_paths?: string[];
 	};
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export interface GraphFile {
@@ -166,12 +234,12 @@ export interface RoadmapTaskContextPacket {
 	version: number;
 	generated_at: string;
 	context_path: string;
-	task: any;
-	budget?: any;
-	revision?: any;
-	code?: any;
-	specs?: any;
-	evidence?: any;
+	task: JsonObject;
+	budget?: JsonObject;
+	revision?: JsonObject;
+	code?: JsonObject;
+	specs?: JsonObject;
+	evidence?: JsonObject;
 }
 
 export interface StatusStateSpecRow {
@@ -184,7 +252,7 @@ export interface StatusStateSpecRow {
 	issue_counts: { errors: number; warnings: number; total: number };
 	related_task_ids: string[];
 	primary_task: { id: string; status: string; title: string } | null;
-	revision: any;
+	revision: JsonObject;
 	note: string;
 }
 
@@ -204,7 +272,7 @@ export interface StatusStateAgencyLane {
 	interval_hours: number;
 	triggers: string[];
 	checked_at: string;
-	revision: any;
+	revision: JsonObject;
 	freshness: {
 		status: "fresh" | "stale";
 		basis: string;
@@ -321,10 +389,12 @@ export interface StatusStateFile {
 		kind: string;
 		command: string;
 		reason: string;
+		item_id?: string;
 	};
 	workflow_cursor?: WorkflowCursor;
-	gc?: any;
-	decision_propagation?: any;
+	file_structure?: unknown;
+	gc?: JsonObject;
+	decision_propagation?: JsonObject;
 	direction: string[];
 	specs: StatusStateSpecRow[];
 	agency: {
@@ -387,7 +457,7 @@ export interface StatusStateFile {
 		next_task_id: string;
 		sprint_ids?: string[];
 		active_sprint_ids?: string[];
-		sprints?: any[];
+		sprints?: RoadmapStateSprintSummary[];
 		columns: StatusStateRoadmapColumn[];
 	};
 	agents: {
@@ -407,22 +477,35 @@ export interface StatusDockPrefs {
 	pinnedRepoPath?: string;
 }
 
-export type StatusPanelSection = any;
+export type StatusPanelSection =
+	| "home"
+	| "product"
+	| "system"
+	| "roadmap"
+	| "graph"
+	| "diff";
+
+export interface StatusPanelAction {
+	id: string;
+	label: string;
+	[key: string]: unknown;
+}
 
 export interface StatusPanelDetail {
-	sections?: any[];
-	actions?: any[];
+	sections?: unknown[];
+	actions?: StatusPanelAction[];
 	kind?: string;
 	selectedActionIndex?: number;
+	taskId?: string;
 	title?: string;
 	lines?: string[];
-	[key: string]: any;
+	[key: string]: unknown;
 }
 
 export interface ActiveStatusPanel {
 	project: ResolvedStatusDockProject;
 	density: StatusDockDensity;
-	section: any;
+	section: StatusPanelSection;
 	source: string;
 	scope: StatusScope;
 	requestRender?: () => void;
@@ -440,13 +523,13 @@ export interface ActiveStatusPanel {
 	diffRowIndex?: number;
 	agentRowIndex: number;
 	channelRowIndex: number;
-	animationTimer?: any;
+	animationTimer?: ReturnType<typeof setInterval> | null;
 }
 
 export interface ActiveConfigPanel {
 	requestRender?: () => void;
 	close?: () => void;
-	section: any;
+	section: ConfigPanelSection;
 	pinActionIndex: number;
 }
 
@@ -457,7 +540,11 @@ export interface ArchitecturePanelComponent {
 	summary: string;
 }
 
-export type ConfigPanelSection = any;
+export type ConfigPanelSection =
+	| "summary"
+	| "pinning"
+	| "gateway"
+	| "automation";
 
 export interface HomeIssue {
 	severity: "blocker" | "warning" | "info";

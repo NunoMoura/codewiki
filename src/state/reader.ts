@@ -14,10 +14,18 @@ import type {
 	RoadmapTaskContextPacket,
 	RoadmapStateTaskSummary,
 } from "./types.ts";
-import { loadCodewikiStateArtifacts, roadmapApiTaskState, maybeReadTaskContext } from "./artifacts.ts";
+import {
+	loadCodewikiStateArtifacts,
+	roadmapApiTaskState,
+	maybeReadTaskContext,
+} from "./artifacts.ts";
 import { readRoadmapTask } from "../roadmap/runtime.ts";
 import { findLatestTaskSessionLink } from "../session/links.ts";
-import type { FileStore, RebuildRunner, SessionStore } from "../shared/ports.ts";
+import type {
+	FileStore,
+	RebuildRunner,
+	SessionStore,
+} from "../shared/ports.ts";
 
 // ---------------------------------------------------------------------------
 // Section include normalization (was inline in Pi adapter)
@@ -50,6 +58,36 @@ function activeOpenTaskLink(
 	return task && isOpenRoadmapTaskStatus(task.status) ? activeLink : null;
 }
 
+function recordOrNull(value: unknown): Record<string, unknown> | null {
+	return Boolean(value) && typeof value === "object" && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: null;
+}
+
+function recordField(
+	record: Record<string, unknown> | null | undefined,
+	key: string,
+): Record<string, unknown> | null {
+	return recordOrNull(record?.[key]);
+}
+
+function arrayField(
+	record: Record<string, unknown> | null | undefined,
+	key: string,
+): unknown[] | null {
+	const value = record?.[key];
+	return Array.isArray(value) ? value : null;
+}
+
+function stringArrayField(
+	record: Record<string, unknown> | null | undefined,
+	key: string,
+): string[] {
+	return (arrayField(record, key) ?? [])
+		.map((value) => String(value || "").trim())
+		.filter(Boolean);
+}
+
 export function buildCodewikiNextAction(
 	statusState: StatusStateFile | null,
 	roadmapState: RoadmapStateFile | null,
@@ -72,19 +110,29 @@ export function buildCodewikiNextAction(
 	const persistedResumeTaskId = String(
 		statusState?.resume?.task_id || statusState?.roadmap?.focused_task_id || "",
 	).trim();
-	if (persistedResumeTaskId && isOpenRoadmapTaskStatus(roadmapState?.tasks?.[persistedResumeTaskId]?.status)) {
+	if (
+		persistedResumeTaskId &&
+		isOpenRoadmapTaskStatus(
+			roadmapState?.tasks?.[persistedResumeTaskId]?.status,
+		)
+	) {
 		return {
 			kind: "resume",
 			taskId: persistedResumeTaskId,
 			reason: "Persisted task focus detected in CodeWiki state.",
 		};
 	}
-	const statusNextStep = statusState?.next_step as any;
-	if (statusNextStep && String(statusNextStep.kind || "").startsWith("reconciliation:")) {
+	const statusNextStep = statusState?.next_step;
+	if (
+		statusNextStep &&
+		String(statusNextStep.kind || "").startsWith("reconciliation:")
+	) {
 		return {
 			kind: String(statusNextStep.kind),
 			taskId: null,
-			reason: String(statusNextStep.reason || "Graph reconciliation selected next loop."),
+			reason: String(
+				statusNextStep.reason || "Graph reconciliation selected next loop.",
+			),
 			command: String(statusNextStep.command || ""),
 			item_id: statusNextStep.item_id,
 		};
@@ -123,7 +171,8 @@ export function buildCodewikiTaskDetail(
 	const apiState = roadmapApiTaskState(task, runtimeTask);
 	const evidence = runtimeTask?.loop?.evidence ?? null;
 	const contextPath =
-		runtimeTask?.context_path ?? `.codewiki/roadmap/tasks/${task.id}/context.json`;
+		runtimeTask?.context_path ??
+		`.codewiki/roadmap/tasks/${task.id}/context.json`;
 	const enrichedContextPacket = {
 		version: contextPacket?.version ?? 1,
 		generated_at: contextPacket?.generated_at ?? task.updated,
@@ -191,7 +240,9 @@ export async function readCodewikiState(
 ): Promise<Record<string, unknown>> {
 	const include = buildCodewikiStateInclude(opts.include, opts.taskId);
 	const artifacts = await loadCodewikiStateArtifacts(project, opts.refresh);
-	const activeLink = findLatestTaskSessionLink(ports.sessionStore.getSessionBranch());
+	const activeLink = findLatestTaskSessionLink(
+		ports.sessionStore.getSessionBranch(),
+	);
 	const health = artifacts.statusState?.health ?? {
 		color: (artifacts.report?.issues.length ?? 0) > 0 ? "yellow" : "green",
 		errors: 0,
@@ -220,7 +271,8 @@ export async function readCodewikiState(
 			open_task_count: artifacts.statusState?.summary.open_task_count ?? 0,
 			active_task_ids: artifacts.roadmapState?.views.in_progress_task_ids ?? [],
 			blocked_task_ids: artifacts.roadmapState?.views.blocked_task_ids ?? [],
-			active_sprint_ids: (artifacts.roadmapState?.views as any)?.active_sprint_ids ?? [],
+			active_sprint_ids:
+				artifacts.roadmapState?.views.active_sprint_ids ?? [],
 			next_task_id: nextAction.taskId ?? null,
 			unmapped_spec_count: artifacts.statusState?.summary.unmapped_specs ?? 0,
 		},
@@ -233,49 +285,73 @@ export async function readCodewikiState(
 			active_task_ids: artifacts.roadmapState?.views.in_progress_task_ids ?? [],
 			blocked_task_ids: artifacts.roadmapState?.views.blocked_task_ids ?? [],
 			recent_task_ids: artifacts.roadmapState?.views.recent_task_ids ?? [],
-			sprint_ids: (artifacts.roadmapState?.views as any)?.sprint_ids ?? [],
-			active_sprint_ids: (artifacts.roadmapState?.views as any)?.active_sprint_ids ?? [],
-			sprints: (artifacts.roadmapState?.views as any)?.sprints ?? [],
+			sprint_ids: artifacts.roadmapState?.views.sprint_ids ?? [],
+			active_sprint_ids: artifacts.roadmapState?.views.active_sprint_ids ?? [],
+			sprints: artifacts.roadmapState?.views.sprints ?? [],
 		};
 	}
 
 	if (include.includes("graph")) {
 		const graph = artifacts.graph;
-		const reconciliation = (graph?.views as any)?.reconciliation || null;
-		const gc = (graph?.views as any)?.gc || null;
-		const defaultLens = (graph?.views as any)?.lenses?.default || null;
-		const hotNodeIds = new Set<string>((gc?.classes?.hot?.task_ids ?? []).map((id: string) => `task:${id}`));
-		for (const path of gc?.classes?.hot?.build_paths ?? []) hotNodeIds.add(`build:${path}`);
-		for (const path of gc?.classes?.hot?.validation_paths ?? []) hotNodeIds.add(`validation:${path}`);
-		for (const id of gc?.classes?.hot?.claim_ids ?? []) hotNodeIds.add(`claim:${id}`);
+		const graphViews = graph?.views;
+		const reconciliation = graphViews?.reconciliation ?? null;
+		const gc = graphViews?.gc ?? null;
+		const defaultLens = graphViews?.lenses?.default ?? null;
+		const gcClasses = recordOrNull(gc?.classes);
+		const hotClass = recordField(gcClasses, "hot");
+		const defaultFamilies = arrayField(defaultLens, "families");
+		const hotNodeIds = new Set<string>(
+			stringArrayField(hotClass, "task_ids").map((id) => `task:${id}`),
+		);
+		for (const path of stringArrayField(hotClass, "build_paths")) {
+			hotNodeIds.add(`build:${path}`);
+		}
+		for (const path of stringArrayField(hotClass, "validation_paths")) {
+			hotNodeIds.add(`validation:${path}`);
+		}
+		for (const id of stringArrayField(hotClass, "claim_ids")) {
+			hotNodeIds.add(`claim:${id}`);
+		}
 		result.graph = {
 			generated_at: graph?.generated_at ?? null,
-			node_count: defaultLens?.families?.length ?? hotNodeIds.size,
-			edge_count: defaultLens?.families ? Math.max(0, defaultLens.families.length - 1) : (graph?.edges.filter((edge) => hotNodeIds.has(edge.from) || hotNodeIds.has(edge.to)).length ?? 0),
-			doc_count: graph?.nodes.filter((n) => n.kind === "doc" && n.default_hidden !== true).length ?? 0,
-			code_path_count: graph?.nodes.filter((n) => n.kind === "code_path" && n.default_hidden !== true).length ?? 0,
+			node_count: defaultFamilies?.length ?? hotNodeIds.size,
+			edge_count: defaultFamilies
+				? Math.max(0, defaultFamilies.length - 1)
+				: (graph?.edges.filter(
+						(edge) => hotNodeIds.has(edge.from) || hotNodeIds.has(edge.to),
+					).length ?? 0),
+			doc_count:
+				graph?.nodes.filter(
+					(n) => n.kind === "doc" && n.default_hidden !== true,
+				).length ?? 0,
+			code_path_count:
+				graph?.nodes.filter(
+					(n) => n.kind === "code_path" && n.default_hidden !== true,
+				).length ?? 0,
 			source: defaultLens ? "graph:default-lens" : "graph:hot-default",
-			families: defaultLens?.families ?? null,
-			badges: defaultLens?.badges ?? null,
+			families: defaultFamilies,
+			badges: recordField(defaultLens, "badges"),
 			next_action: defaultLens?.next_action ?? null,
 			expands_to: defaultLens?.expands_to ?? null,
-			claims: (graph?.views as any)?.claims ?? null,
-			scope_views: (graph?.views as any)?.scope_views ?? null,
-			workflow_cursor: (graph?.views as any)?.workflow_cursor ?? null,
-			file_structure: (graph?.views as any)?.file_structure ?? null,
-			gc: gc ? {
-				policy: gc.policy,
-				classes: {
-					hot: gc.classes?.hot ?? {},
-				},
-			} : null,
+			claims: graphViews?.claims ?? null,
+			scope_views: graphViews?.scope_views ?? null,
+			workflow_cursor: graphViews?.workflow_cursor ?? null,
+			file_structure: graphViews?.file_structure ?? null,
+			gc: gc
+				? {
+						policy: gc.policy,
+						classes: {
+							hot: gc.classes?.hot ?? {},
+						},
+					}
+				: null,
 			reconciliation: reconciliation
 				? {
 						controller: reconciliation.controller,
-						item_count: Array.isArray(reconciliation.items) ? reconciliation.items.length : 0,
-						counts_by_loop: reconciliation.counts_by_loop || {},
-						next_action: reconciliation.next_action || null,
-						layer_states: reconciliation.layer_states || {},
+						item_count: arrayField(reconciliation, "items")?.length ?? 0,
+						counts_by_loop: recordField(reconciliation, "counts_by_loop") ?? {},
+						next_action: reconciliation.next_action ?? null,
+						layer_states: recordField(reconciliation, "layer_states") ?? {},
 					}
 				: null,
 		};
@@ -284,14 +360,14 @@ export async function readCodewikiState(
 	if (include.includes("trace")) {
 		result.trace = {
 			source: "graph:trace-lens",
-			...(artifacts.graph?.views as any)?.lenses?.trace,
+			...(artifacts.graph?.views?.lenses?.trace ?? {}),
 		};
 	}
 
 	if (include.includes("audit")) {
 		result.audit = {
 			source: "graph:audit-lens",
-			...(artifacts.graph?.views as any)?.lenses?.audit,
+			...(artifacts.graph?.views?.lenses?.audit ?? {}),
 		};
 	}
 
@@ -299,10 +375,10 @@ export async function readCodewikiState(
 		const graph = artifacts.graph;
 		result.archive = {
 			source: "graph:explicit-archive",
-			...(graph?.views as any)?.archive,
+			...(graph?.views?.archive ?? {}),
 			gc: {
-				cold: (graph?.views as any)?.gc?.classes?.cold ?? {},
-				purgeable: (graph?.views as any)?.gc?.classes?.purgeable ?? {},
+				cold: graph?.views?.gc?.classes?.cold ?? {},
+				purgeable: graph?.views?.gc?.classes?.purgeable ?? {},
 			},
 		};
 	}
@@ -312,8 +388,12 @@ export async function readCodewikiState(
 			tracked_spec_count: artifacts.statusState?.summary.tracked_specs ?? 0,
 			untracked_spec_count: artifacts.statusState?.summary.untracked_specs ?? 0,
 			blocked_spec_count: artifacts.statusState?.summary.blocked_specs ?? 0,
-			high_risk_spec_paths: artifacts.statusState?.views.top_risky_spec_paths ?? [],
-			file_structure: (artifacts.statusState as any)?.file_structure ?? (artifacts.graph?.views as any)?.file_structure ?? null,
+			high_risk_spec_paths:
+				artifacts.statusState?.views.top_risky_spec_paths ?? [],
+			file_structure:
+				artifacts.statusState?.file_structure ??
+				artifacts.graph?.views?.file_structure ??
+				null,
 		};
 	}
 
@@ -322,32 +402,46 @@ export async function readCodewikiState(
 			focused_task_id: activeTaskLink?.taskId ?? null,
 			updated_at: activeTaskLink?.timestamp ?? null,
 			summary: activeTaskLink?.summary || null,
-			workflow_cursor: activeTaskLink?.cursor ?? (artifacts.statusState as any)?.workflow_cursor ?? (artifacts.graph?.views as any)?.workflow_cursor ?? null,
+			workflow_cursor:
+				activeTaskLink?.cursor ??
+				artifacts.statusState?.workflow_cursor ??
+				artifacts.graph?.views?.workflow_cursor ??
+				null,
 			claims: artifacts.statusState?.parallel
 				? {
-						active_claim_count: artifacts.statusState.parallel.active_claim_count ?? 0,
-						warning_count: artifacts.statusState.parallel.claim_warning_count ?? 0,
-						conflict_count: artifacts.statusState.parallel.claim_conflict_count ?? 0,
-						pending_waiter_count: artifacts.statusState.parallel.claim_pending_wait_count ?? 0,
-						ready_waiter_count: artifacts.statusState.parallel.claim_ready_wait_count ?? 0,
-						artifact_statuses: artifacts.statusState.parallel.artifact_statuses ?? [],
+						active_claim_count:
+							artifacts.statusState.parallel.active_claim_count ?? 0,
+						warning_count:
+							artifacts.statusState.parallel.claim_warning_count ?? 0,
+						conflict_count:
+							artifacts.statusState.parallel.claim_conflict_count ?? 0,
+						pending_waiter_count:
+							artifacts.statusState.parallel.claim_pending_wait_count ?? 0,
+						ready_waiter_count:
+							artifacts.statusState.parallel.claim_ready_wait_count ?? 0,
+						artifact_statuses:
+							artifacts.statusState.parallel.artifact_statuses ?? [],
 					}
 				: null,
 		};
 	}
 
 	if (include.includes("claims")) {
-		const claimView = (artifacts.graph?.views as any)?.claims;
+		const claimView = artifacts.graph?.views?.claims;
 		result.claims = claimView ?? {
-			active_claim_count: artifacts.statusState?.parallel.active_claim_count ?? 0,
+			active_claim_count:
+				artifacts.statusState?.parallel.active_claim_count ?? 0,
 			warning_count: artifacts.statusState?.parallel.claim_warning_count ?? 0,
 			conflict_count: artifacts.statusState?.parallel.claim_conflict_count ?? 0,
-			pending_waiter_count: artifacts.statusState?.parallel.claim_pending_wait_count ?? 0,
-			ready_waiter_count: artifacts.statusState?.parallel.claim_ready_wait_count ?? 0,
+			pending_waiter_count:
+				artifacts.statusState?.parallel.claim_pending_wait_count ?? 0,
+			ready_waiter_count:
+				artifacts.statusState?.parallel.claim_ready_wait_count ?? 0,
 			claims: artifacts.statusState?.parallel.claims ?? [],
 			waiters: artifacts.statusState?.parallel.claim_waiters ?? [],
 			conflicts: artifacts.statusState?.parallel.claim_conflicts ?? [],
-			artifact_statuses: artifacts.statusState?.parallel.artifact_statuses ?? [],
+			artifact_statuses:
+				artifacts.statusState?.parallel.artifact_statuses ?? [],
 		};
 	}
 
@@ -358,7 +452,11 @@ export async function readCodewikiState(
 			const task = await readRoadmapTask(project, opts.taskId);
 			if (!task) throw new Error(`Roadmap task not found: ${opts.taskId}`);
 			const runtimeTask = artifacts.roadmapState?.tasks?.[task.id] ?? null;
-			const contextPacket = await maybeReadTaskContext(project, task.id, runtimeTask);
+			const contextPacket = await maybeReadTaskContext(
+				project,
+				task.id,
+				runtimeTask,
+			);
 			result.task = buildCodewikiTaskDetail(task, runtimeTask, contextPacket);
 		}
 	}
