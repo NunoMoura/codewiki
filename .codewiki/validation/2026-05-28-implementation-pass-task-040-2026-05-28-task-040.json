@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T10:06:17Z",
+  "profile": "implementation",
+  "task_id": "TASK-040",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes for TASK-040. The new `src/state/resume-selection.ts` owns the shared resolver, resumeCandidates, artifact scope, blocking summary, and resume-claim helper; /wiki-resume and codewiki_resume_context import the shared resolver instead of duplicating it; runtime imports shared taskArtifactScopes. Parity tests cover explicit selection, session focus, persisted focus, roadmap-order fallback, candidate ordering/deduping, artifact conflict skip/block, implementation-readiness skip/block, and non-executable skip/block. Typecheck, smoke, source-root guard, architecture, and targeted duplicate checks pass. No scheduling policy, artifact-status semantics, command names, or tool schemas changed.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json — pass",
+    "Read TASK-040 resume context and planning build .codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json — pass",
+    "Read roadmap spec and touched source/test files — pass",
+    "lsp_diagnostics changed TS/test files — pass",
+    "node --experimental-strip-types ./tests/smoke/resume-scheduler.test.mjs — pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs — pass",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run check:architecture — pass",
+    "semantic duplicate target check — pass: resolveImplementationTask/resumeCandidates defined only in src/state/resume-selection.ts",
+    "git diff --check — pass",
+    "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — task/file-structure pass; alignment/generated-view warnings only",
+    "codewiki_validation implementation preflight — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Semantic duplicate evidence is targeted to the previously reported duplicated functions rather than a full Pi-lens booboo rerun."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment/changed audits report existing graph-health/generated-view warnings; not blocking pre-commit implementation validation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Working tree includes unrelated dirty/untracked files outside TASK-040 scope; task-close still needs clean committed proof."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:file-structure",
+    "approval:user",
+    "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "c0161567ffc31a29d5c23ef98dbb108bded52857",
+    "89891f770e3b8ff6494c9e26270cc8d1df312336",
+    "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-040",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "validated_sha": "c0161567ffc31a29d5c23ef98dbb108bded52857",
+    "tree_sha": "89891f770e3b8ff6494c9e26270cc8d1df312336",
+    "working_tree_digest": "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+    "role": "validator"
+  }
+}

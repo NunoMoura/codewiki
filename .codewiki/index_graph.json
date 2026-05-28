@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T09:29:42.889Z",
+  "generated_at": "2026-05-28T10:06:38.232Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4704,7 +4704,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/commands",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4873,7 +4873,7 @@
       "kind": "code_path",
       "path": "src/runtime",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4897,7 +4897,7 @@
       "kind": "code_path",
       "path": "src/state/resume-context.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5549,7 +5549,7 @@
       "kind": "code_path",
       "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5862,7 +5862,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/commands/resume.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6820,7 +6820,7 @@
       "kind": "roadmap_task",
       "title": "Consolidate resume task selection",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "code",
       "alignment_state": "drift",
       "lens_family": "work"
@@ -7944,7 +7944,7 @@
       "kind": "code_path",
       "path": "src/runtime/runner.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -27900,6 +27900,162 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-040",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+          "codewiki_build tool",
+          "src/state/resume-selection.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/state/resume-context.ts",
+          "src/runtime/runner.ts",
+          "tests/smoke/resume-scheduler.test.mjs",
+          "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+          "TASK-040"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+          "tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
+          "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
+          "src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
+          "src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
+          "src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
+          "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+          "refs/codewiki/archive/task/TASK-040",
+          "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:src/state/resume-selection.ts",
+      "kind": "canonical_source_ref",
+      "path": "src/state/resume-selection.ts",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
+      "kind": "content_proof",
+      "path": "tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
+      "kind": "content_proof",
+      "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
+      "kind": "content_proof",
+      "path": "src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
+      "kind": "content_proof",
+      "path": "src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+      "kind": "content_proof",
+      "path": "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-040",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-040",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
+      "kind": "content_proof",
+      "path": "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-040",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-040",
+      "task_id": "TASK-040",
+      "digest": "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
+      "restore_command": "/wiki-restore TASK-040",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
@@ -28619,6 +28775,116 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-207",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-207",
+      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+      "agent_name": "Mole",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+      "expires_at": "2026-05-28T11:53:57.914Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-040"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/roadmap.md"
+        },
+        {
+          "layer": "code",
+          "path": "src/adapters/pi/commands/resume.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/state/resume-context.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/state/resume-selection.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/runner.ts"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/resume-scheduler.test.mjs"
+        },
+        {
+          "layer": "code",
+          "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+        },
+        {
+          "layer": "build",
+          "description": "TASK-040 implementation build"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-040",
+      "kind": "change_claim_scope",
+      "path": "TASK-040",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/roadmap.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/roadmap.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/adapters/pi/commands/resume.ts",
+      "kind": "change_claim_scope",
+      "path": "src/adapters/pi/commands/resume.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/state/resume-context.ts",
+      "kind": "change_claim_scope",
+      "path": "src/state/resume-context.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/state/resume-selection.ts",
+      "kind": "change_claim_scope",
+      "path": "src/state/resume-selection.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/runner.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/runner.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/resume-scheduler.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/resume-scheduler.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-040 implementation build",
+      "kind": "change_claim_scope",
+      "path": "TASK-040 implementation build",
+      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -37352,6 +37618,83 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "validated_sha": "c0161567ffc31a29d5c23ef98dbb108bded52857",
+        "tree_sha": "89891f770e3b8ff6494c9e26270cc8d1df312336",
+        "working_tree_digest": "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:file-structure",
+          "approval:user",
+          "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass"
+        ],
+        "content_proof_refs": [
+          "c0161567ffc31a29d5c23ef98dbb108bded52857",
+          "89891f770e3b8ff6494c9e26270cc8d1df312336",
+          "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:c0161567ffc31a29d5c23ef98dbb108bded52857",
+      "kind": "content_proof",
+      "path": "c0161567ffc31a29d5c23ef98dbb108bded52857",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:89891f770e3b8ff6494c9e26270cc8d1df312336",
+      "kind": "content_proof",
+      "path": "89891f770e3b8ff6494c9e26270cc8d1df312336",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
+      "kind": "content_proof",
+      "path": "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
@@ -38072,7 +38415,7 @@
       "layer": "validation",
       "severity": "warning",
       "issue_kind": "roadmap-missing-code-path",
-      "message": "TASK-036 references missing code path: src/state/resume-selection.ts",
+      "message": "TASK-048 references missing code path: src/quality/production-profile.ts",
       "lens_family": "proof"
     }
   ],
@@ -88680,6 +89023,149 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:src/state/resume-selection.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:src/adapters/pi/commands/resume.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:src/state/resume-context.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:src/runtime/runner.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:tests/smoke/resume-scheduler.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "source:TASK-040",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-040",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "content_proof:sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "task:TASK-040"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-040",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
       "to": "source:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
       "default_hidden": true
@@ -89501,6 +89987,56 @@
       "from": "build:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-047",
       "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-207",
+      "to": "task:TASK-040"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:TASK-040"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:.codewiki/kb/system/roadmap.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:src/adapters/pi/commands/resume.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:src/state/resume-context.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:src/state/resume-selection.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:src/runtime/runner.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:tests/smoke/resume-scheduler.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-207",
+      "to": "claim_scope:TASK-040 implementation build"
     },
     {
       "kind": "validation_attests_source",
@@ -99420,6 +99956,71 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:approval:user",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "content_proof:c0161567ffc31a29d5c23ef98dbb108bded52857",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "content_proof:89891f770e3b8ff6494c9e26270cc8d1df312336",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "content_proof:sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+      "to": "task:TASK-040"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-044.json",
       "to": "source:.codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
       "default_hidden": true
@@ -100090,7 +100691,7 @@
               {
                 "id": "semantic_gaps",
                 "label": "semantic gaps",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [],
@@ -100153,7 +100754,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 19,
+            "item_count": 29,
             "badges": [
               {
                 "id": "open_tasks",
@@ -100191,7 +100792,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -100228,19 +100829,21 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 59
+                "count": 60
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 4,
+                "count": 9,
                 "refs": [
+                  ".gitignore",
                   ".pi/settings.json",
-                  "gitignore",
+                  "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "src/runtime/runner.ts",
+                  "src/state/resume-context.ts"
                 ],
-                "ref_count": 4
+                "ref_count": 9
               }
             ],
             "hot_refs": [
@@ -100267,7 +100870,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 123
+                "count": 124
               },
               {
                 "id": "fail_or_block_validation",
@@ -100277,12 +100880,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 510
+                "count": 512
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1017
+                "count": 1028
               },
               {
                 "id": "traceability_gaps",
@@ -100299,19 +100902,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 95,
+            "total": 96,
             "decision": 12,
             "planning": 24,
-            "implementation": 59,
+            "implementation": 60,
             "hot": 0,
-            "collapsed": 95
+            "collapsed": 96
           },
           "validations": {
-            "total": 123,
-            "pass": 102,
+            "total": 124,
+            "pass": 103,
             "fail_or_block": 21,
             "hot": 5,
-            "collapsed": 123
+            "collapsed": 124
           }
         },
         "next_action": {
@@ -101170,6 +101773,111 @@
         ],
         "semantic_change_rows": [
           {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/adapters/pi/commands/resume.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ],
+            "gaps": []
+          },
+          {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
             "semantic": true,
@@ -101178,6 +101886,27 @@
               ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
               ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/runtime/runner.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [],
+            "gaps": [
+              "missing_accepted_build_coverage"
+            ]
+          },
+          {
+            "path": "src/state/resume-context.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
             ],
             "gaps": []
           },
@@ -101193,9 +101922,51 @@
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
             ],
             "gaps": []
+          },
+          {
+            "path": "tests/smoke/resume-scheduler.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+            ],
+            "gaps": []
           }
         ],
-        "semantic_change_gaps": [],
+        "semantic_change_gaps": [
+          {
+            "path": "src/runtime/runner.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [],
+            "gaps": [
+              "missing_accepted_build_coverage"
+            ]
+          }
+        ],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
           ".codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
@@ -101266,6 +102037,7 @@
           ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+          ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -101755,6 +102527,7 @@
           "src/state/rebuild.ts",
           "src/state/resume-context.ts",
           "src/state/resume-kickoff.ts",
+          "src/state/resume-selection.ts",
           "src/state/resume-tool.ts",
           "src/state/skill-assets.ts",
           "src/state/tool.ts",
@@ -104667,6 +105440,26 @@
               "package.json",
               "tests/smoke/package-smoke.test.mjs",
               "TASK-039"
+            ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-040"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              "codewiki_build tool",
+              "src/state/resume-selection.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/runtime/runner.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "TASK-040"
             ]
           },
           {
@@ -107764,6 +108557,29 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-040",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:file-structure",
+              "approval:user",
+              "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass"
+            ],
+            "content_proof_refs": [
+              "c0161567ffc31a29d5c23ef98dbb108bded52857",
+              "89891f770e3b8ff6494c9e26270cc8d1df312336",
+              "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -109829,6 +110645,27 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+            "task_id": "TASK-040",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/home/nunoc/projects/codewiki",
+            "branch": "main",
+            "validated_sha": "c0161567ffc31a29d5c23ef98dbb108bded52857",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "c0161567ffc31a29d5c23ef98dbb108bded52857",
+              "89891f770e3b8ff6494c9e26270cc8d1df312336",
+              "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+            ],
+            "publisher_result_refs": [
+              "89891f770e3b8ff6494c9e26270cc8d1df312336"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             "task_id": "TASK-044",
             "verdict": "pass",
@@ -110229,7 +111066,9 @@
           "codewiki_audit profiles=alignment,changed,task TASK-047 — warning: graph health/generated state warnings; task pass",
           "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
           "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+          "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass",
           "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+          "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
           "codewiki_audit profiles=alignment,changed,task,file-structure,package TASK-039 — warning: graph/generated views; task/file-structure/package pass",
           "codewiki_audit profiles=alignment,changed,task,file-structure,package task_id=TASK-039 changed=true — warning: graph/generated views; task/file-structure/package pass",
           "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
@@ -110736,6 +111575,7 @@
           "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
           "7f6c8a0a68902dd587b932e598e2fdc723373728",
           "8266b38028d7317de640668dce0bb4697e1b8674",
+          "89891f770e3b8ff6494c9e26270cc8d1df312336",
           "89b181ac7811619bab15d054894dd787f1abd371",
           "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
           "8e2fe1708366bdd39427443a4f4f0143ce4b3ffc",
@@ -110767,6 +111607,7 @@
           "builder-decision-validation-dirty-state",
           "builder-planning-validation-dirty-state",
           "c011a63605448444267f0335cdd205f11421c451",
+          "c0161567ffc31a29d5c23ef98dbb108bded52857",
           "c1451d18f352bfe81d8b8462831959a6b73c12c0",
           "c1b353f123a42dee0429fe221d76fa498e10a129",
           "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
@@ -110842,6 +111683,7 @@
           "refs/codewiki/archive/task/TASK-037",
           "refs/codewiki/archive/task/TASK-038",
           "refs/codewiki/archive/task/TASK-039",
+          "refs/codewiki/archive/task/TASK-040",
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
           "refs/codewiki/archive/task/TASK-047",
@@ -110849,8 +111691,10 @@
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
           "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
           "scripts/codewiki-gateway.mjs@sha256:7749d37f4d8f0b62da2f441ac36c522a988ba562f6c739ac94fd8175d8cb90df",
+          "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
           "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
           "sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
+          "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
           "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
           "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
           "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
@@ -110989,6 +111833,7 @@
           "src/adapters/pi/commands/config.ts@sha256:4bb9c251703cd8a71539f4d9f1bb08fba9ada519b53c81f345137b19e2426c88",
           "src/adapters/pi/commands/config.ts@sha256:a85e6cae5be15791eb65b3ace659b63c83332648732d1e6d18e80c0e9374c006",
           "src/adapters/pi/commands/resume.ts@sha256:08977eda9151869b5d099e30233166cad531e349ac0fbeb3a4d5efcb2b5b3aba",
+          "src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
           "src/adapters/pi/commands/resume.ts@sha256:4e446f9211d617fee2779125209ce513f4f403e84d8eaf4f67ec5941eeaf242c",
           "src/adapters/pi/commands/resume.ts@sha256:5c5670bdfb6e875f71c20de9dca47bf837f813bb3159096bd6ea9fd9addfa395",
           "src/adapters/pi/commands/resume.ts@sha256:5e89dcf84e6220ef273d3b3eb8f2e8f5f95ea2463bbcfe432745a29ef1d468f9",
@@ -111345,6 +112190,7 @@
           "src/roadmap/tool.ts@sha256:687883e6b05b3c47424ef8b32445b11141fdd657c3d5183ba518dde9c1d57385",
           "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
           "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
+          "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
           "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
           "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
           "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
@@ -111377,7 +112223,9 @@
           "src/state/rebuild.ts@sha256:e9ff5e7ae5491301594e82c89ed45d5e587c0a8c45aa603fa5abd37c5efe9784",
           "src/state/resume-context.ts@sha256:30c69535d63b1f32fe31417e15f7e269588e322c402ca20f7b66c6757b754ac0",
           "src/state/resume-context.ts@sha256:9fd7543ecc9e10bf67ae705076ffef3674f7a9c87040be4ec51e39738af5028c",
+          "src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
           "src/state/resume-kickoff.ts@sha256:3788fcec7d13695688561a943789e165892156ca61dbacfd2ceff226924afd36",
+          "src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
           "src/state/resume-tool.ts@sha256:29344ad179c13355ff2090a7751fbfb9f45f01e2d7b28c01ab3d0ade91ee6874",
           "src/state/skill-assets.ts@sha256:8a0fcbfead0d52ec364d818a66375864d2960fe2315ad5085ebd615ddcd2f770",
           "src/state/tool.ts@sha256:6177908bc0efb6e4d44930f2a4039ec66993140a80de519f9c4aad748dbfbac2",
@@ -111506,6 +112354,7 @@
           "tests/smoke/resume-scheduler.test.mjs@sha256:9a93d829887262f691a40af93c01bd270c8aca7fc0c683b71e336761fb8d95fd",
           "tests/smoke/resume-scheduler.test.mjs@sha256:b0f26f40071cca657c1dd85da64764fd79159cf0d7528c738e9233fcbb31cde1",
           "tests/smoke/resume-scheduler.test.mjs@sha256:c7fb26518352cdfe01be560bd8035d8762cb5f6d12fccd251e496f1e13066881",
+          "tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
           "tests/smoke/resume-scheduler.test.mjs@sha256:fcceb8b1215286cd01bad4d84ccd6e7d9539cbbe8778e61a804b081e44169e62",
           "tests/smoke/roadmap-task-boundary.test.mjs@sha256:775b07924b806d03beca64d8433685982871a89372a31dd3577d631c02a35e98",
           "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
@@ -111551,6 +112400,7 @@
           "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
           "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
           "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:314892b82ee1d3b7162a7e83b28c36068e63daa4edfe7c678c572574cb8cb50e",
+          "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
           "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:f79d23d8cfd37dedb47686ecbcec24aef1b6e81125b0526c319c809eb0e1fe0f",
           "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs@sha256:f27cbb0ede9120a4bbddd04cbba8137ead1b49ec7a7131c0d491bddc5158e2e0",
           "tests/tasks/TASK-033/frontmatter-codepath-links.test.mjs@sha256:1636e76bf5ea28d167c2483c0d940455254afe59adba85ed8f5c54b5181750bf",
@@ -111561,30 +112411,18 @@
         ],
         "reconciliation_items": [
           {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+            "id": "reconcile:semantic-build:src/runtime/runner.ts",
+            "source_id": "path:src/runtime/runner.ts",
             "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
+            "direction": "upward",
+            "from_layer": "code",
+            "to_layer": "build",
+            "next_loop": "implementation",
+            "reason": "Semantic code change src/runtime/runner.ts lacks accepted compiler build coverage.",
+            "gaps": [
+              "missing_accepted_build_coverage"
+            ],
+            "change_type": "code"
           },
           {
             "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -111693,7 +112531,17 @@
           }
         ],
         "traceability_gaps": [],
-        "semantic_change_gaps": [],
+        "semantic_change_gaps": [
+          {
+            "path": "src/runtime/runner.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [],
+            "gaps": [
+              "missing_accepted_build_coverage"
+            ]
+          }
+        ],
         "file_structure_drift": {
           "version": 1,
           "source": "file-structure-map",
@@ -111896,9 +112744,10 @@
         "TASK-046",
         "TASK-048"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-040"
+      ],
       "todo_task_ids": [
-        "TASK-040",
         "TASK-041",
         "TASK-042",
         "TASK-043",
@@ -111914,7 +112763,8 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "todo": 6
+        "in_progress": 1,
+        "todo": 5
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -113153,32 +114003,593 @@
         "tsconfig.json"
       ],
       "dirty_paths": [
+        ".gitignore",
         ".pi/settings.json",
-        "gitignore",
+        "src/adapters/pi/commands/resume.ts",
         "src/adapters/pi/ui/decision-approval.ts",
-        "tests/smoke/decision-approval-ui.test.mjs"
+        "src/runtime/runner.ts",
+        "src/state/resume-context.ts",
+        "tests/smoke/decision-approval-ui.test.mjs",
+        "tests/smoke/resume-scheduler.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
       ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-207",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-040",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-207",
+          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "agent_name": "Mole",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+          "task_id": "TASK-040",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-040"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/roadmap.md"
+            },
+            {
+              "layer": "code",
+              "path": "src/adapters/pi/commands/resume.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/state/resume-context.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/state/resume-selection.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/resume-scheduler.test.mjs"
+            },
+            {
+              "layer": "code",
+              "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            },
+            {
+              "layer": "build",
+              "description": "TASK-040 implementation build"
+            }
+          ],
+          "created_at": "2026-05-28T09:53:57Z",
+          "updated_at": "2026-05-28T09:53:57Z",
+          "expires_at": "2026-05-28T11:53:57.914Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/roadmap.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/commands/resume.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/state/resume-context.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/state/resume-selection.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-040"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "build",
+            "description": "TASK-040 implementation build"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/resume-scheduler.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/roadmap.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/commands/resume.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/state/resume-context.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/state/resume-selection.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-040"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "build",
+            "description": "TASK-040 implementation build"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/resume-scheduler.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-207",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-040",
+              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+              "expires_at": "2026-05-28T11:53:57.914Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -114995,6 +116406,27 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+          "task_id": "TASK-040",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "validated_sha": "c0161567ffc31a29d5c23ef98dbb108bded52857",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "c0161567ffc31a29d5c23ef98dbb108bded52857",
+            "89891f770e3b8ff6494c9e26270cc8d1df312336",
+            "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+          ],
+          "publisher_result_refs": [
+            "89891f770e3b8ff6494c9e26270cc8d1df312336"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
           "task_id": "TASK-044",
           "verdict": "pass",
@@ -115278,6 +116710,7 @@
         ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
         ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
         ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+        ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
         ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
         ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
         ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -115767,6 +117200,7 @@
         "src/state/rebuild.ts",
         "src/state/resume-context.ts",
         "src/state/resume-kickoff.ts",
+        "src/state/resume-selection.ts",
         "src/state/resume-tool.ts",
         "src/state/skill-assets.ts",
         "src/state/tool.ts",
@@ -116038,7 +117472,9 @@
         "codewiki_audit profiles=alignment,changed,task TASK-047 — warning: graph health/generated state warnings; task pass",
         "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
         "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+        "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass",
         "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+        "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-040 changed=true — warning: graph/generated state; task/file-structure pass",
         "codewiki_audit profiles=alignment,changed,task,file-structure,package TASK-039 — warning: graph/generated views; task/file-structure/package pass",
         "codewiki_audit profiles=alignment,changed,task,file-structure,package task_id=TASK-039 changed=true — warning: graph/generated views; task/file-structure/package pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
@@ -116545,6 +117981,7 @@
         "7f1bd96575dae5d48b9e9ec96dabb2ffbd791e3c",
         "7f6c8a0a68902dd587b932e598e2fdc723373728",
         "8266b38028d7317de640668dce0bb4697e1b8674",
+        "89891f770e3b8ff6494c9e26270cc8d1df312336",
         "89b181ac7811619bab15d054894dd787f1abd371",
         "8cc714ae3a767a5848e61dc9aa314d73a0e2eef7",
         "8e2fe1708366bdd39427443a4f4f0143ce4b3ffc",
@@ -116576,6 +118013,7 @@
         "builder-decision-validation-dirty-state",
         "builder-planning-validation-dirty-state",
         "c011a63605448444267f0335cdd205f11421c451",
+        "c0161567ffc31a29d5c23ef98dbb108bded52857",
         "c1451d18f352bfe81d8b8462831959a6b73c12c0",
         "c1b353f123a42dee0429fe221d76fa498e10a129",
         "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
@@ -116651,6 +118089,7 @@
         "refs/codewiki/archive/task/TASK-037",
         "refs/codewiki/archive/task/TASK-038",
         "refs/codewiki/archive/task/TASK-039",
+        "refs/codewiki/archive/task/TASK-040",
         "refs/codewiki/archive/task/TASK-044",
         "refs/codewiki/archive/task/TASK-045",
         "refs/codewiki/archive/task/TASK-047",
@@ -116658,8 +118097,10 @@
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
         "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
         "scripts/codewiki-gateway.mjs@sha256:7749d37f4d8f0b62da2f441ac36c522a988ba562f6c739ac94fd8175d8cb90df",
+        "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
         "sha256:0532ebcbefd90a14bd019cc848baac9ae284e7374421fc2a4b9f17c99f9217b7",
         "sha256:1afec18f50ad42f2d0289cfb346da1d0e116749943a3a8e20ccc696b145c8f67",
+        "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3",
         "sha256:1c3d4ecbc97c39cc9aec009e92877fdeecdf4e539730083bfbd366b9171a9cd0",
         "sha256:1f05fab8fc1d73044d733136ad18483ee14470c9ee7205e35ff6a2cf604a40e6",
         "sha256:23e8554d63eaaed7b2c863ea06d0aef2517ad78f990aacc4af73ca22074ed0ee",
@@ -116798,6 +118239,7 @@
         "src/adapters/pi/commands/config.ts@sha256:4bb9c251703cd8a71539f4d9f1bb08fba9ada519b53c81f345137b19e2426c88",
         "src/adapters/pi/commands/config.ts@sha256:a85e6cae5be15791eb65b3ace659b63c83332648732d1e6d18e80c0e9374c006",
         "src/adapters/pi/commands/resume.ts@sha256:08977eda9151869b5d099e30233166cad531e349ac0fbeb3a4d5efcb2b5b3aba",
+        "src/adapters/pi/commands/resume.ts@sha256:4c3308dfb16e66b481479504c21bd7d361533a3b208d0b92eaf24ee1db6d561a",
         "src/adapters/pi/commands/resume.ts@sha256:4e446f9211d617fee2779125209ce513f4f403e84d8eaf4f67ec5941eeaf242c",
         "src/adapters/pi/commands/resume.ts@sha256:5c5670bdfb6e875f71c20de9dca47bf837f813bb3159096bd6ea9fd9addfa395",
         "src/adapters/pi/commands/resume.ts@sha256:5e89dcf84e6220ef273d3b3eb8f2e8f5f95ea2463bbcfe432745a29ef1d468f9",
@@ -117154,6 +118596,7 @@
         "src/roadmap/tool.ts@sha256:687883e6b05b3c47424ef8b32445b11141fdd657c3d5183ba518dde9c1d57385",
         "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
         "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
+        "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
         "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
         "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
         "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
@@ -117186,7 +118629,9 @@
         "src/state/rebuild.ts@sha256:e9ff5e7ae5491301594e82c89ed45d5e587c0a8c45aa603fa5abd37c5efe9784",
         "src/state/resume-context.ts@sha256:30c69535d63b1f32fe31417e15f7e269588e322c402ca20f7b66c6757b754ac0",
         "src/state/resume-context.ts@sha256:9fd7543ecc9e10bf67ae705076ffef3674f7a9c87040be4ec51e39738af5028c",
+        "src/state/resume-context.ts@sha256:c48afb0d073d11bb24bd69683bc546e9dc68ce56608cdcc7aabda4486f0d72a0",
         "src/state/resume-kickoff.ts@sha256:3788fcec7d13695688561a943789e165892156ca61dbacfd2ceff226924afd36",
+        "src/state/resume-selection.ts@sha256:4f3708212364312f194eaac136112227a9160b9ed570b09302604b1036dca870",
         "src/state/resume-tool.ts@sha256:29344ad179c13355ff2090a7751fbfb9f45f01e2d7b28c01ab3d0ade91ee6874",
         "src/state/skill-assets.ts@sha256:8a0fcbfead0d52ec364d818a66375864d2960fe2315ad5085ebd615ddcd2f770",
         "src/state/tool.ts@sha256:6177908bc0efb6e4d44930f2a4039ec66993140a80de519f9c4aad748dbfbac2",
@@ -117315,6 +118760,7 @@
         "tests/smoke/resume-scheduler.test.mjs@sha256:9a93d829887262f691a40af93c01bd270c8aca7fc0c683b71e336761fb8d95fd",
         "tests/smoke/resume-scheduler.test.mjs@sha256:b0f26f40071cca657c1dd85da64764fd79159cf0d7528c738e9233fcbb31cde1",
         "tests/smoke/resume-scheduler.test.mjs@sha256:c7fb26518352cdfe01be560bd8035d8762cb5f6d12fccd251e496f1e13066881",
+        "tests/smoke/resume-scheduler.test.mjs@sha256:e7ae09d68274d7a92574d81f34358fde5b155430452682c324a22d258fe6e5b3",
         "tests/smoke/resume-scheduler.test.mjs@sha256:fcceb8b1215286cd01bad4d84ccd6e7d9539cbbe8778e61a804b081e44169e62",
         "tests/smoke/roadmap-task-boundary.test.mjs@sha256:775b07924b806d03beca64d8433685982871a89372a31dd3577d631c02a35e98",
         "tests/smoke/roadmap-task-boundary.test.mjs@sha256:94fac972921d34bbedde14f039f3bc1cdcca3b11198cfc6a5d9b4d2563ee1eeb",
@@ -117360,6 +118806,7 @@
         "tests/tasks/TASK-028/session-source-root.test.mjs@sha256:7fb5b3a795ede128da632c41cba26f686f8fef13e022a8720e983c1a33ab5ab7",
         "tests/tasks/TASK-029/roadmap-source-root.test.mjs@sha256:9a3d2b62118805aad82761f42dd4a37c5201e1b73cc661c57f112ee63f54c54a",
         "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:314892b82ee1d3b7162a7e83b28c36068e63daa4edfe7c678c572574cb8cb50e",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:89b14f2221d961fb64163d8e7b776cf2e84a86cc7e89d6f445129f192639c431",
         "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs@sha256:f79d23d8cfd37dedb47686ecbcec24aef1b6e81125b0526c319c809eb0e1fe0f",
         "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs@sha256:f27cbb0ede9120a4bbddd04cbba8137ead1b49ec7a7131c0d491bddc5158e2e0",
         "tests/tasks/TASK-033/frontmatter-codepath-links.test.mjs@sha256:1636e76bf5ea28d167c2483c0d940455254afe59adba85ed8f5c54b5181750bf",
@@ -120346,6 +121793,29 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-040-2026-05-28-task-040.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-040",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:file-structure",
+            "approval:user",
+            "codewiki_audit profiles=alignment,changed,task,file-structure TASK-040 — warning: graph/generated views; task/file-structure pass"
+          ],
+          "content_proof_refs": [
+            "c0161567ffc31a29d5c23ef98dbb108bded52857",
+            "89891f770e3b8ff6494c9e26270cc8d1df312336",
+            "sha256:1beffbd27fdf0be4f1ee3b2ffae3e3055f955e12287ff3d8ac8f9021473a64f3"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -123266,6 +124736,111 @@
       ],
       "semantic_change_rows": [
         {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/commands/resume.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+          ],
+          "gaps": []
+        },
+        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -123274,6 +124849,27 @@
             ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
             ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        },
+        {
+          "path": "src/state/resume-context.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
           ],
           "gaps": []
         },
@@ -123289,11 +124885,63 @@
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
           ],
           "gaps": []
+        },
+        {
+          "path": "tests/smoke/resume-scheduler.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
+          ],
+          "gaps": []
         }
       ],
-      "semantic_change_gaps": [],
-      "gap_count": 0,
-      "gaps": []
+      "semantic_change_gaps": [
+        {
+          "path": "src/runtime/runner.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        }
+      ],
+      "gap_count": 1,
+      "gaps": [
+        {
+          "path": "src/runtime/runner.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [],
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ]
+        }
+      ]
     },
     "scope_views": {
       "roadmap": {
@@ -124163,7 +125811,9 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-207"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -124259,6 +125909,7 @@
             ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
             ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
             ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+            ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
             ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -124371,6 +126022,7 @@
             ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
             ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
             ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+            ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
             ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -124944,6 +126596,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-040",
+          "build_path": ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-040",
+          "commit_sha": "",
+          "digest": "sha256:0365af36a06a7e3780364c7d9269001473fd4ccd84df876bfbeac1e0ba396bd4",
+          "restore_command": "/wiki-restore TASK-040",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-044",
           "build_path": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-044",
@@ -124984,7 +126646,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 59,
+        "ledger_count": 60,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -125041,6 +126703,7 @@
           "refs/codewiki/archive/task/TASK-037",
           "refs/codewiki/archive/task/TASK-038",
           "refs/codewiki/archive/task/TASK-039",
+          "refs/codewiki/archive/task/TASK-040",
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
           "refs/codewiki/archive/task/TASK-047",
@@ -125102,6 +126765,7 @@
           ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+          ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -125163,6 +126827,7 @@
           ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+          ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -125177,30 +126842,18 @@
       "model": "graph-backed-state-machine",
       "items": [
         {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+          "id": "reconcile:semantic-build:src/runtime/runner.ts",
+          "source_id": "path:src/runtime/runner.ts",
           "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
+          "direction": "upward",
+          "from_layer": "code",
+          "to_layer": "build",
+          "next_loop": "implementation",
+          "reason": "Semantic code change src/runtime/runner.ts lacks accepted compiler build coverage.",
+          "gaps": [
+            "missing_accepted_build_coverage"
+          ],
+          "change_type": "code"
         },
         {
           "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -125309,8 +126962,8 @@
         }
       ],
       "counts_by_loop": {
-        "decision": 5,
-        "implementation": 6
+        "implementation": 7,
+        "decision": 3
       },
       "next_action": {
         "loop": "decision",
@@ -125345,10 +126998,10 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T09:29:42.734Z",
+      "generated_at": "2026-05-28T10:06:38.093Z",
       "counts": {
         "large-doc": 1,
-        "roadmap-missing-code-path": 5
+        "roadmap-missing-code-path": 3
       },
       "issues": [
         {
@@ -125356,18 +127009,6 @@
           "kind": "large-doc",
           "path": ".codewiki/kb/system/validation-gateway.md",
           "message": "Live doc has 1681 words; consider split or cut."
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-036 references missing code path: src/state/resume-selection.ts"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-040 references missing code path: src/state/resume-selection.ts"
         },
         {
           "severity": "warning",
@@ -125391,12 +127032,12 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T09:29:42Z",
+      "generated_at": "2026-05-28T10:06:38Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 6,
-        "total_issues": 6
+        "warnings": 4,
+        "total_issues": 4
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -125408,7 +127049,8 @@
         "active_sprint_count": 6,
         "status_counts": {
           "cancelled": 3,
-          "todo": 6
+          "in_progress": 1,
+          "todo": 5
         },
         "priority_counts": {
           "medium": 4,
@@ -125880,10 +127522,13 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-040"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-040"
+        ],
         "todo_task_ids": [
-          "TASK-040",
           "TASK-041",
           "TASK-042",
           "TASK-043",
@@ -125891,7 +127536,6 @@
           "TASK-048"
         ],
         "executable_todo_task_ids": [
-          "TASK-040",
           "TASK-041",
           "TASK-042",
           "TASK-043",
@@ -125906,8 +127550,8 @@
           "TASK-036"
         ],
         "recent_task_ids": [
-          "TASK-041",
           "TASK-040",
+          "TASK-041",
           "TASK-036",
           "TASK-048",
           "TASK-046",
@@ -126454,7 +128098,7 @@
         "TASK-040": {
           "id": "TASK-040",
           "title": "Consolidate resume task selection",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "refactor",
           "change_type": "code",
@@ -126494,7 +128138,7 @@
             "tests/smoke/resume-scheduler.test.mjs",
             "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
           ],
-          "updated": "2026-05-28T01:08:45Z",
+          "updated": "2026-05-28T10:06:38Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -126795,7 +128439,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T09:29:42Z",
+      "generated_at": "2026-05-28T10:06:38Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -126804,8 +128448,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 6,
-        "total_issues": 6
+        "warnings": 4,
+        "total_issues": 4
       },
       "summary": {
         "total_specs": 21,
@@ -126954,7 +128598,9 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-207"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -127050,6 +128696,7 @@
               ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
               ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+              ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
               ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -127162,6 +128809,7 @@
               ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
               ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-039-release-readiness-changelog-baseline.json",
+              ".codewiki/builds/implementation/2026-05-28-task-040-resume-selection-consolidation.json",
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
               ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
@@ -127183,7 +128831,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -128032,7 +129680,7 @@
           ],
           "primary_task": {
             "id": "TASK-040",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Consolidate resume task selection"
           },
           "revision": {
@@ -130145,7 +131793,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T09:29:42Z",
+        "generated_at": "2026-05-28T10:06:38Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -130200,14 +131848,20 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:29:42Z",
+            "checked_at": "2026-05-28T10:06:38Z",
             "revision": {
               "git": {
-                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
+                "head": "c0161567ffc31a29d5c23ef98dbb108bded52857",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "src/runtime/runner.ts",
+                  "src/state/resume-context.ts",
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -130377,6 +132031,7 @@
                   "src/state/rebuild.ts": "e3101f2d029e83ed8b15076ced75e03b29582a3e",
                   "src/state/resume-context.ts": "accf45e0f1e7c7c12d34c777eaa25ccc9dce3718",
                   "src/state/resume-kickoff.ts": "3104b8350159612747de313fa96112fdaab93f33",
+                  "src/state/resume-selection.ts": "",
                   "src/state/resume-tool.ts": "0f6f4e129163d3ba364da0dad280f88a44c9a411",
                   "src/state/skill-assets.ts": "692d8acffdce5b46a3c78aaf4ef4b812c9583a06",
                   "src/state/tool.ts": "1c49b52dcfe9593ff8beee8ae364c7d2df027136",
@@ -130427,16 +132082,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
-              "digest": "1a6c81c09826c3feab9eef4c4588d15871c7f0e7a22f5a8f0aa103d4279bdfeb"
+              "task_digest": "7847b8c008fce47588d5fd9d036d7a73302634948e31a550df0eb43d8f428112",
+              "code_digest": "feb83b857f324fcc98d47985327842a5d8e32f464a6262f1706b497097365aba",
+              "digest": "2c1528fe4330ab36ea82d30663ce5ee3d14cb1e10364633f52187a277bdc28cf"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:42Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T10:06:38Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -130866,14 +132521,20 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T09:29:42Z",
+            "checked_at": "2026-05-28T10:06:38Z",
             "revision": {
               "git": {
-                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
+                "head": "c0161567ffc31a29d5c23ef98dbb108bded52857",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "src/runtime/runner.ts",
+                  "src/state/resume-context.ts",
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -131021,6 +132682,7 @@
                   "src/state/rebuild.ts": "e3101f2d029e83ed8b15076ced75e03b29582a3e",
                   "src/state/resume-context.ts": "accf45e0f1e7c7c12d34c777eaa25ccc9dce3718",
                   "src/state/resume-kickoff.ts": "3104b8350159612747de313fa96112fdaab93f33",
+                  "src/state/resume-selection.ts": "",
                   "src/state/resume-tool.ts": "0f6f4e129163d3ba364da0dad280f88a44c9a411",
                   "src/state/skill-assets.ts": "692d8acffdce5b46a3c78aaf4ef4b812c9583a06",
                   "src/state/tool.ts": "1c49b52dcfe9593ff8beee8ae364c7d2df027136",
@@ -131070,16 +132732,16 @@
                 }
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
-              "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "761a857f1a8249846a3e662bac7ab4e6ce58772c491a5b59aef9bb565d4da309",
-              "digest": "d6713a87fb4f32e1d3a6b1b2501db7674c5044e5191ba603ad224d67612453ae"
+              "task_digest": "7847b8c008fce47588d5fd9d036d7a73302634948e31a550df0eb43d8f428112",
+              "code_digest": "09f67ce2e6d2ebe5f25865e98e24f7e78c610f92b50bccc81e859d893d24f9a3",
+              "digest": "e18cfdf23c340dc3874553823b8c5f6433858b9b141e74110f2dd3b16357b0d4"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:42Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T10:06:38Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -131485,14 +133147,20 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:29:42Z",
+            "checked_at": "2026-05-28T10:06:38Z",
             "revision": {
               "git": {
-                "head": "aedff99975cbc8499994841478cc461d7d985ed4",
+                "head": "c0161567ffc31a29d5c23ef98dbb108bded52857",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "src/runtime/runner.ts",
+                  "src/state/resume-context.ts",
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -131662,6 +133330,7 @@
                   "src/state/rebuild.ts": "e3101f2d029e83ed8b15076ced75e03b29582a3e",
                   "src/state/resume-context.ts": "accf45e0f1e7c7c12d34c777eaa25ccc9dce3718",
                   "src/state/resume-kickoff.ts": "3104b8350159612747de313fa96112fdaab93f33",
+                  "src/state/resume-selection.ts": "",
                   "src/state/resume-tool.ts": "0f6f4e129163d3ba364da0dad280f88a44c9a411",
                   "src/state/skill-assets.ts": "692d8acffdce5b46a3c78aaf4ef4b812c9583a06",
                   "src/state/tool.ts": "1c49b52dcfe9593ff8beee8ae364c7d2df027136",
@@ -131712,16 +133381,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
-              "digest": "1a6c81c09826c3feab9eef4c4588d15871c7f0e7a22f5a8f0aa103d4279bdfeb"
+              "task_digest": "7847b8c008fce47588d5fd9d036d7a73302634948e31a550df0eb43d8f428112",
+              "code_digest": "feb83b857f324fcc98d47985327842a5d8e32f464a6262f1706b497097365aba",
+              "digest": "2c1528fe4330ab36ea82d30663ce5ee3d14cb1e10364633f52187a277bdc28cf"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:29:42Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T10:06:38Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -132145,28 +133814,329 @@
         "lane_id": "",
         "heading": "TASK-040 — Consolidate resume task selection",
         "command": "/wiki-resume TASK-040",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T09:29:42Z",
+        "generated_at": "2026-05-28T10:06:38Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-207",
+            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "agent_name": "Mole",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+            "task_id": "TASK-040",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-040"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/roadmap.md"
+              },
+              {
+                "layer": "code",
+                "path": "src/adapters/pi/commands/resume.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/state/resume-context.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/state/resume-selection.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/runner.ts"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/resume-scheduler.test.mjs"
+              },
+              {
+                "layer": "code",
+                "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+              },
+              {
+                "layer": "build",
+                "description": "TASK-040 implementation build"
+              }
+            ],
+            "created_at": "2026-05-28T09:53:57Z",
+            "updated_at": "2026-05-28T09:53:57Z",
+            "expires_at": "2026-05-28T11:53:57.914Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/roadmap.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/adapters/pi/commands/resume.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/state/resume-context.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/state/resume-selection.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-040"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "build",
+              "description": "TASK-040 implementation build"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/resume-scheduler.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-207",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-040",
+                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
+                "expires_at": "2026-05-28T11:53:57.914Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -132985,7 +134955,7 @@
             ],
             "primary_task": {
               "id": "TASK-040",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Consolidate resume task selection"
             },
             "revision": {
@@ -136393,7 +138363,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-040",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Consolidate resume task selection"
                 },
                 "revision": {
@@ -138039,9 +140009,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-040",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-040"
+        ],
         "next_task_id": "TASK-040",
         "sprint_ids": [
           "SPRINT-001",
@@ -138484,7 +140456,6 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-040",
               "TASK-041",
               "TASK-042",
               "TASK-043",
@@ -138495,7 +140466,9 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-040"
+            ]
           },
           {
             "id": "done",

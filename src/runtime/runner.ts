@@ -27,9 +27,9 @@ import type {
 import { stableAgentName } from "../state/builders.ts";
 import {
 	buildCodewikiResumeContext,
-	taskArtifactScopes,
 	type CodewikiResumeContextResult,
 } from "../state/resume-context.ts";
+import { taskArtifactScopes } from "../state/resume-selection.ts";
 import { buildCodewikiResumeKickoff } from "../state/resume-kickoff.ts";
 import { buildValidationPreflight } from "../validation/report.ts";
 import { formatError, nowIso } from "../shared/utils.ts";

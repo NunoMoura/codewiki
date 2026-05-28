@@ -21,6 +21,7 @@ const requiredStateOwners = [
 	"src/state/graph/rebuilder.ts",
 	"src/state/lint.ts",
 	"src/state/resume-context.ts",
+	"src/state/resume-selection.ts",
 	"src/state/prompt.ts",
 	"src/state/skill-assets.ts",
 	"src/state/local/rebuild-runner.ts",
@@ -77,6 +78,9 @@ const stateGraphRebuilder = await import(
 const stateLint = await import(resolve(repoRoot, "src/state/lint.ts"));
 const stateResume = await import(
 	resolve(repoRoot, "src/state/resume-context.ts")
+);
+const stateResumeSelection = await import(
+	resolve(repoRoot, "src/state/resume-selection.ts")
 );
 const statePrompt = await import(resolve(repoRoot, "src/state/prompt.ts"));
 const statePrefs = await import(
@@ -159,6 +163,16 @@ assert.equal(
 	typeof stateResume.buildCodewikiResumeContext,
 	"function",
 	"resume context builder should be state-owned",
+);
+assert.equal(
+	typeof stateResumeSelection.resolveImplementationTask,
+	"function",
+	"resume task selection should be state-owned",
+);
+assert.equal(
+	typeof stateResumeSelection.resumeCandidates,
+	"function",
+	"resume candidate ordering should be state-owned",
 );
 assert.equal(
 	typeof statePrompt.codePrompt,

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T01:08:45Z",
+  "generated_at": "2026-05-28T10:06:38Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-040/context.json",
   "task": {
     "id": "TASK-040",
     "title": "Consolidate resume task selection",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "refactor",
     "change_type": "code",

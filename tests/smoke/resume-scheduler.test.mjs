@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { resolveImplementationTask } from "../../src/adapters/pi/commands/resume.ts";
+import {
+	resolveImplementationTask,
+	resumeCandidates,
+} from "../../src/state/resume-selection.ts";
 import { agencyHardStopReasons } from "../../src/agency/planning.ts";
 import {
 	agencyLevelAllowsContinuation,
@@ -71,6 +74,67 @@ const delegatedContainer = task(
 const firstChild = task("TASK-083", "todo", [], ["skills/codewiki"]);
 const secondChild = task("TASK-085", "todo", [], ["tests/fixtures"]);
 const board = roadmap([umbrella, delegatedContainer, firstChild, secondChild]);
+
+const roadmapOrderSelection = resolveImplementationTask(
+	roadmap([firstChild, secondChild]),
+	null,
+	null,
+	null,
+	state(),
+	"session-helper",
+);
+assert.equal(
+	roadmapOrderSelection.task?.id,
+	"TASK-083",
+	"shared resolver should fall back to roadmap order when no focus exists",
+);
+assert.equal(roadmapOrderSelection.source, "roadmap-order");
+
+const sessionFocusSelection = resolveImplementationTask(
+	roadmap([firstChild, secondChild]),
+	{ taskId: "TASK-085" },
+	null,
+	null,
+	state(),
+	"session-helper",
+);
+assert.equal(
+	sessionFocusSelection.task?.id,
+	"TASK-085",
+	"shared resolver should prefer current session focus before roadmap order",
+);
+assert.equal(sessionFocusSelection.source, "session-focus");
+
+const persistedFocusSelection = resolveImplementationTask(
+	roadmap([firstChild, secondChild]),
+	null,
+	null,
+	"TASK-085",
+	state(),
+	"session-helper",
+);
+assert.equal(
+	persistedFocusSelection.task?.id,
+	"TASK-085",
+	"shared resolver should prefer persisted focus before roadmap order",
+);
+assert.equal(persistedFocusSelection.source, "persisted-focus");
+
+const candidateSources = resumeCandidates(
+	board,
+	{ taskId: "TASK-083" },
+	"TASK-077",
+).map((item) => `${item.source}:${item.task.id}`);
+assert.deepEqual(
+	candidateSources.slice(0, 4),
+	[
+		"session-focus:TASK-083",
+		"persisted-focus:TASK-077",
+		"roadmap-order:TASK-082",
+		"roadmap-order:TASK-085",
+	],
+	"shared candidate order should dedupe session focus, then persisted focus, then roadmap order",
+);
 
 const selected = resolveImplementationTask(
 	board,

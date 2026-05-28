@@ -1,7 +1,7 @@
 {
   "id": "TASK-040",
   "title": "Consolidate resume task selection",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "refactor",
   "summary": "Replace duplicated /wiki-resume and codewiki_resume_context task-selection logic with one shared resolver and parity tests.",
@@ -48,5 +48,5 @@
     "closure": "Task closes when duplicate functions are removed and parity tests pass."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28T01:08:45Z"
+  "updated": "2026-05-28T10:06:38Z"
 }
