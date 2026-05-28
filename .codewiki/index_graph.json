@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T10:10:09.524Z",
+  "generated_at": "2026-05-28T10:11:42.984Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -28765,116 +28765,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-207",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-207",
-      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-      "expires_at": "2026-05-28T11:53:57.914Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-040"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/roadmap.md"
-        },
-        {
-          "layer": "code",
-          "path": "src/adapters/pi/commands/resume.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/resume-context.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/state/resume-selection.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/runtime/runner.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/resume-scheduler.test.mjs"
-        },
-        {
-          "layer": "code",
-          "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-        },
-        {
-          "layer": "build",
-          "description": "TASK-040 implementation build"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-040",
-      "kind": "change_claim_scope",
-      "path": "TASK-040",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/roadmap.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/roadmap.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/resume.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/resume.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/resume-context.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/resume-context.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/resume-selection.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/resume-selection.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/runtime/runner.ts",
-      "kind": "change_claim_scope",
-      "path": "src/runtime/runner.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/resume-scheduler.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/resume-scheduler.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-040 implementation build",
-      "kind": "change_claim_scope",
-      "path": "TASK-040 implementation build",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -90026,56 +89916,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-207",
-      "to": "task:TASK-040"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:TASK-040"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:.codewiki/kb/system/roadmap.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:src/state/resume-context.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:src/state/resume-selection.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:src/runtime/runner.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:tests/smoke/resume-scheduler.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-207",
-      "to": "claim_scope:TASK-040 implementation build"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -100862,7 +100702,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 28,
+            "item_count": 18,
             "badges": [
               {
                 "id": "open_tasks",
@@ -100899,7 +100739,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -101877,88 +101717,6 @@
           }
         ],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-            ],
-            "gaps": []
-          },
           {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
@@ -114036,581 +113794,25 @@
       ]
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-207",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-040",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-207",
-          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-          "task_id": "TASK-040",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-040"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/roadmap.md"
-            },
-            {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/resume.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/resume-context.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/state/resume-selection.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/runtime/runner.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/resume-scheduler.test.mjs"
-            },
-            {
-              "layer": "code",
-              "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-            },
-            {
-              "layer": "build",
-              "description": "TASK-040 implementation build"
-            }
-          ],
-          "created_at": "2026-05-28T09:53:57Z",
-          "updated_at": "2026-05-28T09:53:57Z",
-          "expires_at": "2026-05-28T11:53:57.914Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/roadmap.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/resume.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/runtime/runner.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-context.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-selection.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-040"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-040 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/resume-scheduler.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/roadmap.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/adapters/pi/commands/resume.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/runtime/runner.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-context.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/state/resume-selection.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-040"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-040 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/resume-scheduler.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-207",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-040",
-              "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-              "expires_at": "2026-05-28T11:53:57.914Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -124805,88 +124007,6 @@
       ],
       "semantic_change_rows": [
         {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-          ],
-          "gaps": []
-        },
-        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -125757,9 +124877,7 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-207"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -126919,7 +126037,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T10:10:09.399Z",
+      "generated_at": "2026-05-28T10:11:42.846Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 3
@@ -126953,7 +126071,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T10:10:09Z",
+      "generated_at": "2026-05-28T10:11:42Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -128295,7 +127413,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T10:10:09Z",
+      "generated_at": "2026-05-28T10:11:43Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -128450,9 +127568,7 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-207"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -128683,7 +127799,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -131639,7 +130755,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T10:10:09Z",
+        "generated_at": "2026-05-28T10:11:43Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -131694,13 +130810,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T10:10:09Z",
+            "checked_at": "2026-05-28T10:11:43Z",
             "revision": {
               "git": {
-                "head": "2a70d6ced1647a12b0d488002bda3516932135d7",
+                "head": "5dc51209e70e84c91b56945c3e69804aceec85d0",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -131749,7 +130864,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "aeb60dc69424b17c922853433c9a29cc6fe2f15c",
+                  ".codewiki/roadmap/queue.json": "e8e3427d1a74e3c9cdf3bb017c92ca4c02cc2357",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -131924,15 +131039,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "f2d4392b5a10feab0e02756ff2f7a2306cac3fa7a0dd9878c6d8b3cdc6e80764",
-              "code_digest": "125053abcbd949e757451436eff6e012fecb2b28fc4ceb4ae3d4b7c56b67caeb",
-              "digest": "d01a2ce474f9d7c69d90d0a10b18eb50091369bc50135aab92eff43b8a4c182a"
+              "code_digest": "204df869265cbc0b4de3aa65fdc8ba72bc714b4812b1d87ec8fb60ee7ea0b303",
+              "digest": "91e5b3412f7e2dcb127144ff1836e796b09a7fac6d811954897c4086eb002770"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T10:10:09Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T10:11:43Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -132360,13 +131475,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T10:10:09Z",
+            "checked_at": "2026-05-28T10:11:43Z",
             "revision": {
               "git": {
-                "head": "2a70d6ced1647a12b0d488002bda3516932135d7",
+                "head": "5dc51209e70e84c91b56945c3e69804aceec85d0",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -132399,7 +131513,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "aeb60dc69424b17c922853433c9a29cc6fe2f15c",
+                  ".codewiki/roadmap/queue.json": "e8e3427d1a74e3c9cdf3bb017c92ca4c02cc2357",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -132567,15 +131681,15 @@
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
               "task_digest": "f2d4392b5a10feab0e02756ff2f7a2306cac3fa7a0dd9878c6d8b3cdc6e80764",
-              "code_digest": "a4beef733de4f8c2f41ba3d16675c0178fdbd68939fb9efcdd76d8218f5632da",
-              "digest": "e8cb5a05fa7cea0eff6e3c07413b43e6d4842acaa3ef47cea286586bcd2e7112"
+              "code_digest": "ac587190c10bc519ba935e5de039a713f4ae5543696432b7d89ecda85402da27",
+              "digest": "6d5659556b8ac4213b87e9e39f44dfd924ca1dedea9c06a14616d652eddb57bb"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T10:10:09Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T10:11:43Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -132979,13 +132093,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T10:10:09Z",
+            "checked_at": "2026-05-28T10:11:43Z",
             "revision": {
               "git": {
-                "head": "2a70d6ced1647a12b0d488002bda3516932135d7",
+                "head": "5dc51209e70e84c91b56945c3e69804aceec85d0",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -133034,7 +132147,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "aeb60dc69424b17c922853433c9a29cc6fe2f15c",
+                  ".codewiki/roadmap/queue.json": "e8e3427d1a74e3c9cdf3bb017c92ca4c02cc2357",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -133209,15 +132322,15 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "f2d4392b5a10feab0e02756ff2f7a2306cac3fa7a0dd9878c6d8b3cdc6e80764",
-              "code_digest": "125053abcbd949e757451436eff6e012fecb2b28fc4ceb4ae3d4b7c56b67caeb",
-              "digest": "d01a2ce474f9d7c69d90d0a10b18eb50091369bc50135aab92eff43b8a4c182a"
+              "code_digest": "204df869265cbc0b4de3aa65fdc8ba72bc714b4812b1d87ec8fb60ee7ea0b303",
+              "digest": "91e5b3412f7e2dcb127144ff1836e796b09a7fac6d811954897c4086eb002770"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T10:10:09Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T10:11:43Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -133646,322 +132759,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T10:10:09Z",
+        "generated_at": "2026-05-28T10:11:43Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-207",
-            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-            "task_id": "TASK-040",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-040"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/roadmap.md"
-              },
-              {
-                "layer": "code",
-                "path": "src/adapters/pi/commands/resume.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/resume-context.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/state/resume-selection.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/runtime/runner.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/resume-scheduler.test.mjs"
-              },
-              {
-                "layer": "code",
-                "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-              },
-              {
-                "layer": "build",
-                "description": "TASK-040 implementation build"
-              }
-            ],
-            "created_at": "2026-05-28T09:53:57Z",
-            "updated_at": "2026-05-28T09:53:57Z",
-            "expires_at": "2026-05-28T11:53:57.914Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/roadmap.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/adapters/pi/commands/resume.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/runtime/runner.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/resume-context.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/state/resume-selection.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-040"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "description": "TASK-040 implementation build"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/resume-scheduler.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-207",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-040",
-                "summary": "Consolidate resume task selection into shared resolver and parity tests.",
-                "expires_at": "2026-05-28T11:53:57.914Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-040; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-207 release or validated publisher/patch ref for codewiki/TASK-040/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
