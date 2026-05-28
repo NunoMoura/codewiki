@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T03:48:15.383Z",
+  "generated_at": "2026-05-28T03:50:10.320Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -27247,146 +27247,6 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-194",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-194",
-      "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-      "agent_name": "Wren",
-      "mode": "write",
-      "role": "publisher",
-      "status": "active",
-      "summary": "Commit proof and task-close validation for TASK-038.",
-      "expires_at": "2026-05-28T05:41:16.082Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-        "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-        "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-038"
-        },
-        {
-          "layer": "source",
-          "path": "src/build/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/validation/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/gateway/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/audit/**"
-        },
-        {
-          "layer": "source",
-          "path": "src/state/resume-context.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/adapters/pi/commands/resume.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/adapters/pi/ui/manager.ts"
-        },
-        {
-          "layer": "source",
-          "path": "src/ui/web/control-room.ts"
-        },
-        {
-          "layer": "source",
-          "path": "tests/smoke/**"
-        },
-        {
-          "layer": "build",
-          "path": ".codewiki/builds/implementation/**"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-038",
-      "kind": "change_claim_scope",
-      "path": "TASK-038",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/build/**",
-      "kind": "change_claim_scope",
-      "path": "src/build/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/validation/**",
-      "kind": "change_claim_scope",
-      "path": "src/validation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/gateway/**",
-      "kind": "change_claim_scope",
-      "path": "src/gateway/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/audit/**",
-      "kind": "change_claim_scope",
-      "path": "src/audit/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/state/resume-context.ts",
-      "kind": "change_claim_scope",
-      "path": "src/state/resume-context.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/commands/resume.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/commands/resume.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/adapters/pi/ui/manager.ts",
-      "kind": "change_claim_scope",
-      "path": "src/adapters/pi/ui/manager.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/ui/web/control-room.ts",
-      "kind": "change_claim_scope",
-      "path": "src/ui/web/control-room.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/**",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/builds/implementation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/builds/implementation/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -86267,71 +86127,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-194",
-      "to": "task:TASK-038"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:TASK-038"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/build/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/validation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/gateway/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/audit/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/state/resume-context.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/adapters/pi/commands/resume.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:tests/smoke/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:.codewiki/builds/implementation/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-194",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -96257,7 +96052,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 37,
+            "item_count": 24,
             "badges": [
               {
                 "id": "open_tasks",
@@ -96295,7 +96090,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -96875,88 +96670,7 @@
             "gaps": []
           }
         ],
-        "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
-            ],
-            "gaps": []
-          }
-        ],
+        "semantic_change_rows": [],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -108200,755 +107914,25 @@
       ]
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "publisher": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-194",
-          "role": "publisher",
-          "mode": "write",
-          "task_id": "TASK-038",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-          "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-194",
-          "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-          "agent_name": "Wren",
-          "status": "active",
-          "mode": "write",
-          "role": "publisher",
-          "summary": "Commit proof and task-close validation for TASK-038.",
-          "task_id": "TASK-038",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-            "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-            "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-038"
-            },
-            {
-              "layer": "source",
-              "path": "src/build/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/validation/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/gateway/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/audit/**"
-            },
-            {
-              "layer": "source",
-              "path": "src/state/resume-context.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/adapters/pi/commands/resume.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/adapters/pi/ui/manager.ts"
-            },
-            {
-              "layer": "source",
-              "path": "src/ui/web/control-room.ts"
-            },
-            {
-              "layer": "source",
-              "path": "tests/smoke/**"
-            },
-            {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            }
-          ],
-          "created_at": "2026-05-28T03:41:16Z",
-          "updated_at": "2026-05-28T03:41:16Z",
-          "expires_at": "2026-05-28T05:41:16.082Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/commands/resume.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/ui/manager.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/audit/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/build/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/state/resume-context.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/ui/web/control-room.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-038"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "build",
-            "path": ".codewiki/builds/implementation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/commands/resume.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/adapters/pi/ui/manager.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/audit/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/build/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/gateway/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/state/resume-context.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/ui/web/control-room.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "src/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-038"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "source",
-            "path": "tests/smoke/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-194",
-              "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "agent_name": "Wren",
-              "mode": "write",
-              "role": "publisher",
-              "task_id": "TASK-038",
-              "summary": "Commit proof and task-close validation for TASK-038.",
-              "expires_at": "2026-05-28T05:41:16.082Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -117915,88 +116899,7 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [
-        {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
-          ],
-          "gaps": []
-        }
-      ],
+      "semantic_change_rows": [],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -119032,9 +117935,7 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-194"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -120214,7 +119115,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T03:48:15.278Z",
+      "generated_at": "2026-05-28T03:50:10.171Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 9
@@ -120284,7 +119185,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T03:48:15Z",
+      "generated_at": "2026-05-28T03:50:10Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -122036,7 +120937,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T03:48:15Z",
+      "generated_at": "2026-05-28T03:50:10Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -122220,9 +121121,7 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-194"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -122433,7 +121332,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 20/20.",
@@ -125424,7 +124323,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T03:48:15Z",
+        "generated_at": "2026-05-28T03:50:10Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -125479,14 +124378,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T03:48:15Z",
+            "checked_at": "2026-05-28T03:50:10Z",
             "revision": {
               "git": {
-                "head": "b09be7654575cd0474b8362f3825ff0e8165599e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -125531,7 +124428,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "1142e675048ac7be1a7ef38dbbc5c227c2e16df9",
+                  ".codewiki/roadmap/queue.json": "c1ed0f71df1eb2a085600fb339bfba3b5962dcf0",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -125697,15 +124594,15 @@
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
               "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "fc5a5b01c197761fcf50b540f7305f374f5f8f33b924bdeb2831eb2a8520e00d",
-              "digest": "9a58338ee7d2ed3544e42a24820f8f6f1a3dc55f9ca081b9d1cdeea038cd0db6"
+              "code_digest": "6d738eabc68b39e88ece7b34dec24c393f0711e75571288bc26a2ad59d9732a9",
+              "digest": "3a3c0cb6ce301a8cbc60985bc8b511c372e710d8d4e06b0fc488875569744de4"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:48:15Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T03:50:10Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -126139,14 +125036,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T03:48:15Z",
+            "checked_at": "2026-05-28T03:50:10Z",
             "revision": {
               "git": {
-                "head": "b09be7654575cd0474b8362f3825ff0e8165599e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -126175,7 +125070,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "1142e675048ac7be1a7ef38dbbc5c227c2e16df9",
+                  ".codewiki/roadmap/queue.json": "c1ed0f71df1eb2a085600fb339bfba3b5962dcf0",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -126334,15 +125229,15 @@
               },
               "spec_digest": "1cb2c0942c228588c11f5964858847704a0a8066394e7b2bf1417148dbbcfff2",
               "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "7f124b0e9e4023043fa7594a174ce2f96a30adfc4f7e1f9813ab5e0e901ca95e",
-              "digest": "6c3eb594a880e4d508bd85c75a5e8a403da979202ba32048526dba01884d18e1"
+              "code_digest": "dccd71958fd962b4d23de6349709bb0a631272036c3caa324a12496f3e3e20aa",
+              "digest": "4f0f934a6e237ce49ea74c9fb20f3ead40d96be8d42a951c1134069a20beace6"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:48:15Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T03:50:10Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -126752,14 +125647,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T03:48:15Z",
+            "checked_at": "2026-05-28T03:50:10Z",
             "revision": {
               "git": {
-                "head": "b09be7654575cd0474b8362f3825ff0e8165599e",
-                "dirty": true,
-                "dirty_paths": [
-                  ".codewiki/roadmap/queue.json"
-                ],
+                "head": "44ea53a54b77f92a2c4c00845b1c4619b9ed7e0b",
+                "dirty": false,
+                "dirty_paths": [],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
                   ".codewiki/kb/": "",
@@ -126804,7 +125697,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "1142e675048ac7be1a7ef38dbbc5c227c2e16df9",
+                  ".codewiki/roadmap/queue.json": "c1ed0f71df1eb2a085600fb339bfba3b5962dcf0",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -126970,15 +125863,15 @@
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
               "task_digest": "bf002f2fc2b043e4727a72ea18fcbe1abebb031524a3baccea6d33d0dd065b56",
-              "code_digest": "fc5a5b01c197761fcf50b540f7305f374f5f8f33b924bdeb2831eb2a8520e00d",
-              "digest": "9a58338ee7d2ed3544e42a24820f8f6f1a3dc55f9ca081b9d1cdeea038cd0db6"
+              "code_digest": "6d738eabc68b39e88ece7b34dec24c393f0711e75571288bc26a2ad59d9732a9",
+              "digest": "3a3c0cb6ce301a8cbc60985bc8b511c372e710d8d4e06b0fc488875569744de4"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-28T03:48:15Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-28T03:50:10Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -127413,415 +126306,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T03:48:15Z",
+        "generated_at": "2026-05-28T03:50:10Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-194",
-            "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-            "agent_name": "Wren",
-            "status": "active",
-            "mode": "write",
-            "role": "publisher",
-            "summary": "Commit proof and task-close validation for TASK-038.",
-            "task_id": "TASK-038",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-              "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-038"
-              },
-              {
-                "layer": "source",
-                "path": "src/build/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/validation/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/gateway/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/audit/**"
-              },
-              {
-                "layer": "source",
-                "path": "src/state/resume-context.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/adapters/pi/commands/resume.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/adapters/pi/ui/manager.ts"
-              },
-              {
-                "layer": "source",
-                "path": "src/ui/web/control-room.ts"
-              },
-              {
-                "layer": "source",
-                "path": "tests/smoke/**"
-              },
-              {
-                "layer": "build",
-                "path": ".codewiki/builds/implementation/**"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              }
-            ],
-            "created_at": "2026-05-28T03:41:16Z",
-            "updated_at": "2026-05-28T03:41:16Z",
-            "expires_at": "2026-05-28T05:41:16.082Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "build",
-              "path": ".codewiki/builds/implementation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/adapters/pi/commands/resume.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/adapters/pi/ui/manager.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/audit/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/build/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/gateway/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/state/resume-context.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/ui/web/control-room.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "src/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-038"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "source",
-              "path": "tests/smoke/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-194",
-                "session_id": "019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                "agent_name": "Wren",
-                "mode": "write",
-                "role": "publisher",
-                "task_id": "TASK-038",
-                "summary": "Commit proof and task-close validation for TASK-038.",
-                "expires_at": "2026-05-28T05:41:16.082Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "branch": "codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7",
-                  "notes": "factory=role-worktree; task=TASK-038; role=publisher; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-194 release or validated publisher/patch ref for codewiki/TASK-038/publisher/019e6bfe-d227-747e-9a0e-2d9a44f0c3f7; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
