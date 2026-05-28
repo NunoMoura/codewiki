@@ -65,5 +65,25 @@
 	"dependencies": {
 		"cytoscape": "^3.33.3",
 		"js-yaml": "^4.1.1"
+	},
+	"knip": {
+		"entry": [
+			"src/index.ts",
+			"src/api/index.ts",
+			"src/api/tools.ts",
+			"src/build/index.ts",
+			"src/gateway/index.ts",
+			"src/validation/index.ts",
+			"scripts/*.mjs",
+			"tests/**/*.mjs"
+		],
+		"project": [
+			"src/**/*.ts",
+			"scripts/**/*.mjs",
+			"tests/**/*.mjs"
+		],
+		"ignoreDependencies": [
+			"cytoscape"
+		]
 	}
 }

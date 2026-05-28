@@ -48,6 +48,18 @@ Public command surface is intentionally small:
 
 All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one resume-context entrypoint (`codewiki_resume_context`), one transient compiler-build writer (`codewiki_build`), one canonical task mutation entrypoint (`codewiki_task`), one artifact-status coordination entrypoint (`codewiki_artifact_status`), and one runtime session entrypoint (`codewiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `codewiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps. CodeWiki resume context is normal memory; VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
 
+### Static analysis entrypoints
+
+The `knip` metadata in `package.json` is intentionally part of the package maintenance contract. It tells PyLens/Knip-style review runs that these files are roots, not dead code:
+
+- `src/index.ts` as the Pi extension and package facade
+- `src/api/index.ts` and `src/api/tools.ts` as stable public API facades for adapters and scripts
+- `src/build/index.ts`, `src/gateway/index.ts`, and `src/validation/index.ts` as package-facing subsystem facades
+- `scripts/*.mjs` as maintained CLI/script surfaces, including `scripts/codewiki-gateway.mjs`
+- `tests/**/*.mjs` as the repository smoke and task regression suite
+
+`cytoscape` is listed as an intentional dependency false positive because the Control Room serves its browser bundle through `nodeRequire.resolve("cytoscape/dist/cytoscape.min.js")`; static dependency scanners do not see that dynamic asset lookup reliably.
+
 ### Skills
 
 - `/skill:codewiki`

@@ -1,7 +1,7 @@
 {
   "id": "TASK-037",
   "title": "Calibrate static analysis entrypoints",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "tooling",
   "summary": "Make PyLens/Knip-style review inputs aware of CodeWiki package entrypoints, public API facades, scripts, and tests.",
@@ -50,5 +50,5 @@
     "closure": "Task closes when calibrated review evidence is recorded and package tests pass."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28T01:08:39Z"
+  "updated": "2026-05-28T08:37:19Z"
 }

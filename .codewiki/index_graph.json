@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T08:14:44.322Z",
+  "generated_at": "2026-05-28T08:37:19.620Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4654,7 +4654,7 @@
       "kind": "code_path",
       "path": "tests/smoke/package-smoke.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4823,7 +4823,7 @@
       "kind": "code_path",
       "path": "package.json",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5613,7 +5613,7 @@
       "kind": "code_path",
       "path": "README.md",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6820,7 +6820,7 @@
       "kind": "roadmap_task",
       "title": "Calibrate static analysis entrypoints",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "code",
       "alignment_state": "drift",
       "lens_family": "work"
@@ -27341,6 +27341,204 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": false,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-037",
+      "superseded_by": [
+        ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json"
+      ],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+          "codewiki_build tool",
+          "package.json",
+          "README.md",
+          "tests/smoke/package-smoke.test.mjs",
+          "TASK-037"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+          "tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+          "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+          "README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+          "refs/codewiki/archive/task/TASK-037",
+          "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "kind": "content_proof",
+      "path": ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+      "kind": "content_proof",
+      "path": "tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+      "kind": "content_proof",
+      "path": "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+      "kind": "content_proof",
+      "path": "README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-037",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-037",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
+      "kind": "content_proof",
+      "path": "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-037",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-037",
+      "task_id": "TASK-037",
+      "digest": "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
+      "restore_command": "/wiki-restore TASK-037",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
+      "id": "closure:TASK-037",
+      "kind": "closure_brief",
+      "path": "TASK-037"
+    },
+    {
+      "id": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-037",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+          "codewiki_build tool",
+          "package.json",
+          "README.md",
+          "tests/smoke/package-smoke.test.mjs",
+          "TASK-037"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+          "tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+          "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+          "README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+          "refs/codewiki/archive/task/TASK-037",
+          "sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
+      "kind": "content_proof",
+      "path": "sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
@@ -28320,6 +28518,76 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-205",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-205",
+      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+      "agent_name": "Mole",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+      "expires_at": "2026-05-28T10:26:11.119Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-037"
+        },
+        {
+          "layer": "code",
+          "path": "package.json"
+        },
+        {
+          "layer": "code",
+          "path": "README.md"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/package-smoke.test.mjs"
+        },
+        {
+          "layer": "build",
+          "description": "TASK-037 implementation build"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-037",
+      "kind": "change_claim_scope",
+      "path": "TASK-037",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:package.json",
+      "kind": "change_claim_scope",
+      "path": "package.json",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:README.md",
+      "kind": "change_claim_scope",
+      "path": "README.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/package-smoke.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-037 implementation build",
+      "kind": "change_claim_scope",
+      "path": "TASK-037 implementation build",
+      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -36832,6 +37100,83 @@
       "kind": "audit_evidence",
       "path": "approval:user",
       "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki",
+        "branch": "main",
+        "validated_sha": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+        "tree_sha": "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+        "working_tree_digest": "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:file-structure",
+          "approval:user",
+          "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass"
+        ],
+        "content_proof_refs": [
+          "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+          "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+          "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+      "kind": "content_proof",
+      "path": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:c1451d18f352bfe81d8b8462831959a6b73c12c0",
+      "kind": "content_proof",
+      "path": "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
+      "kind": "content_proof",
+      "path": "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
+      "proof_kind": "digest",
+      "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
     },
@@ -87540,6 +87885,255 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:package.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:README.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "source:TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "audit:codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "content_proof:sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "task:TASK-037"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_derives_from",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "build:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json"
+    },
+    {
+      "kind": "build_consumes_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "task:TASK-037"
+    },
+    {
+      "kind": "build_consumes_planning",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "build:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "code:package.json"
+    },
+    {
+      "kind": "build_produces_code",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "code:README.md"
+    },
+    {
+      "kind": "build_produces_test",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "test:tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "kind": "build_produces_closure",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+      "to": "closure:TASK-037"
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:package.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:README.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "source:TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "content_proof:sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "task:TASK-037"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-037",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
       "to": "source:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
       "default_hidden": true
@@ -88624,6 +89218,36 @@
       "from": "build:.codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-047",
       "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-205",
+      "to": "task:TASK-037"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-205",
+      "to": "claim_scope:TASK-037"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-205",
+      "to": "claim_scope:package.json"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-205",
+      "to": "claim_scope:README.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-205",
+      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-205",
+      "to": "claim_scope:TASK-037 implementation build"
     },
     {
       "kind": "validation_attests_source",
@@ -98354,6 +98978,71 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:profile:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:approval:user",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "audit:codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "content_proof:1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "content_proof:c1451d18f352bfe81d8b8462831959a6b73c12c0",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "content_proof:sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+      "to": "task:TASK-037"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-28-implementation-pass-task-038.json",
       "to": "source:.codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
       "default_hidden": true
@@ -99004,7 +99693,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 21,
+            "item_count": 27,
             "badges": [
               {
                 "id": "open_tasks",
@@ -99042,7 +99731,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -99079,19 +99768,21 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 56
+                "count": 58
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 4,
+                "count": 7,
                 "refs": [
                   ".gitignore",
                   ".pi/settings.json",
+                  "README.md",
+                  "package.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
-                "ref_count": 4
+                "ref_count": 7
               }
             ],
             "hot_refs": [
@@ -99118,7 +99809,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 119
+                "count": 120
               },
               {
                 "id": "fail_or_block_validation",
@@ -99128,12 +99819,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 502
+                "count": 505
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 994
+                "count": 1004
               },
               {
                 "id": "traceability_gaps",
@@ -99150,19 +99841,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 92,
+            "total": 94,
             "decision": 12,
             "planning": 24,
-            "implementation": 56,
+            "implementation": 58,
             "hot": 0,
-            "collapsed": 92
+            "collapsed": 94
           },
           "validations": {
-            "total": 119,
-            "pass": 98,
+            "total": 120,
+            "pass": 99,
             "fail_or_block": 21,
             "hot": 5,
-            "collapsed": 119
+            "collapsed": 120
           }
         },
         "next_action": {
@@ -100021,6 +100712,113 @@
         ],
         "semantic_change_rows": [
           {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "README.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "package.json",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+            ],
+            "gaps": []
+          },
+          {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
             "semantic": true,
@@ -100042,6 +100840,52 @@
               ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
               ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/package-smoke.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
             ],
             "gaps": []
           }
@@ -100113,6 +100957,8 @@
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+          ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+          ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -103434,6 +104280,40 @@
             ]
           },
           {
+            "path": ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-037"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              "codewiki_build tool",
+              "package.json",
+              "README.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "TASK-037"
+            ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-037"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              "codewiki_build tool",
+              "package.json",
+              "README.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "TASK-037"
+            ]
+          },
+          {
             "path": ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
             "kind": "implementation_build",
             "status": "accepted",
@@ -106492,6 +107372,29 @@
             "isolation_status": "legacy"
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-037",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:file-structure",
+              "approval:user",
+              "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass"
+            ],
+            "content_proof_refs": [
+              "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+              "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+              "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -108475,6 +109378,27 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+            "task_id": "TASK-037",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/home/nunoc/projects/codewiki",
+            "branch": "main",
+            "validated_sha": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+              "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+              "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+            ],
+            "publisher_result_refs": [
+              "c1451d18f352bfe81d8b8462831959a6b73c12c0"
+            ]
+          },
+          {
             "path": ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
             "task_id": "TASK-038",
             "verdict": "pass",
@@ -108847,6 +109771,8 @@
           "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
           "codewiki_audit profiles=alignment,changed,task TASK-047 — warning: graph health/generated state warnings; task pass",
           "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
+          "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+          "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
           "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
           "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-045 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph warning",
           "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
@@ -108867,6 +109793,7 @@
           "codewiki_audit profiles=alignment,stale-reference,generated-parity,changed warning generated-only",
           "codewiki_audit profiles=alignment,task,changed task_id=TASK-011 warning: graph health warnings from unresolved process report and generated-file changes",
           "codewiki_audit profiles=alignment,task,changed,generated-parity warning: generated-file changes and graph health warnings from hot fail report/active propagation work",
+          "codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
           "codewiki_audit profiles=file-structure — pass",
           "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task:TASK-010: file-structure/alignment/generated-parity/task pass; changed warnings generated state/view files only",
           "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
@@ -109178,6 +110105,7 @@
           ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
           ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json@sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
           ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json@sha256:9dcbf5fcf43faff07b9b41da92d4db1f5aeb46cd84e8933a41dfa65d2d6651af",
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
           ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json@sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
           ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json@sha256:a6558caefaa2d1a04c5ab7f75716c001f06cd2f820e0b99e4a517fe6f5ecc662",
           ".codewiki/config.json@sha256:198014973ff76ba965a1133b64fac99f2c4c8d9f8e68e14bdeefe60cda92b8d6",
@@ -109301,6 +110229,7 @@
           "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
           "156afe189611a1da02b17b933361e9dd8dfca5bc",
           "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
+          "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
           "1d55123ed90e2c892ef44d03710192c4653139d5",
           "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
           "22e8efd86255595b390d412655c3ae80fcea1cfb",
@@ -109353,6 +110282,7 @@
           "96213363ccf4ff3e01d21a088b61ea0042f63aa1",
           "README.md@sha256:2ea97ec87f74f35c05bcaf2656732c8513736b2e8886b90e92f86c4f2adcd497",
           "README.md@sha256:3e98fa2afa150d924e39c754f048de203279dbbdb88ef30b0fb18e84b5597595",
+          "README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
           "README.md@sha256:beb162f5c083aa879c9337a23ba4c511db95ec59970406149bddc90e96c8e360",
           "README.md@sha256:fd5b87e62318daa870e42e2679e3ac3a398e5b30f57ce89ec712e7bca5c1c29e",
           "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
@@ -109371,6 +110301,7 @@
           "builder-decision-validation-dirty-state",
           "builder-planning-validation-dirty-state",
           "c011a63605448444267f0335cdd205f11421c451",
+          "c1451d18f352bfe81d8b8462831959a6b73c12c0",
           "c1b353f123a42dee0429fe221d76fa498e10a129",
           "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
           "c31533b8cd58de08c2b937acf58db1df228c3608",
@@ -109401,6 +110332,7 @@
           "fd3f93e548bc1d239e35b70a659333b3df644b7a",
           "package.json@sha256:0211ec773ec3a3a3a6b0668dcab2d6c2108394892e8f3067153734606645f764",
           "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
+          "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
           "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
           "package.json@sha256:bebf4e9079272c4b04e6fb3e03f0262827bc5e1b7f94f1ea90280e48db69bf19",
           "package.json@sha256:f20aabdb75a6de2ef7fc19414b690bc0dce882be1295bd03cd2c2d517ef06897",
@@ -109437,6 +110369,7 @@
           "refs/codewiki/archive/task/TASK-033",
           "refs/codewiki/archive/task/TASK-034",
           "refs/codewiki/archive/task/TASK-035",
+          "refs/codewiki/archive/task/TASK-037",
           "refs/codewiki/archive/task/TASK-038",
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
@@ -109472,6 +110405,7 @@
           "sha256:57d14e9587ba552931f1e20b5f2f53394593eb0ac8cfaccbe5a796a456717904",
           "sha256:5c2aaf6cfe22f0143e8b8fd4923325e706c2c10fe6c2e36e9f613eac6d6922da",
           "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+          "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
           "sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d",
           "sha256:620d2207155a05e868e9148c8016e844c574cf63d70a11e0b19a293cc9f8a982",
           "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
@@ -109510,7 +110444,9 @@
           "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f",
           "sha256:b7430722f512051e0ab96562b384adff257d37e0bab454f3da7dd9cba874b2ee",
           "sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a",
+          "sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
           "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
+          "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
           "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
           "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
           "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
@@ -110068,6 +111004,7 @@
           "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
           "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
           "tests/smoke/package-smoke.test.mjs@sha256:4373a6648a15975a289ac5768d03c83e0b5b0f5321a53bbbe84c767818ec335d",
+          "tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
           "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
           "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
           "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
@@ -110239,17 +111176,6 @@
             "doc_paths": [
               ".codewiki/roadmap/queue.json"
             ]
-          },
-          {
-            "id": "reconcile:task:TASK-037",
-            "source_id": "task:TASK-037",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-037",
-            "reason": "TASK-037 is open implementation delta below knowledge."
           },
           {
             "id": "reconcile:task:TASK-039",
@@ -110537,9 +111463,10 @@
         "TASK-046",
         "TASK-048"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-037"
+      ],
       "todo_task_ids": [
-        "TASK-037",
         "TASK-039",
         "TASK-040",
         "TASK-041",
@@ -110557,7 +111484,8 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "todo": 8
+        "in_progress": 1,
+        "todo": 7
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -111802,30 +112730,357 @@
       "dirty_paths": [
         ".gitignore",
         ".pi/settings.json",
+        "README.md",
+        "package.json",
         "src/adapters/pi/ui/decision-approval.ts",
-        "tests/smoke/decision-approval-ui.test.mjs"
+        "tests/smoke/decision-approval-ui.test.mjs",
+        "tests/smoke/package-smoke.test.mjs"
       ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-205",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-037",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-205",
+          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "agent_name": "Mole",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+          "task_id": "TASK-037",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-037"
+            },
+            {
+              "layer": "code",
+              "path": "package.json"
+            },
+            {
+              "layer": "code",
+              "path": "README.md"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/package-smoke.test.mjs"
+            },
+            {
+              "layer": "build",
+              "description": "TASK-037 implementation build"
+            }
+          ],
+          "created_at": "2026-05-28T08:26:11Z",
+          "updated_at": "2026-05-28T08:26:11Z",
+          "expires_at": "2026-05-28T10:26:11.119Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "package.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "README.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-037"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "build",
+            "description": "TASK-037 implementation build"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/package-smoke.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "package.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "README.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-037"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "build",
+            "description": "TASK-037 implementation build"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/package-smoke.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-205",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-037",
+              "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+              "expires_at": "2026-05-28T10:26:11.119Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -113586,6 +114841,27 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+          "task_id": "TASK-037",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki",
+          "branch": "main",
+          "validated_sha": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+            "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+            "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+          ],
+          "publisher_result_refs": [
+            "c1451d18f352bfe81d8b8462831959a6b73c12c0"
+          ]
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
           "task_id": "TASK-038",
           "verdict": "pass",
@@ -113839,6 +115115,8 @@
         ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
         ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
         ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+        ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+        ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
         ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
         ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
         ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -114598,6 +115876,8 @@
         "codewiki_audit profiles=alignment,changed,stale-reference,generated-parity,file-structure,package,task task_id=TASK-006 changed=true: alignment pass; changed warning on 5 generated-file-changed items; stale-reference pass; generated-parity pass; file-structure pass; package pass; task TASK-006 pass",
         "codewiki_audit profiles=alignment,changed,task TASK-047 — warning: graph health/generated state warnings; task pass",
         "codewiki_audit profiles=alignment,changed,task changed=true include_fingerprints=true returned task pass plus non-blocking graph/generated-file warnings",
+        "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass",
+        "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — warning: graph/generated views; task/file-structure pass",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph/generated-file warnings",
         "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-045 changed=true include_fingerprints=true returned task pass and generated-parity pass with graph warning",
         "codewiki_audit profiles=alignment,changed,task,generated-parity,stale-reference,file-structure,package,security task_id=TASK-008 => warning, 1 non-blocking graph-health warning, 0 errors",
@@ -114618,6 +115898,7 @@
         "codewiki_audit profiles=alignment,stale-reference,generated-parity,changed warning generated-only",
         "codewiki_audit profiles=alignment,task,changed task_id=TASK-011 warning: graph health warnings from unresolved process report and generated-file changes",
         "codewiki_audit profiles=alignment,task,changed,generated-parity warning: generated-file changes and graph health warnings from hot fail report/active propagation work",
+        "codewiki_audit profiles=changed,task,file-structure task_id=TASK-037 changed=true — warning: generated views changed; task/file-structure pass",
         "codewiki_audit profiles=file-structure — pass",
         "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task:TASK-010: file-structure/alignment/generated-parity/task pass; changed warnings generated state/view files only",
         "codewiki_audit profiles=file-structure,alignment,generated-parity,changed task_id=TASK-013: warning; file-structure pass, generated-parity pass, task pass, changed generated-file warnings pending commit, alignment graph-health warnings remain",
@@ -114929,6 +116210,7 @@
         ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json@sha256:7174f8bdf5bd45525de448bcbbbcda12af3750002b40ef19de6313ca50a5510a",
         ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json@sha256:797b974ecb0b4b6be2ed81eb910075aff2d34122210db2f9b1119420dc883e88",
         ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json@sha256:9dcbf5fcf43faff07b9b41da92d4db1f5aeb46cd84e8933a41dfa65d2d6651af",
+        ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
         ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json@sha256:438f2c6cd9733f4b49b68a5e8b91150788f07b9e8471380ca455eb41a163a125",
         ".codewiki/builds/planning/2026-05-28-task-047-runtime-root-planning.json@sha256:a6558caefaa2d1a04c5ab7f75716c001f06cd2f820e0b99e4a517fe6f5ecc662",
         ".codewiki/config.json@sha256:198014973ff76ba965a1133b64fac99f2c4c8d9f8e68e14bdeefe60cda92b8d6",
@@ -115052,6 +116334,7 @@
         "155f2a4c762a2e8f945c83e0f35674acc74e5d51",
         "156afe189611a1da02b17b933361e9dd8dfca5bc",
         "16addb5f80d9399366e2e1eb43d9c4da9e68c027",
+        "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
         "1d55123ed90e2c892ef44d03710192c4653139d5",
         "1d6bbca62e5decaee1a8dfc1578b4a053c86629c",
         "22e8efd86255595b390d412655c3ae80fcea1cfb",
@@ -115104,6 +116387,7 @@
         "96213363ccf4ff3e01d21a088b61ea0042f63aa1",
         "README.md@sha256:2ea97ec87f74f35c05bcaf2656732c8513736b2e8886b90e92f86c4f2adcd497",
         "README.md@sha256:3e98fa2afa150d924e39c754f048de203279dbbdb88ef30b0fb18e84b5597595",
+        "README.md@sha256:87169d47c440c49baca8a100c95e58b00b6eeb9dcd8a6961133a50664e8c1955",
         "README.md@sha256:beb162f5c083aa879c9337a23ba4c511db95ec59970406149bddc90e96c8e360",
         "README.md@sha256:fd5b87e62318daa870e42e2679e3ac3a398e5b30f57ce89ec712e7bca5c1c29e",
         "a60b2bc8f973eab2da45d64c3c47e147d3ae37be",
@@ -115122,6 +116406,7 @@
         "builder-decision-validation-dirty-state",
         "builder-planning-validation-dirty-state",
         "c011a63605448444267f0335cdd205f11421c451",
+        "c1451d18f352bfe81d8b8462831959a6b73c12c0",
         "c1b353f123a42dee0429fe221d76fa498e10a129",
         "c286ff3f04c21a2aecf135710ce9aca7fbf11872e55901699eff5cf102c4450b",
         "c31533b8cd58de08c2b937acf58db1df228c3608",
@@ -115152,6 +116437,7 @@
         "fd3f93e548bc1d239e35b70a659333b3df644b7a",
         "package.json@sha256:0211ec773ec3a3a3a6b0668dcab2d6c2108394892e8f3067153734606645f764",
         "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
+        "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
         "package.json@sha256:74779376c5ab7fac0ba8a1f1e71704f2eb57c6bd630a14500643cedc2af49406",
         "package.json@sha256:bebf4e9079272c4b04e6fb3e03f0262827bc5e1b7f94f1ea90280e48db69bf19",
         "package.json@sha256:f20aabdb75a6de2ef7fc19414b690bc0dce882be1295bd03cd2c2d517ef06897",
@@ -115188,6 +116474,7 @@
         "refs/codewiki/archive/task/TASK-033",
         "refs/codewiki/archive/task/TASK-034",
         "refs/codewiki/archive/task/TASK-035",
+        "refs/codewiki/archive/task/TASK-037",
         "refs/codewiki/archive/task/TASK-038",
         "refs/codewiki/archive/task/TASK-044",
         "refs/codewiki/archive/task/TASK-045",
@@ -115223,6 +116510,7 @@
         "sha256:57d14e9587ba552931f1e20b5f2f53394593eb0ac8cfaccbe5a796a456717904",
         "sha256:5c2aaf6cfe22f0143e8b8fd4923325e706c2c10fe6c2e36e9f613eac6d6922da",
         "sha256:5ddceafbcfaf0cbe01a4e7fd75b4446c5b098d788ec9782e3bb3c99a94f28002",
+        "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
         "sha256:603cb6cb63b100837e85f78974a4594f1470fa829608293dfc880ec22bd9981d",
         "sha256:620d2207155a05e868e9148c8016e844c574cf63d70a11e0b19a293cc9f8a982",
         "sha256:642adc5225da160f479c00f3b4f8e454865f86b4962cb776067b2b447fa26aac",
@@ -115261,7 +116549,9 @@
         "sha256:b5ef1ab2f352a76f9e8d053e8092f1f99abdbf81dfd4e279b5d7020343cb9f8f",
         "sha256:b7430722f512051e0ab96562b384adff257d37e0bab454f3da7dd9cba874b2ee",
         "sha256:b7c84c95c8bd28c99f8285416fc4def0cab55046daa69590655d41a45a1cc33a",
+        "sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
         "sha256:be74aea5cea2031e97f2703372fa4b46fab616b06b9f9f4b89ca511264266718",
+        "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
         "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
@@ -115819,6 +117109,7 @@
         "tests/smoke/package-smoke.test.mjs@sha256:392e5a0a6473b1f4d53b292e0231f5915bf4423c8985c5111ba2d96b69fb65fb",
         "tests/smoke/package-smoke.test.mjs@sha256:3a5bc161b24ee348554546c96a9d3c8d1e0da3b4d571af562577270e084b92b3",
         "tests/smoke/package-smoke.test.mjs@sha256:4373a6648a15975a289ac5768d03c83e0b5b0f5321a53bbbe84c767818ec335d",
+        "tests/smoke/package-smoke.test.mjs@sha256:61d4c14c9f98fde8a0281cc7b18712cfd809681f8fe8a28dbc64f78f6e6456d4",
         "tests/smoke/package-smoke.test.mjs@sha256:6b4c1b94fa4451fa1b07807bc3d98ff2027ac26965b235ca9028e471d236eb23",
         "tests/smoke/package-smoke.test.mjs@sha256:7967f3be3c6e8a81c72902decda7ee1498b43e2b3a03e90af3027dd11862f8a0",
         "tests/smoke/package-smoke.test.mjs@sha256:7f21821bfbc7d1dc27f893707069552b90d756ee35683bf710a8a389f91b9c51",
@@ -118809,6 +120100,29 @@
           "isolation_status": "legacy"
         },
         {
+          "path": ".codewiki/validation/2026-05-28-implementation-pass-task-037-2026-05-28-task-037.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-037",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:file-structure",
+            "approval:user",
+            "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass"
+          ],
+          "content_proof_refs": [
+            "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+            "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+            "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-28-implementation-pass-task-038.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -121703,6 +123017,113 @@
       ],
       "semantic_change_rows": [
         {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "README.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "package.json",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json"
+          ],
+          "gaps": []
+        },
+        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -121724,6 +123145,52 @@
             ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
             ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json"
           ],
           "gaps": []
         }
@@ -122655,7 +124122,9 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-205"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -122747,6 +124216,8 @@
             ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
             ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
             ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+            ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+            ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
             ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -122856,6 +124327,7 @@
             ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
             ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
             ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+            ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
             ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -123390,6 +124862,26 @@
         },
         {
           "kind": "task",
+          "id": "TASK-037",
+          "build_path": ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-037",
+          "commit_sha": "",
+          "digest": "sha256:c4c78bb291869296e3b59de070197e4f7519d8a8c057e90319fbad441206c0bf",
+          "restore_command": "/wiki-restore TASK-037",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-037",
+          "build_path": ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-037",
+          "commit_sha": "",
+          "digest": "sha256:b8c324c1c6952cff028d35fed8f56f19cb939a8750eecb8c1e51e058612b2a52",
+          "restore_command": "/wiki-restore TASK-037",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-038",
           "build_path": ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-038",
@@ -123440,7 +124932,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 56,
+        "ledger_count": 58,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -123493,6 +124985,8 @@
           "refs/codewiki/archive/task/TASK-033",
           "refs/codewiki/archive/task/TASK-034",
           "refs/codewiki/archive/task/TASK-035",
+          "refs/codewiki/archive/task/TASK-037",
+          "refs/codewiki/archive/task/TASK-037",
           "refs/codewiki/archive/task/TASK-038",
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
@@ -123551,6 +125045,8 @@
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+          ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+          ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -123609,6 +125105,7 @@
           ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
           ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
           ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+          ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
           ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -123715,17 +125212,6 @@
           ]
         },
         {
-          "id": "reconcile:task:TASK-037",
-          "source_id": "task:TASK-037",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-037",
-          "reason": "TASK-037 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-039",
           "source_id": "task:TASK-039",
           "state": "drift",
@@ -123805,7 +125291,7 @@
       ],
       "counts_by_loop": {
         "decision": 7,
-        "implementation": 8
+        "implementation": 7
       },
       "next_action": {
         "loop": "decision",
@@ -123840,7 +125326,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T08:14:44.190Z",
+      "generated_at": "2026-05-28T08:37:19.490Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 7
@@ -123898,7 +125384,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T08:14:44Z",
+      "generated_at": "2026-05-28T08:37:19Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -123915,7 +125401,8 @@
         "active_sprint_count": 7,
         "status_counts": {
           "cancelled": 3,
-          "todo": 8
+          "in_progress": 1,
+          "todo": 7
         },
         "priority_counts": {
           "medium": 5,
@@ -124397,10 +125884,13 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-037"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-037"
+        ],
         "todo_task_ids": [
-          "TASK-037",
           "TASK-039",
           "TASK-040",
           "TASK-041",
@@ -124410,7 +125900,6 @@
           "TASK-048"
         ],
         "executable_todo_task_ids": [
-          "TASK-037",
           "TASK-039",
           "TASK-040",
           "TASK-041",
@@ -124427,9 +125916,9 @@
           "TASK-036"
         ],
         "recent_task_ids": [
+          "TASK-037",
           "TASK-041",
           "TASK-040",
-          "TASK-037",
           "TASK-036",
           "TASK-048",
           "TASK-046",
@@ -124977,7 +126466,7 @@
         "TASK-037": {
           "id": "TASK-037",
           "title": "Calibrate static analysis entrypoints",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "tooling",
           "change_type": "code",
@@ -125019,7 +126508,7 @@
             "scripts/codewiki-gateway.mjs",
             "tests/smoke/package-smoke.test.mjs"
           ],
-          "updated": "2026-05-28T01:08:39Z",
+          "updated": "2026-05-28T08:37:19Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -125426,7 +126915,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T08:14:44Z",
+      "generated_at": "2026-05-28T08:37:19Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -125591,7 +127080,9 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-205"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -125683,6 +127174,8 @@
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
               ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
               ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+              ".codewiki/builds/implementation/2026-05-28-calibrate-knip-pylens-static-analysis-entrypoint.json",
+              ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
               ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -125792,6 +127285,7 @@
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
               ".codewiki/builds/implementation/2026-05-27-task-034-debounce-context-refresh-deferred-warni.json",
               ".codewiki/builds/implementation/2026-05-27-task-035-reduce-large-doc-graph-warnings.json",
+              ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
               ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
@@ -125814,7 +127308,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -128776,7 +130270,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T08:14:44Z",
+        "generated_at": "2026-05-28T08:37:19Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -128831,14 +130325,18 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T08:14:44Z",
+            "checked_at": "2026-05-28T08:37:19Z",
             "revision": {
               "git": {
-                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
+                "head": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "README.md",
+                  "package.json",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/package-smoke.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -129057,16 +130555,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "8063ed6da09bc61755d82c7efd9b56eecec232359e6ffb0961b5d34bff69657f",
-              "digest": "fe7694c82debb914d9c2ede9f58f16566f70d78c70bd6d0f5dbc914689754923"
+              "task_digest": "66d78fdcf372c5b8c57bc17ff88bb72ce03ae9e6d21d5f0e17c021e1cfd72fb6",
+              "code_digest": "aafb5adde7cb3ef46cf1d8d792555d135da80505b2871a95f726dae25bdfae0f",
+              "digest": "385c08429b567509ce7ba4ecb71c4e340a8dd4c446f2a9687cd8ff26c3e89daf"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:14:44Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T08:37:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -129498,14 +130996,18 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T08:14:44Z",
+            "checked_at": "2026-05-28T08:37:19Z",
             "revision": {
               "git": {
-                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
+                "head": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "README.md",
+                  "package.json",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/package-smoke.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -129701,16 +131203,16 @@
                 }
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
-              "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "e235077e5c3937a0c98686966872cfb5c2b557a174027f9c0b0fb6643c64b9fc",
-              "digest": "255e6338e04bdd24a3db63c1d99c9b9fcc66e09940f67d622fa1dbc03cee6836"
+              "task_digest": "66d78fdcf372c5b8c57bc17ff88bb72ce03ae9e6d21d5f0e17c021e1cfd72fb6",
+              "code_digest": "405d9e6b3bc0179e1b7e7e24d952b16f003fe498c980f1e1078c7b4eea53c34c",
+              "digest": "f72a1b46551c7432f26b5bf4bfdf64ccb28ad14bc17b37ab873cb7bc5bf8a0c5"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:14:44Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T08:37:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -130118,14 +131620,18 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T08:14:44Z",
+            "checked_at": "2026-05-28T08:37:19Z",
             "revision": {
               "git": {
-                "head": "673d93e2f179401c496b14b8f040b195edf7f156",
+                "head": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
                 "dirty": true,
                 "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "README.md",
+                  "package.json",
                   "src/adapters/pi/ui/decision-approval.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs"
+                  "tests/smoke/decision-approval-ui.test.mjs",
+                  "tests/smoke/package-smoke.test.mjs"
                 ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
@@ -130344,16 +131850,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "59f584b2d9dbe293478b47632b40b3593042283b02e5bdc29e7bcd2b3e41d055",
-              "code_digest": "8063ed6da09bc61755d82c7efd9b56eecec232359e6ffb0961b5d34bff69657f",
-              "digest": "fe7694c82debb914d9c2ede9f58f16566f70d78c70bd6d0f5dbc914689754923"
+              "task_digest": "66d78fdcf372c5b8c57bc17ff88bb72ce03ae9e6d21d5f0e17c021e1cfd72fb6",
+              "code_digest": "aafb5adde7cb3ef46cf1d8d792555d135da80505b2871a95f726dae25bdfae0f",
+              "digest": "385c08429b567509ce7ba4ecb71c4e340a8dd4c446f2a9687cd8ff26c3e89daf"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T08:14:44Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-28T08:37:19Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -130779,28 +132285,205 @@
         "lane_id": "",
         "heading": "TASK-037 — Calibrate static analysis entrypoints",
         "command": "/wiki-resume TASK-037",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T08:14:44Z",
+        "generated_at": "2026-05-28T08:37:19Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-205",
+            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "agent_name": "Mole",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+            "task_id": "TASK-037",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-037"
+              },
+              {
+                "layer": "code",
+                "path": "package.json"
+              },
+              {
+                "layer": "code",
+                "path": "README.md"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/package-smoke.test.mjs"
+              },
+              {
+                "layer": "build",
+                "description": "TASK-037 implementation build"
+              }
+            ],
+            "created_at": "2026-05-28T08:26:11Z",
+            "updated_at": "2026-05-28T08:26:11Z",
+            "expires_at": "2026-05-28T10:26:11.119Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "package.json"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-205",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-037",
+                "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+                "expires_at": "2026-05-28T10:26:11.119Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "README.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-205",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-037",
+                "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+                "expires_at": "2026-05-28T10:26:11.119Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-037"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-205",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-037",
+                "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+                "expires_at": "2026-05-28T10:26:11.119Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "build",
+              "description": "TASK-037 implementation build"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-205",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-037",
+                "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+                "expires_at": "2026-05-28T10:26:11.119Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/package-smoke.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-205",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-037",
+                "summary": "Implement static analysis entrypoint calibration for package metadata/docs/tests.",
+                "expires_at": "2026-05-28T10:26:11.119Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-037; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-205 release or validated publisher/patch ref for codewiki/TASK-037/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -136673,9 +138356,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-037",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-037"
+        ],
         "next_task_id": "TASK-037",
         "sprint_ids": [
           "SPRINT-001",
@@ -137122,7 +138807,6 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-037",
               "TASK-039",
               "TASK-040",
               "TASK-041",
@@ -137135,7 +138819,9 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-037"
+            ]
           },
           {
             "id": "done",

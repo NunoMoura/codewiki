@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T08:37:04Z",
+  "profile": "implementation",
+  "task_id": "TASK-037",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passes for TASK-037. The package metadata now declares the Pi extension, public API facades, subsystem facades, scripts, and tests as Knip entry/project roots; README documents the script and dynamic cytoscape dependency rationale; package-smoke asserts the metadata. Required package/type/smoke/pack checks pass. Direct npx Knip rerun is blocked by registry policy, but Pi-lens Knip-equivalent cache evidence reports zero unused file/dependency issues and zero known entrypoint/dynamic dependency hits. No exports were deleted and product runtime behavior is unchanged.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json — pass",
+    "Read TASK-037 resume context and planning build .codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json — pass",
+    "Read package.json, README.md, and tests/smoke/package-smoke.test.mjs changes — pass",
+    "lsp_diagnostics tests/smoke/package-smoke.test.mjs — pass with one TypeScript hint only",
+    "npm run typecheck — pass",
+    "npm run test:smoke — pass",
+    "npm run test:pack — pass",
+    "git diff --check — pass",
+    "npx --yes knip@latest --reporter=json --include files,exports,types,dependencies,unlisted — blocked by npm registry 403",
+    "Pi-lens Knip-equivalent cache check — pass: fileIssues=0 dependencyIssues=0 knownEntrypointOrDynamicDependencyHits=0",
+    "codewiki_audit profiles=alignment,changed,task,file-structure task_id=TASK-037 changed=true — task/file-structure pass; alignment/generated-view warnings only",
+    "codewiki_validation implementation preflight — ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Direct Knip CLI rerun through npx is platform-limited by npm registry 403; validation accepts the local Pi-lens Knip-equivalent cache evidence plus smoke assertions."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment/changed audits report existing graph-health/generated-view warnings; not blocking pre-commit implementation validation."
+    },
+    {
+      "severity": "warning",
+      "summary": "Working tree includes unrelated dirty/untracked files outside TASK-037 scope; task-close still needs clean committed proof."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-037-static-analysis-entrypoints.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:file-structure",
+    "approval:user",
+    "codewiki_audit profiles=alignment,changed,task,file-structure TASK-037 — warning: graph/generated views; task/file-structure pass"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+    "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+    "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-037",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/home/nunoc/projects/codewiki",
+    "branch": "main",
+    "validated_sha": "1bf7bbd67c553e45949239dc0944c6112dd8e2a3",
+    "tree_sha": "c1451d18f352bfe81d8b8462831959a6b73c12c0",
+    "working_tree_digest": "sha256:5f1bcb49fa6a54cc396250750ebdb5234a00cc349d25a66d1b68fac0764a610b",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh source-backed validation from CodeWiki refs; dirty digest computed before writing this validation report over HEAD, git status, tracked diff, and untracked file content.",
+    "role": "validator"
+  }
+}

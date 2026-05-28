@@ -303,6 +303,31 @@ async function main() {
 		"*",
 		"Missing @sinclair/typebox peer dependency",
 	);
+	assert.ok(packageJson.knip, "Missing Knip static-analysis metadata");
+	ensureIncludes(
+		packageJson.knip.entry ?? [],
+		[
+			"src/index.ts",
+			"src/api/index.ts",
+			"src/api/tools.ts",
+			"src/build/index.ts",
+			"src/gateway/index.ts",
+			"src/validation/index.ts",
+			"scripts/*.mjs",
+			"tests/**/*.mjs",
+		],
+		"Knip entry metadata",
+	);
+	ensureIncludes(
+		packageJson.knip.project ?? [],
+		["src/**/*.ts", "scripts/**/*.mjs", "tests/**/*.mjs"],
+		"Knip project metadata",
+	);
+	ensureIncludes(
+		packageJson.knip.ignoreDependencies ?? [],
+		["cytoscape"],
+		"Knip dependency rationale metadata",
+	);
 	console.log(
 		`✓ package manifest looks correct (${packageJson.name}@${packageJson.version})`,
 	);
