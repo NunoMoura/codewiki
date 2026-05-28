@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T04:55:50.817Z",
+  "generated_at": "2026-05-28T04:58:14.968Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4519,7 +4519,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/ui",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4569,7 +4569,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/ui/manager.ts",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4662,7 +4662,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -4763,7 +4763,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -6193,7 +6193,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "execution"
     },
     {
@@ -6731,32 +6731,6 @@
       "change_type": "code",
       "alignment_state": "drift",
       "lens_family": "work"
-    },
-    {
-      "id": "task:TASK-045",
-      "kind": "roadmap_task",
-      "title": "Build inline approval UI and split UI modules",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:src/adapters/pi/ui/decision-approval.ts",
-      "kind": "code_path",
-      "path": "src/adapters/pi/ui/decision-approval.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/decision-approval-ui.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
     },
     {
       "id": "task:TASK-046",
@@ -36338,6 +36312,64 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/tmp/codewiki-task045-clean.4fv4A5",
+        "head_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+        "validated_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+        "tree_sha": "088c4e3f2f16d7fde44500025c4a71721449c4b0",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Fresh task-close validation used clean detached worktree from committed content; publisher/remote proof not requested.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed",
+          "profile:task",
+          "profile:generated-parity",
+          "approval:user",
+          "codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning"
+        ],
+        "content_proof_refs": [
+          "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+          "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "content_proof:385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+      "kind": "content_proof",
+      "path": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:088c4e3f2f16d7fde44500025c4a71721449c4b0",
+      "kind": "content_proof",
+      "path": "088c4e3f2f16d7fde44500025c4a71721449c4b0",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "kind": "lint_issue",
       "path": ".codewiki/roadmap/queue.json",
@@ -53723,326 +53755,6 @@
     },
     {
       "kind": "task_spec",
-      "from": "task:TASK-045",
-      "to": "doc:.codewiki/kb/system/api.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:src/adapters/pi/ui/manager.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:src/adapters/pi/ui/theme.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:src/ui/web/control-room.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:tests/smoke/control-room.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:tests/smoke/efficiency-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-045",
-      "to": "doc:.codewiki/kb/system/adapters.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/adapters/pi/ui/manager.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/adapters/pi/ui/theme.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/ui/web/control-room.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/change/diff-table.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/change/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:src/roadmap/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:tests/smoke/control-room.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:tests/smoke/efficiency-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/adapters.md",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-045",
-      "to": "doc:.codewiki/kb/system/control-room-ui.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:src/change/diff-table.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:src/change/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-045",
-      "to": "doc:.codewiki/kb/system/control-room-ui-details.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:src/change/diff-table.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:src/change/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-045",
-      "to": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/adapters/pi/ui/manager.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/adapters/pi/ui/theme.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/ui/web/control-room.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/change/diff-table.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/change/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:src/roadmap/tool.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:tests/smoke/control-room.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:tests/smoke/efficiency-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-045"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/adapters/pi/ui/decision-approval.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/adapters/pi/ui/manager.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/adapters/pi/ui/theme.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/ui/web/control-room.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/change/diff-table.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/change/tool.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:src/roadmap/tool.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:tests/smoke/control-room.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:tests/smoke/efficiency-ui.test.mjs"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-045",
-      "to": "code:tests/smoke/decision-approval-ui.test.mjs"
-    },
-    {
-      "kind": "task_spec",
       "from": "task:TASK-046",
       "to": "doc:.codewiki/kb/system/file-structure.md"
     },
@@ -60268,6 +59980,20 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/api.md",
       "to": "code:src/adapters/pi/tools/task.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/api.md",
+      "to": "code:src/adapters/pi/ui/manager.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/api.md",
+      "to": "code:src/adapters/pi/ui/theme.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
     },
@@ -96713,6 +96439,65 @@
       "to": "task:TASK-044"
     },
     {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:profile:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:profile:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:approval:user",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "audit:codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "content_proof:385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "content_proof:088c4e3f2f16d7fde44500025c4a71721449c4b0",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+      "to": "task:TASK-045"
+    },
+    {
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
@@ -96803,12 +96588,12 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 23,
+            "item_count": 22,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 10,
+                "count": 9,
                 "refs": [
                   "TASK-037",
                   "TASK-039",
@@ -96817,7 +96602,7 @@
                   "TASK-042",
                   "TASK-043"
                 ],
-                "ref_count": 10
+                "ref_count": 9
               },
               {
                 "id": "done_tasks",
@@ -96862,13 +96647,13 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "drift",
-            "item_count": 407,
+            "state": "aligned",
+            "item_count": 405,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 363
+                "count": 361
               },
               {
                 "id": "test_files",
@@ -96883,13 +96668,12 @@
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 3,
+                "count": 2,
                 "refs": [
                   ".gitignore",
-                  ".pi/settings.json",
-                  "src/adapters/pi/ui/manager.ts"
+                  ".pi/settings.json"
                 ],
-                "ref_count": 3
+                "ref_count": 2
               }
             ],
             "hot_refs": [
@@ -96916,7 +96700,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 113
+                "count": 114
               },
               {
                 "id": "fail_or_block_validation",
@@ -96931,7 +96715,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 964
+                "count": 966
               },
               {
                 "id": "traceability_gaps",
@@ -96956,11 +96740,11 @@
             "collapsed": 88
           },
           "validations": {
-            "total": 113,
-            "pass": 93,
+            "total": 114,
+            "pass": 94,
             "fail_or_block": 20,
             "hot": 5,
-            "collapsed": 113
+            "collapsed": 114
           }
         },
         "next_action": {
@@ -97056,7 +96840,8 @@
               ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+              ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -97176,7 +96961,8 @@
               ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+              ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -97296,7 +97082,8 @@
               ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+              ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -97416,7 +97203,8 @@
               ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+              ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -97536,7 +97324,8 @@
               ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
               ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
               ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+              ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+              ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
             ],
             "audit_evidence_refs": [
               "profile:alignment",
@@ -97661,28 +97450,6 @@
               ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
               ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-            ],
-            "gaps": []
-          },
-          {
-            "path": "src/adapters/pi/ui/manager.ts",
-            "change_type": "code",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
             ],
             "gaps": []
@@ -104108,6 +103875,28 @@
               "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-045",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "audit_evidence_refs": [
+              "profile:alignment",
+              "profile:changed",
+              "profile:task",
+              "profile:generated-parity",
+              "approval:user",
+              "codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning"
+            ],
+            "content_proof_refs": [
+              "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+              "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -105936,6 +105725,26 @@
             "publisher_result_refs": [
               "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+            "task_id": "TASK-045",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/tmp/codewiki-task045-clean.4fv4A5",
+            "head_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+            "validated_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+              "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+            ],
+            "publisher_result_refs": [
+              "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -106567,6 +106376,7 @@
           ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
           "0281c24b6a58032cd8ea3bb87d808547756ce98e",
           "079cf6de55f2f32394616a146f94621f1a342af9",
+          "088c4e3f2f16d7fde44500025c4a71721449c4b0",
           "08a913f4488a5a686170aa3918d095683a98821f",
           "0e1f40791668d5953e6e2106c9fdd475337d601f",
           "0ffd7bfca73d5be5804d4342b90dd1c049a12aee40b854b1df36d40b180573af",
@@ -106591,6 +106401,7 @@
           "301e7f5373522d6371bee8be22af818132f02937",
           "3541f0071755739dfe0f4d44783913447f3da890",
           "35a2197ddcdb8c9d1ea6093845d50cb9150c7867",
+          "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
           "3bfdeddb1f152bcc81d80cbe187020c72def12ac",
           "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
           "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
@@ -107556,17 +107367,6 @@
             "reason": "TASK-043 is open implementation delta below knowledge."
           },
           {
-            "id": "reconcile:task:TASK-045",
-            "source_id": "task:TASK-045",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-045",
-            "reason": "TASK-045 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-046",
             "source_id": "task:TASK-046",
             "state": "drift",
@@ -107792,7 +107592,6 @@
         "TASK-041",
         "TASK-042",
         "TASK-043",
-        "TASK-045",
         "TASK-046",
         "TASK-047",
         "TASK-048"
@@ -107804,13 +107603,11 @@
         "TASK-041",
         "TASK-042",
         "TASK-043",
-        "TASK-045",
         "TASK-046",
         "TASK-047",
         "TASK-048"
       ],
       "in_progress_task_ids": [
-        "TASK-045",
         "TASK-047"
       ],
       "todo_task_ids": [
@@ -107833,7 +107630,7 @@
       "status_counts": {
         "cancelled": 3,
         "todo": 8,
-        "in_progress": 2
+        "in_progress": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -108196,7 +107993,6 @@
             "TASK-048"
           ],
           "open_task_ids": [
-            "TASK-045",
             "TASK-048"
           ],
           "budget": {
@@ -108839,7 +108635,6 @@
         "src/adapters/pi/tools/state.ts",
         "src/adapters/pi/tools/task.ts",
         "src/adapters/pi/ui",
-        "src/adapters/pi/ui/decision-approval.ts",
         "src/adapters/pi/ui/manager.ts",
         "src/adapters/pi/ui/theme.ts",
         "src/agency",
@@ -109045,7 +108840,6 @@
         "tests/smoke/claim-wait-queue.test.mjs",
         "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/control-room.test.mjs",
-        "tests/smoke/decision-approval-ui.test.mjs",
         "tests/smoke/diagram-refs.test.mjs",
         "tests/smoke/efficiency-ui.test.mjs",
         "tests/smoke/graph-lenses.test.mjs",
@@ -109075,8 +108869,7 @@
       ],
       "dirty_paths": [
         ".gitignore",
-        ".pi/settings.json",
-        "src/adapters/pi/ui/manager.ts"
+        ".pi/settings.json"
       ]
     },
     "claims": {
@@ -110927,6 +110720,26 @@
           "publisher_result_refs": [
             "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+          "task_id": "TASK-045",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/tmp/codewiki-task045-clean.4fv4A5",
+          "head_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+          "validated_sha": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+            "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+          ],
+          "publisher_result_refs": [
+            "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+          ]
         }
       ]
     },
@@ -112177,6 +111990,7 @@
         ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
         "0281c24b6a58032cd8ea3bb87d808547756ce98e",
         "079cf6de55f2f32394616a146f94621f1a342af9",
+        "088c4e3f2f16d7fde44500025c4a71721449c4b0",
         "08a913f4488a5a686170aa3918d095683a98821f",
         "0e1f40791668d5953e6e2106c9fdd475337d601f",
         "0ffd7bfca73d5be5804d4342b90dd1c049a12aee40b854b1df36d40b180573af",
@@ -112201,6 +112015,7 @@
         "301e7f5373522d6371bee8be22af818132f02937",
         "3541f0071755739dfe0f4d44783913447f3da890",
         "35a2197ddcdb8c9d1ea6093845d50cb9150c7867",
+        "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
         "3bfdeddb1f152bcc81d80cbe187020c72def12ac",
         "3ff4a637e57baa38ffcdf49f94bdfc0bd5520c33",
         "42fc8e78c90ecac8a9441cddec7b933088c67bb4",
@@ -116021,6 +115836,28 @@
             "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-28-task-close-pass-task-045.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-045",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "audit_evidence_refs": [
+            "profile:alignment",
+            "profile:changed",
+            "profile:task",
+            "profile:generated-parity",
+            "approval:user",
+            "codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning"
+          ],
+          "content_proof_refs": [
+            "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
+            "088c4e3f2f16d7fde44500025c4a71721449c4b0"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -117838,7 +117675,8 @@
             ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+            ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -117958,7 +117796,8 @@
             ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+            ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -118078,7 +117917,8 @@
             ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+            ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -118198,7 +118038,8 @@
             ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+            ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -118318,7 +118159,8 @@
             ".codewiki/validation/2026-05-28-implementation-pass-task-044.json",
             ".codewiki/validation/2026-05-28-implementation-pass-task-045.json",
             ".codewiki/validation/2026-05-28-task-close-pass-task-038.json",
-            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json"
+            ".codewiki/validation/2026-05-28-task-close-pass-task-044.json",
+            ".codewiki/validation/2026-05-28-task-close-pass-task-045.json"
           ],
           "audit_evidence_refs": [
             "profile:alignment",
@@ -118446,28 +118288,6 @@
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
           ],
           "gaps": []
-        },
-        {
-          "path": "src/adapters/pi/ui/manager.ts",
-          "change_type": "code",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-          ],
-          "gaps": []
         }
       ],
       "semantic_change_gaps": [],
@@ -118487,7 +118307,6 @@
           "TASK-041",
           "TASK-042",
           "TASK-043",
-          "TASK-045",
           "TASK-046",
           "TASK-047",
           "TASK-048"
@@ -118499,7 +118318,6 @@
           "TASK-041",
           "TASK-042",
           "TASK-043",
-          "TASK-045",
           "TASK-046",
           "TASK-047",
           "TASK-048"
@@ -118865,7 +118683,6 @@
             "TASK-048"
           ],
           "open_task_ids": [
-            "TASK-045",
             "TASK-048"
           ],
           "budget": {
@@ -119287,38 +119104,6 @@
             "tests/tasks/TASK-025/knowledge-source-root.test.mjs"
           ]
         },
-        "TASK-045": {
-          "kind": "task",
-          "id": "TASK-045",
-          "task_ids": [
-            "TASK-045"
-          ],
-          "open_task_ids": [
-            "TASK-045"
-          ],
-          "sprint_ids": [
-            "SPRINT-009"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
-          ],
-          "code_paths": [
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/ui/web/control-room.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "src/roadmap/tool.ts",
-            "tests/smoke/control-room.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "tests/smoke/decision-approval-ui.test.mjs"
-          ]
-        },
         "TASK-046": {
           "kind": "task",
           "id": "TASK-046",
@@ -119446,7 +119231,6 @@
             "TASK-041",
             "TASK-042",
             "TASK-043",
-            "TASK-045",
             "TASK-046",
             "TASK-047",
             "TASK-048"
@@ -120561,17 +120345,6 @@
           "reason": "TASK-043 is open implementation delta below knowledge."
         },
         {
-          "id": "reconcile:task:TASK-045",
-          "source_id": "task:TASK-045",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-045",
-          "reason": "TASK-045 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-046",
           "source_id": "task:TASK-046",
           "state": "drift",
@@ -120607,7 +120380,7 @@
       ],
       "counts_by_loop": {
         "decision": 7,
-        "implementation": 10
+        "implementation": 9
       },
       "next_action": {
         "loop": "decision",
@@ -120642,7 +120415,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T04:55:50.687Z",
+      "generated_at": "2026-05-28T04:58:14.841Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 7
@@ -120700,7 +120473,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T04:55:50Z",
+      "generated_at": "2026-05-28T04:58:14Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -120711,18 +120484,18 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 13,
-        "open_count": 10,
+        "task_count": 12,
+        "open_count": 9,
         "sprint_count": 10,
         "active_sprint_count": 8,
         "status_counts": {
           "cancelled": 3,
           "todo": 8,
-          "in_progress": 2
+          "in_progress": 1
         },
         "priority_counts": {
           "medium": 5,
-          "high": 8
+          "high": 7
         }
       },
       "views": {
@@ -120736,13 +120509,11 @@
           "TASK-041",
           "TASK-042",
           "TASK-043",
-          "TASK-045",
           "TASK-046",
           "TASK-047",
           "TASK-048"
         ],
         "open_task_ids": [
-          "TASK-045",
           "TASK-047",
           "TASK-037",
           "TASK-039",
@@ -120754,7 +120525,6 @@
           "TASK-048"
         ],
         "executable_open_task_ids": [
-          "TASK-045",
           "TASK-047",
           "TASK-037",
           "TASK-039",
@@ -121127,7 +120897,6 @@
               "TASK-048"
             ],
             "open_task_ids": [
-              "TASK-045",
               "TASK-048"
             ],
             "budget": {
@@ -121211,11 +120980,9 @@
           }
         ],
         "in_progress_task_ids": [
-          "TASK-045",
           "TASK-047"
         ],
         "executable_in_progress_task_ids": [
-          "TASK-045",
           "TASK-047"
         ],
         "todo_task_ids": [
@@ -121246,7 +121013,6 @@
           "TASK-036"
         ],
         "recent_task_ids": [
-          "TASK-045",
           "TASK-047",
           "TASK-041",
           "TASK-040",
@@ -122131,73 +121897,6 @@
             "evidence": null
           }
         },
-        "TASK-045": {
-          "id": "TASK-045",
-          "title": "Build inline approval UI and split UI modules",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "feature",
-          "change_type": "system",
-          "summary": "Add Pi/CodeWiki decision/task approval cards backed by CodeWiki tools while decomposing UI modules enough to keep the approval surface maintainable.",
-          "labels": [
-            "inline-approval-ui",
-            "decision-row-cards",
-            "task-candidate-approval",
-            "ui-manager-split",
-            "control-room-models"
-          ],
-          "goal": {
-            "outcome": "Users can approve, edit, reject, or defer individual decision rows and task candidates inline while UI ownership stays modular.",
-            "acceptance": [
-              "Pi TUI or compact panel shows pending decision rows with current state, desired state, affected layers, risk, and alternatives.",
-              "Inline actions call CodeWiki diff-table actions and leave machine-readable approval evidence before decision_build creation.",
-              "Planning task/sprint candidates can be presented for approval before canonical roadmap mutation when the adapter supports the surface; non-interactive fallback remains explicit typed approval.",
-              "UI data/read, model, render, and interaction seams are separated enough to avoid further expanding the existing UI manager/control-room monoliths.",
-              "Tests cover approve, edit/defer/reject states, build eligibility only for approved rows, fallback behavior, and existing UI smoke behavior."
-            ],
-            "non_goals": [
-              "Do not bypass codewiki_diff_table or codewiki_task tools.",
-              "Do not remove chat fallback until UI is available in all adapters.",
-              "Do not implement agency runner or scheduler logic in UI modules."
-            ],
-            "verification": [
-              "npm run typecheck",
-              "npm run test:smoke",
-              "control-room and efficiency UI smoke tests",
-              "targeted UI/diff-table approval tests"
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/api.md",
-            ".codewiki/kb/system/adapters.md",
-            ".codewiki/kb/system/control-room-ui.md",
-            ".codewiki/kb/system/control-room-ui-details.md",
-            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
-          ],
-          "code_paths": [
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/ui/web/control-room.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "src/roadmap/tool.ts",
-            "tests/smoke/control-room.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "tests/smoke/decision-approval-ui.test.mjs"
-          ],
-          "updated": "2026-05-28T04:55:50Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-045/context.json",
-          "loop": {
-            "updated_at": "",
-            "evidence": null
-          }
-        },
         "TASK-046": {
           "id": "TASK-046",
           "title": "Simplify project bootstrap and template flows",
@@ -122379,7 +122078,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T04:55:50Z",
+      "generated_at": "2026-05-28T04:58:15Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -122394,13 +122093,13 @@
       "summary": {
         "total_specs": 20,
         "mapped_specs": 20,
-        "aligned_specs": 28,
-        "tracked_specs": 10,
+        "aligned_specs": 31,
+        "tracked_specs": 7,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 13,
-        "open_task_count": 10,
+        "task_count": 12,
+        "open_task_count": 9,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 0
@@ -122408,14 +122107,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 10,
-          "total": 10,
+          "value": 7,
+          "total": 7,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 13,
+          "total": 12,
           "percent": 0
         },
         "spec_mapping": {
@@ -122428,30 +122127,23 @@
       "views": {
         "risky_spec_paths": [
           ".codewiki/kb/product/overview.md",
-          ".codewiki/kb/system/adapters.md",
           ".codewiki/kb/system/agency.md",
           ".codewiki/kb/system/api.md",
           ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/control-room-ui-details.md",
-          ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
           ".codewiki/kb/system/roadmap.md"
         ],
         "top_risky_spec_paths": [
           ".codewiki/kb/product/overview.md",
-          ".codewiki/kb/system/adapters.md",
           ".codewiki/kb/system/agency.md",
           ".codewiki/kb/system/api.md",
           ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/control-room-ui-details.md",
-          ".codewiki/kb/system/control-room-ui.md",
           ".codewiki/kb/system/file-structure.md",
           ".codewiki/kb/system/graph.md",
           ".codewiki/kb/system/roadmap.md"
         ],
         "open_task_ids": [
-          "TASK-045",
           "TASK-047",
           "TASK-037",
           "TASK-039",
@@ -122537,7 +122229,6 @@
               "TASK-041",
               "TASK-042",
               "TASK-043",
-              "TASK-045",
               "TASK-046",
               "TASK-047",
               "TASK-048"
@@ -122779,7 +122470,7 @@
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 20/20.",
-        "Tracked drift coverage: 10/10.",
+        "Tracked drift coverage: 7/7.",
         "File-structure drift: 0 actionable item(s), 0 approved migration delta(s)."
       ],
       "file_structure": {
@@ -122861,52 +122552,6 @@
             "basis": "source_content"
           },
           "note": "tracked by TASK-046"
-        },
-        {
-          "path": ".codewiki/kb/system/adapters.md",
-          "title": "Adapters",
-          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/adapters/**",
-            "src/ui/**",
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/ui/web/control-room.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "src/roadmap/tool.ts",
-            "tests/smoke/control-room.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "tests/smoke/decision-approval-ui.test.mjs",
-            "src/application/tools/session-handoff.ts",
-            "src/adapters/pi/tools/session-handoff.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/knowledge/doc-parser.ts",
-            "src/state/graph.ts",
-            "src/state/lint.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, tests",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-045"
-          ],
-          "primary_task": {
-            "id": "TASK-045",
-            "status": "in_progress",
-            "title": "Build inline approval UI and split UI modules"
-          },
-          "revision": {
-            "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-045"
         },
         {
           "path": ".codewiki/kb/system/agency.md",
@@ -123082,13 +122727,6 @@
             "src/adapters/pi/artifact-wake.ts",
             "tests/smoke/package-smoke.test.mjs",
             "tests/smoke/codewiki-compaction.test.mjs",
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/ui/web/control-room.ts",
-            "tests/smoke/control-room.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "tests/smoke/decision-approval-ui.test.mjs",
             "src/agency/tool.ts",
             "tests/tasks/TASK-015/agency-source-root.test.mjs",
             "tests/smoke/resume-scheduler.test.mjs",
@@ -123104,6 +122742,8 @@
             "src/adapters/pi/commands/resume.ts",
             "src/adapters/pi/tools/ports.ts",
             "src/adapters/pi/tools/task.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/adapters/pi/ui/theme.ts",
             "src/application/graph.ts",
             "src/application/graph/rebuilder.ts",
             "src/application/lint.ts",
@@ -123140,20 +122780,19 @@
             "total": 0
           },
           "related_task_ids": [
-            "TASK-045",
             "TASK-047",
             "TASK-041"
           ],
           "primary_task": {
-            "id": "TASK-045",
+            "id": "TASK-047",
             "status": "in_progress",
-            "title": "Build inline approval UI and split UI modules"
+            "title": "Implement bounded agency runner"
           },
           "revision": {
             "digest": "8f7919a7592f3e0565a6b6bed0c69e6f8e04631bea34c9502775cd4984ce44e3",
             "basis": "source_content"
           },
-          "note": "tracked by TASK-045"
+          "note": "tracked by TASK-047"
         },
         {
           "path": ".codewiki/kb/system/compilers.md",
@@ -123274,199 +122913,6 @@
             "basis": "source_content"
           },
           "note": "tracked by TASK-047"
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui-details.md",
-          "title": "CodeWiki UI Implementation Details",
-          "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
-          "drift_status": "tracked",
-          "code_paths": [
-            ".codewiki/config.json",
-            "src/ui/**",
-            "package.json",
-            ".pi-lens",
-            "src/index.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/audit/tool.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/roadmap/tool.ts",
-            "src/state/graph/rebuilder.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-context.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "src/session/types.ts",
-            "src/roadmap/types.ts",
-            "src/state/graph.ts",
-            "src/state/builders.ts",
-            "src/state/reader.ts",
-            "src/state/types.ts",
-            "src/state/lint.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "tests/smoke/decision-approval-ui.test.mjs",
-            "src/knowledge/doc-parser.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": ".codewiki, src +6 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-045"
-          ],
-          "primary_task": {
-            "id": "TASK-045",
-            "status": "in_progress",
-            "title": "Build inline approval UI and split UI modules"
-          },
-          "revision": {
-            "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-045"
-        },
-        {
-          "path": ".codewiki/kb/system/control-room-ui.md",
-          "title": "CodeWiki UI",
-          "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/ui/**",
-            ".codewiki/config.json",
-            ".codewiki/index_graph.json",
-            ".codewiki/kb/**",
-            ".codewiki/kb/product/**",
-            ".codewiki/kb/system/**",
-            ".codewiki/kb/system/*.md",
-            ".codewiki/kb/system/diagrams/**",
-            "src/adapters/**",
-            "src/ui/web/**",
-            "src/api",
-            "src/shared",
-            "src/adapters",
-            "src/ui",
-            "tests",
-            "src/state/reader.ts",
-            "src/state/builders.ts",
-            "src/state/graph.ts",
-            "src/audit/tool.ts",
-            "package.json",
-            ".pi-lens",
-            "src/index.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/roadmap/tool.ts",
-            "src/state/graph/rebuilder.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-context.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "src/session/types.ts",
-            "src/roadmap/types.ts",
-            "src/state/types.ts",
-            "src/state/lint.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            "src/adapters/pi/ui/decision-approval.ts",
-            "src/change/diff-table.ts",
-            "src/change/tool.ts",
-            "tests/smoke/decision-approval-ui.test.mjs",
-            "src/knowledge/doc-parser.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, .codewiki +6 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-045"
-          ],
-          "primary_task": {
-            "id": "TASK-045",
-            "status": "in_progress",
-            "title": "Build inline approval UI and split UI modules"
-          },
-          "revision": {
-            "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-045"
         },
         {
           "path": ".codewiki/kb/system/file-structure.md",
@@ -124619,6 +124065,36 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/adapters.md",
+          "title": "Adapters",
+          "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/adapters/**",
+            "src/ui/**",
+            "src/application/tools/session-handoff.ts",
+            "src/adapters/pi/tools/session-handoff.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/knowledge/doc-parser.ts",
+            "src/state/graph.ts",
+            "src/state/lint.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src +8 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/alignment-model.md",
           "title": "Alignment Model",
           "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
@@ -125018,6 +124494,179 @@
           "primary_task": null,
           "revision": {
             "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui-details.md",
+          "title": "CodeWiki UI Implementation Details",
+          "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
+          "drift_status": "aligned",
+          "code_paths": [
+            ".codewiki/config.json",
+            "src/ui/**",
+            "package.json",
+            ".pi-lens",
+            "src/index.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/audit/tool.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/roadmap/tool.ts",
+            "src/state/graph/rebuilder.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-context.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "src/session/types.ts",
+            "src/roadmap/types.ts",
+            "src/state/graph.ts",
+            "src/state/builders.ts",
+            "src/state/reader.ts",
+            "src/state/types.ts",
+            "src/state/lint.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "src/state/rebuild.ts",
+            "src/roadmap/runtime.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/validation-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            "src/knowledge/doc-parser.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": ".codewiki, src +6 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/control-room-ui.md",
+          "title": "CodeWiki UI",
+          "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/ui/**",
+            ".codewiki/config.json",
+            ".codewiki/index_graph.json",
+            ".codewiki/kb/**",
+            ".codewiki/kb/product/**",
+            ".codewiki/kb/system/**",
+            ".codewiki/kb/system/*.md",
+            ".codewiki/kb/system/diagrams/**",
+            "src/adapters/**",
+            "src/ui/web/**",
+            "src/api",
+            "src/shared",
+            "src/adapters",
+            "src/ui",
+            "tests",
+            "src/state/reader.ts",
+            "src/state/builders.ts",
+            "src/state/graph.ts",
+            "src/audit/tool.ts",
+            "package.json",
+            ".pi-lens",
+            "src/index.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/roadmap/tool.ts",
+            "src/state/graph/rebuilder.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-context.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "src/session/types.ts",
+            "src/roadmap/types.ts",
+            "src/state/types.ts",
+            "src/state/lint.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "src/state/rebuild.ts",
+            "src/roadmap/runtime.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/validation-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            "src/knowledge/doc-parser.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, .codewiki +6 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -125745,7 +125394,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T04:55:50Z",
+        "generated_at": "2026-05-28T04:58:15Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -125800,14 +125449,13 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T04:55:50Z",
+            "checked_at": "2026-05-28T04:58:14Z",
             "revision": {
               "git": {
-                "head": "52917ee81ac659077642be938643be223a0f8045",
+                "head": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/ui/manager.ts"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -125853,7 +125501,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "26df2350a9346f2885d606309010e792eb5d6ca0",
+                  ".codewiki/roadmap/queue.json": "00823f7c149963a24ddc08e3a5fdb66f89b2c47a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -125900,8 +125548,7 @@
                   "src/adapters/pi/tools/state.ts": "ba2180dd5d573f33e6dabdc54b51af4996ffd66e",
                   "src/adapters/pi/tools/task.ts": "63a7e72496abe4ab06175b8a7599af18289217ef",
                   "src/adapters/pi/ui": "",
-                  "src/adapters/pi/ui/decision-approval.ts": "",
-                  "src/adapters/pi/ui/manager.ts": "a25718ba0c58463ffe75dcfb3d7ce058628c7f0b",
+                  "src/adapters/pi/ui/manager.ts": "400c47dc0f463c52daa060af887b286e1caa2432",
                   "src/adapters/pi/ui/theme.ts": "87e3a0c5c7837ae3559ca73ad8f6aa6ab572d97a",
                   "src/agency": "",
                   "src/agency/planning.ts": "197ac30d4fa55bb83febd4fe1d085e8efd804853",
@@ -125993,7 +125640,6 @@
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
                   "tests/smoke/codewiki-compaction.test.mjs": "ca34e5fde0951a9ab2dfa3fde9ac9894b4e7ac83",
                   "tests/smoke/control-room.test.mjs": "d8d8d1939529ebb23d54158501c363d16b127f89",
-                  "tests/smoke/decision-approval-ui.test.mjs": "",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/graph-lenses.test.mjs": "82ade20c4828a24b447560c32aa46bcd586da669",
@@ -126020,15 +125666,15 @@
                 }
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
-              "task_digest": "b9af4d6fc2f234dca59353a9a3f719dc9c50913d71fff14e49b127f2274b9d98",
-              "code_digest": "240d862e2a758c538686df1d9398e9bddd4e1cee8830995cf07ff32d924f4f37",
-              "digest": "505b7931322d47d7a25762d00f9ff2206807784a575374ac526ee96c9e8f8df3"
+              "task_digest": "0ca82a51acd8432859f00c3d428cfb561d5fc36c7c3049d63e70043745cac04e",
+              "code_digest": "1a753268e3c7124820b1b699a27c3c9e62b93ece3b45dc6f3bbe477236451374",
+              "digest": "e20d806e30214390ff012d509f435e91e41b1747cbd1765029e34f6a9fbebb05"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T04:55:50Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-28T04:58:14Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -126047,20 +125693,20 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api-vnext-tools.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph-transition-traceability.md",
@@ -126162,22 +125808,14 @@
               "skills",
               "src",
               "package.json",
-              "src/adapters/**",
-              "src/ui/**",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/ui/web/control-room.ts",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
               "src/agency",
               "src/adapters/pi",
               "src/agency/tool.ts",
               "tests/tasks/TASK-015/agency-source-root.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/resume-scheduler.test.mjs",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
               "src/api/**",
               ".codewiki/session/**",
               ".codewiki/runtime/**",
@@ -126197,6 +125835,7 @@
               "src/application/tools/catalog.ts (deleted)",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
+              "src/adapters/pi/ui/theme.ts",
               "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/lint.ts",
@@ -126259,27 +125898,6 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              ".pi-lens",
-              "tests/smoke",
-              "CHANGELOG.md",
-              "src/state/resume-selection.ts",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "src/audit/types.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              "src/ui/web/**",
               "src/agency/**",
               "src/audit/**",
               "src/build/**",
@@ -126295,14 +125913,23 @@
               "tests/tasks/TASK-025/knowledge-source-root.test.mjs",
               "tests/smoke/diagram-refs.test.mjs",
               "tests/smoke/alignment-drift-fixtures.test.mjs",
+              "src/adapters/**",
+              "src/ui/**",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
               "tests/smoke/hot-retention.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
               "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              ".codewiki/kb/**",
               ".codewiki/roadmap/queue.json",
               ".codewiki/builds/**",
               ".codewiki/roadmap/tasks/**",
@@ -126322,8 +125949,23 @@
               "skills/**",
               "skills/codewiki*/**",
               "src/**",
+              "src/ui/web/**",
               "tests/smoke/**",
               "tsconfig.json",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "src/state/resume-selection.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/audit/types.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/build/types.ts",
               "src/domain/build/lifecycle.ts",
               "src/domain/build/decision-propagation.ts",
@@ -126395,6 +126037,8 @@
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/system/api.md",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/build",
               "skills/codewiki/bootstrap/**",
@@ -126417,26 +126061,22 @@
               "TASK-041",
               "TASK-042",
               "TASK-043",
-              "TASK-045",
               "TASK-046",
               "TASK-047"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 37,
-              "aligned_specs": 27,
-              "tracked_specs": 10,
+              "aligned_specs": 30,
+              "tracked_specs": 7,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -126461,14 +126101,13 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T04:55:50Z",
+            "checked_at": "2026-05-28T04:58:15Z",
             "revision": {
               "git": {
-                "head": "52917ee81ac659077642be938643be223a0f8045",
+                "head": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/ui/manager.ts"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -126498,7 +126137,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "26df2350a9346f2885d606309010e792eb5d6ca0",
+                  ".codewiki/roadmap/queue.json": "00823f7c149963a24ddc08e3a5fdb66f89b2c47a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -126539,8 +126178,7 @@
                   "src/adapters/pi/tools/session.ts": "5fe0951bc53327457d5a4b89c1e15a35e1ed96ea",
                   "src/adapters/pi/tools/state.ts": "ba2180dd5d573f33e6dabdc54b51af4996ffd66e",
                   "src/adapters/pi/tools/task.ts": "63a7e72496abe4ab06175b8a7599af18289217ef",
-                  "src/adapters/pi/ui/decision-approval.ts": "",
-                  "src/adapters/pi/ui/manager.ts": "a25718ba0c58463ffe75dcfb3d7ce058628c7f0b",
+                  "src/adapters/pi/ui/manager.ts": "400c47dc0f463c52daa060af887b286e1caa2432",
                   "src/adapters/pi/ui/theme.ts": "87e3a0c5c7837ae3559ca73ad8f6aa6ab572d97a",
                   "src/agency": "",
                   "src/agency/planning.ts": "197ac30d4fa55bb83febd4fe1d085e8efd804853",
@@ -126631,7 +126269,6 @@
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
                   "tests/smoke/codewiki-compaction.test.mjs": "ca34e5fde0951a9ab2dfa3fde9ac9894b4e7ac83",
                   "tests/smoke/control-room.test.mjs": "d8d8d1939529ebb23d54158501c363d16b127f89",
-                  "tests/smoke/decision-approval-ui.test.mjs": "",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/graph-lenses.test.mjs": "82ade20c4828a24b447560c32aa46bcd586da669",
@@ -126658,32 +126295,32 @@
                 }
               },
               "spec_digest": "1cb2c0942c228588c11f5964858847704a0a8066394e7b2bf1417148dbbcfff2",
-              "task_digest": "b9af4d6fc2f234dca59353a9a3f719dc9c50913d71fff14e49b127f2274b9d98",
-              "code_digest": "969fa5efdc265523057da6cc6bae13d55d3f406558749a3a0456443f8a8e4d6d",
-              "digest": "ba923506473efe1a2e52081ff058be870cd212effd68f6fb1622866b9ac1111f"
+              "task_digest": "0ca82a51acd8432859f00c3d428cfb561d5fc36c7c3049d63e70043745cac04e",
+              "code_digest": "84d799a39e08aa82b1c2cf21b64102b5da2df1e2221b75874b8f1d42e7ae28ea",
+              "digest": "1073f5076352ade95f3cde69bfd140755849ce9cbbb7ef4289daf053688cda4c"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T04:55:50Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-28T04:58:15Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api-vnext-tools.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph-transition-traceability.md",
@@ -126694,25 +126331,6 @@
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
-              "src/adapters/**",
-              "src/ui/**",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/ui/web/control-room.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "src/roadmap/tool.ts",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts",
               "src/agency",
               "src/project/types.ts",
               "src/adapters/pi",
@@ -126721,12 +126339,16 @@
               "src/project/root.ts",
               "src/project/bootstrap.ts",
               "src/project/tool.ts",
+              "src/project/templates.ts",
               "src/project/local/filesystem.ts",
               "src/project/local/file-store.ts",
               "src/project/local/git-cache.ts",
+              "src/knowledge/doc-parser.ts",
               "src/knowledge/diagram-parser.ts",
               "src/change/types.ts",
               "src/change/traceability.ts",
+              "src/change/diff-table.ts",
+              "src/change/tool.ts",
               "src/gc/types.ts",
               "src/gc/runtime.ts",
               "src/gc/tool.ts",
@@ -126743,12 +126365,15 @@
               "src/roadmap/task-boundary.ts",
               "src/roadmap/runtime.ts",
               "src/roadmap/task.ts",
+              "src/roadmap/tool.ts",
               "src/state/types.ts",
               "src/state/reader.ts",
               "src/state/artifacts.ts",
               "src/state/builders.ts",
               "src/state/rebuild.ts",
+              "src/state/graph.ts",
               "src/state/graph/rebuilder.ts",
+              "src/state/lint.ts",
               "src/state/prompt.ts",
               "src/state/skill-assets.ts",
               "src/state/local/rebuild-runner.ts",
@@ -126771,6 +126396,9 @@
               "tests/tasks/TASK-015/agency-source-root.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/resume-scheduler.test.mjs",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
+              "src/adapters/pi/schemas.ts",
               "src/api/**",
               ".codewiki/session/**",
               ".codewiki/runtime/**",
@@ -126793,6 +126421,8 @@
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/adapters/pi/ui/theme.ts",
               "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/lint.ts",
@@ -126862,37 +126492,6 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              ".codewiki/config.json",
-              "package.json",
-              ".pi-lens",
-              "tests/smoke",
-              "CHANGELOG.md",
-              "src/state/resume-selection.ts",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "src/audit/types.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/index_graph.json",
-              ".codewiki/kb/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              ".codewiki/kb/system/*.md",
-              ".codewiki/kb/system/diagrams/**",
-              "src/ui/web/**",
-              "src/api",
-              "src/shared",
-              "src/adapters",
-              "src/ui",
-              "tests",
               "src/agency/**",
               "src/audit/**",
               "src/build/**",
@@ -126909,16 +126508,26 @@
               "tests/tasks/TASK-025/knowledge-source-root.test.mjs",
               "tests/smoke/diagram-refs.test.mjs",
               "tests/smoke/alignment-drift-fixtures.test.mjs",
+              "src/adapters/**",
+              "src/ui/**",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
               "tests/smoke/hot-retention.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
               "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              ".codewiki/kb/**",
               ".codewiki/roadmap/queue.json",
               ".codewiki/builds/**",
+              ".codewiki/index_graph.json",
               ".codewiki/roadmap/tasks/**",
               "skills/codewiki/**",
               "skills/codewiki-decision/**",
@@ -126931,13 +126540,35 @@
               "package digests",
               "archive refs",
               "remote refs",
+              ".codewiki/config.json",
               ".codewiki/kb/",
               ".codewiki/session/queue.json",
+              "package.json",
               "skills/**",
               "skills/codewiki*/**",
               "src/**",
+              "src/ui/web/**",
               "tests/smoke/**",
               "tsconfig.json",
+              "src/api",
+              "src/shared",
+              "src/adapters",
+              "src/ui",
+              "tests",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "src/state/resume-selection.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/audit/types.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "tests/smoke/project-resolution.test.mjs",
               "src/domain/build/types.ts",
               "src/domain/build/lifecycle.ts",
@@ -127007,11 +126638,15 @@
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/knowledge.md",
               "src/adapters/pi/session.ts",
+              ".codewiki/kb/system/diagrams/**",
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/system/api.md",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/build",
+              ".codewiki/kb/system/*.md",
               "skills/codewiki/bootstrap/**",
               "skills/codewiki/prompts/**",
               ".codewiki/kb/product/",
@@ -127024,7 +126659,7 @@
               ".codewiki/kb/**/*.md",
               ".codewiki/kb/**/*.yaml"
             ],
-            "code_area": "src, tests +14 more",
+            "code_area": "src, scripts +14 more",
             "open_task_ids": [
               "TASK-037",
               "TASK-039",
@@ -127032,25 +126667,21 @@
               "TASK-041",
               "TASK-042",
               "TASK-043",
-              "TASK-045",
               "TASK-046",
               "TASK-047"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 22,
-              "aligned_specs": 13,
-              "tracked_specs": 9,
+              "aligned_specs": 16,
+              "tracked_specs": 6,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -127075,14 +126706,13 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T04:55:50Z",
+            "checked_at": "2026-05-28T04:58:15Z",
             "revision": {
               "git": {
-                "head": "52917ee81ac659077642be938643be223a0f8045",
+                "head": "385895cd5b61e9eaba1b19f2ba2e1e51b284d887",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
-                  "src/adapters/pi/ui/manager.ts"
+                  ".codewiki/roadmap/queue.json"
                 ],
                 "paths": {
                   ".codewiki/config.json": "696d25655947a95e424f51c2c91232c1366aa6ab",
@@ -127128,7 +126758,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "26df2350a9346f2885d606309010e792eb5d6ca0",
+                  ".codewiki/roadmap/queue.json": "00823f7c149963a24ddc08e3a5fdb66f89b2c47a",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -127175,8 +126805,7 @@
                   "src/adapters/pi/tools/state.ts": "ba2180dd5d573f33e6dabdc54b51af4996ffd66e",
                   "src/adapters/pi/tools/task.ts": "63a7e72496abe4ab06175b8a7599af18289217ef",
                   "src/adapters/pi/ui": "",
-                  "src/adapters/pi/ui/decision-approval.ts": "",
-                  "src/adapters/pi/ui/manager.ts": "a25718ba0c58463ffe75dcfb3d7ce058628c7f0b",
+                  "src/adapters/pi/ui/manager.ts": "400c47dc0f463c52daa060af887b286e1caa2432",
                   "src/adapters/pi/ui/theme.ts": "87e3a0c5c7837ae3559ca73ad8f6aa6ab572d97a",
                   "src/agency": "",
                   "src/agency/planning.ts": "197ac30d4fa55bb83febd4fe1d085e8efd804853",
@@ -127268,7 +126897,6 @@
                   "tests/smoke/claim-wait-queue.test.mjs": "b338dfc75c106005171f239e4ebb6efb8d87ee2d",
                   "tests/smoke/codewiki-compaction.test.mjs": "ca34e5fde0951a9ab2dfa3fde9ac9894b4e7ac83",
                   "tests/smoke/control-room.test.mjs": "d8d8d1939529ebb23d54158501c363d16b127f89",
-                  "tests/smoke/decision-approval-ui.test.mjs": "",
                   "tests/smoke/diagram-refs.test.mjs": "a43c6b46c3714263fe24f36ffa5338b919630394",
                   "tests/smoke/efficiency-ui.test.mjs": "5bc47d3b3794de0377fea975f0810bc96172ffd0",
                   "tests/smoke/graph-lenses.test.mjs": "82ade20c4828a24b447560c32aa46bcd586da669",
@@ -127295,15 +126923,15 @@
                 }
               },
               "spec_digest": "ed5f8fc32f7e6cff8d71a4fa27b1597692da73716fff955872603552faff0b2d",
-              "task_digest": "b9af4d6fc2f234dca59353a9a3f719dc9c50913d71fff14e49b127f2274b9d98",
-              "code_digest": "240d862e2a758c538686df1d9398e9bddd4e1cee8830995cf07ff32d924f4f37",
-              "digest": "505b7931322d47d7a25762d00f9ff2206807784a575374ac526ee96c9e8f8df3"
+              "task_digest": "0ca82a51acd8432859f00c3d428cfb561d5fc36c7c3049d63e70043745cac04e",
+              "code_digest": "1a753268e3c7124820b1b699a27c3c9e62b93ece3b45dc6f3bbe477236451374",
+              "digest": "e20d806e30214390ff012d509f435e91e41b1747cbd1765029e34f6a9fbebb05"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T04:55:50Z",
-              "reason": "revision changed: task, code",
+              "checked_at": "2026-05-28T04:58:15Z",
+              "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -127322,20 +126950,20 @@
               ".codewiki/kb/product/users/external-users.md",
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md",
+              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/api-vnext-tools.md",
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/control-room-ui-details.md",
+              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/extension.md",
               ".codewiki/kb/system/graph-transition-traceability.md",
@@ -127437,22 +127065,14 @@
               "skills",
               "src",
               "package.json",
-              "src/adapters/**",
-              "src/ui/**",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/ui/web/control-room.ts",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
               "src/agency",
               "src/adapters/pi",
               "src/agency/tool.ts",
               "tests/tasks/TASK-015/agency-source-root.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
               "tests/smoke/resume-scheduler.test.mjs",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
               "src/api/**",
               ".codewiki/session/**",
               ".codewiki/runtime/**",
@@ -127472,6 +127092,7 @@
               "src/application/tools/catalog.ts (deleted)",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
+              "src/adapters/pi/ui/theme.ts",
               "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/lint.ts",
@@ -127534,27 +127155,6 @@
               ".codewiki/kb/system/alignment-model.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              ".pi-lens",
-              "tests/smoke",
-              "CHANGELOG.md",
-              "src/state/resume-selection.ts",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "src/audit/types.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              "src/ui/web/**",
               "src/agency/**",
               "src/audit/**",
               "src/build/**",
@@ -127570,14 +127170,23 @@
               "tests/tasks/TASK-025/knowledge-source-root.test.mjs",
               "tests/smoke/diagram-refs.test.mjs",
               "tests/smoke/alignment-drift-fixtures.test.mjs",
+              "src/adapters/**",
+              "src/ui/**",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
               "tests/smoke/hot-retention.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
               "tests/smoke/loop-isolation-policy.test.mjs",
               "tests/smoke/role-worktree-isolation.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              ".codewiki/kb/**",
               ".codewiki/roadmap/queue.json",
               ".codewiki/builds/**",
               ".codewiki/roadmap/tasks/**",
@@ -127597,8 +127206,23 @@
               "skills/**",
               "skills/codewiki*/**",
               "src/**",
+              "src/ui/web/**",
               "tests/smoke/**",
               "tsconfig.json",
+              ".pi-lens",
+              "src/ui/web/control-room.ts",
+              "tests/smoke",
+              "CHANGELOG.md",
+              "src/state/resume-selection.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/audit/types.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/build/types.ts",
               "src/domain/build/lifecycle.ts",
               "src/domain/build/decision-propagation.ts",
@@ -127670,6 +127294,8 @@
               ".codewiki/roadmap/**",
               ".codewiki/runtime/diff-tables.json",
               ".codewiki/kb/system/api.md",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
               ".codewiki/kb/system/diagrams/**/*.yaml",
               "src/build",
               "skills/codewiki/bootstrap/**",
@@ -127692,26 +127318,22 @@
               "TASK-041",
               "TASK-042",
               "TASK-043",
-              "TASK-045",
               "TASK-046",
               "TASK-047"
             ],
             "risky_spec_paths": [
               ".codewiki/kb/product/overview.md",
-              ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/api.md",
               ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/control-room-ui-details.md",
-              ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/file-structure.md",
               ".codewiki/kb/system/graph.md",
               ".codewiki/kb/system/roadmap.md"
             ],
             "stats": {
               "total_specs": 37,
-              "aligned_specs": 27,
-              "tracked_specs": 10,
+              "aligned_specs": 30,
+              "tracked_specs": 7,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -127726,10 +127348,10 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-045",
+        "task_id": "TASK-047",
         "lane_id": "",
-        "heading": "TASK-045 — Build inline approval UI and split UI modules",
-        "command": "/wiki-resume TASK-045",
+        "heading": "TASK-047 — Implement bounded agency runner",
+        "command": "/wiki-resume TASK-047",
         "reason": "Resume roadmap task (in_progress).",
         "status": "in_progress",
         "verification": "npm run typecheck",
@@ -127737,7 +127359,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T04:55:50Z",
+        "generated_at": "2026-05-28T04:58:15Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -127807,52 +127429,6 @@
               "basis": "source_content"
             },
             "note": "tracked by TASK-046"
-          },
-          {
-            "path": ".codewiki/kb/system/adapters.md",
-            "title": "Adapters",
-            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/adapters/**",
-              "src/ui/**",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/ui/web/control-room.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "src/roadmap/tool.ts",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/application/tools/session-handoff.ts",
-              "src/adapters/pi/tools/session-handoff.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, tests",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-045"
-            ],
-            "primary_task": {
-              "id": "TASK-045",
-              "status": "in_progress",
-              "title": "Build inline approval UI and split UI modules"
-            },
-            "revision": {
-              "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-045"
           },
           {
             "path": ".codewiki/kb/system/agency.md",
@@ -128028,13 +127604,6 @@
               "src/adapters/pi/artifact-wake.ts",
               "tests/smoke/package-smoke.test.mjs",
               "tests/smoke/codewiki-compaction.test.mjs",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/ui/web/control-room.ts",
-              "tests/smoke/control-room.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "tests/smoke/decision-approval-ui.test.mjs",
               "src/agency/tool.ts",
               "tests/tasks/TASK-015/agency-source-root.test.mjs",
               "tests/smoke/resume-scheduler.test.mjs",
@@ -128050,6 +127619,8 @@
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/adapters/pi/ui/theme.ts",
               "src/application/graph.ts",
               "src/application/graph/rebuilder.ts",
               "src/application/lint.ts",
@@ -128086,20 +127657,19 @@
               "total": 0
             },
             "related_task_ids": [
-              "TASK-045",
               "TASK-047",
               "TASK-041"
             ],
             "primary_task": {
-              "id": "TASK-045",
+              "id": "TASK-047",
               "status": "in_progress",
-              "title": "Build inline approval UI and split UI modules"
+              "title": "Implement bounded agency runner"
             },
             "revision": {
               "digest": "8f7919a7592f3e0565a6b6bed0c69e6f8e04631bea34c9502775cd4984ce44e3",
               "basis": "source_content"
             },
-            "note": "tracked by TASK-045"
+            "note": "tracked by TASK-047"
           },
           {
             "path": ".codewiki/kb/system/compilers.md",
@@ -128220,199 +127790,6 @@
               "basis": "source_content"
             },
             "note": "tracked by TASK-047"
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui-details.md",
-            "title": "CodeWiki UI Implementation Details",
-            "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
-            "drift_status": "tracked",
-            "code_paths": [
-              ".codewiki/config.json",
-              "src/ui/**",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/audit/tool.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/graph.ts",
-              "src/state/builders.ts",
-              "src/state/reader.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": ".codewiki, src +6 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-045"
-            ],
-            "primary_task": {
-              "id": "TASK-045",
-              "status": "in_progress",
-              "title": "Build inline approval UI and split UI modules"
-            },
-            "revision": {
-              "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-045"
-          },
-          {
-            "path": ".codewiki/kb/system/control-room-ui.md",
-            "title": "CodeWiki UI",
-            "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/ui/**",
-              ".codewiki/config.json",
-              ".codewiki/index_graph.json",
-              ".codewiki/kb/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              ".codewiki/kb/system/*.md",
-              ".codewiki/kb/system/diagrams/**",
-              "src/adapters/**",
-              "src/ui/web/**",
-              "src/api",
-              "src/shared",
-              "src/adapters",
-              "src/ui",
-              "tests",
-              "src/state/reader.ts",
-              "src/state/builders.ts",
-              "src/state/graph.ts",
-              "src/audit/tool.ts",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              "src/adapters/pi/ui/decision-approval.ts",
-              "src/change/diff-table.ts",
-              "src/change/tool.ts",
-              "tests/smoke/decision-approval-ui.test.mjs",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, .codewiki +6 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-045"
-            ],
-            "primary_task": {
-              "id": "TASK-045",
-              "status": "in_progress",
-              "title": "Build inline approval UI and split UI modules"
-            },
-            "revision": {
-              "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-045"
           },
           {
             "path": ".codewiki/kb/system/file-structure.md",
@@ -129565,6 +128942,36 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/adapters.md",
+            "title": "Adapters",
+            "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/adapters/**",
+              "src/ui/**",
+              "src/application/tools/session-handoff.ts",
+              "src/adapters/pi/tools/session-handoff.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src +8 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/alignment-model.md",
             "title": "Alignment Model",
             "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
@@ -129964,6 +129371,179 @@
             "primary_task": null,
             "revision": {
               "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/control-room-ui-details.md",
+            "title": "CodeWiki UI Implementation Details",
+            "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
+            "drift_status": "aligned",
+            "code_paths": [
+              ".codewiki/config.json",
+              "src/ui/**",
+              "package.json",
+              ".pi-lens",
+              "src/index.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/audit/tool.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/roadmap/tool.ts",
+              "src/state/graph/rebuilder.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "src/session/types.ts",
+              "src/roadmap/types.ts",
+              "src/state/graph.ts",
+              "src/state/builders.ts",
+              "src/state/reader.ts",
+              "src/state/types.ts",
+              "src/state/lint.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/state/rebuild.ts",
+              "src/roadmap/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              "src/knowledge/doc-parser.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": ".codewiki, src +6 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/control-room-ui.md",
+            "title": "CodeWiki UI",
+            "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/ui/**",
+              ".codewiki/config.json",
+              ".codewiki/index_graph.json",
+              ".codewiki/kb/**",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
+              ".codewiki/kb/system/*.md",
+              ".codewiki/kb/system/diagrams/**",
+              "src/adapters/**",
+              "src/ui/web/**",
+              "src/api",
+              "src/shared",
+              "src/adapters",
+              "src/ui",
+              "tests",
+              "src/state/reader.ts",
+              "src/state/builders.ts",
+              "src/state/graph.ts",
+              "src/audit/tool.ts",
+              "package.json",
+              ".pi-lens",
+              "src/index.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/roadmap/tool.ts",
+              "src/state/graph/rebuilder.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "src/session/types.ts",
+              "src/roadmap/types.ts",
+              "src/state/types.ts",
+              "src/state/lint.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/state/rebuild.ts",
+              "src/roadmap/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              "src/knowledge/doc-parser.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, .codewiki +6 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -131225,52 +130805,6 @@
             "label": "System",
             "rows": [
               {
-                "path": ".codewiki/kb/system/adapters.md",
-                "title": "Adapters",
-                "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/adapters/**",
-                  "src/ui/**",
-                  "src/adapters/pi/ui/decision-approval.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/change/diff-table.ts",
-                  "src/change/tool.ts",
-                  "src/roadmap/tool.ts",
-                  "tests/smoke/control-room.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "tests/smoke/decision-approval-ui.test.mjs",
-                  "src/application/tools/session-handoff.ts",
-                  "src/adapters/pi/tools/session-handoff.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/knowledge/doc-parser.ts",
-                  "src/state/graph.ts",
-                  "src/state/lint.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, tests",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-045"
-                ],
-                "primary_task": {
-                  "id": "TASK-045",
-                  "status": "in_progress",
-                  "title": "Build inline approval UI and split UI modules"
-                },
-                "revision": {
-                  "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-045"
-              },
-              {
                 "path": ".codewiki/kb/system/agency.md",
                 "title": "Agency Controller",
                 "summary": "System mechanism for bounded roadmap automation through agency cycles and explicit gates.",
@@ -131444,13 +130978,6 @@
                   "src/adapters/pi/artifact-wake.ts",
                   "tests/smoke/package-smoke.test.mjs",
                   "tests/smoke/codewiki-compaction.test.mjs",
-                  "src/adapters/pi/ui/decision-approval.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/ui/web/control-room.ts",
-                  "tests/smoke/control-room.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "tests/smoke/decision-approval-ui.test.mjs",
                   "src/agency/tool.ts",
                   "tests/tasks/TASK-015/agency-source-root.test.mjs",
                   "tests/smoke/resume-scheduler.test.mjs",
@@ -131466,6 +130993,8 @@
                   "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/tools/ports.ts",
                   "src/adapters/pi/tools/task.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/adapters/pi/ui/theme.ts",
                   "src/application/graph.ts",
                   "src/application/graph/rebuilder.ts",
                   "src/application/lint.ts",
@@ -131502,20 +131031,19 @@
                   "total": 0
                 },
                 "related_task_ids": [
-                  "TASK-045",
                   "TASK-047",
                   "TASK-041"
                 ],
                 "primary_task": {
-                  "id": "TASK-045",
+                  "id": "TASK-047",
                   "status": "in_progress",
-                  "title": "Build inline approval UI and split UI modules"
+                  "title": "Implement bounded agency runner"
                 },
                 "revision": {
                   "digest": "8f7919a7592f3e0565a6b6bed0c69e6f8e04631bea34c9502775cd4984ce44e3",
                   "basis": "source_content"
                 },
-                "note": "tracked by TASK-045"
+                "note": "tracked by TASK-047"
               },
               {
                 "path": ".codewiki/kb/system/compilers.md",
@@ -131636,199 +131164,6 @@
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-047"
-              },
-              {
-                "path": ".codewiki/kb/system/control-room-ui-details.md",
-                "title": "CodeWiki UI Implementation Details",
-                "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  ".codewiki/config.json",
-                  "src/ui/**",
-                  "package.json",
-                  ".pi-lens",
-                  "src/index.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/audit/tool.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "src/session/types.ts",
-                  "src/roadmap/types.ts",
-                  "src/state/graph.ts",
-                  "src/state/builders.ts",
-                  "src/state/reader.ts",
-                  "src/state/types.ts",
-                  "src/state/lint.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  "src/adapters/pi/ui/decision-approval.ts",
-                  "src/change/diff-table.ts",
-                  "src/change/tool.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs",
-                  "src/knowledge/doc-parser.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": ".codewiki, src +6 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-045"
-                ],
-                "primary_task": {
-                  "id": "TASK-045",
-                  "status": "in_progress",
-                  "title": "Build inline approval UI and split UI modules"
-                },
-                "revision": {
-                  "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-045"
-              },
-              {
-                "path": ".codewiki/kb/system/control-room-ui.md",
-                "title": "CodeWiki UI",
-                "summary": "Standalone local web UI and hosting surface for CodeWiki.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/ui/**",
-                  ".codewiki/config.json",
-                  ".codewiki/index_graph.json",
-                  ".codewiki/kb/**",
-                  ".codewiki/kb/product/**",
-                  ".codewiki/kb/system/**",
-                  ".codewiki/kb/system/*.md",
-                  ".codewiki/kb/system/diagrams/**",
-                  "src/adapters/**",
-                  "src/ui/web/**",
-                  "src/api",
-                  "src/shared",
-                  "src/adapters",
-                  "src/ui",
-                  "tests",
-                  "src/state/reader.ts",
-                  "src/state/builders.ts",
-                  "src/state/graph.ts",
-                  "src/audit/tool.ts",
-                  "package.json",
-                  ".pi-lens",
-                  "src/index.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "src/session/types.ts",
-                  "src/roadmap/types.ts",
-                  "src/state/types.ts",
-                  "src/state/lint.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  "src/adapters/pi/ui/decision-approval.ts",
-                  "src/change/diff-table.ts",
-                  "src/change/tool.ts",
-                  "tests/smoke/decision-approval-ui.test.mjs",
-                  "src/knowledge/doc-parser.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, .codewiki +6 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-045"
-                ],
-                "primary_task": {
-                  "id": "TASK-045",
-                  "status": "in_progress",
-                  "title": "Build inline approval UI and split UI modules"
-                },
-                "revision": {
-                  "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-045"
               },
               {
                 "path": ".codewiki/kb/system/file-structure.md",
@@ -132506,6 +131841,36 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/adapters.md",
+                "title": "Adapters",
+                "summary": "Harness and protocol translation boundary for Pi, CLI, MCP, Claude Code, Codex, or other integrations.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/adapters/**",
+                  "src/ui/**",
+                  "src/application/tools/session-handoff.ts",
+                  "src/adapters/pi/tools/session-handoff.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/knowledge/doc-parser.ts",
+                  "src/state/graph.ts",
+                  "src/state/lint.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src +8 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "1ab22953cefca5f152dcea0d898c4952bc625aa24c352f8d3c8cc0103e018e17",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/alignment-model.md",
                 "title": "Alignment Model",
                 "summary": "Core CodeWiki model for context-driven development alignment across intent, knowledge, roadmap, tests, code, validation, commits, and publication.",
@@ -132905,6 +132270,179 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/control-room-ui-details.md",
+                "title": "CodeWiki UI Implementation Details",
+                "summary": "Detailed system expectations for CodeWiki UI Map, Sessions, Settings, source disclosure, styling, and security.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  ".codewiki/config.json",
+                  "src/ui/**",
+                  "package.json",
+                  ".pi-lens",
+                  "src/index.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/audit/tool.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "src/session/types.ts",
+                  "src/roadmap/types.ts",
+                  "src/state/graph.ts",
+                  "src/state/builders.ts",
+                  "src/state/reader.ts",
+                  "src/state/types.ts",
+                  "src/state/lint.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "src/state/rebuild.ts",
+                  "src/roadmap/runtime.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  "src/knowledge/doc-parser.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": ".codewiki, src +6 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "e3c7bcc8ba50b3f66bc774a4185fd08d7dbc83dfc48e78471e537751660fd310",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/control-room-ui.md",
+                "title": "CodeWiki UI",
+                "summary": "Standalone local web UI and hosting surface for CodeWiki.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/ui/**",
+                  ".codewiki/config.json",
+                  ".codewiki/index_graph.json",
+                  ".codewiki/kb/**",
+                  ".codewiki/kb/product/**",
+                  ".codewiki/kb/system/**",
+                  ".codewiki/kb/system/*.md",
+                  ".codewiki/kb/system/diagrams/**",
+                  "src/adapters/**",
+                  "src/ui/web/**",
+                  "src/api",
+                  "src/shared",
+                  "src/adapters",
+                  "src/ui",
+                  "tests",
+                  "src/state/reader.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts",
+                  "src/audit/tool.ts",
+                  "package.json",
+                  ".pi-lens",
+                  "src/index.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "src/session/types.ts",
+                  "src/roadmap/types.ts",
+                  "src/state/types.ts",
+                  "src/state/lint.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "src/state/rebuild.ts",
+                  "src/roadmap/runtime.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  "src/knowledge/doc-parser.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, .codewiki +6 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "8e6990fc20a726a14b2cd063d16acb322729dd1aea860ab581dd951f40dc15a8",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -133640,13 +133178,12 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-045",
+        "focused_task_id": "TASK-047",
         "blocked_task_ids": [],
         "in_progress_task_ids": [
-          "TASK-045",
           "TASK-047"
         ],
-        "next_task_id": "TASK-045",
+        "next_task_id": "TASK-047",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -134008,7 +133545,6 @@
               "TASK-048"
             ],
             "open_task_ids": [
-              "TASK-045",
               "TASK-048"
             ],
             "budget": {
@@ -134110,7 +133646,6 @@
             "id": "implement",
             "label": "Implement",
             "task_ids": [
-              "TASK-045",
               "TASK-047"
             ]
           },
