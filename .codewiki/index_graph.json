@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T09:28:45.981Z",
+  "generated_at": "2026-05-28T09:29:17.518Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -28619,86 +28619,6 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
-    },
-    {
-      "id": "claim:CLAIM-206",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-206",
-      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-      "agent_name": "Mole",
-      "mode": "write",
-      "role": "builder",
-      "status": "active",
-      "summary": "Implement release-readiness changelog baseline and package posture docs.",
-      "expires_at": "2026-05-28T11:22:54.903Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-        "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-039"
-        },
-        {
-          "layer": "code",
-          "path": "CHANGELOG.md"
-        },
-        {
-          "layer": "code",
-          "path": "README.md"
-        },
-        {
-          "layer": "code",
-          "path": "package.json"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/package-smoke.test.mjs"
-        },
-        {
-          "layer": "build",
-          "description": "TASK-039 implementation build"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-039",
-      "kind": "change_claim_scope",
-      "path": "TASK-039",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:CHANGELOG.md",
-      "kind": "change_claim_scope",
-      "path": "CHANGELOG.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:README.md",
-      "kind": "change_claim_scope",
-      "path": "README.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:package.json",
-      "kind": "change_claim_scope",
-      "path": "package.json",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/package-smoke.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-039 implementation build",
-      "kind": "change_claim_scope",
-      "path": "TASK-039 implementation build",
-      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -89583,41 +89503,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-206",
-      "to": "task:TASK-039"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:TASK-039"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:CHANGELOG.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:README.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:package.json"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-206",
-      "to": "claim_scope:TASK-039 implementation build"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -100268,7 +100153,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 26,
+            "item_count": 19,
             "badges": [
               {
                 "id": "open_tasks",
@@ -100306,7 +100191,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -100350,8 +100235,8 @@
                 "label": "dirty paths",
                 "count": 4,
                 "refs": [
-                  ".gitignore",
                   ".pi/settings.json",
+                  "gitignore",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -101284,88 +101169,6 @@
           }
         ],
         "semantic_change_rows": [
-          {
-            "path": ".codewiki/roadmap/queue.json",
-            "change_type": "task",
-            "semantic": true,
-            "accepted_build_refs": [
-              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-            ],
-            "gaps": []
-          },
           {
             "path": "src/adapters/pi/ui/decision-approval.ts",
             "change_type": "code",
@@ -113350,414 +113153,32 @@
         "tsconfig.json"
       ],
       "dirty_paths": [
-        ".gitignore",
         ".pi/settings.json",
+        "gitignore",
         "src/adapters/pi/ui/decision-approval.ts",
         "tests/smoke/decision-approval-ui.test.mjs"
       ]
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "builder": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-206",
-          "role": "builder",
-          "mode": "write",
-          "task_id": "TASK-039",
-          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-206",
-          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-          "agent_name": "Mole",
-          "status": "active",
-          "mode": "write",
-          "role": "builder",
-          "summary": "Implement release-readiness changelog baseline and package posture docs.",
-          "task_id": "TASK-039",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-039"
-            },
-            {
-              "layer": "code",
-              "path": "CHANGELOG.md"
-            },
-            {
-              "layer": "code",
-              "path": "README.md"
-            },
-            {
-              "layer": "code",
-              "path": "package.json"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            {
-              "layer": "build",
-              "description": "TASK-039 implementation build"
-            }
-          ],
-          "created_at": "2026-05-28T09:22:54Z",
-          "updated_at": "2026-05-28T09:22:54Z",
-          "expires_at": "2026-05-28T11:22:54.903Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "CHANGELOG.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "package.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "README.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-039"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-039 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "CHANGELOG.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "package.json"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "README.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-039"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "build",
-            "description": "TASK-039 implementation build"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/package-smoke.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-206",
-              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "agent_name": "Mole",
-              "mode": "write",
-              "role": "builder",
-              "task_id": "TASK-039",
-              "summary": "Implement release-readiness changelog baseline and package posture docs.",
-              "expires_at": "2026-05-28T11:22:54.903Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -123845,88 +123266,6 @@
       ],
       "semantic_change_rows": [
         {
-          "path": ".codewiki/roadmap/queue.json",
-          "change_type": "task",
-          "semantic": true,
-          "accepted_build_refs": [
-            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
-            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
-            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
-            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
-            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
-            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
-            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
-            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
-            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
-            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
-            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
-            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
-            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
-            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
-            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
-            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
-            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
-            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
-            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
-            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
-            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
-            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
-            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
-            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
-            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
-            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
-            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
-            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
-            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
-            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
-            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
-            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
-            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
-            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
-            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
-            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
-            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
-            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
-            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
-            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
-            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
-            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
-            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
-            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
-            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
-            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
-            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
-            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
-            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
-            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
-            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
-            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
-          ],
-          "gaps": []
-        },
-        {
           "path": "src/adapters/pi/ui/decision-approval.ts",
           "change_type": "code",
           "semantic": true,
@@ -124824,9 +124163,7 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [
-            "CLAIM-206"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -126008,7 +125345,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-28T09:28:45.860Z",
+      "generated_at": "2026-05-28T09:29:17.395Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 5
@@ -126054,7 +125391,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-28T09:28:45Z",
+      "generated_at": "2026-05-28T09:29:17Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -127458,7 +126795,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-28T09:28:46Z",
+      "generated_at": "2026-05-28T09:29:17Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -127617,9 +126954,7 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [
-              "CLAIM-206"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -127848,7 +127183,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -130810,7 +130145,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-28T09:28:46Z",
+        "generated_at": "2026-05-28T09:29:17Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -130865,13 +130200,12 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:28:46Z",
+            "checked_at": "2026-05-28T09:29:17Z",
             "revision": {
               "git": {
-                "head": "6d5e597c53b29934405d7b9584a57ba10be7aba9",
+                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -130920,7 +130254,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5b72f2e337ad2ce203e5b0db0e7a947e191ecb8b",
+                  ".codewiki/roadmap/queue.json": "a94db185592b4b53ca5dce4175c3e27a5657e062",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -131094,13 +130428,13 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "e6a5d8a365a8f277371616334f3f8e5bcb2ad0073a3f111463a7436f599ecb95",
-              "digest": "cb1c3286a4880b57a614fb369a5ba3d5f257cd3afd5a1696019c539c60b74fac"
+              "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
+              "digest": "f69ed192c072865c40ec2665f592c5c97ef188191af38cc7f5adf7c890945c25"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:28:46Z",
+              "checked_at": "2026-05-28T09:29:17Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -131532,13 +130866,12 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-28T09:28:46Z",
+            "checked_at": "2026-05-28T09:29:17Z",
             "revision": {
               "git": {
-                "head": "6d5e597c53b29934405d7b9584a57ba10be7aba9",
+                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -131571,7 +130904,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5b72f2e337ad2ce203e5b0db0e7a947e191ecb8b",
+                  ".codewiki/roadmap/queue.json": "a94db185592b4b53ca5dce4175c3e27a5657e062",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -131738,13 +131071,13 @@
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "2926acba33ad5ea0d13b82222f0c68aec08c68db803bc27d9c33dac800ee03c8",
-              "digest": "68198a0d71c140123a1c1ceda035701d8a1842de0ab875851319429e35277621"
+              "code_digest": "761a857f1a8249846a3e662bac7ab4e6ce58772c491a5b59aef9bb565d4da309",
+              "digest": "384abaa06d0ba2b37365228b0e9ab2e035125b8331bba398c077c31f6e3a7b1c"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:28:46Z",
+              "checked_at": "2026-05-28T09:29:17Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -132152,13 +131485,12 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-28T09:28:46Z",
+            "checked_at": "2026-05-28T09:29:17Z",
             "revision": {
               "git": {
-                "head": "6d5e597c53b29934405d7b9584a57ba10be7aba9",
+                "head": "86fda51d337a51b9ba9e9dffd6f9b6098531fc65",
                 "dirty": true,
                 "dirty_paths": [
-                  ".codewiki/roadmap/queue.json",
                   "src/adapters/pi/ui/decision-approval.ts",
                   "tests/smoke/decision-approval-ui.test.mjs"
                 ],
@@ -132207,7 +131539,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "4180cabb44fa63e97fb012ae685549bd5188f8ab",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "5b72f2e337ad2ce203e5b0db0e7a947e191ecb8b",
+                  ".codewiki/roadmap/queue.json": "a94db185592b4b53ca5dce4175c3e27a5657e062",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -132381,13 +131713,13 @@
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
               "task_digest": "d7f7a5aa75051451d40d257ee2820260cb9ecefda973e92968f99accb11934e1",
-              "code_digest": "e6a5d8a365a8f277371616334f3f8e5bcb2ad0073a3f111463a7436f599ecb95",
-              "digest": "cb1c3286a4880b57a614fb369a5ba3d5f257cd3afd5a1696019c539c60b74fac"
+              "code_digest": "0a3962dc685d33e12d07fec97f59a2a65ef50548af1158929387496ce45e6fca",
+              "digest": "f69ed192c072865c40ec2665f592c5c97ef188191af38cc7f5adf7c890945c25"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-28T09:28:46Z",
+              "checked_at": "2026-05-28T09:29:17Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -132820,229 +132152,21 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-28T09:28:46Z",
+        "generated_at": "2026-05-28T09:29:17Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-206",
-            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-            "agent_name": "Mole",
-            "status": "active",
-            "mode": "write",
-            "role": "builder",
-            "summary": "Implement release-readiness changelog baseline and package posture docs.",
-            "task_id": "TASK-039",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-              "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-039"
-              },
-              {
-                "layer": "code",
-                "path": "CHANGELOG.md"
-              },
-              {
-                "layer": "code",
-                "path": "README.md"
-              },
-              {
-                "layer": "code",
-                "path": "package.json"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/package-smoke.test.mjs"
-              },
-              {
-                "layer": "build",
-                "description": "TASK-039 implementation build"
-              }
-            ],
-            "created_at": "2026-05-28T09:22:54Z",
-            "updated_at": "2026-05-28T09:22:54Z",
-            "expires_at": "2026-05-28T11:22:54.903Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "CHANGELOG.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "package.json"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "README.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-039"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "build",
-              "description": "TASK-039 implementation build"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/package-smoke.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-206",
-                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
-                "agent_name": "Mole",
-                "mode": "write",
-                "role": "builder",
-                "task_id": "TASK-039",
-                "summary": "Implement release-readiness changelog baseline and package posture docs.",
-                "expires_at": "2026-05-28T11:22:54.903Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "branch": "codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
-                  "notes": "factory=role-worktree; task=TASK-039; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-206 release or validated publisher/patch ref for codewiki/TASK-039/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
