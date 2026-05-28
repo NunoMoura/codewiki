@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-28T04:26:26Z",
+  "profile": "task-close",
+  "task_id": "TASK-044",
+  "verdict": "pass",
+  "rationale": "TASK-044 is ready to close. Clean detached validation at commit 738beb2aab20a73347fba6da868ec06518596821 confirms the implementation build, implementation validation report, upstream planning gateway proof, generated task context, and canonical roadmap state are committed and coherent. Changed, task, and generated-parity audits pass; remaining alignment graph-health warning is pre-existing and non-blocking. Publication/push is not included.",
+  "checks": [
+    "git worktree add --detach /tmp/codewiki-task044-clean.5PBbZf HEAD",
+    "git -C /tmp/codewiki-task044-clean.5PBbZf status --short --untracked-files=all (clean)",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-044 changed=true include_fingerprints=true: changed/task/generated-parity pass; alignment graph warning",
+    "implementation validation .codewiki/validation/2026-05-28-implementation-pass-task-044.json is committed at 738beb2aab20a73347fba6da868ec06518596821",
+    "commit 738beb2aab20a73347fba6da868ec06518596821 tree 35a2197ddcdb8c9d1ea6093845d50cb9150c7867 contains source/test/build/validation evidence for TASK-044"
+  ],
+  "issues": [
+    {
+      "severity": "information",
+      "summary": "Task-close validates local commit content only; no remote publication/push was performed."
+    },
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports existing graph-health warnings; changed/task/generated-parity audits pass."
+    },
+    {
+      "severity": "information",
+      "summary": "Main worktree still contains unrelated uncommitted local config/pi-lens artifacts outside the clean validation worktree."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "approval:user"
+  ],
+  "audit_reports": [
+    "codewiki_audit clean worktree: changed/task/generated-parity pass; alignment graph-health warning"
+  ],
+  "content_proof_refs": [
+    "738beb2aab20a73347fba6da868ec06518596821",
+    "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "35a2197ddcdb8c9d1ea6093845d50cb9150c7867"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-044",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user"
+      ],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "worktree_path": "/tmp/codewiki-task044-clean.5PBbZf",
+    "head_sha": "738beb2aab20a73347fba6da868ec06518596821",
+    "validated_sha": "738beb2aab20a73347fba6da868ec06518596821",
+    "tree_sha": "35a2197ddcdb8c9d1ea6093845d50cb9150c7867",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Fresh task-close validation used clean detached worktree from committed content; publisher/remote proof not requested.",
+    "role": "validator"
+  }
+}
