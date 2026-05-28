@@ -1,0 +1,274 @@
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { resolve } from "node:path";
+import type { WikiProject } from "../../../project/types.ts";
+import {
+	executeDiffTableAction,
+	type CodewikiDiffTableToolInput,
+} from "../../../change/diff-table.ts";
+import { truncatePlain } from "./text.ts";
+
+export type DecisionApprovalAction = "approve" | "reject" | "defer" | "edit";
+
+export interface DecisionApprovalRow {
+	kind: "decision-row";
+	tableId: string;
+	rowId: string;
+	status: string;
+	current: string;
+	desired: string;
+	rationale: string;
+	affectedLayers: string[];
+	risk: string;
+	source: string;
+	alternatives: string[];
+	readOnly: boolean;
+	buildEligible: boolean;
+	actionEvidence: string;
+}
+
+export interface DecisionApprovalModel {
+	kind: "decision-approval";
+	summary: string;
+	rows: DecisionApprovalRow[];
+	pendingCount: number;
+	approvedRowIds: string[];
+	decisionBuildEligible: boolean;
+	fallbackInstruction: string;
+}
+
+export interface DecisionApprovalActionResult {
+	changed: boolean;
+	tableId: string;
+	rowId: string;
+	userAction: string;
+	evidence: {
+		capability: "codewiki.diff_table";
+		action: CodewikiDiffTableToolInput["action"];
+		table_id: string;
+		row_id: string;
+		alternative?: string;
+	};
+}
+
+export interface TaskCandidateApprovalInput {
+	id: string;
+	title: string;
+	summary: string;
+	kind?: string;
+	priority?: string;
+	sprint_id?: string;
+	status?: "pending" | "approved" | "rejected" | "deferred";
+	code_paths?: string[];
+	spec_paths?: string[];
+}
+
+export interface TaskCandidateApprovalModel {
+	kind: "task-candidate-approval";
+	candidates: Array<TaskCandidateApprovalInput & {
+		buildEligible: boolean;
+		fallbackInstruction: string;
+	}>;
+	fallbackInstruction: string;
+	toolContract: "codewiki_task";
+}
+
+export function readDecisionApprovalModel(project: WikiProject): DecisionApprovalModel {
+	const rows = readRuntimeApprovalRows(project);
+	if (rows.length === 0) rows.push(...readDecisionBuildRows(project));
+	const pendingCount = rows.filter((row) => row.status === "pending" || row.status === "edited").length;
+	const approvedRowIds = rows.filter((row) => row.status === "approved").map((row) => row.rowId);
+	return {
+		kind: "decision-approval",
+		summary: rows.some((row) => !row.readOnly)
+			? "Pending decision approval rows"
+			: "Latest accepted decision rows (read-only)",
+		rows,
+		pendingCount,
+		approvedRowIds,
+		decisionBuildEligible: approvedRowIds.length > 0 && pendingCount === 0,
+		fallbackInstruction: buildDecisionFallbackInstruction(rows),
+	};
+}
+
+export async function applyDecisionApprovalAction(
+	project: WikiProject,
+	input: {
+		tableId: string;
+		rowId: string;
+		action: DecisionApprovalAction;
+		alternative?: string;
+	},
+): Promise<DecisionApprovalActionResult> {
+	const toolAction = diffTableActionForApproval(input.action);
+	if (toolAction === "alternative" && !input.alternative?.trim()) {
+		throw new Error("Decision row edit requires alternative desired state text.");
+	}
+	await executeDiffTableAction(project, {
+		action: toolAction,
+		table_id: input.tableId,
+		row_id: input.rowId,
+		...(input.alternative?.trim() ? { alternative: input.alternative.trim() } : {}),
+	});
+	return {
+		changed: true,
+		tableId: input.tableId,
+		rowId: input.rowId,
+		userAction: userActionForApproval(input.action),
+		evidence: {
+			capability: "codewiki.diff_table",
+			action: toolAction,
+			table_id: input.tableId,
+			row_id: input.rowId,
+			...(input.alternative?.trim() ? { alternative: input.alternative.trim() } : {}),
+		},
+	};
+}
+
+export function renderDecisionApprovalCards(
+	model: DecisionApprovalModel,
+	width = 80,
+): string[] {
+	if (model.rows.length === 0) return ["No pending decision approvals."];
+	const body = [
+		model.summary,
+		`approved=${model.approvedRowIds.length} pending=${model.pendingCount} build=${model.decisionBuildEligible ? "eligible" : "blocked"}`,
+		"actions: a approve · x reject · d defer · p edit/alternative",
+	];
+	for (const row of model.rows) {
+		body.push(
+			`[${row.status}${row.readOnly ? "/ro" : ""}] ${row.tableId}/${row.rowId} risk=${row.risk} layers=${row.affectedLayers.join(",") || "—"}`,
+		);
+		body.push(`  current: ${truncatePlain(row.current, Math.max(16, width - 13))}`);
+		body.push(`  desired: ${truncatePlain(row.desired, Math.max(16, width - 13))}`);
+		if (row.alternatives.length) body.push(`  alternatives: ${truncatePlain(row.alternatives.join(" | "), Math.max(16, width - 18))}`);
+	}
+	return body;
+}
+
+export function buildTaskCandidateApprovalModel(
+	candidates: TaskCandidateApprovalInput[],
+): TaskCandidateApprovalModel {
+	const normalized = candidates.map((candidate) => {
+		const status = candidate.status || "pending";
+		return {
+			...candidate,
+			status,
+			buildEligible: status === "approved",
+			fallbackInstruction: `Type APPROVE ${candidate.id} to allow codewiki_task mutation, or DEFER ${candidate.id} with reason.`,
+		};
+	});
+	return {
+		kind: "task-candidate-approval",
+		candidates: normalized,
+		fallbackInstruction: normalized.length
+			? normalized.map((candidate) => candidate.fallbackInstruction).join("\n")
+			: "No task candidates pending approval.",
+		toolContract: "codewiki_task",
+	};
+}
+
+export function renderTaskCandidateApprovalCards(
+	model: TaskCandidateApprovalModel,
+	width = 80,
+): string[] {
+	if (model.candidates.length === 0) return ["No task candidates pending approval."];
+	const lines = [
+		"Task/sprint candidates pending approval",
+		"actions: typed APPROVE/DEFER/REJECT fallback before codewiki_task mutation",
+	];
+	for (const candidate of model.candidates) {
+		lines.push(
+			`[${candidate.status}] ${candidate.id} ${candidate.priority || "medium"}/${candidate.kind || "task"}${candidate.sprint_id ? ` sprint=${candidate.sprint_id}` : ""}${candidate.buildEligible ? " ✓" : ""}`,
+		);
+		lines.push(`  ${truncatePlain(candidate.title, Math.max(16, width - 4))}`);
+		lines.push(`  ${truncatePlain(candidate.summary, Math.max(16, width - 4))}`);
+	}
+	return lines;
+}
+
+function readRuntimeApprovalRows(project: WikiProject): DecisionApprovalRow[] {
+	const runtime = readJson(resolve(project.root, ".codewiki/runtime/diff-tables.json"));
+	const rows: DecisionApprovalRow[] = [];
+	for (const table of Array.isArray(runtime?.tables) ? runtime.tables : []) {
+		if (String(table.status || "pending") !== "pending") continue;
+		for (const row of Array.isArray(table.rows) ? table.rows : []) {
+			rows.push(toApprovalRow(table, row, false));
+		}
+	}
+	return rows;
+}
+
+function readDecisionBuildRows(project: WikiProject): DecisionApprovalRow[] {
+	const decisionDir = resolve(project.root, ".codewiki/builds/decision");
+	if (!existsSync(decisionDir)) return [];
+	const rows: DecisionApprovalRow[] = [];
+	for (const file of readdirSync(decisionDir)
+		.filter((name) => name.endsWith(".json"))
+		.sort()
+		.reverse()
+		.slice(0, 3)) {
+		const build = readJson(resolve(decisionDir, file));
+		for (const row of Array.isArray(build?.diff_table) ? build.diff_table : []) {
+			rows.push(toApprovalRow({ id: file, summary: build?.summary || file }, row, true));
+		}
+	}
+	return rows;
+}
+
+function toApprovalRow(table: any, row: any, readOnly: boolean): DecisionApprovalRow {
+	const status = String(row.user_action || "pending").trim() || "pending";
+	const tableId = String(table.id || "").trim();
+	const rowId = String(row.id || "").trim();
+	return {
+		kind: "decision-row",
+		tableId,
+		rowId,
+		status,
+		current: String(row.current_state || "").trim(),
+		desired: String(row.desired_state || "").trim(),
+		rationale: String(row.rationale || "").trim(),
+		affectedLayers: Array.isArray(row.affected_layers)
+			? row.affected_layers.map(String).map((value: string) => value.trim()).filter(Boolean)
+			: [],
+		risk: String(row.risk || "medium").trim(),
+		source: String(table.summary || table.id || "pending").trim(),
+		alternatives: Array.isArray(row.alternatives)
+			? row.alternatives.map(String).map((value: string) => value.trim()).filter(Boolean)
+			: [],
+		readOnly,
+		buildEligible: !readOnly && status === "approved",
+		actionEvidence: `codewiki_diff_table ${status} ${tableId}/${rowId}`,
+	};
+}
+
+function diffTableActionForApproval(
+	action: DecisionApprovalAction,
+): CodewikiDiffTableToolInput["action"] {
+	if (action === "approve") return "accept";
+	if (action === "reject") return "reject";
+	if (action === "defer") return "defer";
+	return "alternative";
+}
+
+function userActionForApproval(action: DecisionApprovalAction): string {
+	if (action === "approve") return "approved";
+	if (action === "reject") return "rejected";
+	if (action === "defer") return "deferred";
+	return "edited";
+}
+
+function buildDecisionFallbackInstruction(rows: DecisionApprovalRow[]): string {
+	const editable = rows.filter((row) => !row.readOnly);
+	if (editable.length === 0) return "No editable decision rows. Use typed approval in chat if adapter UI is unavailable.";
+	return editable
+		.map((row) => `Type APPROVE ${row.tableId}/${row.rowId}, REJECT ${row.tableId}/${row.rowId}, DEFER ${row.tableId}/${row.rowId}, or EDIT ${row.tableId}/${row.rowId}: <alternative>.`)
+		.join("\n");
+}
+
+function readJson(path: string): any {
+	try {
+		return JSON.parse(readFileSync(path, "utf8"));
+	} catch {
+		return null;
+	}
+}

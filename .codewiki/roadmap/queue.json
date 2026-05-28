@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-28T04:26:51Z",
+  "updated": "2026-05-28T04:55:50Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -921,7 +921,7 @@
         "closure": "Task closes when approved rows and task candidates flow through UI actions to machine-readable state and tests pass."
       },
       "created": "2026-05-28",
-      "updated": "2026-05-28T02:43:37Z"
+      "updated": "2026-05-28T04:55:50Z"
     },
     "TASK-046": {
       "id": "TASK-046",

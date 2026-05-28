@@ -43,6 +43,10 @@ import {
 } from "../../../project/context.ts";
 import { formatError, cycleIndex, unique } from "../../../shared/utils.ts";
 import { maybeReadJsonSync } from "../../../project/local/filesystem.ts";
+import {
+	applyDecisionApprovalAction,
+	readDecisionApprovalModel,
+} from "./decision-approval.ts";
 import { padToWidth, truncatePlain } from "./text.ts";
 import { STATUS_DOCK_MODE_VALUES } from "../../../state/types.ts";
 import {
@@ -1312,77 +1316,24 @@ export function readDiffTablePanelData(project: WikiProject): {
 		status: string;
 		current: string;
 		desired: string;
+		rationale: string;
+		affectedLayers: string[];
 		risk: string;
 		source: string;
 		alternatives: string[];
 		readOnly: boolean;
+		buildEligible: boolean;
 	}>;
 	summary: string;
+	decisionBuildEligible: boolean;
+	fallbackInstruction: string;
 } {
-	const rows: Array<{
-		tableId: string;
-		rowId: string;
-		status: string;
-		current: string;
-		desired: string;
-		risk: string;
-		source: string;
-		alternatives: string[];
-		readOnly: boolean;
-	}> = [];
-	const runtimePath = resolve(
-		project.root,
-		".codewiki/runtime/diff-tables.json",
-	);
-	const runtime = maybeReadJsonSync<any>(runtimePath);
-	for (const table of Array.isArray(runtime?.tables) ? runtime.tables : []) {
-		if (String(table.status || "pending") !== "pending") continue;
-		for (const row of Array.isArray(table.rows) ? table.rows : [])
-			rows.push({
-				tableId: String(table.id || ""),
-				rowId: String(row.id || ""),
-				status: String(row.user_action || "pending"),
-				current: String(row.current_state || ""),
-				desired: String(row.desired_state || ""),
-				risk: String(row.risk || "medium"),
-				source: String(table.summary || table.id || "pending"),
-				alternatives: Array.isArray(row.alternatives)
-					? row.alternatives.map(String)
-					: [],
-				readOnly: false,
-			});
-	}
-	const decisionDir = resolve(project.root, ".codewiki/builds/decision");
-	if (rows.length === 0 && existsSync(decisionDir)) {
-		for (const file of readdirSync(decisionDir)
-			.filter((name) => name.endsWith(".json"))
-			.sort()
-			.reverse()
-			.slice(0, 3)) {
-			const build = maybeReadJsonSync<any>(resolve(decisionDir, file));
-			for (const row of Array.isArray(build?.diff_table)
-				? build.diff_table
-				: [])
-				rows.push({
-					tableId: file,
-					rowId: String(row.id || ""),
-					status: String(row.user_action || "pending"),
-					current: String(row.current_state || ""),
-					desired: String(row.desired_state || ""),
-					risk: String(row.risk || "medium"),
-					source: String(build?.summary || file),
-					alternatives: Array.isArray(row.alternatives)
-						? row.alternatives.map(String)
-						: [],
-					readOnly: true,
-				});
-		}
-	}
+	const model = readDecisionApprovalModel(project);
 	return {
-		rows,
-		summary: rows.some((row) => !row.readOnly)
-			? "Pending decision diff table"
-			: "Latest accepted decision diff rows (read-only)",
+		rows: model.rows,
+		summary: model.summary,
+		decisionBuildEligible: model.decisionBuildEligible,
+		fallbackInstruction: model.fallbackInstruction,
 	};
 }
 
@@ -2009,6 +1960,12 @@ export function renderStatusPanelLines(
 		body.push(
 			theme.fg(
 				"muted",
+				`decision build ${diff.decisionBuildEligible ? "eligible" : "blocked"}`,
+			),
+		);
+		body.push(
+			theme.fg(
+				"muted",
 				"a approve · x reject · d defer · p alternative · Enter details",
 			),
 		);
@@ -2019,7 +1976,7 @@ export function renderStatusPanelLines(
 			body.push(
 				highlightSelectable(
 					theme,
-					`${selected ? "▸" : " "} ${row.status} [${row.risk}/${mode}] ${truncatePlain(row.desired, Math.max(12, width - 24))}`,
+					`${selected ? "▸" : " "} ${row.status}${row.buildEligible ? " ✓" : ""} [${row.risk}/${mode}] ${truncatePlain(row.desired, Math.max(12, width - 24))}`,
 					selected,
 				),
 			);
@@ -2027,7 +1984,7 @@ export function renderStatusPanelLines(
 				theme.fg(
 					"muted",
 					truncatePlain(
-						`${row.tableId}/${row.rowId} · ${row.current}`,
+						`${row.tableId}/${row.rowId} · layers=${row.affectedLayers.join(",") || "—"} · ${row.current}`,
 						Math.max(12, width - 4),
 					),
 				),
@@ -2312,13 +2269,12 @@ export async function openStatusPanel(
 							await ui.input?.("Alternative desired state", row.desired)
 						)?.trim();
 						if (alternative)
-							updateRuntimeDiffRow(
-								panelState.project,
-								row.tableId,
-								row.rowId,
-								"edited",
+							await applyDecisionApprovalAction(panelState.project, {
+								tableId: row.tableId,
+								rowId: row.rowId,
+								action: "edit",
 								alternative,
-							);
+							});
 						renderWidget();
 					})().catch((error: unknown) =>
 						ui.notify?.(
@@ -2330,17 +2286,22 @@ export async function openStatusPanel(
 				}
 				const action =
 					data.toLowerCase() === "a"
-						? "approved"
+						? "approve"
 						: data.toLowerCase() === "x"
-							? "rejected"
-							: "deferred";
-				updateRuntimeDiffRow(
-					panelState.project,
-					row.tableId,
-					row.rowId,
-					action as any,
-				);
-				renderWidget();
+							? "reject"
+							: "defer";
+				void applyDecisionApprovalAction(panelState.project, {
+					tableId: row.tableId,
+					rowId: row.rowId,
+					action,
+				})
+					.then(() => renderWidget())
+					.catch((error: unknown) =>
+						ui.notify?.(
+							error instanceof Error ? error.message : String(error),
+							"error",
+						),
+					);
 				return { consume: true };
 			}
 			if (data.toLowerCase() === "r") {
@@ -2553,10 +2514,14 @@ export async function openStatusPanel(
 							lines: [
 								`Status: ${row.status}${row.readOnly ? " (read-only)" : ""}`,
 								`Risk: ${row.risk}`,
+								`Affected layers: ${row.affectedLayers.join(", ") || "—"}`,
+								`Build eligible: ${row.buildEligible ? "yes" : "no"}`,
 								"",
 								`Current: ${row.current}`,
 								"",
 								`Desired: ${row.desired}`,
+								"",
+								`Rationale: ${row.rationale || "—"}`,
 								...(row.alternatives.length
 									? ["", "Alternatives:", ...row.alternatives]
 									: []),
