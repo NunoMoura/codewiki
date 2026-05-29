@@ -31,6 +31,10 @@ import {
 import { nowIso, unique } from "../shared/utils.ts";
 import { normalizeWorktreeIsolation } from "../session/claims.ts";
 import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
+import {
+	evaluateProductionQualityProfile,
+	productionQualityProfileEnabled,
+} from "../quality/production-profile.ts";
 import type {
 	CodewikiValidationFailureClass,
 	CodewikiValidationReportInput,
@@ -1044,6 +1048,23 @@ export function buildValidationPreflight(
 		risk.approval_required && approvalEvidence.length === 0
 			? [`user_approval:${risk.tier}`]
 			: [];
+	const productionQuality = productionQualityProfileEnabled(
+		policyProfile,
+		source.build,
+	)
+		? evaluateProductionQualityProfile({
+				profile,
+				policyProfile,
+				build: source.build,
+				checks: input.checks,
+				auditRefs: input.audit_refs,
+				auditReports: input.audit_reports,
+				isolation,
+			})
+		: undefined;
+	const productionQualityGaps = (productionQuality?.missing ?? []).map(
+		(gap) => `production_quality:${gap}`,
+	);
 	const blockingGaps = unique([
 		...upstreamGaps,
 		...decisionMappingGaps,
@@ -1054,6 +1075,7 @@ export function buildValidationPreflight(
 		...isolationGaps,
 		...staleRefs,
 		...closePublicationBlockers,
+		...productionQualityGaps,
 	]);
 	const status =
 		blockingGaps.length > 0
@@ -1075,6 +1097,7 @@ export function buildValidationPreflight(
 		stale_refs: staleRefs,
 		close_publication_blockers: closePublicationBlockers,
 		user_approval: approvalMissing,
+		production_quality: productionQualityGaps,
 	};
 	const issues = [
 		...validationPreflightIssue(
@@ -1137,6 +1160,12 @@ export function buildValidationPreflight(
 			approvalMissing,
 			"Risk tier requires explicit user approval before lower-layer promotion.",
 		),
+		...validationPreflightIssue(
+			"production-quality",
+			"high",
+			productionQualityGaps,
+			"Production quality profile evidence, thresholds, content proof, or waivers are missing.",
+		),
 	];
 	const routingSignals = [
 		...upstreamGaps.map((gap) => `upstream:${gap}`),
@@ -1149,6 +1178,7 @@ export function buildValidationPreflight(
 		...staleRefs.map((gap) => `stale_refs:${gap}`),
 		...closePublicationBlockers.map((gap) => `close_publication:${gap}`),
 		...approvalMissing.map((gap) => `risk_approval:${gap}`),
+		...productionQualityGaps,
 	];
 	const routing = inferValidationRouting(input, routingSignals);
 	return {
@@ -1171,6 +1201,7 @@ export function buildValidationPreflight(
 			"content proof strategy",
 			"close/publication blockers",
 			"risk-tier approval policy",
+			"production quality profile",
 		],
 		missing,
 		issues,
@@ -1187,6 +1218,7 @@ export function buildValidationPreflight(
 					: "High-risk work must cite approval evidence before lower-layer promotion.",
 			},
 		},
+		production_quality: productionQuality,
 	};
 }
 
@@ -1247,6 +1279,8 @@ export async function writeValidationReport(
 		input.verdict === "pass" ? preflight.missing.decision_propagation : [];
 	const riskApprovalGaps =
 		input.verdict === "pass" ? preflight.missing.user_approval : [];
+	const productionQualityGaps =
+		input.verdict === "pass" ? preflight.missing.production_quality : [];
 	const publicationReadinessGaps =
 		input.verdict === "pass"
 			? preflight.missing.close_publication_blockers.filter(
@@ -1266,6 +1300,7 @@ export async function writeValidationReport(
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
 		...auditGaps.map((profileName) => `audit:${profileName}`),
 		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
+		...productionQualityGaps,
 		...publicationReadinessGaps.map((gap) => `publication_readiness:${gap}`),
 	]);
 	const policyBlocked = policyGaps.length > 0;
@@ -1400,6 +1435,15 @@ export async function writeValidationReport(
 					},
 				]
 			: [];
+	const productionQualityIssue =
+		productionQualityGaps.length > 0
+			? [
+					{
+						severity: "high",
+						summary: `Production quality profile blockers remain: ${productionQualityGaps.join(", ")}.`,
+					},
+				]
+			: [];
 	const publicationReadinessIssue =
 		publicationReadinessGaps.length > 0
 			? [
@@ -1447,6 +1491,7 @@ export async function writeValidationReport(
 			...decisionPropagationIssue,
 			...auditIssue,
 			...riskApprovalIssue,
+			...productionQualityIssue,
 			...publicationReadinessIssue,
 		],
 		source: (input.source ?? "").trim() || undefined,
@@ -1475,6 +1520,7 @@ export async function writeValidationReport(
 			...(decisionPropagationGaps.length > 0 ? ["decision_propagation"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
 			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
+			...(productionQualityGaps.length > 0 ? ["production_quality"] : []),
 			...(publicationReadinessGaps.length > 0 ? ["publication_readiness"] : []),
 		]),
 		blocking_questions: unique([
@@ -1537,6 +1583,11 @@ export async function writeValidationReport(
 						`Record explicit user approval for risk tier ${preflight.risk.tier} before lower-layer promotion.`,
 					]
 				: []),
+			...(productionQualityGaps.length > 0
+				? [
+						"Record required production quality evidence or explicit owner/rationale waivers before promotion.",
+					]
+				: []),
 			...(publicationReadinessGaps.length > 0
 				? [
 						"Record publication readiness evidence such as safe_to_push=true with passing secret and remote visibility checks before publication validation can pass.",
@@ -1561,6 +1612,7 @@ export async function writeValidationReport(
 			...auditReq,
 			gaps: auditGaps,
 		},
+		production_quality_requirement: preflight.production_quality,
 		preflight,
 		commit_readiness_requirement:
 			profile.trim().toLowerCase() === "implementation"

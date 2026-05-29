@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T01:18:22Z",
+  "profile": "implementation",
+  "task_id": "TASK-048",
+  "verdict": "pass",
+  "rationale": "TASK-048 implementation build satisfies implementation gateway: production quality profile requirements map to approved decision/planning evidence, opt-in validation integration blocks missing evidence/threshold/content-proof gaps and allows explicit owner/rationale waivers, targeted tests cover pass/block/waiver/package/readiness scenarios, file-structure ownership is current, and required checks pass. Existing graph-health warning is non-blocking and unrelated to the implementation.",
+  "checks": [
+    "source build read: .codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+    "source refs inspected: src/quality/production-profile.ts, src/quality/tool.ts, src/validation/report.ts, tests/smoke/quality-profile.test.mjs, .codewiki/kb/system/file-structure.md, .codewiki/kb/system/diagrams/file-structure-map.yaml",
+    "accepted decision read: .codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+    "accepted planning read: .codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+    "lsp_diagnostics changed files: no diagnostics",
+    "node --experimental-strip-types tests/smoke/quality-profile.test.mjs: pass",
+    "npm run typecheck: pass",
+    "npm run test:smoke: pass",
+    "npm run test:pack: pass",
+    "codewiki_audit profiles alignment,changed,task,file-structure for TASK-048: task pass; file-structure pass; warnings limited to generated state/view refresh and graph-health warning"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Implementation validated with dirty pre-commit working tree digest; task-close/publication still require clean immutable proof if policy is applied."
+    },
+    {
+      "severity": "low",
+      "summary": "Production quality enforcement is opt-in through policy_profile/build quality profile until follow-up tasks adopt it by default."
+    },
+    {
+      "severity": "low",
+      "summary": "src/validation/report.ts retains pre-existing review warnings outside the new production-quality integration path."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+  "policy_profile": "implementation",
+  "failure_class": "content_proof_missing",
+  "recommended_next_loop": "validation",
+  "stop_reason": "Collect or cite required validation/publication content proof before promotion.",
+  "routing": {
+    "failure_class": "content_proof_missing",
+    "recommended_next_loop": "validation",
+    "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "file-structure"
+  ],
+  "audit_refs": [
+    "alignment",
+    "changed",
+    "file-structure",
+    "task:TASK-048",
+    "accepted_semantics:.codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+    "accepted_planning:.codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles alignment,changed,task,file-structure for TASK-048: task pass; file-structure pass; warnings limited to generated state/view refresh and graph-health warning"
+  ],
+  "content_proof_refs": [
+    "5a635230e5abdbefb6a7755fdb2faf09bfba1d0cc9160c14c8e07b11352bcea8"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "file-structure"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:file-structure or profile:file-structure"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-048",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "5a635230e5abdbefb6a7755fdb2faf09bfba1d0cc9160c14c8e07b11352bcea8",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation started from implementation build, accepted decision/planning refs, task, and source refs; dirty pre-commit content proof captured by working_tree_digest.",
+    "role": "validator"
+  }
+}

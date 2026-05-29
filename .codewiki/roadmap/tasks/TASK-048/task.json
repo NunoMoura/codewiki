@@ -1,16 +1,19 @@
 {
   "id": "TASK-048",
   "title": "Define production quality profile",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "quality",
   "summary": "Create a policy-backed quality profile for implementation/task-close promotion using deterministic checks, review thresholds, content proof, and explicit waivers.",
   "spec_paths": [
-    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json"
+    ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
   ],
   "code_paths": [
     "src/quality/production-profile.ts",
     "src/quality/tool.ts",
+    "src/validation/report.ts",
     "tests/smoke/quality-profile.test.mjs"
   ],
   "research_ids": [],
@@ -45,5 +48,5 @@
     "closure": "Task closes when quality profile tests prove required evidence and waivers are enforced."
   },
   "created": "2026-05-28",
-  "updated": "2026-05-28"
+  "updated": "2026-05-29T01:18:34Z"
 }
