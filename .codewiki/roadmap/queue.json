@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-05-29T10:56:18Z",
+  "updated": "2026-05-29T11:01:04Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-051",
     "TASK-052",
     "TASK-053",
     "TASK-054",
@@ -539,74 +538,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
-    },
-    "TASK-051": {
-      "id": "TASK-051",
-      "title": "Add horizontal alignment checks and audit facade",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "testing",
-      "summary": "Add first-class horizontal alignment checks under flat src/checks/** modules, with src/audit as the facade/tool surface and gateway evidence support.",
-      "spec_paths": [
-        ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
-        ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
-        ".codewiki/kb/system/audits.md",
-        ".codewiki/kb/system/validation-gateway.md",
-        ".codewiki/kb/system/graph.md",
-        ".codewiki/kb/system/knowledge.md"
-      ],
-      "code_paths": [
-        "src/checks/horizontal-alignment.ts",
-        "src/checks/tool.ts",
-        "src/checks/types.ts",
-        "src/audit/tool.ts",
-        "src/audit/types.ts",
-        "src/adapters/pi/commands/audit.ts",
-        "src/adapters/pi/tools/audit.ts",
-        "tests/smoke/horizontal-alignment.test.mjs",
-        "tests/smoke/audit.test.mjs",
-        "tests/tasks/TASK-021/audit-source-root.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "horizontal-alignment",
-        "checks",
-        "audit-facade",
-        "anti-drift",
-        "gateway"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Gateway and audit can consume deterministic horizontal alignment evidence from flat src/checks/** modules while audit remains a facade/tool surface.",
-        "acceptance": [
-          "Checks layer exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
-          "Checks layer exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
-          "Checks layer exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
-          "Audit facade exposes the horizontal-alignment profile without owning low-level check implementation.",
-          "Gateway preflight/report can require and cite horizontal-alignment check evidence.",
-          "Fixtures cover pass/fail/warning cases."
-        ],
-        "non_goals": [
-          "Do not attempt unconstrained LLM semantic contradiction detection.",
-          "Do not block on low-confidence prose similarity alone.",
-          "Do not create src/checks/profiles/**.",
-          "Do not leave horizontal alignment implementation owned by src/audit/**."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "npm run test:features",
-          "targeted horizontal-alignment check tests",
-          "source search proves horizontal-alignment implementation lives under src/checks/** and audit is a facade."
-        ]
-      },
-      "delta": {
-        "desired": "Horizontal alignment lives under flat src/checks/** and is exposed by audit/gateway surfaces.",
-        "current": "Horizontal alignment implementation was initially staged under src/audit/**, but approved architecture says checks own deterministic evidence and audit is a facade.",
-        "closure": "Close when checks layer, audit facade, docs, tests, and gateway evidence support align and validation passes."
-      },
-      "created": "2026-05-29",
-      "updated": "2026-05-29T10:56:18Z"
     },
     "TASK-052": {
       "id": "TASK-052",
