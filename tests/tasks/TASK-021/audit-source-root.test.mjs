@@ -37,6 +37,7 @@ assert.deepEqual(
 	[
 		"alignment",
 		"horizontal-alignment",
+		"source-contract",
 		"file-structure",
 		"stale-reference",
 		"package",

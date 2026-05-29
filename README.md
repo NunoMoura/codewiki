@@ -20,9 +20,10 @@ That is the right shape for this package:
 
 Public command surface is intentionally small:
 
-- `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--package|--changed|--task TASK-###|--layer product,system|--json]`
+- `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--source-contract|--package|--changed|--task TASK-###|--layer product,system|--json]`
   - runs source-owned CodeWiki audit profiles and prints human-readable evidence
 - `/wiki-bootstrap [project name] [--force]`
+- `/wiki-status [repo-path]`
 - `Alt+W`
   - toggles compact live Codewiki status panel
 - `/wiki-ui [repo-path] [port]`
@@ -41,6 +42,8 @@ Public command surface is intentionally small:
 - `codewiki_artifact_status`
 - `codewiki_audit`
 - `codewiki_build`
+- `codewiki_diff_table`
+- `codewiki_gc`
 - `codewiki_validation`
 - `codewiki_roadmap`
 - `codewiki_session`
@@ -354,7 +357,7 @@ The always-on surface is optional. When enabled it uses Pi's status area for a o
 
 `/wiki-status` is the canonical compact inspection command. It opens the live status surface, shows roadmap and drift state, and is the right default when the next action is not yet obvious.
 
-`/audit` is the deterministic evidence command. It runs the same source-owned audit engine used by gateways and tools; omit flags for the full audit, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--package`, `--changed`, `--task TASK-###`, and `--layer product,system`.
+`/audit` is the deterministic evidence command. It runs the same source-owned audit engine used by gateways and tools; omit flags for the full audit, or select scoped profiles such as `--file-structure`, `--security`, `--alignment`, `--horizontal-alignment`, `--source-contract`, `--package`, `--changed`, `--task TASK-###`, and `--layer product,system`.
 
 `/wiki-config`, `/wiki-status`, `/wiki-ui`, `/wiki-resume`, and `/audit` all accept an optional repo path when relevant. If Pi is running outside a repo with `.codewiki/`, pass the target repo path explicitly. In UI mode, commands can also offer a repo picker when no repo-local wiki is found from current cwd.
 

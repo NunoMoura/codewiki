@@ -15,6 +15,7 @@ import type {
 import type { WikiProject } from "../project/types.ts";
 import { AUDIT_PROFILE_VALUES } from "./types.ts";
 import { auditHorizontalAlignment } from "../checks/horizontal-alignment.ts";
+import { auditSourceContract } from "../checks/source-contract.ts";
 import { formatError, nowIso, unique } from "../shared/utils.ts";
 import { pathExists } from "../project/local/filesystem.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
@@ -28,6 +29,7 @@ const execFileAsync = promisify(execFile);
 const FULL_AUDIT_PROFILES: AuditProfile[] = [
 	"alignment",
 	"horizontal-alignment",
+	"source-contract",
 	"file-structure",
 	"stale-reference",
 	"package",
@@ -1642,6 +1644,8 @@ async function runProfile(
 			return auditAlignment(project, input);
 		case "horizontal-alignment":
 			return auditHorizontalAlignment(project, input);
+		case "source-contract":
+			return auditSourceContract(project, input);
 		case "file-structure":
 			return auditFileStructure(project, input);
 		case "stale-reference":

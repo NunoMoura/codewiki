@@ -88,6 +88,11 @@ nodes:
     group: app_layer
     kind: workflow
     source: .codewiki/kb/system/validation-gateway.md
+  - id: checks
+    label: Deterministic checks
+    group: app_layer
+    kind: application
+    source: .codewiki/kb/system/audits.md
   - id: knowledge
     label: Knowledge
     group: truth_layer
@@ -171,6 +176,15 @@ edges:
   - from: api
     to: validation_gateway
     label: records/reads validation
+  - from: api
+    to: checks
+    label: exposes deterministic audit evidence
+  - from: validation_gateway
+    to: checks
+    label: requires audit/check evidence
+  - from: checks
+    to: code_tests
+    label: inspects source/API contracts
   - from: api
     to: knowledge
     label: reads/writes intended truth

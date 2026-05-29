@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-29T11:27:43Z",
+  "updated": "2026-05-29T19:15:00Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -541,7 +541,7 @@
     "TASK-052": {
       "id": "TASK-052",
       "title": "Add source/API contract drift checks",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "testing",
       "summary": "Add source/API contract drift checks under the checks layer so code↔code and KB↔code drift can be detected before gateway review relies on manual inspection.",
@@ -594,7 +594,7 @@
         "closure": "Close when contract checks feed audit/gateway/test evidence and validation passes."
       },
       "created": "2026-05-29",
-      "updated": "2026-05-29T10:34:15Z"
+      "updated": "2026-05-29T19:15:00Z"
     },
     "TASK-053": {
       "id": "TASK-053",

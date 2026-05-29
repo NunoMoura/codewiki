@@ -103,6 +103,7 @@ async function main() {
 		for (const profile of [
 			"alignment",
 			"horizontal-alignment",
+			"source-contract",
 			"file-structure",
 			"stale-reference",
 			"package",
@@ -123,7 +124,12 @@ async function main() {
 			"audit report should expose evidence refs",
 		);
 
-		for (const profile of ["file-structure", "security", "package"]) {
+		for (const profile of [
+			"file-structure",
+			"source-contract",
+			"security",
+			"package",
+		]) {
 			const result = await auditTool.definition.execute(
 				`audit-${profile}`,
 				{

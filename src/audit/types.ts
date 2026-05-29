@@ -1,6 +1,7 @@
 export const AUDIT_PROFILE_VALUES = [
 	"alignment",
 	"horizontal-alignment",
+	"source-contract",
 	"file-structure",
 	"stale-reference",
 	"package",

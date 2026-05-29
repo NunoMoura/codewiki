@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T10:34:15Z",
+  "generated_at": "2026-05-29T19:15:00Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-052/context.json",
   "task": {
     "id": "TASK-052",
     "title": "Add source/API contract drift checks",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "testing",
     "change_type": "system",

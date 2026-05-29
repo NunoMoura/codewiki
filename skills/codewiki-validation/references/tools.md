@@ -18,9 +18,9 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
    - Run required audit profiles or cite existing audit refs before a pass verdict when policy requires them.
    - Common profile sets:
      - decision/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
-     - implementation: `alignment`, `changed`, plus `horizontal-alignment` when KB/code/source coherence is the risk surface;
+     - implementation: `alignment`, `changed`, plus `horizontal-alignment` when KB/code/source coherence is the risk surface and `source-contract` when API/tool/package surfaces changed;
      - task-close: `alignment`, `changed`, `task`, `generated-parity`;
-     - graph/drift: `graph-audit`, `drift-audit`, `horizontal-alignment`, `generated-parity` or configured equivalents;
+     - graph/drift: `graph-audit`, `drift-audit`, `horizontal-alignment`, `source-contract`, `generated-parity` or configured equivalents;
      - publication/release: package/security/publication policy profiles when available.
 
 4. `codewiki_validation`
