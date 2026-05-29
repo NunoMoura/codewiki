@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29",
+  "generated_at": "2026-05-29T21:02:39Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-055/context.json",
   "task": {
     "id": "TASK-055",
     "title": "Build parallel worktree dispatcher",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "agent-workflow",
     "change_type": "system",

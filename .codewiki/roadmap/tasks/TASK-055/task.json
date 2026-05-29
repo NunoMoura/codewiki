@@ -1,7 +1,7 @@
 {
   "id": "TASK-055",
   "title": "Build parallel worktree dispatcher",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "agent-workflow",
   "summary": "Build a dispatcher that selects independent roadmap tasks and prepares isolated worktree assignments within budget and artifact-scope constraints.",
@@ -49,5 +49,5 @@
     "closure": "Close when dispatcher logic and tests pass validation."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29"
+  "updated": "2026-05-29T21:02:39Z"
 }

@@ -24,9 +24,11 @@ code_paths_mode: explicit_override
 
 Role worktree isolation prevents parallel CodeWiki agents from blocking each other through a shared dirty root worktree. It is a coordination and publication contract layered on top of roadmap tasks, artifact status, validation, and Git proof.
 
-The repository root remains the coordination and publisher surface unless an explicit solo-mode override is safe. Builder, validator, publisher, and cleanup roles should use per-task role worktrees or branch refs for parallel write work. A parallel scheduler may allocate one worker per non-conflicting sprint or task only after comparing declared write scopes, acquiring artifact claims, and assigning isolated role refs.
+The repository root remains the coordination and publisher surface unless an explicit solo-mode override is safe. Builder, validator, publisher, and cleanup roles should use per-task role worktrees or branch refs for parallel write work. A parallel dispatcher may allocate one worker per non-conflicting sprint or task only after comparing declared write scopes, preparing artifact claim intents, and assigning isolated role refs. Dispatcher output is deterministic evidence: selected task ids, blocked task ids, pause reasons, source-backed resume packets, role worktree plans, and claim scopes.
 
 ## Worktree factory
+
+The worktree dispatcher selects eligible roadmap tasks by priority and roadmap order, then excludes tasks whose code, spec, roadmap, build, validation, graph, or source scopes overlap already-selected tasks or active artifact holders. It must respect configured worker/session budgets and return wait-state evidence rather than forcing claims through conflicts.
 
 The worktree factory prepares, records, heartbeats, verifies, and cleans role worktrees. Each record should include:
 
@@ -58,7 +60,7 @@ Wait/wake records must name the real blocker and the next safe action. Good bloc
 
 Wake notifications are durable session-queue records, not direct inter-agent chat. Release and expiry events enqueue pending wake notifications with waiter id, task/build refs, source refs, and next-action intent. Heartbeats extend holder or waiter leases; stale holders expire with queue evidence and can wake blocked waiters. Wake delivery marks notifications delivered so repeat watchers do not spam the same session.
 
-Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `codewiki_resume_context`, and re-mark scopes before writing.
+Worker handoff packets are source-backed resume packets, not shared chat. Each dispatched worker receives task/context refs, source refs, follow-up intent, role worktree plan, and artifact claim scope. Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `codewiki_resume_context`, and re-mark scopes before writing.
 
 ## Cleanup sequencing
 
