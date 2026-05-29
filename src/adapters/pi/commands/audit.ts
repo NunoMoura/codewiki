@@ -86,13 +86,14 @@ export function parseAuditCommandInput(args: string): AuditCommandInput {
 export function registerAuditCommand(pi: ExtensionAPI): void {
 	pi.registerCommand("audit", {
 		description:
-			"Run CodeWiki audit profiles. Usage: /audit [--file-structure|--security|--alignment|--package|--changed|--task TASK-###|--layer product,system|--json] [repo-path]",
+			"Run CodeWiki audit profiles. Usage: /audit [--file-structure|--security|--alignment|--horizontal-alignment|--package|--changed|--task TASK-###|--layer product,system|--json] [repo-path]",
 		getArgumentCompletions: (prefix) => {
 			const options = [
 				"--full",
 				"--file-structure",
 				"--security",
 				"--alignment",
+				"--horizontal-alignment",
 				"--package",
 				"--changed",
 				"--task",

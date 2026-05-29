@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-29T07:24:43Z",
+  "updated": "2026-05-29T10:56:18Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -10,7 +10,10 @@
     "TASK-053",
     "TASK-054",
     "TASK-055",
-    "TASK-056"
+    "TASK-056",
+    "TASK-057",
+    "TASK-058",
+    "TASK-059"
   ],
   "tasks": {
     "TASK-012": {
@@ -539,76 +542,89 @@
     },
     "TASK-051": {
       "id": "TASK-051",
-      "title": "Add horizontal alignment audit profiles",
-      "status": "todo",
+      "title": "Add horizontal alignment checks and audit facade",
+      "status": "in_progress",
       "priority": "high",
       "kind": "testing",
-      "summary": "Add first-class horizontal alignment audits for KB↔KB, code↔code, and KB↔code consistency, with validation-gateway evidence support.",
+      "summary": "Add first-class horizontal alignment checks under flat src/checks/** modules, with src/audit as the facade/tool surface and gateway evidence support.",
       "spec_paths": [
+        ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+        ".codewiki/kb/system/audits.md",
         ".codewiki/kb/system/validation-gateway.md",
         ".codewiki/kb/system/graph.md",
         ".codewiki/kb/system/knowledge.md"
       ],
       "code_paths": [
-        "src/audit/horizontal-alignment.ts",
-        "src/audit/index.ts",
-        "src/state/graph.ts",
-        "src/knowledge/parser.ts",
+        "src/checks/horizontal-alignment.ts",
+        "src/checks/tool.ts",
+        "src/checks/types.ts",
+        "src/audit/tool.ts",
+        "src/audit/types.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
         "tests/smoke/horizontal-alignment.test.mjs",
-        "tests/fixtures/horizontal-alignment/**"
+        "tests/smoke/audit.test.mjs",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs"
       ],
       "research_ids": [],
       "labels": [
         "horizontal-alignment",
-        "audit",
+        "checks",
+        "audit-facade",
         "anti-drift",
-        "validation"
+        "gateway"
       ],
       "change_type": "system",
       "goal": {
-        "outcome": "Validation can require deterministic horizontal alignment evidence across same-layer docs, same-layer code, and KB-code claims.",
+        "outcome": "Gateway and audit can consume deterministic horizontal alignment evidence from flat src/checks/** modules while audit remains a facade/tool surface.",
         "acceptance": [
-          "Audit exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
-          "Audit exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
-          "Audit exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
-          "Validation preflight/report can require and cite horizontal audit profiles.",
+          "Checks layer exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+          "Checks layer exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+          "Checks layer exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+          "Audit facade exposes the horizontal-alignment profile without owning low-level check implementation.",
+          "Gateway preflight/report can require and cite horizontal-alignment check evidence.",
           "Fixtures cover pass/fail/warning cases."
         ],
         "non_goals": [
           "Do not attempt unconstrained LLM semantic contradiction detection.",
           "Do not block on low-confidence prose similarity alone.",
-          "Do not replace existing alignment/generated-parity audits."
+          "Do not create src/checks/profiles/**.",
+          "Do not leave horizontal alignment implementation owned by src/audit/**."
         ],
         "verification": [
           "npm run typecheck",
           "npm run test:smoke",
           "npm run test:features",
-          "targeted horizontal-alignment audit tests"
+          "targeted horizontal-alignment check tests",
+          "source search proves horizontal-alignment implementation lives under src/checks/** and audit is a facade."
         ]
       },
       "delta": {
-        "desired": "Horizontal alignment is an explicit audit/gateway capability with deterministic evidence.",
-        "current": "Horizontal alignment relies on graph health, tests, file-structure audits, and validator judgment.",
-        "closure": "Close when horizontal audit profiles and validation evidence paths are implemented and tested."
+        "desired": "Horizontal alignment lives under flat src/checks/** and is exposed by audit/gateway surfaces.",
+        "current": "Horizontal alignment implementation was initially staged under src/audit/**, but approved architecture says checks own deterministic evidence and audit is a facade.",
+        "closure": "Close when checks layer, audit facade, docs, tests, and gateway evidence support align and validation passes."
       },
       "created": "2026-05-29",
-      "updated": "2026-05-29T06:36:39Z"
+      "updated": "2026-05-29T10:56:18Z"
     },
     "TASK-052": {
       "id": "TASK-052",
-      "title": "Add source/API contract drift snapshots",
+      "title": "Add source/API contract drift checks",
       "status": "todo",
       "priority": "medium",
       "kind": "testing",
-      "summary": "Add source/API contract snapshots so code↔code and KB↔code drift can be detected before validation relies on manual review.",
+      "summary": "Add source/API contract drift checks under the checks layer so code↔code and KB↔code drift can be detected before gateway review relies on manual inspection.",
       "spec_paths": [
+        ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
         ".codewiki/kb/system/api.md",
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/component-map.yaml"
       ],
       "code_paths": [
-        "src/audit/source-contract.ts",
-        "src/audit/source-contract-snapshot.ts",
+        "src/checks/source-contract.ts",
+        "src/checks/source-contract-snapshot.ts",
+        "src/checks/tool.ts",
         "src/api/index.ts",
         "tests/smoke/source-contract.test.mjs",
         "tests/fixtures/source-contract/**"
@@ -616,37 +632,39 @@
       "research_ids": [],
       "labels": [
         "api-contract",
+        "checks",
         "snapshot",
         "drift",
         "quality"
       ],
       "change_type": "system",
       "goal": {
-        "outcome": "CodeWiki has deterministic source/API contract evidence that horizontal audits can consume for public facades, tool registrations, and documented package surfaces.",
+        "outcome": "CodeWiki has deterministic source/API contract check evidence that horizontal/gateway workflows can consume for public facades, tool registrations, and documented package surfaces.",
         "acceptance": [
           "Contract snapshot captures tool names, command names, public API facade exports, and package entry surfaces relevant to CodeWiki behavior.",
-          "Audit compares current source contract to documented/expected contract and produces actionable diffs.",
-          "Snapshot tests cover codewiki_roadmap naming and prevent stale internal tool names from silently reappearing.",
+          "Checks compare current source contract to documented/expected contract and produce actionable diffs.",
+          "Snapshot tests cover wiki_* naming and prevent stale internal tool names from silently reappearing.",
           "Contract generation is deterministic and not canonical truth unless explicitly accepted."
         ],
         "non_goals": [
-          "Do not publish or version a public API package contract beyond local audit evidence.",
-          "Do not snapshot implementation-private internals without documented ownership reason."
+          "Do not publish or version a public API package contract beyond local check evidence.",
+          "Do not snapshot implementation-private internals without documented ownership reason.",
+          "Do not create src/checks/profiles/**."
         ],
         "verification": [
           "npm run typecheck",
           "npm run test:smoke",
           "npm run test:features",
-          "targeted contract snapshot tests"
+          "targeted source-contract check tests"
         ]
       },
       "delta": {
-        "desired": "Source/API contract evidence provides deterministic drift checks for horizontal audits.",
+        "desired": "Source/API contract evidence lives under flat checks layer and supports horizontal/gateway drift checks.",
         "current": "Code↔code consistency is mostly enforced by typecheck/tests and package smoke tests.",
-        "closure": "Close when contract snapshots feed audit/test evidence and validation passes."
+        "closure": "Close when contract checks feed audit/gateway/test evidence and validation passes."
       },
       "created": "2026-05-29",
-      "updated": "2026-05-29"
+      "updated": "2026-05-29T10:34:15Z"
     },
     "TASK-053": {
       "id": "TASK-053",
@@ -864,6 +882,178 @@
         "desired": "A merge/publisher agent serializes validated parallel outputs into safe commits.",
         "current": "Publisher queue policy and role worktree proof exist, but merge orchestration for parallel worker diffs is not complete.",
         "closure": "Close when merge queue behavior is implemented, tested, and task-close/publication proof gates pass."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
+    },
+    "TASK-057": {
+      "id": "TASK-057",
+      "title": "Move gate requirements from quality to policy",
+      "status": "todo",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Create src/policy/** as the owner of gate requirements, risk tiers, approvals, proof requirements, and production-readiness policy; remove quality as policy owner.",
+      "spec_paths": [
+        ".codewiki/kb/system/compilers.md"
+      ],
+      "code_paths": [
+        "src/policy/gate-policy.ts",
+        "src/policy/risk.ts",
+        "src/policy/production-profile.ts",
+        "src/quality/production-profile.ts",
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "policy-layer",
+        "quality-rename",
+        "risk-policy"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Policy owns rules and requirements while checks produce evidence and gateway emits verdicts.",
+        "acceptance": [
+          "src/policy/** owns gate requirements, risk tiers, proof requirements, approvals, and production profile policy.",
+          "src/quality/** is removed or reduced to historical compatibility-free absence; live imports use policy naming.",
+          "Gateway/report/build code consumes policy functions instead of local duplicate required-audit/risk constants where this task touches them.",
+          "Tests enforce policy dependency direction: policy does not import gateway or checks executors."
+        ],
+        "non_goals": [
+          "Do not run checks from policy.",
+          "Do not emit pass/fail/block verdicts from policy.",
+          "Do not migrate gateway implementation in this task."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted policy-gate tests",
+          "search proves live quality policy ownership names are removed."
+        ]
+      },
+      "delta": {
+        "desired": "Policy is the source owner for rules; checks produce facts and gateway emits verdicts.",
+        "current": "Quality and build shared helpers own production/gate policy concepts in a way that overlaps validation/gateway.",
+        "closure": "Close when policy module, imports, docs, and tests align and validation passes."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
+    },
+    "TASK-058": {
+      "id": "TASK-058",
+      "title": "Move validation engine into gateway layer",
+      "status": "in_progress",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Make gateway the pass/fail/block decision layer by moving/renaming validation report, preflight, tool, and types under src/gateway/** and folding current gateway transaction/catalog plumbing into that layer.",
+      "spec_paths": [
+        ".codewiki/kb/system/validation-gateway.md"
+      ],
+      "code_paths": [
+        "src/gateway/report.ts",
+        "src/gateway/tool.ts",
+        "src/gateway/preflight.ts",
+        "src/gateway/types.ts",
+        "src/gateway/transaction.ts",
+        "src/validation/report.ts",
+        "src/validation/tool.ts",
+        "src/validation/types.ts",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/builds.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "gateway-layer",
+        "validation-rename",
+        "pass-fail-block"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Gateway is the source owner for lifecycle pass/fail/block decisions; validation is no longer a separate generic implementation layer.",
+        "acceptance": [
+          "src/gateway/** owns report/preflight/tool/types/transaction gate semantics.",
+          "src/validation/** live source is removed or no longer owns implementation behavior.",
+          "Gateway docs/skills/tests use gateway naming for pass/fail/block reports and preflight.",
+          "Existing validation behavior is preserved under gateway names and all gateway/preflight/build tests pass."
+        ],
+        "non_goals": [
+          "Do not standardize every internal agent tool name in this task beyond gateway-specific names.",
+          "Do not change policy/check semantics beyond imports needed for gateway migration.",
+          "Do not push or publish remotely."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted gateway preflight/build validation tests",
+          "search proves live src/validation implementation ownership is removed."
+        ]
+      },
+      "delta": {
+        "desired": "src/gateway/** owns the gate engine and validation is no longer a generic source layer.",
+        "current": "src/validation/** owns pass/fail/block reports while src/gateway/** is separate transaction/catalog plumbing.",
+        "closure": "Close when gateway implementation, docs, tests, and validation behavior converge under src/gateway/**."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29T10:52:47Z"
+    },
+    "TASK-059": {
+      "id": "TASK-059",
+      "title": "Standardize internal agent tools to wiki namespace",
+      "status": "todo",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Rename live internal agent tools from codewiki_* to wiki_* (wiki_state, wiki_resume_context, wiki_roadmap, wiki_gateway, wiki_audit, etc.) with no compatibility aliases.",
+      "spec_paths": [
+        ".codewiki/kb/system/api.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/api/tools.ts",
+        "src/adapters/pi/tools/state.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/tools/session.ts",
+        "src/adapters/pi/tools/resume-context.ts",
+        "src/adapters/pi/tools/task.ts",
+        "README.md",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki/references/tool-catalog.md",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "wiki-namespace",
+        "tool-rename",
+        "breaking-change",
+        "agent-api"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "All live internal agent tool names use the wiki_* namespace and no codewiki_* compatibility aliases remain.",
+        "acceptance": [
+          "Pi tool registration exposes wiki_* names for all internal CodeWiki tools.",
+          "No live codewiki_* tool names remain in registration, schemas, skills, README, or tests except historical build/validation/archive artifacts.",
+          "Tool guidance aligns internal wiki_* names with user-facing /wiki-* command naming.",
+          "Package smoke tests assert old codewiki_* names are absent and wiki_* names are present."
+        ],
+        "non_goals": [
+          "Do not preserve compatibility aliases.",
+          "Do not change user-facing /wiki-* command names except docs needed for clarity.",
+          "Do not migrate source layer names unrelated to tool registration."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "search proves live codewiki_* tool names are absent."
+        ]
+      },
+      "delta": {
+        "desired": "Internal agent tools use wiki_* names with no compatibility aliases.",
+        "current": "Internal agent tools use codewiki_* names; user-facing commands use /wiki-* names.",
+        "closure": "Close when live registration/docs/tests use wiki_* and validation passes."
       },
       "created": "2026-05-29",
       "updated": "2026-05-29"
@@ -1318,22 +1508,21 @@
     },
     "SPRINT-012": {
       "id": "SPRINT-012",
-      "title": "Horizontal alignment and contract gates",
+      "title": "Horizontal alignment and contract checks",
       "status": "planned",
-      "outcome": "Turn horizontal KB/code consistency into deterministic audit and validation evidence for production anti-drift gates.",
+      "outcome": "Turn horizontal KB/code consistency into deterministic checks and gateway evidence using the flat checks layer and audit facade.",
       "task_ids": [
         "TASK-051",
         "TASK-052"
       ],
       "scope": {
         "knowledge": [
-          ".codewiki/kb/system/validation-gateway.md",
-          ".codewiki/kb/system/api.md"
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/validation-gateway.md"
         ],
         "code": [
-          "src/audit/**",
-          "src/state/graph.ts",
-          "src/api/**"
+          "src/checks/**",
+          "src/audit/**"
         ]
       },
       "budget": {
@@ -1342,12 +1531,12 @@
         "risk": "high"
       },
       "gates": [
-        "planning validation pass",
+        "decision validation pass",
         "implementation validation pass per task",
         "task-close validation pass per task"
       ],
       "created": "2026-05-29T06:33:51Z",
-      "updated": "2026-05-29T06:33:51Z"
+      "updated": "2026-05-29T10:36:25Z"
     },
     "SPRINT-013": {
       "id": "SPRINT-013",
@@ -1415,6 +1604,44 @@
       ],
       "created": "2026-05-29T06:34:07Z",
       "updated": "2026-05-29T06:34:07Z"
+    },
+    "SPRINT-015": {
+      "id": "SPRINT-015",
+      "title": "Policy, gateway, and wiki namespace convergence",
+      "status": "planned",
+      "outcome": "Clarify CodeWiki architecture names by moving rules to policy, gate decisions to gateway, deterministic checks to checks, audit to facade, and internal agent tools to wiki_* names.",
+      "task_ids": [
+        "TASK-057",
+        "TASK-058",
+        "TASK-059"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/audits.md"
+        ],
+        "code": [
+          "src/policy/**",
+          "src/gateway/**",
+          "src/validation/**",
+          "src/adapters/pi/**",
+          "skills/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 6,
+        "maxSessions": 2,
+        "risk": "high"
+      },
+      "gates": [
+        "decision validation pass",
+        "implementation validation pass per task",
+        "task-close validation pass per task",
+        "reload after tool namespace commit"
+      ],
+      "created": "2026-05-29T10:36:36Z",
+      "updated": "2026-05-29T10:36:36Z"
     }
   }
 }

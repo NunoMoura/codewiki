@@ -71,6 +71,7 @@ nodes:
       - src/audit/**
       - src/build/**
       - src/change/**
+      - src/checks/**
       - src/gc/**
       - src/gateway/**
       - src/knowledge/**
@@ -114,7 +115,7 @@ nodes:
       - tests/tasks/TASK-015/agency-source-root.test.mjs
       - tests/smoke/package-smoke.test.mjs
   - id: audit_concept_root_boundary
-    label: Audit concept-root migration
+    label: Audit facade concept-root migration
     group: source_target
     kind: component
     source: .codewiki/kb/system/file-structure.md
@@ -130,6 +131,17 @@ nodes:
     removed_paths:
       - src/domain/audit/types.ts
       - src/application/tools/audit.ts
+  - id: checks_concept_root_boundary
+    label: Deterministic checks concept-root boundary
+    group: source_target
+    kind: component
+    source: .codewiki/kb/system/audits.md
+    requires_doc: true
+    status: implementation_in_progress_by_task_051
+    task_id: TASK-051
+    paths:
+      - src/checks/**
+      - tests/smoke/horizontal-alignment.test.mjs
   - id: build_validation_gateway_wave
     label: Build, validation, and gateway concept-root wave
     group: source_target

@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T10:37:31Z",
+  "profile": "planning",
+  "task_id": "TASK-051",
+  "verdict": "pass",
+  "rationale": "Planning maps approved option B architecture rows to executable tasks: TASK-051/TASK-052 for checks/audit facade, TASK-057 for policy rename, TASK-058 for gateway consolidation, and TASK-059 for wiki_* tool namespace. SPRINT-012 and SPRINT-015 group related executable work without creating umbrella tasks.",
+  "checks": [
+    "Decision pass .codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+    "TASK-051 patched to checks-layer horizontal alignment boundary",
+    "TASK-052 patched to checks-layer source/API contract boundary",
+    "TASK-057/TASK-058/TASK-059 created for policy/gateway/wiki namespace migrations",
+    "Planning build records decision_row_resolutions and downstream_question_resolutions"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Current working tree still contains pre-replan TASK-051 implementation under src/audit/horizontal-alignment.ts; TASK-051 implementation must refactor it under src/checks before pass."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+  "policy_profile": "planning",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:changed",
+    "approval:user:approve-B-2026-05-29"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-051",
+    "source_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+    "validation_report": ".codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json",
+      "Updated TASK-051 to implement horizontal alignment under flat src/checks/** with src/audit as facade, superseding the initially staged src/audit-owned implementation boundary.",
+      "Updated TASK-052 to implement source/API contract checks under flat src/checks/**.",
+      "Created TASK-057 to rename quality/policy ownership and centralize gate requirements under src/policy/**.",
+      "Created TASK-058 to move/rename validation gate engine into src/gateway/**.",
+      "Created TASK-059 to standardize live internal agent tools to wiki_* namespace without codewiki_* aliases.",
+      "Updated SPRINT-012 for horizontal/contract checks and created SPRINT-015 for policy/gateway/wiki namespace convergence.",
+      "TASK-051",
+      "TASK-052",
+      "TASK-057",
+      "TASK-058",
+      "TASK-059",
+      "src/checks/**",
+      "src/audit/**",
+      "src/policy/**",
+      "src/gateway/**",
+      "src/validation/**",
+      "src/adapters/pi/**",
+      "skills/**",
+      "README.md",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/policy-gate.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/package-smoke.test.mjs"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-051",
+    "source_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+    "validation_report": ".codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json",
+    "commit_title": "checkpoint(codewiki): TASK-051 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-051",
+      "CodeWiki-Build: .codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json",
+      "CodeWiki-Checks: Decision pass .codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json; TASK-051 patched to checks-layer horizontal alignment boundary; TASK-052 patched to checks-layer source/API contract boundary; TASK-057/TASK-058/TASK-059 created for policy/gateway/wiki namespace migrations; Planning build records decision_row_resolutions and downstream_question_resolutions"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/checks/**",
+      "src/audit/**",
+      "src/policy/**",
+      "src/gateway/**",
+      "src/validation/**",
+      "src/adapters/pi/**",
+      "skills/**"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed",
+      "packaged CodeWiki skill prompt changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "task_id": "TASK-051",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production quality profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_quality": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user:approve-B-2026-05-29"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

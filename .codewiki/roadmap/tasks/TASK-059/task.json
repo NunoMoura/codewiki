@@ -1,0 +1,61 @@
+{
+  "id": "TASK-059",
+  "title": "Standardize internal agent tools to wiki namespace",
+  "status": "todo",
+  "priority": "high",
+  "kind": "migration",
+  "summary": "Rename live internal agent tools from codewiki_* to wiki_* (wiki_state, wiki_resume_context, wiki_roadmap, wiki_gateway, wiki_audit, etc.) with no compatibility aliases.",
+  "spec_paths": [
+    ".codewiki/kb/system/api.md"
+  ],
+  "code_paths": [
+    "src/adapters/pi/index.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/api/tools.ts",
+    "src/adapters/pi/tools/state.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/tools/session.ts",
+    "src/adapters/pi/tools/resume-context.ts",
+    "src/adapters/pi/tools/task.ts",
+    "README.md",
+    "skills/codewiki/SKILL.md",
+    "skills/codewiki/references/tool-catalog.md",
+    "tests/smoke/package-smoke.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "wiki-namespace",
+    "tool-rename",
+    "breaking-change",
+    "agent-api"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "All live internal agent tool names use the wiki_* namespace and no codewiki_* compatibility aliases remain.",
+    "acceptance": [
+      "Pi tool registration exposes wiki_* names for all internal CodeWiki tools.",
+      "No live codewiki_* tool names remain in registration, schemas, skills, README, or tests except historical build/validation/archive artifacts.",
+      "Tool guidance aligns internal wiki_* names with user-facing /wiki-* command naming.",
+      "Package smoke tests assert old codewiki_* names are absent and wiki_* names are present."
+    ],
+    "non_goals": [
+      "Do not preserve compatibility aliases.",
+      "Do not change user-facing /wiki-* command names except docs needed for clarity.",
+      "Do not migrate source layer names unrelated to tool registration."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack",
+      "search proves live codewiki_* tool names are absent."
+    ]
+  },
+  "delta": {
+    "desired": "Internal agent tools use wiki_* names with no compatibility aliases.",
+    "current": "Internal agent tools use codewiki_* names; user-facing commands use /wiki-* names.",
+    "closure": "Close when live registration/docs/tests use wiki_* and validation passes."
+  },
+  "created": "2026-05-29",
+  "updated": "2026-05-29"
+}

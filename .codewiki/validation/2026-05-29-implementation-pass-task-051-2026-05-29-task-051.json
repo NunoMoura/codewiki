@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T10:55:46Z",
+  "profile": "implementation",
+  "task_id": "TASK-051",
+  "verdict": "pass",
+  "rationale": "Fresh implementation validation passed for TASK-051. From source refs, horizontal alignment now lives under flat src/checks/**, audit remains a facade, deterministic KB↔KB/KB↔code/code↔code evidence is exposed through the horizontal-alignment audit profile, gateway-required audit evidence can cite the profile, and fixture/smoke/features/package checks pass. Dirty pre-commit working-tree digest is recorded for implementation proof only; task-close still requires clean commit/tree proof.",
+  "checks": [
+    "codewiki_resume_context refresh TASK-051: source-backed restart packet",
+    "codewiki_audit horizontal-alignment/task: pass",
+    "codewiki_audit file-structure: pass",
+    "codewiki_audit task/changed/alignment: warning only; no errors",
+    "lsp_diagnostics changed checks/audit/test files: no errors; one hint in tests/smoke/audit.test.mjs",
+    "source-search proof: src/checks/horizontal-alignment.ts exists; src/audit/horizontal-alignment.ts absent; src/audit/tool.ts imports ../checks/horizontal-alignment.ts",
+    "ast-grep proof: src/audit/tool.ts imports auditHorizontalAlignment from ../checks/horizontal-alignment.ts",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass",
+    "horizontal-alignment audit source command: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (38/38)",
+    "npm run test:pack: pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Working tree is dirty; implementation validation passes with working_tree_digest, but task-close/publication still require clean commit/tree proof."
+    },
+    {
+      "severity": "warning",
+      "summary": "Changed/generated-file warnings remain for refreshed .codewiki/index_graph.json and task context views; expected until committed/reverted as publication policy dictates."
+    },
+    {
+      "severity": "warning",
+      "summary": "Graph health has 27 warnings, all roadmap missing future task paths or large-doc/build metadata warnings; no TASK-051 blocking errors."
+    },
+    {
+      "severity": "hint",
+      "summary": "LSP reports unused readFileSync hint in tests/smoke/audit.test.mjs; not a TypeScript error and test/typecheck pass."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "horizontal-alignment",
+    "file-structure",
+    "task"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed",
+    "audit:horizontal-alignment",
+    "audit:file-structure",
+    "audit:task",
+    "approval:user:approve-B-2026-05-29"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:170dc296bbb40a6966c1bf37e88b546e8cedd63e211aae5d862dbbabc577ad78"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-051",
+    "source_build": ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+    "validation_report": ".codewiki/validation/2026-05-29-implementation-pass-task-051-2026-05-29-task-051.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+      ".codewiki/validation/2026-05-29-implementation-pass-task-051-2026-05-29-task-051.json",
+      "src/checks/horizontal-alignment.ts",
+      "src/checks/tool.ts",
+      "src/checks/types.ts",
+      "src/audit/tool.ts",
+      "src/audit/types.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "package.json",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "README.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-validation/references/tools.md",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-051",
+    "source_build": ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+    "validation_report": ".codewiki/validation/2026-05-29-implementation-pass-task-051-2026-05-29-task-051.json",
+    "commit_title": "checkpoint(codewiki): TASK-051 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-051",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-29-implementation-pass-task-051-2026-05-29-task-051.json",
+      "CodeWiki-Checks: codewiki_resume_context refresh TASK-051: source-backed restart packet; codewiki_audit horizontal-alignment/task: pass; codewiki_audit file-structure: pass; codewiki_audit task/changed/alignment: warning only; no errors; lsp_diagnostics changed checks/audit/test files: no errors; one hint in tests/smoke/audit.test.mjs; source-search proof: src/checks/horizontal-alignment.ts exists; src/audit/horizontal-alignment.ts absent; src/audit/tool.ts imports ../checks/horizontal-alignment.ts; ast-grep proof: src/audit/tool.ts imports auditHorizontalAlignment from ../checks/horizontal-alignment.ts; npm run typecheck: pass; npm run check:architecture: pass; node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass; node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass; node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass; horizontal-alignment audit source command: pass; npm run test:smoke: pass; npm run test:features: pass (38/38); npm run test:pack: pass"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/checks/horizontal-alignment.ts",
+      "src/checks/tool.ts",
+      "src/checks/types.ts",
+      "src/audit/tool.ts",
+      "src/audit/types.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "package.json",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-validation/references/tools.md"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "Pi or harness adapter code changed",
+      "Pi package extension or skill metadata changed",
+      "packaged CodeWiki skill prompt changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "horizontal-alignment",
+      "file-structure",
+      "task"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:horizontal-alignment or profile:horizontal-alignment",
+      "audit:file-structure or profile:file-structure",
+      "audit:task or profile:task"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-051",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production quality profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_quality": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:approve-B-2026-05-29"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:170dc296bbb40a6966c1bf37e88b546e8cedd63e211aae5d862dbbabc577ad78",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Fresh validation used CodeWiki source refs and reran checks after user confirmed Pi reload. Dirty pre-commit implementation proof only; not task-close proof.",
+    "role": "validator"
+  }
+}

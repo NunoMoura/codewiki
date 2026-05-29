@@ -20,7 +20,7 @@ That is the right shape for this package:
 
 Public command surface is intentionally small:
 
-- `/audit [--file-structure|--security|--alignment|--package|--changed|--task TASK-###|--layer product,system|--json]`
+- `/audit [--file-structure|--security|--alignment|--horizontal-alignment|--package|--changed|--task TASK-###|--layer product,system|--json]`
   - runs source-owned CodeWiki audit profiles and prints human-readable evidence
 - `/wiki-bootstrap [project name] [--force]`
 - `Alt+W`

@@ -27,6 +27,7 @@ CodeWiki should expose one audit surface implemented in source, with adapter-fac
 | Profile | Purpose | Typical gate use |
 | --- | --- | --- |
 | `alignment` | Check decision, knowledge, roadmap, tests, code, builds, validation, and publication traceability. | Decision, planning, implementation, task-close. |
+| `horizontal-alignment` | Check same-layer and neighboring-layer consistency: KB claim conflicts/duplicates, KB-code explicit refs, and relative source import contracts. | Architecture/system changes, semantic implementation, task-close when drift risk is high. |
 | `file-structure` | Check path taxonomy, layer ownership, forbidden folders, generated/canonical boundaries, system diagram refs, stale architecture references, and that optional scripts do not own authoritative semantics. | Architecture/system changes, task-close, publication. |
 | `stale-reference` | Check active docs/source for deleted paths, legacy command names, stale architecture paths, and obsolete CodeWiki surfaces. | Documentation, implementation, release. |
 | `package` | Check package reachability, tarball contents, missing lockfile, source files included/excluded, and publication metadata. | Publication, release. |
@@ -46,6 +47,7 @@ The user-facing command should be a single command:
 /audit --file-structure
 /audit --security
 /audit --alignment
+/audit --horizontal-alignment
 /audit --package
 /audit --changed
 /audit --task TASK-###
@@ -61,6 +63,7 @@ Gateways call the source-root audit engine directly. Gateway policy selects requ
 Examples:
 
 - Documentation validation requires `alignment` and `stale-reference` for changed knowledge paths.
+- Horizontal consistency validation can require `horizontal-alignment` when KB claims, explicit KB-code refs, API/import contracts, or same-layer source/docs coherence are the risk surface.
 - Architecture or file-ownership changes require `file-structure`, `generated-parity`, and `alignment`.
 - Implementation task-close requires `changed`, `task`, and any profile implied by changed files.
 - Publication requires `package`, `security`, `alignment`, and immutable content proof.

@@ -15,6 +15,7 @@ diagram_refs:
   - file-structure-map:migration_compatibility_constraints
   - file-structure-map:project_concept_root_boundary
   - file-structure-map:knowledge_concept_root_boundary
+  - file-structure-map:checks_concept_root_boundary
   - file-structure-map:deferred_concept_roots
 ---
 
@@ -88,7 +89,8 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |
-| Audits | `audits.md` | `src/audit/**`, `/audit [flags]`, `codewiki_audit`, gateway-required audit profiles |
+| Checks | `audits.md` | `src/checks/**`, deterministic evidence collectors consumed by audit and gateway surfaces |
+| Audits | `audits.md` | `src/audit/**`, `/audit [flags]`, audit facade/tool behavior, gateway-required check profiles |
 | Roadmap | `roadmap.md` | `src/roadmap/**`, `.codewiki/roadmap/queue.json`, active task state, release checkpoints, archive files |
 | Session queue coordination | `api.md`, `adapters.md`, `graph.md` | `src/session/**`, `.codewiki/session/queue.json`, artifact statuses, generated session views |
 | Generated state and graph | `graph.md` | `.codewiki/index_graph.json`, `src/state/**` |
@@ -134,7 +136,7 @@ Accepted direction: concept-root source ownership. Main concepts live in `src/<c
 Current source roots:
 
 ```text
-src/{api,agency,audit,build,change,gc,gateway,knowledge,project,roadmap,runtime,session,state,validation,shared,adapters,ui}/
+src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,validation,shared,adapters,ui}/
 ```
 
 Deprecated roots:

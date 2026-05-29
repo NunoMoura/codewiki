@@ -6,7 +6,10 @@ import { codewikiAuditToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
 
-export async function executeCodewikiAuditTool(project: WikiProject, params: any) {
+export async function executeCodewikiAuditTool(
+	project: WikiProject,
+	params: any,
+) {
 	const report = await executeCodewikiAudit(project, params);
 	return {
 		summary: formatAuditReport(report),
@@ -24,11 +27,17 @@ export function registerCodewikiAuditTool(pi: ExtensionAPI): void {
 			"Run full or scoped CodeWiki audits through the shared application API.",
 		promptGuidelines: [
 			"Use this for deterministic audit evidence before gateways, task close, publication, or architecture changes.",
-			"Omit profiles for the default full audit. Select profiles for scoped checks such as file-structure, security, alignment, package, changed, task, or generated-parity.",
+			"Omit profiles for the default full audit. Select profiles for scoped checks such as file-structure, security, alignment, horizontal-alignment, package, changed, task, or generated-parity.",
 			"Audits produce evidence only; validation gateways still decide pass, fail, or block.",
 		],
 		parameters: codewikiAuditToolInputSchema,
-		async execute(_toolCallId: string, params: any, _signal: unknown, _onUpdate: unknown, ctx: any) {
+		async execute(
+			_toolCallId: string,
+			params: any,
+			_signal: unknown,
+			_onUpdate: unknown,
+			ctx: any,
+		) {
 			const project = await resolveToolProject(
 				ctx.cwd,
 				params.repoPath,

@@ -1,18 +1,20 @@
 {
   "id": "TASK-052",
-  "title": "Add source/API contract drift snapshots",
+  "title": "Add source/API contract drift checks",
   "status": "todo",
   "priority": "medium",
   "kind": "testing",
-  "summary": "Add source/API contract snapshots so code↔code and KB↔code drift can be detected before validation relies on manual review.",
+  "summary": "Add source/API contract drift checks under the checks layer so code↔code and KB↔code drift can be detected before gateway review relies on manual inspection.",
   "spec_paths": [
+    ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
     ".codewiki/kb/system/api.md",
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/component-map.yaml"
   ],
   "code_paths": [
-    "src/audit/source-contract.ts",
-    "src/audit/source-contract-snapshot.ts",
+    "src/checks/source-contract.ts",
+    "src/checks/source-contract-snapshot.ts",
+    "src/checks/tool.ts",
     "src/api/index.ts",
     "tests/smoke/source-contract.test.mjs",
     "tests/fixtures/source-contract/**"
@@ -20,35 +22,37 @@
   "research_ids": [],
   "labels": [
     "api-contract",
+    "checks",
     "snapshot",
     "drift",
     "quality"
   ],
   "change_type": "system",
   "goal": {
-    "outcome": "CodeWiki has deterministic source/API contract evidence that horizontal audits can consume for public facades, tool registrations, and documented package surfaces.",
+    "outcome": "CodeWiki has deterministic source/API contract check evidence that horizontal/gateway workflows can consume for public facades, tool registrations, and documented package surfaces.",
     "acceptance": [
       "Contract snapshot captures tool names, command names, public API facade exports, and package entry surfaces relevant to CodeWiki behavior.",
-      "Audit compares current source contract to documented/expected contract and produces actionable diffs.",
-      "Snapshot tests cover codewiki_roadmap naming and prevent stale internal tool names from silently reappearing.",
+      "Checks compare current source contract to documented/expected contract and produce actionable diffs.",
+      "Snapshot tests cover wiki_* naming and prevent stale internal tool names from silently reappearing.",
       "Contract generation is deterministic and not canonical truth unless explicitly accepted."
     ],
     "non_goals": [
-      "Do not publish or version a public API package contract beyond local audit evidence.",
-      "Do not snapshot implementation-private internals without documented ownership reason."
+      "Do not publish or version a public API package contract beyond local check evidence.",
+      "Do not snapshot implementation-private internals without documented ownership reason.",
+      "Do not create src/checks/profiles/**."
     ],
     "verification": [
       "npm run typecheck",
       "npm run test:smoke",
       "npm run test:features",
-      "targeted contract snapshot tests"
+      "targeted source-contract check tests"
     ]
   },
   "delta": {
-    "desired": "Source/API contract evidence provides deterministic drift checks for horizontal audits.",
+    "desired": "Source/API contract evidence lives under flat checks layer and supports horizontal/gateway drift checks.",
     "current": "Code↔code consistency is mostly enforced by typecheck/tests and package smoke tests.",
-    "closure": "Close when contract snapshots feed audit/test evidence and validation passes."
+    "closure": "Close when contract checks feed audit/gateway/test evidence and validation passes."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29"
+  "updated": "2026-05-29T10:34:15Z"
 }

@@ -1,0 +1,817 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-29T10:46:21Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+  "task_id": "TASK-051",
+  "task": {
+    "id": "TASK-051",
+    "title": "Add horizontal alignment checks and audit facade",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "testing",
+    "summary": "Add first-class horizontal alignment checks under flat src/checks/** modules, with src/audit as the facade/tool surface and gateway evidence support.",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/knowledge.md"
+    ],
+    "code_paths": [
+      "src/checks/horizontal-alignment.ts",
+      "src/checks/tool.ts",
+      "src/checks/types.ts",
+      "src/audit/tool.ts",
+      "src/audit/types.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Gateway and audit can consume deterministic horizontal alignment evidence from flat src/checks/** modules while audit remains a facade/tool surface.",
+      "acceptance": [
+        "Checks layer exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+        "Checks layer exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+        "Checks layer exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+        "Audit facade exposes the horizontal-alignment profile without owning low-level check implementation.",
+        "Gateway preflight/report can require and cite horizontal-alignment check evidence.",
+        "Fixtures cover pass/fail/warning cases."
+      ],
+      "non_goals": [
+        "Do not attempt unconstrained LLM semantic contradiction detection.",
+        "Do not block on low-confidence prose similarity alone.",
+        "Do not create src/checks/profiles/**.",
+        "Do not leave horizontal alignment implementation owned by src/audit/**."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted horizontal-alignment check tests",
+        "source search proves horizontal-alignment implementation lives under src/checks/** and audit is a facade."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-05T10:46:21.000Z",
+    "purge_after": "2026-06-12T10:46:21.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-051 horizontal alignment checks under flat checks layer.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-051"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/checks/horizontal-alignment.ts",
+      "src/checks/tool.ts",
+      "src/checks/types.ts",
+      "src/audit/tool.ts",
+      "src/audit/types.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/schemas.ts",
+      "package.json",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "README.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-validation/references/tools.md"
+    ],
+    "tests": [
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-051"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+    "spec_paths": [
+      ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+      ".codewiki/kb/system/audits.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/graph.md",
+      ".codewiki/kb/system/knowledge.md"
+    ],
+    "code_paths": [
+      "src/checks/horizontal-alignment.ts",
+      "src/checks/tool.ts",
+      "src/checks/types.ts",
+      "src/audit/tool.ts",
+      "src/audit/types.ts",
+      "src/adapters/pi/commands/audit.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/audit.test.mjs",
+      "tests/tasks/TASK-021/audit-source-root.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/horizontal-alignment.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/tasks/TASK-021/audit-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/checks/horizontal-alignment.ts",
+    "src/checks/tool.ts",
+    "src/checks/types.ts",
+    "src/audit/tool.ts",
+    "src/audit/types.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "package.json",
+    ".codewiki/kb/system/audits.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    "README.md",
+    "skills/codewiki-planning/references/tools.md",
+    "skills/codewiki-validation/references/tools.md"
+  ],
+  "files_changed": [
+    "tests/smoke/horizontal-alignment.test.mjs",
+    "tests/smoke/audit.test.mjs",
+    "tests/tasks/TASK-021/audit-source-root.test.mjs",
+    "src/checks/horizontal-alignment.ts",
+    "src/checks/tool.ts",
+    "src/checks/types.ts",
+    "src/audit/tool.ts",
+    "src/audit/types.ts",
+    "src/adapters/pi/commands/audit.ts",
+    "src/adapters/pi/tools/audit.ts",
+    "src/adapters/pi/schemas.ts",
+    "package.json",
+    ".codewiki/kb/system/audits.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    "README.md",
+    "skills/codewiki-planning/references/tools.md",
+    "skills/codewiki-validation/references/tools.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics src/checks + audit files: pass/no errors",
+    "node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass",
+    "horizontal-alignment audit source command against repo: pass",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (38/38)",
+    "npm run test:pack: pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-051",
+      "test_files": [
+        "tests/smoke/horizontal-alignment.test.mjs",
+        "tests/smoke/audit.test.mjs",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Added pass/fail horizontal-alignment fixture tests before broad checks.",
+        "Updated full audit smoke and audit source-root tests so horizontal-alignment is part of source-owned profile list and default audit behavior."
+      ],
+      "notes": [
+        "Horizontal audit passes on current repo: 39 KB docs, 0 explicit KB claims, 34 KB-code refs, and 478 relative source imports checked.",
+        "npm run check:architecture passes after adding src/checks/** to file-structure map."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-051",
+      "code_files": [
+        "src/checks/horizontal-alignment.ts",
+        "src/checks/tool.ts",
+        "src/checks/types.ts",
+        "src/audit/tool.ts",
+        "src/audit/types.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "src/adapters/pi/schemas.ts",
+        "package.json",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        "README.md",
+        "skills/codewiki-planning/references/tools.md",
+        "skills/codewiki-validation/references/tools.md"
+      ],
+      "evidence": [
+        "Added src/checks/horizontal-alignment.ts with deterministic KB↔KB, KB↔code, and code↔code checks.",
+        "Added src/checks/tool.ts and src/checks/types.ts as the checks-layer export/type surface.",
+        "Registered horizontal-alignment in audit profile values, full audit profile list, profile dispatch, Pi schemas, /audit command/completions, and audit tool prompt guidance.",
+        "Documented horizontal-alignment in audits.md, validation-gateway.md, file-structure.md, file-structure-map.yaml, README, and skill tool references.",
+        "Added horizontal-alignment smoke test to npm run test:smoke."
+      ],
+      "notes": [
+        "Approved B architecture decision changed TASK-051 boundary mid-loop; superseded earlier src/audit-owned implementation by moving horizontal alignment to src/checks/** and updating planning build.",
+        "Live Pi session may need /reload after commit before tool schema accepts horizontal-alignment via codewiki_audit/wiki_audit."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added pass/fail horizontal-alignment fixture tests before broad checks.",
+    "Updated full audit smoke and audit source-root tests so horizontal-alignment is part of source-owned profile list and default audit behavior."
+  ],
+  "code_change_evidence": [
+    "Added src/checks/horizontal-alignment.ts with deterministic KB↔KB, KB↔code, and code↔code checks.",
+    "Added src/checks/tool.ts and src/checks/types.ts as the checks-layer export/type surface.",
+    "Registered horizontal-alignment in audit profile values, full audit profile list, profile dispatch, Pi schemas, /audit command/completions, and audit tool prompt guidance.",
+    "Documented horizontal-alignment in audits.md, validation-gateway.md, file-structure.md, file-structure-map.yaml, README, and skill tool references.",
+    "Added horizontal-alignment smoke test to npm run test:smoke."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Checks layer exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+      "evidence": "src/checks/horizontal-alignment.ts parses explicit horizontal_claims/alignment_claims frontmatter and reports kb-claim-conflict errors plus kb-claim-duplicate warnings; tests/smoke/horizontal-alignment.test.mjs covers pass, conflict, and duplicate cases."
+    },
+    {
+      "criterion": "Checks layer exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+      "evidence": "src/checks/horizontal-alignment.ts scans relative import/export/dynamic import contracts under src, handles TypeScript source backing .js runtime specifiers, includes .codewiki/index_graph.json as routing evidence, and reports code-import-target-missing; fixture tests cover missing imports."
+    },
+    {
+      "criterion": "Checks layer exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+      "evidence": "Explicit doc code_paths, horizontal_code_paths, and horizontal claim refs are checked for missing source refs and generated read-model misuse; fixture tests cover kb-code-missing-source-ref."
+    },
+    {
+      "criterion": "Audit facade exposes the horizontal-alignment profile without owning low-level check implementation.",
+      "evidence": "src/audit/tool.ts imports auditHorizontalAlignment from ../checks/horizontal-alignment.ts; src/audit has no horizontal-alignment implementation module; src/checks/tool.ts exposes the checks-layer API."
+    },
+    {
+      "criterion": "Gateway preflight/report can require and cite horizontal-alignment check evidence.",
+      "evidence": "AUDIT_PROFILE_VALUES and Pi schema include horizontal-alignment; validation required_audits accepts arbitrary profile names, and docs/skills describe horizontal-alignment as selectable/required evidence."
+    },
+    {
+      "criterion": "Fixtures cover pass/fail/warning cases.",
+      "evidence": "tests/smoke/horizontal-alignment.test.mjs creates pass and fail fixtures covering pass, kb conflict, duplicate warning, missing KB-code ref, and missing imports."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-051 after approved B: horizontal alignment belongs under flat checks layer and audit is a facade.",
+    "implemented_changes": [
+      "Added horizontal-alignment check under src/checks/**.",
+      "Audit facade dispatches horizontal-alignment without owning the low-level implementation.",
+      "Added deterministic KB↔KB, KB↔code, and code↔code checks.",
+      "Added fixture tests and default smoke coverage.",
+      "Updated system docs/file-structure map and skill references."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        "skills/codewiki-planning/references/tools.md",
+        "skills/codewiki-validation/references/tools.md",
+        "README.md"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "code": [
+        "src/checks/horizontal-alignment.ts",
+        "src/checks/tool.ts",
+        "src/checks/types.ts",
+        "src/audit/tool.ts",
+        "src/audit/types.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts"
+      ],
+      "tests": [
+        "tests/smoke/horizontal-alignment.test.mjs",
+        "tests/smoke/audit.test.mjs",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "horizontal-alignment audit against repo: pass",
+      "npm run typecheck: pass",
+      "npm run check:architecture: pass",
+      "npm run test:smoke: pass",
+      "npm run test:features: pass",
+      "npm run test:pack: pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "Pi /reload is required after commit before live audit command/tool schema accepts horizontal-alignment profile.",
+      "The first implementation intentionally covers explicit claims/refs and source import contracts; deeper semantic contradictions remain non-goal/future work."
+    ]
+  },
+  "risks": [
+    "Pi /reload is required after commit before live audit command/tool schema accepts horizontal-alignment profile.",
+    "The first implementation intentionally covers explicit claims/refs and source import contracts; deeper semantic contradictions remain non-goal/future work."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-051",
+      "task_id": "TASK-051",
+      "next_focus_task_id": "TASK-052",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-051",
+        "title": "Add horizontal alignment checks and audit facade",
+        "summary": "Implemented TASK-051 horizontal alignment checks under flat checks layer.",
+        "spec_paths": [
+          ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/knowledge.md"
+        ],
+        "code_paths": [
+          "src/checks/horizontal-alignment.ts",
+          "src/checks/tool.ts",
+          "src/checks/types.ts",
+          "src/audit/tool.ts",
+          "src/audit/types.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "tests/smoke/horizontal-alignment.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "src/adapters/pi/schemas.ts",
+          "package.json",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "README.md",
+          "skills/codewiki-planning/references/tools.md",
+          "skills/codewiki-validation/references/tools.md"
+        ],
+        "acceptance": [
+          "Checks layer exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+          "Checks layer exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+          "Checks layer exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+          "Audit facade exposes the horizontal-alignment profile without owning low-level check implementation.",
+          "Gateway preflight/report can require and cite horizontal-alignment check evidence.",
+          "Fixtures cover pass/fail/warning cases."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted horizontal-alignment check tests",
+          "source search proves horizontal-alignment implementation lives under src/checks/** and audit is a facade."
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        "checks_run": [
+          "lsp_diagnostics src/checks + audit files: pass/no errors",
+          "node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass",
+          "horizontal-alignment audit source command against repo: pass",
+          "npm run typecheck: pass",
+          "npm run check:architecture: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass (38/38)",
+          "npm run test:pack: pass"
+        ],
+        "test_design_evidence": [
+          "Added pass/fail horizontal-alignment fixture tests before broad checks.",
+          "Updated full audit smoke and audit source-root tests so horizontal-alignment is part of source-owned profile list and default audit behavior."
+        ],
+        "code_change_evidence": [
+          "Added src/checks/horizontal-alignment.ts with deterministic KB↔KB, KB↔code, and code↔code checks.",
+          "Added src/checks/tool.ts and src/checks/types.ts as the checks-layer export/type surface.",
+          "Registered horizontal-alignment in audit profile values, full audit profile list, profile dispatch, Pi schemas, /audit command/completions, and audit tool prompt guidance.",
+          "Documented horizontal-alignment in audits.md, validation-gateway.md, file-structure.md, file-structure-map.yaml, README, and skill tool references.",
+          "Added horizontal-alignment smoke test to npm run test:smoke."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-051",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-051",
+      "show_build": "git show refs/codewiki/archive/task/TASK-051:.codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+        ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+        ".codewiki/kb/system/audits.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/knowledge.md",
+        "src/checks/horizontal-alignment.ts",
+        "src/checks/tool.ts",
+        "src/checks/types.ts",
+        "src/audit/tool.ts",
+        "src/audit/types.ts",
+        "src/adapters/pi/commands/audit.ts",
+        "src/adapters/pi/tools/audit.ts",
+        "tests/smoke/horizontal-alignment.test.mjs",
+        "tests/smoke/audit.test.mjs",
+        "tests/tasks/TASK-021/audit-source-root.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-051 Add horizontal alignment checks and audit facade implementation evidence",
+      "body": "Implemented TASK-051 horizontal alignment checks under flat checks layer.\n\nChecks: lsp_diagnostics src/checks + audit files: pass/no errors, node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass, horizontal-alignment audit source command against repo: pass, npm run typecheck: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-051\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json\nCodeWiki-Checks: lsp_diagnostics src/checks + audit files: pass/no errors, node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass, horizontal-alignment audit source command against repo: pass, npm run typecheck: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-051\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-051\nCodeWiki-Digest: sha256:15d76cdca3598711469f44084a73d7c8aeecd4f1e6cc536c87609cab37c33e1d\nCodeWiki-Restore: /wiki-restore TASK-051",
+      "trailers": [
+        "CodeWiki-Task: TASK-051",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+        "CodeWiki-Checks: lsp_diagnostics src/checks + audit files: pass/no errors, node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass, horizontal-alignment audit source command against repo: pass, npm run typecheck: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-051",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-051",
+        "CodeWiki-Digest: sha256:15d76cdca3598711469f44084a73d7c8aeecd4f1e6cc536c87609cab37c33e1d",
+        "CodeWiki-Restore: /wiki-restore TASK-051"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-051 Add horizontal alignment checks and audit facade implementation evidence",
+      "body": "Implemented TASK-051 horizontal alignment checks under flat checks layer.\n\nChecks: lsp_diagnostics src/checks + audit files: pass/no errors, node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass, horizontal-alignment audit source command against repo: pass, npm run typecheck: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-051\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json\nCodeWiki-Checks: lsp_diagnostics src/checks + audit files: pass/no errors, node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass, node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass, horizontal-alignment audit source command against repo: pass, npm run typecheck: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-051\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-051\nCodeWiki-Digest: sha256:15d76cdca3598711469f44084a73d7c8aeecd4f1e6cc536c87609cab37c33e1d\nCodeWiki-Restore: /wiki-restore TASK-051"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-051",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-051"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-051",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-051",
+        "show_build": "git show refs/codewiki/archive/task/TASK-051:.codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+          ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/graph.md",
+          ".codewiki/kb/system/knowledge.md",
+          "src/checks/horizontal-alignment.ts",
+          "src/checks/tool.ts",
+          "src/checks/types.ts",
+          "src/audit/tool.ts",
+          "src/audit/types.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "tests/smoke/horizontal-alignment.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-051",
+      "build_path": ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-051",
+      "commit_sha": "",
+      "digest": "sha256:15d76cdca3598711469f44084a73d7c8aeecd4f1e6cc536c87609cab37c33e1d",
+      "restore_command": "/wiki-restore TASK-051"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:a6aca8ff8aa688928595e8b98e83724d50d0debc03f50873196f67a0b87b799d",
+          "bytes": 12033
+        },
+        {
+          "path": "tests/smoke/horizontal-alignment.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:44d82f5b09613ab601291335848e0817358d95bddad3b6359dbf61d1bd30afcf",
+          "bytes": 4646
+        },
+        {
+          "path": "tests/smoke/audit.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c884a4c4ca67af2d0a828af933d9da8fe16318f91871a794f62916011e39cbb9",
+          "bytes": 5252
+        },
+        {
+          "path": "tests/tasks/TASK-021/audit-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:85598310034faaea60af6523644f218836b7431cbdcf18da8298f0f8373d48ce",
+          "bytes": 5430
+        },
+        {
+          "path": "src/checks/horizontal-alignment.ts",
+          "role": "code_file",
+          "sha256": "sha256:490de7e4eb91ef3e62dedc03c21b358f633b2e1bef374ee55fca89d0a2e777e1",
+          "bytes": 11605
+        },
+        {
+          "path": "src/checks/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:4005da872e3fd227269dd6574e51fe1c8601c49cededc3cc54f6b2adbb183f8f",
+          "bytes": 158
+        },
+        {
+          "path": "src/checks/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:fd336e346780a7329a427abe291d34ee78c3915667321766b8818cc3813220e4",
+          "bytes": 95
+        },
+        {
+          "path": "src/audit/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:0662f99c6fdb37c18824c892c325c757217d548bd73650114e42898e4ce16a77",
+          "bytes": 44257
+        },
+        {
+          "path": "src/audit/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:7e967fe561c46230b3a457d925d84c12d91471cb1d36850c863a83223c20f471",
+          "bytes": 1500
+        },
+        {
+          "path": "src/adapters/pi/commands/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:0a3f8ac16beadbc20f0149eef9d91eb9b30e0337789add95fb89a61e51f87559",
+          "bytes": 4126
+        },
+        {
+          "path": "src/adapters/pi/tools/audit.ts",
+          "role": "code_file",
+          "sha256": "sha256:49db808d1af29a1e6f3b366d652ce20b7aa28d354be1e37d2976f7ed86f3bd02",
+          "bytes": 1935
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:76533a6d0c754a82b8361b79d65451d88156b547c8c78b0befe0b7f664d9eb6f",
+          "bytes": 33998
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:1e92a4027523caae32a505639650bcac2a37599c543089d72ba4e1875f8d904a",
+          "bytes": 2743
+        },
+        {
+          "path": ".codewiki/kb/system/audits.md",
+          "role": "code_file",
+          "sha256": "sha256:c43a71bfada230d951da9ba301a131d7871c46a37dabc9d58c047e1caa0d1d48",
+          "bytes": 5768
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "role": "code_file",
+          "sha256": "sha256:50ba7faa4cffcb0809af073e569c8d41b2bf8849c46dc355c150fcbfff1cb38a",
+          "bytes": 13682
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:007c1afe517ac24352015b06886fb150f797457b9e01411a8b97a3ef67965cd1",
+          "bytes": 12890
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:6ffe521d86795aea4c9190d99a5aba7a6bf3a36e40eaf209ad984321298b86ff",
+          "bytes": 21920
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:b72ab874eea9baf7c280999580bda3fe225d7cd79b081f624e59fa2a02fae958",
+          "bytes": 24914
+        },
+        {
+          "path": "skills/codewiki-planning/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:481343430543b7dbe1d0754fe99a592213fc59d42b598216a6c61fb0d79ca63b",
+          "bytes": 3728
+        },
+        {
+          "path": "skills/codewiki-validation/references/tools.md",
+          "role": "code_file",
+          "sha256": "sha256:347a21863e848681ee1becaee758aef96085f0d8df056a5f9a3b610a350da1b7",
+          "bytes": 6013
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-051",
+      "source_build": ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/checks/horizontal-alignment.ts",
+          "src/checks/tool.ts",
+          "src/checks/types.ts",
+          "src/audit/tool.ts",
+          "src/audit/types.ts",
+          "src/adapters/pi/commands/audit.ts",
+          "src/adapters/pi/tools/audit.ts",
+          "src/adapters/pi/schemas.ts",
+          "package.json",
+          ".codewiki/kb/system/audits.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "README.md",
+          "skills/codewiki-planning/references/tools.md",
+          "skills/codewiki-validation/references/tools.md",
+          "tests/smoke/horizontal-alignment.test.mjs",
+          "tests/smoke/audit.test.mjs",
+          "tests/tasks/TASK-021/audit-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-051",
+        "restore_command": "/wiki-restore TASK-051"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics src/checks + audit files: pass/no errors",
+        "node --experimental-strip-types ./tests/smoke/horizontal-alignment.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/audit.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-021/audit-source-root.test.mjs: pass",
+        "horizontal-alignment audit source command against repo: pass",
+        "npm run typecheck: pass",
+        "npm run check:architecture: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass (38/38)",
+        "npm run test:pack: pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

@@ -33,7 +33,7 @@ Use these tools in planning mode. Canonical writes are limited to roadmap task t
 
 - `codewiki_audit`
   - Use for deterministic evidence before planning validation or implementation source handoff.
-  - Common profiles: `task`, `alignment`, `generated-parity`, `changed`.
+  - Common profiles: `task`, `alignment`, `horizontal-alignment`, `generated-parity`, `changed`.
 
 - `codewiki_validation`
   - Use when planning validation is required, failed, blocked, or policy-required.
