@@ -318,7 +318,6 @@ async function main() {
 			"src/api/tools.ts",
 			"src/build/index.ts",
 			"src/gateway/index.ts",
-			"src/validation/index.ts",
 			"scripts/*.mjs",
 			"tests/**/*.mjs",
 		],

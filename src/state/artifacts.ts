@@ -8,7 +8,7 @@ import type {
 	RoadmapTaskContextPacket,
 	RoadmapStateTaskSummary,
 } from "./types.ts";
-import type { LintReport } from "../validation/types.ts";
+import type { LintReport } from "../gateway/types.ts";
 import { maybeReadJson, readJson } from "../project/local/filesystem.ts";
 import {
 	runRebuild as runApplicationRebuild,

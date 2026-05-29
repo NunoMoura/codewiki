@@ -240,6 +240,12 @@ async function runUserScript(
 	return logs.join("\n");
 }
 
+export * from "./types.ts";
+export { buildGatewayPreflight } from "./preflight.ts";
+export { writeGatewayReport } from "./report.ts";
+export { executeCodewikiValidationTool } from "./tool.ts";
+export * from "./transaction.ts";
+
 export async function gatewayMain(args: string[]) {
 	const [command, first, second] = args;
 	if (!command || command === "--help" || command === "-h") return usage();

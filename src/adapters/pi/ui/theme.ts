@@ -12,7 +12,7 @@ import type {
 	ConfigPanelSection,
 	StatusStateAgentRow,
 } from "../../../state/types.ts";
-import type { LintReport } from "../../../validation/types.ts";
+import type { LintReport } from "../../../gateway/types.ts";
 import { basename } from "node:path";
 import { padToWidth, truncatePlain } from "./text.ts";
 

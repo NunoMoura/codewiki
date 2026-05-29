@@ -1,6 +1,6 @@
 import type { SessionStore } from "../shared/ports.ts";
 import type { buildCodewikiResumeContext } from "../state/resume-context.ts";
-import type { buildValidationPreflight } from "../validation/report.ts";
+import type { buildGatewayPreflight } from "../gateway/report.ts";
 
 export interface RuntimeSessionBoundaryPort {
 	requestContextRefresh?: (request: {
@@ -15,5 +15,5 @@ export interface CodewikiRuntimePorts {
 	sessionStore?: SessionStore;
 	sessionBoundary?: RuntimeSessionBoundaryPort;
 	resumeContextBuilder?: typeof buildCodewikiResumeContext;
-	validationPreflightBuilder?: typeof buildValidationPreflight;
+	gatewayPreflightBuilder?: typeof buildGatewayPreflight;
 }

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
 import { evaluateProductionQualityProfile } from "../../src/quality/production-profile.ts";
-import { buildValidationPreflight } from "../../src/validation/report.ts";
+import { buildGatewayPreflight } from "../../src/gateway/report.ts";
 
 function baseBuild(overrides = {}) {
 	return {
@@ -163,7 +163,7 @@ const source = await writeBuild(
 		},
 	}),
 );
-const blockedPreflight = buildValidationPreflight(project, {
+const blockedPreflight = buildGatewayPreflight(project, {
 	profile: "implementation",
 	policy_profile: "production",
 	verdict: "pass",
@@ -173,7 +173,7 @@ const blockedPreflight = buildValidationPreflight(project, {
 	audit_refs: ["alignment", "changed"],
 	isolation,
 });
-assert.equal(blockedPreflight.status, "blocked", "validation preflight should enforce production quality profile");
+assert.equal(blockedPreflight.status, "blocked", "gateway preflight should enforce production quality profile");
 assert.ok(blockedPreflight.missing.production_quality.includes("production_quality:check:typecheck"));
 
 const waivedSource = await writeBuild(
@@ -198,7 +198,7 @@ const waivedSource = await writeBuild(
 		},
 	}),
 );
-const waivedPreflight = buildValidationPreflight(project, {
+const waivedPreflight = buildGatewayPreflight(project, {
 	profile: "implementation",
 	policy_profile: "production",
 	verdict: "pass",

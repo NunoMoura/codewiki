@@ -8,7 +8,7 @@ import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { ChangeClaimsFile, WorkflowCursor } from "../session/types.ts";
 import type { GraphFile, GraphViews } from "./types.ts";
-import type { LintReport } from "../validation/types.ts";
+import type { LintReport } from "../gateway/types.ts";
 import type { GitCache } from "../project/local/git-cache.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import {

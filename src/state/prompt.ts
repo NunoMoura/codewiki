@@ -3,7 +3,7 @@ import { unique } from "../shared/utils.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { GraphFile, RoadmapTaskContextPacket, StatusScope } from "./types.ts";
-import type { LintReport } from "../validation/types.ts";
+import type { LintReport } from "../gateway/types.ts";
 
 export function statusColor(report: LintReport): "green" | "yellow" | "red" {
 	if (report.counts.error > 0) return "red";

@@ -8,7 +8,7 @@ import {
 	writeImplementationBuild,
 	writePlanningBuild,
 } from "../../src/build/writer.ts";
-import { writeValidationReport } from "../../src/validation/report.ts";
+import { writeGatewayReport } from "../../src/gateway/report.ts";
 import { buildGraph } from "../../src/state/graph.ts";
 
 const root = await mkdtemp(join(tmpdir(), "codewiki-loop-isolation-"));
@@ -86,7 +86,7 @@ try {
 		},
 		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
 	});
-	await writeValidationReport(project, {
+	await writeGatewayReport(project, {
 		profile: "decision",
 		verdict: "pass",
 		rationale: "Decision gateway pass for isolation fixture.",
@@ -121,7 +121,7 @@ try {
 		candidate_test_files: ["tests/smoke/loop-isolation-policy.test.mjs"],
 		candidate_code_paths: ["src/build/writer.ts"],
 	});
-	await writeValidationReport(project, {
+	await writeGatewayReport(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Planning gateway pass for isolation fixture.",
@@ -234,7 +234,7 @@ try {
 		JSON.stringify(missingTraceabilityBuild, null, 2) + "\n",
 		"utf8",
 	);
-	const traceabilityBlocked = await writeValidationReport(project, {
+	const traceabilityBlocked = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -260,7 +260,7 @@ try {
 		/accepted_planning_build_ref|source_planning_build/,
 	);
 
-	const commitReadinessBlocked = await writeValidationReport(project, {
+	const commitReadinessBlocked = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -284,7 +284,7 @@ try {
 		/CodeWiki-Validation/,
 	);
 
-	const blocked = await writeValidationReport(project, {
+	const blocked = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -296,7 +296,7 @@ try {
 	assert.ok(blocked.data.failed_criteria.includes("validation_isolation"));
 	assert.match(blocked.data.issues[0].summary, /fresh_context=true/);
 
-	const auditBlocked = await writeValidationReport(project, {
+	const auditBlocked = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -316,7 +316,7 @@ try {
 		"changed",
 	]);
 
-	const passed = await writeValidationReport(project, {
+	const passed = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -339,7 +339,7 @@ try {
 	assert.deepEqual(passed.data.required_audits, ["alignment", "changed"]);
 	assert.deepEqual(passed.data.content_proof_refs, ["abc1234"]);
 
-	const dirtyPreCommitPassed = await writeValidationReport(project, {
+	const dirtyPreCommitPassed = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -361,7 +361,7 @@ try {
 		"sha256:dirty-tree",
 	);
 
-	const taskCloseWithoutPublisherBlocked = await writeValidationReport(
+	const taskCloseWithoutPublisherBlocked = await writeGatewayReport(
 		project,
 		{
 			profile: "task-close",
@@ -390,7 +390,7 @@ try {
 		/published_sha|tree_sha|archive_ref|remote_ref/,
 	);
 
-	const taskCloseTraceabilityBlocked = await writeValidationReport(project, {
+	const taskCloseTraceabilityBlocked = await writeGatewayReport(project, {
 		profile: "task-close",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -417,7 +417,7 @@ try {
 		),
 	);
 
-	const dirtyTaskCloseBlocked = await writeValidationReport(project, {
+	const dirtyTaskCloseBlocked = await writeGatewayReport(project, {
 		profile: "task-close",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -441,7 +441,7 @@ try {
 		dirtyTaskCloseBlocked.data.failed_criteria.includes("validation_isolation"),
 	);
 
-	const dirtyPublicationBlocked = await writeValidationReport(project, {
+	const dirtyPublicationBlocked = await writeGatewayReport(project, {
 		profile: "publication",
 		task_id: "TASK-123",
 		verdict: "pass",
@@ -477,7 +477,7 @@ try {
 		),
 	);
 
-	const publicationPassed = await writeValidationReport(project, {
+	const publicationPassed = await writeGatewayReport(project, {
 		profile: "publication",
 		task_id: "TASK-123",
 		verdict: "pass",

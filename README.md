@@ -54,7 +54,7 @@ The `knip` metadata in `package.json` is intentionally part of the package maint
 
 - `src/index.ts` as the Pi extension and package facade
 - `src/api/index.ts` and `src/api/tools.ts` as stable public API facades for adapters and scripts
-- `src/build/index.ts`, `src/gateway/index.ts`, and `src/validation/index.ts` as package-facing subsystem facades
+- `src/build/index.ts` and `src/gateway/index.ts` as package-facing subsystem facades; validation gateway compatibility shims under `src/validation/**` do not own implementation behavior
 - `scripts/*.mjs` as maintained CLI/script surfaces, including `scripts/codewiki-gateway.mjs`
 - `tests/**/*.mjs` as the repository smoke and task regression suite
 

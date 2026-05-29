@@ -8,7 +8,7 @@ import {
 	mutateChangeClaims,
 } from "../../src/session/claims.ts";
 import { writeImplementationBuild } from "../../src/build/writer.ts";
-import { writeValidationReport } from "../../src/validation/report.ts";
+import { writeGatewayReport } from "../../src/gateway/report.ts";
 import { buildGraph } from "../../src/state/graph.ts";
 import {
 	computeParallelSchedulerPlan,
@@ -110,7 +110,7 @@ try {
 			{
 				task_id: "TASK-072",
 				sprint_ids: ["SPRINT-010"],
-				code_paths: ["src/validation/report.ts"],
+				code_paths: ["src/gateway/report.ts"],
 			},
 			{
 				task_id: "TASK-073",
@@ -332,7 +332,7 @@ try {
 		),
 	);
 
-	const validationResult = await writeValidationReport(project, {
+	const validationResult = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-070",
 		verdict: "pass",

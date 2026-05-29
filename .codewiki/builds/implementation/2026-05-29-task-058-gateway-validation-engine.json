@@ -1,0 +1,1064 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-29T11:24:06Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+  "task_id": "TASK-058",
+  "task": {
+    "id": "TASK-058",
+    "title": "Move validation engine into gateway layer",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Make gateway the pass/fail/block decision layer by moving/renaming validation report, preflight, tool, and types under src/gateway/** and folding current gateway transaction/catalog plumbing into that layer.",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/gateway/report.ts",
+      "src/gateway/tool.ts",
+      "src/gateway/preflight.ts",
+      "src/gateway/types.ts",
+      "src/gateway/transaction.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "src/validation/types.ts",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Gateway is the source owner for lifecycle pass/fail/block decisions; validation is no longer a separate generic implementation layer.",
+      "acceptance": [
+        "src/gateway/** owns report/preflight/tool/types/transaction gate semantics.",
+        "src/validation/** live source is removed or no longer owns implementation behavior.",
+        "Gateway docs/skills/tests use gateway naming for pass/fail/block reports and preflight.",
+        "Existing validation behavior is preserved under gateway names and all gateway/preflight/build tests pass."
+      ],
+      "non_goals": [
+        "Do not standardize every internal agent tool name in this task beyond gateway-specific names.",
+        "Do not change policy/check semantics beyond imports needed for gateway migration.",
+        "Do not push or publish remotely."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted gateway preflight/build validation tests",
+        "search proves live src/validation implementation ownership is removed."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-05T11:24:06.000Z",
+    "purge_after": "2026-06-12T11:24:06.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-058 by moving validation gateway engine ownership into src/gateway/** with src/validation/** compatibility-only shims.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-checks-policy-gateway.json",
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      ".codewiki/validation/2026-05-29-planning-pass-task-051-2026-05-29-checks-policy-.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-058"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/gateway/report.ts",
+      "src/gateway/tool.ts",
+      "src/gateway/preflight.ts",
+      "src/gateway/types.ts",
+      "src/gateway/index.ts",
+      "src/gateway/transaction.ts",
+      "src/validation/index.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "src/validation/preflight.ts",
+      "src/validation/types.ts",
+      "src/api/tools.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/ui/manager.ts",
+      "src/adapters/pi/ui/theme.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/roadmap/runtime.ts",
+      "src/state/artifacts.ts",
+      "src/state/builders.ts",
+      "src/state/graph.ts",
+      "src/state/lint.ts",
+      "src/state/prompt.ts",
+      "src/state/resume-context.ts",
+      "package.json",
+      "README.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "tests": [
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+      "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/quality-profile.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/alignment-drift-fixtures.test.mjs",
+      "tests/smoke/role-worktree-isolation.test.mjs",
+      "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-058"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+    "spec_paths": [
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/gateway/report.ts",
+      "src/gateway/tool.ts",
+      "src/gateway/preflight.ts",
+      "src/gateway/types.ts",
+      "src/gateway/transaction.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "src/validation/types.ts",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+    "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/quality-profile.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/alignment-drift-fixtures.test.mjs",
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/gateway/report.ts",
+    "src/gateway/tool.ts",
+    "src/gateway/preflight.ts",
+    "src/gateway/types.ts",
+    "src/gateway/index.ts",
+    "src/gateway/transaction.ts",
+    "src/validation/index.ts",
+    "src/validation/report.ts",
+    "src/validation/tool.ts",
+    "src/validation/preflight.ts",
+    "src/validation/types.ts",
+    "src/api/tools.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/runtime/ports.ts",
+    "src/runtime/runner.ts",
+    "src/roadmap/runtime.ts",
+    "src/state/artifacts.ts",
+    "src/state/builders.ts",
+    "src/state/graph.ts",
+    "src/state/lint.ts",
+    "src/state/prompt.ts",
+    "src/state/resume-context.ts",
+    "package.json",
+    "README.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "files_changed": [
+    "tests/smoke/gateway-preflight.test.mjs",
+    "tests/smoke/builds.test.mjs",
+    "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+    "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+    "tests/smoke/package-smoke.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/quality-profile.test.mjs",
+    "tests/smoke/loop-isolation-policy.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/smoke/alignment-drift-fixtures.test.mjs",
+    "tests/smoke/role-worktree-isolation.test.mjs",
+    "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+    "src/gateway/report.ts",
+    "src/gateway/tool.ts",
+    "src/gateway/preflight.ts",
+    "src/gateway/types.ts",
+    "src/gateway/index.ts",
+    "src/gateway/transaction.ts",
+    "src/validation/index.ts",
+    "src/validation/report.ts",
+    "src/validation/tool.ts",
+    "src/validation/preflight.ts",
+    "src/validation/types.ts",
+    "src/api/tools.ts",
+    "src/adapters/pi/schemas.ts",
+    "src/adapters/pi/ui/manager.ts",
+    "src/adapters/pi/ui/theme.ts",
+    "src/runtime/ports.ts",
+    "src/runtime/runner.ts",
+    "src/roadmap/runtime.ts",
+    "src/state/artifacts.ts",
+    "src/state/builders.ts",
+    "src/state/graph.ts",
+    "src/state/lint.ts",
+    "src/state/prompt.ts",
+    "src/state/resume-context.ts",
+    "package.json",
+    "README.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "checks_run": [
+    "lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors",
+    "ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes",
+    "ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts",
+    "ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (38/38)",
+    "npm run test:pack: pass",
+    "codewiki_audit file-structure: pass",
+    "codewiki_audit horizontal-alignment/task TASK-058: pass",
+    "codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-058",
+      "test_files": [
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/builds.test.mjs",
+        "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+        "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/quality-profile.test.mjs",
+        "tests/smoke/loop-isolation-policy.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/smoke/alignment-drift-fixtures.test.mjs",
+        "tests/smoke/role-worktree-isolation.test.mjs",
+        "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Renamed and expanded gateway-preflight smoke coverage to import gateway-owned report/preflight APIs directly.",
+        "Updated TASK-022 source-root guard to assert src/validation/** is compatibility-only and API facade imports gateway/tool.ts.",
+        "Updated package smoke to treat src/gateway/index.ts as the package-facing gateway subsystem facade.",
+        "Updated downstream task smoke tests to read gateway/report.ts instead of validation/report.ts."
+      ],
+      "notes": [
+        "The codewiki_validation external tool name is intentionally retained; TASK-059 owns wiki_* internal agent tool namespace changes and this task only changes gateway source ownership.",
+        "Alignment audit remains warning-only because graph health has existing open-roadmap/doc/build warnings unrelated to TASK-058."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-058",
+      "code_files": [
+        "src/gateway/report.ts",
+        "src/gateway/tool.ts",
+        "src/gateway/preflight.ts",
+        "src/gateway/types.ts",
+        "src/gateway/index.ts",
+        "src/gateway/transaction.ts",
+        "src/validation/index.ts",
+        "src/validation/report.ts",
+        "src/validation/tool.ts",
+        "src/validation/preflight.ts",
+        "src/validation/types.ts",
+        "src/api/tools.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/adapters/pi/ui/manager.ts",
+        "src/adapters/pi/ui/theme.ts",
+        "src/runtime/ports.ts",
+        "src/runtime/runner.ts",
+        "src/roadmap/runtime.ts",
+        "src/state/artifacts.ts",
+        "src/state/builders.ts",
+        "src/state/graph.ts",
+        "src/state/lint.ts",
+        "src/state/prompt.ts",
+        "src/state/resume-context.ts",
+        "package.json",
+        "README.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": [
+        "Moved validation report/preflight/tool/types implementation into src/gateway/**.",
+        "Left src/validation/** as deprecated compatibility-only re-export shims.",
+        "Updated API facade, adapter schemas, UI/state/runtime imports, and runtime port naming to consume gateway-owned types/report APIs.",
+        "Renamed gateway preflight smoke test and added it to npm run test:smoke.",
+        "Updated validation-gateway and file-structure docs plus diagram map to reflect gateway ownership and validation shim compatibility."
+      ],
+      "notes": [
+        "TASK-058 is self-contained under approved ARCH-REN-003 from the planning build. No push/publication performed.",
+        "Because Pi extension/source files changed, reload is required after commit before relying on live extension behavior."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Renamed and expanded gateway-preflight smoke coverage to import gateway-owned report/preflight APIs directly.",
+    "Updated TASK-022 source-root guard to assert src/validation/** is compatibility-only and API facade imports gateway/tool.ts.",
+    "Updated package smoke to treat src/gateway/index.ts as the package-facing gateway subsystem facade.",
+    "Updated downstream task smoke tests to read gateway/report.ts instead of validation/report.ts."
+  ],
+  "code_change_evidence": [
+    "Moved validation report/preflight/tool/types implementation into src/gateway/**.",
+    "Left src/validation/** as deprecated compatibility-only re-export shims.",
+    "Updated API facade, adapter schemas, UI/state/runtime imports, and runtime port naming to consume gateway-owned types/report APIs.",
+    "Renamed gateway preflight smoke test and added it to npm run test:smoke.",
+    "Updated validation-gateway and file-structure docs plus diagram map to reflect gateway ownership and validation shim compatibility."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "src/gateway/** owns report/preflight/tool/types/transaction gate semantics.",
+      "evidence": "Moved report/preflight/tool/types into src/gateway/**; src/gateway/index.ts exports gateway report/preflight/tool/types/transaction facade; src/api/tools.ts imports executeCodewikiValidationTool from ../gateway/tool.ts; src/gateway/tool.ts calls buildGatewayPreflight/writeGatewayReport from ./report.ts."
+    },
+    {
+      "criterion": "src/validation/** live source is removed or no longer owns implementation behavior.",
+      "evidence": "src/validation/** files are deprecated compatibility-only re-export shims to ../gateway/**; ast-grep found no function/class implementations under src/validation; TASK-022 source-root test asserts validation shim files re-export from src/gateway and do not import local behavior."
+    },
+    {
+      "criterion": "Gateway docs/skills/tests use gateway naming for pass/fail/block reports and preflight.",
+      "evidence": "Renamed tests/smoke/validation-preflight.test.mjs to tests/smoke/gateway-preflight.test.mjs, switched tests to writeGatewayReport/buildGatewayPreflight imports, updated runtime messages/ports to gateway preflight naming, and documented gateway ownership in validation-gateway.md/file-structure.md/README."
+    },
+    {
+      "criterion": "Existing validation behavior is preserved under gateway names and all gateway/preflight/build tests pass.",
+      "evidence": "Full test suite passes: npm run typecheck, npm run check:architecture, npm run test:smoke, npm run test:features (38/38), npm run test:pack; builds smoke still passes through codewiki_validation tool name while implementation comes from src/gateway/tool.ts."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with next suggested roadmap task TASK-058 after TASK-051 close: move validation gate engine into src/gateway/**.",
+    "implemented_changes": [
+      "Moved gate report/preflight/tool/types implementation under src/gateway/**.",
+      "Converted src/validation/** to deprecated compatibility-only re-export shims.",
+      "Updated live imports and tests to use gateway-owned APIs.",
+      "Renamed validation preflight smoke test to gateway-preflight and added it to smoke script.",
+      "Updated docs and file-structure map for gateway ownership."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        "README.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/gateway/report.ts",
+        "src/gateway/tool.ts",
+        "src/gateway/preflight.ts",
+        "src/gateway/types.ts",
+        "src/gateway/index.ts",
+        "src/validation/index.ts",
+        "src/validation/report.ts",
+        "src/validation/tool.ts",
+        "src/validation/preflight.ts",
+        "src/validation/types.ts",
+        "src/api/tools.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/runtime/ports.ts",
+        "src/runtime/runner.ts",
+        "src/state/**"
+      ],
+      "tests": [
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+        "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+        "tests/smoke/package-smoke.test.mjs",
+        "tests/smoke/**/*.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "npm run typecheck: pass",
+      "npm run check:architecture: pass",
+      "npm run test:smoke: pass",
+      "npm run test:features: pass",
+      "npm run test:pack: pass",
+      "file-structure audit: pass",
+      "horizontal-alignment/task audit: pass",
+      "source search/ast-grep proves validation shims own no implementation"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "src/validation/** compatibility shims remain for source/package compatibility; future cleanup could remove them if a breaking source API removal is approved.",
+      "Gateway still uses validation vocabulary in public tool name and report type names; TASK-059 covers internal tool namespace and this task preserves behavior compatibility."
+    ]
+  },
+  "risks": [
+    "src/validation/** compatibility shims remain for source/package compatibility; future cleanup could remove them if a breaking source API removal is approved.",
+    "Gateway still uses validation vocabulary in public tool name and report type names; TASK-059 covers internal tool namespace and this task preserves behavior compatibility."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-058",
+      "task_id": "TASK-058",
+      "next_focus_task_id": "TASK-052",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-058",
+        "title": "Move validation engine into gateway layer",
+        "summary": "Implemented TASK-058 by moving validation gateway engine ownership into src/gateway/** with src/validation/** compatibility-only shims.",
+        "spec_paths": [
+          ".codewiki/kb/system/validation-gateway.md"
+        ],
+        "code_paths": [
+          "src/gateway/report.ts",
+          "src/gateway/tool.ts",
+          "src/gateway/preflight.ts",
+          "src/gateway/types.ts",
+          "src/gateway/transaction.ts",
+          "src/validation/report.ts",
+          "src/validation/tool.ts",
+          "src/validation/types.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "src/gateway/index.ts",
+          "src/validation/index.ts",
+          "src/validation/preflight.ts",
+          "src/api/tools.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/runtime/ports.ts",
+          "src/runtime/runner.ts",
+          "src/roadmap/runtime.ts",
+          "src/state/artifacts.ts",
+          "src/state/builders.ts",
+          "src/state/graph.ts",
+          "src/state/lint.ts",
+          "src/state/prompt.ts",
+          "src/state/resume-context.ts",
+          "package.json",
+          "README.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        ],
+        "acceptance": [
+          "src/gateway/** owns report/preflight/tool/types/transaction gate semantics.",
+          "src/validation/** live source is removed or no longer owns implementation behavior.",
+          "Gateway docs/skills/tests use gateway naming for pass/fail/block reports and preflight.",
+          "Existing validation behavior is preserved under gateway names and all gateway/preflight/build tests pass."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted gateway preflight/build validation tests",
+          "search proves live src/validation implementation ownership is removed."
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        "checks_run": [
+          "lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors",
+          "ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes",
+          "ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts",
+          "ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts",
+          "npm run typecheck: pass",
+          "npm run check:architecture: pass",
+          "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass (38/38)",
+          "npm run test:pack: pass",
+          "codewiki_audit file-structure: pass",
+          "codewiki_audit horizontal-alignment/task TASK-058: pass",
+          "codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only"
+        ],
+        "test_design_evidence": [
+          "Renamed and expanded gateway-preflight smoke coverage to import gateway-owned report/preflight APIs directly.",
+          "Updated TASK-022 source-root guard to assert src/validation/** is compatibility-only and API facade imports gateway/tool.ts.",
+          "Updated package smoke to treat src/gateway/index.ts as the package-facing gateway subsystem facade.",
+          "Updated downstream task smoke tests to read gateway/report.ts instead of validation/report.ts."
+        ],
+        "code_change_evidence": [
+          "Moved validation report/preflight/tool/types implementation into src/gateway/**.",
+          "Left src/validation/** as deprecated compatibility-only re-export shims.",
+          "Updated API facade, adapter schemas, UI/state/runtime imports, and runtime port naming to consume gateway-owned types/report APIs.",
+          "Renamed gateway preflight smoke test and added it to npm run test:smoke.",
+          "Updated validation-gateway and file-structure docs plus diagram map to reflect gateway ownership and validation shim compatibility."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-058",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-058",
+      "show_build": "git show refs/codewiki/archive/task/TASK-058:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+        ".codewiki/kb/system/validation-gateway.md",
+        "src/gateway/report.ts",
+        "src/gateway/tool.ts",
+        "src/gateway/preflight.ts",
+        "src/gateway/types.ts",
+        "src/gateway/transaction.ts",
+        "src/validation/report.ts",
+        "src/validation/tool.ts",
+        "src/validation/types.ts",
+        "tests/smoke/gateway-preflight.test.mjs",
+        "tests/smoke/builds.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-058 Move validation engine into gateway layer implementation evidence",
+      "body": "Implemented TASK-058 by moving validation gateway engine ownership into src/gateway/** with src/validation/** compatibility-only shims.\n\nChecks: lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors, ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes, ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts, ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts, npm run typecheck: pass, npm run check:architecture: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass, codewiki_audit file-structure: pass, codewiki_audit horizontal-alignment/task TASK-058: pass, codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-058\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json\nCodeWiki-Checks: lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors, ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes, ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts, ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts, npm run typecheck: pass, npm run check:architecture: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass, codewiki_audit file-structure: pass, codewiki_audit horizontal-alignment/task TASK-058: pass, codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-058\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-058\nCodeWiki-Digest: sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de\nCodeWiki-Restore: /wiki-restore TASK-058",
+      "trailers": [
+        "CodeWiki-Task: TASK-058",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+        "CodeWiki-Checks: lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors, ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes, ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts, ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts, npm run typecheck: pass, npm run check:architecture: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass, codewiki_audit file-structure: pass, codewiki_audit horizontal-alignment/task TASK-058: pass, codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-058",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-058",
+        "CodeWiki-Digest: sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de",
+        "CodeWiki-Restore: /wiki-restore TASK-058"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-058 Move validation engine into gateway layer implementation evidence",
+      "body": "Implemented TASK-058 by moving validation gateway engine ownership into src/gateway/** with src/validation/** compatibility-only shims.\n\nChecks: lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors, ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes, ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts, ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts, npm run typecheck: pass, npm run check:architecture: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass, codewiki_audit file-structure: pass, codewiki_audit horizontal-alignment/task TASK-058: pass, codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-058\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json\nCodeWiki-Checks: lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors, ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes, ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts, ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts, npm run typecheck: pass, npm run check:architecture: pass, node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass (38/38), npm run test:pack: pass, codewiki_audit file-structure: pass, codewiki_audit horizontal-alignment/task TASK-058: pass, codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-058\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-058\nCodeWiki-Digest: sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de\nCodeWiki-Restore: /wiki-restore TASK-058"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-058",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-058"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-058",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-058",
+        "show_build": "git show refs/codewiki/archive/task/TASK-058:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+          ".codewiki/kb/system/validation-gateway.md",
+          "src/gateway/report.ts",
+          "src/gateway/tool.ts",
+          "src/gateway/preflight.ts",
+          "src/gateway/types.ts",
+          "src/gateway/transaction.ts",
+          "src/validation/report.ts",
+          "src/validation/tool.ts",
+          "src/validation/types.ts",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/builds.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-058",
+      "build_path": ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-058",
+      "commit_sha": "",
+      "digest": "sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de",
+      "restore_command": "/wiki-restore TASK-058"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:a6aca8ff8aa688928595e8b98e83724d50d0debc03f50873196f67a0b87b799d",
+          "bytes": 12033
+        },
+        {
+          "path": "tests/smoke/gateway-preflight.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c09c4684af5691938f961a0d44248712467681cf07dbb1c96eb801bc5773fc4a",
+          "bytes": 25498
+        },
+        {
+          "path": "tests/smoke/builds.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:9a2e31b1bb45f915bd43b91f163c74c79704429116f428a4cde3f292d9706b55",
+          "bytes": 29933
+        },
+        {
+          "path": "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0e57a8343f3bc62da72a4bc63a585123d8c12620a01a3976652b45ea62a59173",
+          "bytes": 3911
+        },
+        {
+          "path": "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:6a3db6adea1a8a3c6ecc126958bdd7c21cf4c61ac3703cb2570767829087816b",
+          "bytes": 8717
+        },
+        {
+          "path": "tests/smoke/package-smoke.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:72d180b508ce40b419a12e6bb17f653471dd48cb806b39f71e0dc910777de078",
+          "bytes": 111047
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
+          "bytes": 7821
+        },
+        {
+          "path": "tests/smoke/quality-profile.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:fe3610f8c38d0c74ccc4cbd06e57f679024693fa41377e10c8d07200639239bc",
+          "bytes": 6588
+        },
+        {
+          "path": "tests/smoke/loop-isolation-policy.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f2a2860e60d08d47bddf4183e71254bfca021f239430f5bfb7cbbf92bced761d",
+          "bytes": 16854
+        },
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:6749f4e864ba20285608b9fd042b7c6b12d81f78af964b2d69bb0cfa7b0f2910",
+          "bytes": 15042
+        },
+        {
+          "path": "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:34773c4a88652a47c1b471ddc7d7b03e46e7313bb4af3af75b2c6413135b1a48",
+          "bytes": 11716
+        },
+        {
+          "path": "tests/smoke/role-worktree-isolation.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:30c36fb2a8ffebce12e71fe3c2fe564941d3cef8735739cbdc30356648275498",
+          "bytes": 12378
+        },
+        {
+          "path": "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:c2f0a1cbedd098869bbec355ff7619cdd8a1201eeefc586b14b1bf982d25bb33",
+          "bytes": 17705
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:3e594a6825a5c8ff543cc6af19173125ffeefad474cc58913b7a45ad085c8861",
+          "bytes": 55264
+        },
+        {
+          "path": "src/gateway/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:67599f59945f190846068d2bccd3f6ed58f4355d567a9db6019c76240324f76b",
+          "bytes": 923
+        },
+        {
+          "path": "src/gateway/preflight.ts",
+          "role": "code_file",
+          "sha256": "sha256:6d219b785098c546ddc37204eabac1e5bd0ad8b12920739da85b48e0e8289d44",
+          "bytes": 53
+        },
+        {
+          "path": "src/gateway/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:1474f09e41b4228e5da33d68053ee48c086381c957486208d51a05277261be7e",
+          "bytes": 1854
+        },
+        {
+          "path": "src/gateway/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:ad84679aa038464cc92a8df5a690d92b5190ac358e82b4edcf1640ef1d42d328",
+          "bytes": 9172
+        },
+        {
+          "path": "src/gateway/transaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:b0859ce2016511956a7a8fc453df6a17174d334c7fe9171a4ba87e03e8da5d6a",
+          "bytes": 6885
+        },
+        {
+          "path": "src/validation/index.ts",
+          "role": "code_file",
+          "sha256": "sha256:d797439860a4cb4549f20b8e7488109770b5753346bca26a4a5b2a9b19fffe2b",
+          "bytes": 186
+        },
+        {
+          "path": "src/validation/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:22b68c4b58e82cf19a608a8d51da225402c06273864be481475162e57583ae25",
+          "bytes": 192
+        },
+        {
+          "path": "src/validation/tool.ts",
+          "role": "code_file",
+          "sha256": "sha256:6b3585b740b75357488c807d5fa54704851d85e83a0602717bdcdf9dca96169e",
+          "bytes": 120
+        },
+        {
+          "path": "src/validation/preflight.ts",
+          "role": "code_file",
+          "sha256": "sha256:c4661d3ef6c4d7abd0781e4b92ac707eefd26aa65dd8fbcc5754e7551cfe24e4",
+          "bytes": 150
+        },
+        {
+          "path": "src/validation/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:572e3c976386238df8031ac135991dfa456b48817777a4b33ada1a9d6979df21",
+          "bytes": 356
+        },
+        {
+          "path": "src/api/tools.ts",
+          "role": "code_file",
+          "sha256": "sha256:122d0cfe5bb0df45cd5996064aa2307931eb4701ac1d9bb301e813bbfa3dea18",
+          "bytes": 925
+        },
+        {
+          "path": "src/adapters/pi/schemas.ts",
+          "role": "code_file",
+          "sha256": "sha256:c730ee310844ea85f360e761e9c20efce90696e0bc6717958af3bc8d3905e154",
+          "bytes": 33995
+        },
+        {
+          "path": "src/adapters/pi/ui/manager.ts",
+          "role": "code_file",
+          "sha256": "sha256:48e06212154204799a1b0f6e5bf07f3a48b238347a67ebe030547086a53c8332",
+          "bytes": 74869
+        },
+        {
+          "path": "src/adapters/pi/ui/theme.ts",
+          "role": "code_file",
+          "sha256": "sha256:b285a5c35d763b39d58965ffc8b92b5ce224a26124316bc92793be796d6daa7d",
+          "bytes": 8370
+        },
+        {
+          "path": "src/runtime/ports.ts",
+          "role": "code_file",
+          "sha256": "sha256:13c8906ffbc20ebe8e364dda57ad1ae06fb763c251cd941e88255a0c0eb2053a",
+          "bytes": 654
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "role": "code_file",
+          "sha256": "sha256:8d96d0605ab89bc6f283c271dbdd61a4a8b14425b430f86d96effc2986032512",
+          "bytes": 18207
+        },
+        {
+          "path": "src/roadmap/runtime.ts",
+          "role": "code_file",
+          "sha256": "sha256:5da3ca16484e5d5801929f34a8116b7f379badfffa63b9d6b05f46070677e2ae",
+          "bytes": 48973
+        },
+        {
+          "path": "src/state/artifacts.ts",
+          "role": "code_file",
+          "sha256": "sha256:e1c876d44fa63146019552a1d203c73eace04873c613eb9743aff24a6a033f63",
+          "bytes": 4761
+        },
+        {
+          "path": "src/state/builders.ts",
+          "role": "code_file",
+          "sha256": "sha256:e2c7f8e1e16951f60a25f7eb4a66788331830526082e8a313a3f69fb6bb6af29",
+          "bytes": 52263
+        },
+        {
+          "path": "src/state/graph.ts",
+          "role": "code_file",
+          "sha256": "sha256:f855c63402b0b4b79510e8bb13081f567de0e0980c56bc21075a29aba5b47eae",
+          "bytes": 86730
+        },
+        {
+          "path": "src/state/lint.ts",
+          "role": "code_file",
+          "sha256": "sha256:09f4d1e1c6af03230d6800d8e26ec38670a25e7a10aa8dbe07ea520e83d576ec",
+          "bytes": 24252
+        },
+        {
+          "path": "src/state/prompt.ts",
+          "role": "code_file",
+          "sha256": "sha256:3fa568f161737cc4be298b91614629640bf97384b69b0892edcf93391b533587",
+          "bytes": 9617
+        },
+        {
+          "path": "src/state/resume-context.ts",
+          "role": "code_file",
+          "sha256": "sha256:76689fc1bedb213402c37563536bf8d1bc1e36602282f4c133523a1ea062e9b6",
+          "bytes": 9883
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:2086b08bd0c86d06536db4d62807d86a78ee99ef13fb1bf47a5da0951433cfa0",
+          "bytes": 2789
+        },
+        {
+          "path": "README.md",
+          "role": "code_file",
+          "sha256": "sha256:669448a181a27c8deb259ca041d4b13cb6794210881ba0c656aece3b0eebf0bd",
+          "bytes": 24987
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "role": "code_file",
+          "sha256": "sha256:7bd4a8a02089291749c3ed8a2e9256521cdd06f398922b325677eee6956f214c",
+          "bytes": 13705
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:287b0bf0e2f7da2cb5237c37a10c515dbc32880beadd949a5fcf05fdde187f0f",
+          "bytes": 13198
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:b2adf7455d830f1974c4985cea77d2796bb692b788d5c77460ffc273abaae377",
+          "bytes": 21990
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-058",
+      "source_build": ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/gateway/report.ts",
+          "src/gateway/tool.ts",
+          "src/gateway/preflight.ts",
+          "src/gateway/types.ts",
+          "src/gateway/index.ts",
+          "src/gateway/transaction.ts",
+          "src/validation/index.ts",
+          "src/validation/report.ts",
+          "src/validation/tool.ts",
+          "src/validation/preflight.ts",
+          "src/validation/types.ts",
+          "src/api/tools.ts",
+          "src/adapters/pi/schemas.ts",
+          "src/adapters/pi/ui/manager.ts",
+          "src/adapters/pi/ui/theme.ts",
+          "src/runtime/ports.ts",
+          "src/runtime/runner.ts",
+          "src/roadmap/runtime.ts",
+          "src/state/artifacts.ts",
+          "src/state/builders.ts",
+          "src/state/graph.ts",
+          "src/state/lint.ts",
+          "src/state/prompt.ts",
+          "src/state/resume-context.ts",
+          "package.json",
+          "README.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "tests/smoke/gateway-preflight.test.mjs",
+          "tests/smoke/builds.test.mjs",
+          "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+          "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/quality-profile.test.mjs",
+          "tests/smoke/loop-isolation-policy.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/smoke/alignment-drift-fixtures.test.mjs",
+          "tests/smoke/role-worktree-isolation.test.mjs",
+          "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-058",
+        "restore_command": "/wiki-restore TASK-058"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics changed gateway/validation/runtime/test files: pass/no errors",
+        "ast-grep src/validation function/class search: no matches, proving shims own no implementation functions/classes",
+        "ast-grep src/gateway/tool.ts import proof: imports buildGatewayPreflight/writeGatewayReport from ./report.ts",
+        "ast-grep src/api/tools.ts proof: codewiki validation facade exports from ../gateway/tool.ts",
+        "npm run typecheck: pass",
+        "npm run check:architecture: pass",
+        "node --experimental-strip-types ./tests/smoke/gateway-preflight.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-026/change-diff-table-source-root.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/package-smoke.test.mjs: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass (38/38)",
+        "npm run test:pack: pass",
+        "codewiki_audit file-structure: pass",
+        "codewiki_audit horizontal-alignment/task TASK-058: pass",
+        "codewiki_audit task/changed/alignment TASK-058: warning only; task pass, changed/generated warnings only, graph health warnings only"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

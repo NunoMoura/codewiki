@@ -143,20 +143,22 @@ nodes:
       - src/checks/**
       - tests/smoke/horizontal-alignment.test.mjs
   - id: build_validation_gateway_wave
-    label: Build, validation, and gateway concept-root wave
+    label: Build and gateway concept-root wave
     group: source_target
     kind: component
     source: .codewiki/kb/system/file-structure.md
     requires_doc: true
-    status: task_close_validated_by_task_022
-    task_id: TASK-022
-    validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-022.json
+    status: gateway_ownership_updated_by_task_058
+    task_id: TASK-058
+    prior_validation_ref: .codewiki/validation/2026-05-26-task-close-pass-task-022.json
     cleanup_state: old_build_validation_gateway_paths_removed
     paths:
       - src/build/**
-      - src/validation/**
       - src/gateway/**
       - tests/tasks/TASK-022/**
+      - tests/smoke/gateway-preflight.test.mjs
+    compatibility_paths:
+      - src/validation/**
     removed_paths:
       - src/domain/build/**
       - src/domain/validation/**

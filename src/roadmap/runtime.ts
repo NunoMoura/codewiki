@@ -17,7 +17,7 @@ import type {
 	CodewikiSprintInput,
 } from "./types.ts";
 import type { RoadmapStateTaskSummary } from "../state/types.ts";
-import type { TaskVerifierResult } from "../validation/types.ts";
+import type { TaskVerifierResult } from "../gateway/types.ts";
 import { CHANGE_TYPE_VALUES } from "../change/types.ts";
 import { ROADMAP_STATUS_VALUES, ROADMAP_PRIORITY_VALUES } from "./types.ts";
 import { unique, nowIso, formatError } from "../shared/utils.ts";

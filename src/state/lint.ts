@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
-import type { LintIssue, LintReport } from "../validation/types.ts";
+import type { LintIssue, LintReport } from "../gateway/types.ts";
 import { extractLinks } from "../knowledge/doc-parser.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";

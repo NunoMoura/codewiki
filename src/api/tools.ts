@@ -11,4 +11,4 @@ export { executeCodewikiArtifactStatusTool } from "../session/artifact-status-to
 export { executeCodewikiSessionTool } from "../session/tool.ts";
 export { executeCodewikiResumeContextTool } from "../state/resume-tool.ts";
 export { executeCodewikiStateTool } from "../state/tool.ts";
-export { executeCodewikiValidationTool } from "../validation/tool.ts";
+export { executeCodewikiValidationTool } from "../gateway/tool.ts";

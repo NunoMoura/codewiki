@@ -84,7 +84,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `codewiki_agency` entrypoint |
 | CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
-| Validation gateway | `validation-gateway.md` | `src/validation/**`, `src/gateway/**`, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
+| Validation gateway | `validation-gateway.md` | `src/gateway/**` gateway report/preflight/tool/type/transaction ownership, `src/validation/**` compatibility re-export shims, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Production quality profile | `validation-gateway.md` | `src/quality/**`, production-ready promotion checks, review thresholds, package readiness, and waiver policy |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
@@ -136,7 +136,13 @@ Accepted direction: concept-root source ownership. Main concepts live in `src/<c
 Current source roots:
 
 ```text
-src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,validation,shared,adapters,ui}/
+src/{api,agency,audit,build,change,checks,gc,gateway,knowledge,project,roadmap,runtime,session,state,shared,adapters,ui}/
+
+Compatibility-only shim roots:
+
+```text
+src/validation/** -> src/gateway/**
+```
 ```
 
 Deprecated roots:
@@ -145,7 +151,7 @@ Deprecated roots:
 src/{domain,application}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a new concept root for bounded CodeWiki execution orchestration; this root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a new concept root for bounded CodeWiki execution orchestration; this root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state. TASK-058 moves validation gateway implementation ownership into `src/gateway/**` and leaves `src/validation/**` as compatibility-only re-export shims.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 

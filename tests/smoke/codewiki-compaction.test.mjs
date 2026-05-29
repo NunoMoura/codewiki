@@ -22,7 +22,7 @@ import {
 	writeDecisionBuild,
 	writePlanningBuild,
 } from "../../src/build/writer.ts";
-import { writeValidationReport } from "../../src/validation/report.ts";
+import { writeGatewayReport } from "../../src/gateway/report.ts";
 import { loadProject } from "../../src/project/context.ts";
 
 assert.equal(
@@ -435,7 +435,7 @@ async function createCompactionFixture({ openTask = true } = {}) {
 			},
 			knowledge_changes: [".codewiki/kb/system/graph.md"],
 		});
-		await writeValidationReport(project, {
+		await writeGatewayReport(project, {
 			profile: "decision",
 			verdict: "pass",
 			rationale: "Decision pass for compaction resume proof.",
@@ -470,7 +470,7 @@ async function createCompactionFixture({ openTask = true } = {}) {
 			candidate_test_files: ["tests/smoke/codewiki-compaction.test.mjs"],
 			candidate_code_paths: ["src/adapters/pi/compaction.ts"],
 		});
-		await writeValidationReport(project, {
+		await writeGatewayReport(project, {
 			profile: "planning",
 			verdict: "pass",
 			rationale: "Planning pass for compaction resume proof.",

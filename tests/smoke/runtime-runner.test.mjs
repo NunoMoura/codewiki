@@ -276,6 +276,6 @@ async function readQueue(project) {
 	assert.equal(
 		result.budget_used.writes,
 		2,
-		"validation preflight path should also release its claim",
+		"gateway preflight path should also release its claim",
 	);
 }

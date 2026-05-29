@@ -28,7 +28,7 @@ import type {
 	RoadmapStateFile,
 	RoadmapTaskContextPacket,
 } from "./types.ts";
-import type { LintReport } from "../validation/types.ts";
+import type { LintReport } from "../gateway/types.ts";
 
 export interface BuildCodewikiResumeContextInput {
 	requestedTaskId?: string | null;

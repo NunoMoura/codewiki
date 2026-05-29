@@ -9,17 +9,17 @@ import {
 	writePlanningBuild,
 } from "../../src/build/writer.ts";
 import {
-	buildValidationPreflight,
-	writeValidationReport,
-} from "../../src/validation/report.ts";
+	buildGatewayPreflight,
+	writeGatewayReport,
+} from "../../src/gateway/report.ts";
 
-const root = await mkdtemp(join(tmpdir(), "codewiki-validation-preflight-"));
+const root = await mkdtemp(join(tmpdir(), "codewiki-gateway-preflight-"));
 
 const project = {
 	root,
-	label: "validation-preflight-smoke",
+	label: "gateway-preflight-smoke",
 	config: {
-		project_name: "validation-preflight-smoke",
+		project_name: "gateway-preflight-smoke",
 		schema_version: 4,
 		specs_root: ".codewiki/kb",
 		generated_files: [".codewiki/index_graph.json"],
@@ -52,7 +52,7 @@ const publicationAuditRefs = [
 ];
 
 async function writeGatewayPass(profile, source, options = {}) {
-	return writeValidationReport(project, {
+	return writeGatewayReport(project, {
 		profile,
 		verdict: "pass",
 		rationale: `${profile} gateway pass for fixture ${source}.`,
@@ -72,12 +72,12 @@ async function writeGatewayPass(profile, source, options = {}) {
 try {
 	const decision = await writeDecisionBuild(project, {
 		kind: "decision",
-		summary: "Accept validation preflight risk policy.",
+		summary: "Accept gateway preflight risk policy.",
 		diff_table: [
 			{
 				id: "VAL-PREFLIGHT",
-				current_state: "Validation preflight is weaker.",
-				desired_state: "Validation preflight enforces semantic metadata.",
+				current_state: "Gateway preflight is weaker.",
+				desired_state: "Gateway preflight enforces semantic metadata.",
 				rationale: "Smoke coverage needs accepted intent.",
 				affected_layers: ["system", "roadmap", "code"],
 				user_action: "approved",
@@ -101,16 +101,16 @@ try {
 	await writeGatewayPass("decision", decision.path);
 	const planning = await writePlanningBuild(project, {
 		kind: "planning",
-		summary: "Plan validation preflight risk policy.",
+		summary: "Plan gateway preflight risk policy.",
 		source_decision_build: decision.path,
 		task_ids: ["TASK-777"],
-		task_changes: ["TASK-777 covers validation preflight."],
+		task_changes: ["TASK-777 covers gateway preflight."],
 		decision_row_resolutions: [
 			{
 				row_id: "VAL-PREFLIGHT",
 				resolution: "roadmap-task",
 				task_ids: ["TASK-777"],
-				evidence: "TASK-777 implements accepted validation preflight policy.",
+				evidence: "TASK-777 implements accepted gateway preflight policy.",
 				source_refs: [decision.path, "TASK-777"],
 			},
 		],
@@ -125,7 +125,7 @@ try {
 			},
 		],
 		tdd_plan: ["Add gateway/preflight smoke coverage."],
-		candidate_test_files: ["tests/smoke/validation-preflight.test.mjs"],
+		candidate_test_files: ["tests/smoke/gateway-preflight.test.mjs"],
 		candidate_code_paths: ["src/build/writer.ts"],
 	});
 
@@ -137,9 +137,9 @@ try {
 			source_planning_build: planning.path,
 			task_id: "TASK-777",
 			change_type: "system",
-			test_files: ["tests/smoke/validation-preflight.test.mjs"],
+			test_files: ["tests/smoke/gateway-preflight.test.mjs"],
 			code_files: ["src/build/writer.ts"],
-			checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
+			checks_run: ["node tests/smoke/gateway-preflight.test.mjs"],
 			acceptance_mapping: [
 				{
 					criterion: "Planning gateway required",
@@ -150,11 +150,11 @@ try {
 				user_intent: "Prove planning gateway is required.",
 				implemented_changes: ["Added fixture before planning pass."],
 				acceptance_evidence: ["Preflight blocks missing planning pass."],
-				checks: ["node tests/smoke/validation-preflight.test.mjs"],
+				checks: ["node tests/smoke/gateway-preflight.test.mjs"],
 			},
 		},
 	);
-	const missingPlanningGateway = buildValidationPreflight(project, {
+	const missingPlanningGateway = buildGatewayPreflight(project, {
 		profile: "implementation",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -173,7 +173,7 @@ try {
 			entry.includes("missing_planning_validation_pass"),
 		),
 	);
-	const missingPlanningGatewayReport = await writeValidationReport(project, {
+	const missingPlanningGatewayReport = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -197,13 +197,13 @@ try {
 
 	const semanticImplementation = await writeImplementationBuild(project, {
 		kind: "implementation",
-		summary: "Implement semantic validation preflight.",
+		summary: "Implement semantic gateway preflight.",
 		source_planning_build: planning.path,
 		task_id: "TASK-777",
 		change_type: "system",
-		test_files: ["tests/smoke/validation-preflight.test.mjs"],
-		code_files: ["src/build/writer.ts", "src/validation/tool.ts"],
-		checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
+		test_files: ["tests/smoke/gateway-preflight.test.mjs"],
+		code_files: ["src/build/writer.ts", "src/gateway/tool.ts"],
+		checks_run: ["node tests/smoke/gateway-preflight.test.mjs"],
 		acceptance_mapping: [
 			{
 				criterion: "Preflight reports missing metadata",
@@ -212,10 +212,10 @@ try {
 			},
 		],
 		closure_brief: {
-			user_intent: "Implement validation preflight.",
-			implemented_changes: ["Added validation preflight risk policy."],
+			user_intent: "Implement gateway preflight.",
+			implemented_changes: ["Added gateway preflight risk policy."],
 			acceptance_evidence: ["Preflight smoke assertions pass."],
-			checks: ["node tests/smoke/validation-preflight.test.mjs"],
+			checks: ["node tests/smoke/gateway-preflight.test.mjs"],
 		},
 		publication: {
 			safe_to_push: true,
@@ -225,7 +225,7 @@ try {
 		},
 	});
 
-	const missingMetadata = buildValidationPreflight(project, {
+	const missingMetadata = buildGatewayPreflight(project, {
 		profile: "implementation",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -247,7 +247,7 @@ try {
 		),
 	);
 
-	const staleSource = buildValidationPreflight(project, {
+	const staleSource = buildGatewayPreflight(project, {
 		profile: "implementation",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -303,7 +303,7 @@ try {
 		open_questions: ["Who owns UNMAPPED-ROW?"],
 		tdd_plan: ["Prove planning validation blocks unmapped rows."],
 	});
-	const propagationBlocked = buildValidationPreflight(project, {
+	const propagationBlocked = buildGatewayPreflight(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Planning cannot pass with unmapped accepted row.",
@@ -318,7 +318,7 @@ try {
 	);
 	assert.equal(propagationBlocked.routing.failure_class, "planning_gap");
 	assert.equal(propagationBlocked.routing.recommended_next_loop, "planning");
-	const propagationBlockedReport = await writeValidationReport(project, {
+	const propagationBlockedReport = await writeGatewayReport(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Planning cannot pass with unmapped accepted row.",
@@ -329,7 +329,7 @@ try {
 	assert.equal(propagationBlockedReport.data.failure_class, "planning_gap");
 	assert.equal(propagationBlockedReport.data.recommended_next_loop, "planning");
 
-	const explicitRouteReport = await writeValidationReport(project, {
+	const explicitRouteReport = await writeGatewayReport(project, {
 		profile: "decision",
 		verdict: "fail",
 		rationale: "Validator found a planning-only gap.",
@@ -371,7 +371,7 @@ try {
 		},
 		knowledge_changes: [".codewiki/kb/system/validation-gateway.md"],
 	});
-	const pendingApprovedPreflight = buildValidationPreflight(project, {
+	const pendingApprovedPreflight = buildGatewayPreflight(project, {
 		profile: "decision",
 		verdict: "pass",
 		rationale: "Pending approved rows must block.",
@@ -464,7 +464,7 @@ try {
 			},
 		],
 	});
-	const deferredPreflight = buildValidationPreflight(project, {
+	const deferredPreflight = buildGatewayPreflight(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Knowledge-only and deferred rows are fully resolved.",
@@ -536,7 +536,7 @@ try {
 			},
 		],
 	});
-	const triggerSatisfiedPreflight = buildValidationPreflight(project, {
+	const triggerSatisfiedPreflight = buildGatewayPreflight(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Satisfied deferral triggers must not pass as resolved.",
@@ -573,7 +573,7 @@ try {
 			checks: ["codewiki_state refresh=true"],
 		},
 	});
-	const mechanicalPreflight = buildValidationPreflight(project, {
+	const mechanicalPreflight = buildGatewayPreflight(project, {
 		profile: "implementation",
 		task_id: "TASK-778",
 		verdict: "pass",
@@ -592,7 +592,7 @@ try {
 	assert.equal(mechanicalPreflight.risk.approval_required, false);
 	assert.equal(mechanicalPreflight.risk.fast_path.eligible, true);
 
-	const mechanicalReport = await writeValidationReport(project, {
+	const mechanicalReport = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-778",
 		verdict: "pass",
@@ -645,7 +645,7 @@ try {
 			"src/adapters/pi/index.ts",
 			"skills/codewiki-implementation/SKILL.md",
 		],
-		checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
+		checks_run: ["node tests/smoke/gateway-preflight.test.mjs"],
 		acceptance_mapping: [
 			{
 				criterion: "Reload guidance appears for Pi-facing changes",
@@ -656,10 +656,10 @@ try {
 			user_intent: "Show reload guidance for live extension paths.",
 			implemented_changes: ["Changed Pi adapter and skill fixtures."],
 			acceptance_evidence: ["Reload guidance report metadata present."],
-			checks: ["node tests/smoke/validation-preflight.test.mjs"],
+			checks: ["node tests/smoke/gateway-preflight.test.mjs"],
 		},
 	});
-	const reloadReport = await writeValidationReport(project, {
+	const reloadReport = await writeGatewayReport(project, {
 		profile: "implementation",
 		task_id: "TASK-779",
 		verdict: "pass",
@@ -683,7 +683,7 @@ try {
 	);
 	assert.match(reloadReport.data.reload_guidance.message, /\/reload/);
 
-	const publicationPreflight = buildValidationPreflight(project, {
+	const publicationPreflight = buildGatewayPreflight(project, {
 		profile: "publication",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -709,7 +709,7 @@ try {
 		),
 	);
 
-	const publicationBlocked = await writeValidationReport(project, {
+	const publicationBlocked = await writeGatewayReport(project, {
 		profile: "publication",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -729,7 +729,7 @@ try {
 	assert.equal(publicationBlocked.data.failure_class, "risk_approval_missing");
 	assert.equal(publicationBlocked.data.recommended_next_loop, "decision");
 
-	const publicationPassed = await writeValidationReport(project, {
+	const publicationPassed = await writeGatewayReport(project, {
 		profile: "publication",
 		task_id: "TASK-777",
 		verdict: "pass",
@@ -752,7 +752,7 @@ try {
 		true,
 	);
 
-	const destructivePreflight = buildValidationPreflight(project, {
+	const destructivePreflight = buildGatewayPreflight(project, {
 		profile: "implementation",
 		policy_profile: "destructive",
 		task_id: "TASK-777",
@@ -773,4 +773,4 @@ try {
 	await rm(root, { recursive: true, force: true });
 }
 
-console.log("✓ validation preflight smoke passed");
+console.log("✓ gateway preflight smoke passed");

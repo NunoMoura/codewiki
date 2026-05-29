@@ -13,16 +13,31 @@ const requiredPaths = [
 	"src/build/decision-propagation.ts",
 	"src/build/writer.ts",
 	"src/build/tool.ts",
-	"src/validation/types.ts",
-	"src/validation/preflight.ts",
-	"src/validation/report.ts",
-	"src/validation/tool.ts",
+	"src/gateway/types.ts",
+	"src/gateway/preflight.ts",
+	"src/gateway/report.ts",
+	"src/gateway/tool.ts",
 	"src/gateway/index.ts",
 	"src/gateway/transaction.ts",
 ];
 
 for (const path of requiredPaths) {
 	assert.ok(existsSync(resolve(repoRoot, path)), `TASK-022 owner path missing: ${path}`);
+}
+
+const validationShimPaths = [
+	"src/validation/index.ts",
+	"src/validation/preflight.ts",
+	"src/validation/report.ts",
+	"src/validation/tool.ts",
+	"src/validation/types.ts",
+];
+
+for (const path of validationShimPaths) {
+	const source = readFileSync(resolve(repoRoot, path), "utf8");
+	assert.match(source, /@deprecated|compatibility/i, `Validation shim must be documented as compatibility-only: ${path}`);
+	assert.match(source, /\.\.\/gateway\//, `Validation shim must re-export from src/gateway: ${path}`);
+	assert.equal(source.includes("from \"./"), false, `Validation shim must not own local behavior: ${path}`);
 }
 
 const removedPaths = [
@@ -60,7 +75,8 @@ const adapterSource = readFileSync(resolve(repoRoot, "src/adapters/pi/index.ts")
 assert.match(adapterSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter must call codewiki_build/codewiki_validation through src/api/tools.ts");
 const apiFacadeSource = readFileSync(resolve(repoRoot, "src/api/tools.ts"), "utf8");
 assert.match(apiFacadeSource, /build\/tool\.ts/, "API facade must expose codewiki_build from src/build/tool.ts");
-assert.match(apiFacadeSource, /validation\/tool\.ts/, "API facade must expose codewiki_validation from src/validation/tool.ts");
+assert.match(apiFacadeSource, /gateway\/tool\.ts/, "API facade must expose codewiki_validation from src/gateway/tool.ts");
+assert.equal(apiFacadeSource.includes("validation/tool.ts"), false, "API facade must not import the validation compatibility shim");
 
 const gatewayScript = readFileSync(resolve(repoRoot, "scripts/codewiki-gateway.mjs"), "utf8");
 assert.match(gatewayScript, /src\/gateway\/index\.ts/, "Gateway script must use src/gateway/index.ts owner path");

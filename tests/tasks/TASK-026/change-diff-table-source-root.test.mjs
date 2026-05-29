@@ -231,8 +231,8 @@ const buildSharedSource = readFileSync(
 	resolve(repoRoot, "src", "build", "shared.ts"),
 	"utf8",
 );
-const validationReportSource = readFileSync(
-	resolve(repoRoot, "src", "validation", "report.ts"),
+const gatewayReportSource = readFileSync(
+	resolve(repoRoot, "src", "gateway", "report.ts"),
 	"utf8",
 );
 
@@ -263,9 +263,9 @@ assert.match(
 	"Build shared helpers should read traceability helpers from src/change/traceability.ts",
 );
 assert.match(
-	validationReportSource,
+	gatewayReportSource,
 	/from "\.\.\/change\/traceability\.ts"/,
-	"Validation report should read traceability helpers from src/change/traceability.ts",
+	"Gateway report should read traceability helpers from src/change/traceability.ts",
 );
 
 function walkCodeFiles(roots) {

@@ -12,7 +12,7 @@ updated: "2026-05-26"
 
 ## Responsibility
 
-The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. It is exposed through the validation tool at `src/validation/tool.ts`, validation report/preflight modules under `src/validation/**`, and gateway transaction helpers under `src/gateway/**`, staying separate from compiler-loop build production.
+The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. Gateway-owned report, preflight, tool, type, and transaction modules live under `src/gateway/**`. The `src/validation/**` tree is compatibility-only re-export glue and must not own implementation behavior. The gateway stays separate from compiler-loop build production.
 
 The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds; commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence and, for implementation builds, verifies commit-readiness.
 
@@ -107,7 +107,7 @@ Verdict remains `pass`, `fail`, or `block`; routing metadata names the smallest 
 
 | Failure class | Meaning | Typical route |
 | --- | --- | --- |
-| `evidence_missing` | Required mapping, checks, audits, or refs are missing. | Same compiler loop or validation preflight. |
+| `evidence_missing` | Required mapping, checks, audits, or refs are missing. | Same compiler loop or gateway preflight. |
 | `compiler_incomplete` | Compiler output is inconsistent or incomplete. | Same compiler loop with superseding build. |
 | `planning_gap` | Accepted intent lacks durable task, sprint, knowledge-only, or deferral state. | Planning. |
 | `decision_ambiguity` | Intent or source truth is ambiguous, contradictory, or unapproved. | Decision. |

@@ -31,7 +31,7 @@ import {
 } from "../state/resume-context.ts";
 import { taskArtifactScopes } from "../state/resume-selection.ts";
 import { buildCodewikiResumeKickoff } from "../state/resume-kickoff.ts";
-import { buildValidationPreflight } from "../validation/report.ts";
+import { buildGatewayPreflight } from "../gateway/report.ts";
 import { formatError, nowIso } from "../shared/utils.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";
 import type { CodewikiRuntimePorts } from "./ports.ts";
@@ -267,7 +267,7 @@ async function latestImplementationBuildForTask(
 				created: String(data?.created || name).trim(),
 			});
 		} catch {
-			// Ignore malformed transient builds; validation preflight will catch explicit refs.
+			// Ignore malformed transient builds; gateway preflight will catch explicit refs.
 		}
 	}
 	return (
@@ -396,7 +396,7 @@ async function runValidationPreflight(
 	build: LatestImplementationBuild,
 ): Promise<CodewikiRuntimeResult> {
 	const preflightBuilder =
-		ports.validationPreflightBuilder ?? buildValidationPreflight;
+		ports.gatewayPreflightBuilder ?? buildGatewayPreflight;
 	const preflight = preflightBuilder(project, {
 		profile: "implementation",
 		verdict: "pass",
@@ -406,7 +406,7 @@ async function runValidationPreflight(
 	});
 	state.budgetUsed.cycles += 1;
 	state.efficiency.manual_commands_avoided += 1;
-	state.events.push(`validation preflight executed for ${build.path}`);
+	state.events.push(`gateway preflight executed for ${build.path}`);
 	const status = String(preflight.status || "").trim();
 	const gateway = {
 		action: "validation_preflight",
@@ -422,7 +422,7 @@ async function runValidationPreflight(
 			executed: true,
 			status: "blocked",
 			action: "validation_preflight",
-			summary: `Implementation validation preflight blocked for ${task.id}.`,
+			summary: `Implementation gateway preflight blocked for ${task.id}.`,
 			task_id: task.id,
 			stop_reason: "validation_block",
 			scopes: claimScopeLabels(taskArtifactScopes(task)),
@@ -435,7 +435,7 @@ async function runValidationPreflight(
 			executed: true,
 			status: "blocked",
 			action: "validation_preflight",
-			summary: `Implementation validation preflight requires risk approval for ${task.id}.`,
+			summary: `Implementation gateway preflight requires risk approval for ${task.id}.`,
 			task_id: task.id,
 			stop_reason: "risk_escalation",
 			scopes: claimScopeLabels(taskArtifactScopes(task)),
@@ -446,7 +446,7 @@ async function runValidationPreflight(
 		executed: true,
 		status: "completed",
 		action: "validation_preflight",
-		summary: `Implementation validation preflight ready for ${task.id}; fresh validation context still required before pass/close.`,
+		summary: `Implementation gateway preflight ready for ${task.id}; fresh validation context still required before pass/close.`,
 		task_id: task.id,
 		scopes: claimScopeLabels(taskArtifactScopes(task)),
 		gateway,

@@ -15,7 +15,7 @@ import type {
 	RoadmapStateTaskSummary,
 	StatusStateFile,
 } from "./types.ts";
-import type { LintIssue, LintReport } from "../validation/types.ts";
+import type { LintIssue, LintReport } from "../gateway/types.ts";
 import type { ParsedDoc } from "../knowledge/doc-parser.ts";
 import { nowIso } from "../shared/utils.ts";
 import { buildChangeClaimState } from "../session/claims.ts";

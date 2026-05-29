@@ -8,7 +8,7 @@ import {
 	writeDecisionBuild,
 	writePlanningBuild,
 } from "../../../src/build/writer.ts";
-import { writeValidationReport } from "../../../src/validation/report.ts";
+import { writeGatewayReport } from "../../../src/gateway/report.ts";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const requiredStateOwners = [
@@ -448,7 +448,7 @@ try {
 		},
 		knowledge_changes: [".codewiki/kb/system/graph.md"],
 	});
-	await writeValidationReport(project, {
+	await writeGatewayReport(project, {
 		profile: "decision",
 		verdict: "pass",
 		rationale: "Decision pass for TASK-030 resume proof.",
@@ -487,7 +487,7 @@ try {
 		],
 		candidate_code_paths: ["src/state/resume-context.ts"],
 	});
-	await writeValidationReport(project, {
+	await writeGatewayReport(project, {
 		profile: "planning",
 		verdict: "pass",
 		rationale: "Planning pass for TASK-030 resume proof.",

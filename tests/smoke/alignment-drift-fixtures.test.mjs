@@ -8,7 +8,7 @@ import { join, resolve } from "node:path";
 import { buildGraph } from "../../src/state/graph.ts";
 import { loadProject } from "../../src/project/context.ts";
 import { writeImplementationBuild, writePlanningBuild } from "../../src/build/writer.ts";
-import { writeValidationReport } from "../../src/validation/report.ts";
+import { writeGatewayReport } from "../../src/gateway/report.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
 
 const matrix = JSON.parse(readFileSync("tests/fixtures/alignment-drift/matrix.json", "utf8"));
@@ -198,7 +198,7 @@ function createAuditFixture({ clean = false } = {}) {
 		const project = { ...baseProject, root, configPath: ".codewiki/config.json" };
 		const planning = await writePlanningBuild(project, { kind: "planning", summary: "Plan", source_decision_build: ".codewiki/builds/decision/decision.json", task_ids: ["TASK-900"], task_changes: ["Plan"], tdd_plan: ["Test"], candidate_test_files: ["tests/smoke/alignment-drift-fixtures.test.mjs"], candidate_code_paths: ["src/state/graph.ts"] });
 		const implementation = await writeImplementationBuild(project, { kind: "implementation", summary: "Implement", source_planning_build: planning.path, task_id: "TASK-900", test_files: ["tests/smoke/alignment-drift-fixtures.test.mjs"], code_files: ["src/state/graph.ts"], checks_run: ["node tests/smoke/alignment-drift-fixtures.test.mjs"], acceptance_mapping: [{ criterion: "fixture", evidence: "test" }], closure_brief: { user_intent: "test", implemented_changes: ["fixture"], acceptance_evidence: ["test"], checks: ["node tests/smoke/alignment-drift-fixtures.test.mjs"] } });
-		const blocked = await writeValidationReport(project, { profile: "implementation", task_id: "TASK-900", verdict: "pass", rationale: "Missing audits", source: implementation.path, isolation: { role: "validator", fresh_context: true, clean: true, validated_sha: "abc123" } });
+		const blocked = await writeGatewayReport(project, { profile: "implementation", task_id: "TASK-900", verdict: "pass", rationale: "Missing audits", source: implementation.path, isolation: { role: "validator", fresh_context: true, clean: true, validated_sha: "abc123" } });
 		assert.equal(blocked.data.verdict, "block");
 		assert.ok(blocked.data.failed_criteria.includes("audit_evidence"), "missing audit evidence fixture should block validation");
 	} finally { await rmSync(root, { recursive: true, force: true }); }
