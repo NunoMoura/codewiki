@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-05-29T21:21:52Z",
+  "updated": "2026-05-29T21:23:36Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-056",
     "TASK-057",
     "TASK-059"
   ],
@@ -533,58 +532,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
-    },
-    "TASK-056": {
-      "id": "TASK-056",
-      "title": "Build parallel merge publisher queue",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "agent-workflow",
-      "summary": "Build a serialized publisher queue that compares worker diffs, validates outputs, commits safe merges, and reroutes conflicts after parallel worktree execution.",
-      "spec_paths": [
-        ".codewiki/kb/system/worktree-isolation.md"
-      ],
-      "code_paths": [
-        "src/session/merge-publisher-queue.ts",
-        "src/session/worker-diff.ts",
-        "src/session/publisher-proof.ts",
-        "tests/smoke/merge-publisher-queue.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "merge-publisher",
-        "worker-diff",
-        "serialized-merge"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Parallel worker outputs are merged through a serialized publisher queue that checks diffs, enforces validation proof, commits safely, and routes conflicts back to workers or planning.",
-        "acceptance": [
-          "Publisher queue ingests worker build/validation refs and worktree diff proofs.",
-          "Merge validator compares diffs for overlap/conflicts, reruns required audits/checks, and blocks unsafe merges.",
-          "Successful merges create local checkpoint/close commits with task/build/validation/tree proof.",
-          "Conflicts produce deterministic wait/reroute evidence and wake affected workers when resolved.",
-          "Tests cover clean merge, conflict, validation failure, stale base, close proof, and no remote publication without approval."
-        ],
-        "non_goals": [
-          "Do not push to remote without explicit user approval.",
-          "Do not replace Git history as the source of merge truth.",
-          "Do not merge unvalidated worker outputs."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "npm run test:features",
-          "targeted publisher/merge queue tests"
-        ]
-      },
-      "delta": {
-        "desired": "A merge/publisher agent serializes validated parallel outputs into safe commits.",
-        "current": "Publisher queue policy and role worktree proof exist, but merge orchestration for parallel worker diffs is not complete.",
-        "closure": "Close when merge queue behavior is implemented, tested, and task-close/publication proof gates pass."
-      },
-      "created": "2026-05-29",
-      "updated": "2026-05-29T21:21:52Z"
     },
     "TASK-057": {
       "id": "TASK-057",
