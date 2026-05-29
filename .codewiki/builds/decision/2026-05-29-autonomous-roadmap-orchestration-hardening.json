@@ -1,0 +1,421 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-29T06:24:56Z",
+  "source": "codewiki_build tool",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-28T06:24:56.000Z",
+    "purge_after": "2026-07-28T06:24:56.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "AUTO-ROADMAP-001",
+      "text": "Create executable roadmap work for first-class horizontal alignment checks across KB, code, and KB-code layers.",
+      "source_refs": [
+        "ROW-010"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "AUTO-ROADMAP-002",
+      "text": "Create executable roadmap work for unattended post-compaction/new-session pickup governed by /wiki-config agency policy.",
+      "source_refs": [
+        "ROW-011"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "AUTO-ROADMAP-003",
+      "text": "Create executable roadmap work for heartbeat/wake coordination and parallel worktree scheduler/merge orchestration.",
+      "source_refs": [
+        "ROW-012"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "AUTO-ROADMAP-004",
+      "text": "Create executable roadmap work to rename codewiki_task to codewiki_roadmap without compatibility alias.",
+      "source_refs": [
+        "ROW-013"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted roadmap direction for autonomous CodeWiki orchestration hardening.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "ROW-010",
+      "current_state": "Horizontal alignment is checked indirectly through graph health, generated parity, typecheck, tests, file-structure audits, and validator review, but no first-class horizontal KB↔KB, code↔code, and KB↔code audit contract exists.",
+      "current_project_state": "Horizontal alignment is checked indirectly through graph health, generated parity, typecheck, tests, file-structure audits, and validator review, but no first-class horizontal KB↔KB, code↔code, and KB↔code audit contract exists.",
+      "desired_state": "Horizontal alignment becomes a first-class audit/gateway capability with deterministic evidence for KB↔KB, code↔code, and KB↔code consistency.",
+      "agreed_change": "Create roadmap work for horizontal alignment audit profiles and source/API/spec assertion evidence.",
+      "expected_final_state": "Validation can require horizontal alignment profiles and report actionable drift/contradiction evidence.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "A production-ready anti-drift pipeline needs same-layer consistency checks, not only vertical traceability.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-011",
+      "current_state": "CodeWiki can produce source-backed resume packets and safe post-gateway compaction, but unattended continuation after compaction or hard new-session boundaries still depends on adapter/orchestrator behavior and user babysitting in some cases.",
+      "current_project_state": "CodeWiki can produce source-backed resume packets and safe post-gateway compaction, but unattended continuation after compaction or hard new-session boundaries still depends on adapter/orchestrator behavior and user babysitting in some cases.",
+      "desired_state": "CodeWiki agency can pick up work after compaction or new-session boundaries without user babysitting when /wiki-config policy allows it.",
+      "agreed_change": "Create roadmap work for an autonomous post-boundary pickup runner seeded by codewiki_resume_context and gated by agency policy.",
+      "expected_final_state": "Approved agency modes can continue bounded task/sprint/roadmap execution from source refs after safe context boundaries.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "True automation requires the agent to resume from durable source refs without manual prompts after safe boundaries.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "adapters"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-012",
+      "current_state": "Sessions coordinate through CodeWiki artifact status and claims, but durable wait/wake semantics and merge orchestration for fully parallel workers need hardening.",
+      "current_project_state": "Sessions coordinate through CodeWiki artifact status and claims, but durable wait/wake semantics and merge orchestration for fully parallel workers need hardening.",
+      "desired_state": "Different sessions communicate only through CodeWiki claims/builds/validation/queue state, with heartbeat, release wakeups, worktree isolation, and merge/publisher orchestration.",
+      "agreed_change": "Create roadmap work for durable wait/wake heartbeat queue, parallel worktree scheduler, and merge validator/publisher queue.",
+      "expected_final_state": "Independent workers can run in parallel, wake when needed artifacts release, and hand diffs to a merge/publisher agent for validation and serialized commits.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "Maximum safe parallelism needs coordination through durable artifacts, not chat between agents.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "session",
+        "agency"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-013",
+      "current_state": "The internal roadmap mutation tool is still named codewiki_task even though it manages tasks, sprints, checkpoints, archive state, and roadmap truth.",
+      "current_project_state": "The internal roadmap mutation tool is still named codewiki_task even though it manages tasks, sprints, checkpoints, archive state, and roadmap truth.",
+      "desired_state": "The internal tool is renamed to codewiki_roadmap, with no backward-compatible codewiki_task alias required.",
+      "agreed_change": "Create roadmap work to rename codewiki_task to codewiki_roadmap across tool registration, schemas, docs, skills, tests, and examples, fixing breakage directly rather than maintaining compatibility.",
+      "expected_final_state": "Agents use codewiki_roadmap for all roadmap/sprint mutations; codewiki_task references are removed unless historical artifacts retain their past text.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "Tool naming should reflect canonical ownership: roadmap mutation, not only task mutation.",
+      "affected_layers": [
+        "roadmap",
+        "code",
+        "tests",
+        "skills",
+        "api"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "approved_diff_rows": [
+    "ROW-010",
+    "ROW-011",
+    "ROW-012",
+    "ROW-013"
+  ],
+  "approved_rows": [
+    {
+      "id": "ROW-010",
+      "current_state": "Horizontal alignment is checked indirectly through graph health, generated parity, typecheck, tests, file-structure audits, and validator review, but no first-class horizontal KB↔KB, code↔code, and KB↔code audit contract exists.",
+      "current_project_state": "Horizontal alignment is checked indirectly through graph health, generated parity, typecheck, tests, file-structure audits, and validator review, but no first-class horizontal KB↔KB, code↔code, and KB↔code audit contract exists.",
+      "desired_state": "Horizontal alignment becomes a first-class audit/gateway capability with deterministic evidence for KB↔KB, code↔code, and KB↔code consistency.",
+      "agreed_change": "Create roadmap work for horizontal alignment audit profiles and source/API/spec assertion evidence.",
+      "expected_final_state": "Validation can require horizontal alignment profiles and report actionable drift/contradiction evidence.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "A production-ready anti-drift pipeline needs same-layer consistency checks, not only vertical traceability.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "validation"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-011",
+      "current_state": "CodeWiki can produce source-backed resume packets and safe post-gateway compaction, but unattended continuation after compaction or hard new-session boundaries still depends on adapter/orchestrator behavior and user babysitting in some cases.",
+      "current_project_state": "CodeWiki can produce source-backed resume packets and safe post-gateway compaction, but unattended continuation after compaction or hard new-session boundaries still depends on adapter/orchestrator behavior and user babysitting in some cases.",
+      "desired_state": "CodeWiki agency can pick up work after compaction or new-session boundaries without user babysitting when /wiki-config policy allows it.",
+      "agreed_change": "Create roadmap work for an autonomous post-boundary pickup runner seeded by codewiki_resume_context and gated by agency policy.",
+      "expected_final_state": "Approved agency modes can continue bounded task/sprint/roadmap execution from source refs after safe context boundaries.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "True automation requires the agent to resume from durable source refs without manual prompts after safe boundaries.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "adapters"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-012",
+      "current_state": "Sessions coordinate through CodeWiki artifact status and claims, but durable wait/wake semantics and merge orchestration for fully parallel workers need hardening.",
+      "current_project_state": "Sessions coordinate through CodeWiki artifact status and claims, but durable wait/wake semantics and merge orchestration for fully parallel workers need hardening.",
+      "desired_state": "Different sessions communicate only through CodeWiki claims/builds/validation/queue state, with heartbeat, release wakeups, worktree isolation, and merge/publisher orchestration.",
+      "agreed_change": "Create roadmap work for durable wait/wake heartbeat queue, parallel worktree scheduler, and merge validator/publisher queue.",
+      "expected_final_state": "Independent workers can run in parallel, wake when needed artifacts release, and hand diffs to a merge/publisher agent for validation and serialized commits.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "Maximum safe parallelism needs coordination through durable artifacts, not chat between agents.",
+      "affected_layers": [
+        "knowledge",
+        "roadmap",
+        "code",
+        "tests",
+        "session",
+        "agency"
+      ],
+      "risk": "high",
+      "user_action": "approved",
+      "alternatives": []
+    },
+    {
+      "id": "ROW-013",
+      "current_state": "The internal roadmap mutation tool is still named codewiki_task even though it manages tasks, sprints, checkpoints, archive state, and roadmap truth.",
+      "current_project_state": "The internal roadmap mutation tool is still named codewiki_task even though it manages tasks, sprints, checkpoints, archive state, and roadmap truth.",
+      "desired_state": "The internal tool is renamed to codewiki_roadmap, with no backward-compatible codewiki_task alias required.",
+      "agreed_change": "Create roadmap work to rename codewiki_task to codewiki_roadmap across tool registration, schemas, docs, skills, tests, and examples, fixing breakage directly rather than maintaining compatibility.",
+      "expected_final_state": "Agents use codewiki_roadmap for all roadmap/sprint mutations; codewiki_task references are removed unless historical artifacts retain their past text.",
+      "validated_final_state": "",
+      "status": "approved",
+      "proof_refs": [
+        "user:2026-05-29-autonomous-roadmap-request"
+      ],
+      "rationale": "Tool naming should reflect canonical ownership: roadmap mutation, not only task mutation.",
+      "affected_layers": [
+        "roadmap",
+        "code",
+        "tests",
+        "skills",
+        "api"
+      ],
+      "risk": "medium",
+      "user_action": "approved",
+      "alternatives": []
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Add first-class horizontal alignment audits/gates."
+    },
+    {
+      "id": "D2",
+      "summary": "Implement unattended post-boundary pickup for configured agency modes."
+    },
+    {
+      "id": "D3",
+      "summary": "Implement durable CodeWiki wait/wake and parallel worktree merge orchestration."
+    },
+    {
+      "id": "D4",
+      "summary": "Rename codewiki_task to codewiki_roadmap without backward compatibility."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "ROW-010",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "Roadmap task will own KB and source updates for horizontal alignment audit policy.",
+      "deferred": true,
+      "deferred_reason": "This request asked to create the roadmap; KB updates are acceptance criteria for the corresponding implementation task."
+    },
+    {
+      "row_id": "ROW-011",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "Roadmap task will own KB and source updates for unattended pickup runner policy.",
+      "deferred": true,
+      "deferred_reason": "This request asked to create the roadmap; KB updates are acceptance criteria for the corresponding implementation task."
+    },
+    {
+      "row_id": "ROW-012",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "Roadmap tasks will own KB and source updates for wake queue, scheduler, and merge/publisher policy.",
+      "deferred": true,
+      "deferred_reason": "This request asked to create the roadmap; KB updates are acceptance criteria for the corresponding implementation tasks."
+    },
+    {
+      "row_id": "ROW-013",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "Roadmap task will own source/skill/doc updates for the tool rename.",
+      "deferred": true,
+      "deferred_reason": "This request asked to create the roadmap; rename implementation remains a task."
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [
+      "Users get more reliable fully autonomous roadmap/sprint/task execution when agency is enabled.",
+      "Users see clearer internal tool naming for roadmap mutation."
+    ],
+    "system_impact": [
+      "Validation/audit layer gains horizontal alignment profiles.",
+      "Agency/session layer gains unattended pickup and wait/wake semantics.",
+      "Parallel scheduler/publisher layer gains worktree merge orchestration.",
+      "Pi tool registration/schema/docs rename codewiki_task to codewiki_roadmap."
+    ],
+    "downstream_planning_questions": [
+      "What task boundaries best separate horizontal audit, autonomous pickup, wake queue, parallel scheduler, merge publisher, and tool rename work?",
+      "Which sprint grouping maps to pipeline, automation, and parallelization goals without creating umbrella tasks?"
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "What task boundaries best separate horizontal audit, autonomous pickup, wake queue, parallel scheduler, merge publisher, and tool rename work?",
+    "Which sprint grouping maps to pipeline, automation, and parallelization goals without creating umbrella tasks?"
+  ],
+  "assumptions": [
+    "The user explicitly approved breaking compatibility for the roadmap mutation tool rename.",
+    "No active roadmap tasks exist, so new tasks can start a new roadmap cohort."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not implement these roadmap tasks in this planning step.",
+    "Do not add chat-based inter-agent communication.",
+    "Do not preserve codewiki_task as a compatibility alias."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

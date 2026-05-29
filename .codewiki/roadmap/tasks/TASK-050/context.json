@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T06:36:31Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-050/context.json",
+  "task": {
+    "id": "TASK-050",
+    "title": "Rename roadmap mutation tool to codewiki_roadmap",
+    "status": "todo",
+    "priority": "high",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Rename the internal roadmap mutation tool from codewiki_task to codewiki_roadmap across registration, schemas, skills, docs, and tests without keeping a backward-compatible alias.",
+    "labels": [
+      "roadmap-tool",
+      "rename",
+      "breaking-change",
+      "api",
+      "skills"
+    ],
+    "goal": {
+      "outcome": "Agents use codewiki_roadmap as the only internal roadmap mutation tool name, matching task/sprint/checkpoint/archive responsibilities.",
+      "acceptance": [
+        "Pi tool registration exposes codewiki_roadmap and no longer exposes codewiki_task.",
+        "Skills/docs/tests use codewiki_roadmap for tasks, sprints, checkpoints, close/cancel, and archive roadmap mutations.",
+        "No backward-compatible codewiki_task alias remains in live tool registration.",
+        "Typecheck, smoke, feature, and package dry-run checks pass."
+      ],
+      "non_goals": [
+        "Do not preserve codewiki_task as an alias.",
+        "Do not rename canonical roadmap files."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "npm run test:pack",
+        "search proves no live codewiki_task tool references except historical artifacts if unavoidable."
+      ]
+    },
+    "delta": {
+      "desired": "Internal roadmap mutation tool is named codewiki_roadmap without compatibility shim.",
+      "current": "Internal roadmap mutation tool is named codewiki_task despite sprint/checkpoint/archive responsibilities.",
+      "closure": "Close after code, docs, skills, schemas, and tests agree on codewiki_roadmap and validation passes."
+    }
+  }
+}

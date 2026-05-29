@@ -1,10 +1,17 @@
 {
   "version": 2,
-  "updated": "2026-05-29T05:17:19Z",
+  "updated": "2026-05-29T06:36:47Z",
   "order": [
     "TASK-012",
     "TASK-023",
-    "TASK-036"
+    "TASK-036",
+    "TASK-050",
+    "TASK-051",
+    "TASK-052",
+    "TASK-053",
+    "TASK-054",
+    "TASK-055",
+    "TASK-056"
   ],
   "tasks": {
     "TASK-012": {
@@ -530,6 +537,397 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
+    },
+    "TASK-050": {
+      "id": "TASK-050",
+      "title": "Rename roadmap mutation tool to codewiki_roadmap",
+      "status": "todo",
+      "priority": "high",
+      "kind": "migration",
+      "summary": "Rename the internal roadmap mutation tool from codewiki_task to codewiki_roadmap across registration, schemas, skills, docs, and tests without keeping a backward-compatible alias.",
+      "spec_paths": [
+        ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+        ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki-planning/SKILL.md"
+      ],
+      "code_paths": [
+        "src/adapters/pi/index.ts",
+        "src/adapters/pi/schemas.ts",
+        "src/roadmap/tool.ts",
+        "src/api/tools.ts",
+        "skills/codewiki/SKILL.md",
+        "skills/codewiki-planning/SKILL.md",
+        "README.md",
+        "tests/smoke/package-smoke.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "roadmap-tool",
+        "rename",
+        "breaking-change",
+        "api",
+        "skills"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Agents use codewiki_roadmap as the only internal roadmap mutation tool name, matching task/sprint/checkpoint/archive responsibilities.",
+        "acceptance": [
+          "Pi tool registration exposes codewiki_roadmap and no longer exposes codewiki_task.",
+          "Skills/docs/tests use codewiki_roadmap for tasks, sprints, checkpoints, close/cancel, and archive roadmap mutations.",
+          "No backward-compatible codewiki_task alias remains in live tool registration.",
+          "Typecheck, smoke, feature, and package dry-run checks pass."
+        ],
+        "non_goals": [
+          "Do not preserve codewiki_task as an alias.",
+          "Do not rename canonical roadmap files."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "npm run test:pack",
+          "search proves no live codewiki_task tool references except historical artifacts if unavoidable."
+        ]
+      },
+      "delta": {
+        "desired": "Internal roadmap mutation tool is named codewiki_roadmap without compatibility shim.",
+        "current": "Internal roadmap mutation tool is named codewiki_task despite sprint/checkpoint/archive responsibilities.",
+        "closure": "Close after code, docs, skills, schemas, and tests agree on codewiki_roadmap and validation passes."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29T06:36:31Z"
+    },
+    "TASK-051": {
+      "id": "TASK-051",
+      "title": "Add horizontal alignment audit profiles",
+      "status": "todo",
+      "priority": "high",
+      "kind": "testing",
+      "summary": "Add first-class horizontal alignment audits for KB↔KB, code↔code, and KB↔code consistency, with validation-gateway evidence support.",
+      "spec_paths": [
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/graph.md",
+        ".codewiki/kb/system/knowledge.md"
+      ],
+      "code_paths": [
+        "src/audit/horizontal-alignment.ts",
+        "src/audit/index.ts",
+        "src/state/graph.ts",
+        "src/knowledge/parser.ts",
+        "tests/smoke/horizontal-alignment.test.mjs",
+        "tests/fixtures/horizontal-alignment/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "horizontal-alignment",
+        "audit",
+        "anti-drift",
+        "validation"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Validation can require deterministic horizontal alignment evidence across same-layer docs, same-layer code, and KB-code claims.",
+        "acceptance": [
+          "Audit exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+          "Audit exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+          "Audit exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+          "Validation preflight/report can require and cite horizontal audit profiles.",
+          "Fixtures cover pass/fail/warning cases."
+        ],
+        "non_goals": [
+          "Do not attempt unconstrained LLM semantic contradiction detection.",
+          "Do not block on low-confidence prose similarity alone.",
+          "Do not replace existing alignment/generated-parity audits."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted horizontal-alignment audit tests"
+        ]
+      },
+      "delta": {
+        "desired": "Horizontal alignment is an explicit audit/gateway capability with deterministic evidence.",
+        "current": "Horizontal alignment relies on graph health, tests, file-structure audits, and validator judgment.",
+        "closure": "Close when horizontal audit profiles and validation evidence paths are implemented and tested."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29T06:36:39Z"
+    },
+    "TASK-052": {
+      "id": "TASK-052",
+      "title": "Add source/API contract drift snapshots",
+      "status": "todo",
+      "priority": "medium",
+      "kind": "testing",
+      "summary": "Add source/API contract snapshots so code↔code and KB↔code drift can be detected before validation relies on manual review.",
+      "spec_paths": [
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/component-map.yaml"
+      ],
+      "code_paths": [
+        "src/audit/source-contract.ts",
+        "src/audit/source-contract-snapshot.ts",
+        "src/api/index.ts",
+        "tests/smoke/source-contract.test.mjs",
+        "tests/fixtures/source-contract/**"
+      ],
+      "research_ids": [],
+      "labels": [
+        "api-contract",
+        "snapshot",
+        "drift",
+        "quality"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki has deterministic source/API contract evidence that horizontal audits can consume for public facades, tool registrations, and documented package surfaces.",
+        "acceptance": [
+          "Contract snapshot captures tool names, command names, public API facade exports, and package entry surfaces relevant to CodeWiki behavior.",
+          "Audit compares current source contract to documented/expected contract and produces actionable diffs.",
+          "Snapshot tests cover codewiki_roadmap naming and prevent stale internal tool names from silently reappearing.",
+          "Contract generation is deterministic and not canonical truth unless explicitly accepted."
+        ],
+        "non_goals": [
+          "Do not publish or version a public API package contract beyond local audit evidence.",
+          "Do not snapshot implementation-private internals without documented ownership reason."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted contract snapshot tests"
+        ]
+      },
+      "delta": {
+        "desired": "Source/API contract evidence provides deterministic drift checks for horizontal audits.",
+        "current": "Code↔code consistency is mostly enforced by typecheck/tests and package smoke tests.",
+        "closure": "Close when contract snapshots feed audit/test evidence and validation passes."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
+    },
+    "TASK-053": {
+      "id": "TASK-053",
+      "title": "Implement unattended post-boundary agency pickup",
+      "status": "todo",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Implement a policy-gated runner path that resumes work after CodeWiki compaction or hard session boundaries without user babysitting when /wiki-config permits.",
+      "spec_paths": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/product/stories/automation.md"
+      ],
+      "code_paths": [
+        "src/agency/runner.ts",
+        "src/agency/config.ts",
+        "src/runtime/runner.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-kickoff.ts",
+        "tests/smoke/agency-auto-pickup.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "agency",
+        "auto-pickup",
+        "compaction",
+        "resume",
+        "wiki-config"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Configured agency modes can continue bounded task/sprint/roadmap execution from CodeWiki source refs after safe context boundaries without manual user prompts.",
+        "acceptance": [
+          "Runner consumes codewiki_resume_context packets after safe compaction or new-session boundaries and resumes only when agency policy allows.",
+          "Auto-pickup preserves visible tool results, active task/build refs, budgets, approval cadence, and stop conditions.",
+          "Hard new-session pickup has adapter/orchestrator path or explicit fallback when Pi command context is unavailable.",
+          "Tests cover allowed pickup, blocked pickup, budget exhaustion, approval-required stop, and no mid-loop pickup while intent is unstored."
+        ],
+        "non_goals": [
+          "Do not bypass user-configured agency limits.",
+          "Do not use chat-history or VCC recall as normal memory.",
+          "Do not auto-restart Pi."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted agency auto-pickup tests"
+        ]
+      },
+      "delta": {
+        "desired": "Agency can safely resume after context boundaries according to /wiki-config.",
+        "current": "Post-gateway compaction can generate source-backed kickoff packets, but fully unattended continuation needs runner/orchestrator hardening.",
+        "closure": "Close when unattended pickup works in tests and validation proves policy gates."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29T06:36:47Z"
+    },
+    "TASK-054": {
+      "id": "TASK-054",
+      "title": "Implement durable artifact wait/wake heartbeat queue",
+      "status": "todo",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Harden artifact-status waiters, heartbeats, expiry, and release wakeups so sessions coordinate through CodeWiki instead of chat.",
+      "spec_paths": [
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "code_paths": [
+        "src/session/claims.ts",
+        "src/session/artifact-status-tool.ts",
+        "src/session/types.ts",
+        "src/adapters/pi/artifact-wake.ts",
+        "tests/smoke/artifact-wake-queue.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "artifact-status",
+        "heartbeat",
+        "wake-queue",
+        "session-coordination",
+        "parallel"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Waiting sessions/agents awaken when required tasks, builds, validation refs, or paths are released or expire, using only CodeWiki runtime state and source-backed resume packets.",
+        "acceptance": [
+          "Waiters register durable wake conditions on artifact scopes and task/build refs.",
+          "Heartbeats extend leases; stale holders expire safely with audit-visible evidence.",
+          "Release and expiry events enqueue wake notifications with source refs and next-action intent.",
+          "Awakened workers resume through codewiki_resume_context and never depend on direct inter-agent chat.",
+          "Tests cover wait, heartbeat, release wake, stale expiry, conflict, and cancellation paths."
+        ],
+        "non_goals": [
+          "Do not implement full merge scheduling in this task.",
+          "Do not add direct chat/message channels between sessions.",
+          "Do not force wakeups when agency policy requires user approval."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted claim/wait/wake tests"
+        ]
+      },
+      "delta": {
+        "desired": "Sessions coordinate through CodeWiki wait/wake state and source-backed pickup.",
+        "current": "Artifact status supports mark/wait/heartbeat/release, but wake semantics need durable runner integration and expiry handling.",
+        "closure": "Close when durable wake queue behavior is implemented, tested, and validation passes."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
+    },
+    "TASK-055": {
+      "id": "TASK-055",
+      "title": "Build parallel worktree dispatcher",
+      "status": "todo",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Build a dispatcher that selects independent roadmap tasks and prepares isolated worktree assignments within budget and artifact-scope constraints.",
+      "spec_paths": [
+        ".codewiki/kb/system/worktree-isolation.md",
+        ".codewiki/kb/system/roadmap.md"
+      ],
+      "code_paths": [
+        "src/session/worktree-dispatcher.ts",
+        "src/session/worktree-isolation.ts",
+        "src/roadmap/selection.ts",
+        "tests/smoke/worktree-dispatcher.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "worktree-dispatcher",
+        "parallel-execution",
+        "roadmap-selection"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "CodeWiki can safely maximize parallel roadmap execution by selecting independent tasks, preparing role worktrees, and assigning bounded workers without conflicting scopes.",
+        "acceptance": [
+          "Dispatcher selects tasks by priority/order while excluding overlapping code/spec/roadmap/build/validation scopes.",
+          "Dispatcher creates role worktree plans and artifact claims for independent workers under configured budgets.",
+          "Dispatcher records deterministic dispatch evidence, pause reasons, and blocked dependency/wait states.",
+          "Workers get source-backed resume packets and do not share chat context.",
+          "Tests cover independent dispatch, overlap blocking, budget limits, stale holder avoidance, and resume packet generation."
+        ],
+        "non_goals": [
+          "Do not merge worker diffs in this task.",
+          "Do not bypass validation gates or user approval requirements.",
+          "Do not run unbounded subagents."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted worktree dispatcher tests"
+        ]
+      },
+      "delta": {
+        "desired": "Roadmap execution can dispatch independent tasks in parallel safely.",
+        "current": "Worktree isolation and artifact claims exist, but no dispatcher maximizes independent roadmap execution.",
+        "closure": "Close when dispatcher logic and tests pass validation."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
+    },
+    "TASK-056": {
+      "id": "TASK-056",
+      "title": "Build parallel merge publisher queue",
+      "status": "todo",
+      "priority": "high",
+      "kind": "agent-workflow",
+      "summary": "Build a serialized publisher queue that compares worker diffs, validates outputs, commits safe merges, and reroutes conflicts after parallel worktree execution.",
+      "spec_paths": [
+        ".codewiki/kb/system/worktree-isolation.md"
+      ],
+      "code_paths": [
+        "src/session/merge-publisher-queue.ts",
+        "src/session/worker-diff.ts",
+        "src/session/publisher-proof.ts",
+        "tests/smoke/merge-publisher-queue.test.mjs"
+      ],
+      "research_ids": [],
+      "labels": [
+        "merge-publisher",
+        "worker-diff",
+        "serialized-merge"
+      ],
+      "change_type": "system",
+      "goal": {
+        "outcome": "Parallel worker outputs are merged through a serialized publisher queue that checks diffs, enforces validation proof, commits safely, and routes conflicts back to workers or planning.",
+        "acceptance": [
+          "Publisher queue ingests worker build/validation refs and worktree diff proofs.",
+          "Merge validator compares diffs for overlap/conflicts, reruns required audits/checks, and blocks unsafe merges.",
+          "Successful merges create local checkpoint/close commits with task/build/validation/tree proof.",
+          "Conflicts produce deterministic wait/reroute evidence and wake affected workers when resolved.",
+          "Tests cover clean merge, conflict, validation failure, stale base, close proof, and no remote publication without approval."
+        ],
+        "non_goals": [
+          "Do not push to remote without explicit user approval.",
+          "Do not replace Git history as the source of merge truth.",
+          "Do not merge unvalidated worker outputs."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted publisher/merge queue tests"
+        ]
+      },
+      "delta": {
+        "desired": "A merge/publisher agent serializes validated parallel outputs into safe commits.",
+        "current": "Publisher queue policy and role worktree proof exist, but merge orchestration for parallel worker diffs is not complete.",
+        "closure": "Close when merge queue behavior is implemented, tested, and task-close/publication proof gates pass."
+      },
+      "created": "2026-05-29",
+      "updated": "2026-05-29"
     }
   },
   "sprints": {
@@ -946,6 +1344,138 @@
       ],
       "created": "2026-05-28T02:48:04Z",
       "updated": "2026-05-29T05:17:19Z"
+    },
+    "SPRINT-011": {
+      "id": "SPRINT-011",
+      "title": "Roadmap API rename cleanup",
+      "status": "planned",
+      "outcome": "Rename the roadmap mutation tool to codewiki_roadmap without compatibility shims before new automation work depends on tool naming.",
+      "task_ids": [
+        "TASK-050"
+      ],
+      "scope": {
+        "knowledge": [
+          "skills/codewiki/SKILL.md",
+          "skills/codewiki-planning/SKILL.md"
+        ],
+        "code": [
+          "src/adapters/pi/index.ts",
+          "src/roadmap/tool.ts",
+          "src/api/tools.ts"
+        ]
+      },
+      "budget": {
+        "maxCycles": 2,
+        "maxSessions": 1,
+        "risk": "medium"
+      },
+      "gates": [
+        "decision validation pass",
+        "implementation validation pass",
+        "task-close validation pass"
+      ],
+      "created": "2026-05-29T06:33:44Z",
+      "updated": "2026-05-29T06:33:44Z"
+    },
+    "SPRINT-012": {
+      "id": "SPRINT-012",
+      "title": "Horizontal alignment and contract gates",
+      "status": "planned",
+      "outcome": "Turn horizontal KB/code consistency into deterministic audit and validation evidence for production anti-drift gates.",
+      "task_ids": [
+        "TASK-051",
+        "TASK-052"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/api.md"
+        ],
+        "code": [
+          "src/audit/**",
+          "src/state/graph.ts",
+          "src/api/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 4,
+        "maxSessions": 2,
+        "risk": "high"
+      },
+      "gates": [
+        "planning validation pass",
+        "implementation validation pass per task",
+        "task-close validation pass per task"
+      ],
+      "created": "2026-05-29T06:33:51Z",
+      "updated": "2026-05-29T06:33:51Z"
+    },
+    "SPRINT-013": {
+      "id": "SPRINT-013",
+      "title": "Unattended agency pickup and wake queue",
+      "status": "planned",
+      "outcome": "Let configured agency continue after safe context boundaries and wake waiting sessions from CodeWiki artifact releases without user babysitting.",
+      "task_ids": [
+        "TASK-053",
+        "TASK-054"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/system/worktree-isolation.md"
+        ],
+        "code": [
+          "src/agency/**",
+          "src/session/**",
+          "src/adapters/pi/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 4,
+        "maxSessions": 2,
+        "risk": "high"
+      },
+      "gates": [
+        "policy approval retained",
+        "implementation validation pass per task",
+        "wake semantics tests pass"
+      ],
+      "created": "2026-05-29T06:33:59Z",
+      "updated": "2026-05-29T06:33:59Z"
+    },
+    "SPRINT-014": {
+      "id": "SPRINT-014",
+      "title": "Parallel worktree dispatch and merge publishing",
+      "status": "planned",
+      "outcome": "Maximize safe roadmap parallelization with independent worktree dispatch and serialized merge/publisher validation.",
+      "task_ids": [
+        "TASK-055",
+        "TASK-056"
+      ],
+      "scope": {
+        "knowledge": [
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/roadmap.md"
+        ],
+        "code": [
+          "src/session/**",
+          "src/roadmap/**"
+        ]
+      },
+      "budget": {
+        "maxCycles": 4,
+        "maxSessions": 4,
+        "risk": "high"
+      },
+      "gates": [
+        "parallel dispatch tests pass",
+        "merge queue tests pass",
+        "task-close validation pass per task",
+        "no remote publication without approval"
+      ],
+      "created": "2026-05-29T06:34:07Z",
+      "updated": "2026-05-29T06:34:07Z"
     }
   }
 }

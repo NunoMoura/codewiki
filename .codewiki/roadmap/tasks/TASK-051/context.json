@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29T06:36:39Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-051/context.json",
+  "task": {
+    "id": "TASK-051",
+    "title": "Add horizontal alignment audit profiles",
+    "status": "todo",
+    "priority": "high",
+    "kind": "testing",
+    "change_type": "system",
+    "summary": "Add first-class horizontal alignment audits for KB↔KB, code↔code, and KB↔code consistency, with validation-gateway evidence support.",
+    "labels": [
+      "horizontal-alignment",
+      "audit",
+      "anti-drift",
+      "validation"
+    ],
+    "goal": {
+      "outcome": "Validation can require deterministic horizontal alignment evidence across same-layer docs, same-layer code, and KB-code claims.",
+      "acceptance": [
+        "Audit exposes horizontal KB↔KB checks for deterministic conflicting/stale/duplicate canonical claims.",
+        "Audit exposes code↔code checks for API/ownership/import-contract drift using source graph evidence.",
+        "Audit exposes KB↔code checks comparing documented paths/claims to source graph and task/build evidence.",
+        "Validation preflight/report can require and cite horizontal audit profiles.",
+        "Fixtures cover pass/fail/warning cases."
+      ],
+      "non_goals": [
+        "Do not attempt unconstrained LLM semantic contradiction detection.",
+        "Do not block on low-confidence prose similarity alone.",
+        "Do not replace existing alignment/generated-parity audits."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted horizontal-alignment audit tests"
+      ]
+    },
+    "delta": {
+      "desired": "Horizontal alignment is an explicit audit/gateway capability with deterministic evidence.",
+      "current": "Horizontal alignment relies on graph health, tests, file-structure audits, and validator judgment.",
+      "closure": "Close when horizontal audit profiles and validation evidence paths are implemented and tested."
+    }
+  }
+}

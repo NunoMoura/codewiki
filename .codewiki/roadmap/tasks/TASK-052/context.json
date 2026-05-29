@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-29",
+  "context_path": ".codewiki/roadmap/tasks/TASK-052/context.json",
+  "task": {
+    "id": "TASK-052",
+    "title": "Add source/API contract drift snapshots",
+    "status": "todo",
+    "priority": "medium",
+    "kind": "testing",
+    "change_type": "system",
+    "summary": "Add source/API contract snapshots so code↔code and KB↔code drift can be detected before validation relies on manual review.",
+    "labels": [
+      "api-contract",
+      "snapshot",
+      "drift",
+      "quality"
+    ],
+    "goal": {
+      "outcome": "CodeWiki has deterministic source/API contract evidence that horizontal audits can consume for public facades, tool registrations, and documented package surfaces.",
+      "acceptance": [
+        "Contract snapshot captures tool names, command names, public API facade exports, and package entry surfaces relevant to CodeWiki behavior.",
+        "Audit compares current source contract to documented/expected contract and produces actionable diffs.",
+        "Snapshot tests cover codewiki_roadmap naming and prevent stale internal tool names from silently reappearing.",
+        "Contract generation is deterministic and not canonical truth unless explicitly accepted."
+      ],
+      "non_goals": [
+        "Do not publish or version a public API package contract beyond local audit evidence.",
+        "Do not snapshot implementation-private internals without documented ownership reason."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted contract snapshot tests"
+      ]
+    },
+    "delta": {
+      "desired": "Source/API contract evidence provides deterministic drift checks for horizontal audits.",
+      "current": "Code↔code consistency is mostly enforced by typecheck/tests and package smoke tests.",
+      "closure": "Close when contract snapshots feed audit/test evidence and validation passes."
+    }
+  }
+}

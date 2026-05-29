@@ -1,0 +1,242 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T06:35:38Z",
+  "profile": "planning",
+  "task_id": "TASK-050",
+  "verdict": "block",
+  "rationale": "Planning build maps the accepted autonomous orchestration decision rows to seven atomic executable roadmap tasks and four sprint metadata groups without umbrella tasks. Generated parity passes; changed warnings are expected generated roadmap/graph outputs from creating the new roadmap. Policy blocks planning validation until risk_approval:user_approval:security-migration-publication are recorded.",
+  "checks": [
+    "Read decision build .codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+    "Decision validation pass .codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json",
+    "Created/checked TASK-050 through TASK-056",
+    "Created SPRINT-011 through SPRINT-014",
+    "codewiki_audit alignment/task/generated-parity/changed: task pass, generated-parity pass, alignment graph-health warning only"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Changed audit reports generated roadmap task views and graph file changed because new roadmap was created; publication should commit generated outputs."
+    },
+    {
+      "severity": "warning",
+      "summary": "Graph health reports existing warnings, but decision propagation is now mapped by planning build."
+    },
+    {
+      "severity": "high",
+      "summary": "Risk tier security-migration-publication requires user approval before promotion: user_approval:security-migration-publication."
+    }
+  ],
+  "source": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+  "policy_profile": "planning",
+  "failure_class": "risk_approval_missing",
+  "recommended_next_loop": "decision",
+  "routing": {
+    "failure_class": "risk_approval_missing",
+    "recommended_next_loop": "decision"
+  },
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:task",
+    "audit:generated-parity",
+    "audit:changed"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-050",
+    "source_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+    "validation_report": ".codewiki/validation/2026-05-29-planning-block-task-050-2026-05-29-autonomous-ro.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      ".codewiki/validation/2026-05-29-planning-block-task-050-2026-05-29-autonomous-ro.json",
+      "Created TASK-050 for codewiki_task -> codewiki_roadmap breaking rename.",
+      "Created TASK-051 for first-class horizontal alignment audit profiles.",
+      "Created TASK-052 for source/API contract drift snapshots consumed by horizontal audits.",
+      "Created TASK-053 for unattended post-boundary agency pickup.",
+      "Created TASK-054 for durable artifact wait/wake heartbeat queue.",
+      "Created TASK-055 for parallel worktree dispatcher.",
+      "Created TASK-056 for merge publisher queue.",
+      "Created SPRINT-011 through SPRINT-014 to group rename cleanup, horizontal gates, unattended agency wake, and parallel dispatch/publish cohorts.",
+      "TASK-050",
+      "TASK-051",
+      "TASK-052",
+      "TASK-053",
+      "TASK-054",
+      "TASK-055",
+      "TASK-056",
+      "src/adapters/pi/index.ts",
+      "src/roadmap/tool.ts",
+      "src/api/tools.ts",
+      "src/audit/**",
+      "src/agency/**",
+      "src/session/**",
+      "src/roadmap/**",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/smoke/worktree-dispatcher.test.mjs",
+      "tests/smoke/merge-publisher-queue.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-050",
+    "source_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+    "validation_report": ".codewiki/validation/2026-05-29-planning-block-task-050-2026-05-29-autonomous-ro.json",
+    "commit_title": "checkpoint(codewiki): TASK-050 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-050",
+      "CodeWiki-Build: .codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-29-planning-block-task-050-2026-05-29-autonomous-ro.json",
+      "CodeWiki-Checks: Read decision build .codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json; Decision validation pass .codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json; Created/checked TASK-050 through TASK-056; Created SPRINT-011 through SPRINT-014; codewiki_audit alignment/task/generated-parity/changed: task pass, generated-parity pass, alignment graph-health warning only"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/adapters/pi/index.ts",
+      "src/roadmap/tool.ts",
+      "src/api/tools.ts",
+      "src/audit/**",
+      "src/agency/**",
+      "src/session/**",
+      "src/roadmap/**"
+    ],
+    "reasons": [
+      "Pi or harness adapter code changed",
+      "CodeWiki extension package source changed",
+      "CodeWiki API facade changed",
+      "CodeWiki session/runtime boundary code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [
+    "risk_approval"
+  ],
+  "blocking_questions": [
+    "Record explicit user approval for risk tier security-migration-publication before lower-layer promotion."
+  ],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "escalate",
+    "profile": "planning",
+    "task_id": "TASK-050",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production quality profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [
+        "user_approval:security-migration-publication"
+      ],
+      "production_quality": []
+    },
+    "issues": [
+      {
+        "kind": "risk-approval",
+        "severity": "high",
+        "summary": "Risk tier requires explicit user approval before lower-layer promotion.",
+        "evidence": [
+          "user_approval:security-migration-publication"
+        ]
+      }
+    ],
+    "routing": {
+      "failure_class": "risk_approval_missing",
+      "recommended_next_loop": "decision"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [],
+      "approval_missing": [
+        "user_approval:security-migration-publication"
+      ],
+      "fresh_context": {
+        "required": false,
+        "recommended": true,
+        "supplied": false,
+        "gaps": [],
+        "reason": "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}
