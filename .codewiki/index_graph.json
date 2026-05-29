@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T00:07:32.135Z",
+  "generated_at": "2026-05-29T00:33:30.639Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4780,7 +4780,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6402,7 +6402,7 @@
       "kind": "code_path",
       "path": "src/project/context.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6410,7 +6410,7 @@
       "kind": "code_path",
       "path": "src/project/root.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6418,7 +6418,7 @@
       "kind": "code_path",
       "path": "src/project/bootstrap.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6434,7 +6434,7 @@
       "kind": "code_path",
       "path": "src/project/templates.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6458,7 +6458,7 @@
       "kind": "code_path",
       "path": "src/project/local/git-cache.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6820,7 +6820,7 @@
       "kind": "roadmap_task",
       "title": "Simplify project bootstrap and template flows",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "code",
       "alignment_state": "drift",
       "lens_family": "work"
@@ -29815,6 +29815,292 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "title": "TASK-046 implementation builder",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-046",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+          "src/project/context.ts",
+          "src/project/root.ts",
+          "src/project/bootstrap.ts",
+          "src/project/templates.ts",
+          "src/project/local/git-cache.ts",
+          "src/project/local/file-store.ts",
+          "tests/smoke/project-resolution.test.mjs",
+          "tests/smoke/package-smoke.test.mjs",
+          "tests/tasks/TASK-024/project-source-root.test.mjs",
+          "TASK-046 implementation builder",
+          "TASK-046"
+        ],
+        "audit_evidence_refs": [
+          "changed",
+          "task:TASK-046",
+          "codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+          "tests/smoke/project-resolution.test.mjs@sha256:8a1b37e5bc9e2b4b113577232e97ef0e9ab544a1afe74829c75ffe621d1d461e",
+          "tests/smoke/package-smoke.test.mjs@sha256:0dd05c21e3cb72dd3cc15065f235439addd2429fdc28f646ea70e855f2a15a70",
+          "tests/tasks/TASK-024/project-source-root.test.mjs@sha256:22f09537a5cfa50b91ed6587c4f48d15a826dc5bb2b13d6bbc2a0742e0c1e44b",
+          "src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
+          "src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
+          "src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
+          "src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
+          "src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
+          "refs/codewiki/archive/task/TASK-046",
+          "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36"
+        ],
+        "validation_attestation_refs": [
+          "project file pi-lens review: 0 warnings",
+          "npm run typecheck",
+          "npm run test:smoke"
+        ]
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-046 implementation builder",
+      "kind": "canonical_source_ref",
+      "path": "TASK-046 implementation builder",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:task:TASK-046",
+      "kind": "audit_evidence",
+      "path": "task:TASK-046",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
+      "kind": "content_proof",
+      "path": "src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
+      "kind": "content_proof",
+      "path": "src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
+      "kind": "content_proof",
+      "path": "src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
+      "kind": "content_proof",
+      "path": "src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
+      "kind": "content_proof",
+      "path": "src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-046",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-046",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
+      "kind": "content_proof",
+      "path": "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-046",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-046",
+      "task_id": "TASK-046",
+      "digest": "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
+      "restore_command": "/wiki-restore TASK-046",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-215",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-215",
+      "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+      "agent_name": "Mole",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+      "expires_at": "2026-05-29T02:13:41.664Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+        "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-046"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/context.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/root.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/bootstrap.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/templates.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/local/git-cache.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/project/local/file-store.ts"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/project-resolution.test.mjs"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/package-smoke.test.mjs"
+        },
+        {
+          "layer": "code",
+          "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-046",
+      "kind": "change_claim_scope",
+      "path": "TASK-046",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/context.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/context.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/root.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/root.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/bootstrap.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/bootstrap.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/templates.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/templates.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/local/git-cache.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/local/git-cache.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/project/local/file-store.ts",
+      "kind": "change_claim_scope",
+      "path": "src/project/local/file-store.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/project-resolution.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/project-resolution.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/package-smoke.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/package-smoke.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/tasks/TASK-024/project-source-root.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/tasks/TASK-024/project-source-root.test.mjs",
+      "lens_family": "work"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -39808,6 +40094,58 @@
       "kind": "content_proof",
       "path": "56866ca60fbee3dec5403c7e158acbf76b7ec4de",
       "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "verdict": "pass",
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Collect or cite required validation/publication content proof before promotion.",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Validation started from implementation build and source refs; dirty pre-commit content proof captured by working_tree_digest.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
+        ],
+        "audit_evidence_refs": [
+          "alignment",
+          "changed",
+          "task:TASK-046",
+          "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only"
+        ],
+        "content_proof_refs": [
+          "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
+      "kind": "content_proof",
+      "path": "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
+      "proof_kind": "content_proof",
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
@@ -93003,6 +93341,246 @@
       "default_hidden": true
     },
     {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/context.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/root.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/bootstrap.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/templates.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/local/git-cache.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:src/project/local/file-store.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:tests/smoke/project-resolution.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:tests/smoke/package-smoke.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:tests/tasks/TASK-024/project-source-root.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:TASK-046 implementation builder",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "source:TASK-046",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "audit:task:TASK-046",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "audit:codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json@sha256:09ca887c16fde862a21f44c3ca0b097e2958a0a31d1a5187c253b219d173578c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:tests/smoke/project-resolution.test.mjs@sha256:8a1b37e5bc9e2b4b113577232e97ef0e9ab544a1afe74829c75ffe621d1d461e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:tests/smoke/package-smoke.test.mjs@sha256:0dd05c21e3cb72dd3cc15065f235439addd2429fdc28f646ea70e855f2a15a70",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:tests/tasks/TASK-024/project-source-root.test.mjs@sha256:22f09537a5cfa50b91ed6587c4f48d15a826dc5bb2b13d6bbc2a0742e0c1e44b",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-046",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "content_proof:sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "task:TASK-046"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-046",
+      "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-215",
+      "to": "task:TASK-046"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:TASK-046"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/context.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/root.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/bootstrap.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/templates.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/local/git-cache.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:src/project/local/file-store.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:tests/smoke/project-resolution.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:tests/smoke/package-smoke.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-215",
+      "to": "claim_scope:tests/tasks/TASK-024/project-source-root.test.mjs"
+    },
+    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -104036,6 +104614,47 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "audit:task:TASK-046",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "audit:codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "content_proof:0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+      "to": "task:TASK-046"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-29-task-close-pass-task-043-2026-05-28-task-043-mec.json",
       "to": "source:.codewiki/builds/implementation/2026-05-28-task-043-mechanical-parser-refactor.json",
       "default_hidden": true
@@ -104190,7 +104809,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 15,
+            "item_count": 26,
             "badges": [
               {
                 "id": "open_tasks",
@@ -104222,7 +104841,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -104243,7 +104862,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 419,
             "badges": [
               {
@@ -104259,12 +104878,20 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 66
+                "count": 67
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 5,
+                "refs": [
+                  "src/project/bootstrap.ts",
+                  "src/project/context.ts",
+                  "src/project/local/git-cache.ts",
+                  "src/project/root.ts",
+                  "src/project/templates.ts"
+                ],
+                "ref_count": 5
               }
             ],
             "hot_refs": [
@@ -104291,7 +104918,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 133
+                "count": 134
               },
               {
                 "id": "fail_or_block_validation",
@@ -104301,12 +104928,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 526
+                "count": 529
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1080
+                "count": 1088
               },
               {
                 "id": "traceability_gaps",
@@ -104323,19 +104950,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 106,
+            "total": 107,
             "decision": 13,
             "planning": 27,
-            "implementation": 66,
+            "implementation": 67,
             "hot": 0,
-            "collapsed": 106
+            "collapsed": 107
           },
           "validations": {
-            "total": 133,
-            "pass": 112,
+            "total": 134,
+            "pass": 113,
             "fail_or_block": 21,
             "hot": 5,
-            "collapsed": 133
+            "collapsed": 134
           }
         },
         "next_action": {
@@ -105192,7 +105819,153 @@
             "gaps": []
           }
         ],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/project/bootstrap.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/project/context.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/project/local/git-cache.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/project/root.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/project/templates.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -105276,6 +106049,7 @@
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+          ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
           ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -105509,6 +106283,7 @@
           "TASK-044",
           "TASK-045",
           "TASK-046",
+          "TASK-046 implementation builder",
           "TASK-047",
           "TASK-048",
           "Updated .codewiki/kb/system/agency.md to distinguish agency policy from runtime execution.",
@@ -109053,6 +109828,29 @@
               "tests/tasks/TASK-015/agency-source-root.test.mjs",
               "TASK-047"
             ]
+          },
+          {
+            "path": ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-046"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              "src/project/context.ts",
+              "src/project/root.ts",
+              "src/project/bootstrap.ts",
+              "src/project/templates.ts",
+              "src/project/local/git-cache.ts",
+              "src/project/local/file-store.ts",
+              "tests/smoke/project-resolution.test.mjs",
+              "tests/smoke/package-smoke.test.mjs",
+              "tests/tasks/TASK-024/project-source-root.test.mjs",
+              "TASK-046 implementation builder",
+              "TASK-046"
+            ]
           }
         ]
       },
@@ -112475,6 +113273,25 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-046",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
+            ],
+            "audit_evidence_refs": [
+              "alignment",
+              "changed",
+              "task:TASK-046",
+              "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only"
+            ],
+            "content_proof_refs": [
+              "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-29-task-close-pass-task-043-2026-05-28-task-043-mec.json",
             "verdict": "pass",
             "profile": "task-close",
@@ -114663,6 +115480,20 @@
             ]
           },
           {
+            "path": ".codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+            "task_id": "TASK-046",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-29-task-close-pass-task-043-2026-05-28-task-043-mec.json",
             "task_id": "TASK-043",
             "verdict": "pass",
@@ -114874,6 +115705,8 @@
           "codewiki_audit generated-parity pass: graph presence/freshness and active roadmap views checked.",
           "codewiki_audit profiles alignment,changed,task for TASK-043: warning only generated state/view refresh and graph-health warnings",
           "codewiki_audit profiles alignment,changed,task for TASK-043: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+          "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+          "codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
           "codewiki_audit profiles generated-parity,alignment,changed,task for TASK-043: generated-parity pass; changed pass; task pass; alignment warning only graph-health",
           "codewiki_audit profiles=[alignment,changed,generated-parity]: alignment pass, generated-parity pass, changed warning only generated CodeWiki state/task views",
           "codewiki_audit profiles=[alignment] paths=[.codewiki/kb/system/graph.md,.codewiki/kb/system/validation-gateway.md,.codewiki/kb/system/compilers.md,.codewiki/kb/system/alignment-model.md,.codewiki/kb/system/diagrams/state-lifecycle.yaml]",
@@ -115150,6 +115983,7 @@
           "task:TASK-005",
           "task:TASK-006",
           "task:TASK-043",
+          "task:TASK-046",
           "tests/smoke/codewiki-compaction.test.mjs",
           "tests/smoke/resume-scheduler.test.mjs",
           "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
@@ -115351,6 +116185,7 @@
           ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
           ".codewiki/validation/2026-05-28-decision-pass-2026-05-28-task-042-accepted-sta.json@sha256:473f273dbf400d43e100597f74f13bc66c6ca38401c48155f3cf93861fed192d",
           ".codewiki/validation/2026-05-28-planning-pass-task-042-2026-05-28-task-042-execu.json@sha256:9112c0d58e5e136ac9a7570d0e2cf5693ce9c861546f4277c4ede86e18a762eb",
+          "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
           "0281c24b6a58032cd8ea3bb87d808547756ce98e",
           "079cf6de55f2f32394616a146f94621f1a342af9",
           "088c4e3f2f16d7fde44500025c4a71721449c4b0",
@@ -115537,6 +116372,7 @@
           "refs/codewiki/archive/task/TASK-043",
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
+          "refs/codewiki/archive/task/TASK-046",
           "refs/codewiki/archive/task/TASK-047",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -115630,6 +116466,7 @@
           "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
           "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
           "sha256:e040d371480ad2d10508cecb219e98827880fd81f6c29b36b731c39b6d0c3dac",
+          "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
           "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
           "sha256:e3e5645bb3eacc17375488ecdff9ec0f4f0f3dd6a942c9f30d8c55d5c4374833",
           "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
@@ -116027,20 +116864,25 @@
           "src/knowledge/doc-parser.ts@sha256:3333debffe08d59eda5bef330fedb61fcbde9a63198ef4aaa15286e89caad266",
           "src/knowledge/doc-parser.ts@sha256:38a914dc233365d9f28fb57e9ac120248c94ff53c578d49f8269bcd74f341f3c",
           "src/project/bootstrap.ts@sha256:4addc279007d426b5cf0af0ba8bc23856c22d0c3964b975bc922a90e1e1a6b21",
+          "src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
           "src/project/bootstrap.ts@sha256:a5d6990276d9ba0f0e41dfbf75fd86ed931e81876e4a606436b094a64beb087c",
           "src/project/context.ts@sha256:032d61eba4198bfa37dbee4f43c667cfeda5bc4d50e2b3dfb8e317b4a513b8e4",
           "src/project/context.ts@sha256:19537139a3a0432043f0648150c990bbaad6621165d4cd9122236036a02d9286",
           "src/project/context.ts@sha256:242ed62596c8947a7bfba355e40555263cf3625c26ee238050fb40f900bd6387",
           "src/project/context.ts@sha256:3d4cd4cf9940db633037151549130fffc453ae8ef0502e27b12d97efebd3f16e",
           "src/project/context.ts@sha256:487fff7807cbb1cec7a54979222d2051359844e41ec8bd3f19cfd5ce32e4a8e4",
+          "src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
           "src/project/local/file-store.ts@sha256:4a9fb2f24b3a0ff5abfffa1a2879be3d93bbe1bdfb8ab645fa247097c3685ccd",
           "src/project/local/filesystem.ts@sha256:74a9a66e4d47db596ab8106a727131720dd25c2c53e8fa1003f0174ab9dfa559",
           "src/project/local/git-cache.ts@sha256:bc868ed5f08eb04c6382f2742753046dda4a611965abadd85276f16d9726a73c",
+          "src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
           "src/project/root.ts@sha256:0774b6dc5821918dfc77c3c219a9c4c2316128045c673297f71f8dfec111078a",
+          "src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
           "src/project/templates.ts@sha256:1656811b660be4518c79a9a61db7f36e49842a85bfa61e2076300e328f1dde23",
           "src/project/templates.ts@sha256:194a155967656199bafd17f9d2788f47b9ad6dc5dd2c9a898063f3520eca783d",
           "src/project/templates.ts@sha256:1c01ab956dc400ba404461f77c893863085fd2e9705f6486eec95862965c6721",
           "src/project/templates.ts@sha256:3443efbc363e8e9e63c7d1b78ad3ecd1d7cb89b88fda75ab52324c5b099730da",
+          "src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
           "src/project/tool.ts@sha256:fce821d986abbf0db0f4540c3de694b3cfe4d385b9242f4d67c5f58358977846",
           "src/project/types.ts@sha256:02b74b2a04ddd01a419aef608852e77c70ba7b0f97dc46bc5680499617ecb6da",
           "src/project/types.ts@sha256:6bc37f9535a1e8c62b0fb7188c79f34d8d8713143cd3dc03c20313c5ac18ee21",
@@ -116553,9 +117395,10 @@
         "TASK-046",
         "TASK-048"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-046"
+      ],
       "todo_task_ids": [
-        "TASK-046",
         "TASK-048"
       ],
       "blocked_task_ids": [],
@@ -116567,7 +117410,8 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "todo": 2
+        "in_progress": 1,
+        "todo": 1
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -117797,28 +118641,648 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "src/project/bootstrap.ts",
+        "src/project/context.ts",
+        "src/project/local/git-cache.ts",
+        "src/project/root.ts",
+        "src/project/templates.ts"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-215",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-046",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-215",
+          "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+          "agent_name": "Mole",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+          "task_id": "TASK-046",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-046"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/context.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/root.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/bootstrap.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/templates.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/local/git-cache.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/project/local/file-store.ts"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/project-resolution.test.mjs"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/package-smoke.test.mjs"
+            },
+            {
+              "layer": "code",
+              "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+            }
+          ],
+          "created_at": "2026-05-29T00:13:41Z",
+          "updated_at": "2026-05-29T00:13:41Z",
+          "expires_at": "2026-05-29T02:13:41.664Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/bootstrap.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/context.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/local/file-store.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/local/git-cache.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/root.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/templates.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-046"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/package-smoke.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/project-resolution.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/bootstrap.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/context.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/local/file-store.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/local/git-cache.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/root.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/project/templates.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-046"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/package-smoke.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/project-resolution.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-215",
+              "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "agent_name": "Mole",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-046",
+              "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+              "expires_at": "2026-05-29T02:13:41.664Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -119986,6 +121450,20 @@
           ]
         },
         {
+          "path": ".codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+          "task_id": "TASK-046",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-29-task-close-pass-task-043-2026-05-28-task-043-mec.json",
           "task_id": "TASK-043",
           "verdict": "pass",
@@ -120103,6 +121581,7 @@
         ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
         ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
         ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+        ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
         ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -120336,6 +121815,7 @@
         "TASK-044",
         "TASK-045",
         "TASK-046",
+        "TASK-046 implementation builder",
         "TASK-047",
         "TASK-048",
         "Updated .codewiki/kb/system/agency.md to distinguish agency policy from runtime execution.",
@@ -120859,6 +122339,8 @@
         "codewiki_audit generated-parity pass: graph presence/freshness and active roadmap views checked.",
         "codewiki_audit profiles alignment,changed,task for TASK-043: warning only generated state/view refresh and graph-health warnings",
         "codewiki_audit profiles alignment,changed,task for TASK-043: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+        "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only",
+        "codewiki_audit profiles changed,task for TASK-046: task pass; changed warning only generated state/view refresh",
         "codewiki_audit profiles generated-parity,alignment,changed,task for TASK-043: generated-parity pass; changed pass; task pass; alignment warning only graph-health",
         "codewiki_audit profiles=[alignment,changed,generated-parity]: alignment pass, generated-parity pass, changed warning only generated CodeWiki state/task views",
         "codewiki_audit profiles=[alignment] paths=[.codewiki/kb/system/graph.md,.codewiki/kb/system/validation-gateway.md,.codewiki/kb/system/compilers.md,.codewiki/kb/system/alignment-model.md,.codewiki/kb/system/diagrams/state-lifecycle.yaml]",
@@ -121135,6 +122617,7 @@
         "task:TASK-005",
         "task:TASK-006",
         "task:TASK-043",
+        "task:TASK-046",
         "tests/smoke/codewiki-compaction.test.mjs",
         "tests/smoke/resume-scheduler.test.mjs",
         "tests/tasks/TASK-031/api-shared-facade-cleanup.test.mjs",
@@ -121336,6 +122819,7 @@
         ".codewiki/validation/2026-05-25-task-close-block-task-019.json@sha256:8e6d0cf365bc7f21d73e5af7a5296886623b7dab0dac10a503934b7fab5a6f8a",
         ".codewiki/validation/2026-05-28-decision-pass-2026-05-28-task-042-accepted-sta.json@sha256:473f273dbf400d43e100597f74f13bc66c6ca38401c48155f3cf93861fed192d",
         ".codewiki/validation/2026-05-28-planning-pass-task-042-2026-05-28-task-042-execu.json@sha256:9112c0d58e5e136ac9a7570d0e2cf5693ce9c861546f4277c4ede86e18a762eb",
+        "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
         "0281c24b6a58032cd8ea3bb87d808547756ce98e",
         "079cf6de55f2f32394616a146f94621f1a342af9",
         "088c4e3f2f16d7fde44500025c4a71721449c4b0",
@@ -121522,6 +123006,7 @@
         "refs/codewiki/archive/task/TASK-043",
         "refs/codewiki/archive/task/TASK-044",
         "refs/codewiki/archive/task/TASK-045",
+        "refs/codewiki/archive/task/TASK-046",
         "refs/codewiki/archive/task/TASK-047",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -121615,6 +123100,7 @@
         "sha256:d9d8b22c70fe768173f76105831d340e8d31ab07e7a21cd68d5a347292e32407",
         "sha256:dc4bf2bf2ddd56fa9efc122f1e839c100dc18eb768ecf49da524abe15e9f0bed",
         "sha256:e040d371480ad2d10508cecb219e98827880fd81f6c29b36b731c39b6d0c3dac",
+        "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
         "sha256:e3787f96aaa67862d2bb8410da7035c0a23fefefdee41cdbec338bb5e34e5299",
         "sha256:e3e5645bb3eacc17375488ecdff9ec0f4f0f3dd6a942c9f30d8c55d5c4374833",
         "sha256:e6878c014e4a09363c5103c792ba08feea3734bcc5101641b0a2e6e082141978",
@@ -122012,20 +123498,25 @@
         "src/knowledge/doc-parser.ts@sha256:3333debffe08d59eda5bef330fedb61fcbde9a63198ef4aaa15286e89caad266",
         "src/knowledge/doc-parser.ts@sha256:38a914dc233365d9f28fb57e9ac120248c94ff53c578d49f8269bcd74f341f3c",
         "src/project/bootstrap.ts@sha256:4addc279007d426b5cf0af0ba8bc23856c22d0c3964b975bc922a90e1e1a6b21",
+        "src/project/bootstrap.ts@sha256:4f6817285f76e1d54143d2c768fec0e1dee02f60f611b4ba2704c91f427288db",
         "src/project/bootstrap.ts@sha256:a5d6990276d9ba0f0e41dfbf75fd86ed931e81876e4a606436b094a64beb087c",
         "src/project/context.ts@sha256:032d61eba4198bfa37dbee4f43c667cfeda5bc4d50e2b3dfb8e317b4a513b8e4",
         "src/project/context.ts@sha256:19537139a3a0432043f0648150c990bbaad6621165d4cd9122236036a02d9286",
         "src/project/context.ts@sha256:242ed62596c8947a7bfba355e40555263cf3625c26ee238050fb40f900bd6387",
         "src/project/context.ts@sha256:3d4cd4cf9940db633037151549130fffc453ae8ef0502e27b12d97efebd3f16e",
         "src/project/context.ts@sha256:487fff7807cbb1cec7a54979222d2051359844e41ec8bd3f19cfd5ce32e4a8e4",
+        "src/project/context.ts@sha256:a72e8cae1abb60c290bc4af984b9723e505037a2137e13b0fe288c5d07201234",
         "src/project/local/file-store.ts@sha256:4a9fb2f24b3a0ff5abfffa1a2879be3d93bbe1bdfb8ab645fa247097c3685ccd",
         "src/project/local/filesystem.ts@sha256:74a9a66e4d47db596ab8106a727131720dd25c2c53e8fa1003f0174ab9dfa559",
         "src/project/local/git-cache.ts@sha256:bc868ed5f08eb04c6382f2742753046dda4a611965abadd85276f16d9726a73c",
+        "src/project/local/git-cache.ts@sha256:d3f065a657b474d6c9bdacf1783ea06958ecec9fcd17e433ca436b43d70a8451",
         "src/project/root.ts@sha256:0774b6dc5821918dfc77c3c219a9c4c2316128045c673297f71f8dfec111078a",
+        "src/project/root.ts@sha256:ebce45c2b308aee0fc16f7f38960a4d67b615caf942ba90fd65999a05dfb046f",
         "src/project/templates.ts@sha256:1656811b660be4518c79a9a61db7f36e49842a85bfa61e2076300e328f1dde23",
         "src/project/templates.ts@sha256:194a155967656199bafd17f9d2788f47b9ad6dc5dd2c9a898063f3520eca783d",
         "src/project/templates.ts@sha256:1c01ab956dc400ba404461f77c893863085fd2e9705f6486eec95862965c6721",
         "src/project/templates.ts@sha256:3443efbc363e8e9e63c7d1b78ad3ecd1d7cb89b88fda75ab52324c5b099730da",
+        "src/project/templates.ts@sha256:ce44da7b1cfcdaa76147e4132fde4b6cb9fe4d1347ee2852bb22ca4a168d438e",
         "src/project/tool.ts@sha256:fce821d986abbf0db0f4540c3de694b3cfe4d385b9242f4d67c5f58358977846",
         "src/project/types.ts@sha256:02b74b2a04ddd01a419aef608852e77c70ba7b0f97dc46bc5680499617ecb6da",
         "src/project/types.ts@sha256:6bc37f9535a1e8c62b0fb7188c79f34d8d8713143cd3dc03c20313c5ac18ee21",
@@ -125694,6 +127185,25 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-29-implementation-pass-task-046-2026-05-29-task-046.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-046",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
+          ],
+          "audit_evidence_refs": [
+            "alignment",
+            "changed",
+            "task:TASK-046",
+            "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only"
+          ],
+          "content_proof_refs": [
+            "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-29-task-close-pass-task-043-2026-05-28-task-043-mec.json",
           "verdict": "pass",
           "profile": "task-close",
@@ -128384,7 +129894,153 @@
           "gaps": []
         }
       ],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/project/bootstrap.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/project/context.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/project/local/git-cache.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/project/root.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/project/templates.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -129137,7 +130793,9 @@
             ".codewiki/validation/2026-05-24-decision-block.json",
             ".codewiki/validation/2026-05-28-planning-block.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-215"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -129247,7 +130905,8 @@
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
             ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-            ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+            ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+            ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
           ],
           "validation_paths": [
             ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -129368,7 +131027,8 @@
             ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
             ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-            ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+            ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+            ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
           ]
         },
         "purgeable": {
@@ -130045,10 +131705,20 @@
           "digest": "sha256:7c20ea6355eca0271aabd221dffa66e32f7ec60b4157d8b854839ed3f5c2b684",
           "restore_command": "/wiki-restore TASK-047",
           "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
+          "id": "TASK-046",
+          "build_path": ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-046",
+          "commit_sha": "",
+          "digest": "sha256:e1ce7d16907c98fdafcd164eb46757278e49e55094c83358ca50268ecd050f36",
+          "restore_command": "/wiki-restore TASK-046",
+          "safety_status": "blocked"
         }
       ],
       "git_archive": {
-        "ledger_count": 66,
+        "ledger_count": 67,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -130115,7 +131785,8 @@
           "refs/codewiki/archive/task/TASK-044",
           "refs/codewiki/archive/task/TASK-045",
           "refs/codewiki/archive/task/TASK-047",
-          "refs/codewiki/archive/task/TASK-047"
+          "refs/codewiki/archive/task/TASK-047",
+          "refs/codewiki/archive/task/TASK-046"
         ],
         "build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -130183,7 +131854,8 @@
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-          ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+          ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+          ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
         ],
         "blocked_purge_build_paths": [
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -130251,7 +131923,8 @@
           ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
           ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-          ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+          ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+          ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
       }
@@ -130360,7 +132033,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-29T00:07:32.024Z",
+      "generated_at": "2026-05-29T00:33:30.505Z",
       "counts": {
         "large-doc": 1,
         "roadmap-missing-code-path": 3
@@ -130394,7 +132067,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-29T00:07:32Z",
+      "generated_at": "2026-05-29T00:33:30Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -130411,7 +132084,8 @@
         "active_sprint_count": 4,
         "status_counts": {
           "cancelled": 3,
-          "todo": 2
+          "in_progress": 1,
+          "todo": 1
         },
         "priority_counts": {
           "medium": 2,
@@ -130863,14 +132537,16 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-046"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-046"
+        ],
         "todo_task_ids": [
-          "TASK-046",
           "TASK-048"
         ],
         "executable_todo_task_ids": [
-          "TASK-046",
           "TASK-048"
         ],
         "blocked_task_ids": [],
@@ -130881,9 +132557,9 @@
           "TASK-036"
         ],
         "recent_task_ids": [
+          "TASK-046",
           "TASK-036",
           "TASK-048",
-          "TASK-046",
           "TASK-023",
           "TASK-012"
         ]
@@ -131425,7 +133101,7 @@
         "TASK-046": {
           "id": "TASK-046",
           "title": "Simplify project bootstrap and template flows",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "medium",
           "kind": "refactor",
           "change_type": "code",
@@ -131470,7 +133146,7 @@
             "tests/smoke/package-smoke.test.mjs",
             "tests/tasks/TASK-024/project-source-root.test.mjs"
           ],
-          "updated": "2026-05-28",
+          "updated": "2026-05-29T00:33:30Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -131538,7 +133214,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-29T00:07:32Z",
+      "generated_at": "2026-05-29T00:33:30Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -131679,7 +133355,9 @@
               ".codewiki/validation/2026-05-24-decision-block.json",
               ".codewiki/validation/2026-05-28-planning-block.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-215"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -131789,7 +133467,8 @@
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
               ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-              ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+              ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+              ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
             ],
             "validation_paths": [
               ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -131910,7 +133589,8 @@
               ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
               ".codewiki/builds/implementation/2026-05-28-task-047-bounded-agency-runner.json",
-              ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json"
+              ".codewiki/builds/implementation/2026-05-28-task-047-runtime-root-runner.json",
+              ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json"
             ]
           },
           "purgeable": {
@@ -131928,7 +133608,7 @@
       },
       "direction": [
         "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -132006,7 +133686,7 @@
           ],
           "primary_task": {
             "id": "TASK-046",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Simplify project bootstrap and template flows"
           },
           "revision": {
@@ -132323,7 +134003,7 @@
           ],
           "primary_task": {
             "id": "TASK-046",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Simplify project bootstrap and template flows"
           },
           "revision": {
@@ -134866,7 +136546,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-29T00:07:32Z",
+        "generated_at": "2026-05-29T00:33:30Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -134921,12 +136601,19 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T00:07:32Z",
+            "checked_at": "2026-05-29T00:33:30Z",
             "revision": {
               "git": {
-                "head": "c02c748b311b5426366791aec713080f42196721",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "79f77e2eeb952c2785515e2a7df476598164cbb3",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/project/bootstrap.ts",
+                  "src/project/context.ts",
+                  "src/project/local/git-cache.ts",
+                  "src/project/root.ts",
+                  "src/project/templates.ts"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -135145,16 +136832,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "6ff9bd58c914171d67882afdc5a67c4d66921448ca9014cbcce9c55d815e2d75",
-              "code_digest": "aff1490b97353dec5481e95203fd58ac77dc976864ce80eabb2ee915722c16c8",
-              "digest": "2f740669de09d0d21befbcee26c6c00646830ae9c69ac5c28cd4d02dbe687e79"
+              "task_digest": "38ec63c5b9de8d3550bc5f71325ecc1eb84bb95bab9af4347924eaf0a7ed64a4",
+              "code_digest": "c9a05eee8e62dbaf603888ffc4c9ea1ead978e47f5d9a7eb375c574970b99058",
+              "digest": "de37c5d071f5e61481e0780a3fa08fe90d7ba994e04f0ebc7556e651acb7b1c3"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T00:07:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T00:33:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -135576,12 +137263,19 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-29T00:07:32Z",
+            "checked_at": "2026-05-29T00:33:30Z",
             "revision": {
               "git": {
-                "head": "c02c748b311b5426366791aec713080f42196721",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "79f77e2eeb952c2785515e2a7df476598164cbb3",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/project/bootstrap.ts",
+                  "src/project/context.ts",
+                  "src/project/local/git-cache.ts",
+                  "src/project/root.ts",
+                  "src/project/templates.ts"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -135777,16 +137471,16 @@
                 }
               },
               "spec_digest": "23d02fdc6bf649859a047eabbc55a57063715ade2676349865962660576f2c2f",
-              "task_digest": "6ff9bd58c914171d67882afdc5a67c4d66921448ca9014cbcce9c55d815e2d75",
-              "code_digest": "59bc89b581e505eef543b6f2cd5f8629e2ba3d53d91e3fcc826598ca9b5e21e2",
-              "digest": "715c28ec163135559898198bd25f716f478bc2a03044be39b78a5cdf02893161"
+              "task_digest": "38ec63c5b9de8d3550bc5f71325ecc1eb84bb95bab9af4347924eaf0a7ed64a4",
+              "code_digest": "e4d0cec0b4bc7079a54b036fafbc66521c12be4cecdf937444b7d059a9b845ec",
+              "digest": "c0408cef09cb343299373e4a7aaadd2a42680488fe50be1a28608b62b1d75470"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T00:07:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T00:33:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/file-structure.md",
@@ -136184,12 +137878,19 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T00:07:32Z",
+            "checked_at": "2026-05-29T00:33:30Z",
             "revision": {
               "git": {
-                "head": "c02c748b311b5426366791aec713080f42196721",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "79f77e2eeb952c2785515e2a7df476598164cbb3",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/roadmap/queue.json",
+                  "src/project/bootstrap.ts",
+                  "src/project/context.ts",
+                  "src/project/local/git-cache.ts",
+                  "src/project/root.ts",
+                  "src/project/templates.ts"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -136408,16 +138109,16 @@
                 }
               },
               "spec_digest": "3b08f62848b87662ff3a1088fc97f377c43ebd2cc71672cabd94ddf6989c0f99",
-              "task_digest": "6ff9bd58c914171d67882afdc5a67c4d66921448ca9014cbcce9c55d815e2d75",
-              "code_digest": "aff1490b97353dec5481e95203fd58ac77dc976864ce80eabb2ee915722c16c8",
-              "digest": "2f740669de09d0d21befbcee26c6c00646830ae9c69ac5c28cd4d02dbe687e79"
+              "task_digest": "38ec63c5b9de8d3550bc5f71325ecc1eb84bb95bab9af4347924eaf0a7ed64a4",
+              "code_digest": "c9a05eee8e62dbaf603888ffc4c9ea1ead978e47f5d9a7eb375c574970b99058",
+              "digest": "de37c5d071f5e61481e0780a3fa08fe90d7ba994e04f0ebc7556e651acb7b1c3"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T00:07:32Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T00:33:30Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -136833,28 +138534,360 @@
         "lane_id": "",
         "heading": "TASK-046 — Simplify project bootstrap and template flows",
         "command": "/wiki-resume TASK-046",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-29T00:07:32Z",
+        "generated_at": "2026-05-29T00:33:30Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-215",
+            "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+            "agent_name": "Mole",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+            "task_id": "TASK-046",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+              "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-046"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/context.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/root.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/bootstrap.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/templates.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/local/git-cache.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/project/local/file-store.ts"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/project-resolution.test.mjs"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/package-smoke.test.mjs"
+              },
+              {
+                "layer": "code",
+                "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+              }
+            ],
+            "created_at": "2026-05-29T00:13:41Z",
+            "updated_at": "2026-05-29T00:13:41Z",
+            "expires_at": "2026-05-29T02:13:41.664Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/bootstrap.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/context.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/local/file-store.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/local/git-cache.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/root.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/project/templates.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-046"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/package-smoke.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/project-resolution.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/tasks/TASK-024/project-source-root.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-215",
+                "session_id": "019e6d37-a619-7392-ae76-5a86d6375f2c",
+                "agent_name": "Mole",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-046",
+                "summary": "Implement TASK-046 project/bootstrap/template helper refactor and smoke compatibility checks.",
+                "expires_at": "2026-05-29T02:13:41.664Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "branch": "codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c",
+                  "notes": "factory=role-worktree; task=TASK-046; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-215 release or validated publisher/patch ref for codewiki/TASK-046/builder/019e6d37-a619-7392-ae76-5a86d6375f2c; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -136902,7 +138935,7 @@
             ],
             "primary_task": {
               "id": "TASK-046",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Simplify project bootstrap and template flows"
             },
             "revision": {
@@ -137219,7 +139252,7 @@
             ],
             "primary_task": {
               "id": "TASK-046",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Simplify project bootstrap and template flows"
             },
             "revision": {
@@ -139805,7 +141838,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-046",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Simplify project bootstrap and template flows"
                 },
                 "revision": {
@@ -140603,7 +142636,7 @@
                 ],
                 "primary_task": {
                   "id": "TASK-046",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Simplify project bootstrap and template flows"
                 },
                 "revision": {
@@ -142679,9 +144712,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-046",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-046"
+        ],
         "next_task_id": "TASK-046",
         "sprint_ids": [
           "SPRINT-001",
@@ -143116,14 +145151,15 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-046",
               "TASK-048"
             ]
           },
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-046"
+            ]
           },
           {
             "id": "done",

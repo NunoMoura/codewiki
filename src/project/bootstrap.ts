@@ -137,48 +137,85 @@ export async function bootstrapCodewiki(
 	root: string,
 	options: BootstrapOptions = {},
 ): Promise<BootstrapResult> {
-	const projectName = (options.projectName?.trim() || basename(root)).trim();
+	const projectName = bootstrapProjectName(root, options);
 	const date = new Date().toISOString().slice(0, 10);
 	const brownfieldHints = await detectBrownfieldHints(root);
-	const inferredProjectState =
-		brownfieldHints.boundaries.length > 0 || (await looksLikeBoundary(root, 0))
-			? "brownfield"
-			: "greenfield";
+	const inferredProjectState = await inferProjectState(root, brownfieldHints);
 	const files = starterFiles({ projectName, date, brownfieldHints });
 
 	return withLockedPaths(bootstrapTargetPaths(root, files), async () => {
-		const result: BootstrapResult = {
+		const result = createBootstrapResult(
 			root,
 			projectName,
-			created: [],
-			updated: [],
-			skipped: [],
 			inferredProjectState,
-			inferredBoundaries: brownfieldHints.boundaries.map(
-				(boundary) => boundary.codePath,
-			),
-		};
-
-		for (const relativeDir of starterDirectories()) {
-			await mkdir(resolve(root, relativeDir), { recursive: true });
-		}
-
-		for (const [relativePath, content] of Object.entries(files)) {
-			const absolutePath = resolve(root, relativePath);
-			const exists = await pathExists(absolutePath);
-			if (exists && !options.force) {
-				result.skipped.push(relativePath);
-				continue;
-			}
-			await mkdir(dirname(absolutePath), { recursive: true });
-			await writeFile(absolutePath, content, "utf8");
-			if (exists) result.updated.push(relativePath);
-			else result.created.push(relativePath);
-		}
-
+			brownfieldHints,
+		);
+		await ensureStarterDirectories(root);
+		await writeStarterFiles(root, files, options.force === true, result);
 		await runRebuild(root);
 		return result;
 	});
+}
+
+function bootstrapProjectName(root: string, options: BootstrapOptions): string {
+	return (options.projectName?.trim() || basename(root)).trim();
+}
+
+async function inferProjectState(
+	root: string,
+	brownfieldHints: StarterBrownfieldHints,
+): Promise<BootstrapResult["inferredProjectState"]> {
+	if (brownfieldHints.boundaries.length > 0) return "brownfield";
+	if (await looksLikeBoundary(root, 0)) return "brownfield";
+	return "greenfield";
+}
+
+function createBootstrapResult(
+	root: string,
+	projectName: string,
+	inferredProjectState: BootstrapResult["inferredProjectState"],
+	brownfieldHints: StarterBrownfieldHints,
+): BootstrapResult {
+	return {
+		root,
+		projectName,
+		created: [],
+		updated: [],
+		skipped: [],
+		inferredProjectState,
+		inferredBoundaries: brownfieldHints.boundaries.map(
+			(boundary) => boundary.codePath,
+		),
+	};
+}
+
+async function ensureStarterDirectories(root: string): Promise<void> {
+	await Promise.all(
+		starterDirectories().map((relativeDir) =>
+			mkdir(resolve(root, relativeDir), { recursive: true }),
+		),
+	);
+}
+
+async function writeStarterFiles(
+	root: string,
+	files: Record<string, string>,
+	force: boolean,
+	result: BootstrapResult,
+): Promise<void> {
+	await Object.entries(files).reduce(async (previous, [relativePath, content]) => {
+		await previous;
+		const absolutePath = resolve(root, relativePath);
+		const exists = await pathExists(absolutePath);
+		if (exists && !force) {
+			result.skipped.push(relativePath);
+			return;
+		}
+		await mkdir(dirname(absolutePath), { recursive: true });
+		await writeFile(absolutePath, content, "utf8");
+		if (exists) result.updated.push(relativePath);
+		else result.created.push(relativePath);
+	}, Promise.resolve());
 }
 
 function bootstrapTargetPaths(
@@ -228,7 +265,13 @@ export function formatBootstrapSummary(
 }
 
 export function resolveToolStartDir(cwd: string, repoPath?: string): string {
-	return repoPath ? resolve(cwd, repoPath) : cwd;
+	if (repoPath) return resolve(cwd, repoPath);
+	return cwd;
+}
+
+function formatInferredBoundaries(paths: string[]): string {
+	if (paths.length === 0) return "none detected yet";
+	return paths.map((path) => `\`${path}\``).join(", ");
 }
 
 export function renderOnboardingPrompt(result: BootstrapResult): string {
@@ -236,10 +279,7 @@ export function renderOnboardingPrompt(result: BootstrapResult): string {
 		projectName: result.projectName,
 		root: result.root,
 		inferredProjectState: result.inferredProjectState,
-		inferredBoundaries:
-			result.inferredBoundaries.length > 0
-				? result.inferredBoundaries.map((path) => `\`${path}\``).join(", ")
-				: "none detected yet",
+		inferredBoundaries: formatInferredBoundaries(result.inferredBoundaries),
 	});
 }
 
@@ -247,56 +287,76 @@ async function detectBrownfieldHints(
 	root: string,
 ): Promise<StarterBrownfieldHints> {
 	const boundaries = await discoverBrownfieldBoundaries(root);
-	const repoMarkdownGlobs = unique([
+	return {
+		boundaries,
+		repoMarkdownGlobs: repoMarkdownGlobsForBoundaries(boundaries),
+		codeGlobs: await codeGlobsForBoundaries(root, boundaries),
+	};
+}
+
+function repoMarkdownGlobsForBoundaries(
+	boundaries: StarterBoundary[],
+): string[] {
+	return unique([
 		"README.md",
 		...boundaries.map((boundary) => `${boundary.codePath}/**/README.md`),
 	]);
-	const codeGlobs = boundaries.length
-		? unique([
-				...boundaries.map((boundary) => `${boundary.codePath}/**`),
-				...((await pathExists(resolve(root, "scripts"))) ? ["scripts/**"] : []),
-			])
-		: ["src/**", "app/**", "backend/**", "server/**"];
+}
 
-	return {
-		boundaries,
-		repoMarkdownGlobs,
-		codeGlobs,
-	};
+async function codeGlobsForBoundaries(
+	root: string,
+	boundaries: StarterBoundary[],
+): Promise<string[]> {
+	if (boundaries.length === 0) return ["src/**", "app/**", "backend/**", "server/**"];
+	const globs = boundaries.map((boundary) => `${boundary.codePath}/**`);
+	if (await pathExists(resolve(root, "scripts"))) globs.push("scripts/**");
+	return unique(globs);
 }
 
 async function discoverBrownfieldBoundaries(
 	root: string,
 ): Promise<StarterBoundary[]> {
 	const entries = await readVisibleDirectories(root);
-	const boundaries: StarterBoundary[] = [];
+	const boundaryGroups = await Promise.all(
+		entries.map((entry) => discoverEntryBoundaries(root, entry)),
+	);
+	return boundaryGroups.flat().sort((a, b) => a.slug.localeCompare(b.slug));
+}
 
-	for (const entry of entries) {
-		if (CONTAINER_DIR_NAMES.has(entry)) {
-			const children = await readVisibleDirectories(resolve(root, entry));
-			for (const child of children) {
-				const relativePath = `${entry}/${child}`;
-				if (await looksLikeBoundary(resolve(root, relativePath), 0)) {
-					boundaries.push(makeBoundary(relativePath));
-				}
+async function discoverEntryBoundaries(
+	root: string,
+	entry: string,
+): Promise<StarterBoundary[]> {
+	if (CONTAINER_DIR_NAMES.has(entry)) return discoverContainerBoundaries(root, entry);
+	if (await looksLikeBoundary(resolve(root, entry), 0)) return [makeBoundary(entry)];
+	return [];
+}
+
+async function discoverContainerBoundaries(
+	root: string,
+	entry: string,
+): Promise<StarterBoundary[]> {
+	const children = await readVisibleDirectories(resolve(root, entry));
+	const candidates = await Promise.all(
+		children.map(async (child) => {
+			const relativePath = `${entry}/${child}`;
+			if (await looksLikeBoundary(resolve(root, relativePath), 0)) {
+				return makeBoundary(relativePath);
 			}
-			continue;
-		}
-
-		if (await looksLikeBoundary(resolve(root, entry), 0)) {
-			boundaries.push(makeBoundary(entry));
-		}
-	}
-
-	return boundaries.sort((a, b) => a.slug.localeCompare(b.slug));
+			return null;
+		}),
+	);
+	return candidates.filter((boundary): boundary is StarterBoundary => Boolean(boundary));
 }
 
 async function readVisibleDirectories(path: string): Promise<string[]> {
 	const entries = await readdir(path, { withFileTypes: true });
 	return entries
-		.filter((entry) => entry.isDirectory())
-		.map((entry) => entry.name)
-		.filter((name) => !name.startsWith(".") && !EXCLUDED_DIR_NAMES.has(name))
+		.flatMap((entry) => {
+			if (!entry.isDirectory()) return [];
+			if (entry.name.startsWith(".") || EXCLUDED_DIR_NAMES.has(entry.name)) return [];
+			return [entry.name];
+		})
 		.sort((a, b) => a.localeCompare(b));
 }
 
@@ -313,20 +373,26 @@ async function looksLikeBoundary(
 		return false;
 	}
 
-	for (const entry of entries) {
-		if (entry.name.startsWith(".")) continue;
-		if (entry.isDirectory()) {
-			if (EXCLUDED_DIR_NAMES.has(entry.name)) continue;
-			if (await looksLikeBoundary(resolve(path, entry.name), depth + 1))
-				return true;
-			continue;
-		}
-		if (!entry.isFile()) continue;
-		if (MANIFEST_FILE_NAMES.has(entry.name)) return true;
-		if (CODE_FILE_EXTENSIONS.has(extname(entry.name))) return true;
-	}
+	const checks = await Promise.all(
+		entries.flatMap((entry) => {
+			if (entry.name.startsWith(".")) return [];
+			return [entryLooksLikeBoundary(path, depth, entry)];
+		}),
+	);
+	return checks.some(Boolean);
+}
 
-	return false;
+async function entryLooksLikeBoundary(
+	path: string,
+	depth: number,
+	entry: { name: string; isDirectory(): boolean; isFile(): boolean },
+): Promise<boolean> {
+	if (entry.isDirectory()) {
+		if (EXCLUDED_DIR_NAMES.has(entry.name)) return false;
+		return looksLikeBoundary(resolve(path, entry.name), depth + 1);
+	}
+	if (!entry.isFile()) return false;
+	return MANIFEST_FILE_NAMES.has(entry.name) || CODE_FILE_EXTENSIONS.has(extname(entry.name));
 }
 
 function makeBoundary(relativePath: string): StarterBoundary {
@@ -352,9 +418,13 @@ function sanitizeSlugSegment(value: string): string {
 function titleCase(value: string): string {
 	return value
 		.split(/[^a-zA-Z0-9]+/)
-		.filter(Boolean)
-		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.flatMap(titleCasePart)
 		.join(" ");
+}
+
+function titleCasePart(part: string): string[] {
+	if (!part) return [];
+	return [part.charAt(0).toUpperCase() + part.slice(1)];
 }
 
 function unique(values: string[]): string[] {

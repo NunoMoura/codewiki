@@ -19,6 +19,18 @@ export interface StarterTemplateInput {
 	brownfieldHints?: StarterBrownfieldHints;
 }
 
+interface BasicDocTemplateInput {
+	projectName: string;
+	date: string;
+	slug: string;
+	title: string;
+	summary: string;
+}
+
+interface ComponentDocTemplateInput extends BasicDocTemplateInput {
+	codePaths: string[];
+}
+
 export function starterDirectories(): string[] {
 	return [
 		".codewiki/research",
@@ -51,113 +63,121 @@ export function starterFiles(
 
 		".codewiki/kb/lexicon.md": lexiconDoc(projectName, date),
 		".codewiki/kb/product/overview.md": productSpecDoc(projectName, date),
-		".codewiki/kb/product/users/maintainers.md": productUserDoc(
+		".codewiki/kb/product/users/maintainers.md": productUserDoc({
 			projectName,
 			date,
-			"maintainers",
-			"Maintainers",
-			"Human maintainers who need project intent, roadmap state, and implementation evidence close to the repository.",
-		),
-		".codewiki/kb/product/users/agents.md": productUserDoc(
+			slug: "maintainers",
+			title: "Maintainers",
+			summary:
+				"Human maintainers who need project intent, roadmap state, and implementation evidence close to the repository.",
+		}),
+		".codewiki/kb/product/users/agents.md": productUserDoc({
 			projectName,
 			date,
-			"agents",
-			"Pi Agents and Subagents",
-			"AI agents that use CodeWiki as persistent project memory and fresh-context worker state.",
-		),
-		".codewiki/kb/product/stories/intent.md": productStoryDoc(
+			slug: "agents",
+			title: "Pi Agents and Subagents",
+			summary:
+				"AI agents that use CodeWiki as persistent project memory and fresh-context worker state.",
+		}),
+		".codewiki/kb/product/stories/intent.md": productStoryDoc({
 			projectName,
 			date,
-			"intent",
-			"Maintain Fresh Intent",
-			"Preserve current project intent so future sessions do not rediscover goals from chat history or raw diffs.",
-		),
-		".codewiki/kb/product/stories/navigation.md": productStoryDoc(
+			slug: "intent",
+			title: "Maintain Fresh Intent",
+			summary:
+				"Preserve current project intent so future sessions do not rediscover goals from chat history or raw diffs.",
+		}),
+		".codewiki/kb/product/stories/navigation.md": productStoryDoc({
 			projectName,
 			date,
-			"navigation",
-			"Navigate With Low Token Cost",
-			"Start from compact graph-backed state and expand only to exact needed context.",
-		),
-		".codewiki/kb/product/uis/status-panel.md": productUiDoc(
+			slug: "navigation",
+			title: "Navigate With Low Token Cost",
+			summary:
+				"Start from compact graph-backed state and expand only to exact needed context.",
+		}),
+		".codewiki/kb/product/uis/status-panel.md": productUiDoc({
 			projectName,
 			date,
-			"status-panel",
-			"Status Panel UI",
-			"Panel-first status experience for humans and agents.",
-		),
-		".codewiki/kb/product/uis/board.md": productUiDoc(
+			slug: "status-panel",
+			title: "Status Panel UI",
+			summary: "Panel-first status experience for humans and agents.",
+		}),
+		".codewiki/kb/product/uis/board.md": productUiDoc({
 			projectName,
 			date,
-			"board",
-			"Board UI",
-			"Roadmap, inferred-delta, approvals, and next-action visibility.",
-		),
-		".codewiki/kb/product/uis/agent-tools.md": productUiDoc(
+			slug: "board",
+			title: "Board UI",
+			summary: "Roadmap, inferred-delta, approvals, and next-action visibility.",
+		}),
+		".codewiki/kb/product/uis/agent-tools.md": productUiDoc({
 			projectName,
 			date,
-			"agent-tools",
-			"Agent Tools UI",
-			"AI-facing CodeWiki tool expectations.",
-		),
+			slug: "agent-tools",
+			title: "Agent Tools UI",
+			summary: "AI-facing CodeWiki tool expectations.",
+		}),
 		".codewiki/kb/system/overview.md": systemSpecDoc(
 			projectName,
 			date,
 			brownfieldHints.boundaries,
 		),
-		".codewiki/kb/system/adapters.md": systemClientDoc(
+		".codewiki/kb/system/adapters.md": systemClientDoc({
 			projectName,
 			date,
-			"adapters",
-			"Adapters",
-			"Technical distribution boundary for Pi, CLI, TUI, MCP, editor, package API, and future harness clients.",
-		),
-		".codewiki/kb/system/api.md": systemClientDoc(
+			slug: "adapters",
+			title: "Adapters",
+			summary:
+				"Technical distribution boundary for Pi, CLI, TUI, MCP, editor, package API, and future harness clients.",
+		}),
+		".codewiki/kb/system/api.md": systemClientDoc({
 			projectName,
 			date,
-			"api",
-			"CodeWiki API",
-			"Stable semantic operations used by adapters, tools, UI, and future integrations.",
-		),
-		".codewiki/kb/system/extension.md": architectureComponentDoc(
+			slug: "api",
+			title: "CodeWiki API",
+			summary:
+				"Stable semantic operations used by adapters, tools, UI, and future integrations.",
+		}),
+		".codewiki/kb/system/extension.md": architectureComponentDoc({
 			projectName,
 			date,
-			"extension",
-			"CodeWiki Extension",
-			"Pi package extension surface for commands, status panel, skills, and agent tools.",
-			[],
-		),
-		".codewiki/kb/system/knowledge.md": architectureComponentDoc(
+			slug: "extension",
+			title: "CodeWiki Extension",
+			summary:
+				"Pi package extension surface for commands, status panel, skills, and agent tools.",
+			codePaths: [],
+		}),
+		".codewiki/kb/system/knowledge.md": architectureComponentDoc({
 			projectName,
 			date,
-			"knowledge",
-			"Canonical Knowledge",
-			"Durable product and system truth maintained by agents.",
-			[".codewiki/kb"],
-		),
-		".codewiki/kb/system/graph.md": architectureComponentDoc(
+			slug: "knowledge",
+			title: "Canonical Knowledge",
+			summary: "Durable product and system truth maintained by agents.",
+			codePaths: [".codewiki/kb"],
+		}),
+		".codewiki/kb/system/graph.md": architectureComponentDoc({
 			projectName,
 			date,
-			"graph",
-			"Generated Graph",
-			"Tool-owned generated graph consumed by agents and UI.",
-			[".codewiki/index_graph.json"],
-		),
-		".codewiki/kb/system/roadmap.md": architectureComponentDoc(
+			slug: "graph",
+			title: "Generated Graph",
+			summary: "Tool-owned generated graph consumed by agents and UI.",
+			codePaths: [".codewiki/index_graph.json"],
+		}),
+		".codewiki/kb/system/roadmap.md": architectureComponentDoc({
 			projectName,
 			date,
-			"roadmap",
-			"Roadmap Queue",
-			"Queue and task truth for active work ordering and closure state.",
-			[".codewiki/roadmap/queue.json"],
-		),
-		".codewiki/kb/system/compilers.md": architectureFlowDoc(
+			slug: "roadmap",
+			title: "Roadmap Queue",
+			summary: "Queue and task truth for active work ordering and closure state.",
+			codePaths: [".codewiki/roadmap/queue.json"],
+		}),
+		".codewiki/kb/system/compilers.md": architectureFlowDoc({
 			projectName,
 			date,
-			"compilers",
-			"Compiler Flow",
-			"User intent moves through decision, planning, implementation, and validation boundaries; decision builds replace the old split intent/knowledge handoff.",
-		),
+			slug: "compilers",
+			title: "Compiler Flow",
+			summary:
+				"User intent moves through decision, planning, implementation, and validation boundaries; decision builds replace the old split intent/knowledge handoff.",
+		}),
 		".codewiki/kb/system/validation-gateway.md": runtimePolicyDoc(
 			projectName,
 			date,
@@ -165,16 +185,26 @@ export function starterFiles(
 		".codewiki/roadmap/queue.json": roadmapJson(projectName, date),
 	};
 
-	for (const boundary of brownfieldHints.boundaries) {
-		const flatSlug = boundary.slug.replaceAll("/", "-");
-		files[`.codewiki/kb/system/${flatSlug}.md`] = boundarySpecDoc(
-			projectName,
-			date,
-			boundary,
-		);
-	}
+	return {
+		...files,
+		...boundarySpecFiles(projectName, date, brownfieldHints.boundaries),
+	};
+}
 
-	return files;
+function boundarySpecFiles(
+	projectName: string,
+	date: string,
+	boundaries: StarterBoundary[],
+): Record<string, string> {
+	return Object.fromEntries(
+		boundaries.map((boundary) => {
+			const flatSlug = boundary.slug.replaceAll("/", "-");
+			return [
+				`.codewiki/kb/system/${flatSlug}.md`,
+				boundarySpecDoc(projectName, date, boundary),
+			];
+		}),
+	);
 }
 
 function configJson(
@@ -182,19 +212,18 @@ function configJson(
 	date: string,
 	brownfieldHints: StarterBrownfieldHints,
 ): string {
-	const repoMarkdown = uniqueStrings(
-		brownfieldHints.repoMarkdownGlobs.length
-			? brownfieldHints.repoMarkdownGlobs
-			: ["README.md", "src/**/README.md", "backend/**/README.md"],
-	);
-	const codeGlobs = uniqueStrings(
-		brownfieldHints.codeGlobs.length
-			? brownfieldHints.codeGlobs
-			: ["src/**", "app/**", "backend/**", "server/**"],
-	);
-	const indexTitle = projectName.toLowerCase().endsWith("wiki")
-		? `${projectName} Index`
-		: `${projectName} Wiki Index`;
+	const repoMarkdown = defaultedUniqueStrings(brownfieldHints.repoMarkdownGlobs, [
+		"README.md",
+		"src/**/README.md",
+		"backend/**/README.md",
+	]);
+	const codeGlobs = defaultedUniqueStrings(brownfieldHints.codeGlobs, [
+		"src/**",
+		"app/**",
+		"backend/**",
+		"server/**",
+	]);
+	const indexTitle = wikiIndexTitle(projectName);
 
 	return (
 		JSON.stringify(
@@ -373,6 +402,16 @@ function configJson(
 	);
 }
 
+function defaultedUniqueStrings(values: string[], defaults: string[]): string[] {
+	if (values.length > 0) return uniqueStrings(values);
+	return uniqueStrings(defaults);
+}
+
+function wikiIndexTitle(projectName: string): string {
+	if (projectName.toLowerCase().endsWith("wiki")) return `${projectName} Index`;
+	return `${projectName} Wiki Index`;
+}
+
 function uniqueStrings(values: string[]): string[] {
 	return [...new Set(values)].filter(Boolean);
 }
@@ -481,13 +520,8 @@ function productSpecDoc(projectName: string, date: string): string {
 	].join("\n");
 }
 
-function productUserDoc(
-	projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-): string {
+function productUserDoc(input: BasicDocTemplateInput): string {
+	const { projectName, date, slug, title, summary } = input;
 	return [
 		"---",
 		`id: spec.product.users.${slug}`,
@@ -515,13 +549,8 @@ function productUserDoc(
 	].join("\n");
 }
 
-function productStoryDoc(
-	projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-): string {
+function productStoryDoc(input: BasicDocTemplateInput): string {
+	const { projectName, date, slug, title, summary } = input;
 	return [
 		"---",
 		`id: spec.product.stories.${slug}`,
@@ -550,13 +579,8 @@ function productStoryDoc(
 	].join("\n");
 }
 
-function productUiDoc(
-	projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-): string {
+function productUiDoc(input: BasicDocTemplateInput): string {
+	const { projectName, date, slug, title, summary } = input;
 	return [
 		"---",
 		`id: spec.product.uis.${slug}`,
@@ -584,13 +608,8 @@ function productUiDoc(
 	].join("\n");
 }
 
-function systemClientDoc(
-	projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-): string {
+function systemClientDoc(input: BasicDocTemplateInput): string {
+	const { projectName, date, slug, title, summary } = input;
 	return [
 		"---",
 		`id: spec.system.${slug}`,
@@ -621,14 +640,8 @@ function systemClientDoc(
 	].join("\n");
 }
 
-function architectureComponentDoc(
-	_projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-	codePaths: string[],
-): string {
+function architectureComponentDoc(input: ComponentDocTemplateInput): string {
+	const { date, slug, title, summary, codePaths } = input;
 	return [
 		"---",
 		`id: system.components.${slug}`,
@@ -662,13 +675,8 @@ function architectureComponentDoc(
 	].join("\n");
 }
 
-function architectureFlowDoc(
-	_projectName: string,
-	date: string,
-	slug: string,
-	title: string,
-	summary: string,
-): string {
+function architectureFlowDoc(input: BasicDocTemplateInput): string {
+	const { date, slug, title, summary } = input;
 	return [
 		"---",
 		`id: system.flows.${slug}`,
@@ -725,21 +733,7 @@ function systemSpecDoc(
 		"",
 	];
 
-	if (boundaries.length) {
-		lines.push(
-			"## Inferred brownfield boundaries",
-			"",
-			"Setup detected these candidate ownership seams from repo structure. Refine, collapse, or rename them if the codebase uses different stable boundaries.",
-			"",
-		);
-		for (const boundary of boundaries) {
-			const target = `.codewiki/kb/system/${boundary.slug.replaceAll("/", "-")}.md`;
-			lines.push(
-				`- [${boundary.title}](${posix.relative(".codewiki/kb/system", target)}) — owns \`${boundary.codePath}\``,
-			);
-		}
-		lines.push("");
-	}
+	lines.push(...inferredBoundaryLines(boundaries));
 
 	lines.push(
 		"## Architecture organization rule",
@@ -766,6 +760,23 @@ function systemSpecDoc(
 	);
 
 	return lines.join("\n");
+}
+
+function inferredBoundaryLines(boundaries: StarterBoundary[]): string[] {
+	if (boundaries.length === 0) return [];
+	return [
+		"## Inferred brownfield boundaries",
+		"",
+		"Setup detected these candidate ownership seams from repo structure. Refine, collapse, or rename them if the codebase uses different stable boundaries.",
+		"",
+		...boundaries.map(inferredBoundaryLine),
+		"",
+	];
+}
+
+function inferredBoundaryLine(boundary: StarterBoundary): string {
+	const target = `.codewiki/kb/system/${boundary.slug.replaceAll("/", "-")}.md`;
+	return `- [${boundary.title}](${posix.relative(".codewiki/kb/system", target)}) — owns \`${boundary.codePath}\``;
 }
 
 function runtimePolicyDoc(projectName: string, date: string): string {

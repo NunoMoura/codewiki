@@ -147,7 +147,8 @@ export function normalizeRelativePath(path: string): string {
  * Normalize a relative path if it's not null/undefined.
  */
 export function optionalRelativePath(path: string | undefined): string | undefined {
-	return path ? normalizeRelativePath(path) : undefined;
+	if (!path) return undefined;
+	return normalizeRelativePath(path);
 }
 
 /**
@@ -175,41 +176,94 @@ export async function rememberStatusDockProject(
 	await writeStatusDockPrefs({ ...current, lastRepoPath: project.root });
 }
 
+function contextStartPath(ctx: CodewikiContextPort): string {
+	return ctx.cwd || ctx.workspaceRoot || process.cwd();
+}
+
+function statusDockFallbackRoots(prefs: StatusDockPrefs): string[] {
+	const roots: string[] = [];
+	if (prefs.mode === "pin" && prefs.pinnedRepoPath) roots.push(prefs.pinnedRepoPath);
+	if (prefs.lastRepoPath) roots.push(prefs.lastRepoPath);
+	return unique(roots);
+}
+
+async function statusDockResult(
+	project: WikiProject,
+	prefs: StatusDockPrefs,
+	source: "cwd" | "pinned",
+): Promise<ResolvedStatusDockProject> {
+	const { maybeReadStatusState } = await import("../state/artifacts.ts");
+	await rememberStatusDockProject(project, prefs);
+	return {
+		...project,
+		project,
+		statusState: (await maybeReadStatusState(project.statusStatePath)) ?? undefined,
+		source,
+	};
+}
+
+async function firstRememberedProject(
+	prefs: StatusDockPrefs,
+): Promise<WikiProject | null> {
+	return firstLoadableProject(statusDockFallbackRoots(prefs));
+}
+
+async function firstLoadableProject(
+	roots: string[],
+	index = 0,
+): Promise<WikiProject | null> {
+	const root = roots[index];
+	if (!root) return null;
+	const project = await maybeLoadProject(root);
+	if (project) return project;
+	return firstLoadableProject(roots, index + 1);
+}
+
 export async function resolveStatusDockProject(
 	ctx: CodewikiContextPort,
 	options?: { allowWhenOff?: boolean },
 ): Promise<ResolvedStatusDockProject | null> {
-	const { maybeReadStatusState } = await import("../state/artifacts.ts");
 	const prefs = await readStatusDockPrefs();
 	if (prefs.mode === "off" && !options?.allowWhenOff) return null;
 	const localProject = await maybeLoadProject(ctx.cwd || ctx.workspaceRoot || "");
-	if (localProject) {
-		await rememberStatusDockProject(localProject, prefs);
-		return {
-			...localProject,
-			project: localProject,
-			statusState: (await maybeReadStatusState(localProject.statusStatePath)) ?? undefined,
-			source: "cwd",
-		};
-	}
-	const fallbackRoots = unique([
-		...(prefs.mode === "pin" && prefs.pinnedRepoPath
-			? [prefs.pinnedRepoPath]
-			: []),
-		...(prefs.lastRepoPath ? [prefs.lastRepoPath] : []),
-	]);
-	for (const root of fallbackRoots) {
-		const fallbackProject = await maybeLoadProject(root);
-		if (!fallbackProject) continue;
-		await rememberStatusDockProject(fallbackProject, prefs);
-		return {
-			...fallbackProject,
-			project: fallbackProject,
-			statusState: (await maybeReadStatusState(fallbackProject.statusStatePath)) ?? undefined,
-			source: "pinned",
-		};
+	if (localProject) return statusDockResult(localProject, prefs, "cwd");
+	const fallbackProject = await firstRememberedProject(prefs);
+	if (!fallbackProject) return null;
+	return statusDockResult(fallbackProject, prefs, "pinned");
+}
+
+async function rememberAndReturnProject(
+	project: WikiProject,
+	prefs?: StatusDockPrefs,
+): Promise<WikiProject> {
+	await rememberStatusDockProject(project, prefs ?? null);
+	return project;
+}
+
+async function resolveExplicitProject(
+	path: string,
+	errorMessage: string,
+): Promise<WikiProject> {
+	const project = await maybeLoadProject(path);
+	if (!project) throw new Error(errorMessage);
+	return rememberAndReturnProject(project);
+}
+
+async function resolveLocalProject(startDir: string): Promise<WikiProject | null> {
+	try {
+		const project = await maybeLoadProject(startDir);
+		if (project) return rememberAndReturnProject(project);
+	} catch {
+		// Fall back to pinned/last-used repo below.
 	}
 	return null;
+}
+
+async function resolveRememberedProject(): Promise<WikiProject | null> {
+	const prefs = await readStatusDockPrefs();
+	const project = await firstRememberedProject(prefs);
+	if (!project) return null;
+	return rememberAndReturnProject(project, prefs);
 }
 
 export async function resolveToolProject(
@@ -219,47 +273,36 @@ export async function resolveToolProject(
 ): Promise<WikiProject> {
 	if (repoPath) {
 		const requestedPath = resolve(startDir, repoPath);
-		const project = await maybeLoadProject(requestedPath);
-		if (!project) {
-			throw new Error(
-				`${toolName}: could not resolve repoPath ${requestedPath}. No .codewiki/config.json found in that path or its ancestors.`,
-			);
-		}
-		await rememberStatusDockProject(project);
-		return project;
-	}
-
-	try {
-		const project = await maybeLoadProject(startDir);
-		if (project) {
-			await rememberStatusDockProject(project);
-			return project;
-		}
-	} catch {
-		// Fall back to pinned/last-used repo below.
-	}
-	{
-		const prefs = await readStatusDockPrefs();
-		const fallbackRoots = unique([
-			...(prefs.mode === "pin" && prefs.pinnedRepoPath
-				? [prefs.pinnedRepoPath]
-				: []),
-			...(prefs.lastRepoPath ? [prefs.lastRepoPath] : []),
-		]);
-		for (const root of fallbackRoots) {
-			const project = await maybeLoadProject(root);
-			if (!project) continue;
-			await rememberStatusDockProject(project, prefs);
-			return project;
-		}
-		throw new Error(
-			[
-				`${toolName}: no repo-local wiki found from ${startDir}.`,
-				"codewiki tools are available globally, but each run mutates one repo-local wiki.",
-				`Retry with repoPath set to the target repo root, or any path inside that repo.`,
-			].join(" "),
+		return resolveExplicitProject(
+			requestedPath,
+			`${toolName}: could not resolve repoPath ${requestedPath}. No .codewiki/config.json found in that path or its ancestors.`,
 		);
 	}
+
+	const localProject = await resolveLocalProject(startDir);
+	if (localProject) return localProject;
+	const rememberedProject = await resolveRememberedProject();
+	if (rememberedProject) return rememberedProject;
+	throw new Error(
+		[
+			`${toolName}: no repo-local wiki found from ${startDir}.`,
+			"codewiki tools are available globally, but each run mutates one repo-local wiki.",
+			`Retry with repoPath set to the target repo root, or any path inside that repo.`,
+		].join(" "),
+	);
+}
+
+async function loadPickedCommandProject(
+	ctx: CodewikiContextPort,
+	commandName: string,
+	startPath: string,
+): Promise<WikiProject | null> {
+	const { findWikiRootsBelow } = await import("./root.ts");
+	const candidates = await findWikiRootsBelow(startPath);
+	if (candidates.length === 0) return null;
+	const pickedRoot = await pickCommandProjectRoot(ctx, commandName, candidates);
+	if (!pickedRoot) return null;
+	return rememberAndReturnProject(await loadProject(pickedRoot));
 }
 
 export async function resolveCommandProject(
@@ -267,46 +310,22 @@ export async function resolveCommandProject(
 	pathArg: string | null,
 	commandName: string,
 ): Promise<WikiProject> {
-	const { findWikiRootsBelow } = await import("./root.ts");
+	const startPath = contextStartPath(ctx);
 	if (pathArg) {
-		const requestedPath = resolve(ctx.cwd || ctx.workspaceRoot || process.cwd(), pathArg);
-		const project = await maybeLoadProject(requestedPath);
-		if (!project) {
-			throw new Error(
-				`${commandName}: could not resolve repo path ${requestedPath}. No .codewiki/config.json found in that path or its ancestors.`,
-			);
-		}
-		await rememberStatusDockProject(project);
-		return project;
-	}
-
-	try {
-		const project = await maybeLoadProject(ctx.cwd || ctx.workspaceRoot || "");
-		if (project) {
-			await rememberStatusDockProject(project);
-			return project;
-		}
-	} catch {
-		// Fall back to wiki roots below cwd.
-	}
-	{
-		const candidates = await findWikiRootsBelow(ctx.cwd || ctx.workspaceRoot || process.cwd());
-		if (candidates.length > 0) {
-			const pickedRoot = await pickCommandProjectRoot(
-				ctx,
-				commandName,
-				candidates,
-			);
-			if (pickedRoot) {
-				const project = await loadProject(pickedRoot);
-				await rememberStatusDockProject(project);
-				return project;
-			}
-		}
-		throw new Error(
-			`${commandName}: No repo-local wiki found from ${ctx.cwd || ctx.workspaceRoot || process.cwd()}. CodeWiki commands may be loaded globally, but each run targets one repo-local wiki. Use /wiki-bootstrap first, work inside a repo with .codewiki/config.json, or pass an explicit repo path like /${commandName} /path/to/repo.`,
+		const requestedPath = resolve(startPath, pathArg);
+		return resolveExplicitProject(
+			requestedPath,
+			`${commandName}: could not resolve repo path ${requestedPath}. No .codewiki/config.json found in that path or its ancestors.`,
 		);
 	}
+
+	const localProject = await resolveLocalProject(ctx.cwd || ctx.workspaceRoot || "");
+	if (localProject) return localProject;
+	const pickedProject = await loadPickedCommandProject(ctx, commandName, startPath);
+	if (pickedProject) return pickedProject;
+	throw new Error(
+		`${commandName}: No repo-local wiki found from ${startPath}. CodeWiki commands may be loaded globally, but each run targets one repo-local wiki. Use /wiki-bootstrap first, work inside a repo with .codewiki/config.json, or pass an explicit repo path like /${commandName} /path/to/repo.`,
+	);
 }
 
 async function pickCommandProjectRoot(

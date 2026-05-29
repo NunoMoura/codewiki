@@ -58,12 +58,13 @@ export async function findWikiRootsBelow(
 
 		if (depth >= maxDepth) return;
 
-		for (const entry of entries) {
+		await entries.reduce(async (previous, entry) => {
+			await previous;
 			if (roots.length >= maxResults) return;
-			if (!entry.isDirectory()) continue;
-			if (DISCOVERY_EXCLUDED_DIRS.has(entry.name)) continue;
+			if (!entry.isDirectory()) return;
+			if (DISCOVERY_EXCLUDED_DIRS.has(entry.name)) return;
 			await walk(resolve(dir, entry.name), depth + 1);
-		}
+		}, Promise.resolve());
 	}
 }
 
@@ -86,11 +87,7 @@ export async function requireWikiRoot(startDir: string): Promise<string> {
 export async function resolveWikiConfigPath(
 	root: string,
 ): Promise<string | null> {
-	for (const relativePath of WIKI_CONFIG_RELATIVE_PATHS) {
-		const candidate = resolve(root, relativePath);
-		if (await pathExists(candidate)) return candidate;
-	}
-	return null;
+	return firstExistingRelativePath(root, WIKI_CONFIG_RELATIVE_PATHS);
 }
 
 export async function resolveSetupRoot(startDir: string): Promise<string> {
@@ -107,24 +104,32 @@ async function findAncestorWithAnyPath(
 ): Promise<string | null> {
 	let current = resolve(startDir);
 	while (true) {
-		for (const relativePath of relativePaths) {
-			const candidate = resolve(current, relativePath);
-			if (await pathExists(candidate)) return current;
-		}
+		if (await hasAnyPath(current, relativePaths)) return current;
 		const parent = dirname(current);
 		if (parent === current) return null;
 		current = parent;
 	}
 }
 
+async function firstExistingRelativePath(
+	root: string,
+	relativePaths: readonly string[],
+): Promise<string | null> {
+	const candidates = await Promise.all(
+		relativePaths.map(async (relativePath) => {
+			const candidate = resolve(root, relativePath);
+			if (await pathExists(candidate)) return candidate;
+			return null;
+		}),
+	);
+	return candidates.find(Boolean) ?? null;
+}
+
 async function hasAnyPath(
 	root: string,
 	relativePaths: readonly string[],
 ): Promise<boolean> {
-	for (const relativePath of relativePaths) {
-		if (await pathExists(resolve(root, relativePath))) return true;
-	}
-	return false;
+	return (await firstExistingRelativePath(root, relativePaths)) !== null;
 }
 
 async function pathExists(path: string): Promise<boolean> {

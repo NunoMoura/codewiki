@@ -41,16 +41,9 @@ export class GitCache {
 	public getDirtyPaths(): string[] {
 		if (this.dirtyPaths === null) {
 			const raw = this.exec(["status", "--porcelain", "--untracked-files=no"]);
-			const paths = new Set<string>();
-			for (const line of raw.split(/\r?\n/)) {
-				if (line.length < 4) continue;
-				let p = line.substring(3).trim();
-				if (p.includes(" -> ")) {
-					p = p.split(" -> ").pop()!.trim();
-				}
-				if (p) paths.add(p);
-			}
-			this.dirtyPaths = Array.from(paths).sort();
+			this.dirtyPaths = uniqueSorted(
+				raw.split(/\r?\n/).flatMap(parseDirtyStatusLine),
+			);
 		}
 		return this.dirtyPaths;
 	}
@@ -63,42 +56,63 @@ export class GitCache {
 		this.blobOids = new Map<string, string>();
 		const raw = this.exec(["ls-tree", "-r", "HEAD"]);
 		if (!raw) return;
-		for (const line of raw.split(/\r?\n/)) {
-			// Format: <mode> SP <type> SP <object> TAB <file>
-			const match = line.match(/^\d+\s+\w+\s+([a-f0-9]+)\t(.+)$/);
-			if (match) {
-				const [, oid, filepath] = match;
-				this.blobOids.set(filepath, oid);
-			}
-		}
+		raw.split(/\r?\n/).forEach((line) => {
+			const parsed = parseLsTreeLine(line);
+			if (parsed) this.blobOids?.set(parsed.filepath, parsed.oid);
+		});
 	}
 
 	public getFileHash(relPath: string): string {
 		this.prefetchAllBlobOids();
-		return this.blobOids!.get(relPath) || "";
+		return this.blobOids?.get(relPath) || "";
 	}
 
 	public buildAnchor(scopedPaths: string[] = []): GitAnchor {
-		const uniqueScoped = Array.from(new Set(scopedPaths.map((p) => p.trim()))).filter(Boolean).sort();
-		const allDirty = this.getDirtyPaths();
-		
-		const dirty_paths = allDirty.filter((dirty) => {
-			if (uniqueScoped.length === 0) return true;
-			return uniqueScoped.some((scoped) => dirty === scoped || dirty.startsWith(`${scoped}/`));
-		});
-
-		const paths: Record<string, string> = {};
-		for (const p of uniqueScoped) {
-			if (existsSync(join(this.repoRoot, p))) {
-				paths[p] = this.getFileHash(p);
-			}
-		}
-
+		const uniqueScoped = uniqueSorted(scopedPaths.map((p) => p.trim()));
+		const dirty_paths = scopedDirtyPaths(this.getDirtyPaths(), uniqueScoped);
 		return {
 			head: this.getHeadCommit(),
 			dirty: dirty_paths.length > 0,
 			dirty_paths,
-			paths,
+			paths: this.scopedPathHashes(uniqueScoped),
 		};
 	}
+
+	private scopedPathHashes(scopedPaths: string[]): Record<string, string> {
+		return Object.fromEntries(
+			scopedPaths.flatMap((path) => {
+				if (!existsSync(join(this.repoRoot, path))) return [];
+				return [[path, this.getFileHash(path)]];
+			}),
+		);
+	}
+}
+
+function parseDirtyStatusLine(line: string): string[] {
+	if (line.length < 4) return [];
+	const rawPath = line.slice(3).trim();
+	if (!rawPath) return [];
+	const renameTarget = rawPath.split(" -> ").pop();
+	return [renameTarget?.trim() || rawPath];
+}
+
+function parseLsTreeLine(
+	line: string,
+): { oid: string; filepath: string } | null {
+	// Format: <mode> SP <type> SP <object> TAB <file>
+	const match = line.match(/^\d+\s+\w+\s+([a-f0-9]+)\t(.+)$/);
+	if (!match) return null;
+	const [, oid, filepath] = match;
+	return { oid, filepath };
+}
+
+function scopedDirtyPaths(allDirty: string[], scopedPaths: string[]): string[] {
+	if (scopedPaths.length === 0) return allDirty;
+	return allDirty.filter((dirty) =>
+		scopedPaths.some((scoped) => dirty === scoped || dirty.startsWith(`${scoped}/`)),
+	);
+}
+
+function uniqueSorted(values: string[]): string[] {
+	return Array.from(new Set(values.filter(Boolean))).sort();
 }

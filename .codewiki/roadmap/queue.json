@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-29T00:06:05Z",
+  "updated": "2026-05-29T00:33:30Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,7 +536,7 @@
     "TASK-046": {
       "id": "TASK-046",
       "title": "Simplify project bootstrap and template flows",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "refactor",
       "summary": "Reduce complexity in project resolution, bootstrap/setup, template generation, and local git/file helpers while preserving bootstrap output.",
@@ -588,7 +588,7 @@
         "closure": "Task closes when project tests pass and review metrics improve for targeted project files."
       },
       "created": "2026-05-28",
-      "updated": "2026-05-28"
+      "updated": "2026-05-29T00:33:30Z"
     },
     "TASK-048": {
       "id": "TASK-048",

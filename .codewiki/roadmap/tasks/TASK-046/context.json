@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28",
+  "generated_at": "2026-05-29T00:33:30Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-046/context.json",
   "task": {
     "id": "TASK-046",
     "title": "Simplify project bootstrap and template flows",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "refactor",
     "change_type": "code",

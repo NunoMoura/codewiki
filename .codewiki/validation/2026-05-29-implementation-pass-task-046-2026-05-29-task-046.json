@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T00:33:13Z",
+  "profile": "implementation",
+  "task_id": "TASK-046",
+  "verdict": "pass",
+  "rationale": "TASK-046 implementation build satisfies implementation gateway: helper extraction maps to all task acceptance criteria, template helper long-parameter lists were converted to option objects where useful, bootstrap/package/project behavior checks pass, and project-file complexity review reports 0 blockers and 0 warnings. Required audits pass for the task; remaining audit warnings are generated-state refresh and existing graph-health warnings, not implementation blockers.",
+  "checks": [
+    "source build read: .codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+    "source refs inspected: src/project/context.ts, src/project/root.ts, src/project/bootstrap.ts, src/project/templates.ts, src/project/local/git-cache.ts",
+    "lsp_diagnostics project files: no diagnostics",
+    "node tests/smoke/project-resolution.test.mjs && node tests/tasks/TASK-024/project-source-root.test.mjs && node tests/smoke/package-smoke.test.mjs && npm run typecheck && npm run test:smoke: pass",
+    "pi-lens dispatch review for project files: 0 blockers, 0 warnings",
+    "codewiki_audit profiles alignment,changed,task for TASK-046: task pass; warnings limited to generated state/view refresh and graph-health warnings"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Implementation validated with dirty pre-commit working tree digest; task-close/publication still require clean immutable proof if policy is applied."
+    },
+    {
+      "severity": "low",
+      "summary": "No dedicated byte-for-byte starter output snapshot was added; compatibility relies on package smoke bootstrap behavior."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-29-task-046-project-bootstrap-helper-refactor.json",
+  "policy_profile": "implementation",
+  "failure_class": "content_proof_missing",
+  "recommended_next_loop": "validation",
+  "stop_reason": "Collect or cite required validation/publication content proof before promotion.",
+  "routing": {
+    "failure_class": "content_proof_missing",
+    "recommended_next_loop": "validation",
+    "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "alignment",
+    "changed",
+    "task:TASK-046"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles alignment,changed,task for TASK-046: warning; task pass; warnings are generated state/view refresh and existing graph-health warnings only"
+  ],
+  "content_proof_refs": [
+    "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-046",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "content_proof_missing",
+      "recommended_next_loop": "validation",
+      "stop_reason": "Collect or cite required validation/publication content proof before promotion."
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "0071972ec592d73abcabc6a120b7a7ae7512a65df1f1e32d76f6eaffb5f9ec75",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation started from implementation build and source refs; dirty pre-commit content proof captured by working_tree_digest.",
+    "role": "validator"
+  }
+}
