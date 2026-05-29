@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T00:05:55Z",
+  "profile": "task-close",
+  "task_id": "TASK-043",
+  "verdict": "pass",
+  "rationale": "TASK-043 is ready to close: implementation validation passed, task acceptance criteria are satisfied, required audits pass except non-blocking existing graph-health warnings, generated parity is current, the working tree was clean at validation time, and local immutable commit/tree/archive proof captures the implementation content.",
+  "checks": [
+    "implementation validation pass: .codewiki/validation/2026-05-28-implementation-pass-task-043-2026-05-28-task-043.json",
+    "local commit proof: b0088be97b048b9ef1304b85598185129b18d0bd",
+    "tree proof: 464dad6b7dbeec670e79aa3c8fbd468cd8d606f5",
+    "archive ref: refs/codewiki/archive/task/TASK-043",
+    "codewiki_audit profiles generated-parity,alignment,changed,task for TASK-043: generated-parity pass; changed pass; task pass; alignment warning only graph-health"
+  ],
+  "issues": [
+    {
+      "severity": "low",
+      "summary": "Alignment audit still reports existing graph-health warnings unrelated to TASK-043 closure."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-28-task-043-mechanical-parser-refactor.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "generated-parity",
+    "alignment",
+    "changed",
+    "task",
+    "task:TASK-043"
+  ],
+  "audit_reports": [
+    "codewiki_audit profiles generated-parity,alignment,changed,task for TASK-043: generated-parity pass; changed pass; task pass; alignment warning only graph-health"
+  ],
+  "content_proof_refs": [
+    "b0088be97b048b9ef1304b85598185129b18d0bd",
+    "464dad6b7dbeec670e79aa3c8fbd468cd8d606f5",
+    "refs/codewiki/archive/task/TASK-043"
+  ],
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "464dad6b7dbeec670e79aa3c8fbd468cd8d606f5",
+      "refs/codewiki/archive/task/TASK-043"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-043",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "b0088be97b048b9ef1304b85598185129b18d0bd",
+    "validated_sha": "b0088be97b048b9ef1304b85598185129b18d0bd",
+    "tree_sha": "464dad6b7dbeec670e79aa3c8fbd468cd8d606f5",
+    "archive_ref": "refs/codewiki/archive/task/TASK-043",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Local commit/archive proof captures implementation+implementation-validation content before task close.",
+    "role": "validator"
+  }
+}
