@@ -1,0 +1,577 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-29T21:21:03Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+  "task_id": "TASK-056",
+  "task": {
+    "id": "TASK-056",
+    "title": "Build parallel merge publisher queue",
+    "status": "todo",
+    "priority": "high",
+    "kind": "agent-workflow",
+    "summary": "Build a serialized publisher queue that compares worker diffs, validates outputs, commits safe merges, and reroutes conflicts after parallel worktree execution.",
+    "spec_paths": [
+      ".codewiki/kb/system/worktree-isolation.md"
+    ],
+    "code_paths": [
+      "src/session/merge-publisher-queue.ts",
+      "src/session/worker-diff.ts",
+      "src/session/publisher-proof.ts",
+      "tests/smoke/merge-publisher-queue.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Parallel worker outputs are merged through a serialized publisher queue that checks diffs, enforces validation proof, commits safely, and routes conflicts back to workers or planning.",
+      "acceptance": [
+        "Publisher queue ingests worker build/validation refs and worktree diff proofs.",
+        "Merge validator compares diffs for overlap/conflicts, reruns required audits/checks, and blocks unsafe merges.",
+        "Successful merges create local checkpoint/close commits with task/build/validation/tree proof.",
+        "Conflicts produce deterministic wait/reroute evidence and wake affected workers when resolved.",
+        "Tests cover clean merge, conflict, validation failure, stale base, close proof, and no remote publication without approval."
+      ],
+      "non_goals": [
+        "Do not push to remote without explicit user approval.",
+        "Do not replace Git history as the source of merge truth.",
+        "Do not merge unvalidated worker outputs."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted publisher/merge queue tests"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-05T21:21:03.000Z",
+    "purge_after": "2026-06-12T21:21:03.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-056 serialized merge publisher queue.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-056"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/session/merge-publisher-queue.ts",
+      "src/session/worker-diff.ts",
+      "src/session/publisher-proof.ts",
+      "package.json",
+      ".codewiki/kb/system/worktree-isolation.md"
+    ],
+    "tests": [
+      "tests/smoke/merge-publisher-queue.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-056"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+    "spec_paths": [
+      ".codewiki/kb/system/worktree-isolation.md"
+    ],
+    "code_paths": [
+      "src/session/merge-publisher-queue.ts",
+      "src/session/worker-diff.ts",
+      "src/session/publisher-proof.ts",
+      "tests/smoke/merge-publisher-queue.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/merge-publisher-queue.test.mjs"
+  ],
+  "code_files": [
+    "src/session/merge-publisher-queue.ts",
+    "src/session/worker-diff.ts",
+    "src/session/publisher-proof.ts",
+    "package.json",
+    ".codewiki/kb/system/worktree-isolation.md"
+  ],
+  "files_changed": [
+    "tests/smoke/merge-publisher-queue.test.mjs",
+    "src/session/merge-publisher-queue.ts",
+    "src/session/worker-diff.ts",
+    "src/session/publisher-proof.ts",
+    "package.json",
+    ".codewiki/kb/system/worktree-isolation.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics merge publisher modules/test: pass/no errors",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass",
+    "npm run check:architecture: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (43/43)",
+    "npm run test:pack: pass",
+    "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass",
+    "codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "roadmap_task_id": "TASK-056",
+      "test_files": [
+        "tests/smoke/merge-publisher-queue.test.mjs"
+      ],
+      "evidence": [
+        "Added merge-publisher-queue smoke test before broad suite and included it in npm run test:smoke."
+      ],
+      "notes": [
+        "Full feature suite passes 43/43.",
+        "Remote publication remains blocked unless explicit approval is passed; no actual git merge/push is executed by this planning module."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "roadmap_task_id": "TASK-056",
+      "code_files": [
+        "src/session/merge-publisher-queue.ts",
+        "src/session/worker-diff.ts",
+        "src/session/publisher-proof.ts",
+        "package.json",
+        ".codewiki/kb/system/worktree-isolation.md"
+      ],
+      "evidence": [
+        "Added worker diff proof normalization/conflict detection.",
+        "Added publisher proof/commit-plan builder with local checkpoint proof fields and remote push gating.",
+        "Added merge publisher queue planner combining proofs, conflicts, checks, reroutes, local commit plan, and publication policy.",
+        "Documented publisher queue proof requirements in worktree-isolation KB."
+      ],
+      "notes": [
+        "This implementation models serialized publisher queue planning/proof and commands, not direct git history mutation in tests. Git remains source of truth when publisher plan is executed by a role worker.",
+        "No remote publication performed."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added merge-publisher-queue smoke test before broad suite and included it in npm run test:smoke."
+  ],
+  "code_change_evidence": [
+    "Added worker diff proof normalization/conflict detection.",
+    "Added publisher proof/commit-plan builder with local checkpoint proof fields and remote push gating.",
+    "Added merge publisher queue planner combining proofs, conflicts, checks, reroutes, local commit plan, and publication policy.",
+    "Documented publisher queue proof requirements in worktree-isolation KB."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Publisher queue ingests worker build/validation refs and worktree diff proofs.",
+      "evidence": "src/session/worker-diff.ts normalizes WorkerDiffProof with task/build/validation/base/head/tree/worktree/branch/changed_files/checks/clean/digest; src/session/merge-publisher-queue.ts accepts worker proofs and emits evidence build_refs/validation_refs/diff_digests."
+    },
+    {
+      "criterion": "Merge validator compares diffs for overlap/conflicts, reruns required audits/checks, and blocks unsafe merges.",
+      "evidence": "detectWorkerDiffConflicts catches file overlap, duplicate task output, and stale base; planMergePublisherQueue blocks validation-not-pass, dirty worker, missing proof, missing required checks, remote publication without approval, and incomplete publisher proof. Tests cover conflict, validation failure, stale base, missing checks, and remote approval."
+    },
+    {
+      "criterion": "Successful merges create local checkpoint/close commits with task/build/validation/tree proof.",
+      "evidence": "src/session/publisher-proof.ts builds PublisherProof with publisher base/head/tree, task/build/validation/diff/check refs, safe_to_commit, and commit_plan commands/body/required_proof. Clean merge test asserts local_commit.allowed and commit proof body."
+    },
+    {
+      "criterion": "Conflicts produce deterministic wait/reroute evidence and wake affected workers when resolved.",
+      "evidence": "planMergePublisherQueue emits reroutes per affected worker with wait action/scopes and wake_on_resolution source_refs/next_action_intent. Conflict test asserts reroute wait and wake intent."
+    },
+    {
+      "criterion": "Tests cover clean merge, conflict, validation failure, stale base, close proof, and no remote publication without approval.",
+      "evidence": "tests/smoke/merge-publisher-queue.test.mjs covers clean merge, file conflict, validation failure, stale base, incomplete close proof/missing checks, remote publication blocked without approval, and approved remote publication flag behavior."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with TASK-056 after trying auto context handoff: build serialized parallel merge publisher queue.",
+    "implemented_changes": [
+      "Added worker diff proof normalization and conflict detection.",
+      "Added publisher proof and local commit plan builder.",
+      "Added merge publisher queue validator/planner with reroute/wake evidence and remote-publish approval gate.",
+      "Added targeted smoke test and docs."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/worktree-isolation.md"
+      ],
+      "roadmap": [],
+      "code": [
+        "src/session/worker-diff.ts",
+        "src/session/publisher-proof.ts",
+        "src/session/merge-publisher-queue.ts",
+        "package.json"
+      ],
+      "tests": [
+        "tests/smoke/merge-publisher-queue.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "npm run typecheck: pass",
+      "npm run check:architecture: pass",
+      "npm run test:smoke: pass",
+      "npm run test:features: pass",
+      "npm run test:pack: pass",
+      "TASK-056 audits: task/file-structure/horizontal-alignment/source-contract pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "Future integration task may wire plan execution to actual git apply/commit; current task keeps deterministic planning and proof generation only.",
+      "Alignment graph has existing non-blocking roadmap/doc/build warnings."
+    ]
+  },
+  "risks": [
+    "Future integration task may wire plan execution to actual git apply/commit; current task keeps deterministic planning and proof generation only.",
+    "Alignment graph has existing non-blocking roadmap/doc/build warnings."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-056",
+      "task_id": "TASK-056",
+      "next_focus_task_id": "TASK-057",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-056",
+        "title": "Build parallel merge publisher queue",
+        "summary": "Implemented TASK-056 serialized merge publisher queue.",
+        "spec_paths": [
+          ".codewiki/kb/system/worktree-isolation.md"
+        ],
+        "code_paths": [
+          "src/session/merge-publisher-queue.ts",
+          "src/session/worker-diff.ts",
+          "src/session/publisher-proof.ts",
+          "tests/smoke/merge-publisher-queue.test.mjs",
+          "package.json",
+          ".codewiki/kb/system/worktree-isolation.md"
+        ],
+        "acceptance": [
+          "Publisher queue ingests worker build/validation refs and worktree diff proofs.",
+          "Merge validator compares diffs for overlap/conflicts, reruns required audits/checks, and blocks unsafe merges.",
+          "Successful merges create local checkpoint/close commits with task/build/validation/tree proof.",
+          "Conflicts produce deterministic wait/reroute evidence and wake affected workers when resolved.",
+          "Tests cover clean merge, conflict, validation failure, stale base, close proof, and no remote publication without approval."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted publisher/merge queue tests"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+        "checks_run": [
+          "lsp_diagnostics merge publisher modules/test: pass/no errors",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass",
+          "npm run check:architecture: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass (43/43)",
+          "npm run test:pack: pass",
+          "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass",
+          "codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only"
+        ],
+        "test_design_evidence": [
+          "Added merge-publisher-queue smoke test before broad suite and included it in npm run test:smoke."
+        ],
+        "code_change_evidence": [
+          "Added worker diff proof normalization/conflict detection.",
+          "Added publisher proof/commit-plan builder with local checkpoint proof fields and remote push gating.",
+          "Added merge publisher queue planner combining proofs, conflicts, checks, reroutes, local commit plan, and publication policy.",
+          "Documented publisher queue proof requirements in worktree-isolation KB."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-056",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-056",
+      "show_build": "git show refs/codewiki/archive/task/TASK-056:.codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+        ".codewiki/kb/system/worktree-isolation.md",
+        "src/session/merge-publisher-queue.ts",
+        "src/session/worker-diff.ts",
+        "src/session/publisher-proof.ts",
+        "tests/smoke/merge-publisher-queue.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-056 Build parallel merge publisher queue implementation evidence",
+      "body": "Implemented TASK-056 serialized merge publisher queue.\n\nChecks: lsp_diagnostics merge publisher modules/test: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (43/43), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass, codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-056\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json\nCodeWiki-Checks: lsp_diagnostics merge publisher modules/test: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (43/43), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass, codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-056\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-056\nCodeWiki-Digest: sha256:f5c68524d4e917dc9ee8afeb464eaf6f91f04cebd5caa065c72de52507f3c086\nCodeWiki-Restore: /wiki-restore TASK-056",
+      "trailers": [
+        "CodeWiki-Task: TASK-056",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+        "CodeWiki-Checks: lsp_diagnostics merge publisher modules/test: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (43/43), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass, codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-056",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-056",
+        "CodeWiki-Digest: sha256:f5c68524d4e917dc9ee8afeb464eaf6f91f04cebd5caa065c72de52507f3c086",
+        "CodeWiki-Restore: /wiki-restore TASK-056"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-056 Build parallel merge publisher queue implementation evidence",
+      "body": "Implemented TASK-056 serialized merge publisher queue.\n\nChecks: lsp_diagnostics merge publisher modules/test: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (43/43), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass, codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-056\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json\nCodeWiki-Checks: lsp_diagnostics merge publisher modules/test: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (43/43), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass, codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-056\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-056\nCodeWiki-Digest: sha256:f5c68524d4e917dc9ee8afeb464eaf6f91f04cebd5caa065c72de52507f3c086\nCodeWiki-Restore: /wiki-restore TASK-056"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-056",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-056"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-056",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-056",
+        "show_build": "git show refs/codewiki/archive/task/TASK-056:.codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+          ".codewiki/kb/system/worktree-isolation.md",
+          "src/session/merge-publisher-queue.ts",
+          "src/session/worker-diff.ts",
+          "src/session/publisher-proof.ts",
+          "tests/smoke/merge-publisher-queue.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-056",
+      "build_path": ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-056",
+      "commit_sha": "",
+      "digest": "sha256:f5c68524d4e917dc9ee8afeb464eaf6f91f04cebd5caa065c72de52507f3c086",
+      "restore_command": "/wiki-restore TASK-056"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:3168f8238d4b76fefc016eecfcc2b945a18e7deffefec3d817803e754ca23b5a",
+          "bytes": 13672
+        },
+        {
+          "path": "tests/smoke/merge-publisher-queue.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0b7d52bd8a6e013e6f2983a12be124d666c97cd8acbca9ec82b1472d1c828a0a",
+          "bytes": 5554
+        },
+        {
+          "path": "src/session/merge-publisher-queue.ts",
+          "role": "code_file",
+          "sha256": "sha256:26b2a2fa8f2607503425e3d0411ff2c65c63cfec1b70aefd7f831c58ecaa1449",
+          "bytes": 8763
+        },
+        {
+          "path": "src/session/worker-diff.ts",
+          "role": "code_file",
+          "sha256": "sha256:573ea0b8ff08f203cf39a18e1d8dfda28055b91bd680f99a740c3b2615f3a872",
+          "bytes": 4130
+        },
+        {
+          "path": "src/session/publisher-proof.ts",
+          "role": "code_file",
+          "sha256": "sha256:f94c4c94049067323ddd1c0e11ca1c0da0ee7563327a43ed38b6bed3aa6831e7",
+          "bytes": 3991
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:ca9ba630d5b6743f4c2f4167e76516d65b1debbdb4a15e35d6b455d99e952607",
+          "bytes": 3176
+        },
+        {
+          "path": ".codewiki/kb/system/worktree-isolation.md",
+          "role": "code_file",
+          "sha256": "sha256:f0a71b9a61393cf678f37d4b1d771bb7edf2d0d8ffd5dc72b74687f266681cd8",
+          "bytes": 5353
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-056",
+      "source_build": ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/session/merge-publisher-queue.ts",
+          "src/session/worker-diff.ts",
+          "src/session/publisher-proof.ts",
+          "package.json",
+          ".codewiki/kb/system/worktree-isolation.md",
+          "tests/smoke/merge-publisher-queue.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-056",
+        "restore_command": "/wiki-restore TASK-056"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics merge publisher modules/test: pass/no errors",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/merge-publisher-queue.test.mjs: pass",
+        "npm run check:architecture: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass (43/43)",
+        "npm run test:pack: pass",
+        "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-056: pass",
+        "codewiki_audit changed/alignment TASK-056: warning only; generated view dirty and graph-health warnings only"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

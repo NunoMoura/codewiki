@@ -1,7 +1,7 @@
 {
   "id": "TASK-056",
   "title": "Build parallel merge publisher queue",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "agent-workflow",
   "summary": "Build a serialized publisher queue that compares worker diffs, validates outputs, commits safe merges, and reroutes conflicts after parallel worktree execution.",
@@ -48,5 +48,5 @@
     "closure": "Close when merge queue behavior is implemented, tested, and task-close/publication proof gates pass."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29"
+  "updated": "2026-05-29T21:21:52Z"
 }

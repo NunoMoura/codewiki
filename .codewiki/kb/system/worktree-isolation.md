@@ -52,7 +52,7 @@ validator worktree -> immutable validation proof
 publisher role -> merge/ref apply -> generated-state refresh -> commit/tree proof
 ```
 
-The publisher serializes final merge, generated CodeWiki state updates, commit creation, and clean proof. Task-close, publication, publish, release, and tracked GC gates consume the publisher result instead of waiting for an unrelated shared-root dirty state to clear. Parallel sprint agents must not close tasks or publish from their worker roots until the publisher queue records the accepted merge/content proof.
+The publisher serializes final merge, generated CodeWiki state updates, commit creation, and clean proof. A merge publisher queue must ingest worker build refs, implementation validation refs, worktree diff proofs, base/head/tree proof, and required check evidence before local checkpoint or close commits are allowed. It compares worker diffs for file overlap, duplicate task output, stale base SHA, missing validation pass proof, missing checks, and remote publication attempts without explicit approval. Conflicts produce deterministic wait/reroute evidence with source refs so affected workers can resume from CodeWiki state when the conflict is resolved. Task-close, publication, publish, release, and tracked GC gates consume the publisher result instead of waiting for an unrelated shared-root dirty state to clear. Parallel sprint agents must not close tasks or publish from their worker roots until the publisher queue records the accepted merge/content proof.
 
 ## Wait and wake records
 
