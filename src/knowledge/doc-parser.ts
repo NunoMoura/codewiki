@@ -10,7 +10,7 @@ const REPO_PATH_RE =
 
 export interface ParsedDoc {
 	path: string; // Relative to repo root
-	frontmatter: Record<string, any>;
+	frontmatter: Record<string, unknown>;
 	body: string;
 	title: string;
 	summary: string;
@@ -25,7 +25,7 @@ export interface ParsedDoc {
 }
 
 export function splitFrontmatter(text: string): {
-	data: Record<string, any>;
+	data: Record<string, unknown>;
 	body: string;
 } {
 	if (!text.startsWith("---\n") && !text.startsWith("---\r\n")) {
@@ -36,13 +36,16 @@ export function splitFrontmatter(text: string): {
 		return { data: {}, body: text };
 	}
 	const end = endMatch.index;
-	const raw = text.substring(text.indexOf("\n") + 1, end);
-	const body = text.substring(end + endMatch[0].length);
+	const raw = text.slice(text.indexOf("\n") + 1, end);
+	const body = text.slice(end + endMatch[0].length);
 
 	try {
 		const loaded = yaml.load(raw);
-		const data = typeof loaded === "object" && loaded !== null ? loaded : {};
-		return { data: data as Record<string, any>, body };
+		let data: Record<string, unknown> = {};
+		if (typeof loaded === "object" && loaded !== null) {
+			data = loaded as Record<string, unknown>;
+		}
+		return { data, body };
 	} catch (e) {
 		return { data: {}, body };
 	}
@@ -51,7 +54,7 @@ export function splitFrontmatter(text: string): {
 export function extractTitle(
 	filePath: string,
 	body: string,
-	frontmatter: Record<string, any>,
+	frontmatter: Record<string, unknown>,
 ): string {
 	if (typeof frontmatter.title === "string" && frontmatter.title.trim()) {
 		return frontmatter.title.trim();
@@ -142,10 +145,10 @@ function normalizeRepoPathRef(raw: string): string {
 
 function sourcePathExists(repoRoot: string, relPath: string): boolean {
 	const wildcardIndex = relPath.indexOf("*");
-	const candidate =
-		wildcardIndex >= 0
-			? relPath.slice(0, wildcardIndex).replace(/\/+$/, "")
-			: relPath;
+	let candidate = relPath;
+	if (wildcardIndex >= 0) {
+		candidate = relPath.slice(0, wildcardIndex).replace(/\/+$/, "");
+	}
 	if (!candidate) return false;
 	return existsSync(resolve(repoRoot, candidate));
 }
@@ -161,7 +164,12 @@ export function extractSourcePaths(repoRoot: string, body: string): string[] {
 	return Array.from(refs).sort();
 }
 
-function stringList(value: any): string[] {
+function stringValue(value: unknown): string {
+	if (typeof value === "string") return value;
+	return "";
+}
+
+function stringList(value: unknown): string[] {
 	if (!Array.isArray(value)) return [];
 	return value.map((item) => String(item || "").trim()).filter(Boolean);
 }
@@ -185,9 +193,9 @@ export function parseDoc(
 		frontmatter,
 		body,
 		title,
-		summary: typeof frontmatter.summary === "string" ? frontmatter.summary : "",
-		owners: Array.isArray(frontmatter.owners) ? frontmatter.owners : [],
-		tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+		summary: stringValue(frontmatter.summary),
+		owners: stringList(frontmatter.owners),
+		tags: stringList(frontmatter.tags),
 		code_paths: stringList(frontmatter.code_paths),
 		spec_paths: stringList(frontmatter.spec_paths),
 		diagram_refs: stringList(frontmatter.diagram_refs),

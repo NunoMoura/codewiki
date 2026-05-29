@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-28T23:16:07Z",
+  "updated": "2026-05-28T23:59:51Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -537,7 +537,7 @@
     "TASK-043": {
       "id": "TASK-043",
       "title": "Reduce diagram parser complexity",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "medium",
       "kind": "refactor",
       "summary": "Extract focused helpers from knowledge diagram parsing while preserving diagram reference and drift outputs.",
@@ -547,6 +547,7 @@
       "code_paths": [
         "src/knowledge/diagram-parser.ts",
         "src/knowledge/doc-parser.ts",
+        "src/ui/web/control-room.ts",
         "tests/smoke/diagram-refs.test.mjs",
         "tests/tasks/TASK-025/knowledge-source-root.test.mjs"
       ],
@@ -583,7 +584,7 @@
         "closure": "Task closes when diagram tests pass and parser review findings improve."
       },
       "created": "2026-05-28",
-      "updated": "2026-05-28"
+      "updated": "2026-05-28T23:59:51Z"
     },
     "TASK-046": {
       "id": "TASK-046",

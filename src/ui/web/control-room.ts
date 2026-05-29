@@ -1330,47 +1330,83 @@ function writeJsonResponse(
 	);
 }
 
+type ArchitectureMermaidNode = {
+	id: string;
+	label: string;
+	doc: string | null;
+};
+type ArchitectureMermaidEdge = { from: string; to: string };
+
+function parseArchitectureNodeLabel(
+	id: string,
+	rawLabel: string,
+): ArchitectureMermaidNode {
+	const labelParts = rawLabel
+		.split(/\\n/)
+		.map((part) => part.trim())
+		.filter(Boolean);
+	const doc = labelParts.find((part) => part.endsWith(".md")) ?? null;
+	return { id, label: labelParts[0] ?? id, doc };
+}
+
+function parseArchitectureNodeLine(
+	line: string,
+): ArchitectureMermaidNode | null {
+	const nodeMatch = /^\s*([A-Za-z0-9_]+)\["([\s\S]+)"\]/.exec(line);
+	if (!nodeMatch) return null;
+	return parseArchitectureNodeLabel(nodeMatch[1], nodeMatch[2]);
+}
+
+function parseArchitectureEdgeLine(
+	line: string,
+): ArchitectureMermaidEdge | null {
+	const edgeMatch = /^\s*([A-Za-z0-9_]+)\s*-->\s*([A-Za-z0-9_]+)/.exec(line);
+	if (!edgeMatch) return null;
+	return { from: edgeMatch[1], to: edgeMatch[2] };
+}
+
 function parseArchitectureMermaid(source: string): {
-	nodes: Array<{ id: string; label: string; doc: string | null }>;
-	edges: Array<{ from: string; to: string }>;
+	nodes: ArchitectureMermaidNode[];
+	edges: ArchitectureMermaidEdge[];
 } {
-	const nodes = new Map<
-		string,
-		{ id: string; label: string; doc: string | null }
-	>();
-	const edges: Array<{ from: string; to: string }> = [];
-	for (const line of source.split(/\r?\n/)) {
-		const nodeMatch = /^\s*([A-Za-z0-9_]+)\["([\s\S]+)"\]/.exec(line);
-		if (nodeMatch) {
-			const id = nodeMatch[1];
-			const labelParts = nodeMatch[2]
-				.split(/\\n/)
-				.map((part) => part.trim())
-				.filter(Boolean);
-			const doc = labelParts.find((part) => part.endsWith(".md")) ?? null;
-			nodes.set(id, { id, label: labelParts[0] ?? id, doc });
-			continue;
+	const nodes = new Map<string, ArchitectureMermaidNode>();
+	const edges: ArchitectureMermaidEdge[] = [];
+	source.split(/\r?\n/).forEach((line) => {
+		const node = parseArchitectureNodeLine(line);
+		if (node) {
+			nodes.set(node.id, node);
+			return;
 		}
-		const edgeMatch = /^\s*([A-Za-z0-9_]+)\s*-->\s*([A-Za-z0-9_]+)/.exec(line);
-		if (edgeMatch) edges.push({ from: edgeMatch[1], to: edgeMatch[2] });
-	}
+		const edge = parseArchitectureEdgeLine(line);
+		if (edge) edges.push(edge);
+	});
 	return { nodes: Array.from(nodes.values()), edges };
+}
+
+function escapeRegexLiteral(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function classMembershipPattern(className: string): RegExp {
+	return new RegExp(
+		`^\\s*class\\s+([^;]+)\\s+${escapeRegexLiteral(className)}\\s*;`,
+		"gm",
+	);
+}
+
+function parseClassMemberIds(rawIds: string): string[] {
+	return rawIds
+		.split(",")
+		.map((part) => part.trim())
+		.filter(Boolean);
 }
 
 function parseClassMembership(source: string, className: string): Set<string> {
 	const set = new Set<string>();
-	const safeClassName = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-	const pattern = new RegExp(
-		`^\\s*class\\s+([^;]+)\\s+${safeClassName}\\s*;`,
-		"gm",
-	);
+	const pattern = classMembershipPattern(className);
 	let match: RegExpExecArray | null;
 	while ((match = pattern.exec(source))) {
-		for (const id of match[1]
-			.split(",")
-			.map((part) => part.trim())
-			.filter(Boolean))
-			set.add(id);
+		parseClassMemberIds(match[1]).forEach((id) => set.add(id));
 	}
 	return set;
 }

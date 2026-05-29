@@ -9,7 +9,10 @@ import { buildLintReport } from "../../src/state/lint.ts";
 import { parseDoc } from "../../src/knowledge/doc-parser.ts";
 import { buildFileStructureDriftReport } from "../../src/knowledge/diagram-parser.ts";
 import { executeCodewikiAudit } from "../../src/audit/tool.ts";
-import { buildRoadmapState, buildStatusState } from "../../src/state/builders.ts";
+import {
+	buildRoadmapState,
+	buildStatusState,
+} from "../../src/state/builders.ts";
 
 function mkdir(path) {
 	mkdirSync(path, { recursive: true });
@@ -111,13 +114,36 @@ function writeFixture(root, options = {}) {
 	mkdir(resolve(root, "src", "roadmap"));
 	mkdir(resolve(root, "src", "adapters", "pi"));
 	mkdir(resolve(root, "scripts"));
-	writeJson(resolve(root, ".codewiki", "config.json"), { project_name: "diagram-ref-fixture", codewiki: { system_diagrams: { diagram_refs: { mode: options.mode || "warn" } } } });
-	writeJson(resolve(root, ".codewiki", "roadmap", "queue.json"), { version: 1, order: [], tasks: {} });
-	write(resolve(root, "src", "roadmap", "types.ts"), `export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`);
-	write(resolve(root, "src", "adapters", "pi", "schemas.ts"), "export const schemas = {};\n");
-	write(resolve(root, "src", "adapters", "pi", "index.ts"), "export const pi = {};\n");
-	write(resolve(root, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n");
-	write(resolve(root, ".codewiki", "kb", "system", "overview.md"), `---
+	writeJson(resolve(root, ".codewiki", "config.json"), {
+		project_name: "diagram-ref-fixture",
+		codewiki: {
+			system_diagrams: { diagram_refs: { mode: options.mode || "warn" } },
+		},
+	});
+	writeJson(resolve(root, ".codewiki", "roadmap", "queue.json"), {
+		version: 1,
+		order: [],
+		tasks: {},
+	});
+	write(
+		resolve(root, "src", "roadmap", "types.ts"),
+		`export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`,
+	);
+	write(
+		resolve(root, "src", "adapters", "pi", "schemas.ts"),
+		"export const schemas = {};\n",
+	);
+	write(
+		resolve(root, "src", "adapters", "pi", "index.ts"),
+		"export const pi = {};\n",
+	);
+	write(
+		resolve(root, "scripts", "check-architecture.mjs"),
+		"import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n",
+	);
+	write(
+		resolve(root, ".codewiki", "kb", "system", "overview.md"),
+		`---
 id: spec.system.overview
 title: Overview
 state: active
@@ -126,8 +152,11 @@ owners: [tests]
 updated: "2026-05-20"
 ---
 # Overview
-`);
-	write(resolve(root, ".codewiki", "kb", "system", "runtime.md"), `---
+`,
+	);
+	write(
+		resolve(root, ".codewiki", "kb", "system", "runtime.md"),
+		`---
 id: spec.system.runtime
 title: Runtime
 state: active
@@ -146,14 +175,33 @@ diagram_refs:
   - fixture-map:handoff
 ---
 # Runtime
-`);
-	write(resolve(root, ".codewiki", "kb", "system", "diagrams", "component-map.yaml"), baseDiagram(options.diagramExtra || ""));
+`,
+	);
+	write(
+		resolve(
+			root,
+			".codewiki",
+			"kb",
+			"system",
+			"diagrams",
+			"component-map.yaml",
+		),
+		baseDiagram(options.diagramExtra || ""),
+	);
 }
 
 function readDocs(root, project) {
 	return [
-		parseDoc(root, project, resolve(root, ".codewiki", "kb", "system", "overview.md")),
-		parseDoc(root, project, resolve(root, ".codewiki", "kb", "system", "runtime.md")),
+		parseDoc(
+			root,
+			project,
+			resolve(root, ".codewiki", "kb", "system", "overview.md"),
+		),
+		parseDoc(
+			root,
+			project,
+			resolve(root, ".codewiki", "kb", "system", "runtime.md"),
+		),
 	];
 }
 
@@ -163,7 +211,14 @@ try {
 	const project = createProject(root, "warn");
 	const docs = readDocs(root, project);
 	const lint = buildLintReport(root, project, docs, [], [], {});
-	assert.equal(lint.issues.filter((issue) => issue.kind.startsWith("diagram") || issue.kind.startsWith("system-doc")).length, 0, "valid diagram refs should not lint");
+	assert.equal(
+		lint.issues.filter(
+			(issue) =>
+				issue.kind.startsWith("diagram") || issue.kind.startsWith("system-doc"),
+		).length,
+		0,
+		"valid diagram refs should not lint",
+	);
 
 	const graph = buildGraph({
 		project,
@@ -179,14 +234,47 @@ try {
 		claims: { version: 1, claims: [] },
 		lintReport: { issues: [], counts: {}, status: "green" },
 	});
-	for (const category of ["component", "adapter", "flow", "domain_entity", "lifecycle", "policy", "artifact", "actor", "external_system"]) {
-		assert.ok(graph.views.system_diagrams.by_category[category]?.length > 0, `missing category ${category}`);
+	for (const category of [
+		"component",
+		"adapter",
+		"flow",
+		"domain_entity",
+		"lifecycle",
+		"policy",
+		"artifact",
+		"actor",
+		"external_system",
+	]) {
+		assert.ok(
+			graph.views.system_diagrams.by_category[category]?.length > 0,
+			`missing category ${category}`,
+		);
 	}
-	assert.ok(graph.nodes.some((node) => node.id === "diagram_ref:component-map:app" && node.kind === "system_diagram_ref" && node.requires_doc === true), "requires_doc diagram node should be first-class graph node");
-	assert.ok(graph.edges.some((edge) => edge.kind === "doc_diagram_ref" && edge.to === "diagram_ref:component-map:app"), "doc should link to diagram ref");
-	assert.deepEqual(graph.views.system_diagrams.docs_by_ref["component-map:app"], [".codewiki/kb/system/runtime.md"]);
+	assert.ok(
+		graph.nodes.some(
+			(node) =>
+				node.id === "diagram_ref:component-map:app" &&
+				node.kind === "system_diagram_ref" &&
+				node.requires_doc === true,
+		),
+		"requires_doc diagram node should be first-class graph node",
+	);
+	assert.ok(
+		graph.edges.some(
+			(edge) =>
+				edge.kind === "doc_diagram_ref" &&
+				edge.to === "diagram_ref:component-map:app",
+		),
+		"doc should link to diagram ref",
+	);
+	assert.deepEqual(
+		graph.views.system_diagrams.docs_by_ref["component-map:app"],
+		[".codewiki/kb/system/runtime.md"],
+	);
 
-	write(resolve(root, ".codewiki", "kb", "system", "runtime.md"), `---
+	write(
+		resolve(root, ".codewiki", "kb", "system", "runtime.md"),
+		`---
 id: spec.system.runtime
 title: Runtime
 state: active
@@ -197,12 +285,22 @@ diagram_refs:
   - fixture-map:missing
 ---
 # Runtime
-`);
+`,
+	);
 	const missingDocs = readDocs(root, project);
 	const missingLint = buildLintReport(root, project, missingDocs, [], [], {});
-	assert.ok(missingLint.issues.some((issue) => issue.kind === "diagram-ref-target-missing" && issue.severity === "warning"), "migration warn mode should warn for missing targets");
+	assert.ok(
+		missingLint.issues.some(
+			(issue) =>
+				issue.kind === "diagram-ref-target-missing" &&
+				issue.severity === "warning",
+		),
+		"migration warn mode should warn for missing targets",
+	);
 
-	write(resolve(root, ".codewiki", "kb", "system", "runtime.md"), `---
+	write(
+		resolve(root, ".codewiki", "kb", "system", "runtime.md"),
+		`---
 id: spec.system.runtime
 title: Runtime
 state: active
@@ -211,12 +309,22 @@ owners: [tests]
 updated: "2026-05-20"
 ---
 # Runtime
-`);
+`,
+	);
 	const noRefDocs = readDocs(root, project);
 	const noRefLint = buildLintReport(root, project, noRefDocs, [], [], {});
-	assert.ok(noRefLint.issues.some((issue) => issue.kind === "system-doc-missing-diagram-refs" && issue.severity === "warning"), "migration warn mode should warn before hard enforcement");
+	assert.ok(
+		noRefLint.issues.some(
+			(issue) =>
+				issue.kind === "system-doc-missing-diagram-refs" &&
+				issue.severity === "warning",
+		),
+		"migration warn mode should warn before hard enforcement",
+	);
 
-	write(resolve(root, ".codewiki", "kb", "system", "runtime.md"), `---
+	write(
+		resolve(root, ".codewiki", "kb", "system", "runtime.md"),
+		`---
 id: spec.system.runtime
 title: Runtime
 state: active
@@ -227,28 +335,69 @@ diagram_refs:
   - fixture-map:pi
 ---
 # Runtime
-`);
+`,
+	);
 	const orphanDocs = readDocs(root, project);
 	const orphanLint = buildLintReport(root, project, orphanDocs, [], [], {});
-	assert.ok(orphanLint.issues.some((issue) => issue.kind === "diagram-node-missing-required-doc" && issue.severity === "warning"), "requires_doc node without owning doc should warn in migration mode");
+	assert.ok(
+		orphanLint.issues.some(
+			(issue) =>
+				issue.kind === "diagram-node-missing-required-doc" &&
+				issue.severity === "warning",
+		),
+		"requires_doc node without owning doc should warn in migration mode",
+	);
 
 	const hardProject = createProject(root, "error");
 	const hardLint = buildLintReport(root, hardProject, orphanDocs, [], [], {});
-	assert.ok(hardLint.issues.some((issue) => issue.kind === "diagram-node-missing-required-doc" && issue.severity === "error"), "hard enforcement should report errors");
+	assert.ok(
+		hardLint.issues.some(
+			(issue) =>
+				issue.kind === "diagram-node-missing-required-doc" &&
+				issue.severity === "error",
+		),
+		"hard enforcement should report errors",
+	);
 
-	const audit = await executeCodewikiAudit(project, { profiles: ["file-structure"], include_fingerprints: false });
+	const audit = await executeCodewikiAudit(project, {
+		profiles: ["file-structure"],
+		include_fingerprints: false,
+	});
 	assert.equal(audit.status, "warning");
-	assert.ok(audit.issues.some((issue) => issue.kind === "diagram-node-missing-required-doc"), "file-structure audit should include diagram-ref audit issues");
+	assert.ok(
+		audit.issues.some(
+			(issue) => issue.kind === "diagram-node-missing-required-doc",
+		),
+		"file-structure audit should include diagram-ref audit issues",
+	);
 } finally {
 	rmSync(root, { recursive: true, force: true });
 }
 
-const driftRoot = mkdtempSync(resolve(tmpdir(), "codewiki-file-structure-drift-"));
+const driftRoot = mkdtempSync(
+	resolve(tmpdir(), "codewiki-file-structure-drift-"),
+);
 try {
 	const project = createProject(driftRoot, "warn");
-	writeJson(resolve(driftRoot, ".codewiki", "config.json"), { project_name: "file-structure-drift-fixture", codewiki: { system_diagrams: { diagram_refs: { mode: "warn" } } } });
-	writeJson(resolve(driftRoot, ".codewiki", "roadmap", "queue.json"), { version: 1, order: [], tasks: {} });
-	write(resolve(driftRoot, ".codewiki", "kb", "system", "diagrams", "file-structure-map.yaml"), `schema_version: 1
+	writeJson(resolve(driftRoot, ".codewiki", "config.json"), {
+		project_name: "file-structure-drift-fixture",
+		codewiki: { system_diagrams: { diagram_refs: { mode: "warn" } } },
+	});
+	writeJson(resolve(driftRoot, ".codewiki", "roadmap", "queue.json"), {
+		version: 1,
+		order: [],
+		tasks: {},
+	});
+	write(
+		resolve(
+			driftRoot,
+			".codewiki",
+			"kb",
+			"system",
+			"diagrams",
+			"file-structure-map.yaml",
+		),
+		`schema_version: 1
 id: file-structure-map
 title: File Structure Map
 kind: file_structure_map
@@ -294,6 +443,12 @@ nodes:
     compatibility_exports:
       - path: src/legacy/index.ts
         target: src/compat/index.ts
+  - id: special_char_owner
+    label: Special Character Owner
+    group: source_target
+    paths:
+      - src/special+(layer)/**
+      - not a path
   - id: structure_drift_lens
     label: Structure Drift Lens
     categories:
@@ -308,21 +463,70 @@ edges:
   - from: current_layered_source
     to: concept_root_target
     label: approved migration delta
-`);
-	write(resolve(driftRoot, ".codewiki", "kb", "system", "file-structure.md"), "# File Structure\n");
-	write(resolve(driftRoot, "src", "domain", "roadmap", "types.ts"), `export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`);
-	write(resolve(driftRoot, "src", "adapters", "pi", "schemas.ts"), "export const schemas = {};\n");
-	write(resolve(driftRoot, "src", "adapters", "pi", "index.ts"), "export const pi = {};\n");
+`,
+	);
+	write(
+		resolve(driftRoot, ".codewiki", "kb", "system", "file-structure.md"),
+		"# File Structure\n",
+	);
+	write(
+		resolve(driftRoot, "src", "domain", "roadmap", "types.ts"),
+		`export const ROADMAP_STATUS_VALUES = ["todo", "in_progress", "blocked", "done", "cancelled"] as const;\n`,
+	);
+	write(
+		resolve(driftRoot, "src", "adapters", "pi", "schemas.ts"),
+		"export const schemas = {};\n",
+	);
+	write(
+		resolve(driftRoot, "src", "adapters", "pi", "index.ts"),
+		"export const pi = {};\n",
+	);
 	write(resolve(driftRoot, "src", "a", "file.ts"), "export const a = 1;\n");
 	write(resolve(driftRoot, "src", "runtime", "index_graph.json"), "{}\n");
-	write(resolve(driftRoot, "src", "unmapped", "file.ts"), "export const stray = 1;\n");
+	write(
+		resolve(driftRoot, "src", "special+(layer)", "entry.ts"),
+		"export const special = 1;\n",
+	);
+	write(
+		resolve(driftRoot, "src", "unmapped", "file.ts"),
+		"export const stray = 1;\n",
+	);
 	write(resolve(driftRoot, ".codewiki", "index", "legacy.json"), "{}\n");
-	write(resolve(driftRoot, "scripts", "check-architecture.mjs"), "import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n");
+	write(
+		resolve(driftRoot, "scripts", "check-architecture.mjs"),
+		"import { executeCodewikiAudit } from '../src/api/tools.ts';\nvoid executeCodewikiAudit;\n",
+	);
 
 	const drift = buildFileStructureDriftReport(driftRoot, project);
 	assert.equal(drift.available, true);
-	assert.ok(drift.current_path_rules.some((rule) => rule.pattern === "src/domain/**"), "current path rules should be structured");
-	assert.ok(drift.target_path_rules.some((rule) => rule.pattern === "src/session/**"), "target path rules should be structured");
+	assert.ok(
+		drift.current_path_rules.some((rule) => rule.pattern === "src/domain/**"),
+		"current path rules should be structured",
+	);
+	assert.ok(
+		drift.target_path_rules.some((rule) => rule.pattern === "src/session/**"),
+		"target path rules should be structured",
+	);
+	assert.ok(
+		drift.target_path_rules.some(
+			(rule) => rule.pattern === "src/special+(layer)/**",
+		),
+		"special-character path patterns should be retained safely",
+	);
+	assert.equal(
+		drift.target_path_rules.some((rule) => rule.pattern === "not a path"),
+		false,
+		"malformed path patterns should be ignored predictably",
+	);
+	assert.equal(
+		drift.entries.some(
+			(entry) =>
+				entry.path === "src/special+(layer)/**" &&
+				entry.category === "missing_expected_path",
+		),
+		false,
+		"escaped path patterns should match literal repository paths",
+	);
 	for (const category of [
 		"missing_expected_path",
 		"unexpected_path",
@@ -332,7 +536,10 @@ edges:
 		"approved_migration_delta",
 		"compatibility_export_gap",
 	]) {
-		assert.ok(drift.counts[category] > 0, `expected drift category ${category}`);
+		assert.ok(
+			drift.counts[category] > 0,
+			`expected drift category ${category}`,
+		);
 	}
 
 	const graph = buildGraph({
@@ -349,17 +556,61 @@ edges:
 		claims: { version: 1, claims: [] },
 		lintReport: { issues: [], counts: {}, status: "green" },
 	});
-	assert.equal(graph.views.file_structure.counts.approved_migration_delta, drift.counts.approved_migration_delta, "graph views should expose file-structure drift evidence");
-	assert.equal(graph.views.lenses.audit.file_structure_drift.counts.compatibility_export_gap, drift.counts.compatibility_export_gap, "audit lens should expose file-structure drift details");
+	assert.equal(
+		graph.views.file_structure.counts.approved_migration_delta,
+		drift.counts.approved_migration_delta,
+		"graph views should expose file-structure drift evidence",
+	);
+	assert.equal(
+		graph.views.lenses.audit.file_structure_drift.counts
+			.compatibility_export_gap,
+		drift.counts.compatibility_export_gap,
+		"audit lens should expose file-structure drift details",
+	);
 	const lintReport = { issues: [], counts: {}, status: "green" };
-	const roadmapState = buildRoadmapState(project, [], graph, lintReport, [], []);
-	const statusState = buildStatusState(project, driftRoot, fakeGitCache, [], graph, [], lintReport, roadmapState, [], {}, { version: 1, claims: [] });
-	assert.equal(statusState.file_structure.counts.approved_migration_delta, drift.counts.approved_migration_delta, "status state should expose file-structure drift evidence");
-	assert.equal(statusState.summary.file_structure_actionable_drift > 0, true, "status summary should expose actionable file-structure drift count");
+	const roadmapState = buildRoadmapState(
+		project,
+		[],
+		graph,
+		lintReport,
+		[],
+		[],
+	);
+	const statusState = buildStatusState(
+		project,
+		driftRoot,
+		fakeGitCache,
+		[],
+		graph,
+		[],
+		lintReport,
+		roadmapState,
+		[],
+		{},
+		{ version: 1, claims: [] },
+	);
+	assert.equal(
+		statusState.file_structure.counts.approved_migration_delta,
+		drift.counts.approved_migration_delta,
+		"status state should expose file-structure drift evidence",
+	);
+	assert.equal(
+		statusState.summary.file_structure_actionable_drift > 0,
+		true,
+		"status summary should expose actionable file-structure drift count",
+	);
 
-	const audit = await executeCodewikiAudit(project, { profiles: ["file-structure"], include_fingerprints: false });
-	const fileStructure = audit.profile_results.find((result) => result.profile === "file-structure")?.details?.file_structure;
-	assert.ok(fileStructure?.counts?.approved_migration_delta > 0, "audit details should report approved migration deltas");
+	const audit = await executeCodewikiAudit(project, {
+		profiles: ["file-structure"],
+		include_fingerprints: false,
+	});
+	const fileStructure = audit.profile_results.find(
+		(result) => result.profile === "file-structure",
+	)?.details?.file_structure;
+	assert.ok(
+		fileStructure?.counts?.approved_migration_delta > 0,
+		"audit details should report approved migration deltas",
+	);
 	for (const kind of [
 		"missing_expected_path",
 		"unexpected_path",
@@ -368,9 +619,16 @@ edges:
 		"generated_or_runtime_artifact_in_source_area",
 		"compatibility_export_gap",
 	]) {
-		assert.ok(audit.issues.some((issue) => issue.kind === kind), `audit should report ${kind}`);
+		assert.ok(
+			audit.issues.some((issue) => issue.kind === kind),
+			`audit should report ${kind}`,
+		);
 	}
-	assert.equal(audit.issues.some((issue) => issue.kind === "approved_migration_delta"), false, "approved migration deltas should not be actionable audit issues");
+	assert.equal(
+		audit.issues.some((issue) => issue.kind === "approved_migration_delta"),
+		false,
+		"approved migration deltas should not be actionable audit issues",
+	);
 } finally {
 	rmSync(driftRoot, { recursive: true, force: true });
 }

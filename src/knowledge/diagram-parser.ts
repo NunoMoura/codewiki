@@ -270,9 +270,8 @@ function isDriftCategory(value: string): value is FileStructureDriftCategory {
 
 function fileStructureCategories(value: unknown): FileStructureDriftCategory[] {
 	const parsed = stringList(value).filter(isDriftCategory);
-	return parsed.length
-		? Array.from(new Set(parsed))
-		: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES];
+	if (parsed.length > 0) return Array.from(new Set(parsed));
+	return [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES];
 }
 
 function isRepositoryPathPattern(value: string): boolean {
@@ -286,6 +285,10 @@ function isRepositoryPathPattern(value: string): boolean {
 	);
 }
 
+function escapeRegexLiteral(value: string): string {
+	return value.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function wildcardPatternToRegex(pattern: string): RegExp {
 	const normalized = normalizeRel(pattern);
 	let escaped = "";
@@ -297,7 +300,7 @@ function wildcardPatternToRegex(pattern: string): RegExp {
 		} else if (char === "*") {
 			escaped += "[^/]*";
 		} else {
-			escaped += char.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
+			escaped += escapeRegexLiteral(char);
 		}
 	}
 	return new RegExp(`^${escaped}$`);
@@ -342,19 +345,63 @@ function treeHasPathPattern(paths: Set<string>, pattern: string): boolean {
 	);
 }
 
+function relChildPath(relDir: string, name: string): string {
+	if (relDir) return normalizeRel(`${relDir}/${name}`);
+	return normalizeRel(name);
+}
+
+function arrayItems(value: unknown): unknown[] {
+	if (Array.isArray(value)) return value;
+	return [];
+}
+
+function errorMessage(error: unknown): string {
+	if (error instanceof Error) return error.message;
+	return String(error);
+}
+
 function collectRepositoryStructurePaths(repoRoot: string): Set<string> {
 	const out = new Set<string>();
 	const walk = (absDir: string, relDir: string) => {
 		if (!existsSync(absDir)) return;
-		for (const entry of readdirSync(absDir, { withFileTypes: true })) {
-			if (REPOSITORY_WALK_IGNORES.has(entry.name)) continue;
-			const rel = normalizeRel(relDir ? `${relDir}/${entry.name}` : entry.name);
+		readdirSync(absDir, { withFileTypes: true }).forEach((entry) => {
+			if (REPOSITORY_WALK_IGNORES.has(entry.name)) return;
+			const rel = relChildPath(relDir, entry.name);
 			out.add(rel);
 			if (entry.isDirectory()) walk(resolve(repoRoot, rel), rel);
-		}
+		});
 	};
 	walk(repoRoot, "");
 	return out;
+}
+
+function compatibilityExportPath(record: Record<string, unknown>): string {
+	return normalizeRel(
+		stringValue(
+			record.path || record.from || record.export || record.compatibility_path,
+		),
+	);
+}
+
+function parseCompatibilityExportItem(
+	item: unknown,
+	ownerId: string,
+): FileStructureCompatibilityExport | null {
+	if (typeof item === "string") {
+		const path = normalizeRel(item);
+		if (!path) return null;
+		return { path, owner_id: ownerId };
+	}
+	const record = plainObject(item);
+	if (!record) return null;
+	const path = compatibilityExportPath(record);
+	if (!path) return null;
+	const target = normalizeRel(
+		stringValue(record.target || record.to || record.target_path),
+	);
+	const parsed: FileStructureCompatibilityExport = { path, owner_id: ownerId };
+	if (target) parsed.target = target;
+	return parsed;
 }
 
 function compatibilityExports(
@@ -367,37 +414,10 @@ function compatibilityExports(
 		raw.compatibility_paths,
 		raw.compatibilityPaths,
 	];
-	const out: FileStructureCompatibilityExport[] = [];
-	for (const field of fields) {
-		if (Array.isArray(field)) {
-			for (const item of field) {
-				if (typeof item === "string") {
-					const path = normalizeRel(item);
-					if (path) out.push({ path, owner_id: ownerId });
-				} else if (item && typeof item === "object" && !Array.isArray(item)) {
-					const record = item as Record<string, unknown>;
-					const path = normalizeRel(
-						stringValue(
-							record.path ||
-								record.from ||
-								record.export ||
-								record.compatibility_path,
-						),
-					);
-					const target = normalizeRel(
-						stringValue(record.target || record.to || record.target_path),
-					);
-					if (path)
-						out.push({
-							path,
-							...(target ? { target } : {}),
-							owner_id: ownerId,
-						});
-				}
-			}
-		}
-	}
-	return out;
+	return fields
+		.flatMap(arrayItems)
+		.map((item) => parseCompatibilityExportItem(item, ownerId))
+		.filter((item): item is FileStructureCompatibilityExport => Boolean(item));
 }
 
 function parseFileStructureMapNode(
@@ -409,13 +429,13 @@ function parseFileStructureMapNode(
 	const paths = stringList(raw.paths)
 		.map(normalizeRel)
 		.filter(isRepositoryPathPattern);
-	return {
+	const source = stringValue(raw.source);
+	const node: ParsedFileStructureMapNode = {
 		id,
 		label: stringValue(raw.label) || id,
 		group: stringValue(raw.group),
 		kind: stringValue(raw.kind),
 		status: stringValue(raw.status),
-		...(stringValue(raw.source) ? { source: stringValue(raw.source) } : {}),
 		paths,
 		categories,
 		compatibility_exports: compatibilityExports(raw, id),
@@ -439,6 +459,8 @@ function parseFileStructureMapNode(
 			),
 		),
 	};
+	if (source) node.source = source;
+	return node;
 }
 
 function fileStructureRoleForNode(
@@ -471,18 +493,47 @@ function pathRulesForNodes(
 	return nodes.flatMap((node) => {
 		const role = fileStructureRoleForNode(node);
 		const approved = isApprovedDeltaNode(node, approvedNodeIds);
-		return node.paths.map((pattern) => ({
-			owner_id: node.id,
-			owner_label: node.label,
-			group: node.group,
-			kind: node.kind,
-			status: node.status,
-			...(node.source ? { source: node.source } : {}),
-			pattern,
-			role,
-			approved_delta: approved,
-		}));
+		return node.paths.map((pattern) => {
+			const rule: ParsedFileStructurePathRule = {
+				owner_id: node.id,
+				owner_label: node.label,
+				group: node.group,
+				kind: node.kind,
+				status: node.status,
+				pattern,
+				role,
+				approved_delta: approved,
+			};
+			if (node.source) rule.source = node.source;
+			return rule;
+		});
 	});
+}
+
+function emptyFileStructureMap(
+	relPath: string,
+	parseIssues: SystemDiagramValidationIssue[] = [],
+): ParsedFileStructureMap {
+	return {
+		path: relPath,
+		id: "",
+		title: "",
+		categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
+		nodes: [],
+		intended_path_rules: [],
+		current_path_rules: [],
+		target_path_rules: [],
+		approved_delta_edges: [],
+		parse_issues: parseIssues,
+	};
+}
+
+function parseFileStructureMapCategories(
+	nodes: ParsedFileStructureMapNode[],
+): FileStructureDriftCategory[] {
+	const categories = nodes.flatMap((node) => node.categories);
+	if (categories.length > 0) return Array.from(new Set(categories));
+	return fileStructureCategories(undefined);
 }
 
 export function parseFileStructureMap(
@@ -492,18 +543,7 @@ export function parseFileStructureMap(
 	const relPath = fileStructureMapPath(project);
 	const parseIssues: SystemDiagramValidationIssue[] = [];
 	if (!existsSync(resolve(repoRoot, relPath))) {
-		return {
-			path: relPath,
-			id: "",
-			title: "",
-			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
-			nodes: [],
-			intended_path_rules: [],
-			current_path_rules: [],
-			target_path_rules: [],
-			approved_delta_edges: [],
-			parse_issues: [],
-		};
+		return emptyFileStructureMap(relPath);
 	}
 	let loaded: unknown;
 	try {
@@ -513,20 +553,9 @@ export function parseFileStructureMap(
 			severity: "error",
 			kind: "file-structure-map-yaml-invalid",
 			path: relPath,
-			message: `Invalid file-structure map YAML: ${error instanceof Error ? error.message : String(error)}`,
+			message: `Invalid file-structure map YAML: ${errorMessage(error)}`,
 		});
-		return {
-			path: relPath,
-			id: "",
-			title: "",
-			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
-			nodes: [],
-			intended_path_rules: [],
-			current_path_rules: [],
-			target_path_rules: [],
-			approved_delta_edges: [],
-			parse_issues: parseIssues,
-		};
+		return emptyFileStructureMap(relPath, parseIssues);
 	}
 	const data = plainObject(loaded);
 	if (!data) {
@@ -536,23 +565,11 @@ export function parseFileStructureMap(
 			path: relPath,
 			message: "File-structure map YAML must contain an object.",
 		});
-		return {
-			path: relPath,
-			id: "",
-			title: "",
-			categories: [...FILE_STRUCTURE_DRIFT_CATEGORY_VALUES],
-			nodes: [],
-			intended_path_rules: [],
-			current_path_rules: [],
-			target_path_rules: [],
-			approved_delta_edges: [],
-			parse_issues: parseIssues,
-		};
+		return emptyFileStructureMap(relPath, parseIssues);
 	}
 	const nodes = objectList(data.nodes)
 		.map(parseFileStructureMapNode)
 		.filter((node): node is ParsedFileStructureMapNode => Boolean(node));
-	const driftNodeCategories = nodes.flatMap((node) => node.categories);
 	const approvedDeltaEdges = objectList(data.edges)
 		.map((edge) => ({
 			from: stringValue(edge.from),
@@ -573,9 +590,7 @@ export function parseFileStructureMap(
 		path: relPath,
 		id: stringValue(data.id),
 		title: stringValue(data.title),
-		categories: driftNodeCategories.length
-			? Array.from(new Set(driftNodeCategories))
-			: fileStructureCategories(undefined),
+		categories: parseFileStructureMapCategories(nodes),
 		nodes,
 		intended_path_rules: allRules,
 		current_path_rules: allRules.filter((rule) => rule.role === "current"),
@@ -610,7 +625,9 @@ function countEntries(
 	const counts = Object.fromEntries(
 		FILE_STRUCTURE_DRIFT_CATEGORY_VALUES.map((category) => [category, 0]),
 	) as Record<FileStructureDriftCategory, number>;
-	for (const entry of entries) counts[entry.category] += 1;
+	entries.forEach((entry) => {
+		counts[entry.category] += 1;
+	});
 	return counts;
 }
 
@@ -762,6 +779,172 @@ function pushDriftEntry(
 		entries.push(entry);
 }
 
+function pathRuleRefs(
+	mapPath: string,
+	rule: ParsedFileStructurePathRule,
+): string[] {
+	const refs = [mapPath];
+	if (rule.source) refs.push(rule.source);
+	return refs;
+}
+
+function sourceRefsForRules(
+	mapPath: string,
+	rules: ParsedFileStructurePathRule[],
+): string[] {
+	const refs = new Set([mapPath]);
+	rules.forEach((rule) => {
+		if (rule.source) refs.add(rule.source);
+	});
+	return Array.from(refs);
+}
+
+function compatibilityExportRefs(
+	mapPath: string,
+	exportRef: FileStructureCompatibilityExport,
+): string[] {
+	const refs = [mapPath];
+	if (exportRef.target) refs.push(exportRef.target);
+	return refs;
+}
+
+function recordPathRuleDrift(
+	entries: FileStructureDriftEntry[],
+	mapPath: string,
+	treePaths: Set<string>,
+	rule: ParsedFileStructurePathRule,
+): void {
+	const exists = treeHasPathPattern(treePaths, rule.pattern);
+	if (!exists && rule.approved_delta) {
+		pushDriftEntry(entries, {
+			category: "approved_migration_delta",
+			severity: "info",
+			path: rule.pattern,
+			owner_id: rule.owner_id,
+			owner_label: rule.owner_label,
+			refs: pathRuleRefs(mapPath, rule),
+			message: `${rule.pattern} is an accepted target path not yet present; migration delta is approved by file-structure map.`,
+		});
+		return;
+	}
+	if (!exists && !rule.approved_delta) {
+		pushDriftEntry(entries, {
+			category: "missing_expected_path",
+			severity: "warning",
+			path: rule.pattern,
+			owner_id: rule.owner_id,
+			owner_label: rule.owner_label,
+			refs: pathRuleRefs(mapPath, rule),
+			message: `${rule.pattern} is expected by ${rule.owner_label} but is absent from the repository tree.`,
+		});
+		return;
+	}
+	if (exists && rule.approved_delta && rule.role === "current") {
+		pushDriftEntry(entries, {
+			category: "approved_migration_delta",
+			severity: "info",
+			path: rule.pattern,
+			owner_id: rule.owner_id,
+			owner_label: rule.owner_label,
+			refs: pathRuleRefs(mapPath, rule),
+			message: `${rule.pattern} remains current-valid until concept-root migration lands.`,
+		});
+	}
+}
+
+function recordDeprecatedPathDrift(
+	entries: FileStructureDriftEntry[],
+	mapPath: string,
+	treePaths: Set<string>,
+	pattern: string,
+): void {
+	if (!treeHasPathPattern(treePaths, pattern)) return;
+	pushDriftEntry(entries, {
+		category: "deprecated_path_present",
+		severity: "error",
+		path: pattern,
+		refs: [mapPath, ".codewiki/kb/system/file-structure.md"],
+		message: `${pattern} is deprecated by the file-structure contract and must not be recreated.`,
+	});
+}
+
+function strictOwnersForPath(
+	path: string,
+	map: ParsedFileStructureMap,
+): ParsedFileStructurePathRule[] {
+	return map.intended_path_rules.filter(
+		(rule) =>
+			rule.pattern.startsWith("src/") &&
+			!rule.approved_delta &&
+			pathMatchesFileStructurePattern(path, rule.pattern),
+	);
+}
+
+function recordTreePathDrift(
+	entries: FileStructureDriftEntry[],
+	map: ParsedFileStructureMap,
+	knownPatterns: string[],
+	path: string,
+): void {
+	if (!isManagedStructurePath(path)) return;
+	const generatedKind = generatedRuntimeSourcePathKind(path);
+	if (generatedKind) {
+		pushDriftEntry(entries, {
+			category: "generated_or_runtime_artifact_in_source_area",
+			severity: "error",
+			path,
+			refs: [map.path],
+			message: `${path} is a ${generatedKind}; generated/runtime artifacts must stay out of package source areas.`,
+		});
+	}
+	if (
+		!knownPatterns.some((pattern) =>
+			pathMatchesFileStructurePattern(path, pattern),
+		) &&
+		!isParentOfKnownFileStructurePattern(path, knownPatterns)
+	) {
+		pushDriftEntry(entries, {
+			category: "unexpected_path",
+			severity: "warning",
+			path,
+			refs: [map.path],
+			message: `${path} is inside a managed structure area but is not covered by the file-structure map.`,
+		});
+	}
+	if (!path.startsWith("src/")) return;
+	const strictOwners = strictOwnersForPath(path, map);
+	const ownerIds = Array.from(
+		new Set(strictOwners.map((rule) => rule.owner_id)),
+	);
+	if (ownerIds.length <= 1) return;
+	pushDriftEntry(entries, {
+		category: "ownership_mismatch",
+		severity: "warning",
+		path,
+		refs: sourceRefsForRules(map.path, strictOwners),
+		message: `${path} matches multiple strict file-structure owners: ${ownerIds.join(", ")}.`,
+	});
+}
+
+function recordCompatibilityExportDrift(
+	entries: FileStructureDriftEntry[],
+	mapPath: string,
+	treePaths: Set<string>,
+	node: ParsedFileStructureMapNode,
+	exportRef: FileStructureCompatibilityExport,
+): void {
+	if (treeHasPathPattern(treePaths, exportRef.path)) return;
+	pushDriftEntry(entries, {
+		category: "compatibility_export_gap",
+		severity: "warning",
+		path: exportRef.path,
+		owner_id: exportRef.owner_id,
+		owner_label: node.label,
+		refs: compatibilityExportRefs(mapPath, exportRef),
+		message: `${exportRef.path} compatibility export is required by ${node.label} but is absent.`,
+	});
+}
+
 export function buildFileStructureDriftReport(
 	repoRoot: string,
 	project: WikiProject,
@@ -790,116 +973,26 @@ export function buildFileStructureDriftReport(
 		...map.intended_path_rules.map((rule) => rule.pattern),
 		...defaultAllowedPathPatterns(project),
 	];
-	for (const rule of map.intended_path_rules) {
-		const exists = treeHasPathPattern(treePaths, rule.pattern);
-		if (!exists && rule.approved_delta) {
-			pushDriftEntry(entries, {
-				category: "approved_migration_delta",
-				severity: "info",
-				path: rule.pattern,
-				owner_id: rule.owner_id,
-				owner_label: rule.owner_label,
-				refs: [map.path, ...(rule.source ? [rule.source] : [])],
-				message: `${rule.pattern} is an accepted target path not yet present; migration delta is approved by file-structure map.`,
-			});
-			continue;
-		}
-		if (!exists && !rule.approved_delta) {
-			pushDriftEntry(entries, {
-				category: "missing_expected_path",
-				severity: "warning",
-				path: rule.pattern,
-				owner_id: rule.owner_id,
-				owner_label: rule.owner_label,
-				refs: [map.path, ...(rule.source ? [rule.source] : [])],
-				message: `${rule.pattern} is expected by ${rule.owner_label} but is absent from the repository tree.`,
-			});
-		} else if (exists && rule.approved_delta && rule.role === "current") {
-			pushDriftEntry(entries, {
-				category: "approved_migration_delta",
-				severity: "info",
-				path: rule.pattern,
-				owner_id: rule.owner_id,
-				owner_label: rule.owner_label,
-				refs: [map.path, ...(rule.source ? [rule.source] : [])],
-				message: `${rule.pattern} remains current-valid until concept-root migration lands.`,
-			});
-		}
-	}
-	for (const pattern of DEPRECATED_PATH_PATTERNS) {
-		if (!treeHasPathPattern(treePaths, pattern)) continue;
-		pushDriftEntry(entries, {
-			category: "deprecated_path_present",
-			severity: "error",
-			path: pattern,
-			refs: [map.path, ".codewiki/kb/system/file-structure.md"],
-			message: `${pattern} is deprecated by the file-structure contract and must not be recreated.`,
+	map.intended_path_rules.forEach((rule) => {
+		recordPathRuleDrift(entries, map.path, treePaths, rule);
+	});
+	DEPRECATED_PATH_PATTERNS.forEach((pattern) => {
+		recordDeprecatedPathDrift(entries, map.path, treePaths, pattern);
+	});
+	[...treePaths].sort().forEach((path) => {
+		recordTreePathDrift(entries, map, knownPatterns, path);
+	});
+	map.nodes.forEach((node) => {
+		node.compatibility_exports.forEach((exportRef) => {
+			recordCompatibilityExportDrift(
+				entries,
+				map.path,
+				treePaths,
+				node,
+				exportRef,
+			);
 		});
-	}
-	for (const path of [...treePaths].sort()) {
-		if (!isManagedStructurePath(path)) continue;
-		const generatedKind = generatedRuntimeSourcePathKind(path);
-		if (generatedKind) {
-			pushDriftEntry(entries, {
-				category: "generated_or_runtime_artifact_in_source_area",
-				severity: "error",
-				path,
-				refs: [map.path],
-				message: `${path} is a ${generatedKind}; generated/runtime artifacts must stay out of package source areas.`,
-			});
-		}
-		if (
-			!knownPatterns.some((pattern) =>
-				pathMatchesFileStructurePattern(path, pattern),
-			) &&
-			!isParentOfKnownFileStructurePattern(path, knownPatterns)
-		) {
-			pushDriftEntry(entries, {
-				category: "unexpected_path",
-				severity: "warning",
-				path,
-				refs: [map.path],
-				message: `${path} is inside a managed structure area but is not covered by the file-structure map.`,
-			});
-		}
-		if (!path.startsWith("src/")) continue;
-		const strictOwners = map.intended_path_rules.filter(
-			(rule) =>
-				rule.pattern.startsWith("src/") &&
-				!rule.approved_delta &&
-				pathMatchesFileStructurePattern(path, rule.pattern),
-		);
-		const ownerIds = Array.from(
-			new Set(strictOwners.map((rule) => rule.owner_id)),
-		);
-		if (ownerIds.length > 1) {
-			pushDriftEntry(entries, {
-				category: "ownership_mismatch",
-				severity: "warning",
-				path,
-				refs: [
-					map.path,
-					...strictOwners.flatMap((rule) => (rule.source ? [rule.source] : [])),
-				],
-				message: `${path} matches multiple strict file-structure owners: ${ownerIds.join(", ")}.`,
-			});
-		}
-	}
-	for (const node of map.nodes) {
-		for (const exportRef of node.compatibility_exports) {
-			if (!treeHasPathPattern(treePaths, exportRef.path)) {
-				pushDriftEntry(entries, {
-					category: "compatibility_export_gap",
-					severity: "warning",
-					path: exportRef.path,
-					owner_id: exportRef.owner_id,
-					owner_label: node.label,
-					refs: [map.path, ...(exportRef.target ? [exportRef.target] : [])],
-					message: `${exportRef.path} compatibility export is required by ${node.label} but is absent.`,
-				});
-			}
-		}
-	}
+	});
 	const sortedEntries = entries.sort((a, b) =>
 		`${a.category}:${a.path}:${a.owner_id || ""}`.localeCompare(
 			`${b.category}:${b.path}:${b.owner_id || ""}`,
@@ -923,32 +1016,31 @@ export function buildFileStructureDriftReport(
 }
 
 function stringValue(value: unknown): string {
-	return typeof value === "string"
-		? value.trim()
-		: value === undefined || value === null
-			? ""
-			: String(value).trim();
+	if (typeof value === "string") return value.trim();
+	if (value === undefined || value === null) return "";
+	return String(value).trim();
 }
 
 function stringList(value: unknown): string[] {
 	if (Array.isArray(value)) return value.map(stringValue).filter(Boolean);
 	const single = stringValue(value);
-	return single ? [single] : [];
+	if (single) return [single];
+	return [];
 }
 
 function objectList(value: unknown): Record<string, unknown>[] {
-	return Array.isArray(value)
-		? value.filter(
-				(item): item is Record<string, unknown> =>
-					Boolean(item) && typeof item === "object" && !Array.isArray(item),
-			)
-		: [];
+	if (!Array.isArray(value)) return [];
+	return value.filter(
+		(item): item is Record<string, unknown> =>
+			Boolean(item) && typeof item === "object" && !Array.isArray(item),
+	);
 }
 
 function plainObject(value: unknown): Record<string, unknown> | null {
-	return value && typeof value === "object" && !Array.isArray(value)
-		? (value as Record<string, unknown>)
-		: null;
+	if (value && typeof value === "object" && !Array.isArray(value)) {
+		return value as Record<string, unknown>;
+	}
+	return null;
 }
 
 function normalizeRel(path: string): string {
@@ -1043,7 +1135,8 @@ function createDiagramRef(
 	const id = stringValue(localId);
 	if (!id) return null;
 	const rawKind = stringValue(raw.kind);
-	return {
+	const source = stringValue(raw.source);
+	const ref: ParsedDiagramRef = {
 		ref: `${diagram.slug}:${id}`,
 		aliases: refAliases(diagram.slug, diagram.id, id),
 		local_id: id,
@@ -1052,8 +1145,6 @@ function createDiagramRef(
 		diagram_id: diagram.id,
 		diagram_slug: diagram.slug,
 		diagram_path: diagram.path,
-		...(rawKind ? { raw_kind: rawKind } : {}),
-		...(stringValue(raw.source) ? { source: stringValue(raw.source) } : {}),
 		requires_doc: raw.requires_doc === true || raw.requiresDoc === true,
 		metadata: Object.fromEntries(
 			Object.entries(raw).filter(
@@ -1069,6 +1160,9 @@ function createDiagramRef(
 			),
 		),
 	};
+	if (rawKind) ref.raw_kind = rawKind;
+	if (source) ref.source = source;
+	return ref;
 }
 
 function addRef(
@@ -1091,32 +1185,100 @@ function addRef(
 	refs.push(ref);
 }
 
+function diagramEdgeLabel(edge: Record<string, unknown>): string {
+	return stringValue(edge.label || edge.message || edge.type || edge.trigger);
+}
+
+function createDiagramEdge(
+	diagramPath: string,
+	edge: Record<string, unknown>,
+	kind: string,
+	index: number,
+): ParsedDiagramEdge | null {
+	const from = stringValue(edge.from);
+	const to = stringValue(edge.to);
+	if (!from || !to) return null;
+	const label = diagramEdgeLabel(edge);
+	const ref = stringValue(edge.id) || localIdFromEdge(edge, index);
+	const parsed: ParsedDiagramEdge = {
+		kind,
+		from,
+		to,
+		diagram_path: diagramPath,
+	};
+	if (label) parsed.label = label;
+	if (ref) parsed.ref = ref;
+	return parsed;
+}
+
 function diagramEdges(
 	diagramPath: string,
 	rawEdges: Record<string, unknown>[],
 	kind: string,
 ): ParsedDiagramEdge[] {
 	return rawEdges
-		.map((edge, index) => {
-			const from = stringValue(edge.from);
-			const to = stringValue(edge.to);
-			const ref = stringValue(edge.id) || localIdFromEdge(edge, index);
-			return {
-				kind,
-				from,
-				to,
-				...(stringValue(edge.label || edge.message || edge.type || edge.trigger)
-					? {
-							label: stringValue(
-								edge.label || edge.message || edge.type || edge.trigger,
-							),
-						}
-					: {}),
-				...(ref ? { ref } : {}),
-				diagram_path: diagramPath,
-			};
-		})
-		.filter((edge) => edge.from && edge.to);
+		.map((edge, index) => createDiagramEdge(diagramPath, edge, kind, index))
+		.filter((edge): edge is ParsedDiagramEdge => Boolean(edge));
+}
+
+function addDiagramCollectionRefs(
+	refs: ParsedDiagramRef[],
+	issues: SystemDiagramValidationIssue[],
+	diagram: { slug: string; id: string; path: string },
+	value: unknown,
+	category: DiagramRefCategory,
+	idField = "id",
+): void {
+	objectList(value).forEach((item) => {
+		addRef(
+			refs,
+			issues,
+			createDiagramRef(diagram, item, category, stringValue(item[idField])),
+		);
+	});
+}
+
+function addClassifiedDiagramRefs(
+	refs: ParsedDiagramRef[],
+	issues: SystemDiagramValidationIssue[],
+	diagram: { slug: string; id: string; path: string },
+	value: unknown,
+): void {
+	objectList(value).forEach((item) => {
+		addRef(
+			refs,
+			issues,
+			createDiagramRef(
+				diagram,
+				item,
+				classifyComponentKind(stringValue(item.kind), item),
+				stringValue(item.id),
+			),
+		);
+	});
+}
+
+function addDiagramFlowRefs(
+	refs: ParsedDiagramRef[],
+	issues: SystemDiagramValidationIssue[],
+	diagram: { slug: string; id: string; path: string },
+	collection: unknown,
+	kind: string,
+): ParsedDiagramEdge[] {
+	const items = objectList(collection);
+	items.forEach((item) => {
+		addRef(
+			refs,
+			issues,
+			createDiagramRef(
+				diagram,
+				item,
+				"flow",
+				localIdFromEdge(item, refs.length),
+			),
+		);
+	});
+	return diagramEdges(diagram.path, items, kind);
 }
 
 function parseDiagramFile(
@@ -1133,7 +1295,7 @@ function parseDiagramFile(
 			severity: "error",
 			kind: "diagram-yaml-invalid",
 			path: relPath,
-			message: `Invalid system diagram YAML: ${error instanceof Error ? error.message : String(error)}`,
+			message: `Invalid system diagram YAML: ${errorMessage(error)}`,
 		});
 		return { issues };
 	}
@@ -1152,68 +1314,87 @@ function parseDiagramFile(
 	const diagram = { slug, id, path: relPath };
 	const refs: ParsedDiagramRef[] = [];
 	const collectionIssues: SystemDiagramValidationIssue[] = [];
-	const addCollection = (
-		value: unknown,
-		category: DiagramRefCategory,
-		idField = "id",
-	) => {
-		for (const item of objectList(value))
-			addRef(
-				refs,
-				collectionIssues,
-				createDiagramRef(diagram, item, category, stringValue(item[idField])),
-			);
-	};
-
-	addCollection(data.actors, "actor");
-	addCollection(data.external_systems, "external_system");
-	addCollection(data.policies, "policy");
-	addCollection(data.policy_boundaries, "policy");
-	addCollection(data.boundaries, "policy");
-	addCollection(data.artifacts, "artifact");
-	addCollection(data.entities, "domain_entity");
-	addCollection(data.states, "lifecycle");
-	addCollection(data.lifecycles, "lifecycle");
-	addCollection(data.components, "component");
-	addCollection(data.adapters, "adapter");
-	addCollection(data.flows, "flow");
-
-	for (const item of objectList(data.systems)) {
-		addRef(
-			refs,
-			collectionIssues,
-			createDiagramRef(
-				diagram,
-				item,
-				classifyComponentKind(stringValue(item.kind), item),
-				stringValue(item.id),
-			),
-		);
-	}
-	for (const item of objectList(data.nodes)) {
-		addRef(
-			refs,
-			collectionIssues,
-			createDiagramRef(
-				diagram,
-				item,
-				classifyComponentKind(stringValue(item.kind), item),
-				stringValue(item.id),
-			),
-		);
-	}
-	for (const item of objectList(data.participants)) {
-		addRef(
-			refs,
-			collectionIssues,
-			createDiagramRef(
-				diagram,
-				item,
-				classifyComponentKind(stringValue(item.kind), item),
-				stringValue(item.id),
-			),
-		);
-	}
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.actors,
+		"actor",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.external_systems,
+		"external_system",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.policies,
+		"policy",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.policy_boundaries,
+		"policy",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.boundaries,
+		"policy",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.artifacts,
+		"artifact",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.entities,
+		"domain_entity",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.states,
+		"lifecycle",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.lifecycles,
+		"lifecycle",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.components,
+		"component",
+	);
+	addDiagramCollectionRefs(
+		refs,
+		collectionIssues,
+		diagram,
+		data.adapters,
+		"adapter",
+	);
+	addDiagramCollectionRefs(refs, collectionIssues, diagram, data.flows, "flow");
+	addClassifiedDiagramRefs(refs, collectionIssues, diagram, data.systems);
+	addClassifiedDiagramRefs(refs, collectionIssues, diagram, data.nodes);
+	addClassifiedDiagramRefs(refs, collectionIssues, diagram, data.participants);
 
 	const flowCollections: Array<[unknown, string]> = [
 		[data.edges, "edge"],
@@ -1221,20 +1402,9 @@ function parseDiagramFile(
 		[data.steps, "step"],
 		[data.transitions, "transition"],
 	];
-	const edges: ParsedDiagramEdge[] = [];
-	for (const [collection, kind] of flowCollections) {
-		const items = objectList(collection);
-		for (const item of items) {
-			const ref = createDiagramRef(
-				diagram,
-				item,
-				"flow",
-				localIdFromEdge(item, refs.length),
-			);
-			addRef(refs, collectionIssues, ref);
-		}
-		edges.push(...diagramEdges(relPath, items, kind));
-	}
+	const edges = flowCollections.flatMap(([collection, kind]) =>
+		addDiagramFlowRefs(refs, collectionIssues, diagram, collection, kind),
+	);
 
 	return {
 		diagram: {
@@ -1263,12 +1433,14 @@ function collectDiagramFiles(repoRoot: string, rootRel: string): string[] {
 	if (!existsSync(rootAbs)) return [];
 	const out: string[] = [];
 	const walk = (dir: string) => {
-		for (const name of readdirSync(dir)) {
+		readdirSync(dir).forEach((name) => {
 			const abs = resolve(dir, name);
-			if (statSync(abs).isDirectory()) walk(abs);
-			else if (/\.ya?ml$/i.test(name))
+			if (statSync(abs).isDirectory()) {
+				walk(abs);
+			} else if (/\.ya?ml$/i.test(name)) {
 				out.push(normalizeRel(relative(repoRoot, abs)));
-		}
+			}
+		});
 	};
 	walk(rootAbs);
 	return out.sort();
@@ -1280,16 +1452,18 @@ export function parseSystemDiagrams(
 ): SystemDiagramInventory {
 	const diagrams: ParsedSystemDiagram[] = [];
 	const parseIssues: SystemDiagramValidationIssue[] = [];
-	for (const relPath of collectDiagramFiles(repoRoot, diagramRoot(project))) {
+	collectDiagramFiles(repoRoot, diagramRoot(project)).forEach((relPath) => {
 		const parsed = parseDiagramFile(repoRoot, relPath);
 		if (parsed.diagram) diagrams.push(parsed.diagram);
 		parseIssues.push(...parsed.issues);
-	}
+	});
 	const refs = diagrams.flatMap((diagram) => diagram.refs);
 	const refIndex: Record<string, string> = {};
-	for (const ref of refs) {
-		for (const alias of ref.aliases) refIndex[alias] = ref.ref;
-	}
+	refs.forEach((ref) => {
+		ref.aliases.forEach((alias) => {
+			refIndex[alias] = ref.ref;
+		});
+	});
 	return { diagrams, refs, ref_index: refIndex, parse_issues: parseIssues };
 }
 
@@ -1298,7 +1472,8 @@ export function resolveDiagramRef(
 	inventory: Pick<SystemDiagramInventory, "ref_index">,
 ): string | null {
 	const normalized = stringValue(ref);
-	return normalized ? inventory.ref_index[normalized] || null : null;
+	if (!normalized) return null;
+	return inventory.ref_index[normalized] || null;
 }
 
 export function diagramRefMode(project: WikiProject): DiagramRefMode {
@@ -1340,6 +1515,77 @@ function isDiagramRefExemptDoc(project: WikiProject, doc: ParsedDoc): boolean {
 	);
 }
 
+function docsForDiagramRef(
+	docsByRef: Map<string, string[]>,
+	ref: string,
+): string[] {
+	const existing = docsByRef.get(ref);
+	if (existing) return existing;
+	const created: string[] = [];
+	docsByRef.set(ref, created);
+	return created;
+}
+
+function validateDocDiagramRefs(
+	doc: ParsedDoc,
+	inventory: SystemDiagramInventory,
+	mode: DiagramRefMode,
+	issues: SystemDiagramValidationIssue[],
+	docsByRef: Map<string, string[]>,
+): void {
+	const refs = stringList(doc.frontmatter.diagram_refs);
+	if (refs.length === 0) {
+		if (mode !== "off") {
+			issues.push({
+				severity: modeSeverity(mode),
+				kind: "system-doc-missing-diagram-refs",
+				path: doc.path,
+				message:
+					"System doc must declare at least one diagram_refs entry while diagram-ref migration is enabled.",
+			});
+		}
+		return;
+	}
+	refs.forEach((ref) => {
+		const target = resolveDiagramRef(ref, inventory);
+		if (!target) {
+			issues.push({
+				severity: modeSeverity(mode),
+				kind: "diagram-ref-target-missing",
+				path: doc.path,
+				message: `diagram_refs entry does not match any system diagram node: ${ref}`,
+				refs: [ref],
+			});
+			return;
+		}
+		addUnique(docsForDiagramRef(docsByRef, target), doc.path, (value) => value);
+	});
+}
+
+function requiredDiagramRefs(
+	inventory: SystemDiagramInventory,
+	mode: DiagramRefMode,
+	issues: SystemDiagramValidationIssue[],
+	docsByRef: Map<string, string[]>,
+): string[] {
+	const requiredRefs: string[] = [];
+	if (mode === "off") return requiredRefs;
+	inventory.refs
+		.filter((entry) => entry.requires_doc)
+		.forEach((ref) => {
+			requiredRefs.push(ref.ref);
+			if ((docsByRef.get(ref.ref) || []).length > 0) return;
+			issues.push({
+				severity: modeSeverity(mode),
+				kind: "diagram-node-missing-required-doc",
+				path: ref.diagram_path,
+				message: `Diagram node ${ref.ref} sets requires_doc but no system doc declares it in diagram_refs.`,
+				refs: [ref.ref],
+			});
+		});
+	return requiredRefs;
+}
+
 export function validateSystemDiagramRefs(
 	repoRoot: string,
 	project: WikiProject,
@@ -1349,62 +1595,19 @@ export function validateSystemDiagramRefs(
 	const mode = diagramRefMode(project);
 	const issues: SystemDiagramValidationIssue[] = [...inventory.parse_issues];
 	const docsByRef = new Map<string, string[]>();
-	let systemDocsChecked = 0;
-
-	for (const doc of docs.filter(
+	const systemDocs = docs.filter(
 		(entry) =>
 			isSystemDoc(project, entry) && !isDiagramRefExemptDoc(project, entry),
-	)) {
-		systemDocsChecked += 1;
-		const refs = stringList(doc.frontmatter.diagram_refs);
-		if (refs.length === 0) {
-			if (mode !== "off") {
-				issues.push({
-					severity: modeSeverity(mode),
-					kind: "system-doc-missing-diagram-refs",
-					path: doc.path,
-					message:
-						"System doc must declare at least one diagram_refs entry while diagram-ref migration is enabled.",
-				});
-			}
-			continue;
-		}
-		for (const ref of refs) {
-			const target = resolveDiagramRef(ref, inventory);
-			if (!target) {
-				issues.push({
-					severity: modeSeverity(mode),
-					kind: "diagram-ref-target-missing",
-					path: doc.path,
-					message: `diagram_refs entry does not match any system diagram node: ${ref}`,
-					refs: [ref],
-				});
-				continue;
-			}
-			if (!docsByRef.has(target)) docsByRef.set(target, []);
-			addUnique(docsByRef.get(target)!, doc.path, (value) => value);
-		}
-	}
-
-	const requiredRefs: string[] = [];
-	if (mode !== "off") {
-		for (const ref of inventory.refs.filter((entry) => entry.requires_doc)) {
-			requiredRefs.push(ref.ref);
-			if ((docsByRef.get(ref.ref) || []).length > 0) continue;
-			issues.push({
-				severity: modeSeverity(mode),
-				kind: "diagram-node-missing-required-doc",
-				path: ref.diagram_path,
-				message: `Diagram node ${ref.ref} sets requires_doc but no system doc declares it in diagram_refs.`,
-				refs: [ref.ref],
-			});
-		}
-	}
+	);
+	systemDocs.forEach((doc) => {
+		validateDocDiagramRefs(doc, inventory, mode, issues, docsByRef);
+	});
+	const requiredRefs = requiredDiagramRefs(inventory, mode, issues, docsByRef);
 
 	return {
 		...inventory,
 		mode,
-		system_docs_checked: systemDocsChecked,
+		system_docs_checked: systemDocs.length,
 		required_refs: requiredRefs.sort(),
 		docs_by_ref: Object.fromEntries(
 			[...docsByRef.entries()]

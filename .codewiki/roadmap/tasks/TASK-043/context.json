@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28",
+  "generated_at": "2026-05-28T23:59:51Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-043/context.json",
   "task": {
     "id": "TASK-043",
     "title": "Reduce diagram parser complexity",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "medium",
     "kind": "refactor",
     "change_type": "code",
