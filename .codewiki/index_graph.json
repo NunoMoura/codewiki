@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T05:01:46.719Z",
+  "generated_at": "2026-05-29T05:18:01.224Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5915,7 +5915,7 @@
       "kind": "roadmap_sprint",
       "title": "CodeWiki vNext decision and graph workflow",
       "layer": "roadmap",
-      "status": "active",
+      "status": "closed",
       "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
       "budget": {
         "maxCycles": 10,
@@ -5928,7 +5928,7 @@
         "Do not remove compatibility feedback/documentation/build/tool primitives before deprecation tests pass.",
         "Each task must produce implementation_build and fresh validation evidence before close."
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -5971,7 +5971,7 @@
       "kind": "roadmap_sprint",
       "title": "Decision propagation and file-structure follow-through",
       "layer": "roadmap",
-      "status": "active",
+      "status": "closed",
       "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
       "budget": {
         "maxCycles": 6,
@@ -5983,7 +5983,7 @@
         "TASK-013 and TASK-014 preserve the accepted file-structure decision as durable follow-up work; they may be reprioritized after TASK-011 but must not disappear into open questions.",
         "Each implementation task must produce implementation_build and fresh validation evidence before close."
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6054,7 +6054,7 @@
       "kind": "roadmap_sprint",
       "title": "Complete concept-root source migration",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
       "budget": {
         "maxCycles": 8,
@@ -6066,7 +6066,7 @@
         "Task-close requires clean commit/tree proof.",
         "Final API/shared cleanup must prove no unapproved src/domain/** or src/application/** owner paths remain."
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6074,7 +6074,7 @@
       "kind": "roadmap_sprint",
       "title": "Context reset agency and graph-link hygiene",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
       "budget": {
         "maxCycles": 6,
@@ -6087,7 +6087,7 @@
         "implementation validation per task",
         "task-close clean commit/tree proof"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6116,7 +6116,7 @@
       "kind": "roadmap_sprint",
       "title": "Review signal and release hygiene",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
       "budget": {
         "maxCycles": 2,
@@ -6130,7 +6130,7 @@
         "npm run test:pack",
         "rerun static-analysis or production-readiness review subset"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6159,7 +6159,7 @@
       "kind": "roadmap_sprint",
       "title": "Safety and exposure-boundary cleanup",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
       "budget": {
         "maxCycles": 2,
@@ -6171,7 +6171,7 @@
         "npm run test:smoke",
         "rerun duplicate-code, async, and boolean-param review subsets"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6186,7 +6186,7 @@
       "kind": "roadmap_sprint",
       "title": "State and resume hardening",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
       "budget": {
         "maxCycles": 4,
@@ -6199,7 +6199,7 @@
         "npm run test:features",
         "rerun semantic-similarity, type-coverage, and complexity review subsets for state/resume"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6235,7 +6235,7 @@
       "kind": "roadmap_sprint",
       "title": "Runtime parser and support decomposition",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
       "budget": {
         "maxCycles": 3,
@@ -6248,7 +6248,7 @@
         "npm run test:features",
         "rerun complexity and fact-rules review subsets for touched roots"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6284,7 +6284,7 @@
       "kind": "roadmap_sprint",
       "title": "Pipeline foundation and quality gates",
       "layer": "roadmap",
-      "status": "active",
+      "status": "closed",
       "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
       "budget": {
         "maxCycles": 5,
@@ -6299,7 +6299,7 @@
         "targeted validation/resume/UI/quality tests",
         "no implementation task selected without planning-gateway proof"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -6349,7 +6349,7 @@
       "kind": "roadmap_sprint",
       "title": "Agency automation and parallel execution",
       "layer": "roadmap",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
       "budget": {
         "maxCycles": 5,
@@ -6364,7 +6364,7 @@
         "claim/wait/role-worktree/publisher tests",
         "fresh validation proof for parallel outputs"
       ],
-      "alignment_state": "drift",
+      "alignment_state": "aligned",
       "lens_family": "work"
     },
     {
@@ -106764,7 +106764,7 @@
             "id": "work",
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
-            "state": "drift",
+            "state": "aligned",
             "item_count": 13,
             "badges": [
               {
@@ -106780,13 +106780,7 @@
               {
                 "id": "active_sprints",
                 "label": "active sprints",
-                "count": 3,
-                "refs": [
-                  "SPRINT-001",
-                  "SPRINT-002",
-                  "SPRINT-009"
-                ],
-                "ref_count": 3
+                "count": 0
               },
               {
                 "id": "active_claims",
@@ -118752,16 +118746,12 @@
         "SPRINT-009",
         "SPRINT-010"
       ],
-      "active_sprint_ids": [
-        "SPRINT-001",
-        "SPRINT-002",
-        "SPRINT-009"
-      ],
+      "active_sprint_ids": [],
       "sprints": [
         {
           "id": "SPRINT-001",
           "title": "CodeWiki vNext decision and graph workflow",
-          "status": "active",
+          "status": "closed",
           "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
           "task_ids": [
             "TASK-005",
@@ -118807,7 +118797,7 @@
         {
           "id": "SPRINT-002",
           "title": "Decision propagation and file-structure follow-through",
-          "status": "active",
+          "status": "closed",
           "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
           "task_ids": [
             "TASK-011",
@@ -118852,7 +118842,7 @@
         {
           "id": "SPRINT-003",
           "title": "Complete concept-root source migration",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
           "task_ids": [
             "TASK-024",
@@ -118898,7 +118888,7 @@
         {
           "id": "SPRINT-004",
           "title": "Context reset agency and graph-link hygiene",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
           "task_ids": [
             "TASK-032",
@@ -118940,7 +118930,7 @@
         {
           "id": "SPRINT-005",
           "title": "Review signal and release hygiene",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
           "task_ids": [
             "TASK-037",
@@ -118978,7 +118968,7 @@
         {
           "id": "SPRINT-006",
           "title": "Safety and exposure-boundary cleanup",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
           "task_ids": [
             "TASK-041"
@@ -119008,7 +118998,7 @@
         {
           "id": "SPRINT-007",
           "title": "State and resume hardening",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
           "task_ids": [
             "TASK-040",
@@ -119044,7 +119034,7 @@
         {
           "id": "SPRINT-008",
           "title": "Runtime parser and support decomposition",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
           "task_ids": [
             "TASK-043",
@@ -119077,7 +119067,7 @@
         {
           "id": "SPRINT-009",
           "title": "Pipeline foundation and quality gates",
-          "status": "active",
+          "status": "closed",
           "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
           "task_ids": [
             "TASK-038",
@@ -119124,7 +119114,7 @@
         {
           "id": "SPRINT-010",
           "title": "Agency automation and parallel execution",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
           "task_ids": [
             "TASK-047",
@@ -129773,7 +129763,7 @@
           "kind": "sprint",
           "id": "SPRINT-001",
           "title": "CodeWiki vNext decision and graph workflow",
-          "status": "active",
+          "status": "closed",
           "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
           "task_ids": [
             "TASK-005",
@@ -129820,7 +129810,7 @@
           "kind": "sprint",
           "id": "SPRINT-002",
           "title": "Decision propagation and file-structure follow-through",
-          "status": "active",
+          "status": "closed",
           "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
           "task_ids": [
             "TASK-011",
@@ -129866,7 +129856,7 @@
           "kind": "sprint",
           "id": "SPRINT-003",
           "title": "Complete concept-root source migration",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
           "task_ids": [
             "TASK-024",
@@ -129913,7 +129903,7 @@
           "kind": "sprint",
           "id": "SPRINT-004",
           "title": "Context reset agency and graph-link hygiene",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
           "task_ids": [
             "TASK-032",
@@ -129956,7 +129946,7 @@
           "kind": "sprint",
           "id": "SPRINT-005",
           "title": "Review signal and release hygiene",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
           "task_ids": [
             "TASK-037",
@@ -129995,7 +129985,7 @@
           "kind": "sprint",
           "id": "SPRINT-006",
           "title": "Safety and exposure-boundary cleanup",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
           "task_ids": [
             "TASK-041"
@@ -130026,7 +130016,7 @@
           "kind": "sprint",
           "id": "SPRINT-007",
           "title": "State and resume hardening",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
           "task_ids": [
             "TASK-040",
@@ -130063,7 +130053,7 @@
           "kind": "sprint",
           "id": "SPRINT-008",
           "title": "Runtime parser and support decomposition",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
           "task_ids": [
             "TASK-043",
@@ -130097,7 +130087,7 @@
           "kind": "sprint",
           "id": "SPRINT-009",
           "title": "Pipeline foundation and quality gates",
-          "status": "active",
+          "status": "closed",
           "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
           "task_ids": [
             "TASK-038",
@@ -130145,7 +130135,7 @@
           "kind": "sprint",
           "id": "SPRINT-010",
           "title": "Agency automation and parallel execution",
-          "status": "planned",
+          "status": "closed",
           "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
           "task_ids": [
             "TASK-047",
@@ -130386,8 +130376,7 @@
       "expected_output": "observation",
       "exit_gate": "no drift",
       "scope": {
-        "kind": "sprint",
-        "id": "SPRINT-001"
+        "kind": "roadmap"
       },
       "isolation": {
         "required": false,
@@ -130410,11 +130399,7 @@
       "classes": {
         "hot": {
           "task_ids": [],
-          "sprint_ids": [
-            "SPRINT-001",
-            "SPRINT-002",
-            "SPRINT-009"
-          ],
+          "sprint_ids": [],
           "build_paths": [],
           "validation_paths": [
             ".codewiki/validation/2026-05-22-decision-block.json",
@@ -131623,7 +131608,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-29T05:01:46.557Z",
+      "generated_at": "2026-05-29T05:18:00.913Z",
       "counts": {
         "large-doc": 1
       },
@@ -131638,7 +131623,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-29T05:01:46Z",
+      "generated_at": "2026-05-29T05:18:01Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -131652,7 +131637,7 @@
         "task_count": 3,
         "open_count": 0,
         "sprint_count": 10,
-        "active_sprint_count": 3,
+        "active_sprint_count": 0,
         "status_counts": {
           "cancelled": 3
         },
@@ -131682,16 +131667,12 @@
           "SPRINT-009",
           "SPRINT-010"
         ],
-        "active_sprint_ids": [
-          "SPRINT-001",
-          "SPRINT-002",
-          "SPRINT-009"
-        ],
+        "active_sprint_ids": [],
         "sprints": [
           {
             "id": "SPRINT-001",
             "title": "CodeWiki vNext decision and graph workflow",
-            "status": "active",
+            "status": "closed",
             "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
             "task_ids": [
               "TASK-005",
@@ -131737,7 +131718,7 @@
           {
             "id": "SPRINT-002",
             "title": "Decision propagation and file-structure follow-through",
-            "status": "active",
+            "status": "closed",
             "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
             "task_ids": [
               "TASK-011",
@@ -131782,7 +131763,7 @@
           {
             "id": "SPRINT-003",
             "title": "Complete concept-root source migration",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
             "task_ids": [
               "TASK-024",
@@ -131828,7 +131809,7 @@
           {
             "id": "SPRINT-004",
             "title": "Context reset agency and graph-link hygiene",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
             "task_ids": [
               "TASK-032",
@@ -131870,7 +131851,7 @@
           {
             "id": "SPRINT-005",
             "title": "Review signal and release hygiene",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
             "task_ids": [
               "TASK-037",
@@ -131908,7 +131889,7 @@
           {
             "id": "SPRINT-006",
             "title": "Safety and exposure-boundary cleanup",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
             "task_ids": [
               "TASK-041"
@@ -131938,7 +131919,7 @@
           {
             "id": "SPRINT-007",
             "title": "State and resume hardening",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
             "task_ids": [
               "TASK-040",
@@ -131974,7 +131955,7 @@
           {
             "id": "SPRINT-008",
             "title": "Runtime parser and support decomposition",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
             "task_ids": [
               "TASK-043",
@@ -132007,7 +131988,7 @@
           {
             "id": "SPRINT-009",
             "title": "Pipeline foundation and quality gates",
-            "status": "active",
+            "status": "closed",
             "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
             "task_ids": [
               "TASK-038",
@@ -132054,7 +132035,7 @@
           {
             "id": "SPRINT-010",
             "title": "Agency automation and parallel execution",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
             "task_ids": [
               "TASK-047",
@@ -132645,7 +132626,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-29T05:01:46Z",
+      "generated_at": "2026-05-29T05:18:01Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -132707,11 +132688,7 @@
           "SPRINT-009",
           "SPRINT-010"
         ],
-        "active_sprint_ids": [
-          "SPRINT-001",
-          "SPRINT-002",
-          "SPRINT-009"
-        ]
+        "active_sprint_ids": []
       },
       "next_step": {
         "kind": "observe",
@@ -132725,8 +132702,7 @@
         "expected_output": "observation",
         "exit_gate": "no drift",
         "scope": {
-          "kind": "sprint",
-          "id": "SPRINT-001"
+          "kind": "roadmap"
         },
         "isolation": {
           "required": false,
@@ -132749,11 +132725,7 @@
         "classes": {
           "hot": {
             "task_ids": [],
-            "sprint_ids": [
-              "SPRINT-001",
-              "SPRINT-002",
-              "SPRINT-009"
-            ],
+            "sprint_ids": [],
             "build_paths": [],
             "validation_paths": [
               ".codewiki/validation/2026-05-22-decision-block.json",
@@ -135946,7 +135918,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-29T05:01:46Z",
+        "generated_at": "2026-05-29T05:18:01Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -136001,10 +135973,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T05:01:46Z",
+            "checked_at": "2026-05-29T05:18:01Z",
             "revision": {
               "git": {
-                "head": "2e28708da55598f0d14653f465d03b9fee11f822",
+                "head": "a91295740cd89519ba17e6db13bcc349651bfb9a",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -136052,7 +136024,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "6c8b3fa57e59560746f5c4ee07806d08333ed60e",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a19dc25cbe02318e5ccf94624a4700f2adb0fb15",
+                  ".codewiki/roadmap/queue.json": "e30a5a19806c6a194ba42024387de31d78fcc192",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -136228,15 +136200,15 @@
               },
               "spec_digest": "c69f9085ed372dcda68af5385af08bc5cf93c8b00dc88dcd36e849a5e4d72055",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "983f84c6716986413c35dfcfe1bd4bdd1044c6847751bb85eaf7f2b427504e76",
-              "digest": "cea7294949a734933be2e16235e36942ad22e39bcf80b77bdb1283f650ae3585"
+              "code_digest": "7ba116a9d1d973f95bcbc06816d9af5af3cb96c80a918abf35e1f2396e8d7e7f",
+              "digest": "940ba27c09aa14269d1dcfe5d674f631d707b3b5fb35eaeeefaee39327854bb2"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-29T05:01:46Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-29T05:18:01Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -136656,10 +136628,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-29T05:01:46Z",
+            "checked_at": "2026-05-29T05:18:01Z",
             "revision": {
               "git": {
-                "head": "2e28708da55598f0d14653f465d03b9fee11f822",
+                "head": "a91295740cd89519ba17e6db13bcc349651bfb9a",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -136691,7 +136663,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "6c8b3fa57e59560746f5c4ee07806d08333ed60e",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a19dc25cbe02318e5ccf94624a4700f2adb0fb15",
+                  ".codewiki/roadmap/queue.json": "e30a5a19806c6a194ba42024387de31d78fcc192",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -136860,15 +136832,15 @@
               },
               "spec_digest": "e250f2153cd8a0a99460c552c6aeff29162c39353dad97606995cdb432d7eeec",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "90c43e1ae3a4ab066e03e791496eaa4c047d2917a3521f09157df77f33f26219",
-              "digest": "1b6a428ba26cc0865bafe2970d33173f07601bfe875a197ea2a25ef7c7207be8"
+              "code_digest": "2cf4616485aaf594b3bf21cfc2ef37182eadf3bf0219186da67d88d4be9ed029",
+              "digest": "7c5e6b53e9cf88c9757f71d30a8ee6b099edf398751294a0ff13159c983750f8"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-29T05:01:46Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-29T05:18:01Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/adapters.md",
@@ -137265,10 +137237,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T05:01:46Z",
+            "checked_at": "2026-05-29T05:18:01Z",
             "revision": {
               "git": {
-                "head": "2e28708da55598f0d14653f465d03b9fee11f822",
+                "head": "a91295740cd89519ba17e6db13bcc349651bfb9a",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -137316,7 +137288,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "6c8b3fa57e59560746f5c4ee07806d08333ed60e",
                   ".codewiki/kb/system/worktree-isolation.md": "b7f5197b4b20228df0da3ee6ea04a78551148ac9",
-                  ".codewiki/roadmap/queue.json": "a19dc25cbe02318e5ccf94624a4700f2adb0fb15",
+                  ".codewiki/roadmap/queue.json": "e30a5a19806c6a194ba42024387de31d78fcc192",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -137492,15 +137464,15 @@
               },
               "spec_digest": "c69f9085ed372dcda68af5385af08bc5cf93c8b00dc88dcd36e849a5e4d72055",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "983f84c6716986413c35dfcfe1bd4bdd1044c6847751bb85eaf7f2b427504e76",
-              "digest": "cea7294949a734933be2e16235e36942ad22e39bcf80b77bdb1283f650ae3585"
+              "code_digest": "7ba116a9d1d973f95bcbc06816d9af5af3cb96c80a918abf35e1f2396e8d7e7f",
+              "digest": "940ba27c09aa14269d1dcfe5d674f631d707b3b5fb35eaeeefaee39327854bb2"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-29T05:01:46Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-29T05:18:01Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -137909,19 +137881,19 @@
         ]
       },
       "resume": {
-        "source": "agency",
+        "source": "next_step",
         "task_id": "",
-        "lane_id": "product_system",
-        "heading": "Product ↔ System",
-        "command": "/wiki-status",
-        "reason": "Resume from stale agency lane.",
+        "lane_id": "",
+        "heading": "Roadmap clear",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now.",
         "status": "in_progress",
-        "verification": "Strategic intent drift should first be inspected through the canonical status surface.",
+        "verification": "No urgent verification cue.",
         "evidence": "No closure evidence recorded yet.",
-        "agency": "Re-run status or resume implementation before trusting prior drift analysis."
+        "agency": "All agency lanes currently fresh."
       },
       "parallel": {
-        "generated_at": "2026-05-29T05:01:46Z",
+        "generated_at": "2026-05-29T05:18:01Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -143750,16 +143722,12 @@
           "SPRINT-009",
           "SPRINT-010"
         ],
-        "active_sprint_ids": [
-          "SPRINT-001",
-          "SPRINT-002",
-          "SPRINT-009"
-        ],
+        "active_sprint_ids": [],
         "sprints": [
           {
             "id": "SPRINT-001",
             "title": "CodeWiki vNext decision and graph workflow",
-            "status": "active",
+            "status": "closed",
             "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
             "task_ids": [
               "TASK-005",
@@ -143805,7 +143773,7 @@
           {
             "id": "SPRINT-002",
             "title": "Decision propagation and file-structure follow-through",
-            "status": "active",
+            "status": "closed",
             "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
             "task_ids": [
               "TASK-011",
@@ -143850,7 +143818,7 @@
           {
             "id": "SPRINT-003",
             "title": "Complete concept-root source migration",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
             "task_ids": [
               "TASK-024",
@@ -143896,7 +143864,7 @@
           {
             "id": "SPRINT-004",
             "title": "Context reset agency and graph-link hygiene",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
             "task_ids": [
               "TASK-032",
@@ -143938,7 +143906,7 @@
           {
             "id": "SPRINT-005",
             "title": "Review signal and release hygiene",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
             "task_ids": [
               "TASK-037",
@@ -143976,7 +143944,7 @@
           {
             "id": "SPRINT-006",
             "title": "Safety and exposure-boundary cleanup",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
             "task_ids": [
               "TASK-041"
@@ -144006,7 +143974,7 @@
           {
             "id": "SPRINT-007",
             "title": "State and resume hardening",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
             "task_ids": [
               "TASK-040",
@@ -144042,7 +144010,7 @@
           {
             "id": "SPRINT-008",
             "title": "Runtime parser and support decomposition",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
             "task_ids": [
               "TASK-043",
@@ -144075,7 +144043,7 @@
           {
             "id": "SPRINT-009",
             "title": "Pipeline foundation and quality gates",
-            "status": "active",
+            "status": "closed",
             "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
             "task_ids": [
               "TASK-038",
@@ -144122,7 +144090,7 @@
           {
             "id": "SPRINT-010",
             "title": "Agency automation and parallel execution",
-            "status": "planned",
+            "status": "closed",
             "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
             "task_ids": [
               "TASK-047",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-29T05:01:07Z",
+  "updated": "2026-05-29T05:17:19Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,7 +536,7 @@
     "SPRINT-001": {
       "id": "SPRINT-001",
       "title": "CodeWiki vNext decision and graph workflow",
-      "status": "active",
+      "status": "closed",
       "outcome": "Deliver the vNext operating model in bounded compatibility-safe increments, now prioritizing agent-owned session-boundary automation and workflow-efficiency friction reduction before decision_build implementation.",
       "task_ids": [
         "TASK-005",
@@ -578,12 +578,12 @@
         "Each task must produce implementation_build and fresh validation evidence before close."
       ],
       "created": "2026-05-19T00:47:24Z",
-      "updated": "2026-05-19T07:46:57Z"
+      "updated": "2026-05-29T05:16:00Z"
     },
     "SPRINT-002": {
       "id": "SPRINT-002",
       "title": "Decision propagation and file-structure follow-through",
-      "status": "active",
+      "status": "closed",
       "outcome": "Prevent accepted decisions from drifting by enforcing decision-to-roadmap propagation and by giving the file-structure decision durable follow-up work.",
       "task_ids": [
         "TASK-011",
@@ -624,12 +624,12 @@
         "Each implementation task must produce implementation_build and fresh validation evidence before close."
       ],
       "created": "2026-05-23T01:51:02Z",
-      "updated": "2026-05-23T01:51:02Z"
+      "updated": "2026-05-29T05:16:07Z"
     },
     "SPRINT-003": {
       "id": "SPRINT-003",
       "title": "Complete concept-root source migration",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Finish the accepted FS-ROOT-CONCEPTS migration by moving remaining project, knowledge, change, GC, session, roadmap, state/resume, API, and shared ownership out of layer-first application/domain roots while preserving public CodeWiki behavior.",
       "task_ids": [
         "TASK-024",
@@ -671,12 +671,12 @@
         "Final API/shared cleanup must prove no unapproved src/domain/** or src/application/** owner paths remain."
       ],
       "created": "2026-05-26T03:19:56Z",
-      "updated": "2026-05-26T03:19:56Z"
+      "updated": "2026-05-29T05:16:17Z"
     },
     "SPRINT-004": {
       "id": "SPRINT-004",
       "title": "Context reset agency and graph-link hygiene",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Implement approved CodeWiki reset auto-pickup, agency-level continuation, and graph-owned doc-code linking without blocking the state-root migration boundary.",
       "task_ids": [
         "TASK-032",
@@ -714,12 +714,12 @@
         "task-close clean commit/tree proof"
       ],
       "created": "2026-05-27T19:46:42Z",
-      "updated": "2026-05-27T19:46:42Z"
+      "updated": "2026-05-29T05:16:27Z"
     },
     "SPRINT-005": {
       "id": "SPRINT-005",
       "title": "Review signal and release hygiene",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Make the PyLens/booboo review signal trustworthy and resolve low-risk package release hygiene after foundational pipeline gates are in place.",
       "task_ids": [
         "TASK-037",
@@ -753,12 +753,12 @@
         "rerun static-analysis or production-readiness review subset"
       ],
       "created": "2026-05-28T01:01:40Z",
-      "updated": "2026-05-28T02:47:23Z"
+      "updated": "2026-05-29T05:16:33Z"
     },
     "SPRINT-006": {
       "id": "SPRINT-006",
       "title": "Safety and exposure-boundary cleanup",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Clean Pi adapter/schema/helper exposure boundaries after foundational pipeline enforcement is stable.",
       "task_ids": [
         "TASK-041"
@@ -784,12 +784,12 @@
         "rerun duplicate-code, async, and boolean-param review subsets"
       ],
       "created": "2026-05-28T01:01:48Z",
-      "updated": "2026-05-28T02:47:35Z"
+      "updated": "2026-05-29T05:16:42Z"
     },
     "SPRINT-007": {
       "id": "SPRINT-007",
       "title": "State and resume hardening",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Eliminate resume scheduling duplication and improve state graph/read-model typing and modularity while preserving generated outputs.",
       "task_ids": [
         "TASK-040",
@@ -821,12 +821,12 @@
         "rerun semantic-similarity, type-coverage, and complexity review subsets for state/resume"
       ],
       "created": "2026-05-28T01:01:55Z",
-      "updated": "2026-05-28T01:01:55Z"
+      "updated": "2026-05-29T05:16:55Z"
     },
     "SPRINT-008": {
       "id": "SPRINT-008",
       "title": "Runtime parser and support decomposition",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Reduce remaining large-file complexity across knowledge parsing and project/bootstrap support flows after pipeline/agency foundations are stable.",
       "task_ids": [
         "TASK-043",
@@ -855,12 +855,12 @@
         "rerun complexity and fact-rules review subsets for touched roots"
       ],
       "created": "2026-05-28T01:02:04Z",
-      "updated": "2026-05-28T02:47:45Z"
+      "updated": "2026-05-29T05:17:04Z"
     },
     "SPRINT-009": {
       "id": "SPRINT-009",
       "title": "Pipeline foundation and quality gates",
-      "status": "active",
+      "status": "closed",
       "outcome": "Make CodeWiki enforce the approved iterative compiler/gateway pipeline, inline approval flow, and production-ready quality profile before broad remediation work proceeds.",
       "task_ids": [
         "TASK-038",
@@ -903,12 +903,12 @@
         "no implementation task selected without planning-gateway proof"
       ],
       "created": "2026-05-28T02:47:54Z",
-      "updated": "2026-05-28T02:47:54Z"
+      "updated": "2026-05-29T05:17:10Z"
     },
     "SPRINT-010": {
       "id": "SPRINT-010",
       "title": "Agency automation and parallel execution",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Turn agency into a bounded runner and add safe parallel scheduler/worktree/publisher orchestration after foundational gates exist.",
       "task_ids": [
         "TASK-047",
@@ -945,7 +945,7 @@
         "fresh validation proof for parallel outputs"
       ],
       "created": "2026-05-28T02:48:04Z",
-      "updated": "2026-05-28T02:48:04Z"
+      "updated": "2026-05-29T05:17:19Z"
     }
   }
 }
