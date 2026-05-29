@@ -26,6 +26,7 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Apply only approved rows to product/system KB.
 - Compile `codewiki_build kind="decision"` after approved rows and KB edits are complete.
 - The `decision_build` must include approved rows, changed KB refs, row-to-KB mappings, propagation evidence, assumptions, open questions, non-goals, risks, and downstream planning questions.
+- Do not compact or reset while important intent only exists in chat. Decision-loop compaction is safe only after intent is externalized into pending/approved rows, KB/build/session evidence, or explicit blocking questions.
 - If no semantic delta exists, answer normally and do not create a diff table or build.
 
 ## Product/system routing

@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-29T04:56:21Z",
+  "profile": "implementation",
+  "task_id": "TASK-049",
+  "verdict": "pass",
+  "rationale": "TASK-049 implementation build satisfies the accepted planning/task boundary: post-gateway context refresh is pass-only and source-backed, fresh-validation/checkpoint/reload metadata is present, decision-row lifecycle fields round-trip compatibly, KB/skill policy is aligned, and all required targeted/full checks pass. Remaining generated-view audit warnings are expected CodeWiki refresh outputs, not acceptance failures.",
+  "checks": [
+    "Read implementation build .codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+    "Read planning build .codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+    "Read roadmap task .codewiki/roadmap/tasks/TASK-049/task.json",
+    "lsp_diagnostics changed source/test files: pass/no diagnostics",
+    "AST search confirmed codewiki_build registration no longer requests context refresh; validation after-hook owns post-gateway request",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs && node --experimental-strip-types ./tests/smoke/decision-approval-ui.test.mjs && node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass",
+    "npm run typecheck: pass",
+    "npm run check:architecture: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (37/37)",
+    "npm run test:pack: pass",
+    "codewiki_validation preflight_only implementation: ready (0 issues)"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "CodeWiki changed-files audit reports generated .codewiki/index_graph.json and generated TASK-049 task/context views changed after refresh; this is publication hygiene, not implementation acceptance failure."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+  "policy_profile": "implementation",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "audit:changed"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:c1f459004d84073aef8c2a37c2d0efe25842e2412e60b9ead101ed39208825fa"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-049",
+    "source_build": ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+    "validation_report": ".codewiki/validation/2026-05-29-implementation-pass-task-049-2026-05-29-task-049.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+      ".codewiki/validation/2026-05-29-implementation-pass-task-049-2026-05-29-task-049.json",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/reload-guidance.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/shared/reload-guidance.ts",
+      "src/build/writer.ts",
+      "src/change/diff-table.ts",
+      "src/change/types.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-validation/SKILL.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs",
+      "tests/smoke/validation-preflight.test.mjs",
+      "tests/smoke/builds.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": true,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-049",
+    "source_build": ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+    "validation_report": ".codewiki/validation/2026-05-29-implementation-pass-task-049-2026-05-29-task-049.json",
+    "commit_title": "checkpoint(codewiki): TASK-049 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-049",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-29-implementation-pass-task-049-2026-05-29-task-049.json",
+      "CodeWiki-Checks: Read implementation build .codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json; Read planning build .codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json; Read roadmap task .codewiki/roadmap/tasks/TASK-049/task.json; lsp_diagnostics changed source/test files: pass/no diagnostics; AST search confirmed codewiki_build registration no longer requests context refresh; validation after-hook owns post-gateway request; node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs && node --experimental-strip-types ./tests/smoke/decision-approval-ui.test.mjs && node --experimental-strip-types ./tests/smoke/validation-preflight.test.mjs && node --experimental-strip-types ./tests/smoke/builds.test.mjs: pass; npm run typecheck: pass; npm run check:architecture: pass; npm run test:smoke: pass; npm run test:features: pass (37/37); npm run test:pack: pass; codewiki_validation preflight_only implementation: ready (0 issues)"
+    ],
+    "note": "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/reload-guidance.ts",
+      "src/adapters/pi/schemas.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/shared/reload-guidance.ts",
+      "src/build/writer.ts",
+      "src/change/diff-table.ts",
+      "src/change/types.ts",
+      "src/validation/report.ts",
+      "src/validation/tool.ts",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-validation/SKILL.md"
+    ],
+    "reasons": [
+      "Pi or harness adapter code changed",
+      "CodeWiki extension package source changed",
+      "packaged CodeWiki skill prompt changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-049",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production quality profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_quality": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "semantic-system",
+      "reason": "Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "accepted_semantics:.codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+        "accepted_semantics:.codewiki/validation/2026-05-29-planning-pass-task-049-2026-05-29-task-049-conte.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki task/build/checks/validation/recover trailers"
+    ],
+    "gaps": []
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:c1f459004d84073aef8c2a37c2d0efe25842e2412e60b9ead101ed39208825fa",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation performed from CodeWiki source refs and implementation/planning/task artifacts after user confirmed Pi reload. Dirty pre-commit implementation validation uses working_tree_digest as checked content proof.",
+    "role": "validator"
+  }
+}

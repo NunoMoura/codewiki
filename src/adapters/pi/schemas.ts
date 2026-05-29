@@ -434,7 +434,13 @@ export const codewikiBuildLifecycleSchema = Type.Object({
 export const codewikiDiffTableRowSchema = Type.Object({
 	id: Type.Optional(Type.String({ minLength: 1 })),
 	current_state: Type.String({ minLength: 1 }),
+	current_project_state: Type.Optional(Type.String({ minLength: 1 })),
 	desired_state: Type.String({ minLength: 1 }),
+	agreed_change: Type.Optional(Type.String({ minLength: 1 })),
+	expected_final_state: Type.Optional(Type.String({ minLength: 1 })),
+	validated_final_state: Type.Optional(Type.String({ minLength: 1 })),
+	status: Type.Optional(Type.String({ minLength: 1 })),
+	proof_refs: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 	rationale: Type.String({ minLength: 1 }),
 	affected_layers: Type.Optional(Type.Array(Type.String({ minLength: 1 }), { default: [] })),
 	risk: Type.Optional(Type.String({ minLength: 1 })),

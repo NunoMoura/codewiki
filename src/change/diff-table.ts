@@ -46,16 +46,27 @@ export function diffTableStorePath(project: WikiProject): string {
 }
 
 export function normalizeDiffTableRows(rows: CodewikiDiffTableRowInput[] = []): RuntimeDiffTableRow[] {
-	return rows.map((row, index) => ({
-		id: String(row.id || `DTR-${String(index + 1).padStart(3, "0")}`).trim(),
-		current_state: String(row.current_state || "").trim(),
-		desired_state: String(row.desired_state || "").trim(),
-		rationale: String(row.rationale || "").trim(),
-		affected_layers: Array.isArray(row.affected_layers) ? row.affected_layers.map(String).map((v) => v.trim()).filter(Boolean) : [],
-		risk: String(row.risk || "medium").trim(),
-		user_action: String(row.user_action || "pending").trim() || "pending",
-		alternatives: Array.isArray(row.alternatives) ? row.alternatives.map(String).map((v) => v.trim()).filter(Boolean) : [],
-	})).filter((row) => row.current_state && row.desired_state && row.rationale);
+	return rows.map((row, index) => {
+		const currentState = String(row.current_state || row.current_project_state || "").trim();
+		const desiredState = String(row.desired_state || row.expected_final_state || row.agreed_change || "").trim();
+		const userAction = String(row.user_action || "pending").trim() || "pending";
+		return {
+			id: String(row.id || `DTR-${String(index + 1).padStart(3, "0")}`).trim(),
+			current_state: currentState,
+			current_project_state: String(row.current_project_state || currentState).trim(),
+			desired_state: desiredState,
+			agreed_change: String(row.agreed_change || desiredState).trim(),
+			expected_final_state: String(row.expected_final_state || desiredState).trim(),
+			validated_final_state: String(row.validated_final_state || "").trim(),
+			status: String(row.status || userAction).trim() || userAction,
+			proof_refs: normalizeStringList(row.proof_refs),
+			rationale: String(row.rationale || "").trim(),
+			affected_layers: normalizeStringList(row.affected_layers),
+			risk: String(row.risk || "medium").trim(),
+			user_action: userAction,
+			alternatives: normalizeStringList(row.alternatives),
+		};
+	}).filter((row) => row.current_state && row.desired_state && row.rationale);
 }
 
 export async function readRuntimeDiffTables(project: WikiProject): Promise<RuntimeDiffTablesFile> {
@@ -110,16 +121,22 @@ export async function executeDiffTableAction(project: WikiProject, input: Codewi
 		if (input.action === "accept") row.user_action = "approved";
 		if (input.action === "reject") row.user_action = "rejected";
 		if (input.action === "defer") row.user_action = "deferred";
+		if (["accept", "reject", "defer"].includes(input.action)) row.status = row.user_action;
 		if (input.action === "alternative") {
 			const alternative = String(input.alternative || "").trim();
 			if (!alternative) throw new Error("diff_table alternative requires alternative text.");
 			row.alternatives = [...(row.alternatives || []), alternative];
 			row.user_action = "edited";
+			row.status = "edited";
 		}
 	}
 	table.updated_at = now;
 	await writeRuntimeDiffTables(project, file);
 	return { changed: true, table };
+}
+
+function normalizeStringList(values: unknown): string[] {
+	return Array.isArray(values) ? Array.from(new Set(values.map(String).map((value) => value.trim()).filter(Boolean))) : [];
 }
 
 function normalizeRuntimeTable(raw: any): RuntimeDiffTable | null {

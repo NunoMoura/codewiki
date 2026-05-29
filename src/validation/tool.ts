@@ -16,8 +16,14 @@ export async function executeCodewikiValidationTool(
 	}
 	const result = await writeValidationReport(project, input);
 	if (input.refresh ?? true) await runRebuild(project);
+	const reload = result.data.reload_guidance;
 	return {
-		summary: `codewiki validation: wrote ${result.path}`,
+		summary: [
+			`codewiki validation: wrote ${result.path}`,
+			reload?.required ? reload.message : "",
+		]
+			.filter(Boolean)
+			.join("\n"),
 		result,
 	};
 }

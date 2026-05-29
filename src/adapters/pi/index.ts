@@ -33,6 +33,7 @@ import { registerCodewikiResumeContextTool } from "./tools/resume-context.ts";
 import { executeCodewikiSession } from "./tools/session.ts";
 import { installArtifactWaiterWake } from "./artifact-wake.ts";
 import {
+	buildPostGatewayContextRefreshRequest,
 	installCodewikiCompaction,
 	requestCodewikiContextRefresh,
 } from "./compaction.ts";
@@ -252,14 +253,6 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		execute: (project, params) =>
 			executeCodewikiBuildTool(project, params as any),
 		details: resultPayload,
-		after: ({ params, result }) => {
-			requestCodewikiContextRefresh({
-				reason: `${params.kind}-build-boundary`,
-				taskId: params.task_id || params.task_ids?.[0] || null,
-				followUpIntent:
-					`Continue after ${params.kind}_build ${result.result?.path ?? ""}`.trim(),
-			});
-		},
 	});
 
 	registerProjectTool(pi, {
@@ -281,12 +274,16 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 		execute: (project, params) =>
 			executeCodewikiValidationTool(project, params as any),
 		details: resultPayload,
-		after: ({ params }) => {
-			requestCodewikiContextRefresh({
-				reason: `validation-${params.verdict}`,
-				taskId: params.task_id || null,
-				followUpIntent: `Continue after ${params.profile} validation ${params.verdict}`,
+		after: ({ params, result }) => {
+			const data = result?.result?.data;
+			const request = buildPostGatewayContextRefreshRequest({
+				profile: params.profile,
+				verdict: String(data?.verdict || params.verdict || ""),
+				taskId: params.task_id || data?.task_id || null,
+				source: params.source || data?.source || null,
+				validationRef: result?.result?.path || null,
 			});
+			if (request) requestCodewikiContextRefresh(request);
 		},
 	});
 

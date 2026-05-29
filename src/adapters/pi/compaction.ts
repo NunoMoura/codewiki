@@ -5,7 +5,7 @@ import type {
 import { buildCodewikiResumeContext } from "../../state/resume-context.ts";
 import { resolveStatusDockProject } from "../../project/context.ts";
 import type { WikiProject } from "../../project/types.ts";
-import { formatError, nowIso } from "../../shared/utils.ts";
+import { formatError, nowIso, unique } from "../../shared/utils.ts";
 import {
 	CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE,
 	buildCodewikiResumeKickoff,
@@ -27,7 +27,16 @@ export interface CodewikiContextRefreshRequest {
 	reason: string;
 	taskId?: string | null;
 	followUpIntent?: string | null;
+	sourceRefs?: string[];
 	requestedAt?: string;
+}
+
+export interface CodewikiPostGatewayContextRefreshInput {
+	profile: string;
+	verdict: string;
+	taskId?: string | null;
+	source?: string | null;
+	validationRef?: string | null;
 }
 
 export interface CodewikiResetBoundaryDecision {
@@ -56,12 +65,39 @@ let preparedContextRefreshSummary: CodewikiCompactionSummary | null = null;
 export function requestCodewikiContextRefresh(
 	request: CodewikiContextRefreshRequest,
 ): void {
+	const sourceRefs = normalizeContextRefreshSourceRefs(request.sourceRefs);
 	pendingContextRefresh = {
 		...request,
 		reason: request.reason.trim() || "context-refresh",
 		taskId: request.taskId?.trim() || null,
 		followUpIntent: request.followUpIntent?.trim() || null,
+		...(sourceRefs.length ? { sourceRefs } : {}),
 		requestedAt: request.requestedAt ?? nowIso(),
+	};
+}
+
+export function buildPostGatewayContextRefreshRequest(
+	input: CodewikiPostGatewayContextRefreshInput,
+): CodewikiContextRefreshRequest | null {
+	const verdict = input.verdict.trim().toLowerCase();
+	if (verdict !== "pass") return null;
+	const profile = input.profile.trim() || "validation";
+	const sourceRefs = normalizeContextRefreshSourceRefs([
+		input.source || "",
+		input.validationRef || "",
+	]);
+	const followUpIntent = [
+		`Continue after ${profile} gateway pass.`,
+		sourceRefs.length ? "Post-gateway source refs:" : "",
+		...sourceRefs.map((ref) => `- ${ref}`),
+	]
+		.filter(Boolean)
+		.join("\n");
+	return {
+		reason: `${profile}-gateway-pass-boundary`,
+		taskId: input.taskId?.trim() || null,
+		followUpIntent,
+		sourceRefs,
 	};
 }
 
@@ -96,6 +132,7 @@ export function formatCodewikiContextRefreshDeferredNotice(
 		request.reason.trim() || "context-refresh",
 		request.taskId?.trim() || "",
 		request.followUpIntent?.trim() || "",
+		normalizeContextRefreshSourceRefs(request.sourceRefs).join("|"),
 		request.requestedAt || "",
 		normalizedReason,
 	]);
@@ -289,8 +326,16 @@ export async function buildCodewikiCompactionSummary(
 	customInstructions: unknown,
 ): Promise<CodewikiCompactionSummary | null> {
 	const activeLink = currentTaskLink(ctx);
+	const requestSourceRefs = normalizeContextRefreshSourceRefs(
+		request.sourceRefs,
+	);
+	const hasSourceRefIntent = Boolean(request.followUpIntent?.toLowerCase().includes("source refs"));
+	const sourceRefIntent = requestSourceRefs.length && !hasSourceRefIntent
+		? ["Source refs:", ...requestSourceRefs.map((ref) => `- ${ref}`)].join("\n")
+		: "";
 	const followUpIntent = [
 		request.followUpIntent,
+		sourceRefIntent,
 		typeof customInstructions === "string" ? customInstructions : "",
 	]
 		.map((item) => item?.trim())
@@ -317,6 +362,10 @@ export async function buildCodewikiCompactionSummary(
 	}
 	if (!result.prompt.trim()) return null;
 	const policy = effectiveAgencyPolicy(project.config);
+	const sourceRefs = unique([
+		...(Array.isArray(result.source_refs) ? result.source_refs : []),
+		...requestSourceRefs,
+	]);
 	const details = {
 		source: "codewiki",
 		reason: request.reason,
@@ -324,6 +373,7 @@ export async function buildCodewikiCompactionSummary(
 		contextPath: result.context_path,
 		projectRoot: project.root,
 		requestedAt: request.requestedAt ?? null,
+		sourceRefs,
 		agencyLevel: policy.level,
 		approvalCadence: policy.approval_cadence,
 		contextResetAutoPickup:
@@ -347,7 +397,7 @@ export async function buildCodewikiCompactionSummary(
 			projectRoot: project.root,
 			taskId: result.task?.id ?? request.taskId ?? activeLink?.taskId ?? null,
 			contextPath: result.context_path,
-			sourceRefs: result.source_refs,
+			sourceRefs,
 			policy,
 		}),
 	};
@@ -423,7 +473,22 @@ export function formatCodewikiCompactionInstruction(
 		`${CONTEXT_REFRESH_PREFIX}: ${request.reason}`,
 		request.taskId ? `task=${request.taskId}` : "",
 		request.followUpIntent ? `intent=${request.followUpIntent}` : "",
+		request.sourceRefs?.length ? `refs=${request.sourceRefs.join(",")}` : "",
 	]
 		.filter(Boolean)
 		.join("; ");
+}
+
+function normalizeContextRefreshSourceRefs(
+	refs: string[] | undefined,
+): string[] {
+	return unique(
+		(refs ?? [])
+			.map((ref) =>
+				String(ref || "")
+					.trim()
+					.replace(/^\.\//, ""),
+			)
+			.filter(Boolean),
+	);
 }

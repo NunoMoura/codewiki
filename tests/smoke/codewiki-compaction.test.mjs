@@ -9,6 +9,7 @@ import {
 	CODEWIKI_RESUME_KICKOFF_CUSTOM_TYPE,
 	buildCodewikiCompactionSummary,
 	buildCodewikiResumeKickoff,
+	buildPostGatewayContextRefreshRequest,
 	evaluateCodewikiAutoPickupBoundary,
 	evaluateCodewikiResetLifecycleBoundary,
 	formatCodewikiCompactionInstruction,
@@ -86,6 +87,27 @@ assert.equal(
 	"CodeWiki context refresh: implementation-build-boundary; task=TASK-001; intent=continue validation",
 	"CodeWiki compaction instruction should preserve boundary metadata",
 );
+const gatewayPassRequest = buildPostGatewayContextRefreshRequest({
+	profile: "implementation",
+	verdict: "pass",
+	taskId: "TASK-001",
+	source: ".codewiki/builds/implementation/impl.json",
+	validationRef: ".codewiki/validation/impl-pass.json",
+});
+assert.equal(gatewayPassRequest.reason, "implementation-gateway-pass-boundary");
+assert.deepEqual(gatewayPassRequest.sourceRefs, [
+	".codewiki/builds/implementation/impl.json",
+	".codewiki/validation/impl-pass.json",
+]);
+assert.match(gatewayPassRequest.followUpIntent, /Post-gateway source refs/);
+assert.equal(
+	buildPostGatewayContextRefreshRequest({
+		profile: "implementation",
+		verdict: "block",
+	}),
+	null,
+	"failed or blocked gateway verdicts should not create post-gateway context refresh requests",
+);
 
 const deferredNotice = formatCodewikiContextRefreshDeferredNotice(
 	{
@@ -151,6 +173,16 @@ const compactionSource = readFileSync(
 	new URL("../../src/adapters/pi/compaction.ts", import.meta.url),
 	"utf8",
 );
+const adapterSource = readFileSync(
+	new URL("../../src/adapters/pi/index.ts", import.meta.url),
+	"utf8",
+);
+const buildRegistration = adapterSource
+	.split('name: "codewiki_build"')[1]
+	.split('name: "codewiki_validation"')[0];
+const validationRegistration = adapterSource
+	.split('name: "codewiki_validation"')[1]
+	.split('name: "codewiki_task"')[0];
 assert.match(
 	compactionSource,
 	/pi\.on\("agent_end"/,
@@ -195,6 +227,16 @@ assert.doesNotMatch(
 	compactionSource,
 	/role:\s*[`'"]assistant/,
 	"context reset must not synthesize assistant-role continuation leaves",
+);
+assert.doesNotMatch(
+	buildRegistration,
+	/requestCodewikiContextRefresh/,
+	"compiler build creation should not request pre-gateway compaction",
+);
+assert.match(
+	validationRegistration,
+	/buildPostGatewayContextRefreshRequest/,
+	"validation pass handling should own post-gateway compaction requests",
 );
 
 const safeProject = {

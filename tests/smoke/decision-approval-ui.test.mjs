@@ -31,7 +31,13 @@ try {
 			{
 				id: "ROW-APPROVE",
 				current_state: "Approval happens in chat.",
+				current_project_state: "Approval happens in chat and is not durable.",
 				desired_state: "Approval is row-level and machine-readable.",
+				agreed_change: "Capture row-level approval as durable input.",
+				expected_final_state: "Decision build includes approved row refs.",
+				validated_final_state: "Gateway pass validates approved row refs.",
+				status: "pending",
+				proof_refs: ["approval:fixture"],
 				rationale: "Decision builds need exact approved rows.",
 				affected_layers: ["knowledge", "roadmap"],
 				risk: "medium",
@@ -69,6 +75,23 @@ try {
 	assert.equal(model.decisionBuildEligible, false);
 	assert.match(model.fallbackInstruction, /APPROVE DT-APPROVAL\/ROW-APPROVE/);
 	assert.equal(model.rows[0].affectedLayers.includes("knowledge"), true);
+	assert.equal(
+		model.rows[0].currentProjectState,
+		"Approval happens in chat and is not durable.",
+	);
+	assert.equal(
+		model.rows[0].agreedChange,
+		"Capture row-level approval as durable input.",
+	);
+	assert.equal(
+		model.rows[0].expectedFinalState,
+		"Decision build includes approved row refs.",
+	);
+	assert.equal(
+		model.rows[0].validatedFinalState,
+		"Gateway pass validates approved row refs.",
+	);
+	assert.deepEqual(model.rows[0].proofRefs, ["approval:fixture"]);
 	assert.equal(model.rows[0].buildEligible, false);
 	const rendered = renderDecisionApprovalCards(model, 96).join("\n");
 	assert.match(rendered, /Approval is row-level/);
@@ -102,34 +125,86 @@ try {
 	model = readDecisionApprovalModel(project);
 	const byId = Object.fromEntries(model.rows.map((row) => [row.rowId, row]));
 	assert.equal(byId["ROW-APPROVE"].status, "approved");
+	assert.equal(byId["ROW-APPROVE"].lifecycleStatus, "approved");
+	assert.equal(
+		byId["ROW-APPROVE"].expectedFinalState,
+		"Decision build includes approved row refs.",
+	);
+	assert.deepEqual(byId["ROW-APPROVE"].proofRefs, ["approval:fixture"]);
 	assert.equal(byId["ROW-APPROVE"].buildEligible, true);
 	assert.equal(byId["ROW-REJECT"].status, "rejected");
 	assert.equal(byId["ROW-REJECT"].buildEligible, false);
 	assert.equal(byId["ROW-DEFER"].status, "deferred");
 	assert.equal(byId["ROW-EDIT"].status, "edited");
-	assert.deepEqual(byId["ROW-EDIT"].alternatives, ["Alternative desired state from inline edit."]);
+	assert.deepEqual(byId["ROW-EDIT"].alternatives, [
+		"Alternative desired state from inline edit.",
+	]);
 	assert.deepEqual(model.approvedRowIds, ["ROW-APPROVE"]);
-	assert.equal(model.decisionBuildEligible, false, "edited rows must block full-table build eligibility until resolved");
+	assert.equal(
+		model.decisionBuildEligible,
+		false,
+		"edited rows must block full-table build eligibility until resolved",
+	);
 
 	const panel = readDiffTablePanelData(project);
-	assert.equal(panel.rows.find((row) => row.rowId === "ROW-APPROVE")?.buildEligible, true);
-	assert.equal(panel.rows.find((row) => row.rowId === "ROW-REJECT")?.buildEligible, false);
+	assert.equal(
+		panel.rows.find((row) => row.rowId === "ROW-APPROVE")?.buildEligible,
+		true,
+	);
+	assert.equal(
+		panel.rows.find((row) => row.rowId === "ROW-REJECT")?.buildEligible,
+		false,
+	);
 	assert.match(panel.fallbackInstruction, /EDIT DT-APPROVAL\/ROW-EDIT/);
 
-	const stored = JSON.parse(await readFile(join(root, ".codewiki/runtime/diff-tables.json"), "utf8"));
-	assert.equal(stored.tables[0].rows.find((row) => row.id === "ROW-APPROVE").user_action, "approved");
-	assert.equal(stored.tables[0].rows.find((row) => row.id === "ROW-REJECT").user_action, "rejected");
-	assert.equal(stored.tables[0].rows.find((row) => row.id === "ROW-DEFER").user_action, "deferred");
+	const stored = JSON.parse(
+		await readFile(join(root, ".codewiki/runtime/diff-tables.json"), "utf8"),
+	);
+	assert.equal(
+		stored.tables[0].rows.find((row) => row.id === "ROW-APPROVE").user_action,
+		"approved",
+	);
+	assert.equal(
+		stored.tables[0].rows.find((row) => row.id === "ROW-APPROVE").status,
+		"approved",
+	);
+	assert.deepEqual(
+		stored.tables[0].rows.find((row) => row.id === "ROW-APPROVE").proof_refs,
+		["approval:fixture"],
+	);
+	assert.equal(
+		stored.tables[0].rows.find((row) => row.id === "ROW-REJECT").user_action,
+		"rejected",
+	);
+	assert.equal(
+		stored.tables[0].rows.find((row) => row.id === "ROW-DEFER").user_action,
+		"deferred",
+	);
 
 	const candidates = buildTaskCandidateApprovalModel([
-		{ id: "TASK-CANDIDATE", title: "Approve task", summary: "Candidate task", status: "pending", priority: "high", kind: "feature" },
-		{ id: "TASK-APPROVED", title: "Approved task", summary: "Ready task", status: "approved", sprint_id: "SPRINT-001" },
+		{
+			id: "TASK-CANDIDATE",
+			title: "Approve task",
+			summary: "Candidate task",
+			status: "pending",
+			priority: "high",
+			kind: "feature",
+		},
+		{
+			id: "TASK-APPROVED",
+			title: "Approved task",
+			summary: "Ready task",
+			status: "approved",
+			sprint_id: "SPRINT-001",
+		},
 	]);
 	assert.equal(candidates.toolContract, "codewiki_task");
 	assert.equal(candidates.candidates[0].buildEligible, false);
 	assert.equal(candidates.candidates[1].buildEligible, true);
 	assert.match(candidates.fallbackInstruction, /APPROVE TASK-CANDIDATE/);
-	const candidateCards = renderTaskCandidateApprovalCards(candidates, 88).join("\n");
+	const candidateCards = renderTaskCandidateApprovalCards(candidates, 88).join(
+		"\n",
+	);
 	assert.match(candidateCards, /Task\/sprint candidates pending approval/);
 	assert.match(candidateCards, /TASK-APPROVED/);
 	assert.match(candidateCards, /sprint=SPRINT-001/);

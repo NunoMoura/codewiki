@@ -12,7 +12,19 @@ export type ChangeClass = LegacyChangeClass;
 export interface CodewikiDiffTableRowInput {
 	id?: string;
 	current_state: string;
+	/** Optional explicit alias for current_state when callers track row lifecycle. */
+	current_project_state?: string;
 	desired_state: string;
+	/** Optional accepted change summary; defaults to desired_state for legacy rows. */
+	agreed_change?: string;
+	/** Optional target end state; defaults to desired_state for legacy rows. */
+	expected_final_state?: string;
+	/** Optional gateway-confirmed end state after validation. */
+	validated_final_state?: string;
+	/** Optional row lifecycle status independent of user_action. */
+	status?: string;
+	/** Optional source refs proving row approval, implementation, or validation. */
+	proof_refs?: string[];
 	rationale: string;
 	affected_layers?: string[];
 	risk?: "low" | "medium" | "high" | string;

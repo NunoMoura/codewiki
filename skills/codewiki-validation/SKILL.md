@@ -78,6 +78,8 @@ Read only enough source truth to decide:
 7. **Apply isolation/content-proof and risk gates**
    - Implementation validation requires `fresh_context=true`, a clean-state value, required audits, and checked content proof (`validated_sha`, `tree_sha`, `working_tree_digest`, etc.).
    - Task-close/publication/publish/release require `fresh_context=true`, `clean=true`, immutable committed/published/archive proof (`validated_sha`, `head_sha`, `tree_sha`, `package_digest`, `archive_ref`, `remote_ref`, etc.), and publication readiness when publishing.
+   - High-risk or semantic-system gates should run from fresh validation context; decision/planning may record a recommendation while policy-specific isolation can make it blocking.
+   - Passing validation reports may emit post-gateway context-boundary metadata, local-only implementation checkpoint metadata, and Pi `/reload` guidance for extension/skill/runtime/API paths; validation never reloads or restarts Pi itself.
    - Working-tree digest alone can support dirty pre-commit implementation validation, not task-close/publication.
    - Mechanical/docs and code-local changes can use the low-risk fast path only after normal gateway evidence is complete.
    - Semantic-system changes must cite accepted decision/planning evidence; security, migration, publication, release, and destructive tiers require explicit user approval evidence before promotion.

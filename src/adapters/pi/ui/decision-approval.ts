@@ -14,13 +14,19 @@ export interface DecisionApprovalRow {
 	tableId: string;
 	rowId: string;
 	status: string;
+	lifecycleStatus: string;
 	current: string;
+	currentProjectState: string;
 	desired: string;
+	agreedChange: string;
+	expectedFinalState: string;
+	validatedFinalState: string;
 	rationale: string;
 	affectedLayers: string[];
 	risk: string;
 	source: string;
 	alternatives: string[];
+	proofRefs: string[];
 	readOnly: boolean;
 	buildEligible: boolean;
 	actionEvidence: string;
@@ -140,6 +146,9 @@ export function renderDecisionApprovalCards(
 		);
 		body.push(`  current: ${truncatePlain(row.current, Math.max(16, width - 13))}`);
 		body.push(`  desired: ${truncatePlain(row.desired, Math.max(16, width - 13))}`);
+		if (row.expectedFinalState && row.expectedFinalState !== row.desired) body.push(`  expected: ${truncatePlain(row.expectedFinalState, Math.max(16, width - 14))}`);
+		if (row.validatedFinalState) body.push(`  validated: ${truncatePlain(row.validatedFinalState, Math.max(16, width - 15))}`);
+		if (row.proofRefs.length) body.push(`  proof: ${truncatePlain(row.proofRefs.join(", "), Math.max(16, width - 9))}`);
 		if (row.alternatives.length) body.push(`  alternatives: ${truncatePlain(row.alternatives.join(" | "), Math.max(16, width - 18))}`);
 	}
 	return body;
@@ -224,21 +233,27 @@ function toApprovalRow(table: any, row: any, readOnly: boolean): DecisionApprova
 		tableId,
 		rowId,
 		status,
-		current: String(row.current_state || "").trim(),
-		desired: String(row.desired_state || "").trim(),
+		lifecycleStatus: String(row.status || status).trim() || status,
+		current: String(row.current_state || row.current_project_state || "").trim(),
+		currentProjectState: String(row.current_project_state || row.current_state || "").trim(),
+		desired: String(row.desired_state || row.expected_final_state || row.agreed_change || "").trim(),
+		agreedChange: String(row.agreed_change || row.desired_state || "").trim(),
+		expectedFinalState: String(row.expected_final_state || row.desired_state || "").trim(),
+		validatedFinalState: String(row.validated_final_state || "").trim(),
 		rationale: String(row.rationale || "").trim(),
-		affectedLayers: Array.isArray(row.affected_layers)
-			? row.affected_layers.map(String).map((value: string) => value.trim()).filter(Boolean)
-			: [],
+		affectedLayers: stringList(row.affected_layers),
 		risk: String(row.risk || "medium").trim(),
 		source: String(table.summary || table.id || "pending").trim(),
-		alternatives: Array.isArray(row.alternatives)
-			? row.alternatives.map(String).map((value: string) => value.trim()).filter(Boolean)
-			: [],
+		alternatives: stringList(row.alternatives),
+		proofRefs: stringList(row.proof_refs),
 		readOnly,
 		buildEligible: !readOnly && status === "approved",
 		actionEvidence: `codewiki_diff_table ${status} ${tableId}/${rowId}`,
 	};
+}
+
+function stringList(values: unknown): string[] {
+	return Array.isArray(values) ? Array.from(new Set(values.map(String).map((value) => value.trim()).filter(Boolean))) : [];
 }
 
 function diffTableActionForApproval(

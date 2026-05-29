@@ -38,7 +38,9 @@ Validation can run at:
 
 ## Handoff policy
 
-Fresh context is for independence or context health. Decision may stay in-session; agents may run new_session/context_refresh when chat is noisy. Implementation validation, task-close, publication, publish, and release require fresh/content proof. Artifact wakes are not validation handoffs. Missing boundaries block or record fallback.
+Fresh context is for independence or context health. Decision may stay in-session; agents may run new_session/context_refresh when chat is noisy after intent is externalized. Implementation validation, task-close, publication, publish, and release require fresh/content proof. High-risk and semantic-system gates record a fresh-context recommendation, and policy-required isolation can make it a blocking requirement. Artifact wakes are not validation handoffs. Missing required boundaries block or record fallback.
+
+Passing validation reports include a `context_boundary` section that recommends a post-gateway CodeWiki-owned context refresh seeded by the source build, validation report, and CodeWiki source refs. Implementation-pass reports also include local-only `checkpoint_commit` metadata. That checkpoint can capture validated implementation content after the gateway pass, but task-close or publication metadata belongs in a later close/publication commit. Validation metadata may include `/reload` guidance when the source build touched Pi extension, skill, runtime, or API paths; the gateway never reloads or restarts Pi itself.
 
 ## Gateway preflight and risk tiers
 

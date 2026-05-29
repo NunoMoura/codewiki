@@ -230,7 +230,13 @@ async function run() {
 					{
 						id: "DTR-001",
 						current_state: "X is undocumented.",
+						current_project_state: "X lacks durable row lifecycle proof.",
 						desired_state: "Document and implement X.",
+						agreed_change: "Document X and create implementation task.",
+						expected_final_state: "X docs and task evidence exist.",
+						validated_final_state: "X docs and task evidence validated.",
+						status: "approved",
+						proof_refs: ["approval:smoke"],
 						rationale: "Smoke coverage needs accepted intent.",
 						affected_layers: ["knowledge", "roadmap", "code"],
 						risk: "low",
@@ -269,6 +275,24 @@ async function run() {
 		assert.equal(decision.kind, "decision_build");
 		assert.equal(decision.schema_version, 2);
 		assert.equal(decision.diff_table[0].user_action, "approved");
+		assert.equal(
+			decision.diff_table[0].current_project_state,
+			"X lacks durable row lifecycle proof.",
+		);
+		assert.equal(
+			decision.diff_table[0].agreed_change,
+			"Document X and create implementation task.",
+		);
+		assert.equal(
+			decision.diff_table[0].expected_final_state,
+			"X docs and task evidence exist.",
+		);
+		assert.equal(
+			decision.diff_table[0].validated_final_state,
+			"X docs and task evidence validated.",
+		);
+		assert.equal(decision.diff_table[0].status, "approved");
+		assert.deepEqual(decision.diff_table[0].proof_refs, ["approval:smoke"]);
 		assert.deepEqual(decision.approved_diff_rows, ["DTR-001"]);
 		assert.deepEqual(decision.produces.knowledge, [
 			".codewiki/kb/system/overview.md",

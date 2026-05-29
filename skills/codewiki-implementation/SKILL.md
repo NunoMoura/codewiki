@@ -26,8 +26,9 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Use `codewiki_artifact_status` for narrow write scopes before non-trivial edits when parallel overlap is possible.
 - Use TDD/test-design first where practical. If tests cannot be added, record why in tester evidence.
 - Change only files required by task acceptance and non-goals.
-- Compile `codewiki_build kind="implementation"` after edits and checks, before implementation validation.
+- Compile `codewiki_build kind="implementation"` after edits and checks, before implementation validation. Do not treat the build itself as a compaction boundary; post-gateway compaction is allowed only after the validation pass records source refs.
 - Start validation from CodeWiki refs and a fresh/independent context when policy requires proof; do not close the task from builder context when independent proof is required.
+- After implementation validation passes, use the validation report's local-only checkpoint metadata when a checkpoint commit is useful; task-close or publication metadata belongs in a separate close/publication commit.
 - Close only after passing task-close validation/content proof when policy requires it.
 - After any task-close, sprint-close, publication, or roadmap-end commit exists, run `codewiki_gc action="dry-run"`; purge eligible artifacts only with archive commit/tree proof or record defer/block evidence.
 

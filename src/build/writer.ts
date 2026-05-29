@@ -188,16 +188,27 @@ function buildCycleFields(input: CodewikiBuildToolInput, loop: string, defaultPo
 }
 
 function normalizeDiffTable(rows?: CodewikiDiffTableRowInput[]) {
-	return (rows ?? []).map((row, index) => ({
-		id: String(row.id || `DTR-${String(index + 1).padStart(3, "0")}`).trim(),
-		current_state: String(row.current_state || "").trim(),
-		desired_state: String(row.desired_state || "").trim(),
-		rationale: String(row.rationale || "").trim(),
-		affected_layers: trimList(row.affected_layers),
-		risk: String(row.risk || "medium").trim(),
-		user_action: String(row.user_action || "pending").trim(),
-		alternatives: trimList(row.alternatives),
-	})).filter((row) => row.current_state && row.desired_state && row.rationale);
+	return (rows ?? []).map((row, index) => {
+		const currentState = String(row.current_state || row.current_project_state || "").trim();
+		const desiredState = String(row.desired_state || row.expected_final_state || row.agreed_change || "").trim();
+		const userAction = String(row.user_action || "pending").trim() || "pending";
+		return {
+			id: String(row.id || `DTR-${String(index + 1).padStart(3, "0")}`).trim(),
+			current_state: currentState,
+			current_project_state: String(row.current_project_state || currentState).trim(),
+			desired_state: desiredState,
+			agreed_change: String(row.agreed_change || desiredState).trim(),
+			expected_final_state: String(row.expected_final_state || desiredState).trim(),
+			validated_final_state: String(row.validated_final_state || "").trim(),
+			status: String(row.status || userAction).trim() || userAction,
+			proof_refs: trimList(row.proof_refs),
+			rationale: String(row.rationale || "").trim(),
+			affected_layers: trimList(row.affected_layers),
+			risk: String(row.risk || "medium").trim(),
+			user_action: userAction,
+			alternatives: trimList(row.alternatives),
+		};
+	}).filter((row) => row.current_state && row.desired_state && row.rationale);
 }
 
 function approvedDiffRows(rows: ReturnType<typeof normalizeDiffTable>, approvedIds?: string[]) {

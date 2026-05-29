@@ -28,6 +28,7 @@ import {
 	hasPublisherResultProof,
 	publisherProofRefs,
 } from "../session/worktree-isolation.ts";
+import { buildCodewikiReloadGuidance } from "../shared/reload-guidance.ts";
 import { nowIso, unique } from "../shared/utils.ts";
 import { normalizeWorktreeIsolation } from "../session/claims.ts";
 import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
@@ -720,6 +721,88 @@ function validationPathRefs(build: any): string[] {
 	]);
 }
 
+function buildValidationContextBoundary(input: {
+	profile: string;
+	verdict: string;
+	taskId?: string;
+	source?: string;
+	validationReport: string;
+	sourceRefs: string[];
+	risk: { tier: string; approval_required: boolean };
+	requirement: ReturnType<typeof isolationBoundary>;
+}) {
+	const passed = input.verdict.trim().toLowerCase() === "pass";
+	const sourceRefs = unique([
+		...(input.source ? [input.source] : []),
+		input.validationReport,
+		...input.sourceRefs,
+	]);
+	const hardBoundary =
+		input.requirement.required ||
+		[
+			"semantic-system",
+			"security-migration-publication",
+			"destructive",
+		].includes(input.risk.tier);
+	return {
+		recommended: passed,
+		trigger: passed ? "post-gateway-pass" : "gateway-not-passed",
+		mode: passed ? "codewiki-context-refresh" : "none",
+		resume_tool: "codewiki_resume_context",
+		seeded_by: [
+			"passed_build_ref",
+			"validation_report_ref",
+			"CodeWiki source refs",
+		],
+		task_id: input.taskId || undefined,
+		source_build: input.source || undefined,
+		validation_report: input.validationReport,
+		source_refs: sourceRefs,
+		hard_session_boundary_recommended: hardBoundary,
+		reason: passed
+			? "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+			: "No post-gateway boundary is recommended until the gateway passes.",
+	};
+}
+
+function buildValidationCheckpointCommit(input: {
+	profile: string;
+	verdict: string;
+	taskId?: string;
+	source?: string;
+	validationReport: string;
+	checks: string[];
+}) {
+	const profile = input.profile.trim().toLowerCase();
+	const passed = input.verdict.trim().toLowerCase() === "pass";
+	const recommended =
+		passed && profile === "implementation" && Boolean(input.source);
+	return {
+		recommended,
+		scope: "post-gateway-local-checkpoint",
+		local_only: true,
+		remote_publication: false,
+		separate_close_publication_commit: true,
+		task_id: input.taskId || undefined,
+		source_build: input.source || undefined,
+		validation_report: input.validationReport,
+		commit_title: input.taskId
+			? `checkpoint(codewiki): ${input.taskId} implementation validation pass`
+			: "checkpoint(codewiki): implementation validation pass",
+		trailers: unique([
+			...(input.taskId ? [`CodeWiki-Task: ${input.taskId}`] : []),
+			...(input.source ? [`CodeWiki-Build: ${input.source}`] : []),
+			`CodeWiki-Validation: ${input.validationReport}`,
+			...(input.checks.length
+				? [`CodeWiki-Checks: ${input.checks.join("; ")}`]
+				: []),
+		]),
+		note: recommended
+			? "After implementation validation passes, a local checkpoint commit may capture validated content for inspection. Task-close/publication metadata belongs in a later close/publication commit."
+			: "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build.",
+	};
+}
+
 function isDocsOrMechanicalRef(ref: string): boolean {
 	const normalized = normalizeRepoPath(ref);
 	return (
@@ -1210,6 +1293,20 @@ export function buildValidationPreflight(
 			...risk,
 			approval_evidence: approvalEvidence,
 			approval_missing: approvalMissing,
+			fresh_context: {
+				required: isolationReq.required,
+				recommended: isolationReq.required || risk.approval_required,
+				supplied: isolation?.fresh_context === true,
+				gaps:
+					isolationReq.required && isolation?.fresh_context !== true
+						? ["fresh_context=true"]
+						: [],
+				reason: isolationReq.required
+					? isolationReq.reason
+					: risk.approval_required
+						? "High-risk or semantic-system gates should use a fresh validation context even when decision/planning policy only recommends it."
+						: "Fresh validation context is optional for this low-risk profile.",
+			},
 			fast_path: {
 				candidate: lowRiskFastPathCandidate,
 				eligible: lowRiskFastPathCandidate && status === "ready",
@@ -1333,6 +1430,28 @@ export async function writeValidationReport(
 		project.root,
 		`.codewiki/validation/${day}-${slug}.json`,
 	);
+	const relPath = `.codewiki/validation/${day}-${slug}.json`;
+	const sourceForMetadata = readValidationPreflightSource(project, input);
+	const sourcePathRefs = validationPathRefs(sourceForMetadata.build);
+	const reloadGuidance = buildCodewikiReloadGuidance(sourcePathRefs);
+	const contextBoundary = buildValidationContextBoundary({
+		profile,
+		verdict,
+		taskId: input.task_id?.trim() || undefined,
+		source: (input.source ?? "").trim() || undefined,
+		validationReport: relPath,
+		sourceRefs: sourcePathRefs,
+		risk: preflight.risk,
+		requirement,
+	});
+	const checkpointCommit = buildValidationCheckpointCommit({
+		profile,
+		verdict,
+		taskId: input.task_id?.trim() || undefined,
+		source: (input.source ?? "").trim() || undefined,
+		validationReport: relPath,
+		checks: (input.checks ?? []).map((value) => value.trim()).filter(Boolean),
+	});
 	const inputIssues = (input.issues ?? [])
 		.map((i) => ({ severity: i.severity.trim(), summary: i.summary.trim() }))
 		.filter((i) => i.summary);
@@ -1504,6 +1623,9 @@ export async function writeValidationReport(
 		audit_refs: auditRefs,
 		audit_reports: auditReports,
 		content_proof_refs: contentProofRefs,
+		context_boundary: contextBoundary,
+		checkpoint_commit: checkpointCommit,
+		reload_guidance: reloadGuidance,
 		failed_criteria: unique([
 			...trimList(input.failed_criteria),
 			...(upstreamGaps.length > 0 ? ["upstream_gateway"] : []),
@@ -1655,6 +1777,5 @@ export async function writeValidationReport(
 	};
 	await mkdir(dirname(absPath), { recursive: true });
 	await writeFile(absPath, JSON.stringify(data, null, 2) + "\n", "utf8");
-	const relPath = `.codewiki/validation/${day}-${slug}.json`;
 	return { path: relPath, data };
 }

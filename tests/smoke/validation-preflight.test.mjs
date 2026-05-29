@@ -239,6 +239,8 @@ try {
 		missingMetadata.missing.content_proof.includes("fresh_context=true"),
 	);
 	assert.equal(missingMetadata.risk.tier, "semantic-system");
+	assert.equal(missingMetadata.risk.fresh_context.required, true);
+	assert.equal(missingMetadata.risk.fresh_context.recommended, true);
 	assert.ok(
 		missingMetadata.risk.approval_evidence.some((entry) =>
 			entry.includes(planning.path),
@@ -606,6 +608,80 @@ try {
 	});
 	assert.equal(mechanicalReport.data.verdict, "pass");
 	assert.equal(mechanicalReport.data.preflight.risk.fast_path.eligible, true);
+	assert.equal(
+		mechanicalReport.data.context_boundary.trigger,
+		"post-gateway-pass",
+	);
+	assert.equal(
+		mechanicalReport.data.context_boundary.mode,
+		"codewiki-context-refresh",
+	);
+	assert.ok(
+		mechanicalReport.data.context_boundary.source_refs.includes(
+			mechanicalImplementation.path,
+		),
+	);
+	assert.equal(mechanicalReport.data.checkpoint_commit.recommended, true);
+	assert.equal(mechanicalReport.data.checkpoint_commit.local_only, true);
+	assert.equal(
+		mechanicalReport.data.checkpoint_commit.remote_publication,
+		false,
+	);
+	assert.equal(
+		mechanicalReport.data.checkpoint_commit.separate_close_publication_commit,
+		true,
+	);
+	assert.equal(mechanicalReport.data.reload_guidance.required, false);
+
+	const reloadImplementation = await writeImplementationBuild(project, {
+		kind: "implementation",
+		summary: "Update Pi adapter and skills.",
+		task_id: "TASK-779",
+		change_class: "mechanical",
+		test_design_evidence: [
+			"Reload guidance path classification covers Pi-facing files.",
+		],
+		code_files: [
+			"src/adapters/pi/index.ts",
+			"skills/codewiki-implementation/SKILL.md",
+		],
+		checks_run: ["node tests/smoke/validation-preflight.test.mjs"],
+		acceptance_mapping: [
+			{
+				criterion: "Reload guidance appears for Pi-facing changes",
+				evidence: "Validation report reload_guidance.required is true.",
+			},
+		],
+		closure_brief: {
+			user_intent: "Show reload guidance for live extension paths.",
+			implemented_changes: ["Changed Pi adapter and skill fixtures."],
+			acceptance_evidence: ["Reload guidance report metadata present."],
+			checks: ["node tests/smoke/validation-preflight.test.mjs"],
+		},
+	});
+	const reloadReport = await writeValidationReport(project, {
+		profile: "implementation",
+		task_id: "TASK-779",
+		verdict: "pass",
+		rationale:
+			"Reload guidance should be emitted for Pi-facing source changes.",
+		source: reloadImplementation.path,
+		audit_refs: implementationAuditRefs,
+		isolation: {
+			role: "validator",
+			fresh_context: true,
+			clean: false,
+			working_tree_digest: "sha256:reload",
+		},
+	});
+	assert.equal(reloadReport.data.verdict, "pass");
+	assert.equal(reloadReport.data.reload_guidance.required, true);
+	assert.ok(
+		reloadReport.data.reload_guidance.paths.includes(
+			"src/adapters/pi/index.ts",
+		),
+	);
+	assert.match(reloadReport.data.reload_guidance.message, /\/reload/);
 
 	const publicationPreflight = buildValidationPreflight(project, {
 		profile: "publication",
