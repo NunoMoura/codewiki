@@ -210,8 +210,8 @@ assert.match(
 );
 assert.match(
 	compactionSource,
-	/pi\.sendMessage\(\s*summary\.kickoff,\s*\{[\s\S]*triggerTurn:\s*true,[\s\S]*deliverAs:\s*"followUp"[\s\S]*\}\s*\)/,
-	"same-session auto-pickup should trigger from a custom kickoff follow-up boundary",
+	/pi\.sendMessage\(\s*pickup\.kickoff\s*\|\|\s*summary\.kickoff,\s*\{[\s\S]*triggerTurn:\s*true,[\s\S]*deliverAs:\s*"followUp"[\s\S]*\}\s*\)/,
+	"same-session auto-pickup should trigger from a policy-checked custom kickoff follow-up boundary",
 );
 assert.doesNotMatch(
 	compactionSource,

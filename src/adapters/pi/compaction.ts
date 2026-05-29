@@ -16,6 +16,7 @@ import {
 	effectiveAgencyPolicy,
 	type EffectiveAgencyPolicy,
 } from "../../agency/types.ts";
+import { planAgencyAutoPickup } from "../../agency/auto-pickup.ts";
 
 const DEFAULT_CONTEXT_REFRESH_THRESHOLD_PERCENT = 80;
 const CONTEXT_REFRESH_PREFIX = "CodeWiki context refresh";
@@ -264,18 +265,43 @@ export function installCodewikiCompaction(pi: ExtensionAPI): void {
 						canSendMessage: typeof pi.sendMessage === "function",
 					},
 				);
+				const pickup = planAgencyAutoPickup(resolvedProject.project, {
+					boundary: "soft-compaction",
+					reason: request.reason,
+					resume: {
+						prompt: summary.kickoff.content,
+						taskId: String(summary.details.taskId || "") || null,
+						contextPath: String(summary.details.contextPath || "") || null,
+						sourceRefs: Array.isArray(summary.details.sourceRefs)
+							? summary.details.sourceRefs.map(String)
+							: [],
+						followUpIntent: request.followUpIntent || null,
+					},
+					adapterCanDeliver: autoPickup.allowed,
+					lifecycleSafe: autoPickup.allowed,
+					intentStored: Boolean(
+						summary.details.taskId ||
+							request.followUpIntent ||
+							(Array.isArray(summary.details.sourceRefs) &&
+								summary.details.sourceRefs.length > 0),
+					),
+					prebuiltKickoff: summary.kickoff,
+					visibleToolResults: [
+						"agent_end completed before CodeWiki-owned compaction",
+					],
+				});
 				if (ctx.hasUI)
 					ctx.ui.notify(`${CONTEXT_REFRESH_PREFIX} complete`, "info");
-				if (!autoPickup.allowed) {
+				if (!pickup.allowed) {
 					if (ctx.hasUI)
 						ctx.ui.notify(
-							`${CONTEXT_REFRESH_PREFIX} auto-pickup skipped: ${autoPickup.reason}`,
+							`${CONTEXT_REFRESH_PREFIX} auto-pickup skipped: ${pickup.reason}`,
 							"warning",
 						);
 					return;
 				}
 				try {
-					pi.sendMessage(summary.kickoff, {
+					pi.sendMessage(pickup.kickoff || summary.kickoff, {
 						triggerTurn: true,
 						deliverAs: "followUp",
 					});

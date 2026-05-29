@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T06:36:47Z",
+  "generated_at": "2026-05-29T19:33:57Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-053/context.json",
   "task": {
     "id": "TASK-053",
     "title": "Implement unattended post-boundary agency pickup",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "agent-workflow",
     "change_type": "system",

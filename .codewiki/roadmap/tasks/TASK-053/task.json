@@ -1,7 +1,7 @@
 {
   "id": "TASK-053",
   "title": "Implement unattended post-boundary agency pickup",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "agent-workflow",
   "summary": "Implement a policy-gated runner path that resumes work after CodeWiki compaction or hard session boundaries without user babysitting when /wiki-config permits.",
@@ -11,7 +11,7 @@
     ".codewiki/kb/product/stories/automation.md"
   ],
   "code_paths": [
-    "src/agency/runner.ts",
+    "src/agency/auto-pickup.ts",
     "src/agency/config.ts",
     "src/runtime/runner.ts",
     "src/adapters/pi/compaction.ts",
@@ -54,5 +54,5 @@
     "closure": "Close when unattended pickup works in tests and validation proves policy gates."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29T06:36:47Z"
+  "updated": "2026-05-29T19:33:57Z"
 }

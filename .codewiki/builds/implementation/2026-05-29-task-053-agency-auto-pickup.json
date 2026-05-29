@@ -1,0 +1,690 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-29T19:33:10Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+  "task_id": "TASK-053",
+  "task": {
+    "id": "TASK-053",
+    "title": "Implement unattended post-boundary agency pickup",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "agent-workflow",
+    "summary": "Implement a policy-gated runner path that resumes work after CodeWiki compaction or hard session boundaries without user babysitting when /wiki-config permits.",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/product/stories/automation.md"
+    ],
+    "code_paths": [
+      "src/agency/auto-pickup.ts",
+      "src/agency/config.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/state/resume-kickoff.ts",
+      "tests/smoke/agency-auto-pickup.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Configured agency modes can continue bounded task/sprint/roadmap execution from CodeWiki source refs after safe context boundaries without manual user prompts.",
+      "acceptance": [
+        "Runner consumes codewiki_resume_context packets after safe compaction or new-session boundaries and resumes only when agency policy allows.",
+        "Auto-pickup preserves visible tool results, active task/build refs, budgets, approval cadence, and stop conditions.",
+        "Hard new-session pickup has adapter/orchestrator path or explicit fallback when Pi command context is unavailable.",
+        "Tests cover allowed pickup, blocked pickup, budget exhaustion, approval-required stop, and no mid-loop pickup while intent is unstored."
+      ],
+      "non_goals": [
+        "Do not bypass user-configured agency limits.",
+        "Do not use chat-history or VCC recall as normal memory.",
+        "Do not auto-restart Pi."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted agency auto-pickup tests"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-05T19:33:10.000Z",
+    "purge_after": "2026-06-12T19:33:10.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Implemented TASK-053 policy-gated unattended post-boundary agency pickup.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-053"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/agency/auto-pickup.ts",
+      "src/agency/config.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/state/resume-kickoff.ts",
+      "package.json",
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md"
+    ],
+    "tests": [
+      "tests/smoke/agency-auto-pickup.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/tasks/TASK-015/agency-source-root.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-053"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+    "spec_paths": [
+      ".codewiki/kb/system/agency.md",
+      ".codewiki/kb/system/adapters.md",
+      ".codewiki/kb/product/stories/automation.md"
+    ],
+    "code_paths": [
+      "src/agency/auto-pickup.ts",
+      "src/agency/config.ts",
+      "src/runtime/runner.ts",
+      "src/adapters/pi/compaction.ts",
+      "src/adapters/pi/commands/resume.ts",
+      "src/state/resume-kickoff.ts",
+      "tests/smoke/agency-auto-pickup.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs"
+  ],
+  "code_files": [
+    "src/agency/auto-pickup.ts",
+    "src/agency/config.ts",
+    "src/runtime/runner.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/state/resume-kickoff.ts",
+    "package.json",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/adapters.md"
+  ],
+  "files_changed": [
+    "tests/smoke/agency-auto-pickup.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/codewiki-compaction.test.mjs",
+    "tests/tasks/TASK-015/agency-source-root.test.mjs",
+    "src/agency/auto-pickup.ts",
+    "src/agency/config.ts",
+    "src/runtime/runner.ts",
+    "src/adapters/pi/compaction.ts",
+    "src/state/resume-kickoff.ts",
+    "package.json",
+    ".codewiki/kb/system/agency.md",
+    ".codewiki/kb/system/adapters.md"
+  ],
+  "checks_run": [
+    "lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+    "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+    "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+    "npm run check:architecture: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass (40/40)",
+    "npm run test:pack: pass",
+    "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass",
+    "codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only",
+    "direct source-contract audit: pass"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "roadmap_task_id": "TASK-053",
+      "test_files": [
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "tests/tasks/TASK-015/agency-source-root.test.mjs"
+      ],
+      "evidence": [
+        "Added targeted agency-auto-pickup state-machine smoke before broad test runs.",
+        "Kept TASK-015 guard intact by placing agency pickup policy in src/agency/auto-pickup.ts instead of src/agency/runner.ts; bounded execution runtime remains in src/runtime/runner.ts."
+      ],
+      "notes": [
+        "Full feature suite now passes 40/40.",
+        "Graph alignment warnings dropped to 16 and are non-blocking existing roadmap/doc/build metadata warnings."
+      ],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "roadmap_task_id": "TASK-053",
+      "code_files": [
+        "src/agency/auto-pickup.ts",
+        "src/agency/config.ts",
+        "src/runtime/runner.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/state/resume-kickoff.ts",
+        "package.json",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "evidence": [
+        "Added src/agency/config.ts for effective auto-pickup policy/budget resolution.",
+        "Added src/agency/auto-pickup.ts for policy-gated source-backed pickup decisions and kickoff preservation.",
+        "Integrated auto-pickup planning into runtime context refresh and Pi compaction completion.",
+        "Updated codewiki-compaction smoke to assert policy-checked kickoff send path.",
+        "Documented agency runner approval and adapter fallback semantics in agency/adapters KB docs.",
+        "Added agency-auto-pickup to npm run test:smoke."
+      ],
+      "notes": [
+        "Task source refs listed src/agency/runner.ts, but existing TASK-015 architecture guard explicitly forbids bounded runtime under src/agency/runner.ts. Implementation uses src/agency/auto-pickup.ts and roadmap code_paths were patched with evidence.",
+        "No Pi restart or remote publication performed; /reload required after commit for live extension behavior."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Added targeted agency-auto-pickup state-machine smoke before broad test runs.",
+    "Kept TASK-015 guard intact by placing agency pickup policy in src/agency/auto-pickup.ts instead of src/agency/runner.ts; bounded execution runtime remains in src/runtime/runner.ts."
+  ],
+  "code_change_evidence": [
+    "Added src/agency/config.ts for effective auto-pickup policy/budget resolution.",
+    "Added src/agency/auto-pickup.ts for policy-gated source-backed pickup decisions and kickoff preservation.",
+    "Integrated auto-pickup planning into runtime context refresh and Pi compaction completion.",
+    "Updated codewiki-compaction smoke to assert policy-checked kickoff send path.",
+    "Documented agency runner approval and adapter fallback semantics in agency/adapters KB docs.",
+    "Added agency-auto-pickup to npm run test:smoke."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Runner consumes codewiki_resume_context packets after safe compaction or new-session boundaries and resumes only when agency policy allows.",
+      "evidence": "src/agency/auto-pickup.ts implements planAgencyAutoPickup over a source-backed AgencyResumePacket; src/runtime/runner.ts uses it before requesting runtime context refresh; src/adapters/pi/compaction.ts uses it before same-session auto-pickup sendMessage. tests/smoke/agency-auto-pickup.test.mjs covers allowed and blocked decisions."
+    },
+    {
+      "criterion": "Auto-pickup preserves visible tool results, active task/build refs, budgets, approval cadence, and stop conditions.",
+      "evidence": "AgencyAutoPickupDecision preserves visible_tool_results, active_build_refs, source_refs, context_path, budget, level, approval_cadence, max_resets_per_run, and stop_conditions; agency-auto-pickup smoke asserts visible tool result refs, active build refs, budget, and cadence are preserved."
+    },
+    {
+      "criterion": "Hard new-session pickup has adapter/orchestrator path or explicit fallback when Pi command context is unavailable.",
+      "evidence": "planAgencyAutoPickup returns a manual-visible-instructions fallback for hard-new-session when adapterCanDeliver=false; existing /wiki-resume --new command path remains the hard replacement-session adapter path. Smoke test asserts hard-new-session fallback with source-backed kickoff."
+    },
+    {
+      "criterion": "Tests cover allowed pickup, blocked pickup, budget exhaustion, approval-required stop, and no mid-loop pickup while intent is unstored.",
+      "evidence": "tests/smoke/agency-auto-pickup.test.mjs covers allowed pickup, auto_pickup disabled, session budget exhaustion, task-level approval cadence boundary, unstored intent mid-loop block, and hard new-session fallback."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Proceed with TASK-053 after reload: implement unattended post-boundary agency pickup under policy gates.",
+    "implemented_changes": [
+      "Added agency auto-pickup decision module and config helper.",
+      "Runtime and Pi compaction now run policy-gated source-backed pickup checks before requesting or sending continuation.",
+      "Added tests for allowed/blocked/budget/approval/unstored-intent/hard-session-fallback cases.",
+      "Updated docs and smoke scripts."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "code": [
+        "src/agency/auto-pickup.ts",
+        "src/agency/config.ts",
+        "src/runtime/runner.ts",
+        "src/adapters/pi/compaction.ts"
+      ],
+      "tests": [
+        "tests/smoke/agency-auto-pickup.test.mjs",
+        "tests/smoke/codewiki-compaction.test.mjs",
+        "package.json"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "npm run typecheck: pass",
+      "npm run check:architecture: pass",
+      "npm run test:smoke: pass",
+      "npm run test:features: pass",
+      "npm run test:pack: pass",
+      "TASK-053 audits: task/file-structure/horizontal-alignment/source-contract pass"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run check:architecture",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run test:pack"
+    ],
+    "non_goals_preserved": [],
+    "remaining_risks": [
+      "Auto-pickup remains bounded by adapter lifecycle events and Pi sendMessage capability; unsupported adapters receive fallback decisions instead of continuation.",
+      "No auto-restart of Pi is attempted by design."
+    ]
+  },
+  "risks": [
+    "Auto-pickup remains bounded by adapter lifecycle events and Pi sendMessage capability; unsupported adapters receive fallback decisions instead of continuation.",
+    "No auto-restart of Pi is attempted by design."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-053",
+      "task_id": "TASK-053",
+      "next_focus_task_id": "TASK-054",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-053",
+        "title": "Implement unattended post-boundary agency pickup",
+        "summary": "Implemented TASK-053 policy-gated unattended post-boundary agency pickup.",
+        "spec_paths": [
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/product/stories/automation.md"
+        ],
+        "code_paths": [
+          "src/agency/auto-pickup.ts",
+          "src/agency/config.ts",
+          "src/runtime/runner.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/state/resume-kickoff.ts",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "package.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md"
+        ],
+        "acceptance": [
+          "Runner consumes codewiki_resume_context packets after safe compaction or new-session boundaries and resumes only when agency policy allows.",
+          "Auto-pickup preserves visible tool results, active task/build refs, budgets, approval cadence, and stop conditions.",
+          "Hard new-session pickup has adapter/orchestrator path or explicit fallback when Pi command context is unavailable.",
+          "Tests cover allowed pickup, blocked pickup, budget exhaustion, approval-required stop, and no mid-loop pickup while intent is unstored."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted agency auto-pickup tests"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+        "checks_run": [
+          "lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+          "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+          "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+          "npm run check:architecture: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass (40/40)",
+          "npm run test:pack: pass",
+          "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass",
+          "codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only",
+          "direct source-contract audit: pass"
+        ],
+        "test_design_evidence": [
+          "Added targeted agency-auto-pickup state-machine smoke before broad test runs.",
+          "Kept TASK-015 guard intact by placing agency pickup policy in src/agency/auto-pickup.ts instead of src/agency/runner.ts; bounded execution runtime remains in src/runtime/runner.ts."
+        ],
+        "code_change_evidence": [
+          "Added src/agency/config.ts for effective auto-pickup policy/budget resolution.",
+          "Added src/agency/auto-pickup.ts for policy-gated source-backed pickup decisions and kickoff preservation.",
+          "Integrated auto-pickup planning into runtime context refresh and Pi compaction completion.",
+          "Updated codewiki-compaction smoke to assert policy-checked kickoff send path.",
+          "Documented agency runner approval and adapter fallback semantics in agency/adapters KB docs.",
+          "Added agency-auto-pickup to npm run test:smoke."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-053",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-053",
+      "show_build": "git show refs/codewiki/archive/task/TASK-053:.codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+        ".codewiki/kb/system/agency.md",
+        ".codewiki/kb/system/adapters.md",
+        ".codewiki/kb/product/stories/automation.md",
+        "src/agency/auto-pickup.ts",
+        "src/agency/config.ts",
+        "src/runtime/runner.ts",
+        "src/adapters/pi/compaction.ts",
+        "src/adapters/pi/commands/resume.ts",
+        "src/state/resume-kickoff.ts",
+        "tests/smoke/agency-auto-pickup.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-053 Implement unattended post-boundary agency pickup implementation evidence",
+      "body": "Implemented TASK-053 policy-gated unattended post-boundary agency pickup.\n\nChecks: lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (40/40), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass, codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only, direct source-contract audit: pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-053\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json\nCodeWiki-Checks: lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (40/40), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass, codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only, direct source-contract audit: pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-053\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-053\nCodeWiki-Digest: sha256:60947eeea0e026e20bf75408fce084515e67220a334a936fc04dcf4057b11a1c\nCodeWiki-Restore: /wiki-restore TASK-053",
+      "trailers": [
+        "CodeWiki-Task: TASK-053",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+        "CodeWiki-Checks: lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (40/40), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass, codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only, direct source-contract audit: pass",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-053",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-053",
+        "CodeWiki-Digest: sha256:60947eeea0e026e20bf75408fce084515e67220a334a936fc04dcf4057b11a1c",
+        "CodeWiki-Restore: /wiki-restore TASK-053"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-053 Implement unattended post-boundary agency pickup implementation evidence",
+      "body": "Implemented TASK-053 policy-gated unattended post-boundary agency pickup.\n\nChecks: lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (40/40), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass, codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only, direct source-contract audit: pass\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-053\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json\nCodeWiki-Checks: lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors, npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass, node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass, node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass, npm run check:architecture: pass, npm run test:smoke: pass, npm run test:features: pass (40/40), npm run test:pack: pass, codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass, codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only, direct source-contract audit: pass\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-053\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-053\nCodeWiki-Digest: sha256:60947eeea0e026e20bf75408fce084515e67220a334a936fc04dcf4057b11a1c\nCodeWiki-Restore: /wiki-restore TASK-053"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-053",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-053"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-053",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-053",
+        "show_build": "git show refs/codewiki/archive/task/TASK-053:.codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          ".codewiki/kb/product/stories/automation.md",
+          "src/agency/auto-pickup.ts",
+          "src/agency/config.ts",
+          "src/runtime/runner.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/adapters/pi/commands/resume.ts",
+          "src/state/resume-kickoff.ts",
+          "tests/smoke/agency-auto-pickup.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-053",
+      "build_path": ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-053",
+      "commit_sha": "",
+      "digest": "sha256:60947eeea0e026e20bf75408fce084515e67220a334a936fc04dcf4057b11a1c",
+      "restore_command": "/wiki-restore TASK-053"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:3168f8238d4b76fefc016eecfcc2b945a18e7deffefec3d817803e754ca23b5a",
+          "bytes": 13672
+        },
+        {
+          "path": "tests/smoke/agency-auto-pickup.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:688718d9729825efea60aaaafa9e3bb5f057a7160288d8a2fcb3b0b81be545da",
+          "bytes": 4012
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
+          "bytes": 7821
+        },
+        {
+          "path": "tests/smoke/codewiki-compaction.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:2fdfd066d9a80d72ee6d294e2e2e420260ff22f6ea1eb1fe6c36a106c40dbd4c",
+          "bytes": 15082
+        },
+        {
+          "path": "tests/tasks/TASK-015/agency-source-root.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:a88e931def5f2a47454bda8e2d575053a2b5e12032ca667bc78573d9ec680c30",
+          "bytes": 6163
+        },
+        {
+          "path": "src/agency/auto-pickup.ts",
+          "role": "code_file",
+          "sha256": "sha256:b1095d4bca126c7a8db2a8e362a003d1e918ecc7d47f93dbe7a2e2fcb955abf6",
+          "bytes": 7740
+        },
+        {
+          "path": "src/agency/config.ts",
+          "role": "code_file",
+          "sha256": "sha256:3f72a729fafe15e3b8b747fb33d2fcc9ba460c282ae39416defceeb9c62de021",
+          "bytes": 1139
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "role": "code_file",
+          "sha256": "sha256:c155f6093b120542731994519244cefac8109ab5d5faef70acedb0fdd8547cd4",
+          "bytes": 18426
+        },
+        {
+          "path": "src/adapters/pi/compaction.ts",
+          "role": "code_file",
+          "sha256": "sha256:88470e7c5a787a61dce051fdc952cebb663077865d5cb0a3a6dc4f15ce87d86f",
+          "bytes": 15269
+        },
+        {
+          "path": "src/state/resume-kickoff.ts",
+          "role": "code_file",
+          "sha256": "sha256:3788fcec7d13695688561a943789e165892156ca61dbacfd2ceff226924afd36",
+          "bytes": 1920
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:8694d453620e0b5e252ad17152ec1b4e71bf2bea8ed776173f811836b9c3dbd2",
+          "bytes": 2940
+        },
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "role": "code_file",
+          "sha256": "sha256:e6986cf2e5dd73c4a6b0ad460edd9b902141fdbd96203b477d823440ee8ad9b5",
+          "bytes": 10695
+        },
+        {
+          "path": ".codewiki/kb/system/adapters.md",
+          "role": "code_file",
+          "sha256": "sha256:16e83375bd187b84491efbfc34e39f96877b43c02536327a6f2b28d0225fafd8",
+          "bytes": 8959
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-053",
+      "source_build": ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/agency/auto-pickup.ts",
+          "src/agency/config.ts",
+          "src/runtime/runner.ts",
+          "src/adapters/pi/compaction.ts",
+          "src/state/resume-kickoff.ts",
+          "package.json",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/adapters.md",
+          "tests/smoke/agency-auto-pickup.test.mjs",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/codewiki-compaction.test.mjs",
+          "tests/tasks/TASK-015/agency-source-root.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-053",
+        "restore_command": "/wiki-restore TASK-053"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics changed agency/runtime/compaction/test files: pass/no errors",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/agency-auto-pickup.test.mjs: pass",
+        "node --experimental-strip-types ./tests/tasks/TASK-015/agency-source-root.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs: pass",
+        "node --experimental-strip-types ./tests/smoke/codewiki-compaction.test.mjs: pass",
+        "npm run check:architecture: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass (40/40)",
+        "npm run test:pack: pass",
+        "codewiki_audit task/file-structure/horizontal-alignment/source-contract TASK-053: pass",
+        "codewiki_audit changed/alignment TASK-053: warning only; generated view dirty and graph-health warnings only",
+        "direct source-contract audit: pass"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

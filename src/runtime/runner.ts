@@ -34,6 +34,7 @@ import { buildCodewikiResumeKickoff } from "../state/resume-kickoff.ts";
 import { buildGatewayPreflight } from "../gateway/report.ts";
 import { formatError, nowIso } from "../shared/utils.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";
+import { planAgencyAutoPickup } from "../agency/auto-pickup.ts";
 import type { CodewikiRuntimePorts } from "./ports.ts";
 import type {
 	CodewikiRuntimeBudgetUsage,
@@ -332,43 +333,44 @@ async function maybeRequestContextBoundary(
 		sourceRefs: input.resume.source_refs,
 		policy,
 	});
-	const allowedByPolicy =
-		policy.context_reset.enabled &&
-		policy.context_reset.auto_pickup &&
-		policy.context_reset.max_resets_per_run > 0;
-	if (!allowedByPolicy) {
-		state.efficiency.notes.push(
-			"Context boundary not requested because agency context_reset policy disallows auto-pickup.",
-		);
+	const requestContextRefresh = ports.sessionBoundary?.requestContextRefresh;
+	const pickup = planAgencyAutoPickup(project, {
+		boundary: "runtime-context-refresh",
+		reason: input.reason,
+		resume: {
+			prompt: input.resume.prompt,
+			taskId: input.task.id,
+			contextPath: input.resume.context_path,
+			sourceRefs: input.resume.source_refs,
+			followUpIntent: input.followUpIntent,
+		},
+		budget: { maxSessions: input.sessionBudgetAvailable ? 1 : 0 },
+		adapterCanDeliver: typeof requestContextRefresh === "function",
+		lifecycleSafe: true,
+		intentStored: Boolean(input.resume.task || input.resume.context_path),
+		prebuiltKickoff: kickoff,
+		visibleToolResults: ["runtime result returned before context boundary"],
+	});
+	if (!pickup.allowed) {
+		if (pickup.reason.includes("adapter cannot")) {
+			state.efficiency.user_interruptions_required += 1;
+			state.efficiency.manual_commands_required += 1;
+			state.efficiency.platform_limited_steps.push(
+				"session-boundary request port unavailable; returning source-backed kickoff for adapter/manual continuation",
+			);
+		} else {
+			state.efficiency.notes.push(
+				`Context boundary not requested: ${pickup.reason}.`,
+			);
+		}
 		return {
 			requested: false,
-			reason: "context reset auto-pickup disabled by policy",
+			reason: pickup.reason,
 			kickoff,
+			agency_auto_pickup: pickup,
 		};
 	}
-	if (!input.sessionBudgetAvailable) {
-		state.efficiency.notes.push(
-			"Context boundary not requested because agency session budget is exhausted.",
-		);
-		return {
-			requested: false,
-			reason: "session budget exhausted",
-			kickoff,
-		};
-	}
-	if (typeof ports.sessionBoundary?.requestContextRefresh !== "function") {
-		state.efficiency.user_interruptions_required += 1;
-		state.efficiency.manual_commands_required += 1;
-		state.efficiency.platform_limited_steps.push(
-			"session-boundary request port unavailable; returning source-backed kickoff for adapter/manual continuation",
-		);
-		return {
-			requested: false,
-			reason: "adapter session-boundary capability unavailable",
-			kickoff,
-		};
-	}
-	await ports.sessionBoundary.requestContextRefresh({
+	await requestContextRefresh?.({
 		reason: input.reason,
 		taskId: input.task.id,
 		followUpIntent: input.followUpIntent,
