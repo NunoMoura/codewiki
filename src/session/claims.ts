@@ -15,6 +15,8 @@ import type {
 	ChangeClaimState,
 	ChangeClaimsFile,
 	ChangeClaimMutationInput,
+	ChangeClaimWakeReason,
+	ChangeClaimWakeRecord,
 } from "./types.ts";
 import { nowIso, unique } from "../shared/utils.ts";
 import { withLockedPaths } from "../shared/lock.ts";
@@ -33,8 +35,10 @@ const EMPTY_CLAIMS_FILE: ChangeClaimsFile = {
 	updated_at: "",
 	next_sequence: 1,
 	next_wait_sequence: 1,
+	next_wake_sequence: 1,
 	claims: [],
 	waiters: [],
+	wake_notifications: [],
 };
 
 export function claimsFilePath(project: WikiProject): string {
@@ -42,7 +46,7 @@ export function claimsFilePath(project: WikiProject): string {
 }
 
 function cloneEmptyClaimsFile(): ChangeClaimsFile {
-	return { ...EMPTY_CLAIMS_FILE, claims: [] };
+	return { ...EMPTY_CLAIMS_FILE, claims: [], waiters: [], wake_notifications: [] };
 }
 
 export async function readChangeClaimsFile(project: WikiProject): Promise<ChangeClaimsFile> {
@@ -65,11 +69,17 @@ export function normalizeClaimsFile(value: any): ChangeClaimsFile {
 	file.next_wait_sequence = Number.isFinite(Number(value?.next_wait_sequence))
 		? Math.max(1, Math.floor(Number(value.next_wait_sequence)))
 		: 1;
+	file.next_wake_sequence = Number.isFinite(Number(value?.next_wake_sequence))
+		? Math.max(1, Math.floor(Number(value.next_wake_sequence)))
+		: 1;
 	file.claims = Array.isArray(value?.claims)
 		? value.claims.map(normalizeClaimRecord).filter(Boolean) as ChangeClaimRecord[]
 		: [];
 	file.waiters = Array.isArray(value?.waiters)
 		? value.waiters.map(normalizeClaimWaiterRecord).filter(Boolean) as ChangeClaimWaiterRecord[]
+		: [];
+	file.wake_notifications = Array.isArray(value?.wake_notifications || value?.wakeNotifications)
+		? (value.wake_notifications || value.wakeNotifications).map(normalizeWakeRecord).filter(Boolean) as ChangeClaimWakeRecord[]
 		: [];
 	const maxSequence = file.claims
 		.map((claim) => parseClaimSequence(claim.id))
@@ -79,8 +89,13 @@ export function normalizeClaimsFile(value: any): ChangeClaimsFile {
 		.map((waiter) => parseWaitSequence(waiter.id))
 		.filter((seq): seq is number => seq !== null)
 		.reduce((max, seq) => Math.max(max, seq), 0);
+	const maxWakeSequence = (file.wake_notifications || [])
+		.map((wake) => parseWakeSequence(wake.id))
+		.filter((seq): seq is number => seq !== null)
+		.reduce((max, seq) => Math.max(max, seq), 0);
 	file.next_sequence = Math.max(file.next_sequence, maxSequence + 1);
 	file.next_wait_sequence = Math.max(file.next_wait_sequence || 1, maxWaitSequence + 1);
+	file.next_wake_sequence = Math.max(file.next_wake_sequence || 1, maxWakeSequence + 1);
 	return file;
 }
 
@@ -143,6 +158,50 @@ function normalizeClaimWaiterRecord(value: any): ChangeClaimWaiterRecord | null 
 		expires_at: String(value?.expires_at || nowIso()).trim(),
 		ready_at: optionalTrim(value?.ready_at),
 		cancelled_at: optionalTrim(value?.cancelled_at),
+	};
+}
+
+function normalizeWakeReason(value: unknown): ChangeClaimWakeReason {
+	const reason = String(value || "manual").trim() as ChangeClaimWakeReason;
+	return ["wait", "release", "expiry", "heartbeat", "manual"].includes(reason)
+		? reason
+		: "manual";
+}
+
+function normalizeWakeRecord(value: any): ChangeClaimWakeRecord | null {
+	const id = String(value?.id || "").trim();
+	const waiterId = String(value?.waiter_id || value?.waiterId || "").trim();
+	const sessionId = String(value?.session_id || value?.sessionId || "").trim();
+	if (!id || !waiterId || !sessionId) return null;
+	const status = ["pending", "delivered", "cancelled", "expired"].includes(String(value?.status || ""))
+		? String(value.status) as ChangeClaimWakeRecord["status"]
+		: "pending";
+	const sourceRefs = Array.isArray(value?.source_refs || value?.sourceRefs)
+		? (value.source_refs || value.sourceRefs).map(optionalTrim).filter(Boolean) as string[]
+		: [];
+	const followUpIntent = optionalTrim(value?.resume_context?.follow_up_intent || value?.resumeContext?.followUpIntent || value?.next_action_intent || value?.nextActionIntent)
+		|| "Re-read CodeWiki state and resume from source refs.";
+	return {
+		id,
+		waiter_id: waiterId,
+		session_id: sessionId,
+		agent_name: String(value?.agent_name || value?.agentName || "Agent").trim() || "Agent",
+		status,
+		reason: normalizeWakeReason(value?.reason),
+		task_id: optionalTrim(value?.task_id || value?.taskId),
+		build_ref: optionalTrim(value?.build_ref || value?.buildRef),
+		scopes: normalizeScopes(value?.scopes),
+		source_refs: Array.from(new Set(sourceRefs)),
+		next_action_intent: optionalTrim(value?.next_action_intent || value?.nextActionIntent) || followUpIntent,
+		resume_context: {
+			...(optionalTrim(value?.resume_context?.task_id || value?.resumeContext?.taskId || value?.task_id || value?.taskId) ? { task_id: optionalTrim(value?.resume_context?.task_id || value?.resumeContext?.taskId || value?.task_id || value?.taskId) } : {}),
+			...(optionalTrim(value?.resume_context?.build_ref || value?.resumeContext?.buildRef || value?.build_ref || value?.buildRef) ? { build_ref: optionalTrim(value?.resume_context?.build_ref || value?.resumeContext?.buildRef || value?.build_ref || value?.buildRef) } : {}),
+			source_refs: Array.from(new Set(sourceRefs)),
+			follow_up_intent: followUpIntent,
+		},
+		created_at: String(value?.created_at || value?.createdAt || value?.updated_at || nowIso()).trim(),
+		updated_at: String(value?.updated_at || value?.updatedAt || value?.created_at || nowIso()).trim(),
+		delivered_at: optionalTrim(value?.delivered_at || value?.deliveredAt),
 	};
 }
 
@@ -284,12 +343,21 @@ function parseWaitSequence(id: string): number | null {
 	return match ? Number(match[1]) : null;
 }
 
+function parseWakeSequence(id: string): number | null {
+	const match = /^WAKE-(\d+)$/.exec(String(id || "").trim());
+	return match ? Number(match[1]) : null;
+}
+
 function formatClaimId(sequence: number): string {
 	return `CLAIM-${String(sequence).padStart(3, "0")}`;
 }
 
 function formatWaitId(sequence: number): string {
 	return `WAIT-${String(sequence).padStart(3, "0")}`;
+}
+
+function formatWakeId(sequence: number): string {
+	return `WAKE-${String(sequence).padStart(3, "0")}`;
 }
 
 export function isClaimActive(claim: ChangeClaimRecord, now = new Date()): boolean {
@@ -324,6 +392,39 @@ export function readyWaitersForSession(
 	);
 }
 
+export function pendingWakeNotificationsForSession(
+	file: ChangeClaimsFile,
+	sessionId: string,
+	notifiedWakeIds: Set<string> | string[] = new Set(),
+): ChangeClaimWakeRecord[] {
+	const notified = notifiedWakeIds instanceof Set ? notifiedWakeIds : new Set(notifiedWakeIds);
+	return (file.wake_notifications || [])
+		.filter((wake) => wake.session_id === sessionId && wake.status === "pending" && !notified.has(wake.id))
+		.sort((a, b) => String(a.created_at || "").localeCompare(String(b.created_at || "")) || a.id.localeCompare(b.id));
+}
+
+export async function markWakeNotificationsDelivered(
+	project: WikiProject,
+	wakeIds: string[],
+): Promise<number> {
+	if (wakeIds.length === 0) return 0;
+	const filePath = claimsFilePath(project);
+	let delivered = 0;
+	await withLockedPaths([filePath], async () => {
+		const file = await readChangeClaimsFile(project);
+		const wanted = new Set(wakeIds);
+		for (const wake of file.wake_notifications || []) {
+			if (!wanted.has(wake.id) || wake.status !== "pending") continue;
+			wake.status = "delivered";
+			wake.delivered_at = nowIso();
+			wake.updated_at = nowIso();
+			delivered += 1;
+		}
+		if (delivered > 0) await writeClaimsFile(filePath, file);
+	});
+	return delivered;
+}
+
 export function buildChangeClaimState(file: ChangeClaimsFile, now = new Date()): ChangeClaimState {
 	const claims = activeChangeClaims(file, now).sort((a, b) => {
 		const t = String(b.updated_at || "").localeCompare(String(a.updated_at || ""));
@@ -345,9 +446,11 @@ export function buildChangeClaimState(file: ChangeClaimsFile, now = new Date()):
 		conflict_count: conflicts.filter((conflict) => conflict.kind === "conflict").length,
 		pending_waiter_count: waiters.filter((waiter) => waiter.status === "pending").length,
 		ready_waiter_count: waiters.filter((waiter) => waiter.status === "ready").length,
+		pending_wake_count: (file.wake_notifications || []).filter((wake) => wake.status === "pending").length,
 		claims,
 		conflicts,
 		waiters,
+		wake_notifications: [...(file.wake_notifications || [])].sort((a, b) => String(b.updated_at || "").localeCompare(String(a.updated_at || ""))),
 	};
 	return {
 		...state,
@@ -689,7 +792,7 @@ export async function mutateChangeClaims(
 		const file = await readChangeClaimsFile(project);
 		const now = new Date();
 		const expired = markExpired(file, now);
-		const refreshed = refreshWaiters(file, now);
+		const refreshed = refreshWaiters(file, now, expired > 0 ? "expiry" : "manual");
 		const action = input.action;
 		if (action === "list") {
 			if (expired + refreshed > 0) await writeClaimsFile(filePath, file);
@@ -700,7 +803,7 @@ export async function mutateChangeClaims(
 		if (action === "release") {
 			const released = releaseClaims(file, input.claimId, session.sessionId);
 			const cancelled = cancelWaiters(file, input.claimId, session.sessionId);
-			const nextRefreshed = refreshWaiters(file, now);
+			const nextRefreshed = refreshWaiters(file, now, released > 0 ? "release" : "manual");
 			if (released + cancelled + nextRefreshed > 0) await writeClaimsFile(filePath, file);
 			const state = buildChangeClaimState(file, now);
 			output = mutationOutput(released + cancelled + nextRefreshed > 0, state, `codewiki artifact-status: released ${released} holder(s), cancelled ${cancelled} wait(s), readied ${nextRefreshed} wait(s)`);
@@ -709,7 +812,7 @@ export async function mutateChangeClaims(
 		if (action === "heartbeat") {
 			const extended = heartbeatClaims(file, input.claimId, session.sessionId, ttlMinutes(input.ttl_minutes));
 			const extendedWaiters = heartbeatWaiters(file, input.claimId, session.sessionId, ttlMinutes(input.ttl_minutes));
-			const nextRefreshed = refreshWaiters(file, now);
+			const nextRefreshed = refreshWaiters(file, now, "heartbeat");
 			if (extended + extendedWaiters + nextRefreshed > 0) await writeClaimsFile(filePath, file);
 			const state = buildChangeClaimState(file, now);
 			output = mutationOutput(extended + extendedWaiters + nextRefreshed > 0, state, `codewiki artifact-status: extended ${extended} holder(s), ${extendedWaiters} wait(s)`);
@@ -723,6 +826,7 @@ export async function mutateChangeClaims(
 			const waiter = createWaiter(project, file, input, session, scopes, summary, now);
 			file.waiters = [...(file.waiters || []), waiter];
 			file.next_wait_sequence = (file.next_wait_sequence || 1) + 1;
+			enqueueWakeNotification(file, waiter, "wait");
 			await writeClaimsFile(filePath, file);
 			const state = buildChangeClaimState(file, now);
 			output = mutationOutput(true, state, summarizeClaimAction(action, state, undefined, waiter), undefined, waiter);
@@ -777,6 +881,67 @@ function ttlMinutes(value: unknown): number {
 	return Math.min(MAX_TTL_MINUTES, Math.max(1, Math.floor(minutes)));
 }
 
+function sourceRefsForWaiter(waiter: ChangeClaimWaiterRecord): string[] {
+	const refs: string[] = [];
+	if (waiter.task_id) {
+		refs.push(`.codewiki/roadmap/tasks/${waiter.task_id}/task.json`);
+		refs.push(`.codewiki/roadmap/tasks/${waiter.task_id}/context.json`);
+	}
+	if (waiter.build_ref) refs.push(waiter.build_ref);
+	for (const scope of waiter.scopes) {
+		if (scope.task_id) refs.push(`.codewiki/roadmap/tasks/${scope.task_id}/task.json`);
+		if (scope.ref) refs.push(scope.ref);
+		if (scope.path && scope.path.startsWith(".codewiki/")) refs.push(scope.path);
+	}
+	refs.push(".codewiki/session/queue.json");
+	return unique(refs);
+}
+
+function nextActionIntentForWake(waiter: ChangeClaimWaiterRecord, reason: ChangeClaimWakeReason): string {
+	const task = waiter.task_id ? ` for ${waiter.task_id}` : "";
+	const base = waiter.next_safe_action || "Re-read CodeWiki state and re-mark scopes before writing.";
+	return `Artifact wait ${waiter.id} is ready${task} after ${reason}; run codewiki_resume_context${task ? ` ${waiter.task_id}` : ""}, then ${base}`;
+}
+
+function wakeExists(file: ChangeClaimsFile, waiterId: string): boolean {
+	return (file.wake_notifications || []).some((wake) => wake.waiter_id === waiterId && ["pending", "delivered"].includes(wake.status));
+}
+
+function enqueueWakeNotification(
+	file: ChangeClaimsFile,
+	waiter: ChangeClaimWaiterRecord,
+	reason: ChangeClaimWakeReason,
+): boolean {
+	if (waiter.status !== "ready" || wakeExists(file, waiter.id)) return false;
+	const sourceRefs = sourceRefsForWaiter(waiter);
+	const intent = nextActionIntentForWake(waiter, reason);
+	const wake: ChangeClaimWakeRecord = {
+		id: formatWakeId(file.next_wake_sequence || 1),
+		waiter_id: waiter.id,
+		session_id: waiter.session_id,
+		agent_name: waiter.agent_name,
+		status: "pending",
+		reason,
+		task_id: waiter.task_id,
+		build_ref: waiter.build_ref,
+		scopes: waiter.scopes,
+		source_refs: sourceRefs,
+		next_action_intent: intent,
+		resume_context: {
+			...(waiter.task_id ? { task_id: waiter.task_id } : {}),
+			...(waiter.build_ref ? { build_ref: waiter.build_ref } : {}),
+			source_refs: sourceRefs,
+			follow_up_intent: intent,
+		},
+		created_at: nowIso(),
+		updated_at: nowIso(),
+	};
+	file.wake_notifications = [...(file.wake_notifications || []), wake];
+	file.next_wake_sequence = (file.next_wake_sequence || 1) + 1;
+	file.updated_at = nowIso();
+	return true;
+}
+
 function createWaiter(
 	project: WikiProject,
 	file: ChangeClaimsFile,
@@ -825,6 +990,12 @@ function markExpired(file: ChangeClaimsFile, now: Date): number {
 		if (["pending", "ready"].includes(waiter.status) && !isClaimWaiterActive(waiter, now)) {
 			waiter.status = "expired";
 			waiter.updated_at = nowIso();
+			for (const wake of file.wake_notifications || []) {
+				if (wake.waiter_id === waiter.id && wake.status === "pending") {
+					wake.status = "expired";
+					wake.updated_at = nowIso();
+				}
+			}
 			changed += 1;
 		}
 	}
@@ -832,7 +1003,7 @@ function markExpired(file: ChangeClaimsFile, now: Date): number {
 	return changed;
 }
 
-function refreshWaiters(file: ChangeClaimsFile, now: Date): number {
+function refreshWaiters(file: ChangeClaimsFile, now: Date, wakeReason: ChangeClaimWakeReason = "manual"): number {
 	let changed = 0;
 	const claims = activeChangeClaims(file, now);
 	for (const waiter of file.waiters || []) {
@@ -853,6 +1024,9 @@ function refreshWaiters(file: ChangeClaimsFile, now: Date): number {
 		}
 		if (computed.status === "ready" && !waiter.ready_at) {
 			waiter.ready_at = nowIso();
+			touched = true;
+		}
+		if (computed.status === "ready" && enqueueWakeNotification(file, waiter, wakeReason)) {
 			touched = true;
 		}
 		if (touched) {
@@ -904,6 +1078,12 @@ function cancelWaiters(file: ChangeClaimsFile, waiterId: string | undefined, ses
 		waiter.status = "cancelled";
 		waiter.cancelled_at = nowIso();
 		waiter.updated_at = nowIso();
+		for (const wake of file.wake_notifications || []) {
+			if (wake.waiter_id === waiter.id && wake.status === "pending") {
+				wake.status = "cancelled";
+				wake.updated_at = nowIso();
+			}
+		}
 		count += 1;
 	}
 	if (count > 0) file.updated_at = nowIso();
@@ -930,6 +1110,7 @@ async function writeClaimsFile(filePath: string, file: ChangeClaimsFile): Promis
 	file.updated_at = nowIso();
 	file.claims = file.claims.slice(-200);
 	file.waiters = (file.waiters || []).slice(-200);
+	file.wake_notifications = (file.wake_notifications || []).slice(-200);
 	await mkdir(dirname(filePath), { recursive: true });
 	await writeFile(filePath, JSON.stringify(file, null, 2) + "\n", "utf8");
 }

@@ -15,6 +15,8 @@ export const CHANGE_CLAIM_ROLE_VALUES = ["builder", "validator", "publisher", "o
 export const CHANGE_CLAIM_LAYER_VALUES = ["knowledge", "roadmap", "code", "build", "validation", "graph", "source"] as const;
 export const CHANGE_CLAIM_STATUS_VALUES = ["active", "released", "expired"] as const;
 export const CHANGE_CLAIM_WAITER_STATUS_VALUES = ["pending", "ready", "cancelled", "expired"] as const;
+export const CHANGE_CLAIM_WAKE_STATUS_VALUES = ["pending", "delivered", "cancelled", "expired"] as const;
+export const CHANGE_CLAIM_WAKE_REASON_VALUES = ["wait", "release", "expiry", "heartbeat", "manual"] as const;
 export const ARTIFACT_STATUS_VALUES = ["available", "in-use", "waiting", "conflict", "stale"] as const;
 export const ARTIFACT_STATUS_ACTION_VALUES = ["mark", "wait", "release", "heartbeat", "list"] as const;
 export const WORKFLOW_LOOP_VALUES = ["decision", "planning", "implementation", "validation", "observe"] as const;
@@ -26,6 +28,8 @@ export type ChangeClaimRole = (typeof CHANGE_CLAIM_ROLE_VALUES)[number];
 export type ChangeClaimLayer = (typeof CHANGE_CLAIM_LAYER_VALUES)[number];
 export type ChangeClaimStatus = (typeof CHANGE_CLAIM_STATUS_VALUES)[number];
 export type ChangeClaimWaiterStatus = (typeof CHANGE_CLAIM_WAITER_STATUS_VALUES)[number];
+export type ChangeClaimWakeStatus = (typeof CHANGE_CLAIM_WAKE_STATUS_VALUES)[number];
+export type ChangeClaimWakeReason = (typeof CHANGE_CLAIM_WAKE_REASON_VALUES)[number];
 export type ArtifactStatus = (typeof ARTIFACT_STATUS_VALUES)[number];
 export type ArtifactStatusAction = (typeof ARTIFACT_STATUS_ACTION_VALUES)[number];
 export type WorkflowLoop = (typeof WORKFLOW_LOOP_VALUES)[number];
@@ -161,13 +165,38 @@ export interface ChangeClaimWaiterRecord {
 	cancelled_at?: string;
 }
 
+export interface ChangeClaimWakeRecord {
+	id: string;
+	waiter_id: string;
+	session_id: string;
+	agent_name: string;
+	status: ChangeClaimWakeStatus;
+	reason: ChangeClaimWakeReason;
+	task_id?: string;
+	build_ref?: string;
+	scopes: ChangeClaimScope[];
+	source_refs: string[];
+	next_action_intent: string;
+	resume_context: {
+		task_id?: string;
+		build_ref?: string;
+		source_refs: string[];
+		follow_up_intent: string;
+	};
+	created_at: string;
+	updated_at: string;
+	delivered_at?: string;
+}
+
 export interface ChangeClaimsFile {
 	version: number;
 	updated_at: string;
 	next_sequence: number;
 	next_wait_sequence?: number;
+	next_wake_sequence?: number;
 	claims: ChangeClaimRecord[];
 	waiters?: ChangeClaimWaiterRecord[];
+	wake_notifications?: ChangeClaimWakeRecord[];
 }
 
 export interface ChangeClaimConflict {
@@ -212,9 +241,11 @@ export interface ChangeClaimState {
 	conflict_count: number;
 	pending_waiter_count: number;
 	ready_waiter_count: number;
+	pending_wake_count: number;
 	claims: ChangeClaimRecord[];
 	conflicts: ChangeClaimConflict[];
 	waiters: ChangeClaimWaiterRecord[];
+	wake_notifications: ChangeClaimWakeRecord[];
 	artifact_statuses?: ArtifactStatusRecord[];
 }
 

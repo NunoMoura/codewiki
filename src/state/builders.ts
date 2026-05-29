@@ -1435,8 +1435,10 @@ export function buildStatusState(
 	parallel.claim_conflict_count = claimState.conflict_count;
 	parallel.claim_pending_wait_count = claimState.pending_waiter_count;
 	parallel.claim_ready_wait_count = claimState.ready_waiter_count;
+	parallel.claim_pending_wake_count = claimState.pending_wake_count;
 	parallel.claims = claimState.claims.slice(0, 12);
 	parallel.claim_waiters = claimState.waiters.slice(0, 12);
+	parallel.claim_wake_notifications = claimState.wake_notifications.slice(0, 12);
 	parallel.claim_conflicts = claimState.conflicts.slice(0, 12);
 	parallel.artifact_statuses = (claimState.artifact_statuses || []).slice(
 		0,

@@ -1,7 +1,7 @@
 {
   "id": "TASK-054",
   "title": "Implement durable artifact wait/wake heartbeat queue",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "agent-workflow",
   "summary": "Harden artifact-status waiters, heartbeats, expiry, and release wakeups so sessions coordinate through CodeWiki instead of chat.",
@@ -53,5 +53,5 @@
     "closure": "Close when durable wake queue behavior is implemented, tested, and validation passes."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29"
+  "updated": "2026-05-29T20:07:23Z"
 }

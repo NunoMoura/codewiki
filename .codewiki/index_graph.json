@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T19:37:05.264Z",
+  "generated_at": "2026-05-29T20:07:23.471Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -4900,7 +4900,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -4943,7 +4943,7 @@
       "kind": "code_path",
       "path": "package.json",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5009,7 +5009,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5262,7 +5262,7 @@
       "kind": "code_path",
       "path": "src/state/graph.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5661,7 +5661,7 @@
       "kind": "code_path",
       "path": "tests/smoke/claim-wait-queue.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5998,7 +5998,7 @@
       "kind": "code_path",
       "path": "src/session/claims.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6644,7 +6644,7 @@
       "kind": "code_path",
       "path": "src/adapters",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6660,7 +6660,7 @@
       "kind": "code_path",
       "path": "src/state/builders.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6806,7 +6806,7 @@
       "kind": "code_path",
       "path": "src/session/types.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7096,7 +7096,7 @@
       "kind": "roadmap_task",
       "title": "Implement durable artifact wait/wake heartbeat queue",
       "layer": "roadmap",
-      "status": "todo",
+      "status": "in_progress",
       "change_type": "system",
       "alignment_state": "drift",
       "lens_family": "work"
@@ -7106,7 +7106,7 @@
       "kind": "code_path",
       "path": "src/adapters/pi/artifact-wake.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -32683,6 +32683,222 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-054",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+          ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+          "codewiki_build tool",
+          "src/session/types.ts",
+          "src/session/claims.ts",
+          "src/session/artifact-status-tool.ts",
+          "src/adapters/pi/artifact-wake.ts",
+          "src/state/graph.ts",
+          "src/state/builders.ts",
+          "src/state/graph/lenses.ts",
+          "package.json",
+          ".codewiki/kb/system/worktree-isolation.md",
+          ".codewiki/kb/system/agency.md",
+          ".codewiki/kb/system/roadmap.md",
+          "tests/smoke/artifact-wake-queue.test.mjs",
+          "tests/smoke/claim-wait-queue.test.mjs",
+          "TASK-054"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json@sha256:3168f8238d4b76fefc016eecfcc2b945a18e7deffefec3d817803e754ca23b5a",
+          "tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
+          "tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
+          "src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
+          "src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
+          "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
+          "src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
+          "src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
+          "src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
+          "src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
+          "package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
+          ".codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
+          ".codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
+          ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
+          "refs/codewiki/archive/task/TASK-054",
+          "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
+      "kind": "content_proof",
+      "path": "tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
+      "kind": "content_proof",
+      "path": "tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
+      "kind": "content_proof",
+      "path": "src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
+      "kind": "content_proof",
+      "path": "src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
+      "kind": "content_proof",
+      "path": "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
+      "kind": "content_proof",
+      "path": "src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
+      "kind": "content_proof",
+      "path": "src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
+      "kind": "content_proof",
+      "path": "src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
+      "kind": "content_proof",
+      "path": "src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
+      "kind": "content_proof",
+      "path": "package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-054",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-054",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
+      "kind": "content_proof",
+      "path": "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-054",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-054",
+      "task_id": "TASK-054",
+      "digest": "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
+      "restore_command": "/wiki-restore TASK-054",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
@@ -33219,6 +33435,136 @@
       "default_hidden": true,
       "layer": "archive",
       "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-231",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-231",
+      "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+      "agent_name": "Bison",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+      "expires_at": "2026-05-29T22:53:36.708Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+        "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+        "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-054"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/worktree-isolation.md"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/agency.md"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/roadmap.md"
+        },
+        {
+          "layer": "code",
+          "path": "src/session/claims.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/session/artifact-status-tool.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/session/types.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/adapters/pi/artifact-wake.ts"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/artifact-wake-queue.test.mjs"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        },
+        {
+          "layer": "validation",
+          "path": ".codewiki/validation/**"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-054",
+      "kind": "change_claim_scope",
+      "path": "TASK-054",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/worktree-isolation.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/worktree-isolation.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/agency.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/agency.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/roadmap.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/roadmap.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/session/claims.ts",
+      "kind": "change_claim_scope",
+      "path": "src/session/claims.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/session/artifact-status-tool.ts",
+      "kind": "change_claim_scope",
+      "path": "src/session/artifact-status-tool.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/session/types.ts",
+      "kind": "change_claim_scope",
+      "path": "src/session/types.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/adapters/pi/artifact-wake.ts",
+      "kind": "change_claim_scope",
+      "path": "src/adapters/pi/artifact-wake.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/artifact-wake-queue.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/artifact-wake-queue.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/validation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/validation/**",
+      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -43876,6 +44222,49 @@
       "id": "content_proof:sha256:8b07c00248edec4e8c62ea8a8817ed3d88001c1536eba3f98523c72990fe425f",
       "kind": "content_proof",
       "path": "sha256:8b07c00248edec4e8c62ea8a8817ed3d88001c1536eba3f98523c72990fe425f",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh validation used CodeWiki refs and reran deterministic checks from source. Dirty pre-commit implementation proof only; no publication performed.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:file-structure",
+          "audit:horizontal-alignment",
+          "audit:source-contract",
+          "audit:task"
+        ],
+        "content_proof_refs": [
+          "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "content_proof:sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
+      "kind": "content_proof",
+      "path": "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
       "proof_kind": "digest",
       "layer": "content_proof",
       "default_hidden": true,
@@ -101126,6 +101515,227 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:.codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/session/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/session/claims.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/session/artifact-status-tool.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/adapters/pi/artifact-wake.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/state/graph.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/state/builders.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:src/state/graph/lenses.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:package.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:.codewiki/kb/system/worktree-isolation.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:.codewiki/kb/system/agency.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:.codewiki/kb/system/roadmap.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:tests/smoke/artifact-wake-queue.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:tests/smoke/claim-wait-queue.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "source:TASK-054",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json@sha256:3168f8238d4b76fefc016eecfcc2b945a18e7deffefec3d817803e754ca23b5a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:.codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:.codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:.codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-054",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "content_proof:sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "task:TASK-054"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-054",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
       "to": "source:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
       "default_hidden": true
@@ -101680,6 +102290,66 @@
       "from": "build:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-058",
       "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-231",
+      "to": "task:TASK-054"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:TASK-054"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:.codewiki/kb/system/worktree-isolation.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:.codewiki/kb/system/agency.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:.codewiki/kb/system/roadmap.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:src/session/claims.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:src/session/artifact-status-tool.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:src/session/types.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:src/adapters/pi/artifact-wake.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:tests/smoke/artifact-wake-queue.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-231",
+      "to": "claim_scope:.codewiki/validation/**"
     },
     {
       "kind": "validation_attests_source",
@@ -113269,6 +113939,59 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:horizontal-alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:source-contract",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "content_proof:sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+      "to": "task:TASK-054"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-29-implementation-pass-task-058-2026-05-29-task-058.json",
       "to": "source:.codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
       "default_hidden": true
@@ -114128,7 +114851,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 23,
+            "item_count": 35,
             "badges": [
               {
                 "id": "open_tasks",
@@ -114162,7 +114885,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -114183,7 +114906,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 445,
             "badges": [
               {
@@ -114199,12 +114922,21 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 74
+                "count": 75
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 8,
+                "refs": [
+                  "package.json",
+                  "src/adapters/pi/artifact-wake.ts",
+                  "src/session/claims.ts",
+                  "src/session/types.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts"
+                ],
+                "ref_count": 8
               }
             ],
             "hot_refs": [
@@ -114231,7 +114963,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 161
+                "count": 162
               },
               {
                 "id": "fail_or_block_validation",
@@ -114246,7 +114978,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1273
+                "count": 1289
               },
               {
                 "id": "traceability_gaps",
@@ -114265,19 +114997,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 120,
+            "total": 121,
             "decision": 16,
             "planning": 30,
-            "implementation": 74,
+            "implementation": 75,
             "hot": 0,
-            "collapsed": 120
+            "collapsed": 121
           },
           "validations": {
-            "total": 161,
-            "pass": 134,
+            "total": 162,
+            "pass": 135,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 161
+            "collapsed": 162
           }
         },
         "next_action": {
@@ -114298,7 +115030,286 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/kb/system/agency.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+              ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+              ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/kb/system/roadmap.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+              ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/kb/system/worktree-isolation.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "package.json",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/adapters/pi/artifact-wake.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/session/claims.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/session/types.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/state/builders.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/state/graph.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/state/graph/lenses.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/claim-wait-queue.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -114392,6 +115403,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+          ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
           ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
           ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
@@ -118570,6 +119582,33 @@
             ]
           },
           {
+            "path": ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-054"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              "codewiki_build tool",
+              "src/session/types.ts",
+              "src/session/claims.ts",
+              "src/session/artifact-status-tool.ts",
+              "src/adapters/pi/artifact-wake.ts",
+              "src/state/graph.ts",
+              "src/state/builders.ts",
+              "src/state/graph/lenses.ts",
+              "package.json",
+              ".codewiki/kb/system/worktree-isolation.md",
+              ".codewiki/kb/system/agency.md",
+              ".codewiki/kb/system/roadmap.md",
+              "tests/smoke/artifact-wake-queue.test.mjs",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "TASK-054"
+            ]
+          },
+          {
             "path": ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
             "kind": "implementation_build",
             "status": "accepted",
@@ -122314,6 +123353,27 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-054",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:file-structure",
+              "audit:horizontal-alignment",
+              "audit:source-contract",
+              "audit:task"
+            ],
+            "content_proof_refs": [
+              "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-29-implementation-pass-task-058-2026-05-29-task-058.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -124952,6 +126012,20 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+            "task_id": "TASK-054",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-29-implementation-pass-task-058-2026-05-29-task-058.json",
             "task_id": "TASK-058",
             "verdict": "pass",
@@ -125782,6 +126856,7 @@
           ".codewiki/kb/system/agency.md@sha256:71d38083e37f5eafd2bbb16aefd26360e801e311b0e157c397e6fb6a622548b4",
           ".codewiki/kb/system/agency.md@sha256:cfd3833be5a0d9be5d270c2376db52c8067b1c8e28fee47df5ec3278f5f6cd16",
           ".codewiki/kb/system/agency.md@sha256:e6986cf2e5dd73c4a6b0ad460edd9b902141fdbd96203b477d823440ee8ad9b5",
+          ".codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
           ".codewiki/kb/system/alignment-model.md@sha256:57676b9d07b6b48ce41802d4b0f89f6400a9fa0585b75f7d42d79907c907ade5",
           ".codewiki/kb/system/api-vnext-tools.md@sha256:140ed87849331971718f70f88e6aa9001a57faa0b5bc31a24301a2e8ee4d8f67",
           ".codewiki/kb/system/api.md@sha256:055dc47da773b4a1163eb69aa51b88d7638e2446e19757847c46e5f749cc6f9d",
@@ -125846,6 +126921,7 @@
           ".codewiki/kb/system/overview.md@sha256:6fbe39e9ae86ce97b55205c849bb563563aa29d05dc9d111e6b96e3c1965712e",
           ".codewiki/kb/system/overview.md@sha256:bdd97bc58ab4a106b26a6d1bca9fd64d8a08f533c9bc06b746a1a3da317e86e2",
           ".codewiki/kb/system/overview.md@sha256:db71acff4e350df9959784507a2113e09cfe145d4fca587817e45d864d710617",
+          ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
           ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
           ".codewiki/kb/system/validation-gateway.md@sha256:26df5f8efa9404d2927ff04e0479bf413b22cc0886fd2d163ff479f97d974608",
           ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
@@ -125857,6 +126933,7 @@
           ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
           ".codewiki/kb/system/worktree-isolation.md@sha256:40ad0551c5c63369fdb0dbee291ee2f28226c64332d571881553fd62627b1bd9",
           ".codewiki/kb/system/worktree-isolation.md@sha256:aebdb494504a00b4eb5bc81c73ca67effc55b6269f42783488f457c4949e688d",
+          ".codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
           ".codewiki/roadmap/queue.json@sha256:52228b0b51415fa5be836e66634c47f2da4cea62194ccb3b9ae18857c02a98dd",
           ".codewiki/roadmap/queue.json@sha256:55c0d3ed555fa59f892b4773c170292524fa71369e3ff3cd57f10f7dca1aaa65",
           ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
@@ -126054,6 +127131,7 @@
           "package.json@sha256:0211ec773ec3a3a3a6b0668dcab2d6c2108394892e8f3067153734606645f764",
           "package.json@sha256:1e92a4027523caae32a505639650bcac2a37599c543089d72ba4e1875f8d904a",
           "package.json@sha256:2086b08bd0c86d06536db4d62807d86a78ee99ef13fb1bf47a5da0951433cfa0",
+          "package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
           "package.json@sha256:37179f74ffc71bf5b86643ee652dc72886a4c46ed5db4b189d8fb27d3574e612",
           "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
           "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
@@ -126112,6 +127190,7 @@
           "refs/codewiki/archive/task/TASK-051",
           "refs/codewiki/archive/task/TASK-052",
           "refs/codewiki/archive/task/TASK-053",
+          "refs/codewiki/archive/task/TASK-054",
           "refs/codewiki/archive/task/TASK-058",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -126189,6 +127268,7 @@
           "sha256:937c2f7481d0a43c808675ef1975f88d9727a06e8ee20dd6ac072628131a1e62",
           "sha256:96533a80c6b7669194e506442151eabac0e92d288f6139fea50166fac9db5c39",
           "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+          "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
           "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
           "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
           "sha256:a31b784da8a8ff9a8535ef8be768d3acc7ac3e8c4d334e95f64eaee569b02518",
@@ -126209,6 +127289,7 @@
           "sha256:c58e06761d922af4f42cb9bb1bdf3d79b48b23f0265070fcd302514653f09f02",
           "sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de",
           "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+          "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
           "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
           "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
           "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
@@ -126289,6 +127370,7 @@
           "skills/codewiki/references/tool-catalog.md@sha256:ede945d677e2c5cfd0d6cad96f1bc067cb73d6ec2e9dcda9dd693b688be9ea48",
           "src/adapters/pi/artifact-wake.ts@sha256:3f8b95bc45fb65e6985a4cd8c05ff97bd0a3d6b15ecce8d710022b58f2201a3b",
           "src/adapters/pi/artifact-wake.ts@sha256:42ec1ca1ab1e7ba4d233ddc409694a3540e0f8ab3a8d9178c2969c657812c1ed",
+          "src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
           "src/adapters/pi/artifact-wake.ts@sha256:88c5d7a70aa74a3e090a20dc56d8a502c3687e46c5f7c0813288b570495513b0",
           "src/adapters/pi/artifact-wake.ts@sha256:9f34dacfd5692f9d78ef8aada21ecea1f739fd92383ae2a8fa0090f049ab8db0",
           "src/adapters/pi/bootstrap.ts@sha256:8b9a93570a34fcd1e04895733e6cb8cf5781346c9aa9feefdfa6aea243388f5b",
@@ -126722,13 +127804,16 @@
           "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
           "src/runtime/runner.ts@sha256:c155f6093b120542731994519244cefac8109ab5d5faef70acedb0fdd8547cd4",
           "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
+          "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
           "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
           "src/session/claims.ts@sha256:3b6a050c7cdbabedee5139217bca04ab272b91544151d47d0eb4f7238cee32a4",
           "src/session/claims.ts@sha256:c8eb4c0cb7652c86d2e0dc5ea52a6c0c22b99301171b984c658147b916d17037",
+          "src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
           "src/session/links.ts@sha256:8ea18d36d59a8cc0781f2fbf79191f4838b030fe37a9068793d6c9665a59da50",
           "src/session/runtime.ts@sha256:4d8e1229de429357e80b36d0cc6a491f2bc1e9f8df1751fcb3c4c9c4546d434f",
           "src/session/runtime.ts@sha256:a549c416d2f5eacd6042f838ffdedc1fd6fd5de52adb7236329371d14a344a31",
           "src/session/tool.ts@sha256:469c6be7f52bf668c2495072daaad33f0ad80a946468c8bbb1b58e9ab900d678",
+          "src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
           "src/session/types.ts@sha256:e253b9e9f260e38115acbde7e4e5243ede258ddc5e59ac8297bbda6c36b7b716",
           "src/session/worktree-isolation.ts@sha256:424df49687a320d860294cc5d0ecd5d872677d22f4184f8ba67474da53bd7542",
           "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
@@ -126738,6 +127823,7 @@
           "src/shared/utils.ts@sha256:b8a5243d476b430f26af8b05c84802c732cca8a38605e6b6a6d9a13125ea625b",
           "src/state/artifacts.ts@sha256:e1c876d44fa63146019552a1d203c73eace04873c613eb9743aff24a6a033f63",
           "src/state/artifacts.ts@sha256:e24d34f8583090fb89db6753a2852be11a85c8ee7129d08e1041a1e4a74a5884",
+          "src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
           "src/state/builders.ts@sha256:4a1f14a6bc60d3c5cb4f9cd8dd0fc25e7d6039239289940c6e48b411b53289d7",
           "src/state/builders.ts@sha256:77f84d9ee538f752f13a822f2d0e7127ee049c338d7908a31e5b2a9c18731805",
           "src/state/builders.ts@sha256:7b73a38378a7024f17988c7cc2a972aff3a25bacaa295d1925c9f570283e686e",
@@ -126746,11 +127832,13 @@
           "src/state/builders.ts@sha256:ef1454887906002ab360ff289d4c7dfbe999b441a3cce8cd79c93ea935549048",
           "src/state/builders.ts@sha256:f484d95ae86e0c339902c0af0d18775e85d88edae637f8d3cfdd894a1faaea83",
           "src/state/graph.ts@sha256:37dcfe3bac6b2a2a93127157b4f8982eb8a2c205431aa123090d0f4f6495315a",
+          "src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
           "src/state/graph.ts@sha256:d87a936a21ab67c0528ffb59b9a5db6c0b5a6be45ad03eaca15290940c95f7b9",
           "src/state/graph.ts@sha256:ee2a940fa862ebb2fbac863808359c74d4fcbeb193c04173f67ef257b285f690",
           "src/state/graph.ts@sha256:f855c63402b0b4b79510e8bb13081f567de0e0980c56bc21075a29aba5b47eae",
           "src/state/graph/artifact-refs.ts@sha256:3eccf2c6836779383fa01e3ddb104594ed72a2cccbd582a258a6102faf5d8d99",
           "src/state/graph/collector.ts@sha256:108bb827104367fb587f59c854435516990efee3f4d2ba90fc8ac09cae1c86f7",
+          "src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
           "src/state/graph/lenses.ts@sha256:75cd4ece52ca29102def7f899917c073886343b69746c2297b1cf740b83519fe",
           "src/state/graph/lenses.ts@sha256:e127a10cd58cb8789b3329147379c180abc8403c2cdc4b3f1a679294945a5c61",
           "src/state/graph/rebuilder.ts@sha256:477a291de3a793562457a01a6d5fa407e4a8f9492244cccdd96fc05c286734e4",
@@ -126827,6 +127915,7 @@
           "tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
           "tests/smoke/alignment-graph.test.mjs@sha256:93e8472bf480dda9c36282a951089d195344a8842a49ae38dfbd6ad02925c77a",
           "tests/smoke/alignment-graph.test.mjs@sha256:d1b98a1449cc02f46e0febccbb40b6f20f8c58e80d3f4c5654e72a679ad5fccf",
+          "tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
           "tests/smoke/audit-drift.test.mjs@sha256:0847ffbd7bda6a2c704a393d8585abf2800b51b59777e0f76607efc4e3b0846a",
           "tests/smoke/audit-drift.test.mjs@sha256:1e1c55efd197a8eeeb2ce54c930b7cae8a6664d3bbcb7c1df4dcf1773f1161b4",
           "tests/smoke/audit-drift.test.mjs@sha256:c13e9064383b6e4e30bdc5e70d80b027edde781365fe245c10ff8d2bab230ec6",
@@ -126842,6 +127931,7 @@
           "tests/smoke/builds.test.mjs@sha256:9a2e31b1bb45f915bd43b91f163c74c79704429116f428a4cde3f292d9706b55",
           "tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:20e4851f4b8fd1c5d65bc92a0bf6726b97a7a0cce0dfc07ac7385f5f16317fdb",
+          "tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:54f6b29672e45de13959ced945633c21a3d7a54abcca4790a1a28e5b819a5248",
           "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
@@ -127007,19 +128097,6 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24"
         ],
         "reconciliation_items": [
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
           {
             "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
             "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -127460,9 +128537,10 @@
         "TASK-057",
         "TASK-059"
       ],
-      "in_progress_task_ids": [],
+      "in_progress_task_ids": [
+        "TASK-054"
+      ],
       "todo_task_ids": [
-        "TASK-054",
         "TASK-055",
         "TASK-056",
         "TASK-057",
@@ -127477,7 +128555,8 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "todo": 5
+        "in_progress": 1,
+        "todo": 4
       },
       "sprint_ids": [
         "SPRINT-001",
@@ -128476,28 +129555,709 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "package.json",
+        "src/adapters/pi/artifact-wake.ts",
+        "src/session/claims.ts",
+        "src/session/types.ts",
+        "src/state/builders.ts",
+        "src/state/graph.ts",
+        "src/state/graph/lenses.ts",
+        "tests/smoke/claim-wait-queue.test.mjs"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-231",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-054",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+          "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-231",
+          "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+          "agent_name": "Bison",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+          "task_id": "TASK-054",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+            "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+            "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-054"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/worktree-isolation.md"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/agency.md"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/roadmap.md"
+            },
+            {
+              "layer": "code",
+              "path": "src/session/claims.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/session/artifact-status-tool.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/session/types.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/adapters/pi/artifact-wake.ts"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/artifact-wake-queue.test.mjs"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            }
+          ],
+          "created_at": "2026-05-29T19:53:36Z",
+          "updated_at": "2026-05-29T19:53:36Z",
+          "expires_at": "2026-05-29T22:53:36.708Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/agency.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/roadmap.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/worktree-isolation.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/artifact-wake.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/artifact-status-tool.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/claims.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-054"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/artifact-wake-queue.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/agency.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/roadmap.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/worktree-isolation.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "validation",
+            "path": ".codewiki/validation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/adapters/pi/artifact-wake.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/artifact-status-tool.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/claims.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/session/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-054"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/artifact-wake-queue.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-231",
+              "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-054",
+              "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+              "expires_at": "2026-05-29T22:53:36.708Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -130845,6 +132605,20 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+          "task_id": "TASK-054",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-29-implementation-pass-task-058-2026-05-29-task-058.json",
           "task_id": "TASK-058",
           "verdict": "pass",
@@ -131178,6 +132952,7 @@
         ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
         ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
         ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+        ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
         ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
         ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
         ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
@@ -132398,6 +134173,7 @@
         ".codewiki/kb/system/agency.md@sha256:71d38083e37f5eafd2bbb16aefd26360e801e311b0e157c397e6fb6a622548b4",
         ".codewiki/kb/system/agency.md@sha256:cfd3833be5a0d9be5d270c2376db52c8067b1c8e28fee47df5ec3278f5f6cd16",
         ".codewiki/kb/system/agency.md@sha256:e6986cf2e5dd73c4a6b0ad460edd9b902141fdbd96203b477d823440ee8ad9b5",
+        ".codewiki/kb/system/agency.md@sha256:ec04b24f1bbceba4d9623767ec7f4d6309da208a70b90d8425256487d57412aa",
         ".codewiki/kb/system/alignment-model.md@sha256:57676b9d07b6b48ce41802d4b0f89f6400a9fa0585b75f7d42d79907c907ade5",
         ".codewiki/kb/system/api-vnext-tools.md@sha256:140ed87849331971718f70f88e6aa9001a57faa0b5bc31a24301a2e8ee4d8f67",
         ".codewiki/kb/system/api.md@sha256:055dc47da773b4a1163eb69aa51b88d7638e2446e19757847c46e5f749cc6f9d",
@@ -132462,6 +134238,7 @@
         ".codewiki/kb/system/overview.md@sha256:6fbe39e9ae86ce97b55205c849bb563563aa29d05dc9d111e6b96e3c1965712e",
         ".codewiki/kb/system/overview.md@sha256:bdd97bc58ab4a106b26a6d1bca9fd64d8a08f533c9bc06b746a1a3da317e86e2",
         ".codewiki/kb/system/overview.md@sha256:db71acff4e350df9959784507a2113e09cfe145d4fca587817e45d864d710617",
+        ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
         ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
         ".codewiki/kb/system/validation-gateway.md@sha256:26df5f8efa9404d2927ff04e0479bf413b22cc0886fd2d163ff479f97d974608",
         ".codewiki/kb/system/validation-gateway.md@sha256:37586a45f37e98681d7d52e456f1ea89258205683a0317338d206e3d3908375b",
@@ -132473,6 +134250,7 @@
         ".codewiki/kb/system/validation-gateway.md@sha256:f46ec1d0a615a7c87ebfbebe8083e95bbdf249befbdaf137a7e4a759a514fb6c",
         ".codewiki/kb/system/worktree-isolation.md@sha256:40ad0551c5c63369fdb0dbee291ee2f28226c64332d571881553fd62627b1bd9",
         ".codewiki/kb/system/worktree-isolation.md@sha256:aebdb494504a00b4eb5bc81c73ca67effc55b6269f42783488f457c4949e688d",
+        ".codewiki/kb/system/worktree-isolation.md@sha256:b1b14e4bbb5361e4273b3682ad140af3550260ab6eefc890cc9460881339a290",
         ".codewiki/roadmap/queue.json@sha256:52228b0b51415fa5be836e66634c47f2da4cea62194ccb3b9ae18857c02a98dd",
         ".codewiki/roadmap/queue.json@sha256:55c0d3ed555fa59f892b4773c170292524fa71369e3ff3cd57f10f7dca1aaa65",
         ".codewiki/roadmap/queue.json@sha256:75a947b135c2357fd6c4999a66ee935d7eccff585d86f2c469a22efe48040b67",
@@ -132670,6 +134448,7 @@
         "package.json@sha256:0211ec773ec3a3a3a6b0668dcab2d6c2108394892e8f3067153734606645f764",
         "package.json@sha256:1e92a4027523caae32a505639650bcac2a37599c543089d72ba4e1875f8d904a",
         "package.json@sha256:2086b08bd0c86d06536db4d62807d86a78ee99ef13fb1bf47a5da0951433cfa0",
+        "package.json@sha256:2f85bc328b02607cfc162e5fd4c1b85fba22454d343a2cc8bdf5b6b2c9d16e50",
         "package.json@sha256:37179f74ffc71bf5b86643ee652dc72886a4c46ed5db4b189d8fb27d3574e612",
         "package.json@sha256:4040044bddc8c78e2b92ad53c38da60dcb2bfa25d952db4d28800aebd277f062",
         "package.json@sha256:642378893a274b96e3166faf325db27633293f1d7deeff4c9c170ee4ff91a540",
@@ -132728,6 +134507,7 @@
         "refs/codewiki/archive/task/TASK-051",
         "refs/codewiki/archive/task/TASK-052",
         "refs/codewiki/archive/task/TASK-053",
+        "refs/codewiki/archive/task/TASK-054",
         "refs/codewiki/archive/task/TASK-058",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
@@ -132805,6 +134585,7 @@
         "sha256:937c2f7481d0a43c808675ef1975f88d9727a06e8ee20dd6ac072628131a1e62",
         "sha256:96533a80c6b7669194e506442151eabac0e92d288f6139fea50166fac9db5c39",
         "sha256:9b1dbc9d650fece758872a3a3fc516e6c12097124b7634633edb6a39d6ec47b2",
+        "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380",
         "sha256:9ebae8d6d7aa277489eb6ba8706d665b1a81f5431996aa35070cfffa3558c1d4",
         "sha256:a0132972bf93bb533f133ae791c9c0977743b9a16db1cca78639dfeb95cb2d75",
         "sha256:a31b784da8a8ff9a8535ef8be768d3acc7ac3e8c4d334e95f64eaee569b02518",
@@ -132825,6 +134606,7 @@
         "sha256:c58e06761d922af4f42cb9bb1bdf3d79b48b23f0265070fcd302514653f09f02",
         "sha256:c7035005b80b53dc162084a16afba4da801cb202675c693caf4cf6e7b92970de",
         "sha256:c7942bc4509b6440db9c24a2febf6699aacc0129a54f4c100334368d629017b6",
+        "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
         "sha256:d1eb58839a6f2bbc59bf5adf7acd1f2a41c6343f13c9485115fe5def78b380a2",
         "sha256:d1f59d01933fafa5b51bf327932309577537f12711bc3fe1560e54a70b7e2fc4",
         "sha256:d362fc6f0e83866b49524c6975f1e8d3c2443793188908aa14bd1ed4fe6e2b40",
@@ -132905,6 +134687,7 @@
         "skills/codewiki/references/tool-catalog.md@sha256:ede945d677e2c5cfd0d6cad96f1bc067cb73d6ec2e9dcda9dd693b688be9ea48",
         "src/adapters/pi/artifact-wake.ts@sha256:3f8b95bc45fb65e6985a4cd8c05ff97bd0a3d6b15ecce8d710022b58f2201a3b",
         "src/adapters/pi/artifact-wake.ts@sha256:42ec1ca1ab1e7ba4d233ddc409694a3540e0f8ab3a8d9178c2969c657812c1ed",
+        "src/adapters/pi/artifact-wake.ts@sha256:681ba61c7cf38c3a80a622c9a529e77412a08416009555138ba2177722af676a",
         "src/adapters/pi/artifact-wake.ts@sha256:88c5d7a70aa74a3e090a20dc56d8a502c3687e46c5f7c0813288b570495513b0",
         "src/adapters/pi/artifact-wake.ts@sha256:9f34dacfd5692f9d78ef8aada21ecea1f739fd92383ae2a8fa0090f049ab8db0",
         "src/adapters/pi/bootstrap.ts@sha256:8b9a93570a34fcd1e04895733e6cb8cf5781346c9aa9feefdfa6aea243388f5b",
@@ -133338,13 +135121,16 @@
         "src/runtime/runner.ts@sha256:b03e5b348de4a928151ac52f7ab2f6c50e9d34f5b697ddddad802ed297822505",
         "src/runtime/runner.ts@sha256:c155f6093b120542731994519244cefac8109ab5d5faef70acedb0fdd8547cd4",
         "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
+        "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
         "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
         "src/session/claims.ts@sha256:3b6a050c7cdbabedee5139217bca04ab272b91544151d47d0eb4f7238cee32a4",
         "src/session/claims.ts@sha256:c8eb4c0cb7652c86d2e0dc5ea52a6c0c22b99301171b984c658147b916d17037",
+        "src/session/claims.ts@sha256:cfe53e811d21202367e7095060585ba783c64a771b18473c8ce572bc441beb0f",
         "src/session/links.ts@sha256:8ea18d36d59a8cc0781f2fbf79191f4838b030fe37a9068793d6c9665a59da50",
         "src/session/runtime.ts@sha256:4d8e1229de429357e80b36d0cc6a491f2bc1e9f8df1751fcb3c4c9c4546d434f",
         "src/session/runtime.ts@sha256:a549c416d2f5eacd6042f838ffdedc1fd6fd5de52adb7236329371d14a344a31",
         "src/session/tool.ts@sha256:469c6be7f52bf668c2495072daaad33f0ad80a946468c8bbb1b58e9ab900d678",
+        "src/session/types.ts@sha256:69d6313f64e6b105677247aeceeea3c8ce7d58091209b95a1f7f73fb2164cb6e",
         "src/session/types.ts@sha256:e253b9e9f260e38115acbde7e4e5243ede258ddc5e59ac8297bbda6c36b7b716",
         "src/session/worktree-isolation.ts@sha256:424df49687a320d860294cc5d0ecd5d872677d22f4184f8ba67474da53bd7542",
         "src/session/worktree-isolation.ts@sha256:cf1d2a4017f7142c4139ed9ed54c599a0d8a6136e9bef19dbb3ffce75d0c35bb",
@@ -133354,6 +135140,7 @@
         "src/shared/utils.ts@sha256:b8a5243d476b430f26af8b05c84802c732cca8a38605e6b6a6d9a13125ea625b",
         "src/state/artifacts.ts@sha256:e1c876d44fa63146019552a1d203c73eace04873c613eb9743aff24a6a033f63",
         "src/state/artifacts.ts@sha256:e24d34f8583090fb89db6753a2852be11a85c8ee7129d08e1041a1e4a74a5884",
+        "src/state/builders.ts@sha256:098e0242e882ab26bc2dfc6af75f7ff8c17fe769d049f616e2a14872527da34a",
         "src/state/builders.ts@sha256:4a1f14a6bc60d3c5cb4f9cd8dd0fc25e7d6039239289940c6e48b411b53289d7",
         "src/state/builders.ts@sha256:77f84d9ee538f752f13a822f2d0e7127ee049c338d7908a31e5b2a9c18731805",
         "src/state/builders.ts@sha256:7b73a38378a7024f17988c7cc2a972aff3a25bacaa295d1925c9f570283e686e",
@@ -133362,11 +135149,13 @@
         "src/state/builders.ts@sha256:ef1454887906002ab360ff289d4c7dfbe999b441a3cce8cd79c93ea935549048",
         "src/state/builders.ts@sha256:f484d95ae86e0c339902c0af0d18775e85d88edae637f8d3cfdd894a1faaea83",
         "src/state/graph.ts@sha256:37dcfe3bac6b2a2a93127157b4f8982eb8a2c205431aa123090d0f4f6495315a",
+        "src/state/graph.ts@sha256:c5f67b2ca6479f76607cdde781cd2c2c6b40e7f23f54d9da2c85be7d939b7a50",
         "src/state/graph.ts@sha256:d87a936a21ab67c0528ffb59b9a5db6c0b5a6be45ad03eaca15290940c95f7b9",
         "src/state/graph.ts@sha256:ee2a940fa862ebb2fbac863808359c74d4fcbeb193c04173f67ef257b285f690",
         "src/state/graph.ts@sha256:f855c63402b0b4b79510e8bb13081f567de0e0980c56bc21075a29aba5b47eae",
         "src/state/graph/artifact-refs.ts@sha256:3eccf2c6836779383fa01e3ddb104594ed72a2cccbd582a258a6102faf5d8d99",
         "src/state/graph/collector.ts@sha256:108bb827104367fb587f59c854435516990efee3f4d2ba90fc8ac09cae1c86f7",
+        "src/state/graph/lenses.ts@sha256:5cb003a0fcc025377203be373c38c50921276e7dcdba56b1aa5f07d74328aa2c",
         "src/state/graph/lenses.ts@sha256:75cd4ece52ca29102def7f899917c073886343b69746c2297b1cf740b83519fe",
         "src/state/graph/lenses.ts@sha256:e127a10cd58cb8789b3329147379c180abc8403c2cdc4b3f1a679294945a5c61",
         "src/state/graph/rebuilder.ts@sha256:477a291de3a793562457a01a6d5fa407e4a8f9492244cccdd96fc05c286734e4",
@@ -133443,6 +135232,7 @@
         "tests/smoke/alignment-graph.test.mjs@sha256:1b77184382aaabe7a7772421fedabcdb39d2e974627a1ade19f3e01647af3bd3",
         "tests/smoke/alignment-graph.test.mjs@sha256:93e8472bf480dda9c36282a951089d195344a8842a49ae38dfbd6ad02925c77a",
         "tests/smoke/alignment-graph.test.mjs@sha256:d1b98a1449cc02f46e0febccbb40b6f20f8c58e80d3f4c5654e72a679ad5fccf",
+        "tests/smoke/artifact-wake-queue.test.mjs@sha256:b1ff13f9997170be9b592910f081c93aba641b15915ff73ea489aabba1477de1",
         "tests/smoke/audit-drift.test.mjs@sha256:0847ffbd7bda6a2c704a393d8585abf2800b51b59777e0f76607efc4e3b0846a",
         "tests/smoke/audit-drift.test.mjs@sha256:1e1c55efd197a8eeeb2ce54c930b7cae8a6664d3bbcb7c1df4dcf1773f1161b4",
         "tests/smoke/audit-drift.test.mjs@sha256:c13e9064383b6e4e30bdc5e70d80b027edde781365fe245c10ff8d2bab230ec6",
@@ -133458,6 +135248,7 @@
         "tests/smoke/builds.test.mjs@sha256:9a2e31b1bb45f915bd43b91f163c74c79704429116f428a4cde3f292d9706b55",
         "tests/smoke/builds.test.mjs@sha256:cfcbd5f02f799e08f6049043f3805784967f09bf16580c679ab5ddd24fd7e9cd",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:20e4851f4b8fd1c5d65bc92a0bf6726b97a7a0cce0dfc07ac7385f5f16317fdb",
+        "tests/smoke/claim-wait-queue.test.mjs@sha256:3b0880e392dc5eb5c6971e65b2e349f438a286a8619b69c7ca3955ff978b70a1",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:51fc6e0594a01e0af962b21977b0a4d0f8889fe9d00e4d444662ac8e4b191dd6",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:54f6b29672e45de13959ced945633c21a3d7a54abcca4790a1a28e5b819a5248",
         "tests/smoke/claim-wait-queue.test.mjs@sha256:acf1c5f72483e3c5ab443a5c5b3fb4a885995ff4c2a9ae8982a89701ca18acc8",
@@ -137306,6 +139097,27 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-29-implementation-pass-task-054-2026-05-29-task-054.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-054",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:file-structure",
+            "audit:horizontal-alignment",
+            "audit:source-contract",
+            "audit:task"
+          ],
+          "content_proof_refs": [
+            "sha256:9e65a6bc4df561543933e95b361f64a919d35a535d5845f843b217e72706c380"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-29-implementation-pass-task-058-2026-05-29-task-058.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -139555,7 +141367,286 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/agency.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+            ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/roadmap.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
+            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/kb/system/worktree-isolation.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-28-pipeline-agency-parallel-quality-hardening.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "package.json",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/adapters/pi/artifact-wake.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/session/claims.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/session/types.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/state/builders.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/state/graph.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/state/graph/lenses.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/claim-wait-queue.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -140570,7 +142661,9 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-231"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -140694,6 +142787,7 @@
             ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
             ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
             ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
             ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
           ],
           "validation_paths": [
@@ -140829,6 +142923,7 @@
             ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
             ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
             ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
             ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
           ]
         },
@@ -141579,6 +143674,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-054",
+          "build_path": ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-054",
+          "commit_sha": "",
+          "digest": "sha256:ca66a34ae0dccc9323add18ed7135203eb341396be78cc679d2979685765d8d3",
+          "restore_command": "/wiki-restore TASK-054",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-058",
           "build_path": ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-058",
@@ -141589,7 +143694,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 74,
+        "ledger_count": 75,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -141664,6 +143769,7 @@
           "refs/codewiki/archive/task/TASK-051",
           "refs/codewiki/archive/task/TASK-052",
           "refs/codewiki/archive/task/TASK-053",
+          "refs/codewiki/archive/task/TASK-054",
           "refs/codewiki/archive/task/TASK-058"
         ],
         "build_paths": [
@@ -141740,6 +143846,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+          ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
         ],
         "blocked_purge_build_paths": [
@@ -141816,6 +143923,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
           ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+          ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
         ],
         "gate": "validated + artifact digests + archive ledger + publication safety pass"
@@ -141826,19 +143934,6 @@
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
       "items": [
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
         {
           "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
           "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
@@ -142078,7 +144173,7 @@
         }
       ],
       "counts_by_loop": {
-        "decision": 15,
+        "decision": 14,
         "implementation": 5
       },
       "next_action": {
@@ -142114,10 +144209,10 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-29T19:37:05.127Z",
+      "generated_at": "2026-05-29T20:07:23.288Z",
       "counts": {
         "large-doc": 1,
-        "roadmap-missing-code-path": 13,
+        "roadmap-missing-code-path": 12,
         "build-v2-missing-produces": 2
       },
       "issues": [
@@ -142132,12 +144227,6 @@
           "kind": "roadmap-missing-code-path",
           "path": ".codewiki/roadmap/queue.json",
           "message": "TASK-036 references missing code path: tests/smoke/validation-preflight.test.mjs"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-054 references missing code path: tests/smoke/artifact-wake-queue.test.mjs"
         },
         {
           "severity": "warning",
@@ -142221,12 +144310,12 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-29T19:37:05Z",
+      "generated_at": "2026-05-29T20:07:23Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 16,
-        "total_issues": 16
+        "warnings": 15,
+        "total_issues": 15
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -142238,7 +144327,8 @@
         "active_sprint_count": 3,
         "status_counts": {
           "cancelled": 3,
-          "todo": 5
+          "in_progress": 1,
+          "todo": 4
         },
         "priority_counts": {
           "medium": 1,
@@ -142871,17 +144961,19 @@
             }
           }
         ],
-        "in_progress_task_ids": [],
-        "executable_in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-054"
+        ],
+        "executable_in_progress_task_ids": [
+          "TASK-054"
+        ],
         "todo_task_ids": [
-          "TASK-054",
           "TASK-055",
           "TASK-056",
           "TASK-057",
           "TASK-059"
         ],
         "executable_todo_task_ids": [
-          "TASK-054",
           "TASK-055",
           "TASK-056",
           "TASK-057",
@@ -142895,11 +144987,11 @@
           "TASK-036"
         ],
         "recent_task_ids": [
+          "TASK-054",
           "TASK-059",
           "TASK-057",
           "TASK-056",
           "TASK-055",
-          "TASK-054",
           "TASK-036",
           "TASK-023",
           "TASK-012"
@@ -143439,7 +145531,7 @@
         "TASK-054": {
           "id": "TASK-054",
           "title": "Implement durable artifact wait/wake heartbeat queue",
-          "status": "todo",
+          "status": "in_progress",
           "priority": "high",
           "kind": "agent-workflow",
           "change_type": "system",
@@ -143484,7 +145576,7 @@
             "src/adapters/pi/artifact-wake.ts",
             "tests/smoke/artifact-wake-queue.test.mjs"
           ],
-          "updated": "2026-05-29",
+          "updated": "2026-05-29T20:07:23Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -143726,7 +145818,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-29T19:37:05Z",
+      "generated_at": "2026-05-29T20:07:23Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -143735,8 +145827,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 16,
-        "total_issues": 16
+        "warnings": 15,
+        "total_issues": 15
       },
       "summary": {
         "total_specs": 21,
@@ -143884,7 +145976,9 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-231"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -144008,6 +146102,7 @@
               ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
               ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
               ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
               ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
             ],
             "validation_paths": [
@@ -144143,6 +146238,7 @@
               ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
               ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
               ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
               ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json"
             ]
           },
@@ -144161,7 +146257,7 @@
       },
       "direction": [
         "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -144292,11 +146388,11 @@
           ],
           "primary_task": {
             "id": "TASK-054",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Implement durable artifact wait/wake heartbeat queue"
           },
           "revision": {
-            "digest": "19eb561c248144daa38bbe29f0c2ebb0cd1cc11162b0bf297438fd5e16d2cf37",
+            "digest": "7ca07878abf57b182d2c8d45fb44075fd23079d90cb16c31a6ac3efd7b70235d",
             "basis": "source_content"
           },
           "note": "tracked by TASK-054"
@@ -144700,11 +146796,11 @@
           ],
           "primary_task": {
             "id": "TASK-054",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Implement durable artifact wait/wake heartbeat queue"
           },
           "revision": {
-            "digest": "35d5f2ea0641843fa3a8ebed6cd7b8c9c4dbba7fbb3b60465c4352b6835aca90",
+            "digest": "1246e23e5b2b62349aa4447540e63353fe1d2d34462dee163f7aaf7a3302ceda",
             "basis": "source_content"
           },
           "note": "tracked by TASK-054"
@@ -144865,11 +146961,11 @@
           ],
           "primary_task": {
             "id": "TASK-054",
-            "status": "todo",
+            "status": "in_progress",
             "title": "Implement durable artifact wait/wake heartbeat queue"
           },
           "revision": {
-            "digest": "b8aad3f058e5d4e8c3f673f92a9eaaa8f00bdfd3e31137620602d9397d050658",
+            "digest": "ca368660e9d3c790c4a5e2057d8bfa732a531c5aabab274b47283842c4574014",
             "basis": "source_content"
           },
           "note": "tracked by TASK-054"
@@ -147153,7 +149249,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-29T19:37:05Z",
+        "generated_at": "2026-05-29T20:07:23Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -147208,12 +149304,25 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T19:37:05Z",
+            "checked_at": "2026-05-29T20:07:23Z",
             "revision": {
               "git": {
-                "head": "f9c1fda76bcb0ffdd6d83cb28ce303ba7b3bd5c4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12603bd8c96a2de909e13aaa12026dea58777f8d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/roadmap.md",
+                  ".codewiki/kb/system/worktree-isolation.md",
+                  ".codewiki/roadmap/queue.json",
+                  "package.json",
+                  "src/adapters/pi/artifact-wake.ts",
+                  "src/session/claims.ts",
+                  "src/session/types.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts",
+                  "src/state/graph/lenses.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -147403,6 +149512,7 @@
                   "tests/smoke": "",
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "a5c89b8e04fcf9efa0d29aab98e8206203200112",
                   "tests/smoke/alignment-graph.test.mjs": "806666b8a50fd7b95f1048a106f2c25ac29f04ec",
+                  "tests/smoke/artifact-wake-queue.test.mjs": "",
                   "tests/smoke/audit-drift.test.mjs": "ed7c852b8733d16a4f6f731932353796af5a57c1",
                   "tests/smoke/audit.test.mjs": "5c313b206cf6573266fafd794ee14924e0b2fd49",
                   "tests/smoke/builds.test.mjs": "7711699dd63dc3d8a0784d57412d1caff16a36a0",
@@ -147435,17 +149545,17 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "01ffb8f5beacfe1b64597085085d50cc7f3ab08c1b3a580a1b6a094d864cff01",
-              "task_digest": "f56c09ac5728e7d708002254641352d98718773718b50202c163b9986f32a8f4",
-              "code_digest": "15987c4c80b3020e2b27212fb678a8536e2089889eaf1a7d800ea79c8c90ca0e",
-              "digest": "a696f58be3bc1bfebf2d7ebe68482775c1999f6941f4d9be76d9f9b4da1535d9"
+              "spec_digest": "db6d9b815cfbd135cd62668d84d46167ff71a15ce8d4b0f0e19b59c7c602b48e",
+              "task_digest": "73e12ee643c2073dc28b56ba0b70d40f6b9084955674a042fdcc394a72177315",
+              "code_digest": "e7e18c746def5ab40a68663056498ca5550bde25168d66637eba083ba8b73ef1",
+              "digest": "cad15af048db955105c4f7c18c8f238a7646d994111240197a20b665e91eb320"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T19:37:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T20:07:23Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -147893,12 +150003,24 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-29T19:37:05Z",
+            "checked_at": "2026-05-29T20:07:23Z",
             "revision": {
               "git": {
-                "head": "f9c1fda76bcb0ffdd6d83cb28ce303ba7b3bd5c4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12603bd8c96a2de909e13aaa12026dea58777f8d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/roadmap.md",
+                  ".codewiki/kb/system/worktree-isolation.md",
+                  ".codewiki/roadmap/queue.json",
+                  "package.json",
+                  "src/adapters/pi/artifact-wake.ts",
+                  "src/session/claims.ts",
+                  "src/session/types.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -148065,6 +150187,7 @@
                   "tests/smoke": "",
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "a5c89b8e04fcf9efa0d29aab98e8206203200112",
                   "tests/smoke/alignment-graph.test.mjs": "806666b8a50fd7b95f1048a106f2c25ac29f04ec",
+                  "tests/smoke/artifact-wake-queue.test.mjs": "",
                   "tests/smoke/audit-drift.test.mjs": "ed7c852b8733d16a4f6f731932353796af5a57c1",
                   "tests/smoke/audit.test.mjs": "5c313b206cf6573266fafd794ee14924e0b2fd49",
                   "tests/smoke/builds.test.mjs": "7711699dd63dc3d8a0784d57412d1caff16a36a0",
@@ -148097,17 +150220,17 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "d013b1028058abd03472130b8bfb25599d019beff89df9036de6ffe42c009cad",
-              "task_digest": "f56c09ac5728e7d708002254641352d98718773718b50202c163b9986f32a8f4",
-              "code_digest": "ba12ddf3f3ebd258fb276bd31d852b3e0c05ce4b15eedb450a7bc7eb241878e3",
-              "digest": "8b43e90b4da56b4e6644144bd1a809f92603a28fe5585eedf2e3b74ea3654931"
+              "spec_digest": "28f58f41ff58e114466b9c0e146f2530a50c13f57c909e5d4810c5118bb98eb2",
+              "task_digest": "73e12ee643c2073dc28b56ba0b70d40f6b9084955674a042fdcc394a72177315",
+              "code_digest": "1c74d07722c6007ad7f49a36a41df4dd613d8295751015fef4d22fe461f83cef",
+              "digest": "e3b453a465a9bcf2c0b9cd10d9022646499d9bf1f974bbe34aeac0be90cfdae0"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T19:37:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T20:07:23Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/agency.md",
@@ -148532,12 +150655,25 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-29T19:37:05Z",
+            "checked_at": "2026-05-29T20:07:23Z",
             "revision": {
               "git": {
-                "head": "f9c1fda76bcb0ffdd6d83cb28ce303ba7b3bd5c4",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "12603bd8c96a2de909e13aaa12026dea58777f8d",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/agency.md",
+                  ".codewiki/kb/system/roadmap.md",
+                  ".codewiki/kb/system/worktree-isolation.md",
+                  ".codewiki/roadmap/queue.json",
+                  "package.json",
+                  "src/adapters/pi/artifact-wake.ts",
+                  "src/session/claims.ts",
+                  "src/session/types.ts",
+                  "src/state/builders.ts",
+                  "src/state/graph.ts",
+                  "src/state/graph/lenses.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -148727,6 +150863,7 @@
                   "tests/smoke": "",
                   "tests/smoke/alignment-drift-fixtures.test.mjs": "a5c89b8e04fcf9efa0d29aab98e8206203200112",
                   "tests/smoke/alignment-graph.test.mjs": "806666b8a50fd7b95f1048a106f2c25ac29f04ec",
+                  "tests/smoke/artifact-wake-queue.test.mjs": "",
                   "tests/smoke/audit-drift.test.mjs": "ed7c852b8733d16a4f6f731932353796af5a57c1",
                   "tests/smoke/audit.test.mjs": "5c313b206cf6573266fafd794ee14924e0b2fd49",
                   "tests/smoke/builds.test.mjs": "7711699dd63dc3d8a0784d57412d1caff16a36a0",
@@ -148759,17 +150896,17 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "01ffb8f5beacfe1b64597085085d50cc7f3ab08c1b3a580a1b6a094d864cff01",
-              "task_digest": "f56c09ac5728e7d708002254641352d98718773718b50202c163b9986f32a8f4",
-              "code_digest": "15987c4c80b3020e2b27212fb678a8536e2089889eaf1a7d800ea79c8c90ca0e",
-              "digest": "a696f58be3bc1bfebf2d7ebe68482775c1999f6941f4d9be76d9f9b4da1535d9"
+              "spec_digest": "db6d9b815cfbd135cd62668d84d46167ff71a15ce8d4b0f0e19b59c7c602b48e",
+              "task_digest": "73e12ee643c2073dc28b56ba0b70d40f6b9084955674a042fdcc394a72177315",
+              "code_digest": "e7e18c746def5ab40a68663056498ca5550bde25168d66637eba083ba8b73ef1",
+              "digest": "cad15af048db955105c4f7c18c8f238a7646d994111240197a20b665e91eb320"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-29T19:37:05Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-29T20:07:23Z",
+              "reason": "revision changed: task, code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -149211,28 +151348,391 @@
         "lane_id": "",
         "heading": "TASK-054 — Implement durable artifact wait/wake heartbeat queue",
         "command": "/wiki-resume TASK-054",
-        "reason": "Resume roadmap task (todo).",
-        "status": "todo",
+        "reason": "Resume roadmap task (in_progress).",
+        "status": "in_progress",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-29T19:37:05Z",
+        "generated_at": "2026-05-29T20:07:23Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-231",
+            "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+            "agent_name": "Bison",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+            "task_id": "TASK-054",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+              "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-054"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/worktree-isolation.md"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/agency.md"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/roadmap.md"
+              },
+              {
+                "layer": "code",
+                "path": "src/session/claims.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/session/artifact-status-tool.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/session/types.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/adapters/pi/artifact-wake.ts"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/artifact-wake-queue.test.mjs"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              },
+              {
+                "layer": "validation",
+                "path": ".codewiki/validation/**"
+              }
+            ],
+            "created_at": "2026-05-29T19:53:36Z",
+            "updated_at": "2026-05-29T19:53:36Z",
+            "expires_at": "2026-05-29T22:53:36.708Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/agency.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/roadmap.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/worktree-isolation.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "validation",
+              "path": ".codewiki/validation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/adapters/pi/artifact-wake.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/session/artifact-status-tool.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/session/claims.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/session/types.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-054"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/artifact-wake-queue.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-231",
+                "session_id": "019e71a1-1211-7233-8f3f-3517b0f28a95",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-054",
+                "summary": "Implement TASK-054 artifact wait/wake heartbeat queue.",
+                "expires_at": "2026-05-29T22:53:36.708Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "branch": "codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95",
+                  "notes": "factory=role-worktree; task=TASK-054; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-231 release or validated publisher/patch ref for codewiki/TASK-054/builder/019e71a1-1211-7233-8f3f-3517b0f28a95; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -149333,11 +151833,11 @@
             ],
             "primary_task": {
               "id": "TASK-054",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Implement durable artifact wait/wake heartbeat queue"
             },
             "revision": {
-              "digest": "19eb561c248144daa38bbe29f0c2ebb0cd1cc11162b0bf297438fd5e16d2cf37",
+              "digest": "7ca07878abf57b182d2c8d45fb44075fd23079d90cb16c31a6ac3efd7b70235d",
               "basis": "source_content"
             },
             "note": "tracked by TASK-054"
@@ -149741,11 +152241,11 @@
             ],
             "primary_task": {
               "id": "TASK-054",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Implement durable artifact wait/wake heartbeat queue"
             },
             "revision": {
-              "digest": "35d5f2ea0641843fa3a8ebed6cd7b8c9c4dbba7fbb3b60465c4352b6835aca90",
+              "digest": "1246e23e5b2b62349aa4447540e63353fe1d2d34462dee163f7aaf7a3302ceda",
               "basis": "source_content"
             },
             "note": "tracked by TASK-054"
@@ -149906,11 +152406,11 @@
             ],
             "primary_task": {
               "id": "TASK-054",
-              "status": "todo",
+              "status": "in_progress",
               "title": "Implement durable artifact wait/wake heartbeat queue"
             },
             "revision": {
-              "digest": "b8aad3f058e5d4e8c3f673f92a9eaaa8f00bdfd3e31137620602d9397d050658",
+              "digest": "ca368660e9d3c790c4a5e2057d8bfa732a531c5aabab274b47283842c4574014",
               "basis": "source_content"
             },
             "note": "tracked by TASK-054"
@@ -152805,11 +155305,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-054",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Implement durable artifact wait/wake heartbeat queue"
                 },
                 "revision": {
-                  "digest": "19eb561c248144daa38bbe29f0c2ebb0cd1cc11162b0bf297438fd5e16d2cf37",
+                  "digest": "7ca07878abf57b182d2c8d45fb44075fd23079d90cb16c31a6ac3efd7b70235d",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-054"
@@ -153213,11 +155713,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-054",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Implement durable artifact wait/wake heartbeat queue"
                 },
                 "revision": {
-                  "digest": "35d5f2ea0641843fa3a8ebed6cd7b8c9c4dbba7fbb3b60465c4352b6835aca90",
+                  "digest": "1246e23e5b2b62349aa4447540e63353fe1d2d34462dee163f7aaf7a3302ceda",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-054"
@@ -153378,11 +155878,11 @@
                 ],
                 "primary_task": {
                   "id": "TASK-054",
-                  "status": "todo",
+                  "status": "in_progress",
                   "title": "Implement durable artifact wait/wake heartbeat queue"
                 },
                 "revision": {
-                  "digest": "b8aad3f058e5d4e8c3f673f92a9eaaa8f00bdfd3e31137620602d9397d050658",
+                  "digest": "ca368660e9d3c790c4a5e2057d8bfa732a531c5aabab274b47283842c4574014",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-054"
@@ -155165,9 +157665,11 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "",
+        "focused_task_id": "TASK-054",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [],
+        "in_progress_task_ids": [
+          "TASK-054"
+        ],
         "next_task_id": "TASK-054",
         "sprint_ids": [
           "SPRINT-001",
@@ -155774,7 +158276,6 @@
             "id": "todo",
             "label": "Todo",
             "task_ids": [
-              "TASK-054",
               "TASK-055",
               "TASK-056",
               "TASK-057",
@@ -155784,7 +158285,9 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": []
+            "task_ids": [
+              "TASK-054"
+            ]
           },
           {
             "id": "done",

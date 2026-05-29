@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29",
+  "generated_at": "2026-05-29T20:07:23Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-054/context.json",
   "task": {
     "id": "TASK-054",
     "title": "Implement durable artifact wait/wake heartbeat queue",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "agent-workflow",
     "change_type": "system",

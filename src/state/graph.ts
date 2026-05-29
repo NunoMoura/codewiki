@@ -2010,6 +2010,30 @@ export function buildGraph(inputs: GraphBuildInputs): GraphFile {
 			addEdge("claim_scope", claimId, scopeId);
 		}
 	}
+	for (const wake of claimState.wake_notifications || []) {
+		const wakeId = `claim_wake:${wake.id}`;
+		addNode(wakeId, {
+			kind: "change_claim_wake",
+			wake_id: wake.id,
+			waiter_id: wake.waiter_id,
+			session_id: wake.session_id,
+			agent_name: wake.agent_name,
+			status: wake.status,
+			reason: wake.reason,
+			next_action_intent: wake.next_action_intent,
+			source_refs: wake.source_refs,
+			resume_context: wake.resume_context,
+			scopes: wake.scopes,
+		});
+		addEdge("claim_wake_waiter", wakeId, `claim_wait:${wake.waiter_id}`);
+		if (wake.task_id) addEdge("claim_wake_task", wakeId, `task:${wake.task_id}`);
+		if (wake.build_ref) addEdge("claim_wake_build", wakeId, `build:${wake.build_ref}`);
+		for (const label of claimScopeLabels(wake.scopes)) {
+			const scopeId = `claim_scope:${label}`;
+			addNode(scopeId, { kind: "change_claim_scope", path: label });
+			addEdge("claim_wake_scope", wakeId, scopeId);
+		}
+	}
 	for (const waiter of claimState.waiters) {
 		const waiterId = `claim_wait:${waiter.id}`;
 		addNode(waiterId, {

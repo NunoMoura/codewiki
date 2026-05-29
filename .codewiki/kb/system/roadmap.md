@@ -50,7 +50,7 @@ A roadmap item records id, title, priority, status, owner or role when needed, l
 
 It should not duplicate full decision, planning, or implementation briefs. Refinement should be additive and concise while preserving task id and closure criteria.
 
-Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Worktrees isolate filesystem state; validation isolates judgment.
+Roadmap ownership is durable work ownership. Runtime coordination belongs to the session queue: sessions lease affected paths, task state, build refs, validation refs, state refs, or code paths with TTL/heartbeat semantics. Waiters and wake notifications also live in the session queue, so release or expiry can wake blocked sessions with source refs and next-action intent. Worktrees isolate filesystem state; validation isolates judgment.
 
 Parallel write work should be planned as role-isolated execution. A task may assign builder, validator, and publisher roles to separate worktrees or branch refs while keeping the roadmap item itself as the durable work record. The roadmap should record candidate paths, expected role evidence, and close requirements, but the session queue and worktree factory own temporary filesystem leases and branch/worktree metadata.
 

@@ -56,7 +56,9 @@ The publisher serializes final merge, generated CodeWiki state updates, commit c
 
 Wait/wake records must name the real blocker and the next safe action. Good blockers include claim id, branch, patch ref, validation ref, publisher commit, or rebase requirement. A vague “dirty from another session” message is insufficient when isolated refs can express the dependency.
 
-Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state and re-mark scopes before writing.
+Wake notifications are durable session-queue records, not direct inter-agent chat. Release and expiry events enqueue pending wake notifications with waiter id, task/build refs, source refs, and next-action intent. Heartbeats extend holder or waiter leases; stale holders expire with queue evidence and can wake blocked waiters. Wake delivery marks notifications delivered so repeat watchers do not spam the same session.
+
+Wake messages are not stale-context revival. A woken agent must re-read CodeWiki state, resume through `codewiki_resume_context`, and re-mark scopes before writing.
 
 ## Cleanup sequencing
 

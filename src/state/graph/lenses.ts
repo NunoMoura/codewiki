@@ -149,6 +149,7 @@ function graphLensFamilyForNode(node: GraphNode): GraphLensFamilyId | null {
 		kind === "planning_build" ||
 		kind === "change_claim" ||
 		kind === "change_claim_waiter" ||
+		kind === "change_claim_wake" ||
 		kind === "change_claim_scope" ||
 		layer === "roadmap"
 	)

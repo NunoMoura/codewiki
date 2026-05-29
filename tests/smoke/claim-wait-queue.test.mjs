@@ -119,7 +119,7 @@ try {
 	assert.equal(notified.length, 1);
 	assert.equal(appendedEntries[0].type, "codewiki_artifact_wait_wake");
 	assert.equal(appendedEntries[0].data.waiter_id, "WAIT-001");
-	assert.match(sentMessages[0].content, /CodeWiki artifact wait ready: WAIT-001/);
+	assert.match(sentMessages[0].content, /CodeWiki artifact wait ready: WAKE-001\/WAIT-001/);
 	assert.deepEqual(sentMessages[0].options, { deliverAs: "followUp" });
 	assert.deepEqual(await notifyReadyArtifactWaiters(
 		{ appendEntry: () => assert.fail("already notified"), sendUserMessage: () => assert.fail("already notified") },
