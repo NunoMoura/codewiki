@@ -1,15 +1,15 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { WikiProject } from "../../../project/types.ts";
-import type { CodewikiTaskToolInput } from "../../../roadmap/types.ts";
-import { executeCodewikiTaskTool } from "../../../api/tools.ts";
+import type { CodewikiRoadmapToolInput } from "../../../roadmap/types.ts";
+import { executeCodewikiRoadmapTool } from "../../../api/tools.ts";
 import { piTaskPorts } from "./ports.ts";
 
-/** Implementation of the codewiki_task tool. */
-export async function executeCodewikiTask(
+/** Implementation of the codewiki_roadmap tool. */
+export async function executeCodewikiRoadmap(
 	_pi: ExtensionAPI,
 	project: WikiProject,
 	_ctx: ExtensionContext,
-	input: CodewikiTaskToolInput,
+	input: CodewikiRoadmapToolInput,
 ) {
-	return executeCodewikiTaskTool(project, input, piTaskPorts());
+	return executeCodewikiRoadmapTool(project, input, piTaskPorts());
 }

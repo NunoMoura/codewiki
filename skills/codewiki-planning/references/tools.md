@@ -12,7 +12,7 @@ Use these tools in planning mode. Canonical writes are limited to roadmap task t
    - Read the validated `decision_build`, changed KB paths, and relevant roadmap task context before mutating roadmap truth.
    - Generated `.codewiki/roadmap/tasks/**` files are context views only; do not edit them.
 
-3. `codewiki_task`
+3. `codewiki_roadmap`
    - Use `action="create"` for independent new work.
    - Use `action="update"` to refine active overlapping work.
    - Use `action="sprint"` with `sprint` input when accepted intent forms a related executable cohort; never hand-edit sprint metadata.
@@ -46,7 +46,7 @@ Use these tools in planning mode. Canonical writes are limited to roadmap task t
 
 ## Task boundary checklist
 
-Before `codewiki_task create` or `update`, verify:
+Before `codewiki_roadmap create` or `update`, verify:
 
 - work has a direct executable outcome;
 - acceptance proves this task itself, not other tasks closing;
@@ -61,6 +61,6 @@ Before `codewiki_task create` or `update`, verify:
 - Do not change `.codewiki/kb/**` except to stop and route back to decision.
 - Do not change source code or tests.
 - Do not hand-edit `.codewiki/roadmap/queue.json` or `.codewiki/roadmap/tasks/**`.
-- Do not create tasks that only group, coordinate, sequence, or close other tasks; use sprint metadata through `codewiki_task action="sprint"` after acceptance.
+- Do not create tasks that only group, coordinate, sequence, or close other tasks; use sprint metadata through `codewiki_roadmap action="sprint"` after acceptance.
 - Do not duplicate full requirements briefs in roadmap tasks; keep full requirements in builds/knowledge.
 - Do not route to implementation without a `planning_build` unless policy explicitly exempts the work.

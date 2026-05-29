@@ -42,11 +42,11 @@ Public command surface is intentionally small:
 - `codewiki_audit`
 - `codewiki_build`
 - `codewiki_validation`
-- `codewiki_task`
+- `codewiki_roadmap`
 - `codewiki_session`
 - `codewiki_agency`
 
-All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one resume-context entrypoint (`codewiki_resume_context`), one transient compiler-build writer (`codewiki_build`), one canonical task mutation entrypoint (`codewiki_task`), one artifact-status coordination entrypoint (`codewiki_artifact_status`), and one runtime session entrypoint (`codewiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `codewiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps. CodeWiki resume context is normal memory; VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
+All internal `codewiki_*` tools accept optional `repoPath` so agents can target a repo explicitly when Pi is running outside that repo. Day-to-day execution should center on one read entrypoint (`codewiki_state`), one resume-context entrypoint (`codewiki_resume_context`), one transient compiler-build writer (`codewiki_build`), one canonical roadmap mutation entrypoint (`codewiki_roadmap`), one artifact-status coordination entrypoint (`codewiki_artifact_status`), and one runtime session entrypoint (`codewiki_session`). Runtime artifact status lives under `.codewiki/session/queue.json` as gitignored coordination input; the graph exposes derived holder/waiter/conflict views. `codewiki_agency` plans bounded observe/maintain/work cycles and can include an optional ThinkCode context plan with native CodeWiki fallback steps. CodeWiki resume context is normal memory; VCC recall and Pi compaction are recovery/overflow fallbacks, not the default continuation model.
 
 ### Static analysis entrypoints
 
@@ -72,7 +72,7 @@ The main CodeWiki skill covers package invariants, bootstrap/status flow, sprint
 
 - intelligent bootstrap/onboarding of a repo-local wiki
 - sprint-aware routing for related executable cohorts without creating umbrella tasks
-- tool catalog mapping `codewiki_*` tools to `src/application/tools/**` contracts, including `codewiki_task action="sprint"`
+- tool catalog mapping `codewiki_*` tools to `src/application/tools/**` contracts, including `codewiki_roadmap action="sprint"`
 - skill-owned bootstrap/resume prompt templates consumed by source-owned command orchestration
 - decision compiler guidance with semantic diff-table approval, KB edits, product/system propagation, and accepted `decision_build` handoffs
 - planning compiler guidance for atomic roadmap tasks, `planning_build` evidence, validation, and implementation handoff
@@ -360,7 +360,7 @@ The always-on surface is optional. When enabled it uses Pi's status area for a o
 
 `/wiki-resume` is the implementation segue. With no argument it resumes the current focused roadmap task when one exists, otherwise it picks the next open task from the roadmap working set. Pass `TASK-###` to force a specific open task. Add `--new` only when policy needs a hard Pi replacement session; normal same-terminal context cleanup uses CodeWiki-owned compaction seeded by the same bounded resume packet.
 
-`/wiki-resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `codewiki_state`, build high-signal continuation packets through `codewiki_resume_context`, record canonical task progress and evidence through `codewiki_task`, coordinate overlapping parallel work through `codewiki_artifact_status`, and keep runtime session focus separate through `codewiki_session`.
+`/wiki-resume` runs inside the parent-owned task loop. Runtime status and resume output show the active task status plus latest structured evidence summary. Internal agent flows should read state through `codewiki_state`, build high-signal continuation packets through `codewiki_resume_context`, record canonical task progress and evidence through `codewiki_roadmap`, coordinate overlapping parallel work through `codewiki_artifact_status`, and keep runtime session focus separate through `codewiki_session`.
 
 For token efficiency, agents should avoid raw wiki truth, full lifecycle logs, chat-history archaeology, and all task shards as default context. Prefer compact state, `codewiki_resume_context`, CodeWiki-owned compaction, the current task context shard, or latest lifecycle events first; expand to targeted raw specs/code only when task status, gates, or stale revision requires exact source.
 

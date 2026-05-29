@@ -43,7 +43,7 @@ assert.doesNotMatch(mainSkill, /(?:\.\.\/)+\.codewiki/, "main skill should not r
 
 const toolCatalog = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
 assert.doesNotMatch(toolCatalog, /src\/application\/tools\/catalog\.ts/, "skill tool catalog should not point to removed application catalog source");
-assert.match(toolCatalog, /`codewiki_task`/, "skill tool catalog should list codewiki_task");
+assert.match(toolCatalog, /`codewiki_roadmap`/, "skill tool catalog should list codewiki_roadmap");
 assert.match(toolCatalog, /`codewiki_gc`/, "skill tool catalog should list codewiki_gc");
 assert.match(toolCatalog, /archive_sha/, "skill tool catalog should document GC archive proof fields");
 assert.match(toolCatalog, /action="sprint"/, "skill tool catalog should document sprint metadata action");
@@ -62,7 +62,7 @@ assert.match(decisionTools, /kind="decision"/, "decision tool reference should d
 
 const planningSkill = readFileSync(resolve(repoRoot, "skills", "codewiki-planning", "SKILL.md"), "utf8");
 assert.match(planningSkill, /name: codewiki-planning/, "planning skill should define public skill frontmatter");
-assert.match(planningSkill, /codewiki_task/, "planning skill should define roadmap task mutation tool usage");
+assert.match(planningSkill, /codewiki_roadmap/, "planning skill should define roadmap task mutation tool usage");
 assert.match(planningSkill, /codewiki_build kind="planning"/, "planning skill should define planning build compilation point");
 assert.match(planningSkill, /Reject coordination-only/, "planning skill should enforce task boundary rules");
 

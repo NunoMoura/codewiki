@@ -75,7 +75,7 @@ export interface TaskCandidateApprovalModel {
 		fallbackInstruction: string;
 	}>;
 	fallbackInstruction: string;
-	toolContract: "codewiki_task";
+	toolContract: "codewiki_roadmap";
 }
 
 export function readDecisionApprovalModel(project: WikiProject): DecisionApprovalModel {
@@ -163,7 +163,7 @@ export function buildTaskCandidateApprovalModel(
 			...candidate,
 			status,
 			buildEligible: status === "approved",
-			fallbackInstruction: `Type APPROVE ${candidate.id} to allow codewiki_task mutation, or DEFER ${candidate.id} with reason.`,
+			fallbackInstruction: `Type APPROVE ${candidate.id} to allow codewiki_roadmap mutation, or DEFER ${candidate.id} with reason.`,
 		};
 	});
 	return {
@@ -172,7 +172,7 @@ export function buildTaskCandidateApprovalModel(
 		fallbackInstruction: normalized.length
 			? normalized.map((candidate) => candidate.fallbackInstruction).join("\n")
 			: "No task candidates pending approval.",
-		toolContract: "codewiki_task",
+		toolContract: "codewiki_roadmap",
 	};
 }
 
@@ -183,7 +183,7 @@ export function renderTaskCandidateApprovalCards(
 	if (model.candidates.length === 0) return ["No task candidates pending approval."];
 	const lines = [
 		"Task/sprint candidates pending approval",
-		"actions: typed APPROVE/DEFER/REJECT fallback before codewiki_task mutation",
+		"actions: typed APPROVE/DEFER/REJECT fallback before codewiki_roadmap mutation",
 	];
 	for (const candidate of model.candidates) {
 		lines.push(

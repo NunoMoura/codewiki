@@ -65,7 +65,7 @@ Internal agent tools:
 - `codewiki_audit`
 - `codewiki_build`
 - `codewiki_validation`
-- `codewiki_task` (tasks and sprint metadata)
+- `codewiki_roadmap` (tasks and sprint metadata)
 - `codewiki_gc` (post-commit garbage collection with archive proof and restore ledger)
 - `codewiki_diff_table`
 - `codewiki_session`

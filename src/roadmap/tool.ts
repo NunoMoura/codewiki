@@ -5,7 +5,7 @@ import { dirname, resolve } from "node:path";
 import { promisify } from "node:util";
 import { gzipSync } from "node:zlib";
 import type { WikiProject } from "../project/types.ts";
-import type { CodewikiTaskToolInput } from "./types.ts";
+import type { CodewikiRoadmapToolInput } from "./types.ts";
 import { nowIso } from "../shared/utils.ts";
 import { withLockedPaths } from "../shared/lock.ts";
 import { buildCodewikiTaskDetail } from "../state/reader.ts";
@@ -75,14 +75,14 @@ async function computeCanonicalDigest(project: WikiProject): Promise<string> {
 	return `sha256:${hash.digest("hex")}`;
 }
 
-export async function executeCodewikiTaskTool(
+export async function executeCodewikiRoadmapTool(
 	project: WikiProject,
-	input: CodewikiTaskToolInput,
+	input: CodewikiRoadmapToolInput,
 	ports: TaskMutationPorts,
 ) {
 	const refresh = input.refresh ?? true;
 	if (input.action === "sprint") {
-		if (!input.sprint) throw new Error("codewiki_task sprint requires sprint input.");
+		if (!input.sprint) throw new Error("codewiki_roadmap sprint requires sprint input.");
 		const result = await upsertRoadmapSprint(project, input.sprint, { refresh });
 		return {
 			action: "sprint" as const,
@@ -95,12 +95,12 @@ export async function executeCodewikiTaskTool(
 				status: result.sprint.status,
 				task_ids: result.sprint.task_ids,
 			},
-			summary: `codewiki task: sprint ${result.created ? "created" : result.changed ? "updated" : "unchanged"} ${result.sprint.id}`,
+			summary: `codewiki roadmap: sprint ${result.created ? "created" : result.changed ? "updated" : "unchanged"} ${result.sprint.id}`,
 		};
 	}
 	if (input.action === "clear-archive") {
 		if (!input.summary?.trim()) {
-			throw new Error("codewiki_task clear-archive requires summary confirmation.");
+			throw new Error("codewiki_roadmap clear-archive requires summary confirmation.");
 		}
 		const archivePath = roadmapArchivePath(project);
 		await withLockedPaths([archivePath], async () => {
@@ -120,12 +120,12 @@ export async function executeCodewikiTaskTool(
 			action: "clear-archive" as const,
 			changed: true,
 			archive_path: archivePath.replace(`${project.root}/`, ""),
-			summary: `codewiki task: cleared roadmap archive ${archivePath.replace(`${project.root}/`, "")}`,
+			summary: `codewiki roadmap: cleared roadmap archive ${archivePath.replace(`${project.root}/`, "")}`,
 		};
 	}
 	if (input.action === "checkpoint") {
 		if (!input.summary?.trim()) {
-			throw new Error("codewiki_task checkpoint requires summary as version or label.");
+			throw new Error("codewiki_roadmap checkpoint requires summary as version or label.");
 		}
 		let gitSha = "unknown";
 		try {
@@ -170,11 +170,11 @@ export async function executeCodewikiTaskTool(
 		return {
 			action: "checkpoint" as const,
 			changed: true,
-			summary: `codewiki task: created release checkpoint ${versionLabel}`,
+			summary: `codewiki roadmap: created release checkpoint ${versionLabel}`,
 		};
 	}
 	if (input.action === "create") {
-		if (!input.tasks?.length) throw new Error("codewiki_task create requires tasks.");
+		if (!input.tasks?.length) throw new Error("codewiki_roadmap create requires tasks.");
 		const result = await createCodewikiTasks(project, input.tasks, ports);
 		const details = {
 			action: "create" as const,
@@ -190,13 +190,13 @@ export async function executeCodewikiTaskTool(
 		return details;
 	}
 	if (!input.taskId?.trim()) {
-		throw new Error(`codewiki_task ${input.action} requires taskId.`);
+		throw new Error(`codewiki_roadmap ${input.action} requires taskId.`);
 	}
 	if (input.action === "cancel" && !input.summary?.trim()) {
-		throw new Error("codewiki_task cancel requires summary.");
+		throw new Error("codewiki_roadmap cancel requires summary.");
 	}
 	if (input.action === "update" && !hasCodewikiTaskPatchChanges(input.patch) && !input.evidence) {
-		throw new Error("codewiki_task update requires patch or evidence.");
+		throw new Error("codewiki_roadmap update requires patch or evidence.");
 	}
 	if (input.action === "update" && input.evidence?.result && ["pass", "fail", "block"].includes(input.evidence.result) && input.patch?.status !== undefined) {
 		throw new Error("Use evidence.result pass/fail/block without patch.status; lifecycle evidence owns the status transition.");
@@ -221,7 +221,7 @@ export async function executeCodewikiTaskTool(
 				changed: false,
 				canonical_task_ids: [existingTask.id],
 				evidence_recorded: false,
-				summary: `codewiki task: close ${existingTask.id} blocked — ${closeResult.reason}`,
+				summary: `codewiki roadmap: close ${existingTask.id} blocked — ${closeResult.reason}`,
 			};
 		}
 		const reloaded = await readRoadmapTask(project, existingTask.id);

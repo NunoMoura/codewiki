@@ -40,7 +40,7 @@ When the current session is not an acceptable validator context, stop and restar
 
 - Do not call `codewiki_build`; compilers produce builds.
 - Do not call `codewiki_diff_table`; decision compilers capture semantic proposals.
-- Do not call `codewiki_task action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
+- Do not call `codewiki_roadmap action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
 - Do not hand-edit `.codewiki/kb/**`, `.codewiki/roadmap/**`, `.codewiki/builds/**`, source code, tests, or generated views.
 - Do not mark work pass without required audits and proof.
 

@@ -182,7 +182,7 @@ const buildRegistration = adapterSource
 	.split('name: "codewiki_validation"')[0];
 const validationRegistration = adapterSource
 	.split('name: "codewiki_validation"')[1]
-	.split('name: "codewiki_task"')[0];
+	.split('name: "codewiki_roadmap"')[0];
 assert.match(
 	compactionSource,
 	/pi\.on\("agent_end"/,

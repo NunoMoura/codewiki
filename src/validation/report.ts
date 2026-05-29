@@ -1750,7 +1750,7 @@ export async function writeValidationReport(
 							"checks_run",
 							"closure_brief",
 							"publication.commit title/body",
-							"CodeWiki task/build/checks/validation/recover trailers",
+							"CodeWiki roadmap/build/checks/validation/recover trailers",
 						],
 						gaps: commitReadinessGaps,
 					}

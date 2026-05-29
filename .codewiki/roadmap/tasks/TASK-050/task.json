@@ -1,7 +1,7 @@
 {
   "id": "TASK-050",
   "title": "Rename roadmap mutation tool to codewiki_roadmap",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "high",
   "kind": "migration",
   "summary": "Rename the internal roadmap mutation tool from codewiki_task to codewiki_roadmap across registration, schemas, skills, docs, and tests without keeping a backward-compatible alias.",
@@ -56,5 +56,5 @@
     "closure": "Close after code, docs, skills, schemas, and tests agree on codewiki_roadmap and validation passes."
   },
   "created": "2026-05-29",
-  "updated": "2026-05-29T06:36:31Z"
+  "updated": "2026-05-29T07:22:51Z"
 }

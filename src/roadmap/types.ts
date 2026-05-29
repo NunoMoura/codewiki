@@ -153,7 +153,7 @@ export interface TaskLoopUpdateInput {
 	issues?: string[];
 }
 
-export interface CodewikiTaskEvidenceInput {
+export interface CodewikiRoadmapEvidenceInput {
 	summary: string;
 	result?: TaskEvidenceResult;
 	checks_run?: string[];
@@ -161,7 +161,7 @@ export interface CodewikiTaskEvidenceInput {
 	issues?: string[];
 }
 
-export interface CodewikiTaskPatchInput {
+export interface CodewikiRoadmapPatchInput {
 	title?: string;
 	priority?: RoadmapPriority;
 	kind?: string;
@@ -192,14 +192,14 @@ export interface CodewikiSprintInput {
 	gates?: string[];
 }
 
-export interface CodewikiTaskToolInput {
+export interface CodewikiRoadmapToolInput {
 	repoPath?: string;
 	action: "create" | "update" | "close" | "cancel" | "checkpoint" | "clear-archive" | "sprint";
 	tasks?: RoadmapTaskInput[];
 	sprint?: CodewikiSprintInput;
 	taskId?: string;
 	summary?: string;
-	patch?: CodewikiTaskPatchInput;
-	evidence?: CodewikiTaskEvidenceInput;
+	patch?: CodewikiRoadmapPatchInput;
+	evidence?: CodewikiRoadmapEvidenceInput;
 	refresh?: boolean;
 }

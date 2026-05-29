@@ -7,7 +7,7 @@ import {
 	codewikiDiffTableToolInputSchema,
 	codewikiGcToolInputSchema,
 	codewikiSessionToolInputSchema,
-	codewikiTaskToolInputSchema,
+	codewikiRoadmapToolInputSchema,
 	codewikiValidationReportSchema,
 } from "./schemas.ts";
 import { registerAuditCommand } from "./commands/audit.ts";
@@ -38,7 +38,7 @@ import {
 	requestCodewikiContextRefresh,
 } from "./compaction.ts";
 import { registerCodewikiStateTool } from "./tools/state.ts";
-import { executeCodewikiTask } from "./tools/task.ts";
+import { executeCodewikiRoadmap } from "./tools/task.ts";
 import {
 	activeStatusPanelGlobal,
 	clearStatusDock,
@@ -288,8 +288,8 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_task",
-		label: "Codewiki Task",
+		name: "codewiki_roadmap",
+		label: "Codewiki Roadmap",
 		description:
 			"Create, update, close, cancel roadmap tasks, or update sprint metadata through one canonical roadmap mutation tool",
 		promptSnippet:
@@ -303,9 +303,9 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 			"Use action='close' or action='cancel' instead of patching status directly when intent is final closure.",
 			"Set refresh=false when you need a minimal canonical write and can defer generated graph/status/roadmap view rebuilds.",
 		],
-		parameters: codewikiTaskToolInputSchema,
+		parameters: codewikiRoadmapToolInputSchema,
 		execute: (project, params, ctx) =>
-			executeCodewikiTask(pi, project, ctx, params),
+			executeCodewikiRoadmap(pi, project, ctx, params),
 		after: ({ params, result }) => {
 			if (params.action !== "close" && params.action !== "cancel") return;
 			requestCodewikiContextRefresh({

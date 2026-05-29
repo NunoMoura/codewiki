@@ -10,8 +10,8 @@ import type { WikiProject } from "../project/types.ts";
 import type {
 	RoadmapTaskRecord,
 	RoadmapTaskInput,
-	CodewikiTaskPatchInput,
-	CodewikiTaskEvidenceInput,
+	CodewikiRoadmapPatchInput,
+	CodewikiRoadmapEvidenceInput,
 	RoadmapStatus,
 } from "./types.ts";
 import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./runtime.ts";
@@ -43,13 +43,13 @@ export async function createCodewikiTasks(
 }
 
 // ---------------------------------------------------------------------------
-// Update task (patch-style from codewiki_task tool)
+// Update task (patch-style from codewiki_roadmap tool)
 // ---------------------------------------------------------------------------
 
 export async function patchCodewikiTask(
 	project: WikiProject,
 	taskId: string,
-	patch: CodewikiTaskPatchInput,
+	patch: CodewikiRoadmapPatchInput,
 	ports: TaskMutationPorts,
 ): Promise<{ task: RoadmapTaskRecord; changed: boolean }> {
 	const task = await readRoadmapTask(project, taskId);
@@ -119,7 +119,7 @@ export async function closeCodewikiTask(
 	project: WikiProject,
 	taskId: string,
 	ports: TaskMutationPorts,
-	evidence?: CodewikiTaskEvidenceInput,
+	evidence?: CodewikiRoadmapEvidenceInput,
 	summary?: string,
 ): Promise<{
 	closed: boolean;
@@ -161,7 +161,7 @@ export async function closeCodewikiTask(
 export async function appendTaskEvidence(
 	project: WikiProject,
 	taskId: string,
-	evidence: CodewikiTaskEvidenceInput,
+	evidence: CodewikiRoadmapEvidenceInput,
 	ports: TaskMutationPorts,
 ): Promise<void> {
 	const task = await readRoadmapTask(project, taskId);

@@ -40,7 +40,7 @@ Use these tools while executing one atomic roadmap task. Implementation produces
    - Use the implementation build ref as the validator source when fresh validation is required.
    - Expected validator output: `codewiki_validation profile="implementation"` pass/fail/block with `fresh_context=true`, clean-state value, checked content proof (`tree_sha`, `validated_sha`, or `working_tree_digest`), audit refs, and rationale.
 
-9. `codewiki_task`
+9. `codewiki_roadmap`
    - Use `action="update"` to append builder evidence and validation source refs.
    - Use `action="close"` only after required passing validation/task-close proof exists.
    - Do not patch status directly for final closure.

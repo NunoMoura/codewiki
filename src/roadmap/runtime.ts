@@ -10,8 +10,8 @@ import type {
 	RoadmapStatus,
 	RoadmapPriority,
 	RoadmapTaskGoal,
-	CodewikiTaskPatchInput,
-	CodewikiTaskEvidenceInput,
+	CodewikiRoadmapPatchInput,
+	CodewikiRoadmapEvidenceInput,
 	RoadmapTaskInput,
 	TaskLoopUpdateInput,
 	CodewikiSprintInput,
@@ -45,8 +45,8 @@ export function roadmapArchivePath(project: WikiProject): string {
  * Check if a task patch has any actual changes.
  */
 export function hasCodewikiTaskPatchChanges(
-	patch: CodewikiTaskPatchInput | undefined,
-): patch is CodewikiTaskPatchInput {
+	patch: CodewikiRoadmapPatchInput | undefined,
+): patch is CodewikiRoadmapPatchInput {
 	return Boolean(
 		patch &&
 			(patch.title !== undefined ||
@@ -71,12 +71,12 @@ export function hasCodewikiTaskPatchChanges(
 }
 
 /**
- * Build a RoadmapTaskUpdateInput from a CodewikiTaskPatchInput.
+ * Build a RoadmapTaskUpdateInput from a CodewikiRoadmapPatchInput.
  */
 export function buildRoadmapTaskUpdateFromCodewikiPatch(
 	task: RoadmapTaskRecord,
 	runtimeTask: RoadmapStateTaskSummary | null,
-	patch: CodewikiTaskPatchInput,
+	patch: CodewikiRoadmapPatchInput,
 ): RoadmapTaskUpdateInput {
 	const currentState = roadmapApiTaskState(task, runtimeTask);
 	const requestedStatus = patch.status ?? currentState.status;
@@ -103,7 +103,7 @@ export function buildRoadmapTaskUpdateFromCodewikiPatch(
 export async function appendCodewikiTaskEvidence(
 	project: WikiProject,
 	task: RoadmapTaskRecord,
-	evidence: CodewikiTaskEvidenceInput,
+	evidence: CodewikiRoadmapEvidenceInput,
 	refresh = true,
 ): Promise<void> {
 	await withLockedPaths(
@@ -172,7 +172,7 @@ export async function appendTaskEvidenceEvent(
 }
 
 /**
- * Summarize the result of a codewiki_task tool action.
+ * Summarize the result of a codewiki_roadmap tool action.
  */
 export function summarizeCodewikiTaskAction(result: {
 	action: string;
@@ -188,11 +188,11 @@ export function summarizeCodewikiTaskAction(result: {
 		const created = result.created?.length ?? 0;
 		const reused = result.reused?.length ?? 0;
 		const refined = result.refined?.length ?? 0;
-		return `codewiki task: created ${created}, reused ${reused}, refined ${refined} tasks (${ids})`;
+		return `codewiki roadmap: created ${created}, reused ${reused}, refined ${refined} tasks (${ids})`;
 	}
 	const changed = result.changed ? "updated" : "read";
 	const evidence = result.evidence_recorded ? " with evidence" : "";
-	return `codewiki task: ${result.action} ${ids} (${changed}${evidence})`;
+	return `codewiki roadmap: ${result.action} ${ids} (${changed}${evidence})`;
 }
 
 /**
@@ -1060,8 +1060,8 @@ export async function upsertRoadmapSprint(
 ): Promise<{ sprint: RoadmapSprintRecord; changed: boolean; created: boolean }> {
 	const title = input.title.trim();
 	const outcome = input.outcome.trim();
-	if (!title) throw new Error("codewiki_task sprint requires sprint.title.");
-	if (!outcome) throw new Error("codewiki_task sprint requires sprint.outcome.");
+	if (!title) throw new Error("codewiki_roadmap sprint requires sprint.title.");
+	if (!outcome) throw new Error("codewiki_roadmap sprint requires sprint.outcome.");
 	const roadmapPath = resolve(project.root, project.roadmapPath);
 	let sprint!: RoadmapSprintRecord;
 	let changed = false;

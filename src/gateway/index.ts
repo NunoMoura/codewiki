@@ -119,12 +119,12 @@ function capabilityManifest() {
 				audit: ["repo", "sections", "taskId", "refresh"],
 			},
 			{
-				name: "codewiki.task",
+				name: "codewiki.roadmap",
 				class: "semantic-write",
 				summary:
-					"Create, update, close, cancel, or append evidence to roadmap tasks.",
-				args_schema: "codewikiTaskToolInputSchema",
-				result_schema: "CodeWiki task mutation result",
+					"Create, update, close, cancel, append evidence to roadmap tasks, or update sprint metadata.",
+				args_schema: "codewikiRoadmapToolInputSchema",
+				result_schema: "CodeWiki roadmap mutation result",
 				writes: [".codewiki/roadmap/queue.json"],
 				audit: [
 					"repo",

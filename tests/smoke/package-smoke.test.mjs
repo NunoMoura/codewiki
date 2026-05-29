@@ -415,6 +415,7 @@ async function main() {
 			"Expected alt+w shortcut for toggling the status panel",
 		);
 		const extensionToolNames = [...extension.tools.keys()];
+		const removedRoadmapToolAlias = ["codewiki", "task"].join("_");
 		ensureIncludes(
 			extensionToolNames,
 			[
@@ -427,12 +428,16 @@ async function main() {
 				"codewiki_build",
 				"codewiki_validation",
 				"codewiki_gc",
-				"codewiki_task",
+				"codewiki_roadmap",
 				"codewiki_diff_table",
 				"codewiki_session",
 				"codewiki_agency",
 			],
 			"extension tools",
+		);
+		assert.ok(
+			!extension.tools.has(removedRoadmapToolAlias),
+			"Removed roadmap tool alias should not be registered",
 		);
 		const skillToolCatalog = readFileSync(
 			resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
@@ -499,6 +504,11 @@ async function main() {
 			piIndexSource,
 			/requestCodewikiContextRefresh/,
 			"Loop-boundary tools should request CodeWiki context refresh",
+		);
+		assert.doesNotMatch(
+			piIndexSource,
+			new RegExp(`name:\\s*["']${removedRoadmapToolAlias}["']`),
+			"Pi adapter should not register removed roadmap tool alias",
 		);
 		assert.match(
 			bootstrapSource,
@@ -844,8 +854,8 @@ async function main() {
 			"codewiki_status",
 			"codewiki_roadmap_append",
 			"codewiki_roadmap_update",
-			"codewiki_task_session_link",
-			"codewiki_task_loop_update",
+			"codewiki_roadmap_session_link",
+			"codewiki_roadmap_loop_update",
 			"codewiki_session_handoff",
 		]) {
 			assert.ok(
@@ -1604,7 +1614,7 @@ async function main() {
 		assert.equal(failVal.verdict, "fail");
 		assert.equal(failVal.issues.length, 1);
 
-		const taskTool = extension.tools.get("codewiki_task");
+		const taskTool = extension.tools.get("codewiki_roadmap");
 		assert.ok(
 			taskTool && typeof taskTool.definition?.execute === "function",
 			"Task tool missing execute function",

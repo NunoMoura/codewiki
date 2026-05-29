@@ -58,7 +58,7 @@ for (const exportedName of [
 	"executeCodewikiDiffTableTool",
 	"executeCodewikiGcTool",
 	"executeCodewikiSetupTool",
-	"executeCodewikiTaskTool",
+	"executeCodewikiRoadmapTool",
 	"executeCodewikiArtifactStatusTool",
 	"executeCodewikiSessionTool",
 	"executeCodewikiResumeContextTool",

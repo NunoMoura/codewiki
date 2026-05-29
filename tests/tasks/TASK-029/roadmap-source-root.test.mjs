@@ -93,7 +93,7 @@ for (const [name, value] of [
 	["patchCodewikiTask", roadmapTask.patchCodewikiTask],
 	["closeCodewikiTask", roadmapTask.closeCodewikiTask],
 	["cancelCodewikiTask", roadmapTask.cancelCodewikiTask],
-	["executeCodewikiTaskTool", roadmapTool.executeCodewikiTaskTool],
+	["executeCodewikiRoadmapTool", roadmapTool.executeCodewikiRoadmapTool],
 ]) {
 	assert.equal(typeof value, "function", `${name} should be exported from roadmap source root`);
 }
@@ -150,14 +150,14 @@ try {
 		messageBus: { publish: async () => {} },
 	};
 
-	const createResult = await roadmapTool.executeCodewikiTaskTool(project, {
+	const createResult = await roadmapTool.executeCodewikiRoadmapTool(project, {
 		action: "create",
 		refresh: false,
 		tasks: [{
 			title: "Verify roadmap source root",
 			priority: "medium",
 			kind: "testing",
-			summary: "Prove codewiki_task create still mutates queue JSON.",
+			summary: "Prove codewiki_roadmap create still mutates queue JSON.",
 			spec_paths: ["package.json"],
 			code_paths: ["tests/tasks/TASK-029/roadmap-source-root.test.mjs"],
 			labels: ["guard-new-task"],
@@ -175,7 +175,7 @@ try {
 	assert.equal(createResult.canonical_task_ids[0], "TASK-901", "create should preserve sequential task ids");
 	assert.equal(rebuildCount, 1, "create path should still request rebuild through ports");
 
-	const updateResult = await roadmapTool.executeCodewikiTaskTool(project, {
+	const updateResult = await roadmapTool.executeCodewikiRoadmapTool(project, {
 		action: "update",
 		taskId: "TASK-901",
 		refresh: false,
@@ -186,7 +186,7 @@ try {
 	assert.equal(updateResult.changed, true);
 	assert.equal(updateResult.evidence_recorded, true);
 
-	const sprintResult = await roadmapTool.executeCodewikiTaskTool(project, {
+	const sprintResult = await roadmapTool.executeCodewikiRoadmapTool(project, {
 		action: "sprint",
 		refresh: false,
 		sprint: {
@@ -202,7 +202,7 @@ try {
 	assert.equal(sprintResult.action, "sprint");
 	assert.equal(sprintResult.sprint.id, "SPRINT-901");
 
-	const cancelResult = await roadmapTool.executeCodewikiTaskTool(project, {
+	const cancelResult = await roadmapTool.executeCodewikiRoadmapTool(project, {
 		action: "cancel",
 		taskId: "TASK-901",
 		refresh: false,

@@ -6,7 +6,7 @@ export { executeCodewikiBuildTool } from "../build/tool.ts";
 export { executeCodewikiDiffTableTool } from "../change/tool.ts";
 export { executeCodewikiGcTool } from "../gc/tool.ts";
 export { executeCodewikiBootstrapTool, executeCodewikiSetupTool } from "../project/tool.ts";
-export { executeCodewikiTaskTool } from "../roadmap/tool.ts";
+export { executeCodewikiRoadmapTool } from "../roadmap/tool.ts";
 export { executeCodewikiArtifactStatusTool } from "../session/artifact-status-tool.ts";
 export { executeCodewikiSessionTool } from "../session/tool.ts";
 export { executeCodewikiResumeContextTool } from "../state/resume-tool.ts";

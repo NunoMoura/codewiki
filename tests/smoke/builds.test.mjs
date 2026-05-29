@@ -85,8 +85,8 @@ async function run() {
 		);
 		assert.ok(bootstrapResult?.content, "Bootstrap failed");
 
-		// codewiki_task: progressive refinement/reuse
-		const taskTool = extension.tools.get("codewiki_task");
+		// codewiki_roadmap: progressive refinement/reuse
+		const taskTool = extension.tools.get("codewiki_roadmap");
 		assert.ok(taskTool, "Task tool missing");
 		const firstTask = await taskTool.definition.execute(
 			"task-create-initial",

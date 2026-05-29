@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T06:36:31Z",
+  "generated_at": "2026-05-29T07:22:51Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-050/context.json",
   "task": {
     "id": "TASK-050",
     "title": "Rename roadmap mutation tool to codewiki_roadmap",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

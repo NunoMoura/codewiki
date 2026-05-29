@@ -142,7 +142,7 @@ const roadmapTaskDeltaSchema = Type.Object({
 	current: Type.Optional(Type.String()),
 	closure: Type.Optional(Type.String()),
 });
-export const codewikiTaskCreateSchema = Type.Object({
+export const codewikiRoadmapCreateSchema = Type.Object({
 	title: Type.String({ minLength: 1, description: "Short task title." }),
 	priority: roadmapPrioritySchema,
 	kind: Type.String({
@@ -326,7 +326,7 @@ export const toolTaskIdField = Type.String({
 	description:
 		"Existing task id. Use canonical TASK-### ids.",
 });
-export const codewikiTaskPatchSchema = Type.Object({
+export const codewikiRoadmapPatchSchema = Type.Object({
 	title: Type.Optional(Type.String({ minLength: 1 })),
 	priority: Type.Optional(roadmapPrioritySchema),
 	kind: Type.Optional(Type.String({ minLength: 1 })),
@@ -341,7 +341,7 @@ export const codewikiTaskPatchSchema = Type.Object({
 	goal: Type.Optional(roadmapTaskGoalSchema),
 	delta: Type.Optional(roadmapTaskDeltaSchema),
 });
-export const codewikiTaskEvidenceSchema = Type.Object({
+export const codewikiRoadmapEvidenceSchema = Type.Object({
 	summary: Type.String({
 		minLength: 1,
 		description: "Short evidence summary to append to task history.",
@@ -393,7 +393,7 @@ export const codewikiStateToolInputSchema = Type.Object({
 	),
 	taskId: Type.Optional(toolTaskIdField),
 });
-export const codewikiTaskToolInputSchema = Type.Object({
+export const codewikiRoadmapToolInputSchema = Type.Object({
 	repoPath: repoPathToolField,
 	action: Type.Union([
 		Type.Literal("create"),
@@ -412,10 +412,10 @@ export const codewikiTaskToolInputSchema = Type.Object({
 		}),
 	),
 	taskId: Type.Optional(toolTaskIdField),
-	tasks: Type.Optional(Type.Array(codewikiTaskCreateSchema, { minItems: 1 })),
+	tasks: Type.Optional(Type.Array(codewikiRoadmapCreateSchema, { minItems: 1 })),
 	sprint: Type.Optional(codewikiSprintSchema),
-	patch: Type.Optional(codewikiTaskPatchSchema),
-	evidence: Type.Optional(codewikiTaskEvidenceSchema),
+	patch: Type.Optional(codewikiRoadmapPatchSchema),
+	evidence: Type.Optional(codewikiRoadmapEvidenceSchema),
 	summary: Type.Optional(Type.String({ minLength: 1 })),
 });
 export const codewikiBuildLifecycleSchema = Type.Object({

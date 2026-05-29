@@ -20,14 +20,14 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 - Start from a validated `decision_build` or an explicit validation/audit route to planning.
 - Start with `codewiki_state`, then read the decision build, changed knowledge refs, active tasks, and active sprint context directly.
 - Decision owns semantic intent and knowledge. Planning owns roadmap alignment. Implementation owns code/tests.
-- Use `codewiki_task` for roadmap creation/refinement. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
+- Use `codewiki_roadmap` for roadmap creation/refinement. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
 - Inspect active tasks and sprints before creating work. Refine an existing active task when paths, labels, or intent overlap.
 - Create only self-contained executable tasks with direct outcomes, acceptance criteria, non-goals, verification, candidate files, independent validation evidence, and post-commit GC review when the work closes tasks/sprints or publishes artifacts.
 - Reject coordination-only tasks, sprint/umbrella/container tasks, and tasks whose acceptance mainly says other tasks must close.
 - Compile `codewiki_build kind="planning"` after roadmap alignment and before implementation handoff. Do not treat the planning build itself as a post-gateway compaction boundary until planning validation passes.
 - Every accepted decision row and downstream planning question must have deterministic propagation evidence in the planning build: `decision_row_resolutions` / `downstream_question_resolutions` as `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` with owner/trigger/rationale.
 - Planning-loop compaction is safe only after accepted rows/questions are durably mapped into task, sprint, knowledge-only, deferred, or blocking-question evidence.
-- Use `codewiki_task action="sprint"` for accepted related executable cohorts; never create umbrella tasks or hand-edit sprint metadata.
+- Use `codewiki_roadmap action="sprint"` for accepted related executable cohorts; never create umbrella tasks or hand-edit sprint metadata.
 - Validate planning-to-roadmap alignment before routing to implementation.
 
 ## Workflow
@@ -47,14 +47,14 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - For each executable unit, define outcome, acceptance criteria, non-goals, verification, candidate code/test paths, blockers, requirement refs, and any `codewiki_gc action="dry-run"`/defer evidence expected after close/publication commits.
    - Prefer refining existing active tasks when the new intent overlaps.
    - Create new tasks only when the work is independent and conflict-free.
-   - If the work is a cohort, use sprint metadata through `codewiki_task action="sprint"` and planning-build context instead of a task that only groups other tasks.
+   - If the work is a cohort, use sprint metadata through `codewiki_roadmap action="sprint"` and planning-build context instead of a task that only groups other tasks.
 
 4. **Coordinate writes**
    - Use `codewiki_artifact_status` for narrow roadmap/build scopes when parallel sessions may overlap.
    - Release artifact status when planning writes complete.
 
 5. **Mutate roadmap truth**
-   - Call `codewiki_task action="create"` for new tasks or `action="update"` for refinements.
+   - Call `codewiki_roadmap action="create"` for new tasks or `action="update"` for refinements.
    - Include `spec_paths`, `code_paths`, labels, `change_type`, and a complete `goal` with outcome/acceptance/non-goals/verification.
    - Add evidence when a task is refined, blocked, or intentionally not created.
 
