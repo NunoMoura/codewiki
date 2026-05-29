@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "updated": "2026-05-29T07:22:51Z",
+  "updated": "2026-05-29T07:24:43Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
-    "TASK-050",
     "TASK-051",
     "TASK-052",
     "TASK-053",
@@ -537,66 +536,6 @@
       },
       "created": "2026-05-28",
       "updated": "2026-05-28T00:53:56Z"
-    },
-    "TASK-050": {
-      "id": "TASK-050",
-      "title": "Rename roadmap mutation tool to codewiki_roadmap",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "migration",
-      "summary": "Rename the internal roadmap mutation tool from codewiki_task to codewiki_roadmap across registration, schemas, skills, docs, and tests without keeping a backward-compatible alias.",
-      "spec_paths": [
-        ".codewiki/builds/decision/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
-        ".codewiki/validation/2026-05-29-decision-pass-2026-05-29-autonomous-roadmap-or.json",
-        "skills/codewiki/SKILL.md",
-        "skills/codewiki-planning/SKILL.md"
-      ],
-      "code_paths": [
-        "src/adapters/pi/index.ts",
-        "src/adapters/pi/schemas.ts",
-        "src/roadmap/tool.ts",
-        "src/api/tools.ts",
-        "skills/codewiki/SKILL.md",
-        "skills/codewiki-planning/SKILL.md",
-        "README.md",
-        "tests/smoke/package-smoke.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "roadmap-tool",
-        "rename",
-        "breaking-change",
-        "api",
-        "skills"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Agents use codewiki_roadmap as the only internal roadmap mutation tool name, matching task/sprint/checkpoint/archive responsibilities.",
-        "acceptance": [
-          "Pi tool registration exposes codewiki_roadmap and no longer exposes codewiki_task.",
-          "Skills/docs/tests use codewiki_roadmap for tasks, sprints, checkpoints, close/cancel, and archive roadmap mutations.",
-          "No backward-compatible codewiki_task alias remains in live tool registration.",
-          "Typecheck, smoke, feature, and package dry-run checks pass."
-        ],
-        "non_goals": [
-          "Do not preserve codewiki_task as an alias.",
-          "Do not rename canonical roadmap files."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "npm run test:smoke",
-          "npm run test:features",
-          "npm run test:pack",
-          "search proves no live codewiki_task tool references except historical artifacts if unavoidable."
-        ]
-      },
-      "delta": {
-        "desired": "Internal roadmap mutation tool is named codewiki_roadmap without compatibility shim.",
-        "current": "Internal roadmap mutation tool is named codewiki_task despite sprint/checkpoint/archive responsibilities.",
-        "closure": "Close after code, docs, skills, schemas, and tests agree on codewiki_roadmap and validation passes."
-      },
-      "created": "2026-05-29",
-      "updated": "2026-05-29T07:22:51Z"
     },
     "TASK-051": {
       "id": "TASK-051",
@@ -1348,7 +1287,7 @@
     "SPRINT-011": {
       "id": "SPRINT-011",
       "title": "Roadmap API rename cleanup",
-      "status": "planned",
+      "status": "closed",
       "outcome": "Rename the roadmap mutation tool to codewiki_roadmap without compatibility shims before new automation work depends on tool naming.",
       "task_ids": [
         "TASK-050"
@@ -1375,7 +1314,7 @@
         "task-close validation pass"
       ],
       "created": "2026-05-29T06:33:44Z",
-      "updated": "2026-05-29T06:33:44Z"
+      "updated": "2026-05-29T07:24:43Z"
     },
     "SPRINT-012": {
       "id": "SPRINT-012",
