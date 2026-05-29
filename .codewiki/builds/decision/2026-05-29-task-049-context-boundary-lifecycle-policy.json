@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-29T02:23:44Z",
+  "source": "User-approved TASK-049 brainstorming consolidation",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 14,
+    "archive_after": "2026-06-12T02:23:44.000Z",
+    "purge_after": "2026-06-26T02:23:44.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted consolidated TASK-049 decision: one non-overlapping task will cover CodeWiki context-boundary policy, fresh validation context, validation checkpoint commits, Pi reload guidance, and richer decision-row lifecycle state.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "ROW-009",
+      "current_state": "TASK-049 existed as a narrower post-gateway compaction/reload task, with separate pending brainstorm rows for gateway compaction, fresh validation, threshold compaction, boundary packets, checkpoint commits, CodeWiki-owned compaction override, and safe decision/planning compaction. Current decision rows did not explicitly track agreed change, expected final state, validated final state, status, and proof refs.",
+      "desired_state": "Refine TASK-049 instead of creating overlapping tasks. Treat context-boundary policy as one cohesive system decision covering source-backed compaction after gateway passes, fresh validator contexts, local validation checkpoint commits, Pi reload guidance separate from compaction, and decision-row lifecycle proof fields.",
+      "rationale": "This preserves all brainstormed insights in one roadmap item and makes compaction safe by ensuring important intent is durable in CodeWiki source refs instead of chat.",
+      "affected_layers": [
+        "roadmap",
+        "decision",
+        "planning",
+        "implementation",
+        "validation",
+        "session",
+        "adapter",
+        "api",
+        "build",
+        "publication"
+      ],
+      "risk": "medium-high: workflow and UI/data-shape expectations change; implementation must avoid forced mid-loop compaction, lost unstored user nuance, automatic Pi restarts, or remote publication without approval.",
+      "user_action": "approved",
+      "alternatives": [
+        "Split into multiple overlapping tasks",
+        "Keep TASK-049 narrow and miss decision/planning context bloat",
+        "Use generic Pi compaction summaries and rely on chat history"
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "ROW-009"
+  ],
+  "approved_rows": [
+    {
+      "id": "ROW-009",
+      "current_state": "TASK-049 existed as a narrower post-gateway compaction/reload task, with separate pending brainstorm rows for gateway compaction, fresh validation, threshold compaction, boundary packets, checkpoint commits, CodeWiki-owned compaction override, and safe decision/planning compaction. Current decision rows did not explicitly track agreed change, expected final state, validated final state, status, and proof refs.",
+      "desired_state": "Refine TASK-049 instead of creating overlapping tasks. Treat context-boundary policy as one cohesive system decision covering source-backed compaction after gateway passes, fresh validator contexts, local validation checkpoint commits, Pi reload guidance separate from compaction, and decision-row lifecycle proof fields.",
+      "rationale": "This preserves all brainstormed insights in one roadmap item and makes compaction safe by ensuring important intent is durable in CodeWiki source refs instead of chat.",
+      "affected_layers": [
+        "roadmap",
+        "decision",
+        "planning",
+        "implementation",
+        "validation",
+        "session",
+        "adapter",
+        "api",
+        "build",
+        "publication"
+      ],
+      "risk": "medium-high: workflow and UI/data-shape expectations change; implementation must avoid forced mid-loop compaction, lost unstored user nuance, automatic Pi restarts, or remote publication without approval.",
+      "user_action": "approved",
+      "alternatives": [
+        "Split into multiple overlapping tasks",
+        "Keep TASK-049 narrow and miss decision/planning context bloat",
+        "Use generic Pi compaction summaries and rely on chat history"
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "TASK-049 remains the single roadmap task for context-boundary, compaction, fresh validation, checkpoint commit, reload guidance, and decision-row lifecycle work."
+    },
+    {
+      "id": "D2",
+      "summary": "CodeWiki compaction should be source-backed through codewiki_resume_context packets, not generic chat-history summaries."
+    },
+    {
+      "id": "D3",
+      "summary": "Fresh validation context and post-gateway compaction are distinct contracts even if both use source-backed packets."
+    },
+    {
+      "id": "D4",
+      "summary": "Decision rows should evolve toward before/agreed/expected/validated/proof lifecycle tracking so compaction can wipe chat safely after intent is externalized."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [
+    "TASK-049 roadmap metadata refined from consolidated decision row ROW-009."
+  ],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "ROW-009",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No product/system KB edited in this decision pass; the accepted row updates TASK-049 roadmap scope and defers KB/source implementation to TASK-049.",
+      "deferred": true,
+      "deferred_reason": "TASK-049 will implement and update canonical system docs/source/tests for the accepted policy."
+    }
+  ],
+  "propagation": {
+    "direction": "system-to-roadmap",
+    "product_impact": [
+      "Reduces user-visible context bloat and missing reload guidance when implemented."
+    ],
+    "system_impact": [
+      "Defines upcoming changes for session boundaries, validation context, compaction, checkpoint proof, and decision-row lifecycle."
+    ],
+    "downstream_planning_questions": [
+      "What exact source modules own context-boundary packet generation and Pi compaction hook behavior?",
+      "How should decision row lifecycle fields remain backward-compatible with existing diff_table rows and builds?",
+      "Which changed paths should trigger reload guidance in final summaries?"
+    ]
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [
+    "What exact source modules own context-boundary packet generation and Pi compaction hook behavior?",
+    "How should decision row lifecycle fields remain backward-compatible with existing diff_table rows and builds?",
+    "Which changed paths should trigger reload guidance in final summaries?"
+  ],
+  "assumptions": [
+    "Implementation will refine exact API/schema details during TASK-049 and route back if source constraints conflict.",
+    "Local checkpoint commits remain local proof and do not imply remote publication."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "No automatic Pi restart.",
+    "No overlapping tasks for the same brainstormed scope.",
+    "No guessing when decision/planning context is ambiguous."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-049 roadmap metadata refined from consolidated decision row ROW-009."
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [],
+    "publication": [],
+    "closure": []
+  }
+}

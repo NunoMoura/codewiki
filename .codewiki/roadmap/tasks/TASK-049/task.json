@@ -1,0 +1,77 @@
+{
+  "id": "TASK-049",
+  "title": "Define CodeWiki context-boundary and decision-row lifecycle policy",
+  "status": "in_progress",
+  "priority": "high",
+  "kind": "agent-workflow",
+  "summary": "Define and implement source-backed context boundaries for gateway passes, fresh validation, threshold compaction, validation checkpoint commits, Pi reload guidance, and richer decision-row state tracking without creating overlapping roadmap tasks.",
+  "spec_paths": [
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    "skills/codewiki-decision/SKILL.md",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-validation/SKILL.md"
+  ],
+  "code_paths": [
+    "src/adapters/pi/**",
+    "src/api/**",
+    "src/session/**",
+    "src/build/**",
+    "src/validation/report.ts",
+    "src/change/diff-table.ts",
+    "src/change/types.ts",
+    "src/roadmap/**",
+    "skills/codewiki-decision/SKILL.md",
+    "skills/codewiki-planning/SKILL.md",
+    "skills/codewiki-implementation/SKILL.md",
+    "skills/codewiki-validation/SKILL.md"
+  ],
+  "research_ids": [],
+  "labels": [
+    "post-gateway",
+    "compaction",
+    "fresh-validation",
+    "checkpoint-commit",
+    "pi-reload",
+    "decision-rows",
+    "handoff",
+    "agent-workflow"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Gateway-passed builds and validated decision rows become compact source truth for next-loop context, fresh validators start from artifact refs, local checkpoint commits make validated content inspectable with Git, and Pi reload guidance appears when extension/runtime code may be stale.",
+    "acceptance": [
+      "Decision, planning, and implementation gateway-pass handoffs define a CodeWiki-owned compaction or hard session-boundary recommendation seeded by codewiki_resume_context and the passed build plus validation refs.",
+      "Fresh validation context is required for implementation, task-close, publication/publish/release, and high-risk or semantic-system gates; decision/planning validation may request freshness based on policy or context health.",
+      "Automatic threshold compaction is supported only through safe boundaries: visible tool results are preserved, active task/build refs are externalized, and mid-loop compaction blocks or checkpoints instead of losing unstored intent.",
+      "Decision/planning compaction is allowed only after important user intent is externalized into pending/approved rows, KB/build/task/session evidence, or explicit blocking questions; ambiguity routes back to decision rather than guessing.",
+      "Validated implementation content can produce a local checkpoint commit after gateway pass, while task-close/publication metadata uses a separate close/publication commit; local commits are not remote publication.",
+      "Decision rows support or plan support for current project state, agreed change, expected final state, validated final state, status, and proof refs so future compaction/restart uses durable row truth.",
+      "Final summaries detect Pi extension/skill/runtime/API changes and include explicit reload-Pi guidance; compaction does not claim to reload live extension code and never auto-restarts Pi.",
+      "Tests cover post-gateway compaction timing, no pre-gateway compaction, fresh validation packet behavior, threshold safe-boundary behavior, reload notice/no-notice cases, checkpoint commit metadata, and decision-row lifecycle serialization or compatibility."
+    ],
+    "non_goals": [
+      "Do not replace CodeWiki resume_context with chat-history/VCC recall.",
+      "Do not force compaction in the middle of an edit/check loop.",
+      "Do not restart Pi automatically or change Pi package install behavior.",
+      "Do not create separate overlapping tasks for commit policy, compaction override, validation freshness, reload guidance, or decision-row lifecycle unless TASK-049 implementation discovers an explicit split requirement."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "targeted context-boundary/compaction tests",
+      "targeted reload-guidance tests",
+      "targeted decision-row lifecycle tests"
+    ]
+  },
+  "delta": {
+    "desired": "One cohesive context-boundary policy covers gateway-pass compaction, fresh validation, threshold compaction, checkpoint commits, Pi reload guidance, and decision-row lifecycle proof without roadmap duplication.",
+    "current": "TASK-049 existed as a narrower post-gateway compaction/reload task; decision row state and validation checkpoint commit timing were not yet captured in roadmap acceptance.",
+    "closure": "Task closes when tests and validation prove boundary timing, source-backed compaction packets, fresh validator context, checkpoint commit guidance, reload notices, and decision-row lifecycle handling."
+  },
+  "created": "2026-05-29",
+  "updated": "2026-05-29T02:24:00Z"
+}
