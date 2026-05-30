@@ -14,7 +14,7 @@ import {
 import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import { nowIso, unique } from "../shared/utils.ts";
-import { readRoadmapTask } from "../roadmap/runtime.ts";
+import { readRoadmapTask } from "../roadmap/store.ts";
 import { maybeReadGraph } from "../state/artifacts.ts";
 import { requiredAuditProfiles } from "../policy/gate-policy.ts";
 import {

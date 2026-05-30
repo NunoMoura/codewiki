@@ -20,7 +20,7 @@ import {
 	roadmapTaskStage,
 	taskBoardColumn,
 	isTaskBlocked,
-} from "../../../roadmap/runtime.ts";
+} from "../../../roadmap/store.ts";
 
 export { roadmapTaskStage, taskBoardColumn, isTaskBlocked };
 

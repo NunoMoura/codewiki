@@ -122,7 +122,7 @@ export async function appendTaskSessionEvent(
 	link: TaskSessionLinkRecord,
 	sessionId: string,
 ): Promise<void> {
-	const { appendProjectEvent } = await import("../roadmap/runtime.ts");
+	const { appendProjectEvent } = await import("../roadmap/store.ts");
 	await appendProjectEvent(project, {
 		ts: nowIso(),
 		kind: "roadmap_task_session_link",

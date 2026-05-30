@@ -83,7 +83,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | CodeWiki API | `api.md` | `src/api/**` facade modules, concept tool modules such as `src/roadmap/tool.ts`, focused use-case modules, and stable contracts |
 | Agency controller | `agency.md` | `src/agency/**` agency policy, planning, budget/risk gates, and adapter-exposed `codewiki_agency` entrypoint |
 | CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
-| Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
+| Compilers | `compilers.md` | `src/build/**`, `src/roadmap/store.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/gateway/**` gateway report/preflight/tool/type/transaction ownership, `src/validation/**` compatibility re-export shims, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
 | Gate policy | `validation-gateway.md` | `src/policy/**`, gate requirements, risk tiers, approval/proof requirements, production-readiness policy, review thresholds, package readiness, and waiver policy |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |

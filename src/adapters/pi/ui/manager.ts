@@ -68,7 +68,7 @@ import {
 	taskLoopEvidenceLine,
 	isTaskBlocked,
 	taskBoardColumn,
-} from "../../../roadmap/runtime.ts";
+} from "../../../roadmap/store.ts";
 import { taskIdCandidates } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, setTaskSessionStatusText } from "../session.ts";
 import {

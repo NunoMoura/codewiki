@@ -96,7 +96,7 @@ async function main() {
 	initTheme("dark", false);
 	process.env.PI_CODEWIKI_SKIP_VERIFIER = "1";
 	const roadmapSource = readFileSync(
-		resolve(repoRoot, "src", "roadmap", "runtime.ts"),
+		resolve(repoRoot, "src", "roadmap", "store.ts"),
 		"utf8",
 	);
 	const taskAdapterSource = readFileSync(

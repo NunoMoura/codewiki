@@ -16,7 +16,7 @@ import { registerResumeCommand } from "./commands/resume.ts";
 import { registerStatusCommand } from "./commands/status.ts";
 import { registerUiCommand } from "./commands/ui.ts";
 import { currentTaskLink } from "./session.ts";
-import { readRoadmapTask } from "../../roadmap/runtime.ts";
+import { readRoadmapTask } from "../../roadmap/store.ts";
 import {
 	rememberStatusDockProject,
 	resolveStatusDockProject,

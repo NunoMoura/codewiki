@@ -50,7 +50,7 @@ Agency remains responsible for autonomy level, approval cadence, task/sprint/roa
 
 ## Runtime nomenclature
 
-Only `src/runtime/**` owns the CodeWiki Runtime concept. Helper modules that persist or mutate a specific domain should use names such as `store`, `repository`, `reader`, `writer`, or `service` instead of `runtime` unless they own daemon/harness execution. The existing `src/roadmap/runtime.ts` name is a migration target because it is roadmap persistence and mutation code, not the CodeWiki Runtime.
+Only `src/runtime/**` owns the CodeWiki Runtime concept. Helper modules that persist or mutate a specific domain should use names such as `store`, `repository`, `reader`, `writer`, or `service` instead of `runtime` unless they own daemon/harness execution. The existing `src/roadmap/store.ts` name is a migration target because it is roadmap persistence and mutation code, not the CodeWiki Runtime.
 
 ## Boundary with harness runtimes
 

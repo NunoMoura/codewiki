@@ -6,7 +6,7 @@ import {
 	readChangeClaimsFile,
 } from "../session/claims.ts";
 import { codePrompt, statusColor } from "./prompt.ts";
-import { readRoadmapFile, taskLoopEvidenceLine } from "../roadmap/runtime.ts";
+import { readRoadmapFile, taskLoopEvidenceLine } from "../roadmap/store.ts";
 import {
 	loadCodewikiStateArtifacts,
 	maybeReadTaskContext,

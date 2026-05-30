@@ -75,10 +75,10 @@ export function hasCodewikiTaskPatchChanges(
  */
 export function buildRoadmapTaskUpdateFromCodewikiPatch(
 	task: RoadmapTaskRecord,
-	runtimeTask: RoadmapStateTaskSummary | null,
+	stateTask: RoadmapStateTaskSummary | null,
 	patch: CodewikiRoadmapPatchInput,
 ): RoadmapTaskUpdateInput {
-	const currentState = roadmapApiTaskState(task, runtimeTask);
+	const currentState = roadmapApiTaskState(task, stateTask);
 	const requestedStatus = patch.status ?? currentState.status;
 	return {
 		taskId: task.id,
@@ -443,11 +443,11 @@ export async function maybeRunAutomaticTaskVerifier(
 	if (process.env.PI_CODEWIKI_VERIFIER_MODE === "off") return null;
 	
 	const state = await maybeReadRoadmapState(project.roadmapStatePath);
-	const runtimeTask = state?.tasks?.[task.id] ?? null;
+	const stateTask = state?.tasks?.[task.id] ?? null;
 	const contextPacket = (await maybeReadVerifierContextPack(project, task.id)) ?? await maybeReadTaskContext(
 		project,
 		task.id,
-		runtimeTask,
+		stateTask,
 	);
 	const brief = await buildTaskVerifierBrief(project, task, contextPacket, "task-close", closeEvidence);
 	if (brief.preflight.verdict !== "pass") return brief.preflight;

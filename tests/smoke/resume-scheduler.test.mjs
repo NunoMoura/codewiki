@@ -65,7 +65,7 @@ const delegatedContainer = task(
 	"TASK-082",
 	"todo",
 	[],
-	["src/roadmap/runtime.ts"],
+	["src/roadmap/store.ts"],
 	[
 		"TASK-078 is closed with passing checks and evidence.",
 		"TASK-079 is closed with passing checks and evidence.",

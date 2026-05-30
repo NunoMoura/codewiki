@@ -1,5 +1,5 @@
 import type { RoadmapFile, RoadmapStatus, RoadmapTaskRecord } from "./types.ts";
-import { isClosedRoadmapStatus } from "./runtime.ts";
+import { isClosedRoadmapStatus } from "./store.ts";
 import { assessRoadmapTaskBoundary } from "./task-boundary.ts";
 
 export interface RoadmapDispatchCandidate {

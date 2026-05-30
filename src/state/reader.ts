@@ -19,7 +19,7 @@ import {
 	roadmapApiTaskState,
 	maybeReadTaskContext,
 } from "./artifacts.ts";
-import { readRoadmapTask } from "../roadmap/runtime.ts";
+import { readRoadmapTask } from "../roadmap/store.ts";
 import { findLatestTaskSessionLink } from "../session/links.ts";
 import type {
 	FileStore,

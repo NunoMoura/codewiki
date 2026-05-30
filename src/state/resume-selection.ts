@@ -10,7 +10,7 @@ import {
 import {
 	isClosedRoadmapStatus,
 	resolveRoadmapTask,
-} from "../roadmap/runtime.ts";
+} from "../roadmap/store.ts";
 import { assessRoadmapTaskBoundary } from "../roadmap/task-boundary.ts";
 import { stableAgentName } from "./builders.ts";
 import type { WikiProject } from "../project/types.ts";

@@ -14,7 +14,7 @@ import type {
 	CodewikiRoadmapEvidenceInput,
 	RoadmapStatus,
 } from "./types.ts";
-import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./runtime.ts";
+import { appendRoadmapTasks, updateRoadmapTask, appendCodewikiTaskEvidence, readRoadmapTask, hasCodewikiTaskPatchChanges, buildRoadmapTaskUpdateFromCodewikiPatch, hasRoadmapTaskUpdateFields } from "./store.ts";
 import { maybeReadRoadmapState } from "../state/artifacts.ts";
 import type { FileStore, RebuildRunner, MessageBus } from "../shared/ports.ts";
 
@@ -56,13 +56,13 @@ export async function patchCodewikiTask(
 	if (!task) throw new Error(`Roadmap task not found: ${taskId}`);
 
 	const state = await maybeReadRoadmapState(project.roadmapStatePath);
-	const runtimeTask = state?.tasks?.[task.id] ?? null;
+	const stateTask = state?.tasks?.[task.id] ?? null;
 
 	if (!hasCodewikiTaskPatchChanges(patch)) {
 		return { task, changed: false };
 	}
 
-	const update = buildRoadmapTaskUpdateFromCodewikiPatch(task, runtimeTask, patch);
+	const update = buildRoadmapTaskUpdateFromCodewikiPatch(task, stateTask, patch);
 
 	if (!hasRoadmapTaskUpdateFields(update)) {
 		return { task, changed: false };

@@ -19,7 +19,7 @@ import {
 import {
 	readRoadmapFile,
 	updateRoadmapTask,
-} from "../../../roadmap/runtime.ts";
+} from "../../../roadmap/store.ts";
 import { isRoadmapTaskToken } from "../../../roadmap/task-id.ts";
 import { currentTaskLink, piSessionPorts } from "../session.ts";
 import { recordSessionTaskAction } from "../../../session/runtime.ts";

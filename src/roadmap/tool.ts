@@ -21,7 +21,7 @@ import {
 	updateTaskLoop,
 	upsertRoadmapSprint,
 	writeRoadmapFile,
-} from "./runtime.ts";
+} from "./store.ts";
 import {
 	appendTaskEvidence as appendTaskEvidenceUseCase,
 	cancelCodewikiTask,
@@ -203,8 +203,8 @@ export async function executeCodewikiRoadmapTool(
 	}
 	const existingTask = await readRoadmapTask(project, input.taskId);
 	if (!existingTask) throw new Error(`Roadmap task not found: ${input.taskId}`);
-	let runtimeState = await maybeReadRoadmapState(project.roadmapStatePath);
-	let runtimeTask = runtimeState?.tasks?.[existingTask.id] ?? null;
+	let roadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
+	let stateTask = roadmapState?.tasks?.[existingTask.id] ?? null;
 	let latestTask = existingTask;
 	let changed = false;
 	let evidenceRecorded = false;
@@ -250,8 +250,8 @@ export async function executeCodewikiRoadmapTool(
 			const patchResult = await patchCodewikiTask(project, existingTask.id, input.patch, ports);
 			latestTask = patchResult.task;
 			changed = patchResult.changed;
-			runtimeState = await maybeReadRoadmapState(project.roadmapStatePath);
-			runtimeTask = runtimeState?.tasks?.[latestTask.id] ?? null;
+			roadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
+			stateTask = roadmapState?.tasks?.[latestTask.id] ?? null;
 		}
 		if (input.evidence) {
 			if (input.evidence.result === "pass" || input.evidence.result === "fail" || input.evidence.result === "block") {
@@ -275,9 +275,9 @@ export async function executeCodewikiRoadmapTool(
 	}
 	if (refresh && (changed || evidenceRecorded)) await runRebuild(project);
 	const finalRoadmapState = await maybeReadRoadmapState(project.roadmapStatePath);
-	const finalRuntimeTask = finalRoadmapState?.tasks?.[latestTask.id] ?? runtimeTask;
-	const finalContextPacket = await maybeReadTaskContext(project, latestTask.id, finalRuntimeTask);
-	const finalState = buildCodewikiTaskDetail(latestTask, finalRuntimeTask, finalContextPacket);
+	const finalStateTask = finalRoadmapState?.tasks?.[latestTask.id] ?? stateTask;
+	const finalContextPacket = await maybeReadTaskContext(project, latestTask.id, finalStateTask);
+	const finalState = buildCodewikiTaskDetail(latestTask, finalStateTask, finalContextPacket);
 	const result = {
 		action: input.action,
 		changed,

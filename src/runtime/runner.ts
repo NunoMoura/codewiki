@@ -10,7 +10,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import type { AgencyBudget } from "../agency/types.ts";
 import type { WikiProject } from "../project/types.ts";
-import { readRoadmapFile, resolveRoadmapTask } from "../roadmap/runtime.ts";
+import { readRoadmapFile, resolveRoadmapTask } from "../roadmap/store.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import {
 	artifactStatusesForScopes,

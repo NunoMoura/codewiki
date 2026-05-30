@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import type { AgencyBudget } from "../agency/types.ts";
 import type { WikiProject } from "../project/types.ts";
-import { readRoadmapFile } from "../roadmap/runtime.ts";
+import { readRoadmapFile } from "../roadmap/store.ts";
 import {
 	selectRoadmapDispatchCandidates,
 	type RoadmapDispatchCandidate,

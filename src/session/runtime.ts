@@ -8,7 +8,7 @@ import type { WikiProject } from "../project/types.ts";
 import type { RoadmapTaskRecord } from "../roadmap/types.ts";
 import type { TaskSessionLinkRecord, TaskSessionAction, TaskSessionLinkInput } from "./types.ts";
 import { findLatestTaskSessionLink, normalizeTaskSessionLinkInput } from "./links.ts";
-import { readRoadmapTask } from "../roadmap/runtime.ts";
+import { readRoadmapTask } from "../roadmap/store.ts";
 import { unique } from "../shared/utils.ts";
 import type { FileStore, SessionStore, UserNotifier } from "../shared/ports.ts";
 

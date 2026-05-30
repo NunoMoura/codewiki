@@ -11,7 +11,7 @@ const requiredRoadmapOwners = [
 	"src/roadmap/status.ts",
 	"src/roadmap/task-id.ts",
 	"src/roadmap/task-boundary.ts",
-	"src/roadmap/runtime.ts",
+	"src/roadmap/store.ts",
 	"src/roadmap/task.ts",
 	"src/roadmap/tool.ts",
 ];
@@ -36,7 +36,7 @@ const roadmapTypes = await import(resolve(repoRoot, "src/roadmap/types.ts"));
 const roadmapStatus = await import(resolve(repoRoot, "src/roadmap/status.ts"));
 const roadmapIds = await import(resolve(repoRoot, "src/roadmap/task-id.ts"));
 const roadmapBoundary = await import(resolve(repoRoot, "src/roadmap/task-boundary.ts"));
-const roadmapRuntime = await import(resolve(repoRoot, "src/roadmap/runtime.ts"));
+const roadmapStore = await import(resolve(repoRoot, "src/roadmap/store.ts"));
 const roadmapTask = await import(resolve(repoRoot, "src/roadmap/task.ts"));
 const roadmapTool = await import(resolve(repoRoot, "src/roadmap/tool.ts"));
 
@@ -59,7 +59,7 @@ const executableTask = {
 	kind: "migration",
 	summary: "Move roadmap owner modules without changing behavior.",
 	spec_paths: [".codewiki/kb/system/roadmap.md"],
-	code_paths: ["src/roadmap/runtime.ts"],
+	code_paths: ["src/roadmap/store.ts"],
 	labels: ["roadmap-root"],
 	goal: {
 		outcome: "Roadmap ownership lives under src/roadmap/**.",
@@ -83,12 +83,12 @@ assert.equal(roadmapBoundary.assessRoadmapTaskBoundary(containerTask).container,
 assert.throws(() => roadmapBoundary.assertExecutableRoadmapTask(containerTask, "guard"), /self-contained executable work/);
 
 for (const [name, value] of [
-	["readRoadmapFile", roadmapRuntime.readRoadmapFile],
-	["writeRoadmapFile", roadmapRuntime.writeRoadmapFile],
-	["appendRoadmapTasks", roadmapRuntime.appendRoadmapTasks],
-	["updateRoadmapTask", roadmapRuntime.updateRoadmapTask],
-	["upsertRoadmapSprint", roadmapRuntime.upsertRoadmapSprint],
-	["runTaskClosePreflight", roadmapRuntime.runTaskClosePreflight],
+	["readRoadmapFile", roadmapStore.readRoadmapFile],
+	["writeRoadmapFile", roadmapStore.writeRoadmapFile],
+	["appendRoadmapTasks", roadmapStore.appendRoadmapTasks],
+	["updateRoadmapTask", roadmapStore.updateRoadmapTask],
+	["upsertRoadmapSprint", roadmapStore.upsertRoadmapSprint],
+	["runTaskClosePreflight", roadmapStore.runTaskClosePreflight],
 	["createCodewikiTasks", roadmapTask.createCodewikiTasks],
 	["patchCodewikiTask", roadmapTask.patchCodewikiTask],
 	["closeCodewikiTask", roadmapTask.closeCodewikiTask],
