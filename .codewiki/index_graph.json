@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T05:20:56.372Z",
+  "generated_at": "2026-05-30T05:23:03.968Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -7077,56 +7077,6 @@
       "lens_family": "execution"
     },
     {
-      "id": "task:TASK-057",
-      "kind": "roadmap_task",
-      "title": "Move gate requirements from quality to policy",
-      "layer": "roadmap",
-      "status": "in_progress",
-      "change_type": "system",
-      "alignment_state": "drift",
-      "lens_family": "work"
-    },
-    {
-      "id": "code:src/policy/gate-policy.ts",
-      "kind": "code_path",
-      "path": "src/policy/gate-policy.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/policy/risk.ts",
-      "kind": "code_path",
-      "path": "src/policy/risk.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/policy/production-profile.ts",
-      "kind": "code_path",
-      "path": "src/policy/production-profile.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/build/shared.ts",
-      "kind": "code_path",
-      "path": "src/build/shared.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:src/gateway/report.ts",
-      "kind": "code_path",
-      "path": "src/gateway/report.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
       "id": "task:TASK-059",
       "kind": "roadmap_task",
       "title": "Standardize internal agent tools to wiki namespace",
@@ -7908,6 +7858,14 @@
       "id": "code:src/build/decision-propagation.ts",
       "kind": "code_path",
       "path": "src/build/decision-propagation.ts",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/build/shared.ts",
+      "kind": "code_path",
+      "path": "src/build/shared.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -33914,116 +33872,6 @@
       "lens_family": "proof"
     },
     {
-      "id": "claim:CLAIM-001",
-      "kind": "change_claim",
-      "claim_id": "CLAIM-001",
-      "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-      "agent_name": "Bison",
-      "mode": "write",
-      "role": "validator",
-      "status": "active",
-      "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-      "expires_at": "2026-05-30T08:12:17.527Z",
-      "worktree": {
-        "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-        "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-        "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-      },
-      "scopes": [
-        {
-          "layer": "roadmap",
-          "task_id": "TASK-057"
-        },
-        {
-          "layer": "code",
-          "path": "src/policy/**"
-        },
-        {
-          "layer": "code",
-          "path": "src/build/shared.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/build/writer.ts"
-        },
-        {
-          "layer": "code",
-          "path": "src/gateway/report.ts"
-        },
-        {
-          "layer": "code",
-          "path": "tests/smoke/policy-gate.test.mjs"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/compilers.md"
-        },
-        {
-          "layer": "knowledge",
-          "path": ".codewiki/kb/system/validation-gateway.md"
-        },
-        {
-          "layer": "validation",
-          "path": ".codewiki/validation/**"
-        }
-      ],
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:TASK-057",
-      "kind": "change_claim_scope",
-      "path": "TASK-057",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/policy/**",
-      "kind": "change_claim_scope",
-      "path": "src/policy/**",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/build/shared.ts",
-      "kind": "change_claim_scope",
-      "path": "src/build/shared.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/build/writer.ts",
-      "kind": "change_claim_scope",
-      "path": "src/build/writer.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:src/gateway/report.ts",
-      "kind": "change_claim_scope",
-      "path": "src/gateway/report.ts",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:tests/smoke/policy-gate.test.mjs",
-      "kind": "change_claim_scope",
-      "path": "tests/smoke/policy-gate.test.mjs",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/compilers.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/compilers.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/kb/system/validation-gateway.md",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/kb/system/validation-gateway.md",
-      "lens_family": "work"
-    },
-    {
-      "id": "claim_scope:.codewiki/validation/**",
-      "kind": "change_claim_scope",
-      "path": ".codewiki/validation/**",
-      "lens_family": "work"
-    },
-    {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-19-documentation-pass.json",
@@ -45746,6 +45594,63 @@
       "kind": "content_proof",
       "path": "sha256:3bba4bc57c6016538ce7111713623b9da08734f2d967f7ac6b152d1b72bf8a37",
       "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/task-057-close",
+        "branch": "task-057-close",
+        "head_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+        "validated_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+        "tree_sha": "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
+        "clean": true,
+        "fresh_context": true,
+        "notes": "Task-close validation was recorded immediately after verifying the isolated worktree was clean at commit 2717bb81e689b82ca9564d1cf625906216dd022f.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json"
+        ],
+        "audit_evidence_refs": [
+          "alignment",
+          "changed",
+          "task",
+          "task:TASK-057",
+          "generated-parity",
+          "file-structure"
+        ],
+        "content_proof_refs": [
+          "2717bb81e689b82ca9564d1cf625906216dd022f",
+          "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "content_proof:2717bb81e689b82ca9564d1cf625906216dd022f",
+      "kind": "content_proof",
+      "path": "2717bb81e689b82ca9564d1cf625906216dd022f",
+      "proof_kind": "git_sha",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
+      "kind": "content_proof",
+      "path": "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
+      "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
@@ -63483,135 +63388,6 @@
     },
     {
       "kind": "task_spec",
-      "from": "task:TASK-057",
-      "to": "doc:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:src/policy/gate-policy.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:src/policy/risk.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:src/policy/production-profile.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:src/build/shared.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:src/gateway/report.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/compilers.md",
-      "to": "code:tests/smoke/policy-gate.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "task_spec",
-      "from": "task:TASK-057",
-      "to": "doc:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/policy/gate-policy.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/policy/risk.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/policy/production-profile.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/build/shared.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/build/writer.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/gateway/report.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-057"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/policy/gate-policy.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/policy/risk.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/policy/production-profile.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/build/shared.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/build/writer.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:src/gateway/report.ts"
-    },
-    {
-      "kind": "task_code_path",
-      "from": "task:TASK-057",
-      "to": "code:tests/smoke/policy-gate.test.mjs"
-    },
-    {
-      "kind": "task_spec",
       "from": "task:TASK-059",
       "to": "doc:.codewiki/kb/system/api.md"
     },
@@ -67745,6 +67521,20 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
+      "to": "code:src/build/shared.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/validation-gateway.md",
+      "to": "code:src/build/writer.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/validation-gateway.md",
       "to": "code:src/build/tool.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
@@ -67865,6 +67655,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/compilers.md",
       "to": "code:src/build/decision-propagation.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/compilers.md",
+      "to": "code:src/build/shared.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json"
     },
@@ -103461,56 +103258,6 @@
       "default_hidden": true
     },
     {
-      "kind": "claim_task",
-      "from": "claim:CLAIM-001",
-      "to": "task:TASK-057"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:TASK-057"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:src/policy/**"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:src/build/shared.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:src/build/writer.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:src/gateway/report.ts"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:tests/smoke/policy-gate.test.mjs"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:.codewiki/kb/system/compilers.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:.codewiki/kb/system/validation-gateway.md"
-    },
-    {
-      "kind": "claim_scope",
-      "from": "claim:CLAIM-001",
-      "to": "claim_scope:.codewiki/validation/**"
-    },
-    {
       "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
       "to": "source:.codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
@@ -116270,6 +116017,65 @@
       "to": "task:TASK-057"
     },
     {
+      "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:task:TASK-057",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "audit:file-structure",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "content_proof:2717bb81e689b82ca9564d1cf625906216dd022f",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "content_proof:e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+      "to": "task:TASK-057"
+    },
+    {
       "kind": "lint_issue_path",
       "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
       "to": "doc:.codewiki/roadmap/queue.json"
@@ -116370,17 +116176,16 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 30,
+            "item_count": 19,
             "badges": [
               {
                 "id": "open_tasks",
                 "label": "open tasks",
-                "count": 2,
+                "count": 1,
                 "refs": [
-                  "TASK-057",
                   "TASK-059"
                 ],
-                "ref_count": 2
+                "ref_count": 1
               },
               {
                 "id": "done_tasks",
@@ -116399,7 +116204,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 1
+                "count": 0
               }
             ],
             "hot_refs": [
@@ -116421,12 +116226,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 435,
+            "item_count": 431,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 381
+                "count": 377
               },
               {
                 "id": "test_files",
@@ -116468,7 +116273,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 168
+                "count": 169
               },
               {
                 "id": "fail_or_block_validation",
@@ -116483,7 +116288,7 @@
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1332
+                "count": 1334
               },
               {
                 "id": "traceability_gaps",
@@ -116510,11 +116315,11 @@
             "collapsed": 124
           },
           "validations": {
-            "total": 168,
-            "pass": 141,
+            "total": 169,
+            "pass": 142,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 168
+            "collapsed": 169
           }
         },
         "next_action": {
@@ -125104,6 +124909,28 @@
               "sha256:3bba4bc57c6016538ce7111713623b9da08734f2d967f7ac6b152d1b72bf8a37"
             ],
             "isolation_status": "isolated"
+          },
+          {
+            "path": ".codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+            "verdict": "pass",
+            "profile": "task-close",
+            "task_id": "TASK-057",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json"
+            ],
+            "audit_evidence_refs": [
+              "alignment",
+              "changed",
+              "task",
+              "task:TASK-057",
+              "generated-parity",
+              "file-structure"
+            ],
+            "content_proof_refs": [
+              "2717bb81e689b82ca9564d1cf625906216dd022f",
+              "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+            ],
+            "isolation_status": "isolated"
           }
         ],
         "validation_isolation": [
@@ -127796,6 +127623,27 @@
             "publisher_result_refs": [
               "846d7121e242d8d99a6f3e78a237dc162c4a0ed5"
             ]
+          },
+          {
+            "path": ".codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+            "task_id": "TASK-057",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/task-057-close",
+            "branch": "task-057-close",
+            "head_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+            "validated_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+            "clean": true,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "2717bb81e689b82ca9564d1cf625906216dd022f",
+              "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+            ],
+            "publisher_result_refs": [
+              "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+            ]
           }
         ],
         "audit_evidence_refs": [
@@ -128547,6 +128395,7 @@
           "22e8efd86255595b390d412655c3ae80fcea1cfb",
           "23535a3b871eb528b3857868b758fe5a7041734c",
           "25e2938267e79daa79ac8bbce8f7cf37034c8abc",
+          "2717bb81e689b82ca9564d1cf625906216dd022f",
           "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
           "280342c5ed31c376db33af53187b336ed710e441",
           "29fa4d712229e29e1a7d531994beacb8ffde3332",
@@ -128678,6 +128527,7 @@
           "e329c1f47deec0f969c834131b017d33dd46e8de",
           "e33d7830865ed01b2a04c14e4160d5d7d9ddfe18",
           "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+          "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
           "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
           "e74b43a3baf16efb55d7ef159eebb4fec3cb8f0de7a618a43f4a089d4de061f7",
           "e993fdd9e0952203a2169ced3d61ed661366c98d",
@@ -129726,17 +129576,6 @@
             ]
           },
           {
-            "id": "reconcile:task:TASK-057",
-            "source_id": "task:TASK-057",
-            "state": "drift",
-            "direction": "downward",
-            "from_layer": "roadmap",
-            "to_layer": "code",
-            "next_loop": "implementation",
-            "task_id": "TASK-057",
-            "reason": "TASK-057 is open implementation delta below knowledge."
-          },
-          {
             "id": "reconcile:task:TASK-059",
             "source_id": "task:TASK-059",
             "state": "drift",
@@ -129937,16 +129776,12 @@
         "TASK-012",
         "TASK-023",
         "TASK-036",
-        "TASK-057",
         "TASK-059"
       ],
       "open_task_ids": [
-        "TASK-057",
         "TASK-059"
       ],
-      "in_progress_task_ids": [
-        "TASK-057"
-      ],
+      "in_progress_task_ids": [],
       "todo_task_ids": [
         "TASK-059"
       ],
@@ -129959,7 +129794,6 @@
       ],
       "status_counts": {
         "cancelled": 3,
-        "in_progress": 1,
         "todo": 1
       },
       "sprint_ids": [
@@ -130525,7 +130359,6 @@
             "TASK-059"
           ],
           "open_task_ids": [
-            "TASK-057",
             "TASK-059"
           ],
           "budget": {
@@ -130806,7 +130639,6 @@
         "src/gateway",
         "src/gateway/**",
         "src/gateway/index.ts",
-        "src/gateway/report.ts",
         "src/gateway/tool.ts",
         "src/gateway/transaction.ts",
         "src/gc/**",
@@ -130821,9 +130653,6 @@
         "src/mutation-queue.ts",
         "src/mutation-queue.ts (deleted)",
         "src/policy/**",
-        "src/policy/gate-policy.ts",
-        "src/policy/production-profile.ts",
-        "src/policy/risk.ts",
         "src/project",
         "src/project-root.ts",
         "src/project/**",
@@ -130945,581 +130774,25 @@
       "dirty_paths": []
     },
     "claims": {
-      "active_claim_count": 1,
+      "active_claim_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {
-        "validator": 1
-      },
-      "isolation": [
-        {
-          "id": "CLAIM-001",
-          "role": "validator",
-          "mode": "write",
-          "task_id": "TASK-057",
-          "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-          "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951"
-        }
-      ],
-      "claims": [
-        {
-          "id": "CLAIM-001",
-          "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-          "agent_name": "Bison",
-          "status": "active",
-          "mode": "write",
-          "role": "validator",
-          "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-          "task_id": "TASK-057",
-          "worktree": {
-            "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-            "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-            "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-          },
-          "scopes": [
-            {
-              "layer": "roadmap",
-              "task_id": "TASK-057"
-            },
-            {
-              "layer": "code",
-              "path": "src/policy/**"
-            },
-            {
-              "layer": "code",
-              "path": "src/build/shared.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/build/writer.ts"
-            },
-            {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            {
-              "layer": "code",
-              "path": "tests/smoke/policy-gate.test.mjs"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/compilers.md"
-            },
-            {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/validation-gateway.md"
-            },
-            {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            }
-          ],
-          "created_at": "2026-05-30T05:12:17Z",
-          "updated_at": "2026-05-30T05:12:17Z",
-          "expires_at": "2026-05-30T08:12:17.527Z"
-        }
-      ],
+      "by_role": {},
+      "isolation": [],
+      "claims": [],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/compilers.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/validation-gateway.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/shared.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/writer.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-057"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/policy-gate.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifact_statuses": []
     },
     "artifact_status": {
-      "in_use_count": 1,
+      "in_use_count": 0,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": [
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/compilers.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "knowledge",
-            "path": ".codewiki/kb/system/validation-gateway.md"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "validation",
-            "path": ".codewiki/validation/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/shared.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/build/writer.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/gateway/report.ts"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "src/policy/**"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "roadmap",
-            "task_id": "TASK-057"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        },
-        {
-          "artifact": {
-            "layer": "code",
-            "path": "tests/smoke/policy-gate.test.mjs"
-          },
-          "status": "in-use",
-          "holders": [
-            {
-              "record_id": "CLAIM-001",
-              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "agent_name": "Bison",
-              "mode": "write",
-              "role": "validator",
-              "task_id": "TASK-057",
-              "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-              "expires_at": "2026-05-30T08:12:17.527Z",
-              "worktree": {
-                "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-              },
-              "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-            }
-          ],
-          "waiters": [],
-          "conflict_ids": []
-        }
-      ]
+      "artifacts": []
     },
     "validation": {
       "isolation": [
@@ -134212,6 +133485,27 @@
           "publisher_result_refs": [
             "846d7121e242d8d99a6f3e78a237dc162c4a0ed5"
           ]
+        },
+        {
+          "path": ".codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+          "task_id": "TASK-057",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/task-057-close",
+          "branch": "task-057-close",
+          "head_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+          "validated_sha": "2717bb81e689b82ca9564d1cf625906216dd022f",
+          "clean": true,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "2717bb81e689b82ca9564d1cf625906216dd022f",
+            "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+          ],
+          "publisher_result_refs": [
+            "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+          ]
         }
       ]
     },
@@ -135698,6 +134992,7 @@
         "22e8efd86255595b390d412655c3ae80fcea1cfb",
         "23535a3b871eb528b3857868b758fe5a7041734c",
         "25e2938267e79daa79ac8bbce8f7cf37034c8abc",
+        "2717bb81e689b82ca9564d1cf625906216dd022f",
         "27c8167e0bb9fe85e609c3efee8b2ae23ad5a9b0",
         "280342c5ed31c376db33af53187b336ed710e441",
         "29fa4d712229e29e1a7d531994beacb8ffde3332",
@@ -135829,6 +135124,7 @@
         "e329c1f47deec0f969c834131b017d33dd46e8de",
         "e33d7830865ed01b2a04c14e4160d5d7d9ddfe18",
         "e3e415f6b74486fedf0831fc272f1abc2b6ea9e1",
+        "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c",
         "e5f0c3c509c1d0ab4fcf915dd767b8b2d31d3601",
         "e74b43a3baf16efb55d7ef159eebb4fec3cb8f0de7a618a43f4a089d4de061f7",
         "e993fdd9e0952203a2169ced3d61ed661366c98d",
@@ -140965,6 +140261,28 @@
             "sha256:3bba4bc57c6016538ce7111713623b9da08734f2d967f7ac6b152d1b72bf8a37"
           ],
           "isolation_status": "isolated"
+        },
+        {
+          "path": ".codewiki/validation/2026-05-30-task-close-pass-task-057-2026-05-30-task-057-pol.json",
+          "verdict": "pass",
+          "profile": "task-close",
+          "task_id": "TASK-057",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json"
+          ],
+          "audit_evidence_refs": [
+            "alignment",
+            "changed",
+            "task",
+            "task:TASK-057",
+            "generated-parity",
+            "file-structure"
+          ],
+          "content_proof_refs": [
+            "2717bb81e689b82ca9564d1cf625906216dd022f",
+            "e5d37c95c3cfac0c5a6d113dcf6a29df5291c31c"
+          ],
+          "isolation_status": "isolated"
         }
       ]
     },
@@ -142935,11 +142253,9 @@
           "TASK-012",
           "TASK-023",
           "TASK-036",
-          "TASK-057",
           "TASK-059"
         ],
         "open_task_ids": [
-          "TASK-057",
           "TASK-059"
         ],
         "sprint_ids": [
@@ -143518,7 +142834,6 @@
             "TASK-059"
           ],
           "open_task_ids": [
-            "TASK-057",
             "TASK-059"
           ],
           "budget": {
@@ -143741,32 +143056,6 @@
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
           ]
         },
-        "TASK-057": {
-          "kind": "task",
-          "id": "TASK-057",
-          "task_ids": [
-            "TASK-057"
-          ],
-          "open_task_ids": [
-            "TASK-057"
-          ],
-          "sprint_ids": [
-            "SPRINT-015"
-          ],
-          "spec_paths": [
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "code_paths": [
-            "src/policy/gate-policy.ts",
-            "src/policy/risk.ts",
-            "src/policy/production-profile.ts",
-            "src/build/shared.ts",
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "tests/smoke/policy-gate.test.mjs"
-          ]
-        },
         "TASK-059": {
           "kind": "task",
           "id": "TASK-059",
@@ -143839,7 +143128,6 @@
       "classes": {
         "hot": {
           "task_ids": [
-            "TASK-057",
             "TASK-059"
           ],
           "sprint_ids": [
@@ -143855,9 +143143,7 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
           ],
-          "claim_ids": [
-            "CLAIM-001"
-          ],
+          "claim_ids": [],
           "claim_wait_ids": []
         },
         "warm": {
@@ -145213,17 +144499,6 @@
           ]
         },
         {
-          "id": "reconcile:task:TASK-057",
-          "source_id": "task:TASK-057",
-          "state": "drift",
-          "direction": "downward",
-          "from_layer": "roadmap",
-          "to_layer": "code",
-          "next_loop": "implementation",
-          "task_id": "TASK-057",
-          "reason": "TASK-057 is open implementation delta below knowledge."
-        },
-        {
           "id": "reconcile:task:TASK-059",
           "source_id": "task:TASK-059",
           "state": "drift",
@@ -145237,7 +144512,7 @@
       ],
       "counts_by_loop": {
         "decision": 3,
-        "implementation": 2
+        "implementation": 1
       },
       "next_action": {
         "loop": "decision",
@@ -145272,7 +144547,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-30T05:20:56.255Z",
+      "generated_at": "2026-05-30T05:23:03.858Z",
       "counts": {
         "large-doc": 2,
         "roadmap-missing-code-path": 1,
@@ -145313,7 +144588,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-30T05:20:56Z",
+      "generated_at": "2026-05-30T05:23:03Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -145324,18 +144599,17 @@
         "task_context_root": ".codewiki/roadmap/tasks"
       },
       "summary": {
-        "task_count": 5,
-        "open_count": 2,
+        "task_count": 4,
+        "open_count": 1,
         "sprint_count": 15,
         "active_sprint_count": 1,
         "status_counts": {
           "cancelled": 3,
-          "in_progress": 1,
           "todo": 1
         },
         "priority_counts": {
           "medium": 1,
-          "high": 4
+          "high": 3
         }
       },
       "views": {
@@ -145343,15 +144617,12 @@
           "TASK-012",
           "TASK-023",
           "TASK-036",
-          "TASK-057",
           "TASK-059"
         ],
         "open_task_ids": [
-          "TASK-057",
           "TASK-059"
         ],
         "executable_open_task_ids": [
-          "TASK-057",
           "TASK-059"
         ],
         "container_task_ids": [],
@@ -145918,7 +145189,6 @@
               "TASK-059"
             ],
             "open_task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "budget": {
@@ -145948,12 +145218,8 @@
             }
           }
         ],
-        "in_progress_task_ids": [
-          "TASK-057"
-        ],
-        "executable_in_progress_task_ids": [
-          "TASK-057"
-        ],
+        "in_progress_task_ids": [],
+        "executable_in_progress_task_ids": [],
         "todo_task_ids": [
           "TASK-059"
         ],
@@ -145968,7 +145234,6 @@
           "TASK-036"
         ],
         "recent_task_ids": [
-          "TASK-057",
           "TASK-059",
           "TASK-036",
           "TASK-023",
@@ -146506,64 +145771,6 @@
             "updated_at": ""
           }
         },
-        "TASK-057": {
-          "id": "TASK-057",
-          "title": "Move gate requirements from quality to policy",
-          "status": "in_progress",
-          "priority": "high",
-          "kind": "migration",
-          "change_type": "system",
-          "summary": "Create src/policy/** as the owner of gate requirements, risk tiers, approvals, proof requirements, and production-readiness policy; remove quality as policy owner.",
-          "labels": [
-            "policy-layer",
-            "quality-rename",
-            "risk-policy"
-          ],
-          "goal": {
-            "outcome": "Policy owns rules and requirements while checks produce evidence and gateway emits verdicts.",
-            "acceptance": [
-              "src/policy/** owns gate requirements, risk tiers, proof requirements, approvals, and production profile policy.",
-              "src/quality/** is removed or reduced to historical compatibility-free absence; live imports use policy naming.",
-              "Gateway/report/build code consumes policy functions instead of local duplicate required-audit/risk constants where this task touches them.",
-              "Tests enforce policy dependency direction: policy does not import gateway or checks executors."
-            ],
-            "non_goals": [
-              "Do not run checks from policy.",
-              "Do not emit pass/fail/block verdicts from policy.",
-              "Do not migrate gateway implementation in this task."
-            ],
-            "verification": [
-              "npm run typecheck",
-              "npm run test:smoke",
-              "npm run test:features",
-              "targeted policy-gate tests",
-              "search proves live quality policy ownership names are removed."
-            ]
-          },
-          "spec_paths": [
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/validation-gateway.md"
-          ],
-          "code_paths": [
-            "src/policy/gate-policy.ts",
-            "src/policy/risk.ts",
-            "src/policy/production-profile.ts",
-            "src/build/shared.ts",
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "tests/smoke/policy-gate.test.mjs"
-          ],
-          "updated": "2026-05-30T05:12:39Z",
-          "boundary": {
-            "executable": true,
-            "container": false,
-            "reasons": []
-          },
-          "context_path": ".codewiki/roadmap/tasks/TASK-057/context.json",
-          "loop": {
-            "updated_at": ""
-          }
-        },
         "TASK-059": {
           "id": "TASK-059",
           "title": "Standardize internal agent tools to wiki namespace",
@@ -146631,7 +145838,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-30T05:20:56Z",
+      "generated_at": "2026-05-30T05:23:04Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -146646,13 +145853,13 @@
       "summary": {
         "total_specs": 21,
         "mapped_specs": 21,
-        "aligned_specs": 36,
-        "tracked_specs": 3,
+        "aligned_specs": 38,
+        "tracked_specs": 1,
         "untracked_specs": 0,
         "blocked_specs": 0,
         "unmapped_specs": 0,
-        "task_count": 5,
-        "open_task_count": 2,
+        "task_count": 4,
+        "open_task_count": 1,
         "done_task_count": 0,
         "file_structure_actionable_drift": 0,
         "file_structure_approved_migration_deltas": 0
@@ -146660,14 +145867,14 @@
       "bars": {
         "tracked_drift": {
           "label": "Tracked Drift",
-          "value": 3,
-          "total": 3,
+          "value": 1,
+          "total": 1,
           "percent": 100
         },
         "roadmap_done": {
           "label": "Roadmap Done",
           "value": 0,
-          "total": 5,
+          "total": 4,
           "percent": 0
         },
         "spec_mapping": {
@@ -146679,17 +145886,12 @@
       },
       "views": {
         "risky_spec_paths": [
-          ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/validation-gateway.md"
+          ".codewiki/kb/system/api.md"
         ],
         "top_risky_spec_paths": [
-          ".codewiki/kb/system/api.md",
-          ".codewiki/kb/system/compilers.md",
-          ".codewiki/kb/system/validation-gateway.md"
+          ".codewiki/kb/system/api.md"
         ],
         "open_task_ids": [
-          "TASK-057",
           "TASK-059"
         ],
         "sprint_ids": [
@@ -146759,7 +145961,6 @@
         "classes": {
           "hot": {
             "task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "sprint_ids": [
@@ -146775,9 +145976,7 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
             ],
-            "claim_ids": [
-              "CLAIM-001"
-            ],
+            "claim_ids": [],
             "claim_wait_ids": []
           },
           "warm": {
@@ -147062,11 +146261,11 @@
       },
       "direction": [
         "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
-        "Tracked drift coverage: 3/3.",
+        "Tracked drift coverage: 1/1.",
         "File-structure drift: 0 actionable item(s), 0 approved migration delta(s)."
       ],
       "file_structure": {
@@ -147250,263 +146449,6 @@
             "basis": "source_content"
           },
           "note": "tracked by TASK-059"
-        },
-        {
-          "path": ".codewiki/kb/system/compilers.md",
-          "title": "Compilers",
-          "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/build/tool.ts",
-            "src/build/writer.ts",
-            "src/policy/**",
-            "src/validation/**",
-            "src/policy/gate-policy.ts",
-            "src/policy/risk.ts",
-            "src/policy/production-profile.ts",
-            "src/build/shared.ts",
-            "src/gateway/report.ts",
-            "tests/smoke/policy-gate.test.mjs",
-            "src/domain/audit/types.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/audit.ts",
-            "src/adapters/pi/tools/audit.ts",
-            "src/adapters/pi/schemas.ts",
-            "scripts/check-architecture.mjs",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            "src/domain/shared/types.ts",
-            "src/domain/shared/session.ts",
-            "src/application/builds.ts",
-            "src/application/lint.ts",
-            "src/application/graph.ts",
-            "src/application/graph/rebuilder.ts",
-            "src/application/agency.ts",
-            "src/application/diff-table.ts",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/templates.ts",
-            "skills/codewiki/SKILL.md",
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-decision/references/tools.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-planning/references/tools.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-implementation/references/tools.md",
-            "skills/codewiki-validation/SKILL.md",
-            "skills/codewiki-validation/references/tools.md",
-            "skills/codewiki/references/tool-catalog.md",
-            "skills/codewiki/prompts/resume-implementation.md",
-            "README.md",
-            "src/adapters/pi/tools/artifact-status.ts",
-            "src/application/claims.ts",
-            "src/application/gateway/index.ts",
-            "src/adapters/pi/tools/claim.ts (deleted)",
-            "src/application/tools/claim.ts (deleted)",
-            "src/application/tools/catalog.ts (deleted)",
-            "src/build/types.ts",
-            "src/build/lifecycle.ts",
-            "src/build/decision-propagation.ts",
-            "src/build/index.ts",
-            "src/validation/types.ts",
-            "src/validation/preflight.ts",
-            "src/validation/report.ts",
-            "src/validation/tool.ts",
-            "src/validation/index.ts",
-            "src/gateway/index.ts",
-            "src/gateway/transaction.ts",
-            "src/application/roadmap.ts",
-            "src/application/prompt.ts",
-            "src/application/resume-context.ts",
-            "src/application/state-artifacts.ts",
-            "src/application/state-builders.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/adapters/pi/commands/status.ts",
-            "scripts/codewiki-gateway.mjs",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/validation-gateway.md",
-            ".codewiki/kb/system/alignment-model.md",
-            ".codewiki/kb/system/change-lifecycle.md",
-            ".codewiki/kb/system/worktree-isolation.md",
-            "src/roadmap/types.ts",
-            "src/roadmap/status.ts",
-            "src/roadmap/task-id.ts",
-            "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
-            "src/roadmap/task.ts",
-            "src/roadmap/tool.ts",
-            "src/adapters/pi/commands/resume.ts",
-            "src/adapters/pi/tools/ports.ts",
-            "src/adapters/pi/tools/task.ts",
-            "src/application/state.ts",
-            "src/audit/tool.ts",
-            "src/domain/state/types.ts",
-            "src/project/context.ts",
-            "src/session/runtime.ts",
-            "src/knowledge/doc-parser.ts",
-            "src/state/graph.ts",
-            "src/state/lint.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, tests +4 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-057"
-          ],
-          "primary_task": {
-            "id": "TASK-057",
-            "status": "in_progress",
-            "title": "Move gate requirements from quality to policy"
-          },
-          "revision": {
-            "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-057"
-        },
-        {
-          "path": ".codewiki/kb/system/validation-gateway.md",
-          "title": "Validation Gateway",
-          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-          "drift_status": "tracked",
-          "code_paths": [
-            "src/policy/**",
-            "tests/smoke/policy-gate.test.mjs",
-            ".codewiki/validation/**",
-            "src/gateway/**",
-            "src/validation/**",
-            "package.json",
-            ".pi-lens",
-            "src/index.ts",
-            "src/api/index.ts",
-            "src/api/tools.ts",
-            "scripts/codewiki-gateway.mjs",
-            "src/gateway/index.ts",
-            "src/ui/web/control-room.ts",
-            "src/gateway/transaction.ts",
-            "src/audit/tool.ts",
-            "src/knowledge/diagram-parser.ts",
-            "src/adapters/pi/ui/manager.ts",
-            "src/roadmap/tool.ts",
-            "src/state/graph/rebuilder.ts",
-            "tests/smoke",
-            "README.md",
-            "CHANGELOG.md",
-            "tests/smoke/package-smoke.test.mjs",
-            "src/adapters/pi/commands/resume.ts",
-            "src/state/resume-context.ts",
-            "src/state/resume-selection.ts",
-            "tests/smoke/resume-scheduler.test.mjs",
-            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-            "src/adapters/pi/index.ts",
-            "src/adapters/pi/schemas.ts",
-            "src/adapters/pi/ui/theme.ts",
-            "src/validation/report.ts",
-            "src/session/types.ts",
-            "src/roadmap/types.ts",
-            "src/state/graph.ts",
-            "src/state/builders.ts",
-            "src/state/reader.ts",
-            "src/state/types.ts",
-            "src/state/lint.ts",
-            "tests/smoke/graph-lenses.test.mjs",
-            "tests/smoke/alignment-graph.test.mjs",
-            "src/adapters/pi/tools",
-            "tests/smoke/control-room.test.mjs",
-            "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
-            "src/session/claims.ts",
-            "src/session/tool.ts",
-            "src/session/artifact-status-tool.ts",
-            "tests/smoke/claim-wait-queue.test.mjs",
-            "tests/smoke/roadmap-task-boundary.test.mjs",
-            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-            "tests/tasks/TASK-028/session-source-root.test.mjs",
-            "tests/smoke/efficiency-ui.test.mjs",
-            "src/audit/types.ts",
-            "src/validation/tool.ts",
-            "src/validation/preflight.ts",
-            "tests/smoke/audit.test.mjs",
-            "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
-            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-            "src/policy/gate-policy.ts",
-            "src/policy/risk.ts",
-            "src/policy/production-profile.ts",
-            "src/build/shared.ts",
-            "src/build/writer.ts",
-            "src/gateway/report.ts",
-            "src/domain/audit/types.ts",
-            "src/application/tools/audit.ts",
-            "src/adapters/pi/commands/audit.ts",
-            "src/adapters/pi/tools/audit.ts",
-            "scripts/check-architecture.mjs",
-            ".codewiki/kb/system/file-structure.md",
-            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-            "src/domain/shared/types.ts",
-            "src/domain/shared/session.ts",
-            "src/application/builds.ts",
-            "src/application/lint.ts",
-            "src/application/graph.ts",
-            "src/application/graph/rebuilder.ts",
-            "src/application/agency.ts",
-            "src/application/diff-table.ts",
-            "src/templates.ts",
-            "skills/codewiki/SKILL.md",
-            "skills/codewiki-decision/SKILL.md",
-            "skills/codewiki-decision/references/tools.md",
-            "skills/codewiki-planning/SKILL.md",
-            "skills/codewiki-planning/references/tools.md",
-            "skills/codewiki-implementation/SKILL.md",
-            "skills/codewiki-implementation/references/tools.md",
-            "skills/codewiki-validation/SKILL.md",
-            "skills/codewiki-validation/references/tools.md",
-            "skills/codewiki/references/tool-catalog.md",
-            "skills/codewiki/prompts/resume-implementation.md",
-            "src/build/types.ts",
-            "src/build/lifecycle.ts",
-            "src/build/decision-propagation.ts",
-            "src/build/tool.ts",
-            "src/build/index.ts",
-            "src/validation/types.ts",
-            "src/validation/index.ts",
-            "src/application/roadmap.ts",
-            "src/application/prompt.ts",
-            "src/application/resume-context.ts",
-            "src/application/state-artifacts.ts",
-            "src/application/state-builders.ts",
-            "src/adapters/pi/commands/status.ts",
-            ".codewiki/kb/system/builds.md",
-            ".codewiki/kb/system/compilers.md",
-            ".codewiki/kb/system/alignment-model.md",
-            ".codewiki/kb/system/change-lifecycle.md",
-            ".codewiki/kb/system/worktree-isolation.md",
-            "src/knowledge/doc-parser.ts",
-            "src/project/templates.ts"
-          ],
-          "code_area": "src, tests +7 more",
-          "issue_counts": {
-            "errors": 0,
-            "warnings": 0,
-            "total": 0
-          },
-          "related_task_ids": [
-            "TASK-057"
-          ],
-          "primary_task": {
-            "id": "TASK-057",
-            "status": "in_progress",
-            "title": "Move gate requirements from quality to policy"
-          },
-          "revision": {
-            "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
-            "basis": "source_content"
-          },
-          "note": "tracked by TASK-057"
         },
         {
           "path": ".codewiki/kb/lexicon.md",
@@ -148601,6 +147543,112 @@
           "primary_task": null,
           "revision": {
             "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "title": "Compilers",
+          "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/build/tool.ts",
+            "src/build/writer.ts",
+            "src/policy/**",
+            "src/validation/**",
+            "src/domain/audit/types.ts",
+            "src/application/tools/audit.ts",
+            "src/adapters/pi/commands/audit.ts",
+            "src/adapters/pi/tools/audit.ts",
+            "src/adapters/pi/schemas.ts",
+            "scripts/check-architecture.mjs",
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            "src/domain/shared/types.ts",
+            "src/domain/shared/session.ts",
+            "src/application/builds.ts",
+            "src/application/lint.ts",
+            "src/application/graph.ts",
+            "src/application/graph/rebuilder.ts",
+            "src/application/agency.ts",
+            "src/application/diff-table.ts",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/templates.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-decision/references/tools.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-planning/references/tools.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-implementation/references/tools.md",
+            "skills/codewiki-validation/SKILL.md",
+            "skills/codewiki-validation/references/tools.md",
+            "skills/codewiki/references/tool-catalog.md",
+            "skills/codewiki/prompts/resume-implementation.md",
+            "README.md",
+            "src/adapters/pi/tools/artifact-status.ts",
+            "src/application/claims.ts",
+            "src/application/gateway/index.ts",
+            "src/adapters/pi/tools/claim.ts (deleted)",
+            "src/application/tools/claim.ts (deleted)",
+            "src/application/tools/catalog.ts (deleted)",
+            "src/build/types.ts",
+            "src/build/lifecycle.ts",
+            "src/build/decision-propagation.ts",
+            "src/build/shared.ts",
+            "src/build/index.ts",
+            "src/validation/types.ts",
+            "src/validation/preflight.ts",
+            "src/validation/report.ts",
+            "src/validation/tool.ts",
+            "src/validation/index.ts",
+            "src/gateway/index.ts",
+            "src/gateway/transaction.ts",
+            "src/application/roadmap.ts",
+            "src/application/prompt.ts",
+            "src/application/resume-context.ts",
+            "src/application/state-artifacts.ts",
+            "src/application/state-builders.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/adapters/pi/commands/status.ts",
+            "scripts/codewiki-gateway.mjs",
+            ".codewiki/kb/system/builds.md",
+            ".codewiki/kb/system/validation-gateway.md",
+            ".codewiki/kb/system/alignment-model.md",
+            ".codewiki/kb/system/change-lifecycle.md",
+            ".codewiki/kb/system/worktree-isolation.md",
+            "src/roadmap/types.ts",
+            "src/roadmap/status.ts",
+            "src/roadmap/task-id.ts",
+            "src/roadmap/task-boundary.ts",
+            "src/roadmap/runtime.ts",
+            "src/roadmap/task.ts",
+            "src/roadmap/tool.ts",
+            "src/adapters/pi/commands/resume.ts",
+            "src/adapters/pi/tools/ports.ts",
+            "src/adapters/pi/tools/task.ts",
+            "src/application/state.ts",
+            "src/audit/tool.ts",
+            "src/domain/state/types.ts",
+            "src/project/context.ts",
+            "src/session/runtime.ts",
+            "src/knowledge/doc-parser.ts",
+            "src/state/graph.ts",
+            "src/state/lint.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, scripts +3 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
             "basis": "source_content"
           },
           "note": "no deterministic drift signals"
@@ -149878,6 +148926,136 @@
           "note": "no deterministic drift signals"
         },
         {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "title": "Validation Gateway",
+          "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+          "drift_status": "aligned",
+          "code_paths": [
+            "src/policy/**",
+            "tests/smoke/policy-gate.test.mjs",
+            ".codewiki/validation/**",
+            "src/gateway/**",
+            "src/validation/**",
+            "package.json",
+            ".pi-lens",
+            "src/index.ts",
+            "src/api/index.ts",
+            "src/api/tools.ts",
+            "scripts/codewiki-gateway.mjs",
+            "src/gateway/index.ts",
+            "src/ui/web/control-room.ts",
+            "src/gateway/transaction.ts",
+            "src/audit/tool.ts",
+            "src/knowledge/diagram-parser.ts",
+            "src/adapters/pi/ui/manager.ts",
+            "src/roadmap/tool.ts",
+            "src/state/graph/rebuilder.ts",
+            "tests/smoke",
+            "README.md",
+            "CHANGELOG.md",
+            "tests/smoke/package-smoke.test.mjs",
+            "src/adapters/pi/commands/resume.ts",
+            "src/state/resume-context.ts",
+            "src/state/resume-selection.ts",
+            "tests/smoke/resume-scheduler.test.mjs",
+            "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+            "src/adapters/pi/index.ts",
+            "src/adapters/pi/schemas.ts",
+            "src/adapters/pi/ui/theme.ts",
+            "src/validation/report.ts",
+            "src/session/types.ts",
+            "src/roadmap/types.ts",
+            "src/state/graph.ts",
+            "src/state/builders.ts",
+            "src/state/reader.ts",
+            "src/state/types.ts",
+            "src/state/lint.ts",
+            "tests/smoke/graph-lenses.test.mjs",
+            "tests/smoke/alignment-graph.test.mjs",
+            "src/adapters/pi/tools",
+            "tests/smoke/control-room.test.mjs",
+            "src/state/rebuild.ts",
+            "src/roadmap/runtime.ts",
+            "src/session/claims.ts",
+            "src/session/tool.ts",
+            "src/session/artifact-status-tool.ts",
+            "tests/smoke/claim-wait-queue.test.mjs",
+            "tests/smoke/roadmap-task-boundary.test.mjs",
+            "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+            "tests/tasks/TASK-028/session-source-root.test.mjs",
+            "tests/smoke/efficiency-ui.test.mjs",
+            "src/audit/types.ts",
+            "src/validation/tool.ts",
+            "src/validation/preflight.ts",
+            "tests/smoke/audit.test.mjs",
+            "tests/smoke/audit-drift.test.mjs",
+            "tests/smoke/validation-preflight.test.mjs",
+            "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            "src/domain/audit/types.ts",
+            "src/application/tools/audit.ts",
+            "src/adapters/pi/commands/audit.ts",
+            "src/adapters/pi/tools/audit.ts",
+            "scripts/check-architecture.mjs",
+            ".codewiki/kb/system/file-structure.md",
+            ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+            "src/domain/shared/types.ts",
+            "src/domain/shared/session.ts",
+            "src/application/builds.ts",
+            "src/application/lint.ts",
+            "src/application/graph.ts",
+            "src/application/graph/rebuilder.ts",
+            "src/application/agency.ts",
+            "src/application/diff-table.ts",
+            "src/templates.ts",
+            "skills/codewiki/SKILL.md",
+            "skills/codewiki-decision/SKILL.md",
+            "skills/codewiki-decision/references/tools.md",
+            "skills/codewiki-planning/SKILL.md",
+            "skills/codewiki-planning/references/tools.md",
+            "skills/codewiki-implementation/SKILL.md",
+            "skills/codewiki-implementation/references/tools.md",
+            "skills/codewiki-validation/SKILL.md",
+            "skills/codewiki-validation/references/tools.md",
+            "skills/codewiki/references/tool-catalog.md",
+            "skills/codewiki/prompts/resume-implementation.md",
+            "src/build/types.ts",
+            "src/build/lifecycle.ts",
+            "src/build/decision-propagation.ts",
+            "src/build/shared.ts",
+            "src/build/writer.ts",
+            "src/build/tool.ts",
+            "src/build/index.ts",
+            "src/validation/types.ts",
+            "src/validation/index.ts",
+            "src/application/roadmap.ts",
+            "src/application/prompt.ts",
+            "src/application/resume-context.ts",
+            "src/application/state-artifacts.ts",
+            "src/application/state-builders.ts",
+            "src/adapters/pi/commands/status.ts",
+            ".codewiki/kb/system/builds.md",
+            ".codewiki/kb/system/compilers.md",
+            ".codewiki/kb/system/alignment-model.md",
+            ".codewiki/kb/system/change-lifecycle.md",
+            ".codewiki/kb/system/worktree-isolation.md",
+            "src/knowledge/doc-parser.ts",
+            "src/project/templates.ts"
+          ],
+          "code_area": "src, tests +7 more",
+          "issue_counts": {
+            "errors": 0,
+            "warnings": 0,
+            "total": 0
+          },
+          "related_task_ids": [],
+          "primary_task": null,
+          "revision": {
+            "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
+            "basis": "source_content"
+          },
+          "note": "no deterministic drift signals"
+        },
+        {
           "path": ".codewiki/kb/system/worktree-isolation.md",
           "title": "Role Worktree Isolation",
           "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
@@ -150028,7 +149206,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-30T05:20:56Z",
+        "generated_at": "2026-05-30T05:23:04Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -150083,10 +149261,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T05:20:56Z",
+            "checked_at": "2026-05-30T05:23:03Z",
             "revision": {
               "git": {
-                "head": "1875541e1f4f99fa8f1303589a99e312b9548c95",
+                "head": "98551fa6ccda46e0f24dfcebc445cdf078212726",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -150134,7 +149312,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "f4cd6e519358ec639ca9bafd31f8faea43119f9a",
+                  ".codewiki/roadmap/queue.json": "587b7b580fd00ac1db920a4b06a12d736642b60a",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
                   "CHANGELOG.md": "2f8d06644c1c6a7a81b98e83cb20d5a9adffbbbc",
@@ -150205,7 +149383,6 @@
                   "src/change/traceability.ts": "04a8281a7be7c0d7f866f6c436d8d8b0738fd57b",
                   "src/change/types.ts": "0085bc10ebd985c4382d4a1e53d441baef87278d",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "4f9e6f72c758f939b1b84ef678dd1035fd6c7956",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "049c6900a0b65857dcbd656326799a8074723435",
@@ -150214,9 +149391,6 @@
                   "src/index.ts": "309056d7dc05f1cc2bf9a0a0b62e19f871f18196",
                   "src/knowledge/diagram-parser.ts": "37e926a432276409fc052d31d2d4863b826b0e1a",
                   "src/knowledge/doc-parser.ts": "6896c7a935de376b4a1f36d07e320a85a61f20d4",
-                  "src/policy/gate-policy.ts": "059e3a83334b72b3fb52bdf0b856b2421ce0e17e",
-                  "src/policy/production-profile.ts": "1facc981c09ca74afc335f010536e5ad214fa401",
-                  "src/policy/risk.ts": "d144bf1b546b38becdb4cd12a9fcdff43509f83f",
                   "src/project/bootstrap.ts": "62feddef74e0ac5354711e72934a4918f49842e6",
                   "src/project/context.ts": "26531d36977da137df0f81a32a1f523eeae1173d",
                   "src/project/local/file-store.ts": "bd2d62ef6b7649d8aef1f527711bb81a92d780e7",
@@ -150312,16 +149486,16 @@
                 }
               },
               "spec_digest": "5de42cc5e423819e3435ba91ffc55295fc5799e34042caef655bbfbc41746e1c",
-              "task_digest": "4fa85da325c2f1089e34eeca4606c8e31e652bd1118057834b5758d955c9fec4",
-              "code_digest": "bc8c9ba590409906e653def09482cbe32d38ec0f712b22b2e4bff1ab9e4f3519",
-              "digest": "51500b485c54b8725c0e85e527282bca6e417dfe3f4a2613df028543eea698a4"
+              "task_digest": "72c8a0b15083ccbf07e05f7b36af4ba410f9222c8022626a3a477aaf2ac9fd3c",
+              "code_digest": "5c83aca7e0a7375f13e906067d501b695b03ae3d966b66f2889ccee58ce0d773",
+              "digest": "4b048a71e70746e4980e32edde209d17ef30674c271cfdc989dbe52a47af53a3"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T05:20:56Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-30T05:23:03Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -150340,8 +149514,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -150349,6 +149521,7 @@
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -150361,6 +149534,7 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
@@ -150506,19 +149680,19 @@
               "src/runtime/ports.ts",
               "src/agency/tool.ts",
               "src/state/resume-kickoff.ts",
-              "src/policy/**",
-              "src/validation/**",
-              "src/policy/gate-policy.ts",
-              "src/policy/risk.ts",
-              "src/policy/production-profile.ts",
-              "src/build/shared.ts",
-              "src/gateway/report.ts",
-              "tests/smoke/policy-gate.test.mjs",
-              "src/domain/audit/types.ts",
-              "src/application/tools/audit.ts",
-              "src/adapters/pi/commands/audit.ts",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/adapters/**",
+              "src/ui/**",
+              "src/agency",
+              "src/runtime",
+              "src/adapters/pi",
+              ".codewiki/builds/**",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
+              ".codewiki/roadmap/queue.json",
+              "scripts/**",
+              "skills/**",
+              "src/**",
+              "tests/**",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
               "src/application/agency.ts",
@@ -150534,6 +149708,7 @@
               "src/build/types.ts",
               "src/build/lifecycle.ts",
               "src/build/decision-propagation.ts",
+              "src/build/shared.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
               "src/validation/preflight.ts",
@@ -150544,12 +149719,28 @@
               "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "scripts/codewiki-gateway.mjs",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/validation-gateway.md",
-              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              "src/gateway/**",
+              ".codewiki/kb/system/api.md",
+              "src/checks/**",
+              "tests/smoke/horizontal-alignment.test.mjs",
+              ".codewiki/kb/system/diagrams/**/*.yaml",
+              "src/application/knowledge/diagram-parser.ts",
+              "src/application/tools/audit.ts",
+              "src/audit/types.ts",
+              "src/application/tools/audit.ts (deleted)",
+              "src/domain/audit/types.ts (deleted)",
+              "src/adapters/pi/commands/audit.ts",
+              ".codewiki/roadmap/tasks/TASK-021/task.json",
+              ".codewiki/roadmap/tasks/TASK-012/task.json",
+              "src/build",
+              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
               ".pi-lens",
               "src/ui/web/control-room.ts",
               "tests/smoke",
@@ -150566,36 +149757,13 @@
               "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
               "tests/tasks/TASK-028/session-source-root.test.mjs",
               "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
               "tests/smoke/validation-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/system/compilers.md",
-              "src/adapters/**",
-              "src/ui/**",
-              "src/agency",
-              "src/runtime",
-              "src/adapters/pi",
-              ".codewiki/builds/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              ".codewiki/roadmap/queue.json",
-              "scripts/**",
-              "skills/**",
-              "src/**",
-              "tests/**",
-              ".codewiki/kb/system/api.md",
-              "src/checks/**",
-              "tests/smoke/horizontal-alignment.test.mjs",
-              ".codewiki/kb/system/diagrams/**/*.yaml",
-              "src/application/knowledge/diagram-parser.ts",
-              "src/application/tools/audit.ts (deleted)",
-              "src/domain/audit/types.ts (deleted)",
-              ".codewiki/roadmap/tasks/TASK-021/task.json",
-              ".codewiki/roadmap/tasks/TASK-012/task.json",
-              "src/build",
-              ".codewiki/kb/**",
+              "src/policy/**",
+              "src/validation/**",
+              "src/domain/audit/types.ts",
               "src/ui/web/**",
               ".codewiki/kb/system/knowledge.md",
               "skills/codewiki/**",
@@ -150633,6 +149801,7 @@
               "src/build/**",
               "src/change/**",
               "src/gc/**",
+              "src/gateway/**",
               "src/knowledge/**",
               "src/roadmap/**",
               "src/state/**",
@@ -150644,6 +149813,7 @@
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/smoke/gateway-preflight.test.mjs",
+              "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
@@ -150719,18 +149889,15 @@
             ],
             "code_area": ".codewiki, src +14 more",
             "open_task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/api.md"
             ],
             "stats": {
               "total_specs": 38,
-              "aligned_specs": 35,
-              "tracked_specs": 3,
+              "aligned_specs": 37,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -150755,10 +149922,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-30T05:20:56Z",
+            "checked_at": "2026-05-30T05:23:04Z",
             "revision": {
               "git": {
-                "head": "1875541e1f4f99fa8f1303589a99e312b9548c95",
+                "head": "98551fa6ccda46e0f24dfcebc445cdf078212726",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -150790,7 +149957,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "f4cd6e519358ec639ca9bafd31f8faea43119f9a",
+                  ".codewiki/roadmap/queue.json": "587b7b580fd00ac1db920a4b06a12d736642b60a",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
                   "CHANGELOG.md": "2f8d06644c1c6a7a81b98e83cb20d5a9adffbbbc",
@@ -150855,7 +150022,6 @@
                   "src/change/traceability.ts": "04a8281a7be7c0d7f866f6c436d8d8b0738fd57b",
                   "src/change/types.ts": "0085bc10ebd985c4382d4a1e53d441baef87278d",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "4f9e6f72c758f939b1b84ef678dd1035fd6c7956",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "049c6900a0b65857dcbd656326799a8074723435",
@@ -150864,9 +150030,6 @@
                   "src/index.ts": "309056d7dc05f1cc2bf9a0a0b62e19f871f18196",
                   "src/knowledge/diagram-parser.ts": "37e926a432276409fc052d31d2d4863b826b0e1a",
                   "src/knowledge/doc-parser.ts": "6896c7a935de376b4a1f36d07e320a85a61f20d4",
-                  "src/policy/gate-policy.ts": "059e3a83334b72b3fb52bdf0b856b2421ce0e17e",
-                  "src/policy/production-profile.ts": "1facc981c09ca74afc335f010536e5ad214fa401",
-                  "src/policy/risk.ts": "d144bf1b546b38becdb4cd12a9fcdff43509f83f",
                   "src/project/bootstrap.ts": "62feddef74e0ac5354711e72934a4918f49842e6",
                   "src/project/context.ts": "26531d36977da137df0f81a32a1f523eeae1173d",
                   "src/project/local/file-store.ts": "bd2d62ef6b7649d8aef1f527711bb81a92d780e7",
@@ -150961,21 +150124,19 @@
                 }
               },
               "spec_digest": "23362ef8797bcb5d645a1e221c5bb3105959324f77b5c2da1bc1ab544befb661",
-              "task_digest": "4fa85da325c2f1089e34eeca4606c8e31e652bd1118057834b5758d955c9fec4",
-              "code_digest": "77ddd2e125224015ad30764962af57799882130cd014972cd1fe11525a1274e2",
-              "digest": "ebb91f06f4bb38255fca226541b8a005d141e6a06334c95f62b5986a315b1da6"
+              "task_digest": "72c8a0b15083ccbf07e05f7b36af4ba410f9222c8022626a3a477aaf2ac9fd3c",
+              "code_digest": "494ea41b5ed7330b0f41c77b49809f381a7fd46af6e5b067dae784567d89d0c9",
+              "digest": "43746945e795e4a57e8434e72e579f3c4eba398107036c1dd0cc1ed537c40a0f"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T05:20:56Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-30T05:23:04Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -150983,6 +150144,7 @@
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -150995,6 +150157,7 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
@@ -151121,19 +150284,19 @@
               "src/agency/tool.ts",
               "src/state/resume-kickoff.ts",
               "package.json",
-              "src/policy/**",
-              "src/validation/**",
-              "src/policy/gate-policy.ts",
-              "src/policy/risk.ts",
-              "src/policy/production-profile.ts",
-              "src/build/shared.ts",
-              "src/gateway/report.ts",
-              "tests/smoke/policy-gate.test.mjs",
-              "src/domain/audit/types.ts",
-              "src/application/tools/audit.ts",
-              "src/adapters/pi/commands/audit.ts",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/adapters/**",
+              "src/ui/**",
+              "src/agency",
+              "src/runtime",
+              "src/adapters/pi",
+              ".codewiki/builds/**",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
+              ".codewiki/roadmap/queue.json",
+              "scripts/**",
+              "skills/**",
+              "src/**",
+              "tests/**",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
               "src/application/agency.ts",
@@ -151151,6 +150314,7 @@
               "src/build/types.ts",
               "src/build/lifecycle.ts",
               "src/build/decision-propagation.ts",
+              "src/build/shared.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
               "src/validation/preflight.ts",
@@ -151161,12 +150325,28 @@
               "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "scripts/codewiki-gateway.mjs",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/validation-gateway.md",
-              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              "src/gateway/**",
+              ".codewiki/kb/system/api.md",
+              "src/checks/**",
+              "tests/smoke/horizontal-alignment.test.mjs",
+              ".codewiki/kb/system/diagrams/**/*.yaml",
+              "src/application/knowledge/diagram-parser.ts",
+              "src/application/tools/audit.ts",
+              "src/audit/types.ts",
+              "src/application/tools/audit.ts (deleted)",
+              "src/domain/audit/types.ts (deleted)",
+              "src/adapters/pi/commands/audit.ts",
+              ".codewiki/roadmap/tasks/TASK-021/task.json",
+              ".codewiki/roadmap/tasks/TASK-012/task.json",
+              "src/build",
+              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
               ".pi-lens",
               "src/ui/web/control-room.ts",
               "tests/smoke",
@@ -151183,36 +150363,13 @@
               "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
               "tests/tasks/TASK-028/session-source-root.test.mjs",
               "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
               "tests/smoke/validation-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/system/compilers.md",
-              "src/adapters/**",
-              "src/ui/**",
-              "src/agency",
-              "src/runtime",
-              "src/adapters/pi",
-              ".codewiki/builds/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              ".codewiki/roadmap/queue.json",
-              "scripts/**",
-              "skills/**",
-              "src/**",
-              "tests/**",
-              ".codewiki/kb/system/api.md",
-              "src/checks/**",
-              "tests/smoke/horizontal-alignment.test.mjs",
-              ".codewiki/kb/system/diagrams/**/*.yaml",
-              "src/application/knowledge/diagram-parser.ts",
-              "src/application/tools/audit.ts (deleted)",
-              "src/domain/audit/types.ts (deleted)",
-              ".codewiki/roadmap/tasks/TASK-021/task.json",
-              ".codewiki/roadmap/tasks/TASK-012/task.json",
-              "src/build",
-              ".codewiki/kb/**",
+              "src/policy/**",
+              "src/validation/**",
+              "src/domain/audit/types.ts",
               ".codewiki/config.json",
               ".codewiki/index_graph.json",
               ".codewiki/kb/system/*.md",
@@ -151259,6 +150416,7 @@
               "src/build/**",
               "src/change/**",
               "src/gc/**",
+              "src/gateway/**",
               "src/knowledge/**",
               "src/roadmap/**",
               "src/state/**",
@@ -151270,6 +150428,7 @@
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/smoke/gateway-preflight.test.mjs",
+              "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
@@ -151345,18 +150504,15 @@
             ],
             "code_area": "src, .codewiki +14 more",
             "open_task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/api.md"
             ],
             "stats": {
               "total_specs": 23,
-              "aligned_specs": 20,
-              "tracked_specs": 3,
+              "aligned_specs": 22,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -151381,10 +150537,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T05:20:56Z",
+            "checked_at": "2026-05-30T05:23:04Z",
             "revision": {
               "git": {
-                "head": "1875541e1f4f99fa8f1303589a99e312b9548c95",
+                "head": "98551fa6ccda46e0f24dfcebc445cdf078212726",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -151432,7 +150588,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "f4cd6e519358ec639ca9bafd31f8faea43119f9a",
+                  ".codewiki/roadmap/queue.json": "587b7b580fd00ac1db920a4b06a12d736642b60a",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
                   "CHANGELOG.md": "2f8d06644c1c6a7a81b98e83cb20d5a9adffbbbc",
@@ -151503,7 +150659,6 @@
                   "src/change/traceability.ts": "04a8281a7be7c0d7f866f6c436d8d8b0738fd57b",
                   "src/change/types.ts": "0085bc10ebd985c4382d4a1e53d441baef87278d",
                   "src/gateway/index.ts": "78567e618a62e16a1d0fdc4fa8fdd98de384cb9e",
-                  "src/gateway/report.ts": "4f9e6f72c758f939b1b84ef678dd1035fd6c7956",
                   "src/gateway/tool.ts": "004ec4681ef593d62c61c80f63ae3b1d004d1272",
                   "src/gateway/transaction.ts": "c30e61458d836807f64ebb1f3fe9ca85ff2aba47",
                   "src/gc/runtime.ts": "049c6900a0b65857dcbd656326799a8074723435",
@@ -151512,9 +150667,6 @@
                   "src/index.ts": "309056d7dc05f1cc2bf9a0a0b62e19f871f18196",
                   "src/knowledge/diagram-parser.ts": "37e926a432276409fc052d31d2d4863b826b0e1a",
                   "src/knowledge/doc-parser.ts": "6896c7a935de376b4a1f36d07e320a85a61f20d4",
-                  "src/policy/gate-policy.ts": "059e3a83334b72b3fb52bdf0b856b2421ce0e17e",
-                  "src/policy/production-profile.ts": "1facc981c09ca74afc335f010536e5ad214fa401",
-                  "src/policy/risk.ts": "d144bf1b546b38becdb4cd12a9fcdff43509f83f",
                   "src/project/bootstrap.ts": "62feddef74e0ac5354711e72934a4918f49842e6",
                   "src/project/context.ts": "26531d36977da137df0f81a32a1f523eeae1173d",
                   "src/project/local/file-store.ts": "bd2d62ef6b7649d8aef1f527711bb81a92d780e7",
@@ -151610,16 +150762,16 @@
                 }
               },
               "spec_digest": "5de42cc5e423819e3435ba91ffc55295fc5799e34042caef655bbfbc41746e1c",
-              "task_digest": "4fa85da325c2f1089e34eeca4606c8e31e652bd1118057834b5758d955c9fec4",
-              "code_digest": "bc8c9ba590409906e653def09482cbe32d38ec0f712b22b2e4bff1ab9e4f3519",
-              "digest": "51500b485c54b8725c0e85e527282bca6e417dfe3f4a2613df028543eea698a4"
+              "task_digest": "72c8a0b15083ccbf07e05f7b36af4ba410f9222c8022626a3a477aaf2ac9fd3c",
+              "code_digest": "5c83aca7e0a7375f13e906067d501b695b03ae3d966b66f2889ccee58ce0d773",
+              "digest": "4b048a71e70746e4980e32edde209d17ef30674c271cfdc989dbe52a47af53a3"
             },
             "freshness": {
-              "status": "fresh",
+              "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T05:20:56Z",
-              "reason": "revision anchors unchanged since previous agency",
-              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
+              "checked_at": "2026-05-30T05:23:04Z",
+              "reason": "revision changed: code",
+              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -151638,8 +150790,6 @@
               ".codewiki/kb/product/users/maintainers.md",
               ".codewiki/kb/product/users/package-authors.md",
               ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/adapters.md",
               ".codewiki/kb/system/agency.md",
               ".codewiki/kb/system/alignment-model.md",
@@ -151647,6 +150797,7 @@
               ".codewiki/kb/system/audits.md",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/control-room-ui-details.md",
               ".codewiki/kb/system/control-room-ui.md",
               ".codewiki/kb/system/diagrams/README.md",
@@ -151659,6 +150810,7 @@
               ".codewiki/kb/system/roadmap.md",
               ".codewiki/kb/system/runtime.md",
               ".codewiki/kb/system/system-truth-and-compilers.md",
+              ".codewiki/kb/system/validation-gateway.md",
               ".codewiki/kb/system/worktree-isolation.md"
             ],
             "code_paths": [
@@ -151804,19 +150956,19 @@
               "src/runtime/ports.ts",
               "src/agency/tool.ts",
               "src/state/resume-kickoff.ts",
-              "src/policy/**",
-              "src/validation/**",
-              "src/policy/gate-policy.ts",
-              "src/policy/risk.ts",
-              "src/policy/production-profile.ts",
-              "src/build/shared.ts",
-              "src/gateway/report.ts",
-              "tests/smoke/policy-gate.test.mjs",
-              "src/domain/audit/types.ts",
-              "src/application/tools/audit.ts",
-              "src/adapters/pi/commands/audit.ts",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/adapters/**",
+              "src/ui/**",
+              "src/agency",
+              "src/runtime",
+              "src/adapters/pi",
+              ".codewiki/builds/**",
+              ".codewiki/kb/product/**",
+              ".codewiki/kb/system/**",
+              ".codewiki/roadmap/queue.json",
+              "scripts/**",
+              "skills/**",
+              "src/**",
+              "tests/**",
               "src/domain/shared/session.ts",
               "src/application/builds.ts",
               "src/application/agency.ts",
@@ -151832,6 +150984,7 @@
               "src/build/types.ts",
               "src/build/lifecycle.ts",
               "src/build/decision-propagation.ts",
+              "src/build/shared.ts",
               "src/build/index.ts",
               "src/validation/types.ts",
               "src/validation/preflight.ts",
@@ -151842,12 +150995,28 @@
               "src/gateway/transaction.ts",
               "src/application/roadmap.ts",
               "scripts/codewiki-gateway.mjs",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
               ".codewiki/kb/system/builds.md",
               ".codewiki/kb/system/validation-gateway.md",
-              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/compilers.md",
               ".codewiki/kb/system/change-lifecycle.md",
               ".codewiki/kb/system/worktree-isolation.md",
-              "src/gateway/**",
+              ".codewiki/kb/system/api.md",
+              "src/checks/**",
+              "tests/smoke/horizontal-alignment.test.mjs",
+              ".codewiki/kb/system/diagrams/**/*.yaml",
+              "src/application/knowledge/diagram-parser.ts",
+              "src/application/tools/audit.ts",
+              "src/audit/types.ts",
+              "src/application/tools/audit.ts (deleted)",
+              "src/domain/audit/types.ts (deleted)",
+              "src/adapters/pi/commands/audit.ts",
+              ".codewiki/roadmap/tasks/TASK-021/task.json",
+              ".codewiki/roadmap/tasks/TASK-012/task.json",
+              "src/build",
+              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/**",
               ".pi-lens",
               "src/ui/web/control-room.ts",
               "tests/smoke",
@@ -151864,36 +151033,13 @@
               "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
               "tests/tasks/TASK-028/session-source-root.test.mjs",
               "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
               "tests/smoke/validation-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              ".codewiki/kb/system/compilers.md",
-              "src/adapters/**",
-              "src/ui/**",
-              "src/agency",
-              "src/runtime",
-              "src/adapters/pi",
-              ".codewiki/builds/**",
-              ".codewiki/kb/product/**",
-              ".codewiki/kb/system/**",
-              ".codewiki/roadmap/queue.json",
-              "scripts/**",
-              "skills/**",
-              "src/**",
-              "tests/**",
-              ".codewiki/kb/system/api.md",
-              "src/checks/**",
-              "tests/smoke/horizontal-alignment.test.mjs",
-              ".codewiki/kb/system/diagrams/**/*.yaml",
-              "src/application/knowledge/diagram-parser.ts",
-              "src/application/tools/audit.ts (deleted)",
-              "src/domain/audit/types.ts (deleted)",
-              ".codewiki/roadmap/tasks/TASK-021/task.json",
-              ".codewiki/roadmap/tasks/TASK-012/task.json",
-              "src/build",
-              ".codewiki/kb/**",
+              "src/policy/**",
+              "src/validation/**",
+              "src/domain/audit/types.ts",
               "src/ui/web/**",
               ".codewiki/kb/system/knowledge.md",
               "skills/codewiki/**",
@@ -151931,6 +151077,7 @@
               "src/build/**",
               "src/change/**",
               "src/gc/**",
+              "src/gateway/**",
               "src/knowledge/**",
               "src/roadmap/**",
               "src/state/**",
@@ -151942,6 +151089,7 @@
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
               "tests/smoke/gateway-preflight.test.mjs",
+              "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
               "tests/tasks/TASK-027/gc-source-root.test.mjs",
@@ -152017,18 +151165,15 @@
             ],
             "code_area": ".codewiki, src +14 more",
             "open_task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "risky_spec_paths": [
-              ".codewiki/kb/system/api.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/validation-gateway.md"
+              ".codewiki/kb/system/api.md"
             ],
             "stats": {
               "total_specs": 38,
-              "aligned_specs": 35,
-              "tracked_specs": 3,
+              "aligned_specs": 37,
+              "tracked_specs": 1,
               "untracked_specs": 0,
               "blocked_specs": 0,
               "unmapped_specs": 0
@@ -152043,335 +151188,34 @@
       },
       "resume": {
         "source": "task",
-        "task_id": "TASK-057",
+        "task_id": "TASK-059",
         "lane_id": "",
-        "heading": "TASK-057 — Move gate requirements from quality to policy",
-        "command": "/wiki-resume TASK-057",
-        "reason": "Resume roadmap task (in_progress).",
-        "status": "in_progress",
+        "heading": "TASK-059 — Standardize internal agent tools to wiki namespace",
+        "command": "/wiki-resume TASK-059",
+        "reason": "Resume roadmap task (todo).",
+        "status": "todo",
         "verification": "npm run typecheck",
         "evidence": "No closure evidence recorded yet.",
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-30T05:20:56Z",
+        "generated_at": "2026-05-30T05:23:04Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 1,
+        "active_claim_count": 0,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [
-          {
-            "id": "CLAIM-001",
-            "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-            "agent_name": "Bison",
-            "status": "active",
-            "mode": "write",
-            "role": "validator",
-            "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-            "task_id": "TASK-057",
-            "worktree": {
-              "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-              "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-            },
-            "scopes": [
-              {
-                "layer": "roadmap",
-                "task_id": "TASK-057"
-              },
-              {
-                "layer": "code",
-                "path": "src/policy/**"
-              },
-              {
-                "layer": "code",
-                "path": "src/build/shared.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/build/writer.ts"
-              },
-              {
-                "layer": "code",
-                "path": "src/gateway/report.ts"
-              },
-              {
-                "layer": "code",
-                "path": "tests/smoke/policy-gate.test.mjs"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/compilers.md"
-              },
-              {
-                "layer": "knowledge",
-                "path": ".codewiki/kb/system/validation-gateway.md"
-              },
-              {
-                "layer": "validation",
-                "path": ".codewiki/validation/**"
-              }
-            ],
-            "created_at": "2026-05-30T05:12:17Z",
-            "updated_at": "2026-05-30T05:12:17Z",
-            "expires_at": "2026-05-30T08:12:17.527Z"
-          }
-        ],
+        "claims": [],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/compilers.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "knowledge",
-              "path": ".codewiki/kb/system/validation-gateway.md"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "validation",
-              "path": ".codewiki/validation/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/build/shared.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/build/writer.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/gateway/report.ts"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "src/policy/**"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "roadmap",
-              "task_id": "TASK-057"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          },
-          {
-            "artifact": {
-              "layer": "code",
-              "path": "tests/smoke/policy-gate.test.mjs"
-            },
-            "status": "in-use",
-            "holders": [
-              {
-                "record_id": "CLAIM-001",
-                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                "agent_name": "Bison",
-                "mode": "write",
-                "role": "validator",
-                "task_id": "TASK-057",
-                "summary": "Isolated TASK-057 close worktree: apply policy migration patch, validate, commit, close.",
-                "expires_at": "2026-05-30T08:12:17.527Z",
-                "worktree": {
-                  "worktree_path": "/home/nunoc/projects/codewiki/.tmp-worktrees/.codewiki-worktrees/codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "branch": "codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951",
-                  "notes": "factory=role-worktree; task=TASK-057; role=validator; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
-                },
-                "next_safe_action": "Wait for CLAIM-001 release or validated publisher/patch ref for codewiki/TASK-057/validator/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
-              }
-            ],
-            "waiters": [],
-            "conflict_ids": []
-          }
-        ],
+        "artifact_statuses": [],
         "artifact_status": {
-          "in_use_count": 1,
+          "in_use_count": 0,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -152529,263 +151373,6 @@
               "basis": "source_content"
             },
             "note": "tracked by TASK-059"
-          },
-          {
-            "path": ".codewiki/kb/system/compilers.md",
-            "title": "Compilers",
-            "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/build/tool.ts",
-              "src/build/writer.ts",
-              "src/policy/**",
-              "src/validation/**",
-              "src/policy/gate-policy.ts",
-              "src/policy/risk.ts",
-              "src/policy/production-profile.ts",
-              "src/build/shared.ts",
-              "src/gateway/report.ts",
-              "tests/smoke/policy-gate.test.mjs",
-              "src/domain/audit/types.ts",
-              "src/application/tools/audit.ts",
-              "src/adapters/pi/commands/audit.ts",
-              "src/adapters/pi/tools/audit.ts",
-              "src/adapters/pi/schemas.ts",
-              "scripts/check-architecture.mjs",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "src/domain/shared/types.ts",
-              "src/domain/shared/session.ts",
-              "src/application/builds.ts",
-              "src/application/lint.ts",
-              "src/application/graph.ts",
-              "src/application/graph/rebuilder.ts",
-              "src/application/agency.ts",
-              "src/application/diff-table.ts",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/templates.ts",
-              "skills/codewiki/SKILL.md",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-decision/references/tools.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-planning/references/tools.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-implementation/references/tools.md",
-              "skills/codewiki-validation/SKILL.md",
-              "skills/codewiki-validation/references/tools.md",
-              "skills/codewiki/references/tool-catalog.md",
-              "skills/codewiki/prompts/resume-implementation.md",
-              "README.md",
-              "src/adapters/pi/tools/artifact-status.ts",
-              "src/application/claims.ts",
-              "src/application/gateway/index.ts",
-              "src/adapters/pi/tools/claim.ts (deleted)",
-              "src/application/tools/claim.ts (deleted)",
-              "src/application/tools/catalog.ts (deleted)",
-              "src/build/types.ts",
-              "src/build/lifecycle.ts",
-              "src/build/decision-propagation.ts",
-              "src/build/index.ts",
-              "src/validation/types.ts",
-              "src/validation/preflight.ts",
-              "src/validation/report.ts",
-              "src/validation/tool.ts",
-              "src/validation/index.ts",
-              "src/gateway/index.ts",
-              "src/gateway/transaction.ts",
-              "src/application/roadmap.ts",
-              "src/application/prompt.ts",
-              "src/application/resume-context.ts",
-              "src/application/state-artifacts.ts",
-              "src/application/state-builders.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/adapters/pi/commands/status.ts",
-              "scripts/codewiki-gateway.mjs",
-              ".codewiki/kb/system/builds.md",
-              ".codewiki/kb/system/validation-gateway.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/worktree-isolation.md",
-              "src/roadmap/types.ts",
-              "src/roadmap/status.ts",
-              "src/roadmap/task-id.ts",
-              "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
-              "src/roadmap/task.ts",
-              "src/roadmap/tool.ts",
-              "src/adapters/pi/commands/resume.ts",
-              "src/adapters/pi/tools/ports.ts",
-              "src/adapters/pi/tools/task.ts",
-              "src/application/state.ts",
-              "src/audit/tool.ts",
-              "src/domain/state/types.ts",
-              "src/project/context.ts",
-              "src/session/runtime.ts",
-              "src/knowledge/doc-parser.ts",
-              "src/state/graph.ts",
-              "src/state/lint.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, tests +4 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-057"
-            ],
-            "primary_task": {
-              "id": "TASK-057",
-              "status": "in_progress",
-              "title": "Move gate requirements from quality to policy"
-            },
-            "revision": {
-              "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-057"
-          },
-          {
-            "path": ".codewiki/kb/system/validation-gateway.md",
-            "title": "Validation Gateway",
-            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-            "drift_status": "tracked",
-            "code_paths": [
-              "src/policy/**",
-              "tests/smoke/policy-gate.test.mjs",
-              ".codewiki/validation/**",
-              "src/gateway/**",
-              "src/validation/**",
-              "package.json",
-              ".pi-lens",
-              "src/index.ts",
-              "src/api/index.ts",
-              "src/api/tools.ts",
-              "scripts/codewiki-gateway.mjs",
-              "src/gateway/index.ts",
-              "src/ui/web/control-room.ts",
-              "src/gateway/transaction.ts",
-              "src/audit/tool.ts",
-              "src/knowledge/diagram-parser.ts",
-              "src/adapters/pi/ui/manager.ts",
-              "src/roadmap/tool.ts",
-              "src/state/graph/rebuilder.ts",
-              "tests/smoke",
-              "README.md",
-              "CHANGELOG.md",
-              "tests/smoke/package-smoke.test.mjs",
-              "src/adapters/pi/commands/resume.ts",
-              "src/state/resume-context.ts",
-              "src/state/resume-selection.ts",
-              "tests/smoke/resume-scheduler.test.mjs",
-              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-              "src/adapters/pi/index.ts",
-              "src/adapters/pi/schemas.ts",
-              "src/adapters/pi/ui/theme.ts",
-              "src/validation/report.ts",
-              "src/session/types.ts",
-              "src/roadmap/types.ts",
-              "src/state/graph.ts",
-              "src/state/builders.ts",
-              "src/state/reader.ts",
-              "src/state/types.ts",
-              "src/state/lint.ts",
-              "tests/smoke/graph-lenses.test.mjs",
-              "tests/smoke/alignment-graph.test.mjs",
-              "src/adapters/pi/tools",
-              "tests/smoke/control-room.test.mjs",
-              "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
-              "src/session/claims.ts",
-              "src/session/tool.ts",
-              "src/session/artifact-status-tool.ts",
-              "tests/smoke/claim-wait-queue.test.mjs",
-              "tests/smoke/roadmap-task-boundary.test.mjs",
-              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-              "tests/tasks/TASK-028/session-source-root.test.mjs",
-              "tests/smoke/efficiency-ui.test.mjs",
-              "src/audit/types.ts",
-              "src/validation/tool.ts",
-              "src/validation/preflight.ts",
-              "tests/smoke/audit.test.mjs",
-              "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
-              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-              "src/policy/gate-policy.ts",
-              "src/policy/risk.ts",
-              "src/policy/production-profile.ts",
-              "src/build/shared.ts",
-              "src/build/writer.ts",
-              "src/gateway/report.ts",
-              "src/domain/audit/types.ts",
-              "src/application/tools/audit.ts",
-              "src/adapters/pi/commands/audit.ts",
-              "src/adapters/pi/tools/audit.ts",
-              "scripts/check-architecture.mjs",
-              ".codewiki/kb/system/file-structure.md",
-              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "src/domain/shared/types.ts",
-              "src/domain/shared/session.ts",
-              "src/application/builds.ts",
-              "src/application/lint.ts",
-              "src/application/graph.ts",
-              "src/application/graph/rebuilder.ts",
-              "src/application/agency.ts",
-              "src/application/diff-table.ts",
-              "src/templates.ts",
-              "skills/codewiki/SKILL.md",
-              "skills/codewiki-decision/SKILL.md",
-              "skills/codewiki-decision/references/tools.md",
-              "skills/codewiki-planning/SKILL.md",
-              "skills/codewiki-planning/references/tools.md",
-              "skills/codewiki-implementation/SKILL.md",
-              "skills/codewiki-implementation/references/tools.md",
-              "skills/codewiki-validation/SKILL.md",
-              "skills/codewiki-validation/references/tools.md",
-              "skills/codewiki/references/tool-catalog.md",
-              "skills/codewiki/prompts/resume-implementation.md",
-              "src/build/types.ts",
-              "src/build/lifecycle.ts",
-              "src/build/decision-propagation.ts",
-              "src/build/tool.ts",
-              "src/build/index.ts",
-              "src/validation/types.ts",
-              "src/validation/index.ts",
-              "src/application/roadmap.ts",
-              "src/application/prompt.ts",
-              "src/application/resume-context.ts",
-              "src/application/state-artifacts.ts",
-              "src/application/state-builders.ts",
-              "src/adapters/pi/commands/status.ts",
-              ".codewiki/kb/system/builds.md",
-              ".codewiki/kb/system/compilers.md",
-              ".codewiki/kb/system/alignment-model.md",
-              ".codewiki/kb/system/change-lifecycle.md",
-              ".codewiki/kb/system/worktree-isolation.md",
-              "src/knowledge/doc-parser.ts",
-              "src/project/templates.ts"
-            ],
-            "code_area": "src, tests +7 more",
-            "issue_counts": {
-              "errors": 0,
-              "warnings": 0,
-              "total": 0
-            },
-            "related_task_ids": [
-              "TASK-057"
-            ],
-            "primary_task": {
-              "id": "TASK-057",
-              "status": "in_progress",
-              "title": "Move gate requirements from quality to policy"
-            },
-            "revision": {
-              "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
-              "basis": "source_content"
-            },
-            "note": "tracked by TASK-057"
           },
           {
             "path": ".codewiki/kb/lexicon.md",
@@ -153880,6 +152467,112 @@
             "primary_task": null,
             "revision": {
               "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
+            "path": ".codewiki/kb/system/compilers.md",
+            "title": "Compilers",
+            "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/build/tool.ts",
+              "src/build/writer.ts",
+              "src/policy/**",
+              "src/validation/**",
+              "src/domain/audit/types.ts",
+              "src/application/tools/audit.ts",
+              "src/adapters/pi/commands/audit.ts",
+              "src/adapters/pi/tools/audit.ts",
+              "src/adapters/pi/schemas.ts",
+              "scripts/check-architecture.mjs",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/domain/shared/types.ts",
+              "src/domain/shared/session.ts",
+              "src/application/builds.ts",
+              "src/application/lint.ts",
+              "src/application/graph.ts",
+              "src/application/graph/rebuilder.ts",
+              "src/application/agency.ts",
+              "src/application/diff-table.ts",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/templates.ts",
+              "skills/codewiki/SKILL.md",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-decision/references/tools.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-planning/references/tools.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-implementation/references/tools.md",
+              "skills/codewiki-validation/SKILL.md",
+              "skills/codewiki-validation/references/tools.md",
+              "skills/codewiki/references/tool-catalog.md",
+              "skills/codewiki/prompts/resume-implementation.md",
+              "README.md",
+              "src/adapters/pi/tools/artifact-status.ts",
+              "src/application/claims.ts",
+              "src/application/gateway/index.ts",
+              "src/adapters/pi/tools/claim.ts (deleted)",
+              "src/application/tools/claim.ts (deleted)",
+              "src/application/tools/catalog.ts (deleted)",
+              "src/build/types.ts",
+              "src/build/lifecycle.ts",
+              "src/build/decision-propagation.ts",
+              "src/build/shared.ts",
+              "src/build/index.ts",
+              "src/validation/types.ts",
+              "src/validation/preflight.ts",
+              "src/validation/report.ts",
+              "src/validation/tool.ts",
+              "src/validation/index.ts",
+              "src/gateway/index.ts",
+              "src/gateway/transaction.ts",
+              "src/application/roadmap.ts",
+              "src/application/prompt.ts",
+              "src/application/resume-context.ts",
+              "src/application/state-artifacts.ts",
+              "src/application/state-builders.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/adapters/pi/commands/status.ts",
+              "scripts/codewiki-gateway.mjs",
+              ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/validation-gateway.md",
+              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/worktree-isolation.md",
+              "src/roadmap/types.ts",
+              "src/roadmap/status.ts",
+              "src/roadmap/task-id.ts",
+              "src/roadmap/task-boundary.ts",
+              "src/roadmap/runtime.ts",
+              "src/roadmap/task.ts",
+              "src/roadmap/tool.ts",
+              "src/adapters/pi/commands/resume.ts",
+              "src/adapters/pi/tools/ports.ts",
+              "src/adapters/pi/tools/task.ts",
+              "src/application/state.ts",
+              "src/audit/tool.ts",
+              "src/domain/state/types.ts",
+              "src/project/context.ts",
+              "src/session/runtime.ts",
+              "src/knowledge/doc-parser.ts",
+              "src/state/graph.ts",
+              "src/state/lint.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, scripts +3 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
               "basis": "source_content"
             },
             "note": "no deterministic drift signals"
@@ -155157,6 +153850,136 @@
             "note": "no deterministic drift signals"
           },
           {
+            "path": ".codewiki/kb/system/validation-gateway.md",
+            "title": "Validation Gateway",
+            "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+            "drift_status": "aligned",
+            "code_paths": [
+              "src/policy/**",
+              "tests/smoke/policy-gate.test.mjs",
+              ".codewiki/validation/**",
+              "src/gateway/**",
+              "src/validation/**",
+              "package.json",
+              ".pi-lens",
+              "src/index.ts",
+              "src/api/index.ts",
+              "src/api/tools.ts",
+              "scripts/codewiki-gateway.mjs",
+              "src/gateway/index.ts",
+              "src/ui/web/control-room.ts",
+              "src/gateway/transaction.ts",
+              "src/audit/tool.ts",
+              "src/knowledge/diagram-parser.ts",
+              "src/adapters/pi/ui/manager.ts",
+              "src/roadmap/tool.ts",
+              "src/state/graph/rebuilder.ts",
+              "tests/smoke",
+              "README.md",
+              "CHANGELOG.md",
+              "tests/smoke/package-smoke.test.mjs",
+              "src/adapters/pi/commands/resume.ts",
+              "src/state/resume-context.ts",
+              "src/state/resume-selection.ts",
+              "tests/smoke/resume-scheduler.test.mjs",
+              "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+              "src/adapters/pi/index.ts",
+              "src/adapters/pi/schemas.ts",
+              "src/adapters/pi/ui/theme.ts",
+              "src/validation/report.ts",
+              "src/session/types.ts",
+              "src/roadmap/types.ts",
+              "src/state/graph.ts",
+              "src/state/builders.ts",
+              "src/state/reader.ts",
+              "src/state/types.ts",
+              "src/state/lint.ts",
+              "tests/smoke/graph-lenses.test.mjs",
+              "tests/smoke/alignment-graph.test.mjs",
+              "src/adapters/pi/tools",
+              "tests/smoke/control-room.test.mjs",
+              "src/state/rebuild.ts",
+              "src/roadmap/runtime.ts",
+              "src/session/claims.ts",
+              "src/session/tool.ts",
+              "src/session/artifact-status-tool.ts",
+              "tests/smoke/claim-wait-queue.test.mjs",
+              "tests/smoke/roadmap-task-boundary.test.mjs",
+              "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+              "tests/tasks/TASK-028/session-source-root.test.mjs",
+              "tests/smoke/efficiency-ui.test.mjs",
+              "src/audit/types.ts",
+              "src/validation/tool.ts",
+              "src/validation/preflight.ts",
+              "tests/smoke/audit.test.mjs",
+              "tests/smoke/audit-drift.test.mjs",
+              "tests/smoke/validation-preflight.test.mjs",
+              "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              "src/domain/audit/types.ts",
+              "src/application/tools/audit.ts",
+              "src/adapters/pi/commands/audit.ts",
+              "src/adapters/pi/tools/audit.ts",
+              "scripts/check-architecture.mjs",
+              ".codewiki/kb/system/file-structure.md",
+              ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+              "src/domain/shared/types.ts",
+              "src/domain/shared/session.ts",
+              "src/application/builds.ts",
+              "src/application/lint.ts",
+              "src/application/graph.ts",
+              "src/application/graph/rebuilder.ts",
+              "src/application/agency.ts",
+              "src/application/diff-table.ts",
+              "src/templates.ts",
+              "skills/codewiki/SKILL.md",
+              "skills/codewiki-decision/SKILL.md",
+              "skills/codewiki-decision/references/tools.md",
+              "skills/codewiki-planning/SKILL.md",
+              "skills/codewiki-planning/references/tools.md",
+              "skills/codewiki-implementation/SKILL.md",
+              "skills/codewiki-implementation/references/tools.md",
+              "skills/codewiki-validation/SKILL.md",
+              "skills/codewiki-validation/references/tools.md",
+              "skills/codewiki/references/tool-catalog.md",
+              "skills/codewiki/prompts/resume-implementation.md",
+              "src/build/types.ts",
+              "src/build/lifecycle.ts",
+              "src/build/decision-propagation.ts",
+              "src/build/shared.ts",
+              "src/build/writer.ts",
+              "src/build/tool.ts",
+              "src/build/index.ts",
+              "src/validation/types.ts",
+              "src/validation/index.ts",
+              "src/application/roadmap.ts",
+              "src/application/prompt.ts",
+              "src/application/resume-context.ts",
+              "src/application/state-artifacts.ts",
+              "src/application/state-builders.ts",
+              "src/adapters/pi/commands/status.ts",
+              ".codewiki/kb/system/builds.md",
+              ".codewiki/kb/system/compilers.md",
+              ".codewiki/kb/system/alignment-model.md",
+              ".codewiki/kb/system/change-lifecycle.md",
+              ".codewiki/kb/system/worktree-isolation.md",
+              "src/knowledge/doc-parser.ts",
+              "src/project/templates.ts"
+            ],
+            "code_area": "src, tests +7 more",
+            "issue_counts": {
+              "errors": 0,
+              "warnings": 0,
+              "total": 0
+            },
+            "related_task_ids": [],
+            "primary_task": null,
+            "revision": {
+              "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
+              "basis": "source_content"
+            },
+            "note": "no deterministic drift signals"
+          },
+          {
             "path": ".codewiki/kb/system/worktree-isolation.md",
             "title": "Role Worktree Isolation",
             "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
@@ -155977,263 +154800,6 @@
                 "note": "tracked by TASK-059"
               },
               {
-                "path": ".codewiki/kb/system/compilers.md",
-                "title": "Compilers",
-                "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/build/tool.ts",
-                  "src/build/writer.ts",
-                  "src/policy/**",
-                  "src/validation/**",
-                  "src/policy/gate-policy.ts",
-                  "src/policy/risk.ts",
-                  "src/policy/production-profile.ts",
-                  "src/build/shared.ts",
-                  "src/gateway/report.ts",
-                  "tests/smoke/policy-gate.test.mjs",
-                  "src/domain/audit/types.ts",
-                  "src/application/tools/audit.ts",
-                  "src/adapters/pi/commands/audit.ts",
-                  "src/adapters/pi/tools/audit.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "scripts/check-architecture.mjs",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  "src/domain/shared/types.ts",
-                  "src/domain/shared/session.ts",
-                  "src/application/builds.ts",
-                  "src/application/lint.ts",
-                  "src/application/graph.ts",
-                  "src/application/graph/rebuilder.ts",
-                  "src/application/agency.ts",
-                  "src/application/diff-table.ts",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/templates.ts",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-decision/references/tools.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-planning/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-implementation/references/tools.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "skills/codewiki-validation/references/tools.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "skills/codewiki/prompts/resume-implementation.md",
-                  "README.md",
-                  "src/adapters/pi/tools/artifact-status.ts",
-                  "src/application/claims.ts",
-                  "src/application/gateway/index.ts",
-                  "src/adapters/pi/tools/claim.ts (deleted)",
-                  "src/application/tools/claim.ts (deleted)",
-                  "src/application/tools/catalog.ts (deleted)",
-                  "src/build/types.ts",
-                  "src/build/lifecycle.ts",
-                  "src/build/decision-propagation.ts",
-                  "src/build/index.ts",
-                  "src/validation/types.ts",
-                  "src/validation/preflight.ts",
-                  "src/validation/report.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/index.ts",
-                  "src/gateway/index.ts",
-                  "src/gateway/transaction.ts",
-                  "src/application/roadmap.ts",
-                  "src/application/prompt.ts",
-                  "src/application/resume-context.ts",
-                  "src/application/state-artifacts.ts",
-                  "src/application/state-builders.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/adapters/pi/commands/status.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  ".codewiki/kb/system/builds.md",
-                  ".codewiki/kb/system/validation-gateway.md",
-                  ".codewiki/kb/system/alignment-model.md",
-                  ".codewiki/kb/system/change-lifecycle.md",
-                  ".codewiki/kb/system/worktree-isolation.md",
-                  "src/roadmap/types.ts",
-                  "src/roadmap/status.ts",
-                  "src/roadmap/task-id.ts",
-                  "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/roadmap/task.ts",
-                  "src/roadmap/tool.ts",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/adapters/pi/tools/ports.ts",
-                  "src/adapters/pi/tools/task.ts",
-                  "src/application/state.ts",
-                  "src/audit/tool.ts",
-                  "src/domain/state/types.ts",
-                  "src/project/context.ts",
-                  "src/session/runtime.ts",
-                  "src/knowledge/doc-parser.ts",
-                  "src/state/graph.ts",
-                  "src/state/lint.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, tests +4 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-057"
-                ],
-                "primary_task": {
-                  "id": "TASK-057",
-                  "status": "in_progress",
-                  "title": "Move gate requirements from quality to policy"
-                },
-                "revision": {
-                  "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-057"
-              },
-              {
-                "path": ".codewiki/kb/system/validation-gateway.md",
-                "title": "Validation Gateway",
-                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
-                "drift_status": "tracked",
-                "code_paths": [
-                  "src/policy/**",
-                  "tests/smoke/policy-gate.test.mjs",
-                  ".codewiki/validation/**",
-                  "src/gateway/**",
-                  "src/validation/**",
-                  "package.json",
-                  ".pi-lens",
-                  "src/index.ts",
-                  "src/api/index.ts",
-                  "src/api/tools.ts",
-                  "scripts/codewiki-gateway.mjs",
-                  "src/gateway/index.ts",
-                  "src/ui/web/control-room.ts",
-                  "src/gateway/transaction.ts",
-                  "src/audit/tool.ts",
-                  "src/knowledge/diagram-parser.ts",
-                  "src/adapters/pi/ui/manager.ts",
-                  "src/roadmap/tool.ts",
-                  "src/state/graph/rebuilder.ts",
-                  "tests/smoke",
-                  "README.md",
-                  "CHANGELOG.md",
-                  "tests/smoke/package-smoke.test.mjs",
-                  "src/adapters/pi/commands/resume.ts",
-                  "src/state/resume-context.ts",
-                  "src/state/resume-selection.ts",
-                  "tests/smoke/resume-scheduler.test.mjs",
-                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
-                  "src/adapters/pi/index.ts",
-                  "src/adapters/pi/schemas.ts",
-                  "src/adapters/pi/ui/theme.ts",
-                  "src/validation/report.ts",
-                  "src/session/types.ts",
-                  "src/roadmap/types.ts",
-                  "src/state/graph.ts",
-                  "src/state/builders.ts",
-                  "src/state/reader.ts",
-                  "src/state/types.ts",
-                  "src/state/lint.ts",
-                  "tests/smoke/graph-lenses.test.mjs",
-                  "tests/smoke/alignment-graph.test.mjs",
-                  "src/adapters/pi/tools",
-                  "tests/smoke/control-room.test.mjs",
-                  "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
-                  "src/session/claims.ts",
-                  "src/session/tool.ts",
-                  "src/session/artifact-status-tool.ts",
-                  "tests/smoke/claim-wait-queue.test.mjs",
-                  "tests/smoke/roadmap-task-boundary.test.mjs",
-                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
-                  "tests/tasks/TASK-028/session-source-root.test.mjs",
-                  "tests/smoke/efficiency-ui.test.mjs",
-                  "src/audit/types.ts",
-                  "src/validation/tool.ts",
-                  "src/validation/preflight.ts",
-                  "tests/smoke/audit.test.mjs",
-                  "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
-                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
-                  "src/policy/gate-policy.ts",
-                  "src/policy/risk.ts",
-                  "src/policy/production-profile.ts",
-                  "src/build/shared.ts",
-                  "src/build/writer.ts",
-                  "src/gateway/report.ts",
-                  "src/domain/audit/types.ts",
-                  "src/application/tools/audit.ts",
-                  "src/adapters/pi/commands/audit.ts",
-                  "src/adapters/pi/tools/audit.ts",
-                  "scripts/check-architecture.mjs",
-                  ".codewiki/kb/system/file-structure.md",
-                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
-                  "src/domain/shared/types.ts",
-                  "src/domain/shared/session.ts",
-                  "src/application/builds.ts",
-                  "src/application/lint.ts",
-                  "src/application/graph.ts",
-                  "src/application/graph/rebuilder.ts",
-                  "src/application/agency.ts",
-                  "src/application/diff-table.ts",
-                  "src/templates.ts",
-                  "skills/codewiki/SKILL.md",
-                  "skills/codewiki-decision/SKILL.md",
-                  "skills/codewiki-decision/references/tools.md",
-                  "skills/codewiki-planning/SKILL.md",
-                  "skills/codewiki-planning/references/tools.md",
-                  "skills/codewiki-implementation/SKILL.md",
-                  "skills/codewiki-implementation/references/tools.md",
-                  "skills/codewiki-validation/SKILL.md",
-                  "skills/codewiki-validation/references/tools.md",
-                  "skills/codewiki/references/tool-catalog.md",
-                  "skills/codewiki/prompts/resume-implementation.md",
-                  "src/build/types.ts",
-                  "src/build/lifecycle.ts",
-                  "src/build/decision-propagation.ts",
-                  "src/build/tool.ts",
-                  "src/build/index.ts",
-                  "src/validation/types.ts",
-                  "src/validation/index.ts",
-                  "src/application/roadmap.ts",
-                  "src/application/prompt.ts",
-                  "src/application/resume-context.ts",
-                  "src/application/state-artifacts.ts",
-                  "src/application/state-builders.ts",
-                  "src/adapters/pi/commands/status.ts",
-                  ".codewiki/kb/system/builds.md",
-                  ".codewiki/kb/system/compilers.md",
-                  ".codewiki/kb/system/alignment-model.md",
-                  ".codewiki/kb/system/change-lifecycle.md",
-                  ".codewiki/kb/system/worktree-isolation.md",
-                  "src/knowledge/doc-parser.ts",
-                  "src/project/templates.ts"
-                ],
-                "code_area": "src, tests +7 more",
-                "issue_counts": {
-                  "errors": 0,
-                  "warnings": 0,
-                  "total": 0
-                },
-                "related_task_ids": [
-                  "TASK-057"
-                ],
-                "primary_task": {
-                  "id": "TASK-057",
-                  "status": "in_progress",
-                  "title": "Move gate requirements from quality to policy"
-                },
-                "revision": {
-                  "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
-                  "basis": "source_content"
-                },
-                "note": "tracked by TASK-057"
-              },
-              {
                 "path": ".codewiki/kb/lexicon.md",
                 "title": "Lexicon",
                 "summary": "Shared CodeWiki vocabulary for agents, humans, tasks, compiler builds, validation gateways, and generated graph views.",
@@ -156817,6 +155383,112 @@
                 "primary_task": null,
                 "revision": {
                   "digest": "157174612cd8925af6f0c01034026f623bd981c39c918c4de694ba004b8e3bac",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
+                "path": ".codewiki/kb/system/compilers.md",
+                "title": "Compilers",
+                "summary": "Alignment loops that create source-backed builds for decision, planning, implementation, and validation boundaries.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/build/tool.ts",
+                  "src/build/writer.ts",
+                  "src/policy/**",
+                  "src/validation/**",
+                  "src/domain/audit/types.ts",
+                  "src/application/tools/audit.ts",
+                  "src/adapters/pi/commands/audit.ts",
+                  "src/adapters/pi/tools/audit.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "scripts/check-architecture.mjs",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  "src/domain/shared/types.ts",
+                  "src/domain/shared/session.ts",
+                  "src/application/builds.ts",
+                  "src/application/lint.ts",
+                  "src/application/graph.ts",
+                  "src/application/graph/rebuilder.ts",
+                  "src/application/agency.ts",
+                  "src/application/diff-table.ts",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/templates.ts",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-decision/references/tools.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-planning/references/tools.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-implementation/references/tools.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "README.md",
+                  "src/adapters/pi/tools/artifact-status.ts",
+                  "src/application/claims.ts",
+                  "src/application/gateway/index.ts",
+                  "src/adapters/pi/tools/claim.ts (deleted)",
+                  "src/application/tools/claim.ts (deleted)",
+                  "src/application/tools/catalog.ts (deleted)",
+                  "src/build/types.ts",
+                  "src/build/lifecycle.ts",
+                  "src/build/decision-propagation.ts",
+                  "src/build/shared.ts",
+                  "src/build/index.ts",
+                  "src/validation/types.ts",
+                  "src/validation/preflight.ts",
+                  "src/validation/report.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/index.ts",
+                  "src/gateway/index.ts",
+                  "src/gateway/transaction.ts",
+                  "src/application/roadmap.ts",
+                  "src/application/prompt.ts",
+                  "src/application/resume-context.ts",
+                  "src/application/state-artifacts.ts",
+                  "src/application/state-builders.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/adapters/pi/commands/status.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  ".codewiki/kb/system/builds.md",
+                  ".codewiki/kb/system/validation-gateway.md",
+                  ".codewiki/kb/system/alignment-model.md",
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/worktree-isolation.md",
+                  "src/roadmap/types.ts",
+                  "src/roadmap/status.ts",
+                  "src/roadmap/task-id.ts",
+                  "src/roadmap/task-boundary.ts",
+                  "src/roadmap/runtime.ts",
+                  "src/roadmap/task.ts",
+                  "src/roadmap/tool.ts",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/adapters/pi/tools/ports.ts",
+                  "src/adapters/pi/tools/task.ts",
+                  "src/application/state.ts",
+                  "src/audit/tool.ts",
+                  "src/domain/state/types.ts",
+                  "src/project/context.ts",
+                  "src/session/runtime.ts",
+                  "src/knowledge/doc-parser.ts",
+                  "src/state/graph.ts",
+                  "src/state/lint.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, scripts +3 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "f3539726782253c051259fb4e1914ddcdd72366209398093f81f09f27e1c8f52",
                   "basis": "source_content"
                 },
                 "note": "no deterministic drift signals"
@@ -158094,6 +156766,136 @@
                 "note": "no deterministic drift signals"
               },
               {
+                "path": ".codewiki/kb/system/validation-gateway.md",
+                "title": "Validation Gateway",
+                "summary": "Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.",
+                "drift_status": "aligned",
+                "code_paths": [
+                  "src/policy/**",
+                  "tests/smoke/policy-gate.test.mjs",
+                  ".codewiki/validation/**",
+                  "src/gateway/**",
+                  "src/validation/**",
+                  "package.json",
+                  ".pi-lens",
+                  "src/index.ts",
+                  "src/api/index.ts",
+                  "src/api/tools.ts",
+                  "scripts/codewiki-gateway.mjs",
+                  "src/gateway/index.ts",
+                  "src/ui/web/control-room.ts",
+                  "src/gateway/transaction.ts",
+                  "src/audit/tool.ts",
+                  "src/knowledge/diagram-parser.ts",
+                  "src/adapters/pi/ui/manager.ts",
+                  "src/roadmap/tool.ts",
+                  "src/state/graph/rebuilder.ts",
+                  "tests/smoke",
+                  "README.md",
+                  "CHANGELOG.md",
+                  "tests/smoke/package-smoke.test.mjs",
+                  "src/adapters/pi/commands/resume.ts",
+                  "src/state/resume-context.ts",
+                  "src/state/resume-selection.ts",
+                  "tests/smoke/resume-scheduler.test.mjs",
+                  "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs",
+                  "src/adapters/pi/index.ts",
+                  "src/adapters/pi/schemas.ts",
+                  "src/adapters/pi/ui/theme.ts",
+                  "src/validation/report.ts",
+                  "src/session/types.ts",
+                  "src/roadmap/types.ts",
+                  "src/state/graph.ts",
+                  "src/state/builders.ts",
+                  "src/state/reader.ts",
+                  "src/state/types.ts",
+                  "src/state/lint.ts",
+                  "tests/smoke/graph-lenses.test.mjs",
+                  "tests/smoke/alignment-graph.test.mjs",
+                  "src/adapters/pi/tools",
+                  "tests/smoke/control-room.test.mjs",
+                  "src/state/rebuild.ts",
+                  "src/roadmap/runtime.ts",
+                  "src/session/claims.ts",
+                  "src/session/tool.ts",
+                  "src/session/artifact-status-tool.ts",
+                  "tests/smoke/claim-wait-queue.test.mjs",
+                  "tests/smoke/roadmap-task-boundary.test.mjs",
+                  "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+                  "tests/tasks/TASK-028/session-source-root.test.mjs",
+                  "tests/smoke/efficiency-ui.test.mjs",
+                  "src/audit/types.ts",
+                  "src/validation/tool.ts",
+                  "src/validation/preflight.ts",
+                  "tests/smoke/audit.test.mjs",
+                  "tests/smoke/audit-drift.test.mjs",
+                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  "src/domain/audit/types.ts",
+                  "src/application/tools/audit.ts",
+                  "src/adapters/pi/commands/audit.ts",
+                  "src/adapters/pi/tools/audit.ts",
+                  "scripts/check-architecture.mjs",
+                  ".codewiki/kb/system/file-structure.md",
+                  ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+                  "src/domain/shared/types.ts",
+                  "src/domain/shared/session.ts",
+                  "src/application/builds.ts",
+                  "src/application/lint.ts",
+                  "src/application/graph.ts",
+                  "src/application/graph/rebuilder.ts",
+                  "src/application/agency.ts",
+                  "src/application/diff-table.ts",
+                  "src/templates.ts",
+                  "skills/codewiki/SKILL.md",
+                  "skills/codewiki-decision/SKILL.md",
+                  "skills/codewiki-decision/references/tools.md",
+                  "skills/codewiki-planning/SKILL.md",
+                  "skills/codewiki-planning/references/tools.md",
+                  "skills/codewiki-implementation/SKILL.md",
+                  "skills/codewiki-implementation/references/tools.md",
+                  "skills/codewiki-validation/SKILL.md",
+                  "skills/codewiki-validation/references/tools.md",
+                  "skills/codewiki/references/tool-catalog.md",
+                  "skills/codewiki/prompts/resume-implementation.md",
+                  "src/build/types.ts",
+                  "src/build/lifecycle.ts",
+                  "src/build/decision-propagation.ts",
+                  "src/build/shared.ts",
+                  "src/build/writer.ts",
+                  "src/build/tool.ts",
+                  "src/build/index.ts",
+                  "src/validation/types.ts",
+                  "src/validation/index.ts",
+                  "src/application/roadmap.ts",
+                  "src/application/prompt.ts",
+                  "src/application/resume-context.ts",
+                  "src/application/state-artifacts.ts",
+                  "src/application/state-builders.ts",
+                  "src/adapters/pi/commands/status.ts",
+                  ".codewiki/kb/system/builds.md",
+                  ".codewiki/kb/system/compilers.md",
+                  ".codewiki/kb/system/alignment-model.md",
+                  ".codewiki/kb/system/change-lifecycle.md",
+                  ".codewiki/kb/system/worktree-isolation.md",
+                  "src/knowledge/doc-parser.ts",
+                  "src/project/templates.ts"
+                ],
+                "code_area": "src, tests +7 more",
+                "issue_counts": {
+                  "errors": 0,
+                  "warnings": 0,
+                  "total": 0
+                },
+                "related_task_ids": [],
+                "primary_task": null,
+                "revision": {
+                  "digest": "e8fdbc1bec67f52a03011cd5c424f155e7a73a31a4cbf3928f551ee6cf5dc5da",
+                  "basis": "source_content"
+                },
+                "note": "no deterministic drift signals"
+              },
+              {
                 "path": ".codewiki/kb/system/worktree-isolation.md",
                 "title": "Role Worktree Isolation",
                 "summary": "Coordination contract for role-isolated Git worktrees, exact wait/wake blockers, and publisher-queue proof.",
@@ -158252,12 +157054,10 @@
         ]
       },
       "roadmap": {
-        "focused_task_id": "TASK-057",
+        "focused_task_id": "",
         "blocked_task_ids": [],
-        "in_progress_task_ids": [
-          "TASK-057"
-        ],
-        "next_task_id": "TASK-057",
+        "in_progress_task_ids": [],
+        "next_task_id": "TASK-059",
         "sprint_ids": [
           "SPRINT-001",
           "SPRINT-002",
@@ -158821,7 +157621,6 @@
               "TASK-059"
             ],
             "open_task_ids": [
-              "TASK-057",
               "TASK-059"
             ],
             "budget": {
@@ -158862,9 +157661,7 @@
           {
             "id": "implement",
             "label": "Implement",
-            "task_ids": [
-              "TASK-057"
-            ]
+            "task_ids": []
           },
           {
             "id": "done",
