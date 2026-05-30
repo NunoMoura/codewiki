@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T04:00:17Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-063/context.json",
+  "task": {
+    "id": "TASK-063",
+    "title": "Design daemon job and run state model",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "change_type": "system",
+    "summary": "Define durable daemon job/run state for execution attempts, heartbeats, retries, block reasons, build/validation refs, and handoff metadata without replacing roadmap truth.",
+    "labels": [
+      "daemon-job-model"
+    ],
+    "goal": {
+      "outcome": "Daemon jobs/runs have an approved schema, storage boundary, and lifecycle contract.",
+      "acceptance": [
+        "Job/run states and transitions are specified.",
+        "Storage path and relationship to session queue/artifact status are specified.",
+        "Roadmap/build/validation/Git remain canonical truth; daemon jobs are execution attempts only.",
+        "Tests or fixtures cover schema normalization and lifecycle transitions."
+      ],
+      "non_goals": [
+        "Do not spawn sessions in this task.",
+        "Do not replace roadmap tasks with daemon jobs.",
+        "Do not rename roadmap helper modules."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted daemon job schema tests",
+        "codewiki_audit alignment/task where applicable"
+      ]
+    },
+    "delta": {
+      "desired": "Daemon execution attempts are durable and distinct from roadmap truth.",
+      "current": "Session queue/artifact status coordinates claims but lacks durable job/run attempts.",
+      "closure": "Close when schema/storage/lifecycle are implemented or specified with tests."
+    }
+  }
+}

@@ -74,9 +74,19 @@ nodes:
     kind: application
     source: .codewiki/kb/system/agency.md
   - id: runtime
-    label: CodeWiki runtime
+    label: CodeWiki runtime / daemon
     group: app_layer
     kind: application
+    source: .codewiki/kb/system/runtime.md
+  - id: pi_code_foundation
+    label: Pi Code foundation
+    group: adapter_layer
+    kind: runtime_foundation
+    source: .codewiki/kb/system/runtime.md
+  - id: runtime_jobs
+    label: Daemon jobs and runs
+    group: truth_layer
+    kind: runtime_state
     source: .codewiki/kb/system/runtime.md
   - id: compilers
     label: Compilers
@@ -157,7 +167,13 @@ edges:
     label: plans and gates bounded automation
   - from: agency
     to: runtime
-    label: authorizes one bounded step
+    label: authorizes one bounded step or daemon job
+  - from: runtime
+    to: pi_code_foundation
+    label: builds on runtime/session primitives
+  - from: runtime
+    to: runtime_jobs
+    label: records attempts and heartbeats
   - from: runtime
     to: resume_context
     label: requests source-backed reset kickoff
@@ -166,10 +182,16 @@ edges:
     label: claims task/sprint/roadmap scopes
   - from: runtime
     to: compilers
-    label: invokes allowed compiler step
+    label: invokes or schedules allowed compiler step
   - from: runtime
     to: validation_gateway
-    label: submits gateway preflight
+    label: submits gateway preflight and routes pass/fail/block
+  - from: runtime_jobs
+    to: builds
+    label: carries build refs for loop attempts
+  - from: runtime_jobs
+    to: roadmap
+    label: references tasks without replacing truth
   - from: api
     to: compilers
     label: starts compiler loops

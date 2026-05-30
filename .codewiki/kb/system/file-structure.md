@@ -151,7 +151,7 @@ Deprecated roots:
 src/{domain,application}/
 ```
 
-Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a new concept root for bounded CodeWiki execution orchestration; this root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state. TASK-058 moves validation gateway implementation ownership into `src/gateway/**` and leaves `src/validation/**` as compatibility-only re-export shims.
+Closed roots: `agency` (TASK-015/TASK-020), `audit` (TASK-021), `build`/`validation`/`gateway` (TASK-022), `project` (TASK-024), `knowledge` (TASK-025), `change`/`diff-table` (TASK-026), `gc` (TASK-027), `session` (TASK-028), `roadmap` (TASK-029), `state` (TASK-030), and `api`/`shared` cleanup (TASK-031). TASK-031 removes residual `src/domain/**` and `src/application/**` owner paths, exposes adapter/script use cases through `src/api/**`, and keeps shared primitives under `src/shared/**`. TASK-047 adds `runtime` as a concept root for bounded CodeWiki execution orchestration; approved daemon-runtime direction expands this root toward daemon job dispatch, Pi Code foundation use, runtime capability contracts, and pass-boundary session spawning. This root is package source and is distinct from `.codewiki/runtime/**` dogfood operational state. TASK-058 moves validation gateway implementation ownership into `src/gateway/**` and leaves `src/validation/**` as compatibility-only re-export shims.
 
 Skills own workflow assets under `skills/codewiki*/**`; source executes workflows through API/concept entrypoints. `scripts/**` is optional developer convenience and must be safe to delete without changing product behavior, gateway policy, tests, or package semantics.
 
@@ -167,6 +167,8 @@ Legacy `adapters -> application -> domain` layering is retired. New code follows
 
 Rules:
 
+- `src/runtime/**` is the only package source root that owns the CodeWiki Runtime concept. Domain-specific files named `runtime.ts`, such as roadmap persistence/mutation helpers, are migration targets and should be renamed to `store`, `repository`, `reader`, `writer`, or another domain-specific name when touched.
+- Pi Code is the primary runtime foundation dependency for CodeWiki. Optional model/runtime plug points must sit behind explicit capability contracts and must not turn CodeWiki into a generic chat gateway.
 - Concept model code has no Node I/O, Pi, adapter, UI, skill, or script imports.
 - Concept use cases own concrete behavior and may use concept-local runtime implementations behind contracts.
 - Cross-concept APIs must be explicit through the API facade, shared ports, or named contracts; do not recreate a dumping-ground `shared` or `application` under a new name.

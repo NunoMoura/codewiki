@@ -1,0 +1,48 @@
+{
+  "id": "TASK-064",
+  "title": "Define Pi Code foundation runtime contracts",
+  "status": "todo",
+  "priority": "high",
+  "kind": "architecture",
+  "summary": "Model Pi Code as CodeWiki's primary runtime foundation while defining explicit capability contracts for model/runtime plug points and future compatible execution backends.",
+  "spec_paths": [
+    ".codewiki/kb/system/adapters.md",
+    ".codewiki/kb/system/runtime.md"
+  ],
+  "code_paths": [
+    "src/runtime/ports.ts",
+    "src/adapters/pi/tools/ports.ts",
+    "tests/smoke/runtime-runner.test.mjs"
+  ],
+  "research_ids": [],
+  "labels": [
+    "pi-foundation-contracts"
+  ],
+  "change_type": "system",
+  "goal": {
+    "outcome": "Pi Code foundation and optional runtime/model support contracts are explicit in code and docs.",
+    "acceptance": [
+      "Runtime capability contracts document who owns model loop, session/thread state, tools, context assembly, compaction, and event streams.",
+      "Pi Code is represented as the first-class foundation path, not only a generic adapter.",
+      "Unsupported runtimes fail closed or report platform-limited capability evidence.",
+      "Tests cover capability discovery/unsupported capability behavior."
+    ],
+    "non_goals": [
+      "Do not implement a non-Pi runtime backend.",
+      "Do not change model provider configuration beyond contract shape.",
+      "Do not implement daemon job storage."
+    ],
+    "verification": [
+      "npm run typecheck",
+      "targeted runtime port/capability tests",
+      "search/docs confirm Pi foundation wording and support-contract boundaries."
+    ]
+  },
+  "delta": {
+    "desired": "CodeWiki can grow pluggable runtime/model policy without losing Pi Code foundation semantics.",
+    "current": "Runtime ports exist but do not encode the approved Pi foundation plus future capability contract model.",
+    "closure": "Close when contracts and tests are in place."
+  },
+  "created": "2026-05-30",
+  "updated": "2026-05-30"
+}

@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "generated_at": "2026-05-30T03:56:47Z",
+  "context_path": ".codewiki/roadmap/tasks/TASK-062/context.json",
+  "task": {
+    "id": "TASK-062",
+    "title": "Normalize runtime terminology and roadmap store naming",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "change_type": "system",
+    "summary": "Rename or reclassify non-runtime helper modules so `src/runtime/**` is the sole CodeWiki Runtime owner and roadmap persistence no longer uses runtime naming.",
+    "labels": [
+      "daemon-runtime-naming",
+      "runtime-taxonomy"
+    ],
+    "goal": {
+      "outcome": "Runtime naming aligns with the accepted daemon-runtime taxonomy without changing roadmap behavior.",
+      "acceptance": [
+        "`src/runtime/**` remains the only CodeWiki Runtime source root.",
+        "Roadmap persistence/mutation helpers no longer use misleading runtime naming when touched by this migration.",
+        "Imports, docs, and tests use the new naming consistently.",
+        "Typecheck and targeted roadmap/runtime smoke tests pass."
+      ],
+      "non_goals": [
+        "Do not implement daemon dispatch in this task.",
+        "Do not change roadmap task semantics.",
+        "Do not define daemon job/run schema in this task."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "targeted roadmap/runtime naming tests",
+        "search proves misleading live runtime helper names are removed or documented as deferred."
+      ]
+    },
+    "delta": {
+      "desired": "Runtime terminology is unambiguous before daemon implementation.",
+      "current": "`src/roadmap/runtime.ts` and `src/runtime/**` both use runtime naming for different concepts.",
+      "closure": "Close when naming is migrated or explicitly documented with no drift and checks pass."
+    }
+  }
+}

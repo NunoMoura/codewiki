@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-30T04:05:29Z",
+  "profile": "planning",
+  "verdict": "pass",
+  "rationale": "Daemon-runtime planning build maps accepted decision rows and downstream questions to SPRINT-016, TASK-062..065, knowledge-only research, roadmap tasks, or covered-by-row-resolution evidence. Corrective evidence shows over-merged TASK-061 was cancelled and TASK-057 restored to policy-only scope. Gateway/session/UI follow-ups are captured for later planning after prerequisites and TASK-057 close.",
+  "checks": [
+    "approval:user approved DAEMON-RUNTIME-001..006 for daemon-runtime architecture",
+    "decision validation pass .codewiki/validation/2026-05-30-decision-pass-2026-05-30-daemon-runtime-archit.json",
+    "codewiki_roadmap created SPRINT-016 with TASK-062..065",
+    "TASK-061 cancelled because it was over-merged umbrella task",
+    "TASK-057 restored to policy-only scope after accidental gateway-routing refinement",
+    "task audits pass for TASK-062, TASK-063, TASK-064, TASK-065"
+  ],
+  "issues": [],
+  "source": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+  "policy_profile": "planning",
+  "routing": {},
+  "required_audits": [
+    "alignment"
+  ],
+  "audit_refs": [
+    "audit:alignment",
+    "approval:user:DAEMON-RUNTIME-001..006",
+    "decision-validation:.codewiki/validation/2026-05-30-decision-pass-2026-05-30-daemon-runtime-archit.json",
+    "task-audit:TASK-062:pass",
+    "task-audit:TASK-063:pass",
+    "task-audit:TASK-064:pass",
+    "task-audit:TASK-065:pass"
+  ],
+  "audit_reports": [
+    "User approval text: approve DAEMON-RUNTIME-001..006.",
+    "codewiki_audit task TASK-062: pass with alignment graph-health warning only.",
+    "codewiki_audit task TASK-063: pass.",
+    "codewiki_audit task TASK-064: pass.",
+    "codewiki_audit task TASK-065: pass."
+  ],
+  "content_proof_refs": [],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "source_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+    "validation_report": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
+    "source_refs": [
+      ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
+      "Created SPRINT-016 Daemon Runtime Architecture Sprint.",
+      "Created TASK-062 for runtime naming cleanup.",
+      "Created TASK-063 for daemon job/run model.",
+      "Created TASK-064 for Pi Code foundation runtime contracts.",
+      "Created TASK-065 for daemon dispatcher skeleton.",
+      "Cancelled over-merged TASK-061 and restored TASK-057 to policy-only scope after automatic roadmap overlap refinements.",
+      "TASK-062",
+      "TASK-063",
+      "TASK-064",
+      "TASK-065",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-062/task.json",
+      ".codewiki/roadmap/tasks/TASK-063/task.json",
+      ".codewiki/roadmap/tasks/TASK-064/task.json",
+      ".codewiki/roadmap/tasks/TASK-065/task.json",
+      "src/roadmap/runtime.ts",
+      "src/roadmap/**",
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/jobs.ts",
+      "src/runtime/job-store.ts",
+      "src/runtime/dispatcher.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/types.ts",
+      "src/session/runtime.ts",
+      "tests/smoke/roadmap-task-boundary.test.mjs",
+      "tests/smoke/daemon-jobs.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/daemon-dispatcher.test.mjs"
+    ],
+    "hard_session_boundary_recommended": false,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "source_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+    "validation_report": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
+    "commit_title": "checkpoint(codewiki): implementation validation pass",
+    "trailers": [
+      "CodeWiki-Build: .codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
+      "CodeWiki-Checks: approval:user approved DAEMON-RUNTIME-001..006 for daemon-runtime architecture; decision validation pass .codewiki/validation/2026-05-30-decision-pass-2026-05-30-daemon-runtime-archit.json; codewiki_roadmap created SPRINT-016 with TASK-062..065; TASK-061 cancelled because it was over-merged umbrella task; TASK-057 restored to policy-only scope after accidental gateway-routing refinement; task audits pass for TASK-062, TASK-063, TASK-064, TASK-065"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/roadmap/runtime.ts",
+      "src/roadmap/**",
+      "src/runtime/types.ts",
+      "src/runtime/ports.ts",
+      "src/runtime/runner.ts",
+      "src/runtime/jobs.ts",
+      "src/runtime/job-store.ts",
+      "src/runtime/dispatcher.ts",
+      "src/adapters/pi/tools/ports.ts",
+      "src/session/types.ts",
+      "src/session/runtime.ts"
+    ],
+    "reasons": [
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed",
+      "Pi or harness adapter code changed",
+      "CodeWiki session/runtime boundary code changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": false,
+    "mode": "fresh-context-preferred",
+    "reason": "Fresh validation is preferred but not required for this profile.",
+    "evidence": [
+      "fresh_context=true when high-risk or policy-required"
+    ],
+    "handoff": "planning validation",
+    "profiles": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "planning",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production quality profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_quality": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [
+        "approval:user:DAEMON-RUNTIME-001..006",
+        "User approval text: approve DAEMON-RUNTIME-001..006.",
+        "approval:user approved DAEMON-RUNTIME-001..006 for daemon-runtime architecture"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": false,
+        "recommended": false,
+        "supplied": false,
+        "gaps": [],
+        "reason": "Fresh validation context is optional for this low-risk profile."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": false,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  }
+}

@@ -2,11 +2,11 @@
 id: spec.system.runtime
 title: CodeWiki Runtime
 state: active
-summary: Source concept root for bounded CodeWiki execution orchestration across agency plans, claims, compiler/gateway preparation, and harness boundaries.
+summary: Source concept root for CodeWiki daemon-capable software-development runtime orchestration across agency plans, claims, compiler/gateway preparation, harness boundaries, and session spawning.
 owners:
   - architecture
   - engineering
-updated: "2026-05-28"
+updated: "2026-05-30"
 diagram_refs:
   - component-map:runtime
   - file-structure-map:runtime_orchestration_boundary
@@ -21,15 +21,20 @@ code_paths_mode: explicit_override
 
 ## Responsibility
 
-The CodeWiki runtime is the package-source domain that executes one bounded CodeWiki step after agency policy has selected and authorized that step. It is not the Pi runtime, Node runtime, terminal runtime, or harness event loop. Harnesses run the process and provide capabilities; CodeWiki runtime coordinates CodeWiki semantics inside those capabilities.
+The CodeWiki runtime is the package-source domain that executes and, after the daemon refactor, dispatches CodeWiki software-development loops after agency policy has selected and authorized them. It is not the Node runtime, terminal runtime, generic chat gateway, or arbitrary agent swarm. CodeWiki builds on Pi Code as its primary runtime foundation dependency, then layers CodeWiki-specific roadmap, compiler, gateway, worktree, proof, and daemon-job semantics above it.
 
-The runtime owns bounded execution mechanics:
+Pi Code is a foundation, not merely one external harness adapter. CodeWiki should follow the OpenClaw pattern of building on Pi Code primitives while defining explicit model/runtime plug points that can operate the CodeWiki software-development system. Future compatible runtimes or protocols may be added through support contracts, but they must preserve CodeWiki truth, proof, and gate semantics.
+
+The runtime owns bounded execution mechanics now and daemon dispatch mechanics after the approved runtime-daemon refactor:
 
 - read a selected agency plan or scoped work item;
 - enforce immediate budget and write/session gates before execution;
 - inspect and acquire artifact-status claims for touched task, knowledge, code, build, validation, and state scopes;
 - invoke the next deterministic compiler or gateway preparation step that policy allows;
-- build source-backed resume context and request a session/context boundary when useful and allowed;
+- build source-backed resume context and request or spawn a session/context boundary when useful and allowed;
+- enqueue next compiler loops after gateway `pass` with build and validation refs as durable context;
+- keep failed or blocked gateways in the same loop/job until rebuilt, fixed, or explicitly blocked for user input;
+- record daemon job attempts, worker/session identity, heartbeats, retry limits, block reasons, and structured handoff metadata without duplicating roadmap truth;
 - record workflow-efficiency evidence such as interruptions avoided, manual commands avoided, session boundaries used, and platform-limited steps;
 - release temporary claims and stop with clear evidence on conflicts, ambiguity, validation blocks, risk escalation, publication/destructive gates, or budget exhaustion.
 
@@ -43,9 +48,15 @@ agency planning/policy -> CodeWiki runtime step -> compiler/gateway preparation 
 
 Agency remains responsible for autonomy level, approval cadence, task/sprint/roadmap scope selection, budget defaults, and risk policy. Runtime consumes the agency plan and applies executable orchestration. Runtime may use agency policy helpers, but agency should not own session claims, gateway preflight mechanics, context-boundary delivery, or workflow-efficiency accounting.
 
+## Runtime nomenclature
+
+Only `src/runtime/**` owns the CodeWiki Runtime concept. Helper modules that persist or mutate a specific domain should use names such as `store`, `repository`, `reader`, `writer`, or `service` instead of `runtime` unless they own daemon/harness execution. The existing `src/roadmap/runtime.ts` name is a migration target because it is roadmap persistence and mutation code, not the CodeWiki Runtime.
+
 ## Boundary with harness runtimes
 
-Harness runtimes such as Pi own process/session mechanics: tool invocation, TUI messages, model turns, compaction, replacement sessions, permissions, and host-specific capability delivery. CodeWiki runtime must not assume those capabilities exist or implement a harness event loop.
+Pi Code owns the primary process/session mechanics CodeWiki builds on: tool invocation, TUI messages, model turns, compaction, replacement sessions, permissions, and host-specific capability delivery. CodeWiki runtime should use Pi Code directly as foundation where appropriate, while still describing the capability boundary in a way future compatible runtimes can satisfy.
+
+CodeWiki runtime must not become a generic model provider, chat gateway, or unsupported harness event loop. A runtime/model plug point must document who owns the model loop, canonical thread/session state, dynamic tools, native tools, context assembly, compaction, and event streams before it can operate CodeWiki jobs.
 
 Adapters expose harness capabilities through ports. Runtime requests capabilities through those ports and records platform-limited steps when a capability is missing.
 
@@ -59,7 +70,7 @@ Examples:
 | --- | --- |
 | Same-session context hygiene | Pi CodeWiki-owned compaction or context refresh. |
 | Hard replacement context | Pi `new_session` or another harness replacement-session API. |
-| Separate worker execution | External orchestrator or future worker adapter. |
+| Separate worker execution | Runtime daemon job spawning through Pi Code first, then future supported worker adapters. |
 | User-visible kickoff | Protocol-safe custom/user-role-safe message seeded by `codewiki_resume_context`. |
 
 Runtime must not inject slash commands as control flow, must not auto-continue from an assistant-leaf message, and must not treat unsupported harness features as normal user work. It should return a visible fallback and platform limitation.
@@ -70,21 +81,21 @@ Runtime package source lives under `src/runtime/**`.
 
 ```text
 src/runtime/
-  runner.ts   # bounded runtime step implementation
-  ports.ts    # harness/runtime capability ports
-  types.ts    # runtime result, budget usage, and workflow-efficiency evidence
+  runner.ts   # bounded runtime step implementation; migration target for daemon dispatcher entrypoints
+  ports.ts    # Pi Code foundation and future runtime capability ports
+  types.ts    # runtime result, daemon job/run, budget usage, and workflow-efficiency evidence
 ```
 
 `src/agency/**` keeps agency planning and the `codewiki_agency` tool entrypoint. `src/session/**` owns claims and wait/wake state. `src/state/**` owns resume context and generated graph state. `src/validation/**` owns gateway checks. Runtime coordinates those concepts without absorbing their durable truth.
 
 ## Invariants
 
-- Runtime executes at most one bounded step per call.
+- Runtime executes at most one bounded step per call until daemon scheduling explicitly dispatches a job attempt.
 - Runtime does not bypass decision, planning, implementation, validation, task-close, publication, or destructive gates.
-- Runtime does not create compiler outputs by itself; it invokes the correct compiler/gateway tool or prepares a safe source-backed kickoff.
+- Runtime does not create compiler outputs by itself; it invokes the correct compiler/gateway tool, schedules the next compiler loop after a pass, or prepares a safe source-backed kickoff.
 - Runtime treats artifact status as temporary coordination evidence, not durable roadmap truth.
 - Runtime releases claims it acquires before returning unless the adapter/process fails; release failures are recorded as platform-limited evidence.
-- Runtime requests harness capabilities through ports and records unsupported capabilities rather than fabricating host behavior.
+- Runtime uses Pi Code as the first-class foundation and requests any optional harness/runtime capabilities through explicit contracts, recording unsupported capabilities rather than fabricating host behavior.
 - Runtime is package source under `src/runtime/**`; dogfood operational state under `.codewiki/runtime/**` remains repo-local state, not package source.
 
 ## Related docs
