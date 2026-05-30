@@ -6,7 +6,7 @@ summary: Alignment loops that create source-backed builds for decision, planning
 owners:
   - architecture
   - product
-updated: "2026-05-26"
+updated: "2026-05-30"
 ---
 
 # Compilers
@@ -23,7 +23,7 @@ decision -> decision_build -> validation
     -> implementation -> implementation_build -> validation/publication
 ```
 
-The arrows are promotion gates, not a one-way-only pipeline. The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Gateway verdicts validate each handoff, and any loop can route backward to the smallest upstream loop that can resolve missing semantics, failed evidence, or policy ambiguity. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
+The arrows are promotion gates, not a one-way-only pipeline. The decision loop owns user semantic approval and knowledge updates. Planning owns roadmap alignment. Implementation owns tests/code and check evidence. Source modules under `src/policy/**` own gate requirements, required audit profiles, risk tiers, approval requirements, proof requirements, and production-readiness profile policy. Checks and audits produce evidence only. Gateway verdicts validate each handoff, and any loop can route backward to the smallest upstream loop that can resolve missing semantics, failed evidence, or policy ambiguity. The state engine points to the next loop and source refs, but agents must still read builds, knowledge, roadmap tasks, validation evidence, tests, code, and content proofs directly.
 
 ## Alignment cycles
 

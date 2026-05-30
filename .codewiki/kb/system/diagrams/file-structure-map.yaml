@@ -75,8 +75,8 @@ nodes:
       - src/gc/**
       - src/gateway/**
       - src/knowledge/**
+      - src/policy/**
       - src/project/**
-      - src/quality/**
       - src/roadmap/**
       - src/runtime/**
       - src/session/**
@@ -190,15 +190,18 @@ nodes:
       - src/bootstrap.ts
       - src/project-root.ts
       - src/templates.ts
-  - id: quality_profile_boundary
-    label: Production quality profile
+  - id: policy_gate_boundary
+    label: Gate policy boundary
     group: source_target
     kind: component
     source: .codewiki/kb/system/validation-gateway.md
     requires_doc: true
-    status: implementation_in_progress_by_task_048
-    task_id: TASK-048
+    status: implemented_by_task_057
+    task_id: TASK-057
     paths:
+      - src/policy/**
+      - tests/smoke/policy-gate.test.mjs
+    removed_paths:
       - src/quality/**
       - tests/smoke/quality-profile.test.mjs
   - id: knowledge_concept_root_boundary

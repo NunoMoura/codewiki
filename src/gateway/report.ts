@@ -6,8 +6,6 @@ import { isAcceptedBuildData } from "../build/lifecycle.ts";
 import {
 	acceptedBuildRefGaps,
 	acceptedGatewayBuildRefGaps,
-	auditEvidenceGaps,
-	auditRequirement,
 	buildRefsByKind,
 	buildSlug,
 	isolationBoundary,
@@ -18,10 +16,10 @@ import {
 	trimList,
 } from "../build/shared.ts";
 import {
-	normalizeChangeType,
 	normalizeTraceabilityExemption,
 	isSemanticTraceability,
 } from "../change/traceability.ts";
+import { auditEvidenceGaps, auditRequirement } from "../policy/gate-policy.ts";
 import type { WikiProject } from "../project/types.ts";
 import type { WorkflowLoop } from "../session/types.ts";
 import {
@@ -33,9 +31,13 @@ import { nowIso, unique } from "../shared/utils.ts";
 import { normalizeWorktreeIsolation } from "../session/claims.ts";
 import { fileStructureSatisfiedDeferredTriggerRefs } from "../knowledge/diagram-parser.ts";
 import {
-	evaluateProductionQualityProfile,
-	productionQualityProfileEnabled,
-} from "../quality/production-profile.ts";
+	evaluateProductionPolicyProfile,
+	productionPolicyProfileEnabled,
+} from "../policy/production-profile.ts";
+import {
+	classifyValidationRisk,
+	validationApprovalEvidence,
+} from "../policy/risk.ts";
 import type {
 	CodewikiValidationFailureClass,
 	CodewikiValidationReportInput,
@@ -342,11 +344,6 @@ const IMMUTABLE_VALIDATION_PROFILES = new Set([
 	"publication",
 	"publish",
 	"release",
-]);
-const HIGH_RISK_VALIDATION_TIERS = new Set([
-	"semantic-system",
-	"security-migration-publication",
-	"destructive",
 ]);
 
 type ValidationPreflightSource = {
@@ -803,128 +800,6 @@ function buildValidationCheckpointCommit(input: {
 	};
 }
 
-function isDocsOrMechanicalRef(ref: string): boolean {
-	const normalized = normalizeRepoPath(ref);
-	return (
-		normalized.startsWith(".codewiki/kb/") ||
-		normalized.endsWith(".md") ||
-		normalized.endsWith(".mdx") ||
-		normalized.endsWith(".rst") ||
-		normalized.endsWith(".adoc") ||
-		normalized.endsWith(".txt")
-	);
-}
-
-function classifyValidationRisk(
-	input: CodewikiValidationReportInput,
-	build: any,
-) {
-	const profile = input.profile.trim().toLowerCase();
-	const policyProfile = String(input.policy_profile || "")
-		.trim()
-		.toLowerCase();
-	const exemption = normalizeTraceabilityExemption(
-		build?.traceability?.exemption ??
-			build?.traceability?.change_class ??
-			build?.change_class,
-	);
-	const changeType = normalizeChangeType(
-		build?.traceability?.change_type ??
-			build?.change_type ??
-			build?.traceability?.change_class ??
-			build?.change_class,
-		"code",
-	);
-	const semantic = isSemanticTraceability(
-		build?.traceability?.semantic,
-		exemption,
-	);
-	const pathRefs = validationPathRefs(build);
-	const docsOnly = pathRefs.length > 0 && pathRefs.every(isDocsOrMechanicalRef);
-	const haystack = [
-		profile,
-		policyProfile,
-		input.source,
-		...(input.checks ?? []),
-		...(input.audit_refs ?? []),
-		...(input.audit_reports ?? []),
-		build?.summary,
-		build?.change_type,
-		build?.change_class,
-		build?.traceability?.change_type,
-		build?.traceability?.exemption,
-		...pathRefs,
-	]
-		.map((value) => String(value || "").toLowerCase())
-		.join(" ");
-	let tier = "code-local";
-	let reason =
-		"Code-local change; gateway audits and content proof still required.";
-	if (
-		/\b(destructive|irreversible|drop\s+table|delete\s+all|rm\s+-rf|force[- ]push|wipe|destroy)\b/.test(
-			haystack,
-		)
-	) {
-		tier = "destructive";
-		reason =
-			"Destructive or irreversible wording requires explicit user approval before promotion.";
-	} else if (
-		["publication", "publish", "release"].includes(profile) ||
-		/\b(security|migration|publication|publish|release|secret|credential|remote|breaking[- ]api)\b/.test(
-			haystack,
-		)
-	) {
-		tier = "security-migration-publication";
-		reason =
-			"Security, migration, publication, or release work requires explicit user approval before promotion.";
-	} else if (
-		exemption ||
-		docsOnly ||
-		/\b(mechanical|generated|runtime|docs[- ]cleanup|documentation[- ]cleanup)\b/.test(
-			haystack,
-		)
-	) {
-		tier = "mechanical-docs";
-		reason =
-			"Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.";
-	} else if (
-		semantic &&
-		["product", "system", "task"].includes(String(changeType))
-	) {
-		tier = "semantic-system";
-		reason =
-			"Semantic product/system/task change must trace to accepted user semantics before lower-layer promotion.";
-	}
-	const approvalRequired = HIGH_RISK_VALIDATION_TIERS.has(tier);
-	return { tier, reason, approval_required: approvalRequired };
-}
-
-function validationApprovalEvidence(
-	input: CodewikiValidationReportInput,
-	build: any,
-	tier: string,
-): string[] {
-	const refs = trimList([
-		...(input.audit_refs ?? []),
-		...(input.audit_reports ?? []),
-		...(input.checks ?? []),
-	]);
-	const explicit = refs.filter((ref) =>
-		/\b(approval:user|user[-_ ]approval|explicit[-_ ]approval|approved[-_ ]by[-_ ]user|semantic[-_ ]approval)\b/i.test(
-			ref,
-		),
-	);
-	if (explicit.length > 0) return unique(explicit);
-	if (tier === "semantic-system") {
-		const acceptedRefs = trimList(build?.traceability?.accepted_build_refs);
-		if (acceptedRefs.length > 0)
-			return acceptedRefs.map((ref) => `accepted_semantics:${ref}`);
-		const rows = trimList(build?.approved_diff_rows);
-		if (rows.length > 0) return rows.map((row) => `approved_diff_row:${row}`);
-	}
-	return [];
-}
-
 function validationPreflightIssue(
 	kind: string,
 	severity: "high" | "medium" | "low",
@@ -1131,11 +1006,11 @@ export function buildGatewayPreflight(
 		risk.approval_required && approvalEvidence.length === 0
 			? [`user_approval:${risk.tier}`]
 			: [];
-	const productionQuality = productionQualityProfileEnabled(
+	const productionPolicy = productionPolicyProfileEnabled(
 		policyProfile,
 		source.build,
 	)
-		? evaluateProductionQualityProfile({
+		? evaluateProductionPolicyProfile({
 				profile,
 				policyProfile,
 				build: source.build,
@@ -1145,8 +1020,8 @@ export function buildGatewayPreflight(
 				isolation,
 			})
 		: undefined;
-	const productionQualityGaps = (productionQuality?.missing ?? []).map(
-		(gap) => `production_quality:${gap}`,
+	const productionPolicyGaps = (productionPolicy?.missing ?? []).map(
+		(gap) => `production_policy:${gap}`,
 	);
 	const blockingGaps = unique([
 		...upstreamGaps,
@@ -1158,7 +1033,7 @@ export function buildGatewayPreflight(
 		...isolationGaps,
 		...staleRefs,
 		...closePublicationBlockers,
-		...productionQualityGaps,
+		...productionPolicyGaps,
 	]);
 	const status =
 		blockingGaps.length > 0
@@ -1180,7 +1055,7 @@ export function buildGatewayPreflight(
 		stale_refs: staleRefs,
 		close_publication_blockers: closePublicationBlockers,
 		user_approval: approvalMissing,
-		production_quality: productionQualityGaps,
+		production_policy: productionPolicyGaps,
 	};
 	const issues = [
 		...validationPreflightIssue(
@@ -1244,10 +1119,10 @@ export function buildGatewayPreflight(
 			"Risk tier requires explicit user approval before lower-layer promotion.",
 		),
 		...validationPreflightIssue(
-			"production-quality",
+			"production-policy",
 			"high",
-			productionQualityGaps,
-			"Production quality profile evidence, thresholds, content proof, or waivers are missing.",
+			productionPolicyGaps,
+			"Production policy profile evidence, thresholds, content proof, or waivers are missing.",
 		),
 	];
 	const routingSignals = [
@@ -1261,7 +1136,7 @@ export function buildGatewayPreflight(
 		...staleRefs.map((gap) => `stale_refs:${gap}`),
 		...closePublicationBlockers.map((gap) => `close_publication:${gap}`),
 		...approvalMissing.map((gap) => `risk_approval:${gap}`),
-		...productionQualityGaps,
+		...productionPolicyGaps,
 	];
 	const routing = inferValidationRouting(input, routingSignals);
 	return {
@@ -1284,7 +1159,7 @@ export function buildGatewayPreflight(
 			"content proof strategy",
 			"close/publication blockers",
 			"risk-tier approval policy",
-			"production quality profile",
+			"production policy profile",
 		],
 		missing,
 		issues,
@@ -1315,7 +1190,7 @@ export function buildGatewayPreflight(
 					: "High-risk work must cite approval evidence before lower-layer promotion.",
 			},
 		},
-		production_quality: productionQuality,
+		production_policy: productionPolicy,
 	};
 }
 
@@ -1376,8 +1251,8 @@ export async function writeGatewayReport(
 		input.verdict === "pass" ? preflight.missing.decision_propagation : [];
 	const riskApprovalGaps =
 		input.verdict === "pass" ? preflight.missing.user_approval : [];
-	const productionQualityGaps =
-		input.verdict === "pass" ? preflight.missing.production_quality : [];
+	const productionPolicyGaps =
+		input.verdict === "pass" ? preflight.missing.production_policy : [];
 	const publicationReadinessGaps =
 		input.verdict === "pass"
 			? preflight.missing.close_publication_blockers.filter(
@@ -1397,7 +1272,7 @@ export async function writeGatewayReport(
 		...decisionPropagationGaps.map((gap) => `decision_propagation:${gap}`),
 		...auditGaps.map((profileName) => `audit:${profileName}`),
 		...riskApprovalGaps.map((gap) => `risk_approval:${gap}`),
-		...productionQualityGaps,
+		...productionPolicyGaps,
 		...publicationReadinessGaps.map((gap) => `publication_readiness:${gap}`),
 	]);
 	const policyBlocked = policyGaps.length > 0;
@@ -1554,12 +1429,12 @@ export async function writeGatewayReport(
 					},
 				]
 			: [];
-	const productionQualityIssue =
-		productionQualityGaps.length > 0
+	const productionPolicyIssue =
+		productionPolicyGaps.length > 0
 			? [
 					{
 						severity: "high",
-						summary: `Production quality profile blockers remain: ${productionQualityGaps.join(", ")}.`,
+						summary: `Production policy profile blockers remain: ${productionPolicyGaps.join(", ")}.`,
 					},
 				]
 			: [];
@@ -1610,7 +1485,7 @@ export async function writeGatewayReport(
 			...decisionPropagationIssue,
 			...auditIssue,
 			...riskApprovalIssue,
-			...productionQualityIssue,
+			...productionPolicyIssue,
 			...publicationReadinessIssue,
 		],
 		source: (input.source ?? "").trim() || undefined,
@@ -1642,7 +1517,7 @@ export async function writeGatewayReport(
 			...(decisionPropagationGaps.length > 0 ? ["decision_propagation"] : []),
 			...(auditGaps.length > 0 ? ["audit_evidence"] : []),
 			...(riskApprovalGaps.length > 0 ? ["risk_approval"] : []),
-			...(productionQualityGaps.length > 0 ? ["production_quality"] : []),
+			...(productionPolicyGaps.length > 0 ? ["production_policy"] : []),
 			...(publicationReadinessGaps.length > 0 ? ["publication_readiness"] : []),
 		]),
 		blocking_questions: unique([
@@ -1705,9 +1580,9 @@ export async function writeGatewayReport(
 						`Record explicit user approval for risk tier ${preflight.risk.tier} before lower-layer promotion.`,
 					]
 				: []),
-			...(productionQualityGaps.length > 0
+			...(productionPolicyGaps.length > 0
 				? [
-						"Record required production quality evidence or explicit owner/rationale waivers before promotion.",
+						"Record required production policy evidence or explicit owner/rationale waivers before promotion.",
 					]
 				: []),
 			...(publicationReadinessGaps.length > 0
@@ -1734,7 +1609,7 @@ export async function writeGatewayReport(
 			...auditReq,
 			gaps: auditGaps,
 		},
-		production_quality_requirement: preflight.production_quality,
+		production_policy_requirement: preflight.production_policy,
 		preflight,
 		commit_readiness_requirement:
 			profile.trim().toLowerCase() === "implementation"

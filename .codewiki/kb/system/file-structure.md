@@ -5,7 +5,7 @@ state: active
 summary: Target knowledge-base and package file structure for CodeWiki.
 owners:
   - architecture
-updated: "2026-05-26"
+updated: "2026-05-30"
 diagram_refs:
   - file-structure-map:intended_file_structure
   - file-structure-map:current_layered_source
@@ -85,7 +85,7 @@ Renderer-specific Mermaid, Cytoscape, or SVG output is generated or renderer inp
 | CodeWiki runtime | `runtime.md` | `src/runtime/**` bounded execution orchestration, harness capability ports, claims/gateway/context-boundary coordination, and workflow-efficiency evidence |
 | Compilers | `compilers.md` | `src/build/**`, `src/roadmap/runtime.ts`, `src/roadmap/task.ts`, focused `skills/codewiki-*/SKILL.md` compiler skills |
 | Validation gateway | `validation-gateway.md` | `src/gateway/**` gateway report/preflight/tool/type/transaction ownership, `src/validation/**` compatibility re-export shims, `skills/codewiki-validation/SKILL.md`, hot fail/block/policy-required/current validation reports |
-| Production quality profile | `validation-gateway.md` | `src/quality/**`, production-ready promotion checks, review thresholds, package readiness, and waiver policy |
+| Gate policy | `validation-gateway.md` | `src/policy/**`, gate requirements, risk tiers, approval/proof requirements, production-readiness policy, review thresholds, package readiness, and waiver policy |
 | Knowledge | `knowledge.md` | `.codewiki/kb/**`, `src/knowledge/**` parser ownership |
 | Builds | `builds.md` | `.codewiki/builds/**`, implementation evidence and publication payloads |
 | Alignment model | `alignment-model.md` | graph/gateway/content-proof precedence and semantic-change rules |

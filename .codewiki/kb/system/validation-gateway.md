@@ -5,14 +5,14 @@ state: active
 summary: Pure build-validation gateway for horizontal and vertical alignment before handoff, closure, release, or publication.
 owners:
   - architecture
-updated: "2026-05-26"
+updated: "2026-05-30"
 ---
 
 # Validation Gateway
 
 ## Responsibility
 
-The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. Gateway-owned report, preflight, tool, type, and transaction modules live under `src/gateway/**`. The `src/validation/**` tree is compatibility-only re-export glue and must not own implementation behavior. The gateway stays separate from compiler-loop build production.
+The validation gateway validates a submitted cycle build against policy, source refs, exit criteria, and evidence, returning `pass`, `fail`, or `block`. Gate requirement, required-audit, risk-tier, approval, content-proof, and production-readiness rules live under `src/policy/**`. Gateway-owned report, preflight, tool, type, and transaction modules live under `src/gateway/**` and consume policy instead of owning policy constants. The `src/validation/**` tree is compatibility-only re-export glue and must not own implementation behavior. The gateway stays separate from compiler-loop build production.
 
 The gateway does not define requirements, write canonical truth, create plans, compile handoffs, or prove content. Compilers create builds; commits, tree SHAs, package digests, and canonical files prove content. The gateway attests named evidence and, for implementation builds, verifies commit-readiness.
 

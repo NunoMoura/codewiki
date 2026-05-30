@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29",
+  "generated_at": "2026-05-30T05:12:39Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-057/context.json",
   "task": {
     "id": "TASK-057",
     "title": "Move gate requirements from quality to policy",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-29T21:23:36Z",
+  "updated": "2026-05-30T05:12:39Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,18 +536,21 @@
     "TASK-057": {
       "id": "TASK-057",
       "title": "Move gate requirements from quality to policy",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Create src/policy/** as the owner of gate requirements, risk tiers, approvals, proof requirements, and production-readiness policy; remove quality as policy owner.",
       "spec_paths": [
-        ".codewiki/kb/system/compilers.md"
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md"
       ],
       "code_paths": [
         "src/policy/gate-policy.ts",
         "src/policy/risk.ts",
         "src/policy/production-profile.ts",
-        "src/quality/production-profile.ts",
+        "src/build/shared.ts",
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
         "tests/smoke/policy-gate.test.mjs"
       ],
       "research_ids": [],
@@ -584,7 +587,7 @@
         "closure": "Close when policy module, imports, docs, and tests align and validation passes."
       },
       "created": "2026-05-29",
-      "updated": "2026-05-29"
+      "updated": "2026-05-30T05:12:39Z"
     },
     "TASK-059": {
       "id": "TASK-059",

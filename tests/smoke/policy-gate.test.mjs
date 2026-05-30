@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync, readdirSync } from "node:fs";
 import { mkdtemp, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 
-import { evaluateProductionQualityProfile } from "../../src/quality/production-profile.ts";
+import { evaluateProductionPolicyProfile } from "../../src/policy/production-profile.ts";
 import { buildGatewayPreflight } from "../../src/gateway/report.ts";
 
 function baseBuild(overrides = {}) {
@@ -26,12 +27,12 @@ function baseBuild(overrides = {}) {
 		],
 		audit_refs: ["alignment", "changed"],
 		acceptance_mapping: [
-			{ criterion: "quality evidence exists", evidence: "checks passed" },
+			{ criterion: "policy evidence exists", evidence: "checks passed" },
 		],
 		closure_brief: {
-			user_intent: "quality test",
+			user_intent: "policy test",
 			implemented_changes: ["changed example"],
-			acceptance_evidence: ["quality evidence exists"],
+			acceptance_evidence: ["policy evidence exists"],
 			checks: ["npm run typecheck", "npm run test:smoke"],
 		},
 		...overrides,
@@ -44,24 +45,31 @@ const isolation = {
 	working_tree_digest: "sha256-dirty",
 };
 
-const passing = evaluateProductionQualityProfile({
+const passing = evaluateProductionPolicyProfile({
 	profile: "implementation",
 	policyProfile: "production",
 	build: baseBuild(),
 	isolation,
 });
-assert.equal(passing.status, "pass", "complete implementation evidence should pass production profile");
+assert.equal(
+	passing.status,
+	"satisfied",
+	"complete implementation evidence should satisfy production profile",
+);
 assert.deepEqual(passing.missing, []);
-assert.deepEqual(passing.required_audits.sort(), ["alignment", "changed"].sort());
+assert.deepEqual(
+	passing.required_audits.sort(),
+	["alignment", "changed"].sort(),
+);
 
-const missing = evaluateProductionQualityProfile({
+const missing = evaluateProductionPolicyProfile({
 	profile: "implementation",
 	policyProfile: "production",
 	build: baseBuild({
 		checks_run: [],
 		acceptance_mapping: [],
 		closure_brief: {
-			user_intent: "quality test",
+			user_intent: "policy test",
 			implemented_changes: ["changed example"],
 			acceptance_evidence: [],
 			checks: [],
@@ -69,7 +77,11 @@ const missing = evaluateProductionQualityProfile({
 	}),
 	isolation: {},
 });
-assert.equal(missing.status, "block", "missing evidence should block production profile");
+assert.equal(
+	missing.status,
+	"missing",
+	"missing evidence should remain missing in production profile",
+);
 for (const requirement of [
 	"evidence:acceptance-mapping",
 	"check:typecheck",
@@ -78,59 +90,78 @@ for (const requirement of [
 	"proof:fresh-validation",
 	"proof:content",
 ]) {
-	assert.ok(missing.missing.includes(requirement), `missing ${requirement} should be reported`);
+	assert.ok(
+		missing.missing.includes(requirement),
+		`missing ${requirement} should be reported`,
+	);
 }
 
 const packageBuild = baseBuild({
 	code_files: ["package.json"],
 	audit_refs: ["alignment", "changed", "package"],
 });
-const missingPackagePack = evaluateProductionQualityProfile({
+const missingPackagePack = evaluateProductionPolicyProfile({
 	profile: "implementation",
 	policyProfile: "production",
 	build: packageBuild,
 	isolation,
 });
-assert.equal(missingPackagePack.status, "block", "package changes require package pack evidence");
+assert.equal(
+	missingPackagePack.status,
+	"missing",
+	"package changes require package pack evidence",
+);
 assert.ok(missingPackagePack.missing.includes("check:package-pack"));
 
-const invalidWaiver = evaluateProductionQualityProfile({
+const invalidWaiver = evaluateProductionPolicyProfile({
 	profile: "implementation",
 	policyProfile: "production",
 	build: {
 		...packageBuild,
-		quality: {
-			waivers: [
-				{ requirement: "check:package-pack", reason: "temporary package dry-run skip" },
-			],
-		},
-	},
-	isolation,
-});
-assert.equal(invalidWaiver.status, "block", "waiver without owner should not pass");
-assert.ok(invalidWaiver.missing.includes("check:package-pack:waiver_invalid"));
-
-const waivedPackagePack = evaluateProductionQualityProfile({
-	profile: "implementation",
-	policyProfile: "production",
-	build: {
-		...packageBuild,
-		quality: {
+		policy: {
 			waivers: [
 				{
 					requirement: "check:package-pack",
-					owner: "maintainer",
-					reason: "package contents unchanged; pack dry-run covered by separate release gate",
+					reason: "temporary package dry-run skip",
 				},
 			],
 		},
 	},
 	isolation,
 });
-assert.equal(waivedPackagePack.status, "pass", "explicit owner/rationale waiver should allow package pack gap");
+assert.equal(
+	invalidWaiver.status,
+	"missing",
+	"waiver without owner should not satisfy policy",
+);
+assert.ok(invalidWaiver.missing.includes("check:package-pack:waiver_invalid"));
+
+const waivedPackagePack = evaluateProductionPolicyProfile({
+	profile: "implementation",
+	policyProfile: "production",
+	build: {
+		...packageBuild,
+		policy: {
+			waivers: [
+				{
+					requirement: "check:package-pack",
+					owner: "maintainer",
+					reason:
+						"package contents unchanged; pack dry-run covered by separate release gate",
+				},
+			],
+		},
+	},
+	isolation,
+});
+assert.equal(
+	waivedPackagePack.status,
+	"satisfied",
+	"explicit owner/rationale waiver should allow package pack gap",
+);
 assert.equal(waivedPackagePack.waived[0].requirement_id, "check:package-pack");
 
-const packageReady = evaluateProductionQualityProfile({
+const packageReady = evaluateProductionPolicyProfile({
 	profile: "implementation",
 	policyProfile: "production",
 	build: {
@@ -139,26 +170,39 @@ const packageReady = evaluateProductionQualityProfile({
 	},
 	isolation,
 });
-assert.equal(packageReady.status, "pass", "package pack evidence should satisfy package readiness");
+assert.equal(
+	packageReady.status,
+	"satisfied",
+	"package pack evidence should satisfy package readiness",
+);
 
 async function writeBuild(root, build) {
 	const rel = ".codewiki/builds/implementation/fixture.json";
 	const abs = resolve(root, rel);
-	await mkdir(resolve(root, ".codewiki/builds/implementation"), { recursive: true });
+	await mkdir(resolve(root, ".codewiki/builds/implementation"), {
+		recursive: true,
+	});
 	await writeFile(abs, JSON.stringify(build, null, 2) + "\n", "utf8");
 	return rel;
 }
 
-const root = await mkdtemp(resolve(tmpdir(), "codewiki-quality-"));
-const project = { root, roadmapPath: ".codewiki/roadmap/queue.json", graphPath: ".codewiki/index_graph.json" };
+const root = await mkdtemp(resolve(tmpdir(), "codewiki-policy-"));
+const project = {
+	root,
+	roadmapPath: ".codewiki/roadmap/queue.json",
+	graphPath: ".codewiki/index_graph.json",
+};
 const source = await writeBuild(
 	root,
 	baseBuild({
-		checks_run: ["npm run test:smoke: pass", "pi-lens review: 0 blockers, 0 warnings"],
+		checks_run: [
+			"npm run test:smoke: pass",
+			"pi-lens review: 0 blockers, 0 warnings",
+		],
 		closure_brief: {
-			user_intent: "quality test",
+			user_intent: "policy test",
 			implemented_changes: ["changed example"],
-			acceptance_evidence: ["quality evidence exists"],
+			acceptance_evidence: ["policy evidence exists"],
 			checks: ["npm run test:smoke"],
 		},
 	}),
@@ -173,26 +217,38 @@ const blockedPreflight = buildGatewayPreflight(project, {
 	audit_refs: ["alignment", "changed"],
 	isolation,
 });
-assert.equal(blockedPreflight.status, "blocked", "gateway preflight should enforce production quality profile");
-assert.ok(blockedPreflight.missing.production_quality.includes("production_quality:check:typecheck"));
+assert.equal(
+	blockedPreflight.status,
+	"blocked",
+	"gateway preflight should enforce production policy profile",
+);
+assert.ok(
+	blockedPreflight.missing.production_policy.includes(
+		"production_policy:check:typecheck",
+	),
+);
 
 const waivedSource = await writeBuild(
 	root,
 	baseBuild({
-		checks_run: ["npm run test:smoke: pass", "pi-lens review: 0 blockers, 0 warnings"],
+		checks_run: [
+			"npm run test:smoke: pass",
+			"pi-lens review: 0 blockers, 0 warnings",
+		],
 		closure_brief: {
-			user_intent: "quality test",
+			user_intent: "policy test",
 			implemented_changes: ["changed example"],
-			acceptance_evidence: ["quality evidence exists"],
+			acceptance_evidence: ["policy evidence exists"],
 			checks: ["npm run test:smoke"],
 		},
-		quality: {
+		policy: {
 			profile: "production",
 			waivers: [
 				{
 					requirement: "check:typecheck",
 					owner: "maintainer",
-					reason: "fixture proves waiver integration; real task still runs typecheck",
+					reason:
+						"fixture proves waiver integration; real task still runs typecheck",
 				},
 			],
 		},
@@ -208,8 +264,29 @@ const waivedPreflight = buildGatewayPreflight(project, {
 	audit_refs: ["alignment", "changed"],
 	isolation,
 });
-assert.equal(waivedPreflight.status, "ready", "explicit waiver should satisfy production quality integration");
-assert.equal(waivedPreflight.production_quality.status, "pass");
-assert.equal(waivedPreflight.production_quality.waived[0].requirement_id, "check:typecheck");
+assert.equal(
+	waivedPreflight.status,
+	"ready",
+	"explicit waiver should satisfy production policy integration",
+);
+assert.equal(waivedPreflight.production_policy.status, "satisfied");
+assert.equal(
+	waivedPreflight.production_policy.waived[0].requirement_id,
+	"check:typecheck",
+);
 
-console.log("✓ quality profile smoke passed");
+for (const file of readdirSync(resolve("src/policy")).filter((name) =>
+	name.endsWith(".ts"),
+)) {
+	const content = readFileSync(resolve("src/policy", file), "utf8");
+	assert.ok(
+		!content.includes("../gateway/"),
+		`${file} must not import gateway`,
+	);
+	assert.ok(
+		!content.includes("../checks/"),
+		`${file} must not import checks executors`,
+	);
+}
+
+console.log("✓ policy gate smoke passed");

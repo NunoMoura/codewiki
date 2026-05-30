@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-30T05:17:14Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+  "task_id": "TASK-057",
+  "task": {
+    "id": "TASK-057",
+    "title": "Move gate requirements from quality to policy",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "migration",
+    "summary": "Create src/policy/** as the owner of gate requirements, risk tiers, approvals, proof requirements, and production-readiness policy; remove quality as policy owner.",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/policy/gate-policy.ts",
+      "src/policy/risk.ts",
+      "src/policy/production-profile.ts",
+      "src/build/shared.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "tests/smoke/policy-gate.test.mjs"
+    ],
+    "goal": {
+      "outcome": "Policy owns rules and requirements while checks produce evidence and gateway emits verdicts.",
+      "acceptance": [
+        "src/policy/** owns gate requirements, risk tiers, proof requirements, approvals, and production profile policy.",
+        "src/quality/** is removed or reduced to historical compatibility-free absence; live imports use policy naming.",
+        "Gateway/report/build code consumes policy functions instead of local duplicate required-audit/risk constants where this task touches them.",
+        "Tests enforce policy dependency direction: policy does not import gateway or checks executors."
+      ],
+      "non_goals": [
+        "Do not run checks from policy.",
+        "Do not emit pass/fail/block verdicts from policy.",
+        "Do not migrate gateway implementation in this task."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "npm run test:smoke",
+        "npm run test:features",
+        "targeted policy-gate tests",
+        "search proves live quality policy ownership names are removed."
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-06T05:17:14.000Z",
+    "purge_after": "2026-06-13T05:17:14.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "alignment",
+    "changed",
+    "task:TASK-057",
+    "generated-parity",
+    "file-structure"
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "TASK-057 isolated policy gate ownership implementation from clean HEAD worktree.",
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-057"
+    ],
+    "validation": [],
+    "source": [
+      "src/policy/gate-policy.ts",
+      "src/policy/risk.ts",
+      "src/policy/production-profile.ts",
+      "src/build/shared.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "tests/smoke/policy-gate.test.mjs",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ]
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/policy/gate-policy.ts",
+      "src/policy/risk.ts",
+      "src/policy/production-profile.ts",
+      "src/build/shared.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "src/ui/web/control-room.ts",
+      "package.json",
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md",
+      ".codewiki/kb/system/file-structure.md",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+    ],
+    "tests": [
+      "tests/smoke/policy-gate.test.mjs"
+    ],
+    "validation": [
+      "fresh isolated implementation validation required"
+    ],
+    "publication": [],
+    "closure": [
+      "TASK-057"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+    "spec_paths": [
+      ".codewiki/kb/system/compilers.md",
+      ".codewiki/kb/system/validation-gateway.md"
+    ],
+    "code_paths": [
+      "src/policy/gate-policy.ts",
+      "src/policy/risk.ts",
+      "src/policy/production-profile.ts",
+      "src/build/shared.ts",
+      "src/build/writer.ts",
+      "src/gateway/report.ts",
+      "tests/smoke/policy-gate.test.mjs"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/policy-gate.test.mjs"
+  ],
+  "code_files": [
+    "src/policy/gate-policy.ts",
+    "src/policy/risk.ts",
+    "src/policy/production-profile.ts",
+    "src/build/shared.ts",
+    "src/build/writer.ts",
+    "src/gateway/report.ts",
+    "src/ui/web/control-room.ts",
+    "package.json",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "files_changed": [
+    "tests/smoke/policy-gate.test.mjs",
+    "src/policy/gate-policy.ts",
+    "src/policy/risk.ts",
+    "src/policy/production-profile.ts",
+    "src/build/shared.ts",
+    "src/build/writer.ts",
+    "src/gateway/report.ts",
+    "src/ui/web/control-room.ts",
+    "package.json",
+    ".codewiki/kb/system/compilers.md",
+    ".codewiki/kb/system/validation-gateway.md",
+    ".codewiki/kb/system/file-structure.md",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+  ],
+  "checks_run": [
+    "lsp_diagnostics touched TS files: pass (0 diagnostics)",
+    "npm run typecheck: pass",
+    "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+    "npm run test:smoke: pass",
+    "npm run test:features: pass",
+    "npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded",
+    "codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-057",
+      "test_files": [
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "evidence": [
+        "Policy gate smoke test covers required audit policy, risk/approval policy, production profile policy, and dependency direction."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+      "roadmap_task_id": "TASK-057",
+      "code_files": [
+        "src/policy/gate-policy.ts",
+        "src/policy/risk.ts",
+        "src/policy/production-profile.ts",
+        "src/build/shared.ts",
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "src/ui/web/control-room.ts",
+        "package.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "evidence": [
+        "Moved required audit/gate helpers from build shared ownership to src/policy/gate-policy.ts.",
+        "Moved validation risk-tier and approval evidence policy into src/policy/risk.ts.",
+        "Renamed production quality profile policy into src/policy/production-profile.ts with policy/readiness terminology and no verdict ownership.",
+        "Updated build/gateway consumers to import policy helpers while preserving gateway verdict ownership.",
+        "Removed src/quality/** source and quality-profile smoke test in favor of policy naming."
+      ],
+      "notes": [
+        "Isolated worktree created under .tmp-worktrees/task-057-close from HEAD cf8efead9690096ea221380b9eaf5b29449a9f12 to avoid unrelated daemon/runtime dirty work from the main worktree."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Policy gate smoke test covers required audit policy, risk/approval policy, production profile policy, and dependency direction."
+  ],
+  "code_change_evidence": [
+    "Moved required audit/gate helpers from build shared ownership to src/policy/gate-policy.ts.",
+    "Moved validation risk-tier and approval evidence policy into src/policy/risk.ts.",
+    "Renamed production quality profile policy into src/policy/production-profile.ts with policy/readiness terminology and no verdict ownership.",
+    "Updated build/gateway consumers to import policy helpers while preserving gateway verdict ownership.",
+    "Removed src/quality/** source and quality-profile smoke test in favor of policy naming."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "src/policy/** owns gate requirements, risk tiers, proof requirements, approvals, and production profile policy.",
+      "evidence": "src/policy/gate-policy.ts owns required audit profiles and gate audit evidence helpers; src/policy/risk.ts owns validation risk tiers and approval evidence policy; src/policy/production-profile.ts owns production-readiness profile policy."
+    },
+    {
+      "criterion": "src/quality/** is removed or reduced to historical compatibility-free absence; live imports use policy naming.",
+      "evidence": "src/quality/production-profile.ts, src/quality/tool.ts, and tests/smoke/quality-profile.test.mjs are removed; package smoke test references tests/smoke/policy-gate.test.mjs; search found no live quality policy ownership names/imports."
+    },
+    {
+      "criterion": "Gateway/report/build code consumes policy functions instead of local duplicate required-audit/risk constants where this task touches them.",
+      "evidence": "src/build/shared.ts re-exports policy audit helpers; src/build/writer.ts imports requiredAuditProfiles from src/policy/gate-policy.ts; src/gateway/report.ts imports gate-policy, risk, and production-profile policy helpers."
+    },
+    {
+      "criterion": "Tests enforce policy dependency direction: policy does not import gateway or checks executors.",
+      "evidence": "tests/smoke/policy-gate.test.mjs asserts policy exports and dependency direction; grep of src/policy for gateway/checks imports returned no matches."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Move gate requirements from quality to policy and close TASK-057 after isolated validation.",
+    "implemented_changes": [
+      "Policy namespace now owns gate requirements, risk, approvals, proof requirements, and production profile policy.",
+      "Quality namespace source/test ownership was removed.",
+      "Build and gateway code consume policy helpers.",
+      "Policy gate tests enforce dependency direction and no verdict/check execution ownership."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        ".codewiki/kb/system/file-structure.md",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json"
+      ],
+      "code": [
+        "src/policy/gate-policy.ts",
+        "src/policy/risk.ts",
+        "src/policy/production-profile.ts",
+        "src/build/shared.ts",
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "src/ui/web/control-room.ts",
+        "package.json"
+      ],
+      "tests": [
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "validation": [
+        "codewiki_audit:alignment,changed,task,generated-parity,file-structure:TASK-057"
+      ]
+    },
+    "acceptance_evidence": [
+      "lsp_diagnostics touched TS files: pass",
+      "npm run typecheck: pass",
+      "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+      "npm run test:smoke: pass",
+      "npm run test:features: pass",
+      "src/quality absent and quality policy naming search clean"
+    ],
+    "checks": [
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run test:features",
+      "npm run check:architecture",
+      "codewiki_audit alignment,changed,task,generated-parity,file-structure"
+    ],
+    "non_goals_preserved": [
+      "Policy does not run checks.",
+      "Policy does not emit pass/fail/block verdicts.",
+      "Gateway implementation is not migrated in this task."
+    ],
+    "remaining_risks": [
+      "Task-close requires clean immutable commit/tree proof."
+    ]
+  },
+  "risks": [
+    "Task-close requires clean committed implementation state and task-close validation pass before roadmap closure."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-057",
+      "task_id": "TASK-057",
+      "next_focus_task_id": "TASK-059",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-057",
+        "title": "Move gate requirements from quality to policy",
+        "summary": "TASK-057 isolated policy gate ownership implementation from clean HEAD worktree.",
+        "spec_paths": [
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md"
+        ],
+        "code_paths": [
+          "src/policy/gate-policy.ts",
+          "src/policy/risk.ts",
+          "src/policy/production-profile.ts",
+          "src/build/shared.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "tests/smoke/policy-gate.test.mjs",
+          "src/ui/web/control-room.ts",
+          "package.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+        ],
+        "acceptance": [
+          "src/policy/** owns gate requirements, risk tiers, proof requirements, approvals, and production profile policy.",
+          "src/quality/** is removed or reduced to historical compatibility-free absence; live imports use policy naming.",
+          "Gateway/report/build code consumes policy functions instead of local duplicate required-audit/risk constants where this task touches them.",
+          "Tests enforce policy dependency direction: policy does not import gateway or checks executors."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "npm run test:smoke",
+          "npm run test:features",
+          "targeted policy-gate tests",
+          "search proves live quality policy ownership names are removed."
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+        "checks_run": [
+          "lsp_diagnostics touched TS files: pass (0 diagnostics)",
+          "npm run typecheck: pass",
+          "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+          "npm run test:smoke: pass",
+          "npm run test:features: pass",
+          "npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded",
+          "codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed"
+        ],
+        "test_design_evidence": [
+          "Policy gate smoke test covers required audit policy, risk/approval policy, production profile policy, and dependency direction."
+        ],
+        "code_change_evidence": [
+          "Moved required audit/gate helpers from build shared ownership to src/policy/gate-policy.ts.",
+          "Moved validation risk-tier and approval evidence policy into src/policy/risk.ts.",
+          "Renamed production quality profile policy into src/policy/production-profile.ts with policy/readiness terminology and no verdict ownership.",
+          "Updated build/gateway consumers to import policy helpers while preserving gateway verdict ownership.",
+          "Removed src/quality/** source and quality-profile smoke test in favor of policy naming."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-057",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-057",
+      "show_build": "git show refs/codewiki/archive/task/TASK-057:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+        ".codewiki/kb/system/compilers.md",
+        ".codewiki/kb/system/validation-gateway.md",
+        "src/policy/gate-policy.ts",
+        "src/policy/risk.ts",
+        "src/policy/production-profile.ts",
+        "src/build/shared.ts",
+        "src/build/writer.ts",
+        "src/gateway/report.ts",
+        "tests/smoke/policy-gate.test.mjs"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-057 Move gate requirements from quality to policy implementation evidence",
+      "body": "TASK-057 isolated policy gate ownership implementation from clean HEAD worktree.\n\nChecks: lsp_diagnostics touched TS files: pass (0 diagnostics), npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded, codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-057\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json\nCodeWiki-Checks: lsp_diagnostics touched TS files: pass (0 diagnostics), npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded, codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-057\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-057\nCodeWiki-Digest: sha256:f62a394bd688ce3770e825ec8e5bcd19c22b5dfa1548dbfc47ad80507fa850f3\nCodeWiki-Restore: /wiki-restore TASK-057",
+      "trailers": [
+        "CodeWiki-Task: TASK-057",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+        "CodeWiki-Checks: lsp_diagnostics touched TS files: pass (0 diagnostics), npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded, codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-057",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-057",
+        "CodeWiki-Digest: sha256:f62a394bd688ce3770e825ec8e5bcd19c22b5dfa1548dbfc47ad80507fa850f3",
+        "CodeWiki-Restore: /wiki-restore TASK-057"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-057 Move gate requirements from quality to policy implementation evidence",
+      "body": "TASK-057 isolated policy gate ownership implementation from clean HEAD worktree.\n\nChecks: lsp_diagnostics touched TS files: pass (0 diagnostics), npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded, codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-057\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json\nCodeWiki-Checks: lsp_diagnostics touched TS files: pass (0 diagnostics), npm run typecheck: pass, node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass, npm run test:smoke: pass, npm run test:features: pass, npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded, codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-057\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-057\nCodeWiki-Digest: sha256:f62a394bd688ce3770e825ec8e5bcd19c22b5dfa1548dbfc47ad80507fa850f3\nCodeWiki-Restore: /wiki-restore TASK-057"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-057",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-057"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-057",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-057",
+        "show_build": "git show refs/codewiki/archive/task/TASK-057:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          "src/policy/gate-policy.ts",
+          "src/policy/risk.ts",
+          "src/policy/production-profile.ts",
+          "src/build/shared.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "tests/smoke/policy-gate.test.mjs"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-057",
+      "build_path": ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-057",
+      "commit_sha": "",
+      "digest": "sha256:f62a394bd688ce3770e825ec8e5bcd19c22b5dfa1548dbfc47ad80507fa850f3",
+      "restore_command": "/wiki-restore TASK-057"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:a6aca8ff8aa688928595e8b98e83724d50d0debc03f50873196f67a0b87b799d",
+          "bytes": 12033
+        },
+        {
+          "path": "tests/smoke/policy-gate.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:f0606315486db19eee1e1cf346214ced632ec28e960f5081c4b4b25188b1c0da",
+          "bytes": 7151
+        },
+        {
+          "path": "src/policy/gate-policy.ts",
+          "role": "code_file",
+          "sha256": "sha256:953b1a44a8f4ef12a8d12f6ac83fbe4243a7ebf7d31701a9dcd40ff5c72b382f",
+          "bytes": 2297
+        },
+        {
+          "path": "src/policy/risk.ts",
+          "role": "code_file",
+          "sha256": "sha256:1330caa1cfba71840e4e473e77c2159931bdda36d87705e92d14037a37764bbe",
+          "bytes": 5122
+        },
+        {
+          "path": "src/policy/production-profile.ts",
+          "role": "code_file",
+          "sha256": "sha256:068e2811ef9f5c03aae2bb35ff813291b2975b3c8e26e65219b969b565efec02",
+          "bytes": 18532
+        },
+        {
+          "path": "src/build/shared.ts",
+          "role": "code_file",
+          "sha256": "sha256:1c39c22e6bcac5fc2df01659e185c2c797e4a9de900ff7a8cca38b42d50c7327",
+          "bytes": 14419
+        },
+        {
+          "path": "src/build/writer.ts",
+          "role": "code_file",
+          "sha256": "sha256:0f9733f27f66f32291e9aaf863d09791d50dc40d0e13e761a2fe0f4ebdfb1ec2",
+          "bytes": 32840
+        },
+        {
+          "path": "src/gateway/report.ts",
+          "role": "code_file",
+          "sha256": "sha256:3d066464a27f7cdac9952ab7a5dcad8bbcc2db1fe806005dbfe75b627fc652f1",
+          "bytes": 51504
+        },
+        {
+          "path": "src/ui/web/control-room.ts",
+          "role": "code_file",
+          "sha256": "sha256:0f2f6e5175d141c47acf0a3a80ce3cb5d14f0c5112c6ce04599cdd2a2bb8a5e1",
+          "bytes": 93206
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:d65ef54096ae5a7ded83b95101ab5265b0128c5579cd17f3d9e7779cd0a40135",
+          "bytes": 3246
+        },
+        {
+          "path": ".codewiki/kb/system/compilers.md",
+          "role": "code_file",
+          "sha256": "sha256:cf32cf9006c4a83c8832f372b2588a9e3f388bad4a7f6e9fe92480c8d6fcf609",
+          "bytes": 12268
+        },
+        {
+          "path": ".codewiki/kb/system/validation-gateway.md",
+          "role": "code_file",
+          "sha256": "sha256:1bc16663774a774b99903c451393a72ba2faef17c8e5c01d7f1c3b568be9b759",
+          "bytes": 14181
+        },
+        {
+          "path": ".codewiki/kb/system/file-structure.md",
+          "role": "code_file",
+          "sha256": "sha256:41a69da41ae01fe53de3a47646955cf51a4d5b038e0ee3e3bf801669733b1a45",
+          "bytes": 13236
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:c13afded65a85e636f91516a341b2fb39661ce32cb02c9afdb8baf5b23a4da74",
+          "bytes": 22046
+        }
+      ],
+      "skipped": []
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-057",
+      "source_build": ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/policy/gate-policy.ts",
+          "src/policy/risk.ts",
+          "src/policy/production-profile.ts",
+          "src/build/shared.ts",
+          "src/build/writer.ts",
+          "src/gateway/report.ts",
+          "src/ui/web/control-room.ts",
+          "package.json",
+          ".codewiki/kb/system/compilers.md",
+          ".codewiki/kb/system/validation-gateway.md",
+          ".codewiki/kb/system/file-structure.md",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "tests/smoke/policy-gate.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-057",
+        "restore_command": "/wiki-restore TASK-057"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "lsp_diagnostics touched TS files: pass (0 diagnostics)",
+        "npm run typecheck: pass",
+        "node --experimental-strip-types ./tests/smoke/policy-gate.test.mjs: pass",
+        "npm run test:smoke: pass",
+        "npm run test:features: pass",
+        "npm run check:architecture: warning only for pre-existing .codewiki/runtime expected path before ignored runtime dir seeded",
+        "codewiki_audit alignment,changed,task,generated-parity,file-structure TASK-057: warning overall; task/generated-parity/file-structure pass; alignment/changed warnings limited to graph-health/generated-file-changed"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}
