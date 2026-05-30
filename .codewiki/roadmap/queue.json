@@ -1,12 +1,11 @@
 {
   "version": 2,
-  "updated": "2026-05-30T23:42:26Z",
+  "updated": "2026-05-30T23:43:23Z",
   "order": [
     "TASK-012",
     "TASK-023",
     "TASK-036",
     "TASK-064",
-    "TASK-065",
     "TASK-059"
   ],
   "tasks": {
@@ -642,55 +641,6 @@
       },
       "created": "2026-05-30",
       "updated": "2026-05-30"
-    },
-    "TASK-065": {
-      "id": "TASK-065",
-      "title": "Implement daemon dispatcher skeleton",
-      "status": "in_progress",
-      "priority": "high",
-      "kind": "architecture",
-      "summary": "Add a bounded daemon dispatcher skeleton that can claim runnable daemon jobs, record attempts/heartbeats, enforce retry/block policy, and stop safely without spawning compiler sessions yet.",
-      "spec_paths": [
-        ".codewiki/kb/system/runtime.md",
-        ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md"
-      ],
-      "code_paths": [
-        "src/runtime/runner.ts",
-        "src/runtime/types.ts",
-        "src/runtime/ports.ts",
-        "tests/smoke/runtime-runner.test.mjs"
-      ],
-      "research_ids": [],
-      "labels": [
-        "daemon-dispatcher"
-      ],
-      "change_type": "system",
-      "goal": {
-        "outcome": "Daemon dispatcher core can run one safe job attempt lifecycle without replacing compiler execution.",
-        "acceptance": [
-          "Dispatcher claims one runnable job with locking/TTL semantics.",
-          "Attempts record started/heartbeat/completed/blocked/failed states.",
-          "Retry/circuit breaker and stale-heartbeat behavior are deterministic.",
-          "Dispatcher has no unbounded autonomous loop in package tests; one-shot/tick mode is testable."
-        ],
-        "non_goals": [
-          "Do not spawn Pi sessions in this task.",
-          "Do not auto-close roadmap tasks.",
-          "Do not define runtime model/provider policy beyond existing contracts."
-        ],
-        "verification": [
-          "npm run typecheck",
-          "targeted dispatcher lifecycle tests",
-          "npm run test:smoke"
-        ]
-      },
-      "delta": {
-        "desired": "A safe daemon core exists for subsequent pass-boundary scheduling.",
-        "current": "No daemon dispatcher job lifecycle exists.",
-        "closure": "Close when one-shot dispatcher lifecycle passes tests."
-      },
-      "created": "2026-05-30",
-      "updated": "2026-05-30T23:42:26Z"
     }
   },
   "sprints": {
