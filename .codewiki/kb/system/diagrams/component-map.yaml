@@ -190,8 +190,14 @@ edges:
     to: builds
     label: carries build refs for loop attempts
   - from: runtime_jobs
+    to: validation_gateway
+    label: carries validation refs and pass/fail/block outcomes
+  - from: runtime_jobs
     to: roadmap
     label: references tasks without replacing truth
+  - from: runtime_jobs
+    to: sessions
+    label: records session and claim refs without owning leases
   - from: api
     to: compilers
     label: starts compiler loops

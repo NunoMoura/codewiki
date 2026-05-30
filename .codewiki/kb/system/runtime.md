@@ -88,6 +88,39 @@ src/runtime/
 
 `src/agency/**` keeps agency planning and the `codewiki_agency` tool entrypoint. `src/session/**` owns claims and wait/wake state. `src/state/**` owns resume context and generated graph state. `src/validation/**` owns gateway checks. Runtime coordinates those concepts without absorbing their durable truth.
 
+## Daemon job/run model
+
+Daemon jobs live at `.codewiki/runtime/jobs.json`. This path is repo-local runtime state, not package source and not roadmap truth. A job is a durable execution request for one CodeWiki loop against an existing roadmap/source boundary. A run is one worker attempt for that job. Jobs and runs may reference roadmap tasks, compiler builds, validation reports, Git proof, package/archive proof, session claims, and worktree identity, but those referenced artifacts remain canonical.
+
+Job states:
+
+- `queued`: authorized by agency/planning and waiting for a worker attempt.
+- `running`: exactly one run attempt is active and heartbeating.
+- `blocked`: latest run ended with fail/block/error/stale evidence, missing proof, artifact conflict, budget exhaustion, risk/user gate, or retry limit. The same job can retry only while `max_attempts` permits and an external gate resolves the blocker.
+- `completed`: latest run ended with `pass` and emitted required handoff/build/validation/content refs.
+- `cancelled`: user or policy stopped the execution request.
+
+Run states:
+
+- `running`: worker has started, owns any required artifact-status claim, and updates `last_heartbeat_at` plus append-only heartbeat records.
+- `completed`: run outcome `pass`; any next loop must be represented by a new queued job carrying build/validation refs.
+- `blocked`: run outcome `block`; human/policy/planning input is required before retry or reroute.
+- `failed`: run outcome `fail` or `error`; validator/builder must repair evidence before retry.
+- `stale`: heartbeat expired or worker vanished; runtime may retry if `max_attempts` permits.
+- `cancelled`: user or policy stopped the run.
+
+Lifecycle contract:
+
+```text
+queued -> running -> completed
+queued -> running -> blocked -> running
+queued -> running -> failed/stale -> running
+queued/running/blocked -> cancelled
+completed/cancelled are terminal
+```
+
+A pass boundary never mutates the roadmap directly. It enqueues or hands off the next compiler/gateway loop with source-backed refs. A fail/block boundary keeps the same loop/job blocked until rebuilt, repaired, rerouted by validation, or explicitly escalated. Artifact status in `.codewiki/session/queue.json` remains the short-lived concurrency lease; daemon jobs record execution attempts, heartbeats, retries, and handoff metadata.
+
 ## Invariants
 
 - Runtime executes at most one bounded step per call until daemon scheduling explicitly dispatches a job attempt.

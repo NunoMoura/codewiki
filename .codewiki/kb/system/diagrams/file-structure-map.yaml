@@ -318,11 +318,12 @@ nodes:
     kind: component
     source: .codewiki/kb/system/runtime.md
     requires_doc: true
-    status: implementation_in_progress_by_task_047
-    task_id: TASK-047
+    status: implementation_in_progress_by_task_063
+    task_id: TASK-063
     paths:
       - src/runtime/**
       - tests/smoke/runtime-runner.test.mjs
+      - tests/smoke/runtime-job-state.test.mjs
       - tests/tasks/TASK-015/agency-source-root.test.mjs
   - id: state_graph_resume_concept_root_boundary
     label: State, graph, prompt, and resume-context concept-root migration

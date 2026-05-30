@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "implementation_build",
+  "created": "2026-05-30T22:54:13Z",
+  "source": "codewiki_build tool",
+  "source_planning_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+  "task_id": "TASK-063",
+  "task": {
+    "id": "TASK-063",
+    "title": "Design daemon job and run state model",
+    "status": "in_progress",
+    "priority": "high",
+    "kind": "architecture",
+    "summary": "Define durable daemon job/run state for execution attempts, heartbeats, retries, block reasons, build/validation refs, and handoff metadata without replacing roadmap truth.",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md"
+    ],
+    "code_paths": [
+      "src/runtime/types.ts",
+      "src/runtime/runner.ts",
+      "src/session/types.ts",
+      "src/session/runtime.ts"
+    ],
+    "goal": {
+      "outcome": "Daemon jobs/runs have an approved schema, storage boundary, and lifecycle contract.",
+      "acceptance": [
+        "Job/run states and transitions are specified.",
+        "Storage path and relationship to session queue/artifact status are specified.",
+        "Roadmap/build/validation/Git remain canonical truth; daemon jobs are execution attempts only.",
+        "Tests or fixtures cover schema normalization and lifecycle transitions."
+      ],
+      "non_goals": [
+        "Do not spawn sessions in this task.",
+        "Do not replace roadmap tasks with daemon jobs.",
+        "Do not rename roadmap helper modules."
+      ],
+      "verification": [
+        "npm run typecheck",
+        "targeted daemon job schema tests",
+        "codewiki_audit alignment/task where applicable"
+      ]
+    }
+  },
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 7,
+    "archive_after": "2026-06-06T22:54:13.000Z",
+    "purge_after": "2026-06-13T22:54:13.000Z"
+  },
+  "cycle": {
+    "loop": "implementation",
+    "sequence": 2,
+    "supersedes": [
+      ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+    ],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "implementation",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "changed"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "implementation_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "Implementation validation must not reuse builder thought context and must cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      },
+      "next_loop": {
+        "required": true,
+        "mode": "fresh-context-checked-content",
+        "reason": "The next gateway must independently validate implementation evidence and cite checked content proof.",
+        "evidence": [
+          "fresh_context=true",
+          "clean state recorded",
+          "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+        ],
+        "handoff": "implementation_build -> validation gateway",
+        "profiles": [
+          "implementation"
+        ]
+      }
+    }
+  },
+  "requirements": [],
+  "evidence_mapping": [],
+  "audit_refs": [
+    "codewiki_audit task/alignment/generated-parity/changed for TASK-063 after release: task pass; generated-parity pass; warnings remain for graph-health and expected generated-file-changed outputs."
+  ],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Final TASK-063 implementation handoff after roadmap evidence refresh for daemon job/run state schema, lifecycle docs, diagrams, and tests.",
+  "change_type": "task",
+  "traceability": {
+    "change_type": "task",
+    "semantic": true,
+    "requires_accepted_build": true,
+    "upstream_loop": "planning",
+    "upstream_build_refs": [
+      ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json"
+    ],
+    "accepted_build_refs": [
+      ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json"
+    ]
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [
+      ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json"
+    ],
+    "implementation": [],
+    "roadmap": [
+      "TASK-063"
+    ],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [],
+    "code": [
+      "src/runtime/types.ts",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "package.json",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/diagrams/data-model.yaml",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-063/context.json",
+      ".codewiki/roadmap/tasks/TASK-063/task.json",
+      ".codewiki/index_graph.json",
+      ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+    ],
+    "tests": [
+      "tests/smoke/runtime-job-state.test.mjs",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "validation": [],
+    "publication": [],
+    "closure": [
+      "TASK-063"
+    ]
+  },
+  "linked_refs": {
+    "planning_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+    "spec_paths": [
+      ".codewiki/kb/system/api.md",
+      ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md"
+    ],
+    "code_paths": [
+      "src/runtime/types.ts",
+      "src/runtime/runner.ts",
+      "src/session/types.ts",
+      "src/session/runtime.ts"
+    ]
+  },
+  "test_files": [
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/source-contract.test.mjs"
+  ],
+  "code_files": [
+    "src/runtime/types.ts",
+    "tests/smoke/runtime-job-state.test.mjs",
+    "package.json",
+    ".codewiki/kb/system/runtime.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/roadmap/queue.json",
+    ".codewiki/roadmap/tasks/TASK-063/context.json",
+    ".codewiki/roadmap/tasks/TASK-063/task.json",
+    ".codewiki/index_graph.json",
+    ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+  ],
+  "files_changed": [
+    "tests/smoke/runtime-job-state.test.mjs",
+    "tests/smoke/runtime-runner.test.mjs",
+    "tests/smoke/diagram-refs.test.mjs",
+    "tests/smoke/source-contract.test.mjs",
+    "src/runtime/types.ts",
+    "package.json",
+    ".codewiki/kb/system/runtime.md",
+    ".codewiki/kb/system/api.md",
+    ".codewiki/kb/system/diagrams/data-model.yaml",
+    ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+    ".codewiki/kb/system/diagrams/component-map.yaml",
+    ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+    ".codewiki/roadmap/queue.json",
+    ".codewiki/roadmap/tasks/TASK-063/context.json",
+    ".codewiki/roadmap/tasks/TASK-063/task.json",
+    ".codewiki/index_graph.json",
+    ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+  ],
+  "checks_run": [
+    "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+    "npm run typecheck",
+    "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+    "npm run check:architecture",
+    "npm run test:smoke",
+    "codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063"
+  ],
+  "role_evidence": {
+    "tester": {
+      "role": "tester",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      "roadmap_task_id": "TASK-063",
+      "test_files": [
+        "tests/smoke/runtime-job-state.test.mjs",
+        "tests/smoke/runtime-runner.test.mjs",
+        "tests/smoke/diagram-refs.test.mjs",
+        "tests/smoke/source-contract.test.mjs"
+      ],
+      "evidence": [
+        "Normalization fixture covers malformed/duplicated store input, invalid statuses, heartbeat normalization, and skipped invalid jobs.",
+        "Lifecycle fixture covers queued->running->completed with heartbeat and handoff refs.",
+        "Block fixture covers blocked retry and retry-limit enforcement."
+      ],
+      "notes": [],
+      "boundary": "derive tests or test-design evidence before code changes where practical"
+    },
+    "builder": {
+      "role": "builder",
+      "source_planning_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      "roadmap_task_id": "TASK-063",
+      "code_files": [
+        "src/runtime/types.ts",
+        "tests/smoke/runtime-job-state.test.mjs",
+        "package.json",
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/diagrams/data-model.yaml",
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-063/context.json",
+        ".codewiki/roadmap/tasks/TASK-063/task.json",
+        ".codewiki/index_graph.json",
+        ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+      ],
+      "evidence": [
+        "Added daemon schema constants/interfaces and create/normalize/start/heartbeat/finish helpers in src/runtime/types.ts.",
+        "Added targeted smoke test and package test:smoke integration.",
+        "Updated runtime/API docs plus component/data/state/file-structure diagrams after reviewing Urbis/OpenClaw and current system diagrams/file structure.",
+        "Recorded roadmap evidence and refreshed generated task context/graph outputs."
+      ],
+      "notes": [
+        "Urbis/OpenClaw review informed keeping jobs separate from canonical tasks, using small durable run records, heartbeats, block/retry metadata, and explicit handoff/build/validation refs.",
+        "No session spawning, dispatcher, or roadmap replacement added; this is schema/lifecycle/storage boundary only."
+      ],
+      "boundary": "change code until tests, roadmap acceptance, and required checks pass"
+    }
+  },
+  "test_design_evidence": [
+    "Normalization fixture covers malformed/duplicated store input, invalid statuses, heartbeat normalization, and skipped invalid jobs.",
+    "Lifecycle fixture covers queued->running->completed with heartbeat and handoff refs.",
+    "Block fixture covers blocked retry and retry-limit enforcement."
+  ],
+  "code_change_evidence": [
+    "Added daemon schema constants/interfaces and create/normalize/start/heartbeat/finish helpers in src/runtime/types.ts.",
+    "Added targeted smoke test and package test:smoke integration.",
+    "Updated runtime/API docs plus component/data/state/file-structure diagrams after reviewing Urbis/OpenClaw and current system diagrams/file structure.",
+    "Recorded roadmap evidence and refreshed generated task context/graph outputs."
+  ],
+  "acceptance_mapping": [
+    {
+      "criterion": "Job/run states and transitions are specified.",
+      "evidence": "src/runtime/types.ts defines status values, run outcomes, block kinds, and pure lifecycle helpers; .codewiki/kb/system/runtime.md and state-lifecycle.yaml document transitions."
+    },
+    {
+      "criterion": "Storage path and relationship to session queue/artifact status are specified.",
+      "evidence": "CODEWIKI_DAEMON_JOB_STORE_PATH is .codewiki/runtime/jobs.json; API/runtime docs and data-model.yaml specify daemon jobs as execution-attempt records and session queue/artifact status as short-lived leases."
+    },
+    {
+      "criterion": "Roadmap/build/validation/Git remain canonical truth; daemon jobs are execution attempts only.",
+      "evidence": "Docs and diagrams state daemon jobs only carry refs; helper normalization keeps roadmap_task aligned to task_id and never mutates roadmap state."
+    },
+    {
+      "criterion": "Tests or fixtures cover schema normalization and lifecycle transitions.",
+      "evidence": "tests/smoke/runtime-job-state.test.mjs covers normalization, pass handoff, block/retry, and max-attempt enforcement; npm run test:smoke includes it."
+    }
+  ],
+  "validation_refs": [],
+  "closure_brief": {
+    "user_intent": "Implement TASK-063 so daemon execution attempts are durable and distinct from roadmap truth, including Urbis/OpenClaw-informed review and system diagram/file-structure review.",
+    "implemented_changes": [
+      "Defined daemon job/run schema, store path, states, transitions, heartbeat/block/retry/handoff metadata, and lifecycle helpers.",
+      "Added tests for schema normalization and lifecycle transitions, and wired them into smoke tests.",
+      "Updated runtime/API docs and system diagrams/file-structure map; recorded roadmap evidence and refreshed generated CodeWiki state."
+    ],
+    "layers_updated": {
+      "knowledge": [
+        ".codewiki/kb/system/runtime.md",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/kb/system/diagrams/data-model.yaml",
+        ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+        ".codewiki/kb/system/diagrams/component-map.yaml",
+        ".codewiki/kb/system/diagrams/file-structure-map.yaml"
+      ],
+      "roadmap": [
+        ".codewiki/roadmap/queue.json",
+        ".codewiki/roadmap/tasks/TASK-063/context.json",
+        ".codewiki/roadmap/tasks/TASK-063/task.json",
+        ".codewiki/index_graph.json"
+      ],
+      "code": [
+        "src/runtime/types.ts",
+        "package.json"
+      ],
+      "tests": [
+        "tests/smoke/runtime-job-state.test.mjs"
+      ],
+      "validation": []
+    },
+    "acceptance_evidence": [
+      "Job/run states and transitions in src/runtime/types.ts, runtime.md, and state-lifecycle.yaml.",
+      "Storage/canonical-truth boundary in CODEWIKI_DAEMON_JOB_STORE_PATH, api.md, runtime.md, and data-model.yaml.",
+      "Targeted schema/lifecycle tests in tests/smoke/runtime-job-state.test.mjs."
+    ],
+    "checks": [
+      "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+      "npm run typecheck",
+      "npm run test:smoke",
+      "npm run check:architecture",
+      "codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063"
+    ],
+    "non_goals_preserved": [
+      "Did not spawn sessions.",
+      "Did not replace roadmap tasks with daemon jobs.",
+      "Did not rename roadmap helper modules."
+    ],
+    "remaining_risks": [
+      "Fresh implementation validation still required before task close.",
+      "Graph health audit still reports 8 warnings though task/generated-parity pass."
+    ]
+  },
+  "risks": [
+    "Fresh implementation validation still required before close.",
+    "Graph health still reports 8 warnings; task and generated-parity audits pass."
+  ],
+  "unresolved_issues": [],
+  "open_questions": [],
+  "handoff": {
+    "resume": {
+      "source": "implementation_build",
+      "command": "/wiki-resume TASK-063",
+      "task_id": "TASK-063",
+      "next_focus_task_id": "TASK-065",
+      "context": {
+        "source": "implementation_build",
+        "task_id": "TASK-063",
+        "title": "Design daemon job and run state model",
+        "summary": "Final TASK-063 implementation handoff after roadmap evidence refresh for daemon job/run state schema, lifecycle docs, diagrams, and tests.",
+        "spec_paths": [
+          ".codewiki/kb/system/api.md",
+          ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md"
+        ],
+        "code_paths": [
+          "src/runtime/types.ts",
+          "src/runtime/runner.ts",
+          "src/session/types.ts",
+          "src/session/runtime.ts",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "package.json",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/diagrams/data-model.yaml",
+          ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-063/context.json",
+          ".codewiki/roadmap/tasks/TASK-063/task.json",
+          ".codewiki/index_graph.json",
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json"
+        ],
+        "acceptance": [
+          "Job/run states and transitions are specified.",
+          "Storage path and relationship to session queue/artifact status are specified.",
+          "Roadmap/build/validation/Git remain canonical truth; daemon jobs are execution attempts only.",
+          "Tests or fixtures cover schema normalization and lifecycle transitions."
+        ],
+        "verification": [
+          "npm run typecheck",
+          "targeted daemon job schema tests",
+          "codewiki_audit alignment/task where applicable"
+        ],
+        "source_planning_build": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+        "checks_run": [
+          "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+          "npm run typecheck",
+          "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+          "npm run check:architecture",
+          "npm run test:smoke",
+          "codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063"
+        ],
+        "test_design_evidence": [
+          "Normalization fixture covers malformed/duplicated store input, invalid statuses, heartbeat normalization, and skipped invalid jobs.",
+          "Lifecycle fixture covers queued->running->completed with heartbeat and handoff refs.",
+          "Block fixture covers blocked retry and retry-limit enforcement."
+        ],
+        "code_change_evidence": [
+          "Added daemon schema constants/interfaces and create/normalize/start/heartbeat/finish helpers in src/runtime/types.ts.",
+          "Added targeted smoke test and package test:smoke integration.",
+          "Updated runtime/API docs plus component/data/state/file-structure diagrams after reviewing Urbis/OpenClaw and current system diagrams/file structure.",
+          "Recorded roadmap evidence and refreshed generated task context/graph outputs."
+        ],
+        "validation_refs": []
+      }
+    },
+    "restore": {
+      "command": "/wiki-restore TASK-063",
+      "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-063",
+      "show_build": "git show refs/codewiki/archive/task/TASK-063:.codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+      "sparse_paths": [
+        ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+        ".codewiki/kb/system/api.md",
+        ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md",
+        "src/runtime/types.ts",
+        "src/runtime/runner.ts",
+        "src/session/types.ts",
+        "src/session/runtime.ts"
+      ],
+      "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+    },
+    "fallback": "Use codewiki_state refresh=true and this implementation_build; do not rely on chat transcript memory."
+  },
+  "publication": {
+    "policy": {
+      "execution": "recommendation_only",
+      "approval_required": true,
+      "remote_updates": "blocked_until_explicit_approval",
+      "security_review_required": true
+    },
+    "commit": {
+      "title": "chore(codewiki): record TASK-063 Design daemon job and run state model implementation evidence",
+      "body": "Final TASK-063 implementation handoff after roadmap evidence refresh for daemon job/run state schema, lifecycle docs, diagrams, and tests.\n\nChecks: node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, npm run typecheck, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, npm run check:architecture, npm run test:smoke, codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-063\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, npm run typecheck, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, npm run check:architecture, npm run test:smoke, codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-063\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-063\nCodeWiki-Digest: sha256:6157cb90b114d2c77aae455d1313faf6d049a81ba7c9730d5496628e625b538c\nCodeWiki-Restore: /wiki-restore TASK-063",
+      "trailers": [
+        "CodeWiki-Task: TASK-063",
+        "CodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+        "CodeWiki-Checks: node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, npm run typecheck, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, npm run check:architecture, npm run test:smoke, codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063",
+        "CodeWiki-Validation: <pending-validation>",
+        "CodeWiki-Recover: /wiki-restore TASK-063",
+        "CodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-063",
+        "CodeWiki-Digest: sha256:6157cb90b114d2c77aae455d1313faf6d049a81ba7c9730d5496628e625b538c",
+        "CodeWiki-Restore: /wiki-restore TASK-063"
+      ],
+      "commit_ready": true,
+      "validation_ref_policy": "replace <pending-validation> with validation report ref before commit"
+    },
+    "pr": {
+      "title": "chore(codewiki): record TASK-063 Design daemon job and run state model implementation evidence",
+      "body": "Final TASK-063 implementation handoff after roadmap evidence refresh for daemon job/run state schema, lifecycle docs, diagrams, and tests.\n\nChecks: node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, npm run typecheck, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, npm run check:architecture, npm run test:smoke, codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063\nValidation: no durable validation refs recorded.\nRemote publication requires explicit approval; this build is recommendation-only.\n\nCodeWiki-Task: TASK-063\nCodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json\nCodeWiki-Checks: node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs, npm run typecheck, node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs, npm run check:architecture, npm run test:smoke, codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063\nCodeWiki-Validation: <pending-validation>\nCodeWiki-Recover: /wiki-restore TASK-063\nCodeWiki-Archive-Ref: refs/codewiki/archive/task/TASK-063\nCodeWiki-Digest: sha256:6157cb90b114d2c77aae455d1313faf6d049a81ba7c9730d5496628e625b538c\nCodeWiki-Restore: /wiki-restore TASK-063"
+    },
+    "issue_update": "",
+    "release_notes": "",
+    "git": {
+      "strategy": "implementation_build_publication_payload",
+      "archive_ref": "refs/codewiki/archive/task/TASK-063",
+      "commit_sha": "",
+      "remote": "origin",
+      "branch": "",
+      "atomic_push_refspecs": [
+        "HEAD",
+        "refs/codewiki/archive/task/TASK-063"
+      ],
+      "restore": {
+        "command": "/wiki-restore TASK-063",
+        "worktree": "git worktree add --detach <tmp> refs/codewiki/archive/task/TASK-063",
+        "show_build": "git show refs/codewiki/archive/task/TASK-063:.codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+        "sparse_paths": [
+          ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/research/2026-05-30-openclaw-hermes-runtime-daemon.md",
+          "src/runtime/types.ts",
+          "src/runtime/runner.ts",
+          "src/session/types.ts",
+          "src/session/runtime.ts"
+        ],
+        "note": "Restored history is reference material until promoted into active knowledge or roadmap truth."
+      }
+    },
+    "archive_ledger": {
+      "kind": "task",
+      "id": "TASK-063",
+      "build_path": ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+      "archive_ref": "refs/codewiki/archive/task/TASK-063",
+      "commit_sha": "",
+      "digest": "sha256:6157cb90b114d2c77aae455d1313faf6d049a81ba7c9730d5496628e625b538c",
+      "restore_command": "/wiki-restore TASK-063"
+    },
+    "artifact_digests": {
+      "algorithm": "sha256",
+      "files": [
+        {
+          "path": ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+          "role": "source_planning_build",
+          "sha256": "sha256:94636271359eb6499585e230944c89b0596c243889a892deaae74795781fa40a",
+          "bytes": 25289
+        },
+        {
+          "path": "tests/smoke/runtime-job-state.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
+          "bytes": 4905
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
+          "bytes": 7821
+        },
+        {
+          "path": "tests/smoke/diagram-refs.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:077bcdd5463fe6bec84dea8ff3a5538ef21122628bb5ccd6e700f9c85ad23756",
+          "bytes": 15690
+        },
+        {
+          "path": "tests/smoke/source-contract.test.mjs",
+          "role": "test_file",
+          "sha256": "sha256:72ad8685cdccac7b8ada4e107258fbbde5e60af8f08bf165594992b8944ebe88",
+          "bytes": 4951
+        },
+        {
+          "path": "src/runtime/types.ts",
+          "role": "code_file",
+          "sha256": "sha256:87d9aa21606ec52354b97463267c83ab5536e02b8427705bbfd17bdf8693bc96",
+          "bytes": 18546
+        },
+        {
+          "path": "tests/smoke/runtime-job-state.test.mjs",
+          "role": "code_file",
+          "sha256": "sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
+          "bytes": 4905
+        },
+        {
+          "path": "package.json",
+          "role": "code_file",
+          "sha256": "sha256:c5fef1dfdc0339de0d1db78a01ab4b430ac38672f3f7fd1497ea2e1fa467321e",
+          "bytes": 3322
+        },
+        {
+          "path": ".codewiki/kb/system/runtime.md",
+          "role": "code_file",
+          "sha256": "sha256:95534121c5b54e1734d88ef6c0c23363b4b7892d3b6a205ae73cd699776c3bd9",
+          "bytes": 9760
+        },
+        {
+          "path": ".codewiki/kb/system/api.md",
+          "role": "code_file",
+          "sha256": "sha256:8db7fcc967f0aee4097579b1cf8cfeb149b6847b94b3388fd3620e73d2457863",
+          "bytes": 13161
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/data-model.yaml",
+          "role": "code_file",
+          "sha256": "sha256:38fca37c66cfe469532e9b0b82cc6e65ab06a54c63c3c4963151aba634dcd0ad",
+          "bytes": 5870
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+          "role": "code_file",
+          "sha256": "sha256:05b117b4532469fa57fe0617b8a858dc4c96a40a2c4cbd6d7015ea867682b54a",
+          "bytes": 6616
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/component-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:9a391407463bd9eb01a6c5abd18ff72efba209a00c7dbb4ffe059040d837f011",
+          "bytes": 6978
+        },
+        {
+          "path": ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          "role": "code_file",
+          "sha256": "sha256:654a89c53834ea31d9d7c079763ba98f39a1ce7c5570fdbe4fd9e534ff8a36fa",
+          "bytes": 22093
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "role": "code_file",
+          "sha256": "sha256:8c8b13862d854a3f69f653dcab55c6dce8bb1f29629c527a7b07e9dff7c4a8a2",
+          "bytes": 71837
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-063/context.json",
+          "role": "code_file",
+          "sha256": "sha256:99e0b1cf3c9b8e62413e6b96758747dd6c6d1c633a1a8b733195db583ed87315",
+          "bytes": 1716
+        },
+        {
+          "path": ".codewiki/roadmap/tasks/TASK-063/task.json",
+          "role": "code_file",
+          "sha256": "sha256:df8d34151525271a6929e897b6e6af64ab536f8cde1c2b87f572319e20989e5a",
+          "bytes": 1857
+        },
+        {
+          "path": ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+          "role": "code_file",
+          "sha256": "sha256:f09e81b9ef5b74ad8d2c4c09c9af679260cd041ec4dbc00f12711ba26f5e7449",
+          "bytes": 32275
+        }
+      ],
+      "skipped": [
+        {
+          "path": ".codewiki/index_graph.json",
+          "role": "code_file",
+          "reason": "too-large"
+        }
+      ]
+    },
+    "publisher_queue": {
+      "status": "waiting_validation",
+      "task_id": "TASK-063",
+      "source_build": ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+      "role": "publisher",
+      "inputs": {
+        "builder_refs": [
+          "src/runtime/types.ts",
+          "tests/smoke/runtime-job-state.test.mjs",
+          "package.json",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/kb/system/api.md",
+          ".codewiki/kb/system/diagrams/data-model.yaml",
+          ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+          ".codewiki/kb/system/diagrams/component-map.yaml",
+          ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+          ".codewiki/roadmap/queue.json",
+          ".codewiki/roadmap/tasks/TASK-063/context.json",
+          ".codewiki/roadmap/tasks/TASK-063/task.json",
+          ".codewiki/index_graph.json",
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+          "tests/smoke/runtime-runner.test.mjs",
+          "tests/smoke/diagram-refs.test.mjs",
+          "tests/smoke/source-contract.test.mjs"
+        ],
+        "validation_refs": [],
+        "archive_ref": "refs/codewiki/archive/task/TASK-063",
+        "restore_command": "/wiki-restore TASK-063"
+      },
+      "required_steps": [
+        "consume implementation_build from fresh publisher context",
+        "refresh generated CodeWiki state",
+        "verify validation refs and checks",
+        "create clean publisher commit/tree or archive ref",
+        "record immutable publisher result proof"
+      ],
+      "result": {
+        "state": "pending",
+        "required_proof": [
+          "clean=true",
+          "published_sha",
+          "tree_sha",
+          "archive_ref or remote_ref"
+        ]
+      }
+    },
+    "push_readiness": {
+      "checks_recorded": [
+        "node --experimental-strip-types ./tests/smoke/runtime-job-state.test.mjs",
+        "npm run typecheck",
+        "node --experimental-strip-types ./tests/smoke/runtime-runner.test.mjs && node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs && node --experimental-strip-types ./tests/smoke/source-contract.test.mjs",
+        "npm run check:architecture",
+        "npm run test:smoke",
+        "codewiki_audit profiles=task,alignment,generated-parity changed task_id=TASK-063"
+      ],
+      "validation_refs": [],
+      "approval_required": true,
+      "allowed_by_default": false,
+      "safe_to_push": false,
+      "blocked_reasons": [
+        "explicit approval required",
+        "secret scan required",
+        "remote visibility review required",
+        "fail/block/private evidence policy required"
+      ],
+      "security": {
+        "secret_scan": "required",
+        "remote_visibility": "required",
+        "private_evidence": "required",
+        "git_namespaces": "not_access_control"
+      }
+    }
+  }
+}

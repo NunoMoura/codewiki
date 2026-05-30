@@ -65,6 +65,7 @@ All access surfaces must preserve the same `.codewiki/` semantics.
 - Roadmap task creation must check active work for related intent and refine matching tasks before creating duplicates.
 - Parallel sessions should mark affected artifacts in the session queue before non-trivial overlapping decision, roadmap, build, validation, or code edits.
 - Artifact status records are temporary coordination records; they do not replace roadmap tasks, builds, validation, git, or code review.
+- Daemon job records under `.codewiki/runtime/jobs.json` are durable execution-attempt records only. They store job/run state, heartbeats, retry/block metadata, and refs to canonical roadmap/build/validation/Git proof; they do not replace or close roadmap tasks.
 - Session queue callers may register wait entries when overlapping write artifact status blocks needed scopes. Waits have TTL/heartbeat, can be cancelled through release, and become ready when blockers release or expire. Adapter sessions that own waits should subscribe to queue changes and wake the agent; passive queue state is not enough for parallel work.
 - Ready waits are wake signals, not stale-context revival. Wake messages should name wait id, task/build refs, and scopes, then require current state and artifact-status re-check before writing.
 - Session queue callers may provide role/worktree metadata for builder, validator, publisher, or observer sessions so status and generated state views can explain isolation without making artifact status records the filesystem source of truth.

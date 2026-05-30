@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-30T06:06:10Z",
+  "updated": "2026-05-30T23:33:02Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -643,7 +643,7 @@
         "closure": "Close when schema/storage/lifecycle are implemented or specified with tests."
       },
       "created": "2026-05-30",
-      "updated": "2026-05-30T04:00:17Z"
+      "updated": "2026-05-30T23:33:02Z"
     },
     "TASK-064": {
       "id": "TASK-064",

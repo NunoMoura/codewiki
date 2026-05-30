@@ -10,6 +10,7 @@ source_docs:
   - .codewiki/kb/system/roadmap.md
   - .codewiki/kb/system/graph.md
   - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/adapters.md
 renderer:
   preferred: er
@@ -119,6 +120,24 @@ entities:
       - mode
       - scopes
       - expires_at
+  - id: daemon_job_store
+    label: Daemon job/run store
+    storage: .codewiki/runtime/jobs.json
+    role: durable execution-attempt state; references roadmap/build/validation/Git proof without replacing canonical truth
+    key_fields:
+      - job_id
+      - task_id
+      - loop
+      - job_status
+      - max_attempts
+      - run_id
+      - run_status
+      - worker/session/claim refs
+      - last_heartbeat_at
+      - block_reason
+      - build_refs
+      - validation_refs
+      - handoff
   - id: executable_truth
     label: Code and tests
     storage: repository code/test paths
@@ -178,6 +197,21 @@ relationships:
   - from: state_index
     to: scoped_lease
     type: derives_from
+  - from: daemon_job_store
+    to: roadmap_task
+    type: references_attempt_for
+  - from: daemon_job_store
+    to: scoped_lease
+    type: records_claim_refs
+  - from: daemon_job_store
+    to: implementation_build
+    type: carries_build_refs
+  - from: daemon_job_store
+    to: validation_report
+    type: carries_validation_refs
+  - from: state_index
+    to: daemon_job_store
+    type: may_derive_runtime_status_from
   - from: diagram_spec
     to: knowledge_doc
     type: cites_source

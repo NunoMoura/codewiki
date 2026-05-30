@@ -11,6 +11,7 @@ source_docs:
   - .codewiki/kb/system/graph.md
   - .codewiki/kb/system/alignment-model.md
   - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/runtime.md
   - .codewiki/kb/system/adapters.md
 renderer:
   preferred: mermaid_state
@@ -46,6 +47,18 @@ states:
   - id: context_reset
     label: Context reset and auto-pickup
     kind: hygiene
+  - id: daemon_job_queued
+    label: Daemon job queued
+    kind: runtime
+  - id: daemon_run_active
+    label: Daemon run active and heartbeating
+    kind: runtime
+  - id: daemon_job_completed
+    label: Daemon job completed with handoff refs
+    kind: runtime
+  - id: daemon_job_blocked
+    label: Daemon job blocked with reason
+    kind: blocked
   - id: task_verify
     label: Task verify
     kind: gate
@@ -101,6 +114,29 @@ transitions:
   - from: context_reset
     to: task_in_progress
     trigger: adapter delivers auto-pickup kickoff from resume context
+  - from: task_in_progress
+    to: daemon_job_queued
+    trigger: agency/runtime records a durable execution attempt without changing roadmap truth
+  - from: daemon_job_queued
+    to: daemon_run_active
+    trigger: worker claims artifact-status scopes and starts run
+  - from: daemon_run_active
+    to: daemon_job_completed
+    trigger: run outcome pass records build, validation, content, and handoff refs
+    gate: compiler/gateway pass evidence
+  - from: daemon_run_active
+    to: daemon_job_blocked
+    trigger: run outcome fail, block, error, stale heartbeat, budget stop, conflict, or missing proof
+    gate: block_reason and retry_limit
+  - from: daemon_job_blocked
+    to: daemon_job_queued
+    trigger: blocker resolved and max_attempts permits retry of same execution request
+  - from: daemon_job_blocked
+    to: task_blocked
+    trigger: retry limit reached or user/policy input required
+  - from: daemon_job_completed
+    to: task_in_progress
+    trigger: handoff resumes compiler loop from source refs; roadmap remains canonical task truth
   - from: task_in_progress
     to: task_verify
     trigger: checks and acceptance evidence ready
