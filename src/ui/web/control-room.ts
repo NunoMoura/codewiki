@@ -1087,7 +1087,7 @@ function settingsGroupSummary(id: string): string {
 				paths: "Canonical and generated repository locations.",
 				roadmap: "Closed-task retention and archive behavior.",
 				generated: "Generated files rebuilt by CodeWiki.",
-				lint: "Warnings and documentation quality policy.",
+				lint: "Warnings and documentation policy.",
 				gateway: "Sandbox/read/write/deny/generated path policy.",
 				runtime: "Adapter and patch runtime settings.",
 				rebuild: "Rebuild freshness and noise controls.",

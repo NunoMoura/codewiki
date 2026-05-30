@@ -1,15 +1,15 @@
 import { unique } from "../shared/utils.ts";
 
-export type ProductionQualityStatus = "pass" | "block";
+export type ProductionPolicyStatus = "satisfied" | "missing";
 
-export type ProductionQualityRequirementCategory =
+export type ProductionPolicyRequirementCategory =
 	| "check"
 	| "audit"
 	| "threshold"
 	| "evidence"
 	| "proof";
 
-export interface ProductionQualityWaiver {
+export interface ProductionPolicyWaiver {
 	id?: string;
 	requirement?: string;
 	applies_to?: string[];
@@ -19,7 +19,7 @@ export interface ProductionQualityWaiver {
 	expires_at?: string;
 }
 
-export interface ProductionQualityInput {
+export interface ProductionPolicyInput {
 	profile: string;
 	policyProfile?: string;
 	changeClass?: string;
@@ -29,26 +29,26 @@ export interface ProductionQualityInput {
 	auditRefs?: string[];
 	auditReports?: string[];
 	isolation?: Record<string, unknown>;
-	waivers?: ProductionQualityWaiver[];
+	waivers?: ProductionPolicyWaiver[];
 }
 
-export interface ProductionQualityRequirement {
+export interface ProductionPolicyRequirement {
 	id: string;
-	category: ProductionQualityRequirementCategory;
+	category: ProductionPolicyRequirementCategory;
 	label: string;
 	waivable: boolean;
 }
 
-export interface ProductionQualityIssue {
+export interface ProductionPolicyIssue {
 	severity: "high" | "medium" | "low";
 	requirement_id: string;
 	summary: string;
-	waiver?: ProductionQualityWaiver;
+	waiver?: ProductionPolicyWaiver;
 }
 
-export interface ProductionQualityResult {
+export interface ProductionPolicyResult {
 	version: 1;
-	status: ProductionQualityStatus;
+	status: ProductionPolicyStatus;
 	profile: string;
 	policy_profile?: string;
 	change_class: string;
@@ -58,8 +58,8 @@ export interface ProductionQualityResult {
 	required_audits: string[];
 	thresholds: { review_blockers: number; review_warnings: number };
 	missing: string[];
-	waived: Array<{ requirement_id: string; waiver: ProductionQualityWaiver }>;
-	issues: ProductionQualityIssue[];
+	waived: Array<{ requirement_id: string; waiver: ProductionPolicyWaiver }>;
+	issues: ProductionPolicyIssue[];
 	evidence: {
 		checks: string[];
 		audits: string[];
@@ -77,7 +77,7 @@ const REVIEW_THRESHOLDS: Record<string, ReviewThreshold> = {
 	release: { blockers: 0, warnings: 0 },
 };
 
-const BASE_REQUIREMENTS: ProductionQualityRequirement[] = [
+const BASE_REQUIREMENTS: ProductionPolicyRequirement[] = [
 	{
 		id: "evidence:implementation-build",
 		category: "evidence",
@@ -87,7 +87,7 @@ const BASE_REQUIREMENTS: ProductionQualityRequirement[] = [
 	{
 		id: "evidence:acceptance-mapping",
 		category: "evidence",
-		label: "Acceptance criteria mapped to quality evidence",
+		label: "Acceptance criteria mapped to policy evidence",
 		waivable: true,
 	},
 	{
@@ -140,7 +140,7 @@ const BASE_REQUIREMENTS: ProductionQualityRequirement[] = [
 	},
 ];
 
-const TASK_CLOSE_REQUIREMENTS: ProductionQualityRequirement[] = [
+const TASK_CLOSE_REQUIREMENTS: ProductionPolicyRequirement[] = [
 	{
 		id: "audit:generated-parity",
 		category: "audit",
@@ -173,7 +173,7 @@ const TASK_CLOSE_REQUIREMENTS: ProductionQualityRequirement[] = [
 	},
 ];
 
-const PACKAGE_REQUIREMENTS: ProductionQualityRequirement[] = [
+const PACKAGE_REQUIREMENTS: ProductionPolicyRequirement[] = [
 	{
 		id: "audit:package",
 		category: "audit",
@@ -188,7 +188,7 @@ const PACKAGE_REQUIREMENTS: ProductionQualityRequirement[] = [
 	},
 ];
 
-const SYSTEM_RISK_REQUIREMENTS: ProductionQualityRequirement[] = [
+const SYSTEM_RISK_REQUIREMENTS: ProductionPolicyRequirement[] = [
 	{
 		id: "audit:file-structure",
 		category: "audit",
@@ -203,7 +203,7 @@ const SYSTEM_RISK_REQUIREMENTS: ProductionQualityRequirement[] = [
 	},
 ];
 
-const SECURITY_REQUIREMENTS: ProductionQualityRequirement[] = [
+const SECURITY_REQUIREMENTS: ProductionPolicyRequirement[] = [
 	{
 		id: "audit:security",
 		category: "audit",
@@ -212,49 +212,48 @@ const SECURITY_REQUIREMENTS: ProductionQualityRequirement[] = [
 	},
 ];
 
-export function productionQualityProfileEnabled(
+export function productionPolicyProfileEnabled(
 	policyProfile?: string,
 	build?: Record<string, unknown> | null,
 ): boolean {
-	const values = [
-		policyProfile,
-		build?.quality_profile,
-		(build?.quality as Record<string, unknown> | undefined)?.profile,
-	]
+	const values = [policyProfile, build?.policy_profile]
 		.map((value) => String(value || "").toLowerCase())
 		.join(" ");
-	return /\b(production|quality|production-ready)\b/.test(values);
+	return /\b(production|policy|production-ready)\b/.test(values);
 }
 
-export function evaluateProductionQualityProfile(
-	input: ProductionQualityInput,
-): ProductionQualityResult {
+export function evaluateProductionPolicyProfile(
+	input: ProductionPolicyInput,
+): ProductionPolicyResult {
 	const profile = normalizedWord(input.profile || "implementation");
 	const changeClass = normalizedWord(
 		input.changeClass || changeClassFromBuild(input.build) || "code",
 	);
-	const riskTier = normalizedRiskTier(input.riskTier || riskTierFromBuild(input.build));
+	const riskTier = normalizedRiskTier(
+		input.riskTier || riskTierFromBuild(input.build),
+	);
 	const packageReadinessRequired = requiresPackageReadiness(
 		profile,
 		input.policyProfile,
 		input.build,
 		changeClass,
 	);
-	const requirements = productionQualityRequirements({
+	const requirements = productionPolicyRequirements({
 		profile,
 		changeClass,
 		riskTier,
 		packageReadinessRequired,
 	});
-	const evidence = collectProductionQualityEvidence(input);
+	const evidence = collectProductionPolicyEvidence(input);
 	const thresholds = reviewThresholdForRisk(riskTier);
-	const waivers = collectProductionQualityWaivers(input);
+	const waivers = collectProductionPolicyWaivers(input);
 	const missing: string[] = [];
-	const waived: ProductionQualityResult["waived"] = [];
-	const issues: ProductionQualityIssue[] = [];
+	const waived: ProductionPolicyResult["waived"] = [];
+	const issues: ProductionPolicyIssue[] = [];
 
 	requirements.forEach((requirement) => {
-		if (requirementSatisfied(requirement.id, input, evidence, thresholds)) return;
+		if (requirementSatisfied(requirement.id, input, evidence, thresholds))
+			return;
 		const waiver = findRequirementWaiver(requirement.id, waivers);
 		if (waiver?.valid) {
 			waived.push({ requirement_id: requirement.id, waiver: waiver.waiver });
@@ -264,9 +263,9 @@ export function evaluateProductionQualityProfile(
 		issues.push(missingRequirementIssue(requirement, waiver));
 	});
 
-	const result: ProductionQualityResult = {
+	const result: ProductionPolicyResult = {
 		version: 1,
-		status: productionQualityStatus(missing),
+		status: productionPolicyStatus(missing),
 		profile,
 		change_class: changeClass,
 		risk_tier: riskTier,
@@ -290,17 +289,17 @@ export function evaluateProductionQualityProfile(
 
 function missingRequirementId(
 	requirementId: string,
-	waiver: { waiver: ProductionQualityWaiver; valid: boolean } | null,
+	waiver: { waiver: ProductionPolicyWaiver; valid: boolean } | null,
 ): string {
 	if (waiver) return `${requirementId}:waiver_invalid`;
 	return requirementId;
 }
 
 function missingRequirementIssue(
-	requirement: ProductionQualityRequirement,
-	waiver: { waiver: ProductionQualityWaiver; valid: boolean } | null,
-): ProductionQualityIssue {
-	const issue: ProductionQualityIssue = {
+	requirement: ProductionPolicyRequirement,
+	waiver: { waiver: ProductionPolicyWaiver; valid: boolean } | null,
+): ProductionPolicyIssue {
+	const issue: ProductionPolicyIssue = {
 		severity: missingRequirementSeverity(requirement),
 		requirement_id: requirement.id,
 		summary: missingRequirementSummary(requirement, waiver),
@@ -310,15 +309,15 @@ function missingRequirementIssue(
 }
 
 function missingRequirementSeverity(
-	requirement: ProductionQualityRequirement,
-): ProductionQualityIssue["severity"] {
+	requirement: ProductionPolicyRequirement,
+): ProductionPolicyIssue["severity"] {
 	if (requirement.category === "threshold") return "medium";
 	return "high";
 }
 
 function missingRequirementSummary(
-	requirement: ProductionQualityRequirement,
-	waiver: { waiver: ProductionQualityWaiver; valid: boolean } | null,
+	requirement: ProductionPolicyRequirement,
+	waiver: { waiver: ProductionPolicyWaiver; valid: boolean } | null,
 ): string {
 	if (waiver) {
 		return `${requirement.label} is missing and matching waiver lacks owner or rationale.`;
@@ -326,14 +325,14 @@ function missingRequirementSummary(
 	return `${requirement.label} is missing.`;
 }
 
-function productionQualityStatus(missing: string[]): ProductionQualityStatus {
-	if (missing.length > 0) return "block";
-	return "pass";
+function productionPolicyStatus(missing: string[]): ProductionPolicyStatus {
+	if (missing.length > 0) return "missing";
+	return "satisfied";
 }
 
 function requirementIdsByCategory(
-	requirements: ProductionQualityRequirement[],
-	category: ProductionQualityRequirementCategory,
+	requirements: ProductionPolicyRequirement[],
+	category: ProductionPolicyRequirementCategory,
 ): string[] {
 	return requirements.flatMap((requirement) => {
 		if (requirement.category !== category) return [];
@@ -341,15 +340,17 @@ function requirementIdsByCategory(
 	});
 }
 
-function productionQualityRequirements(input: {
+function productionPolicyRequirements(input: {
 	profile: string;
 	changeClass: string;
 	riskTier: string;
 	packageReadinessRequired: boolean;
-}): ProductionQualityRequirement[] {
+}): ProductionPolicyRequirement[] {
 	const requirements = [...BASE_REQUIREMENTS];
-	if (input.profile === "task-close") requirements.push(...TASK_CLOSE_REQUIREMENTS);
-	if (input.packageReadinessRequired) requirements.push(...PACKAGE_REQUIREMENTS);
+	if (input.profile === "task-close")
+		requirements.push(...TASK_CLOSE_REQUIREMENTS);
+	if (input.packageReadinessRequired)
+		requirements.push(...PACKAGE_REQUIREMENTS);
 	if (requiresSystemDriftAudits(input.changeClass, input.riskTier)) {
 		requirements.push(...SYSTEM_RISK_REQUIREMENTS);
 	}
@@ -360,8 +361,8 @@ function productionQualityRequirements(input: {
 }
 
 function uniqueRequirements(
-	requirements: ProductionQualityRequirement[],
-): ProductionQualityRequirement[] {
+	requirements: ProductionPolicyRequirement[],
+): ProductionPolicyRequirement[] {
 	const seen = new Set<string>();
 	return requirements.filter((requirement) => {
 		if (seen.has(requirement.id)) return false;
@@ -372,29 +373,50 @@ function uniqueRequirements(
 
 function requirementSatisfied(
 	id: string,
-	input: ProductionQualityInput,
-	evidence: ProductionQualityResult["evidence"],
+	input: ProductionPolicyInput,
+	evidence: ProductionPolicyResult["evidence"],
 	threshold: ReviewThreshold,
 ): boolean {
-	if (id.startsWith("audit:")) return hasAuditEvidence(evidence.audits, id.slice(6));
+	if (id.startsWith("audit:"))
+		return hasAuditEvidence(evidence.audits, id.slice(6));
 	switch (id) {
 		case "evidence:implementation-build":
 			return String(input.build?.kind || "") === "implementation_build";
 		case "evidence:acceptance-mapping":
-			return Array.isArray(input.build?.acceptance_mapping) &&
-				input.build.acceptance_mapping.length > 0;
+			return (
+				Array.isArray(input.build?.acceptance_mapping) &&
+				input.build.acceptance_mapping.length > 0
+			);
 		case "evidence:implementation-validation":
-			return hasEvidence(evidence.checks, /implementation validation (pass|passed)|implementation-pass/i);
+			return hasEvidence(
+				evidence.checks,
+				/implementation validation (pass|passed)|implementation-pass/i,
+			);
 		case "check:typecheck":
-			return hasEvidence(evidence.checks, /\b(npm run typecheck|tsc --noEmit|typecheck: pass)\b/i);
+			return hasEvidence(
+				evidence.checks,
+				/\b(npm run typecheck|tsc --noEmit|typecheck: pass)\b/i,
+			);
 		case "check:tests":
-			return hasEvidence(evidence.checks, /\b(npm run test|npm test|test:smoke|node tests\/|vitest|jest|tests?: pass)\b/i);
+			return hasEvidence(
+				evidence.checks,
+				/\b(npm run test|npm test|test:smoke|node tests\/|vitest|jest|tests?: pass)\b/i,
+			);
 		case "check:review-tool":
-			return Boolean(evidence.review_findings) || hasEvidence(evidence.checks, /\b(pi-lens|review-tool|review findings|dispatch review)\b/i);
+			return (
+				Boolean(evidence.review_findings) ||
+				hasEvidence(
+					evidence.checks,
+					/\b(pi-lens|review-tool|review findings|dispatch review)\b/i,
+				)
+			);
 		case "threshold:review-findings":
 			return reviewWithinThreshold(evidence.review_findings, threshold);
 		case "check:package-pack":
-			return hasEvidence(evidence.checks, /\b(npm run test:pack|npm pack --dry-run|package pack|pack check)\b/i);
+			return hasEvidence(
+				evidence.checks,
+				/\b(npm run test:pack|npm pack --dry-run|package pack|pack check)\b/i,
+			);
 		case "proof:fresh-validation":
 			return input.isolation?.fresh_context === true;
 		case "proof:content":
@@ -408,13 +430,16 @@ function requirementSatisfied(
 	}
 }
 
-function collectProductionQualityEvidence(
-	input: ProductionQualityInput,
-): ProductionQualityResult["evidence"] {
+function collectProductionPolicyEvidence(
+	input: ProductionPolicyInput,
+): ProductionPolicyResult["evidence"] {
 	const checks = unique([
 		...stringList(input.checks),
 		...stringList(input.build?.checks_run),
-		...stringList((input.build?.closure_brief as Record<string, unknown> | undefined)?.checks),
+		...stringList(
+			(input.build?.closure_brief as Record<string, unknown> | undefined)
+				?.checks,
+		),
 		...stringList(input.build?.test_design_evidence),
 		...stringList(input.build?.code_change_evidence),
 	]);
@@ -424,7 +449,7 @@ function collectProductionQualityEvidence(
 		...stringList(input.build?.audit_refs),
 		...stringList(input.build?.audit_reports),
 	]);
-	const evidence: ProductionQualityResult["evidence"] = {
+	const evidence: ProductionPolicyResult["evidence"] = {
 		checks,
 		audits,
 		content_proof: contentProofRefs(input.isolation),
@@ -434,21 +459,23 @@ function collectProductionQualityEvidence(
 	return evidence;
 }
 
-function collectProductionQualityWaivers(
-	input: ProductionQualityInput,
-): ProductionQualityWaiver[] {
+function collectProductionPolicyWaivers(
+	input: ProductionPolicyInput,
+): ProductionPolicyWaiver[] {
 	return [
 		...objectList(input.waivers),
-		...objectList(input.build?.quality_waivers),
+		...objectList(input.build?.policy_waivers),
 		...objectList(input.build?.waivers),
-		...objectList((input.build?.quality as Record<string, unknown> | undefined)?.waivers),
-	] as ProductionQualityWaiver[];
+		...objectList(
+			(input.build?.policy as Record<string, unknown> | undefined)?.waivers,
+		),
+	] as ProductionPolicyWaiver[];
 }
 
 function findRequirementWaiver(
 	requirementId: string,
-	waivers: ProductionQualityWaiver[],
-): { waiver: ProductionQualityWaiver; valid: boolean } | null {
+	waivers: ProductionPolicyWaiver[],
+): { waiver: ProductionPolicyWaiver; valid: boolean } | null {
 	const normalizedRequirement = normalizeRequirementId(requirementId);
 	const waiver = waivers.find((candidate) =>
 		waiverAppliesTo(candidate, normalizedRequirement),
@@ -464,10 +491,14 @@ function findRequirementWaiver(
 }
 
 function waiverAppliesTo(
-	waiver: ProductionQualityWaiver,
+	waiver: ProductionPolicyWaiver,
 	normalizedRequirement: string,
 ): boolean {
-	const values = [waiver.id, waiver.requirement, ...stringList(waiver.applies_to)];
+	const values = [
+		waiver.id,
+		waiver.requirement,
+		...stringList(waiver.applies_to),
+	];
 	return values.some(
 		(value) => normalizeRequirementId(value) === normalizedRequirement,
 	);
@@ -496,7 +527,10 @@ function reviewWithinThreshold(
 	threshold: ReviewThreshold,
 ): boolean {
 	if (!findings) return false;
-	return findings.blockers <= threshold.blockers && findings.warnings <= threshold.warnings;
+	return (
+		findings.blockers <= threshold.blockers &&
+		findings.warnings <= threshold.warnings
+	);
 }
 
 function reviewThresholdForRisk(riskTier: string): ReviewThreshold {
@@ -507,7 +541,12 @@ function hasAuditEvidence(audits: string[], profile: string): boolean {
 	const expected = normalizeRequirementId(profile);
 	return audits.some((audit) => {
 		const normalized = normalizeRequirementId(audit);
-		return normalized === expected || normalized.includes(`audit:${expected}`) || normalized.includes(`profile:${expected}`) || normalized.includes(expected);
+		return (
+			normalized === expected ||
+			normalized.includes(`audit:${expected}`) ||
+			normalized.includes(`profile:${expected}`) ||
+			normalized.includes(expected)
+		);
 	});
 }
 
@@ -515,7 +554,9 @@ function hasEvidence(values: string[], pattern: RegExp): boolean {
 	return values.some((value) => pattern.test(value));
 }
 
-function contentProofRefs(isolation: Record<string, unknown> | undefined): string[] {
+function contentProofRefs(
+	isolation: Record<string, unknown> | undefined,
+): string[] {
 	if (!isolation) return [];
 	return unique(
 		[
@@ -534,7 +575,9 @@ function contentProofRefs(isolation: Record<string, unknown> | undefined): strin
 	);
 }
 
-function hasImmutableContentProof(isolation: Record<string, unknown> | undefined): boolean {
+function hasImmutableContentProof(
+	isolation: Record<string, unknown> | undefined,
+): boolean {
 	return Boolean(
 		isolation?.validated_sha ||
 			isolation?.head_sha ||
@@ -555,14 +598,25 @@ function requiresPackageReadiness(
 	const text = [profile, policyProfile, changeClass, ...buildPathRefs(build)]
 		.map((value) => String(value || "").toLowerCase())
 		.join(" ");
-	return /\b(package|publication|publish|release|pack|package\.json|package-lock\.json|npm)\b/.test(text);
+	return /\b(package|publication|publish|release|pack|package\.json|package-lock\.json|npm)\b/.test(
+		text,
+	);
 }
 
-function requiresSystemDriftAudits(changeClass: string, riskTier: string): boolean {
-	return changeClass === "system" || riskTier === "high" || riskTier === "release";
+function requiresSystemDriftAudits(
+	changeClass: string,
+	riskTier: string,
+): boolean {
+	return (
+		changeClass === "system" || riskTier === "high" || riskTier === "release"
+	);
 }
 
-function requiresSecurityAudit(profile: string, changeClass: string, riskTier: string): boolean {
+function requiresSecurityAudit(
+	profile: string,
+	changeClass: string,
+	riskTier: string,
+): boolean {
 	return (
 		["publication", "publish", "release"].includes(profile) ||
 		changeClass === "security" ||
@@ -570,31 +624,44 @@ function requiresSecurityAudit(profile: string, changeClass: string, riskTier: s
 	);
 }
 
-function buildPathRefs(build: Record<string, unknown> | null | undefined): string[] {
+function buildPathRefs(
+	build: Record<string, unknown> | null | undefined,
+): string[] {
 	if (!build) return [];
 	return unique([
 		...stringList(build.code_files),
 		...stringList(build.test_files),
-		...stringList((build.produces as Record<string, unknown> | undefined)?.code),
-		...stringList((build.produces as Record<string, unknown> | undefined)?.tests),
-		...stringList((build.produces as Record<string, unknown> | undefined)?.publication),
+		...stringList(
+			(build.produces as Record<string, unknown> | undefined)?.code,
+		),
+		...stringList(
+			(build.produces as Record<string, unknown> | undefined)?.tests,
+		),
+		...stringList(
+			(build.produces as Record<string, unknown> | undefined)?.publication,
+		),
 	]);
 }
 
-function changeClassFromBuild(build: Record<string, unknown> | null | undefined): string {
+function changeClassFromBuild(
+	build: Record<string, unknown> | null | undefined,
+): string {
 	return String(
 		build?.change_class ||
 			build?.change_type ||
-			(build?.traceability as Record<string, unknown> | undefined)?.change_class ||
-			(build?.traceability as Record<string, unknown> | undefined)?.change_type ||
+			(build?.traceability as Record<string, unknown> | undefined)
+				?.change_class ||
+			(build?.traceability as Record<string, unknown> | undefined)
+				?.change_type ||
 			"",
 	);
 }
 
-function riskTierFromBuild(build: Record<string, unknown> | null | undefined): string {
+function riskTierFromBuild(
+	build: Record<string, unknown> | null | undefined,
+): string {
 	return String(
 		build?.risk_tier ||
-			(build?.quality as Record<string, unknown> | undefined)?.risk_tier ||
 			(build?.policy as Record<string, unknown> | undefined)?.risk_tier ||
 			"",
 	);
@@ -602,8 +669,10 @@ function riskTierFromBuild(build: Record<string, unknown> | null | undefined): s
 
 function normalizedRiskTier(value: unknown): string {
 	const normalized = normalizedWord(value || "medium");
-	if (["low", "medium", "high", "release"].includes(normalized)) return normalized;
-	if (["publication", "publish", "security", "migration"].includes(normalized)) return "release";
+	if (["low", "medium", "high", "release"].includes(normalized))
+		return normalized;
+	if (["publication", "publish", "security", "migration"].includes(normalized))
+		return "release";
 	return "medium";
 }
 
