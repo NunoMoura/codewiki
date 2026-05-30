@@ -2216,6 +2216,10 @@ async function main() {
 		const taskStatuses = [];
 		const statusSummaries = [];
 		const channelInputQueue = [];
+		let configIdle = true;
+		let configAbortCount = 0;
+		let panelIdle = true;
+		let panelAbortCount = 0;
 		const widgetState = { key: null, content: null, options: null };
 		const panelState = { renderedLines: null, terminalInput: null };
 		const configPanelState = {
@@ -2253,7 +2257,10 @@ async function main() {
 		);
 		await configCommand.handler("", {
 			cwd: projectDir,
-			isIdle: () => true,
+			isIdle: () => configIdle,
+			abort: () => {
+				configAbortCount += 1;
+			},
 			sessionManager: toolCtx.sessionManager,
 			ui: {
 				notify: (message, level) =>
@@ -2298,9 +2305,28 @@ async function main() {
 			configPanelState.widget && configPanelState.instance,
 			"wiki-config should render an interactive top-pinned configuration panel",
 		);
+		configIdle = false;
+		assert.deepEqual(
+			configPanelState.terminalInput?.("\x1b"),
+			{ consume: true },
+			"Esc in config panel should be consumed after aborting active agent response",
+		);
+		assert.equal(
+			configAbortCount,
+			1,
+			"Esc in config panel should abort active agent response instead of only closing the panel",
+		);
+		assert.ok(
+			configPanelState.terminalInput,
+			"Esc while agent is active should keep config panel open after abort",
+		);
+		configIdle = true;
 		await statusShortcut.handler({
 			cwd: projectDir,
-			isIdle: () => true,
+			isIdle: () => panelIdle,
+			abort: () => {
+				panelAbortCount += 1;
+			},
 			sessionManager: toolCtx.sessionManager,
 			ui: {
 				notify: (message, level) =>
@@ -3406,6 +3432,18 @@ async function main() {
 			/Status[\s\S]*(🟢|🟡|🔴)[\s\S]*(GREEN|YELLOW|RED)[\s\S]*Checks:[\s\S]*Tasks:[\s\S]*Claims:[\s\S]*Next action/i,
 			"Status tab should show compact metrics and next action",
 		);
+		panelIdle = false;
+		assert.deepEqual(
+			panelState.terminalInput?.("\x1b"),
+			{ consume: true },
+			"Esc in status panel should be consumed after aborting active agent response",
+		);
+		assert.equal(
+			panelAbortCount,
+			1,
+			"Esc in status panel should abort active agent response instead of only closing the panel",
+		);
+		panelIdle = true;
 		panelState.terminalInput?.("\t");
 		const widgetInstanceAfterProductTab = widgetState.content?.(
 			{ terminal: { columns: 120, rows: 32 } },

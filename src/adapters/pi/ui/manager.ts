@@ -180,6 +180,22 @@ export async function queueAudit(
 	}
 }
 
+function shouldInterruptAgentOnEscape(
+	ctx: ExtensionContext | ExtensionCommandContext,
+	data: string,
+): boolean {
+	if (!matchesKey(data, "escape")) return false;
+	try {
+		if (typeof ctx.isIdle === "function" && !ctx.isIdle()) {
+			ctx.abort?.();
+			return true;
+		}
+	} catch {
+		// Fall through to panel-local escape handling.
+	}
+	return false;
+}
+
 /**
  * Open the configuration panel.
  */
@@ -324,6 +340,7 @@ export async function openConfigPanel(
 
 	const inputUnsub =
 		ui.onTerminalInput?.((data: string) => {
+			if (shouldInterruptAgentOnEscape(ctx, data)) return { consume: true };
 			if (matchesKey(data, "escape") || matchesKey(data, "q")) {
 				close();
 				return { consume: true };
@@ -2143,6 +2160,7 @@ export async function openStatusPanel(
 	activeStatusPanelInputUnsubscribe =
 		ui.onTerminalInput?.((data: string) => {
 			if (!activeStatusPanelGlobal) return undefined;
+			if (shouldInterruptAgentOnEscape(ctx, data)) return { consume: true };
 			const snapshot = readLiveStatusPanelSnapshot(
 				panelState.project,
 				panelState.activeLink,
