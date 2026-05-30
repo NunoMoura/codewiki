@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-30T23:58:09Z",
+  "profile": "task-close",
+  "task_id": "TASK-059",
+  "verdict": "pass",
+  "rationale": "TASK-059 task-close validation passes against clean local commit proof. HEAD 1672fd537b791e2193c9cda9edec1b11fb457fbc contains the wiki_* internal tool namespace migration, wiki_gateway registration, docs/skills/test updates, implementation build, and fresh implementation validation pass. The package exposes wiki_* live tool names with no codewiki_* compatibility aliases, source-contract audit passes, package smoke asserts old-prefix tools absent and wiki_* tools present, and user-facing /wiki-* commands remain unchanged.",
+  "checks": [
+    "git status --porcelain=v1 — clean before task-close validation report write",
+    "git rev-parse HEAD — 1672fd537b791e2193c9cda9edec1b11fb457fbc",
+    "git rev-parse HEAD^{tree} — 30bb7407237bfc0f06009ed391e69117bbfdd45e",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity,source-contract task_id=TASK-059 — changed/task/generated-parity/source-contract pass; alignment warning graph-health 8 warnings",
+    "implementation validation pass exists: .codewiki/validation/2026-05-30-implementation-pass-task-059-2026-05-30-implemen.json",
+    "implementation checks reviewed: typecheck, test:smoke, test:features, test:pack, check:architecture, package smoke, search proof all pass",
+    "approval:user:approve-B-2026-05-29 for ARCH-REN-004 wiki_* namespace migration"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports 8 graph-health warnings; changed/task/generated-parity/source-contract pass, and worktree was clean before report write."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed; local commit proof only."
+    },
+    {
+      "severity": "low",
+      "summary": "Pi reload required after close commit before relying on new wiki_* live tool names."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity",
+    "source-contract"
+  ],
+  "audit_refs": [
+    "approval:user:approve-B-2026-05-29",
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "profile:source-contract",
+    "commit:1672fd537b791e2193c9cda9edec1b11fb457fbc",
+    "tree:30bb7407237bfc0f06009ed391e69117bbfdd45e",
+    ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+    ".codewiki/validation/2026-05-30-implementation-pass-task-059-2026-05-30-implemen.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit alignment,changed,task,generated-parity,source-contract task_id=TASK-059: changed pass with 0 changed files; task pass; generated-parity pass; source-contract pass; alignment warning only graph-health 8 warnings."
+  ],
+  "content_proof_refs": [
+    "1672fd537b791e2193c9cda9edec1b11fb457fbc",
+    "30bb7407237bfc0f06009ed391e69117bbfdd45e"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-059",
+    "source_build": ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+    "validation_report": ".codewiki/validation/2026-05-30-task-close-pass-task-059-2026-05-30-implemented-.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+      ".codewiki/validation/2026-05-30-task-close-pass-task-059-2026-05-30-implemented-.json",
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/tools/state.ts",
+      "src/adapters/pi/tools/resume-context.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/api/tools.ts",
+      "src/build/writer.ts",
+      "src/change/diff-table.ts",
+      "src/checks/source-contract.ts",
+      "src/gateway/report.ts",
+      "src/gc/runtime.ts",
+      "src/roadmap/store.ts",
+      "src/roadmap/task.ts",
+      "src/roadmap/tool.ts",
+      "src/runtime/runner.ts",
+      "src/session/claims.ts",
+      "src/session/runtime.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/session/worktree-isolation.ts",
+      "src/ui/web/control-room.ts",
+      "README.md",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      "skills/codewiki/prompts/resume-implementation.md",
+      "skills/codewiki/playbooks/architecture.md",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-decision/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/index_graph.json",
+      "tests/smoke/package-smoke.test.mjs",
+      "tests/smoke/source-contract.test.mjs",
+      "tests/smoke/prompt-assets.test.mjs",
+      "tests/smoke/codewiki-compaction.test.mjs",
+      "tests/smoke/builds.test.mjs",
+      "tests/smoke/artifact-wake-queue.test.mjs",
+      "tests/smoke/decision-approval-ui.test.mjs",
+      "tests/smoke/gateway-preflight.test.mjs",
+      "tests/smoke/horizontal-alignment.test.mjs",
+      "tests/smoke/hot-retention.test.mjs",
+      "tests/smoke/loop-isolation-policy.test.mjs",
+      "tests/smoke/project-resolution.test.mjs",
+      "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+      "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
+      "tests/tasks/TASK-027/gc-source-root.test.mjs",
+      "tests/tasks/TASK-028/session-source-root.test.mjs",
+      "tests/tasks/TASK-029/roadmap-source-root.test.mjs",
+      "tests/tasks/TASK-030/state-graph-resume-source-root.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-059",
+    "source_build": ".codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+    "validation_report": ".codewiki/validation/2026-05-30-task-close-pass-task-059-2026-05-30-implemented-.json",
+    "commit_title": "checkpoint(codewiki): TASK-059 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-059",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-30-implemented-task-059-live-internal-agent-tool-na.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-30-task-close-pass-task-059-2026-05-30-implemented-.json",
+      "CodeWiki-Checks: git status --porcelain=v1 — clean before task-close validation report write; git rev-parse HEAD — 1672fd537b791e2193c9cda9edec1b11fb457fbc; git rev-parse HEAD^{tree} — 30bb7407237bfc0f06009ed391e69117bbfdd45e; codewiki_audit profiles=alignment,changed,task,generated-parity,source-contract task_id=TASK-059 — changed/task/generated-parity/source-contract pass; alignment warning graph-health 8 warnings; implementation validation pass exists: .codewiki/validation/2026-05-30-implementation-pass-task-059-2026-05-30-implemen.json; implementation checks reviewed: typecheck, test:smoke, test:features, test:pack, check:architecture, package smoke, search proof all pass; approval:user:approve-B-2026-05-29 for ARCH-REN-004 wiki_* namespace migration"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/adapters/pi/index.ts",
+      "src/adapters/pi/bootstrap.ts",
+      "src/adapters/pi/tools/state.ts",
+      "src/adapters/pi/tools/resume-context.ts",
+      "src/adapters/pi/tools/artifact-status.ts",
+      "src/adapters/pi/tools/audit.ts",
+      "src/adapters/pi/tools/agency.ts",
+      "src/adapters/pi/tools/session.ts",
+      "src/adapters/pi/tools/task.ts",
+      "src/adapters/pi/artifact-wake.ts",
+      "src/adapters/pi/commands/status.ts",
+      "src/adapters/pi/ui/decision-approval.ts",
+      "src/api/tools.ts",
+      "src/build/writer.ts",
+      "src/change/diff-table.ts",
+      "src/checks/source-contract.ts",
+      "src/gateway/report.ts",
+      "src/gc/runtime.ts",
+      "src/roadmap/store.ts",
+      "src/roadmap/task.ts",
+      "src/roadmap/tool.ts",
+      "src/runtime/runner.ts",
+      "src/session/claims.ts",
+      "src/session/runtime.ts",
+      "src/session/worktree-dispatcher.ts",
+      "src/session/worktree-isolation.ts",
+      "src/ui/web/control-room.ts",
+      "skills/codewiki/SKILL.md",
+      "skills/codewiki/references/tool-catalog.md",
+      "skills/codewiki/prompts/resume-implementation.md",
+      "skills/codewiki/playbooks/architecture.md",
+      "skills/codewiki-decision/SKILL.md",
+      "skills/codewiki-decision/references/tools.md",
+      "skills/codewiki-implementation/SKILL.md",
+      "skills/codewiki-implementation/references/tools.md",
+      "skills/codewiki-planning/SKILL.md",
+      "skills/codewiki-planning/references/tools.md",
+      "skills/codewiki-validation/SKILL.md",
+      "skills/codewiki-validation/references/tools.md"
+    ],
+    "reasons": [
+      "Pi or harness adapter code changed",
+      "CodeWiki API facade changed",
+      "CodeWiki extension package source changed",
+      "CodeWiki runtime orchestration changed",
+      "CodeWiki session/runtime boundary code changed",
+      "packaged CodeWiki skill prompt changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "30bb7407237bfc0f06009ed391e69117bbfdd45e"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity",
+      "source-contract"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity",
+      "audit:source-contract or profile:source-contract"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-059",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user:approve-B-2026-05-29",
+        "approval:user:approve-B-2026-05-29 for ARCH-REN-004 wiki_* namespace migration"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "1672fd537b791e2193c9cda9edec1b11fb457fbc",
+    "validated_sha": "1672fd537b791e2193c9cda9edec1b11fb457fbc",
+    "tree_sha": "30bb7407237bfc0f06009ed391e69117bbfdd45e",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation after clean local commit proof; no remote publication.",
+    "role": "validator"
+  }
+}
