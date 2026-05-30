@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-30T23:35:14Z",
+  "profile": "task-close",
+  "task_id": "TASK-063",
+  "verdict": "pass",
+  "rationale": "TASK-063 task-close validation passes against clean local commit proof. HEAD 95ad03ed84658d96692a015d293d1f12bc4d11c4 contains daemon job/run schema, lifecycle helpers, docs/diagrams, targeted tests, implementation build, and fresh implementation validation pass. Source implementation build .codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json maps all acceptance criteria: job/run states and transitions, .codewiki/runtime/jobs.json storage boundary, daemon jobs as execution attempts only, and schema/lifecycle tests. Required task-close audits pass except existing graph-health warnings, which are non-blocking roadmap hygiene and not changed-file drift.",
+  "checks": [
+    "git status --porcelain=v1 — clean before task-close validation report write",
+    "git rev-parse HEAD — 95ad03ed84658d96692a015d293d1f12bc4d11c4",
+    "git rev-parse HEAD^{tree} — b1a23904673e2081d930b74b7ece18422d9a2169",
+    "codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-063 — changed/task/generated-parity pass; alignment warning graph-health 8 warnings",
+    "implementation validation pass exists: .codewiki/validation/2026-05-30-implementation-pass-task-063-2026-05-30-task-063.json",
+    "implementation checks reviewed: targeted runtime job-state smoke, typecheck, test:smoke, check:architecture all pass"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Alignment audit still reports 8 graph-health warnings; changed, task, and generated-parity pass, and worktree was clean before report write."
+    },
+    {
+      "severity": "low",
+      "summary": "No push/publication performed; local commit proof only."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+  "policy_profile": "task-close",
+  "failure_class": "evidence_missing",
+  "recommended_next_loop": "validation",
+  "routing": {
+    "failure_class": "evidence_missing",
+    "recommended_next_loop": "validation"
+  },
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:alignment",
+    "profile:changed",
+    "profile:task",
+    "profile:generated-parity",
+    "commit:95ad03ed84658d96692a015d293d1f12bc4d11c4",
+    "tree:b1a23904673e2081d930b74b7ece18422d9a2169",
+    ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+    ".codewiki/validation/2026-05-30-implementation-pass-task-063-2026-05-30-task-063.json"
+  ],
+  "audit_reports": [
+    "codewiki_audit alignment,changed,task,generated-parity task_id=TASK-063: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 8 warnings."
+  ],
+  "content_proof_refs": [
+    "95ad03ed84658d96692a015d293d1f12bc4d11c4",
+    "b1a23904673e2081d930b74b7ece18422d9a2169"
+  ],
+  "context_boundary": {
+    "recommended": true,
+    "trigger": "post-gateway-pass",
+    "mode": "codewiki-context-refresh",
+    "resume_tool": "codewiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-063",
+    "source_build": ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+    "validation_report": ".codewiki/validation/2026-05-30-task-close-pass-task-063-2026-05-30-task-063-dae.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+      ".codewiki/validation/2026-05-30-task-close-pass-task-063-2026-05-30-task-063-dae.json",
+      "src/runtime/types.ts",
+      "tests/smoke/runtime-job-state.test.mjs",
+      "package.json",
+      ".codewiki/kb/system/runtime.md",
+      ".codewiki/kb/system/api.md",
+      ".codewiki/kb/system/diagrams/data-model.yaml",
+      ".codewiki/kb/system/diagrams/state-lifecycle.yaml",
+      ".codewiki/kb/system/diagrams/component-map.yaml",
+      ".codewiki/kb/system/diagrams/file-structure-map.yaml",
+      ".codewiki/roadmap/queue.json",
+      ".codewiki/roadmap/tasks/TASK-063/context.json",
+      ".codewiki/roadmap/tasks/TASK-063/task.json",
+      ".codewiki/index_graph.json",
+      ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+      "tests/smoke/runtime-runner.test.mjs",
+      "tests/smoke/diagram-refs.test.mjs",
+      "tests/smoke/source-contract.test.mjs"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "Gateway pass can hand the next loop a bounded source-backed packet instead of builder chat memory."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-063",
+    "source_build": ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+    "validation_report": ".codewiki/validation/2026-05-30-task-close-pass-task-063-2026-05-30-task-063-dae.json",
+    "commit_title": "checkpoint(codewiki): TASK-063 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-063",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-30-task-close-pass-task-063-2026-05-30-task-063-dae.json",
+      "CodeWiki-Checks: git status --porcelain=v1 — clean before task-close validation report write; git rev-parse HEAD — 95ad03ed84658d96692a015d293d1f12bc4d11c4; git rev-parse HEAD^{tree} — b1a23904673e2081d930b74b7ece18422d9a2169; codewiki_audit profiles=alignment,changed,task,generated-parity task_id=TASK-063 — changed/task/generated-parity pass; alignment warning graph-health 8 warnings; implementation validation pass exists: .codewiki/validation/2026-05-30-implementation-pass-task-063-2026-05-30-task-063.json; implementation checks reviewed: targeted runtime job-state smoke, typecheck, test:smoke, check:architecture all pass"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": true,
+    "command": "/reload",
+    "paths": [
+      "src/runtime/types.ts",
+      "package.json"
+    ],
+    "reasons": [
+      "CodeWiki runtime orchestration changed",
+      "Pi package extension or skill metadata changed"
+    ],
+    "message": "Pi extension, skill, runtime, or API files changed. Run `/reload` in Pi before relying on live extension behavior; CodeWiki compaction does not reload extension code and never restarts Pi automatically."
+  },
+  "failed_criteria": [],
+  "blocking_questions": [],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-clean-immutable-content",
+    "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean=true",
+      "publisher queue result proof",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "handoff": "task-close validation",
+    "profiles": [
+      "task-close"
+    ]
+  },
+  "publisher_result_requirement": {
+    "required": true,
+    "evidence": [
+      "publisher queue result",
+      "clean=true",
+      "published_sha/tree_sha/archive_ref/remote_ref"
+    ],
+    "proof_refs": [
+      "b1a23904673e2081d930b74b7ece18422d9a2169"
+    ],
+    "gaps": []
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "task-close",
+    "task_id": "TASK-063",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation"
+    },
+    "risk": {
+      "tier": "mechanical-docs",
+      "reason": "Mechanical, generated, runtime, or docs-only cleanup can use the low-risk fast path when gateway evidence is complete.",
+      "approval_required": false,
+      "approval_evidence": [],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Task-close and publication validation require independent validator context, a clean worktree, and immutable content proof."
+      },
+      "fast_path": {
+        "candidate": true,
+        "eligible": true,
+        "reason": "User approval is not required beyond accepted semantics, but gateway audits and content proof remain mandatory."
+      }
+    }
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "head_sha": "95ad03ed84658d96692a015d293d1f12bc4d11c4",
+    "validated_sha": "95ad03ed84658d96692a015d293d1f12bc4d11c4",
+    "tree_sha": "b1a23904673e2081d930b74b7ece18422d9a2169",
+    "clean": true,
+    "fresh_context": true,
+    "notes": "Task-close validation after clean local commit proof; no remote publication.",
+    "role": "validator"
+  }
+}
