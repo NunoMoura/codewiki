@@ -164,6 +164,7 @@ export interface CodewikiDaemonRunRecord {
 	started_at: string;
 	updated_at: string;
 	last_heartbeat_at?: string;
+	lease_expires_at?: string;
 	heartbeat_count: number;
 	heartbeats: CodewikiDaemonHeartbeatRecord[];
 	ended_at?: string;
@@ -214,6 +215,7 @@ export interface StartCodewikiDaemonRunInput {
 	run_id: string;
 	started_at: string;
 	worker?: CodewikiDaemonWorkerRef;
+	lease_expires_at?: string;
 	build_refs?: string[];
 	validation_refs?: string[];
 	content_refs?: string[];
@@ -476,6 +478,9 @@ function normalizeCodewikiDaemonRun(
 		...(String(raw.last_heartbeat_at || "").trim()
 			? { last_heartbeat_at: String(raw.last_heartbeat_at).trim() }
 			: {}),
+		...(String(raw.lease_expires_at || "").trim()
+			? { lease_expires_at: String(raw.lease_expires_at).trim() }
+			: {}),
 		heartbeat_count: Math.max(
 			0,
 			Math.floor(Number(raw.heartbeat_count ?? heartbeats.length)),
@@ -533,6 +538,9 @@ export function startCodewikiDaemonRun(
 		started_at: input.started_at,
 		updated_at: input.started_at,
 		last_heartbeat_at: input.started_at,
+		...(input.lease_expires_at?.trim()
+			? { lease_expires_at: input.lease_expires_at.trim() }
+			: {}),
 		heartbeat_count: 0,
 		heartbeats: [],
 		build_refs: uniqueStrings(input.build_refs ?? []),

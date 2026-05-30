@@ -121,6 +121,14 @@ completed/cancelled are terminal
 
 A pass boundary never mutates the roadmap directly. It enqueues or hands off the next compiler/gateway loop with source-backed refs. A fail/block boundary keeps the same loop/job blocked until rebuilt, repaired, rerouted by validation, or explicitly escalated. Artifact status in `.codewiki/session/queue.json` remains the short-lived concurrency lease; daemon jobs record execution attempts, heartbeats, retries, and handoff metadata.
 
+## Daemon dispatcher skeleton
+
+The dispatcher runs in one-shot tick mode. One tick may claim one runnable job, write one run attempt with a lease expiry, append one heartbeat, optionally finish that attempt from a deterministic executor result, or mark one stale running attempt. It must not spin an unbounded loop, spawn Pi sessions, close roadmap tasks, or bypass compiler/gateway policy.
+
+Runnable jobs are `queued` jobs or `blocked` jobs whose block reason is retryable and whose attempts are below `max_attempts`. Running jobs stay locked until their lease expires or their heartbeat exceeds the stale threshold. Stale attempts become `stale` runs and blocked jobs; retry is allowed only while the retry circuit breaker permits it. When attempts reach `max_attempts`, the dispatcher records a `retry_limit` block reason and stops selecting that job.
+
+This skeleton intentionally executes only pure lifecycle transitions. Later tasks may attach Pi Code session spawning or gateway pass/fail/block routing behind explicit runtime ports, but this dispatcher already preserves the core invariants: bounded work, lease/TTL ownership, deterministic stale recovery, and daemon jobs as execution attempts rather than roadmap truth.
+
 ## Invariants
 
 - Runtime executes at most one bounded step per call until daemon scheduling explicitly dispatches a job attempt.

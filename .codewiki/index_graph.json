@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T23:36:13.032Z",
+  "generated_at": "2026-05-30T23:42:26.849Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -5383,7 +5383,7 @@
       "kind": "code_path",
       "path": "src",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -5476,7 +5476,7 @@
       "kind": "code_path",
       "path": "src/runtime",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -6184,7 +6184,7 @@
       "kind": "code_path",
       "path": "tests/smoke/runtime-runner.test.mjs",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7694,7 +7694,7 @@
       "kind": "code_path",
       "path": "src/runtime/runner.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -7702,7 +7702,7 @@
       "kind": "code_path",
       "path": "src/runtime/types.ts",
       "layer": "code",
-      "alignment_state": "aligned",
+      "alignment_state": "drift",
       "lens_family": "execution"
     },
     {
@@ -34736,6 +34736,133 @@
       "lens_family": "proof"
     },
     {
+      "id": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "kind": "implementation_build",
+      "path": ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "title": "codewiki_build tool",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": true,
+      "default_hidden": true,
+      "archive_ref": "refs/codewiki/archive/task/TASK-065",
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+          ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+          "codewiki_build tool",
+          "src/runtime/runner.ts",
+          "src/runtime/types.ts",
+          ".codewiki/kb/system/runtime.md",
+          ".codewiki/index_graph.json",
+          "tests/smoke/runtime-runner.test.mjs",
+          "TASK-065"
+        ],
+        "audit_evidence_refs": [
+          "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+          "profile:alignment",
+          "profile:changed"
+        ],
+        "content_proof_refs": [
+          ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json@sha256:94636271359eb6499585e230944c89b0596c243889a892deaae74795781fa40a",
+          "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
+          "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
+          "src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
+          ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
+          "refs/codewiki/archive/task/TASK-065",
+          "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6"
+        ],
+        "validation_attestation_refs": []
+      },
+      "lens_family": "execution",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "audit:codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
+      "kind": "content_proof",
+      "path": "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
+      "kind": "content_proof",
+      "path": "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
+      "kind": "content_proof",
+      "path": "src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "execution"
+    },
+    {
+      "id": "content_proof:.codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
+      "kind": "content_proof",
+      "path": ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:refs/codewiki/archive/task/TASK-065",
+      "kind": "content_proof",
+      "path": "refs/codewiki/archive/task/TASK-065",
+      "proof_kind": "git_ref",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
+      "kind": "content_proof",
+      "path": "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
+      "proof_kind": "digest",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "archive_ref:refs/codewiki/archive/task/TASK-065",
+      "kind": "git_archive_ref",
+      "path": "refs/codewiki/archive/task/TASK-065",
+      "task_id": "TASK-065",
+      "digest": "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
+      "restore_command": "/wiki-restore TASK-065",
+      "safety_status": "blocked",
+      "default_hidden": true,
+      "layer": "archive",
+      "lens_family": "proof"
+    },
+    {
       "id": "build:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
       "kind": "implementation_build",
       "path": ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
@@ -35628,6 +35755,106 @@
       "layer": "content_proof",
       "default_hidden": true,
       "lens_family": "proof"
+    },
+    {
+      "id": "claim:CLAIM-247",
+      "kind": "change_claim",
+      "claim_id": "CLAIM-247",
+      "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+      "agent_name": "Bison",
+      "mode": "write",
+      "role": "builder",
+      "status": "active",
+      "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+      "expires_at": "2026-05-31T01:36:52.625Z",
+      "worktree": {
+        "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+        "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+        "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+      },
+      "scopes": [
+        {
+          "layer": "roadmap",
+          "task_id": "TASK-065"
+        },
+        {
+          "layer": "knowledge",
+          "path": ".codewiki/kb/system/runtime.md"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/runner.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/types.ts"
+        },
+        {
+          "layer": "code",
+          "path": "src/runtime/ports.ts"
+        },
+        {
+          "layer": "code",
+          "path": "tests/smoke/runtime-runner.test.mjs"
+        },
+        {
+          "layer": "code",
+          "path": "package.json"
+        },
+        {
+          "layer": "build",
+          "path": ".codewiki/builds/implementation/**"
+        }
+      ],
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:TASK-065",
+      "kind": "change_claim_scope",
+      "path": "TASK-065",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/kb/system/runtime.md",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/kb/system/runtime.md",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/runner.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/runner.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/types.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/types.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:src/runtime/ports.ts",
+      "kind": "change_claim_scope",
+      "path": "src/runtime/ports.ts",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:tests/smoke/runtime-runner.test.mjs",
+      "kind": "change_claim_scope",
+      "path": "tests/smoke/runtime-runner.test.mjs",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:package.json",
+      "kind": "change_claim_scope",
+      "path": "package.json",
+      "lens_family": "work"
+    },
+    {
+      "id": "claim_scope:.codewiki/builds/implementation/**",
+      "kind": "change_claim_scope",
+      "path": ".codewiki/builds/implementation/**",
+      "lens_family": "work"
     },
     {
       "id": "validation:.codewiki/validation/2026-05-19-documentation-pass.json",
@@ -47501,6 +47728,58 @@
       "id": "content_proof:working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
       "kind": "content_proof",
       "path": "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
+      "proof_kind": "content_proof",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "verdict": "pass",
+      "failure_class": "evidence_missing",
+      "recommended_next_loop": "validation",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Validation judged from source refs and checked dirty pre-commit content digest before writing this validation report.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json"
+        ],
+        "audit_evidence_refs": [
+          "audit:alignment",
+          "audit:changed",
+          "audit:task",
+          "audit:generated-parity",
+          "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs."
+        ],
+        "content_proof_refs": [
+          "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs.",
+      "kind": "audit_evidence",
+      "path": "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs.",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6",
+      "kind": "content_proof",
+      "path": "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6",
       "proof_kind": "content_proof",
       "layer": "content_proof",
       "default_hidden": true,
@@ -106609,6 +106888,131 @@
     },
     {
       "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:.codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:codewiki_build tool",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:src/runtime/runner.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:src/runtime/types.ts",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:.codewiki/kb/system/runtime.md",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:.codewiki/index_graph.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:tests/smoke/runtime-runner.test.mjs",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "source:TASK-065",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "audit:codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "audit:profile:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:.codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json@sha256:94636271359eb6499585e230944c89b0596c243889a892deaae74795781fa40a",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:.codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:refs/codewiki/archive/task/TASK-065",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_content_proof",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "content_proof:sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "task:TASK-065"
+    },
+    {
+      "kind": "build_archive_ref",
+      "from": "build:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "to": "archive_ref:refs/codewiki/archive/task/TASK-065",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
       "from": "build:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
       "to": "source:.codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
       "default_hidden": true
@@ -107928,6 +108332,51 @@
       "from": "build:.codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json",
       "to": "archive_ref:refs/codewiki/archive/task/TASK-063",
       "default_hidden": true
+    },
+    {
+      "kind": "claim_task",
+      "from": "claim:CLAIM-247",
+      "to": "task:TASK-065"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:TASK-065"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:.codewiki/kb/system/runtime.md"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:src/runtime/runner.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:src/runtime/types.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:src/runtime/ports.ts"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:tests/smoke/runtime-runner.test.mjs"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:package.json"
+    },
+    {
+      "kind": "claim_scope",
+      "from": "claim:CLAIM-247",
+      "to": "claim_scope:.codewiki/builds/implementation/**"
     },
     {
       "kind": "validation_attests_source",
@@ -120844,6 +121293,53 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "source:.codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "audit:audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "audit:audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "audit:audit:task",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "audit:audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "audit:codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs.",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "content_proof:working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_task",
+      "from": "validation:.codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+      "to": "task:TASK-065"
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
       "to": "source:.codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
       "default_hidden": true
@@ -121216,7 +121712,7 @@
             "label": "Work",
             "summary": "Planning, roadmap, sprint, task, and coordination state.",
             "state": "drift",
-            "item_count": 22,
+            "item_count": 31,
             "badges": [
               {
                 "id": "open_tasks",
@@ -121247,7 +121743,7 @@
               {
                 "id": "active_claims",
                 "label": "active claims",
-                "count": 0
+                "count": 1
               }
             ],
             "hot_refs": [
@@ -121268,7 +121764,7 @@
             "id": "execution",
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
-            "state": "aligned",
+            "state": "drift",
             "item_count": 442,
             "badges": [
               {
@@ -121284,12 +121780,18 @@
               {
                 "id": "implementation_builds",
                 "label": "implementation builds",
-                "count": 82
+                "count": 83
               },
               {
                 "id": "dirty_paths",
                 "label": "dirty paths",
-                "count": 0
+                "count": 3,
+                "refs": [
+                  "src/runtime/runner.ts",
+                  "src/runtime/types.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
+                "ref_count": 3
               }
             ],
             "hot_refs": [
@@ -121316,7 +121818,7 @@
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 175
+                "count": 176
               },
               {
                 "id": "fail_or_block_validation",
@@ -121326,12 +121828,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 576
+                "count": 578
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1389
+                "count": 1396
               },
               {
                 "id": "traceability_gaps",
@@ -121350,19 +121852,19 @@
         ],
         "badges": {
           "builds": {
-            "total": 130,
+            "total": 131,
             "decision": 17,
             "planning": 31,
-            "implementation": 82,
+            "implementation": 83,
             "hot": 0,
-            "collapsed": 130
+            "collapsed": 131
           },
           "validations": {
-            "total": 175,
-            "pass": 148,
+            "total": 176,
+            "pass": 149,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 175
+            "collapsed": 176
           }
         },
         "next_action": {
@@ -121383,7 +121885,174 @@
         "source": "generated:graph-trace-lens",
         "exact_refs": true,
         "requirement_rows": [],
-        "semantic_change_rows": [],
+        "semantic_change_rows": [
+          {
+            "path": ".codewiki/kb/system/runtime.md",
+            "change_type": "system",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+              ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": ".codewiki/roadmap/queue.json",
+            "change_type": "task",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+              ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+              ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+              ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+              ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+              ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+              ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+              ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+              ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+              ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+              ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+              ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+              ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+              ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+              ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+              ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+              ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+              ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+              ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+              ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+              ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+              ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+              ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+              ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+              ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+              ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+              ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+              ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+              ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+              ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+              ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+              ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+              ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+              ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+              ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+              ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+              ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+              ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+              ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+              ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+              ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+              ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+              ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+              ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+              ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+              ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+              ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+              ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+              ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+              ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+              ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+              ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+              ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+              ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+              ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+              ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+              ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/runtime/runner.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+              ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "src/runtime/types.ts",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ],
+            "gaps": []
+          },
+          {
+            "path": "tests/smoke/runtime-runner.test.mjs",
+            "change_type": "code",
+            "semantic": true,
+            "accepted_build_refs": [
+              ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+              ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+              ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+            ],
+            "gaps": []
+          }
+        ],
         "semantic_change_gaps": [],
         "canonical_source_refs": [
           ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
@@ -121483,6 +122152,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
           ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
           ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -125904,6 +126574,25 @@
             ]
           },
           {
+            "path": ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            "kind": "implementation_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-065"
+            ],
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+              ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+              "codewiki_build tool",
+              "src/runtime/runner.ts",
+              "src/runtime/types.ts",
+              ".codewiki/kb/system/runtime.md",
+              ".codewiki/index_graph.json",
+              "tests/smoke/runtime-runner.test.mjs",
+              "TASK-065"
+            ]
+          },
+          {
             "path": ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
             "kind": "implementation_build",
             "status": "accepted",
@@ -130241,6 +130930,26 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+            "verdict": "pass",
+            "profile": "implementation",
+            "task_id": "TASK-065",
+            "source_refs": [
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json"
+            ],
+            "audit_evidence_refs": [
+              "audit:alignment",
+              "audit:changed",
+              "audit:task",
+              "audit:generated-parity",
+              "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs."
+            ],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
             "verdict": "pass",
             "profile": "planning",
@@ -133067,6 +133776,20 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+            "task_id": "TASK-065",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
             "verdict": "pass",
             "status": "legacy",
@@ -133435,6 +134158,8 @@
           "codewiki_audit task,generated-parity TASK-032",
           "codewiki_audit task/alignment/generated-parity/changed for TASK-063 after release: task pass; generated-parity pass; warnings remain for graph-health and expected generated-file-changed outputs.",
           "codewiki_audit task/alignment/generated-parity/changed for TASK-063: task pass; generated-parity pass; warnings remain for graph-health existing 8 warnings and generated-file-changed expected after refresh.",
+          "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+          "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs.",
           "codewiki_audit:2026-05-25:TASK-017:alignment,changed,stale-reference,task",
           "codewiki_audit:2026-05-25:TASK-017:alignment,changed,stale-reference,task,generated-parity",
           "codewiki_audit:2026-05-25:TASK-018:file-structure,alignment,generated-parity,stale-reference,task,changed",
@@ -133842,6 +134567,7 @@
           ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
           ".codewiki/kb/system/roadmap.md@sha256:6a10121e49607cb9b12aefe8464c50f4b361608b4e8b69563c579aa2b478e05f",
           ".codewiki/kb/system/runtime.md@sha256:07e78d2b38a6dc3cc0b194536b83b8afeb9593f88380d8c01cd89c00db182e16",
+          ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
           ".codewiki/kb/system/runtime.md@sha256:95534121c5b54e1734d88ef6c0c23363b4b7892d3b6a205ae73cd699776c3bd9",
           ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
           ".codewiki/kb/system/validation-gateway.md@sha256:1bc16663774a774b99903c451393a72ba2faef17c8e5c01d7f1c3b568be9b759",
@@ -134146,6 +134872,7 @@
           "refs/codewiki/archive/task/TASK-058",
           "refs/codewiki/archive/task/TASK-062",
           "refs/codewiki/archive/task/TASK-063",
+          "refs/codewiki/archive/task/TASK-065",
           "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
           "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
           "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
@@ -134201,6 +134928,7 @@
           "sha256:6c51d0fd876cf242c33da1cf3568b7f6e01e47cd7b9e1dd1a242b6d6b872e333",
           "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
           "sha256:6cde044b729f230080c501631ad22fb82efff7dbff0de1c4781930d4501f287e",
+          "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
           "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
           "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
           "sha256:74b7386de015da92a3e06604e45d7bb00e10c145ed1c750e882db61ef5c34578",
@@ -134781,6 +135509,7 @@
           "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
           "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
           "src/runtime/ports.ts@sha256:13c8906ffbc20ebe8e364dda57ad1ae06fb763c251cd941e88255a0c0eb2053a",
+          "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
           "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
           "src/runtime/runner.ts@sha256:8d96d0605ab89bc6f283c271dbdd61a4a8b14425b430f86d96effc2986032512",
           "src/runtime/runner.ts@sha256:9e844e097c2338f61e3a210187ae42d4bda78015f5f8cdbfb5fadccb980de6bb",
@@ -134788,6 +135517,7 @@
           "src/runtime/runner.ts@sha256:c155f6093b120542731994519244cefac8109ab5d5faef70acedb0fdd8547cd4",
           "src/runtime/types.ts@sha256:87d9aa21606ec52354b97463267c83ab5536e02b8427705bbfd17bdf8693bc96",
           "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
+          "src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
           "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
           "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
           "src/session/claims.ts@sha256:3b6a050c7cdbabedee5139217bca04ab272b91544151d47d0eb4f7238cee32a4",
@@ -135043,6 +135773,7 @@
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:691aaa1d1d3c87e06891d26bc14fd097b3544b7372542d0fe9e77a2f6f132613",
           "tests/smoke/role-worktree-isolation.test.mjs@sha256:ecdc9dfd4777658f6217a1b8a113c5b49b3e07a93045c15d8ec8b861baa792d4",
           "tests/smoke/runtime-job-state.test.mjs@sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
+          "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
           "tests/smoke/runtime-runner.test.mjs@sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
           "tests/smoke/runtime-runner.test.mjs@sha256:9bf02d7859521b915f2c6ff43b4319a2a3bff339c91b78427561ee386086eae7",
           "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
@@ -135101,7 +135832,8 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
-          "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06"
+          "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
+          "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
         ],
         "reconciliation_items": [
           {
@@ -136443,28 +137175,530 @@
         "tests/tasks/TASK-076/restructure.test.mjs",
         "tsconfig.json"
       ],
-      "dirty_paths": []
+      "dirty_paths": [
+        "src/runtime/runner.ts",
+        "src/runtime/types.ts",
+        "tests/smoke/runtime-runner.test.mjs"
+      ]
     },
     "claims": {
-      "active_claim_count": 0,
+      "active_claim_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "pending_waiter_count": 0,
       "ready_waiter_count": 0,
-      "by_role": {},
-      "isolation": [],
-      "claims": [],
+      "by_role": {
+        "builder": 1
+      },
+      "isolation": [
+        {
+          "id": "CLAIM-247",
+          "role": "builder",
+          "mode": "write",
+          "task_id": "TASK-065",
+          "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+          "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951"
+        }
+      ],
+      "claims": [
+        {
+          "id": "CLAIM-247",
+          "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+          "agent_name": "Bison",
+          "status": "active",
+          "mode": "write",
+          "role": "builder",
+          "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+          "task_id": "TASK-065",
+          "worktree": {
+            "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+          },
+          "scopes": [
+            {
+              "layer": "roadmap",
+              "task_id": "TASK-065"
+            },
+            {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/runtime.md"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/types.ts"
+            },
+            {
+              "layer": "code",
+              "path": "src/runtime/ports.ts"
+            },
+            {
+              "layer": "code",
+              "path": "tests/smoke/runtime-runner.test.mjs"
+            },
+            {
+              "layer": "code",
+              "path": "package.json"
+            },
+            {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            }
+          ],
+          "created_at": "2026-05-30T23:36:52Z",
+          "updated_at": "2026-05-30T23:36:52Z",
+          "expires_at": "2026-05-31T01:36:52.625Z"
+        }
+      ],
       "conflicts": [],
       "waiters": [],
-      "artifact_statuses": []
+      "artifact_statuses": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/runtime.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "package.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-065"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/runtime-runner.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "artifact_status": {
-      "in_use_count": 0,
+      "in_use_count": 1,
       "warning_count": 0,
       "conflict_count": 0,
       "waiting_count": 0,
       "ready_waiter_count": 0,
-      "artifacts": []
+      "artifacts": [
+        {
+          "artifact": {
+            "layer": "build",
+            "path": ".codewiki/builds/implementation/**"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "knowledge",
+            "path": ".codewiki/kb/system/runtime.md"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "package.json"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/ports.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/runner.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "src/runtime/types.ts"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "roadmap",
+            "task_id": "TASK-065"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        },
+        {
+          "artifact": {
+            "layer": "code",
+            "path": "tests/smoke/runtime-runner.test.mjs"
+          },
+          "status": "in-use",
+          "holders": [
+            {
+              "record_id": "CLAIM-247",
+              "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "agent_name": "Bison",
+              "mode": "write",
+              "role": "builder",
+              "task_id": "TASK-065",
+              "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+              "expires_at": "2026-05-31T01:36:52.625Z",
+              "worktree": {
+                "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+              },
+              "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+            }
+          ],
+          "waiters": [],
+          "conflict_ids": []
+        }
+      ]
     },
     "validation": {
       "isolation": [
@@ -139200,6 +140434,20 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+          "task_id": "TASK-065",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
           "verdict": "pass",
           "status": "legacy",
@@ -139379,6 +140627,7 @@
         ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
         ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
         ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+        ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
         ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
         ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
         ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -140329,6 +141578,8 @@
         "codewiki_audit task,generated-parity TASK-032",
         "codewiki_audit task/alignment/generated-parity/changed for TASK-063 after release: task pass; generated-parity pass; warnings remain for graph-health and expected generated-file-changed outputs.",
         "codewiki_audit task/alignment/generated-parity/changed for TASK-063: task pass; generated-parity pass; warnings remain for graph-health existing 8 warnings and generated-file-changed expected after refresh.",
+        "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment graph-health warning persists; changed warns that generated index_graph changed after refresh.",
+        "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs.",
         "codewiki_audit:2026-05-25:TASK-017:alignment,changed,stale-reference,task",
         "codewiki_audit:2026-05-25:TASK-017:alignment,changed,stale-reference,task,generated-parity",
         "codewiki_audit:2026-05-25:TASK-018:file-structure,alignment,generated-parity,stale-reference,task,changed",
@@ -140736,6 +141987,7 @@
         ".codewiki/kb/system/roadmap.md@sha256:57741bfdb693dec0eb0450b2ef0a6ae2a8c3c8c5e66ae4ed7ed86fd37eb6cc98",
         ".codewiki/kb/system/roadmap.md@sha256:6a10121e49607cb9b12aefe8464c50f4b361608b4e8b69563c579aa2b478e05f",
         ".codewiki/kb/system/runtime.md@sha256:07e78d2b38a6dc3cc0b194536b83b8afeb9593f88380d8c01cd89c00db182e16",
+        ".codewiki/kb/system/runtime.md@sha256:6571feb925c1b95fa771623cabf0f7e4e45c195895ca0b6d1861173c030c6cd0",
         ".codewiki/kb/system/runtime.md@sha256:95534121c5b54e1734d88ef6c0c23363b4b7892d3b6a205ae73cd699776c3bd9",
         ".codewiki/kb/system/system-truth-and-compilers.md@sha256:698a1d14d3b83073919bacaaebff6bc4b655a098ac9260a6101614a1c62f4981",
         ".codewiki/kb/system/validation-gateway.md@sha256:1bc16663774a774b99903c451393a72ba2faef17c8e5c01d7f1c3b568be9b759",
@@ -141040,6 +142292,7 @@
         "refs/codewiki/archive/task/TASK-058",
         "refs/codewiki/archive/task/TASK-062",
         "refs/codewiki/archive/task/TASK-063",
+        "refs/codewiki/archive/task/TASK-065",
         "scripts/check-architecture.mjs@sha256:66626acdc19138850299f67e557977cc93e1b5586053e004c710c09fc4c98435",
         "scripts/check-architecture.mjs@sha256:7bfd82e6e4b8d6c97f239048af6a4aab1a3a10285b8272bd28840384f3952528",
         "scripts/check-architecture.mjs@sha256:b493ef7c7a3d8cd44bf60a2c1a79ab23a47730482cb4e3a9348514c118bcd04e",
@@ -141095,6 +142348,7 @@
         "sha256:6c51d0fd876cf242c33da1cf3568b7f6e01e47cd7b9e1dd1a242b6d6b872e333",
         "sha256:6cd1f58075e5088ccf615f58e7611581301e3a60172b35c303c71272955d825a",
         "sha256:6cde044b729f230080c501631ad22fb82efff7dbff0de1c4781930d4501f287e",
+        "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
         "sha256:6eccd481bee34cd977e590a70f92de36899b96a7b833cb09dfeeb98fdf9338c7",
         "sha256:7319daeb019c0c29fc0c14bf623f20c690f800ccce0de2ed6ae5e5663d13b67c",
         "sha256:74b7386de015da92a3e06604e45d7bb00e10c145ed1c750e882db61ef5c34578",
@@ -141675,6 +142929,7 @@
         "src/roadmap/types.ts@sha256:64c026bbbc9ff17200c00a29278cae3da015361b92249e1e60fd2d18a2436b37",
         "src/runtime/ports.ts@sha256:0e9e93f8f1e9e2c7ee608072ca07ff729f139edf035cda3d6c466f48ba059427",
         "src/runtime/ports.ts@sha256:13c8906ffbc20ebe8e364dda57ad1ae06fb763c251cd941e88255a0c0eb2053a",
+        "src/runtime/runner.ts@sha256:0d94829989f917aa4a72a7ec6d5f94310ff4d88a08dd27f45d1feec04f914699",
         "src/runtime/runner.ts@sha256:5680d94c0601a05d7d93fd419ac41ac52a21c704304de84343c1e55bbe37998f",
         "src/runtime/runner.ts@sha256:8d96d0605ab89bc6f283c271dbdd61a4a8b14425b430f86d96effc2986032512",
         "src/runtime/runner.ts@sha256:9e844e097c2338f61e3a210187ae42d4bda78015f5f8cdbfb5fadccb980de6bb",
@@ -141682,6 +142937,7 @@
         "src/runtime/runner.ts@sha256:c155f6093b120542731994519244cefac8109ab5d5faef70acedb0fdd8547cd4",
         "src/runtime/types.ts@sha256:87d9aa21606ec52354b97463267c83ab5536e02b8427705bbfd17bdf8693bc96",
         "src/runtime/types.ts@sha256:dfbe4110f53cce64793ae21be99896e6c9e92922c701d57aa3393cf0c0f2b304",
+        "src/runtime/types.ts@sha256:e8bc9e57c5304bba025b96309bb9ba91afcf340addb592dc09ded0d12776c6e5",
         "src/session/artifact-status-tool.ts@sha256:578ff39b84215ffac65c20d41c223bae149f8fc6d8f2d7d97ced1fd7def2771b",
         "src/session/artifact-status-tool.ts@sha256:93dd0625477ae704abcb647b17cbbd606b1356205906682b03088fea8b56e6be",
         "src/session/claims.ts@sha256:3b6a050c7cdbabedee5139217bca04ab272b91544151d47d0eb4f7238cee32a4",
@@ -141937,6 +143193,7 @@
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:691aaa1d1d3c87e06891d26bc14fd097b3544b7372542d0fe9e77a2f6f132613",
         "tests/smoke/role-worktree-isolation.test.mjs@sha256:ecdc9dfd4777658f6217a1b8a113c5b49b3e07a93045c15d8ec8b861baa792d4",
         "tests/smoke/runtime-job-state.test.mjs@sha256:1f2ab4429f6939717f0aadf29d187ce9bd3e9cd0738eab9b3f01859b00539c26",
+        "tests/smoke/runtime-runner.test.mjs@sha256:0bd7224eb080b543215cc60d355e694c3353f59d0cc04ecdb6a1d09392bd1a90",
         "tests/smoke/runtime-runner.test.mjs@sha256:0f4b1ffc8327087d3e2f21420ec8dbb955f6712059e2d43786ce4a6ce590fcd5",
         "tests/smoke/runtime-runner.test.mjs@sha256:9bf02d7859521b915f2c6ff43b4319a2a3bff339c91b78427561ee386086eae7",
         "tests/smoke/session-handoff.test.mjs@sha256:1b3d85c59f28b10404b89a8141ffbcfe926ff6b7cdb16eeba6ea7987bd1f46b4",
@@ -141995,7 +143252,8 @@
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
-        "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06"
+        "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
+        "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
       ],
       "validation_attestations": [
         {
@@ -146189,6 +147447,26 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-30-implementation-pass-task-065-2026-05-30-implemen.json",
+          "verdict": "pass",
+          "profile": "implementation",
+          "task_id": "TASK-065",
+          "source_refs": [
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json"
+          ],
+          "audit_evidence_refs": [
+            "audit:alignment",
+            "audit:changed",
+            "audit:task",
+            "audit:generated-parity",
+            "codewiki_audit task/alignment/generated-parity/changed for TASK-065: task pass; generated-parity pass; alignment warning graph-health 8 warnings; changed warning generated-file-changed for refreshed generated outputs."
+          ],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-30-planning-pass-2026-05-30-daemon-runtime-archit.json",
           "verdict": "pass",
           "profile": "planning",
@@ -148306,7 +149584,174 @@
     },
     "traceability": {
       "rows": [],
-      "semantic_change_rows": [],
+      "semantic_change_rows": [
+        {
+          "path": ".codewiki/kb/system/runtime.md",
+          "change_type": "system",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-28-task-047-runtime-root-boundary.json",
+            ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": ".codewiki/roadmap/queue.json",
+          "change_type": "task",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/decision/2026-05-20-task-007-context-refresh-regression-decision.json",
+            ".codewiki/builds/decision/2026-05-23-task-014-first-concept-root-agency-boundary.json",
+            ".codewiki/builds/decision/2026-05-25-task-018-deferred-trigger-planning-gateway.json",
+            ".codewiki/builds/decision/2026-05-25-task-019-post-agency-boundary-decision.json",
+            ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-handoff-orchestration-plan.json",
+            ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
+            ".codewiki/builds/planning/2026-05-19-vnext-decision-graph-tooling-plan.json",
+            ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
+            ".codewiki/builds/planning/2026-05-22-task-010-file-structure-drift-lens-plan.json",
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-23-task-011-decision-propagation-gate-plan.json",
+            ".codewiki/builds/planning/2026-05-24-task-014-agency-pilot-planning.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-agency-concept-root-migration-plan.json",
+            ".codewiki/builds/planning/2026-05-25-post-task-021-build-validation-gateway-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-018-deferred-trigger-reconciliation-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-agency-shim-cleanup-plan.json",
+            ".codewiki/builds/planning/2026-05-25-task-019-post-agency-boundary-plan.json",
+            ".codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
+            ".codewiki/builds/planning/2026-05-27-context-reset-agency-doc-code-planning.json",
+            ".codewiki/builds/planning/2026-05-28-booboo-review-remediation-roadmap.json",
+            ".codewiki/builds/planning/2026-05-28-pipeline-agency-parallel-quality-roadmap.json",
+            ".codewiki/builds/planning/2026-05-29-autonomous-roadmap-orchestration-hardening.json",
+            ".codewiki/builds/planning/2026-05-29-checks-policy-gateway-wiki-namespace.json",
+            ".codewiki/builds/planning/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
+            ".codewiki/builds/implementation/2026-05-19-finalize-resume-context-fresh-session-transfer-b.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-001-clean-decision-build-refactor.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-005-agent-owned-session-boundary-.json",
+            ".codewiki/builds/implementation/2026-05-19-implement-task-006-role-worktree-factory-exact-w.json",
+            ".codewiki/builds/implementation/2026-05-19-patch-resume-context-packet-to-include-recent-ta.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-context-reset-handoff-hotfix-implementa.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-decision-new-session-policy-implementat.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-handoff-orchestration-implementation.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-no-slash-followup-chat-fix.json",
+            ".codewiki/builds/implementation/2026-05-19-task-006-role-worktree-factory-publisher-queue-v.json",
+            ".codewiki/builds/implementation/2026-05-19-update-task-001-implementation-build-after-fixin.json",
+            ".codewiki/builds/implementation/2026-05-20-add-codewiki-owned-pi-compaction-soft-context-re.json",
+            ".codewiki/builds/implementation/2026-05-20-cleanup-audit-follow-up-remove-legacy-roadmap-ta.json",
+            ".codewiki/builds/implementation/2026-05-20-implement-task-002-diagram-refs.json",
+            ".codewiki/builds/implementation/2026-05-20-patch-codewiki-owned-compaction-trigger-to-run-f.json",
+            ".codewiki/builds/implementation/2026-05-20-resolve-task-001-implementation-validation-block.json",
+            ".codewiki/builds/implementation/2026-05-20-task-003-validation-preflight-risk-policy.json",
+            ".codewiki/builds/implementation/2026-05-20-task-004-generated-state-graph-lenses.json",
+            ".codewiki/builds/implementation/2026-05-20-task-007-stale-task-context-refresh.json",
+            ".codewiki/builds/implementation/2026-05-22-task-010-file-structure-drift-lens-implementatio.json",
+            ".codewiki/builds/implementation/2026-05-23-task-011-decision-propagation-gates-implementati.json",
+            ".codewiki/builds/implementation/2026-05-23-task-013-file-structure-drift-ui.json",
+            ".codewiki/builds/implementation/2026-05-24-make-package-audit-derive-required-pi-skill-asse.json",
+            ".codewiki/builds/implementation/2026-05-24-task-014-agency-boundary-closure-evidence.json",
+            ".codewiki/builds/implementation/2026-05-24-task-015-agency-source-root-pilot.json",
+            ".codewiki/builds/implementation/2026-05-24-task-016-package-neutral-skill-assets.json",
+            ".codewiki/builds/implementation/2026-05-25-task-017-gateway-failure-routing-metadata.json",
+            ".codewiki/builds/implementation/2026-05-25-task-018-deferred-trigger-reconciliation-impleme.json",
+            ".codewiki/builds/implementation/2026-05-25-task-019-boundary-selection-implementation.json",
+            ".codewiki/builds/implementation/2026-05-25-task-020-agency-shim-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-25-task-021-audit-source-root-migration.json",
+            ".codewiki/builds/implementation/2026-05-26-task-022-build-validation-gateway-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-024-project-bootstrap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-025-knowledge-parser-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-026-change-diff-table-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-027-gc-source-root.json",
+            ".codewiki/builds/implementation/2026-05-26-task-028-session-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-030-state-graph-resume-source-root.json",
+            ".codewiki/builds/implementation/2026-05-27-task-031-api-shared-facade-cleanup.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v2.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels-v3.json",
+            ".codewiki/builds/implementation/2026-05-27-task-032-reset-autopickup-agency-levels.json",
+            ".codewiki/builds/implementation/2026-05-27-task-033-frontmatter-codepath-links.json",
+            ".codewiki/builds/implementation/2026-05-28-task-038-promotion-gates.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-final-implementation-handoff-after-acce.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-strengthened-state-graph-read-models-by.json",
+            ".codewiki/builds/implementation/2026-05-28-task-042-superseding-implementation-after-pi-lin.json",
+            ".codewiki/builds/implementation/2026-05-28-task-043-refactored-diagram-parser-internals-int.json",
+            ".codewiki/builds/implementation/2026-05-28-task-044-parallel-scheduler-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-28-task-045-inline-approval-ui.json",
+            ".codewiki/builds/implementation/2026-05-29-task-048-production-quality-profile.json",
+            ".codewiki/builds/implementation/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
+            ".codewiki/builds/implementation/2026-05-29-task-050-codewiki-roadmap-tool-rename.json",
+            ".codewiki/builds/implementation/2026-05-29-task-051-horizontal-alignment-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-052-source-api-contract-checks.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-054-artifact-wake-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-055-parallel-worktree-dispatcher.json",
+            ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/runtime/runner.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
+            ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "src/runtime/types.ts",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ],
+          "gaps": []
+        },
+        {
+          "path": "tests/smoke/runtime-runner.test.mjs",
+          "change_type": "code",
+          "semantic": true,
+          "accepted_build_refs": [
+            ".codewiki/builds/planning/2026-05-23-decision-propagation-and-file-structure-followth.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan-v2.json",
+            ".codewiki/builds/planning/2026-05-25-gateway-failure-routing-metadata-plan.json",
+            ".codewiki/builds/planning/2026-05-30-daemon-runtime-architecture-sprint.json",
+            ".codewiki/builds/implementation/2026-05-29-task-053-agency-auto-pickup.json",
+            ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+            ".codewiki/builds/implementation/2026-05-30-task-063-daemon-job-run-state-final.json"
+          ],
+          "gaps": []
+        }
+      ],
       "semantic_change_gaps": [],
       "gap_count": 0,
       "gaps": []
@@ -149302,7 +150747,9 @@
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
             ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
           ],
-          "claim_ids": [],
+          "claim_ids": [
+            "CLAIM-247"
+          ],
           "claim_wait_ids": []
         },
         "warm": {
@@ -149433,6 +150880,7 @@
             ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
             ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
             ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -149578,6 +151026,7 @@
             ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
             ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
             ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+            ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
             ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
             ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -150381,6 +151830,16 @@
         },
         {
           "kind": "task",
+          "id": "TASK-065",
+          "build_path": ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
+          "archive_ref": "refs/codewiki/archive/task/TASK-065",
+          "commit_sha": "",
+          "digest": "sha256:6d07388da12ed238a5278abe4299f0d36e53bf3bb37d50a8bc48469b46b91be6",
+          "restore_command": "/wiki-restore TASK-065",
+          "safety_status": "blocked"
+        },
+        {
+          "kind": "task",
           "id": "TASK-057",
           "build_path": ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           "archive_ref": "refs/codewiki/archive/task/TASK-057",
@@ -150421,7 +151880,7 @@
         }
       ],
       "git_archive": {
-        "ledger_count": 82,
+        "ledger_count": 83,
         "archive_refs": [
           "refs/codewiki/archive/task/TASK-001",
           "refs/codewiki/archive/task/TASK-001",
@@ -150501,6 +151960,7 @@
           "refs/codewiki/archive/task/TASK-056",
           "refs/codewiki/archive/task/TASK-058",
           "refs/codewiki/archive/task/TASK-063",
+          "refs/codewiki/archive/task/TASK-065",
           "refs/codewiki/archive/task/TASK-057",
           "refs/codewiki/archive/task/TASK-062",
           "refs/codewiki/archive/task/TASK-062",
@@ -150585,6 +152045,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
           ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
           ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -150669,6 +152130,7 @@
           ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
           ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+          ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
           ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
           ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -150818,7 +152280,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-30T23:36:12.882Z",
+      "generated_at": "2026-05-30T23:42:26.689Z",
       "counts": {
         "large-doc": 3,
         "roadmap-missing-code-path": 3,
@@ -150877,7 +152339,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-30T23:36:13Z",
+      "generated_at": "2026-05-30T23:42:26Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -152270,7 +153732,7 @@
             "src/runtime/ports.ts",
             "tests/smoke/runtime-runner.test.mjs"
           ],
-          "updated": "2026-05-30T04:00:42Z",
+          "updated": "2026-05-30T23:42:26Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -152285,7 +153747,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-30T23:36:13Z",
+      "generated_at": "2026-05-30T23:42:26Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -152434,7 +153896,9 @@
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-autonomous-roadmap-or.json",
               ".codewiki/validation/2026-05-29-decision-block-2026-05-29-checks-policy-gateway.json"
             ],
-            "claim_ids": [],
+            "claim_ids": [
+              "CLAIM-247"
+            ],
             "claim_wait_ids": []
           },
           "warm": {
@@ -152565,6 +154029,7 @@
               ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
               ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
               ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -152710,6 +154175,7 @@
               ".codewiki/builds/implementation/2026-05-29-task-056-merge-publisher-queue.json",
               ".codewiki/builds/implementation/2026-05-29-task-058-gateway-validation-engine.json",
               ".codewiki/builds/implementation/2026-05-30-implemented-task-063-daemon-job-run-state-schema.json",
+              ".codewiki/builds/implementation/2026-05-30-implemented-task-065-daemon-dispatcher-skeleton-.json",
               ".codewiki/builds/implementation/2026-05-30-task-057-policy-gate-ownership-isolated.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming-current-source.json",
               ".codewiki/builds/implementation/2026-05-30-task-062-roadmap-store-naming.json",
@@ -152731,7 +154197,7 @@
       },
       "direction": [
         "Lint warning (build-v2-missing-produces) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
+        "Parallel sessions: 0 active, 0 collision task(s), 1 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
         "Mapped specs: 21/21.",
@@ -153020,7 +154486,7 @@
             "title": "Implement daemon dispatcher skeleton"
           },
           "revision": {
-            "digest": "84da85909fac35330d998bd45cbd2d772d42785fdee3403a9277f6828d7bac23",
+            "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
             "basis": "source_content"
           },
           "note": "tracked by TASK-065"
@@ -155718,7 +157184,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-30T23:36:13Z",
+        "generated_at": "2026-05-30T23:42:26Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -155773,12 +157239,18 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T23:36:13Z",
+            "checked_at": "2026-05-30T23:42:26Z",
             "revision": {
               "git": {
-                "head": "699f50ee33bc2ecbe5fa17c6485f42e50f9184c2",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "aed6ef0793decfdea067c2783368cf24151f46a7",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/runtime/runner.ts",
+                  "src/runtime/types.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -156001,16 +157473,16 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "4dc50590e83365a3121bec2528a46aad15b4057062ebf8b389d3593bf5e84656",
-              "task_digest": "d311fa0a6afb3c5674c5a392d3486a54d3a61047dba791444c2ec71392ef821f",
-              "code_digest": "e19be065f76474788a97fa9610e9505170faf438f5daa79336814606499e6fe7",
-              "digest": "aa93507b13445caa63769ee198493d0290ab0b5020e2825c778bc856cf2a47ef"
+              "spec_digest": "fab62122fa9a98b977ed5e62b4e4779a6da80144a882bc6b5700825962f310cd",
+              "task_digest": "f30ccf6edc2d8e80bd30b48a014a2050a155daca2263512d7e8a154ca44f3a3e",
+              "code_digest": "cbaba5883f04212efcb5d335c47cac3afd9b5c0932b77339b6ca1fdfb2ace70e",
+              "digest": "bd51edf70529e90db6f22dd38e8b300dc790dc2d13fa9def2cb71167ed7700ce"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:36:13Z",
-              "reason": "revision changed: code",
+              "checked_at": "2026-05-30T23:42:26Z",
+              "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -156448,12 +157920,18 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-30T23:36:13Z",
+            "checked_at": "2026-05-30T23:42:26Z",
             "revision": {
               "git": {
-                "head": "699f50ee33bc2ecbe5fa17c6485f42e50f9184c2",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "aed6ef0793decfdea067c2783368cf24151f46a7",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/runtime/runner.ts",
+                  "src/runtime/types.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -156653,16 +158131,16 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "ef453724e0015a142f24ca719990ed963dd2cdc9e051385d713213f6fd58f452",
-              "task_digest": "d311fa0a6afb3c5674c5a392d3486a54d3a61047dba791444c2ec71392ef821f",
-              "code_digest": "525894c0f07fac0e92a4787521a49ffdda8a4a5922d8993250316a04d703bf1f",
-              "digest": "997e97157f6fc4e04aa81a919cdff2b3f5354c4cecffb9f37342181ed8dba512"
+              "spec_digest": "c84873f2b19ad11e95a05c78bd4270992bdeae1cf3c5d2e79b4e1f5b6206d15f",
+              "task_digest": "f30ccf6edc2d8e80bd30b48a014a2050a155daca2263512d7e8a154ca44f3a3e",
+              "code_digest": "bcd697b60bf2e54a0b5bab59ffd20dcafa72cadbe2e6a32a14ccdcc7eae6bc4a",
+              "digest": "f83750a567d98966c2df7c2ad8ab2e4282bb7ed3c4e83c5e9b2ae231214fe8b9"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:36:13Z",
-              "reason": "revision changed: code",
+              "checked_at": "2026-05-30T23:42:26Z",
+              "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -157077,12 +158555,18 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-30T23:36:13Z",
+            "checked_at": "2026-05-30T23:42:26Z",
             "revision": {
               "git": {
-                "head": "699f50ee33bc2ecbe5fa17c6485f42e50f9184c2",
-                "dirty": false,
-                "dirty_paths": [],
+                "head": "aed6ef0793decfdea067c2783368cf24151f46a7",
+                "dirty": true,
+                "dirty_paths": [
+                  ".codewiki/kb/system/runtime.md",
+                  ".codewiki/roadmap/queue.json",
+                  "src/runtime/runner.ts",
+                  "src/runtime/types.ts",
+                  "tests/smoke/runtime-runner.test.mjs"
+                ],
                 "paths": {
                   ".codewiki/config.json": "a2bf2cda243ae6ba8d302954738465615dfc053c",
                   ".codewiki/kb/": "",
@@ -157305,16 +158789,16 @@
                   "tsconfig.json": "bf89d8bd5105e2ec65c752ca80743eabaa13dbe0"
                 }
               },
-              "spec_digest": "4dc50590e83365a3121bec2528a46aad15b4057062ebf8b389d3593bf5e84656",
-              "task_digest": "d311fa0a6afb3c5674c5a392d3486a54d3a61047dba791444c2ec71392ef821f",
-              "code_digest": "e19be065f76474788a97fa9610e9505170faf438f5daa79336814606499e6fe7",
-              "digest": "aa93507b13445caa63769ee198493d0290ab0b5020e2825c778bc856cf2a47ef"
+              "spec_digest": "fab62122fa9a98b977ed5e62b4e4779a6da80144a882bc6b5700825962f310cd",
+              "task_digest": "f30ccf6edc2d8e80bd30b48a014a2050a155daca2263512d7e8a154ca44f3a3e",
+              "code_digest": "cbaba5883f04212efcb5d335c47cac3afd9b5c0932b77339b6ca1fdfb2ace70e",
+              "digest": "bd51edf70529e90db6f22dd38e8b300dc790dc2d13fa9def2cb71167ed7700ce"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-30T23:36:13Z",
-              "reason": "revision changed: code",
+              "checked_at": "2026-05-30T23:42:26Z",
+              "reason": "revision changed: task, code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
             "spec_paths": [
@@ -157753,23 +159237,293 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-30T23:36:13Z",
+        "generated_at": "2026-05-30T23:42:26Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
-        "active_claim_count": 0,
+        "active_claim_count": 1,
         "claim_warning_count": 0,
         "claim_conflict_count": 0,
         "claim_pending_wait_count": 0,
         "claim_ready_wait_count": 0,
         "claim_pending_wake_count": 0,
-        "claims": [],
+        "claims": [
+          {
+            "id": "CLAIM-247",
+            "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+            "agent_name": "Bison",
+            "status": "active",
+            "mode": "write",
+            "role": "builder",
+            "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+            "task_id": "TASK-065",
+            "worktree": {
+              "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+              "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+            },
+            "scopes": [
+              {
+                "layer": "roadmap",
+                "task_id": "TASK-065"
+              },
+              {
+                "layer": "knowledge",
+                "path": ".codewiki/kb/system/runtime.md"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/runner.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/types.ts"
+              },
+              {
+                "layer": "code",
+                "path": "src/runtime/ports.ts"
+              },
+              {
+                "layer": "code",
+                "path": "tests/smoke/runtime-runner.test.mjs"
+              },
+              {
+                "layer": "code",
+                "path": "package.json"
+              },
+              {
+                "layer": "build",
+                "path": ".codewiki/builds/implementation/**"
+              }
+            ],
+            "created_at": "2026-05-30T23:36:52Z",
+            "updated_at": "2026-05-30T23:36:52Z",
+            "expires_at": "2026-05-31T01:36:52.625Z"
+          }
+        ],
         "claim_waiters": [],
         "claim_wake_notifications": [],
         "claim_conflicts": [],
-        "artifact_statuses": [],
+        "artifact_statuses": [
+          {
+            "artifact": {
+              "layer": "build",
+              "path": ".codewiki/builds/implementation/**"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "knowledge",
+              "path": ".codewiki/kb/system/runtime.md"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "package.json"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/ports.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/runner.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "src/runtime/types.ts"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "roadmap",
+              "task_id": "TASK-065"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          },
+          {
+            "artifact": {
+              "layer": "code",
+              "path": "tests/smoke/runtime-runner.test.mjs"
+            },
+            "status": "in-use",
+            "holders": [
+              {
+                "record_id": "CLAIM-247",
+                "session_id": "019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                "agent_name": "Bison",
+                "mode": "write",
+                "role": "builder",
+                "task_id": "TASK-065",
+                "summary": "Implement daemon dispatcher skeleton one-shot lifecycle with tests.",
+                "expires_at": "2026-05-31T01:36:52.625Z",
+                "worktree": {
+                  "worktree_path": "/home/nunoc/projects/.codewiki-worktrees/codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "branch": "codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951",
+                  "notes": "factory=role-worktree; task=TASK-065; role=builder; base_ref=HEAD; prepare=git worktree add; verify=git status/rev-parse; cleanup=git worktree remove"
+                },
+                "next_safe_action": "Wait for CLAIM-247 release or validated publisher/patch ref for codewiki/TASK-065/builder/019e772c-e06e-76f1-a64b-9bb48b2cc951; then re-read CodeWiki state and mark scopes before writing."
+              }
+            ],
+            "waiters": [],
+            "conflict_ids": []
+          }
+        ],
         "artifact_status": {
-          "in_use_count": 0,
+          "in_use_count": 1,
           "warning_count": 0,
           "conflict_count": 0,
           "waiting_count": 0,
@@ -158028,7 +159782,7 @@
               "title": "Implement daemon dispatcher skeleton"
             },
             "revision": {
-              "digest": "84da85909fac35330d998bd45cbd2d772d42785fdee3403a9277f6828d7bac23",
+              "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
               "basis": "source_content"
             },
             "note": "tracked by TASK-065"
@@ -161495,7 +163249,7 @@
                   "title": "Implement daemon dispatcher skeleton"
                 },
                 "revision": {
-                  "digest": "84da85909fac35330d998bd45cbd2d772d42785fdee3403a9277f6828d7bac23",
+                  "digest": "fc3857568ee46ed2a1a4cf265dacf49978518aba7522ecf712c346aee64ea7d7",
                   "basis": "source_content"
                 },
                 "note": "tracked by TASK-065"

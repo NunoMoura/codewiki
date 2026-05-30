@@ -36,14 +36,27 @@ import { formatError, nowIso } from "../shared/utils.ts";
 import { effectiveAgencyPolicy } from "../agency/types.ts";
 import { planAgencyAutoPickup } from "../agency/auto-pickup.ts";
 import type { CodewikiRuntimePorts } from "./ports.ts";
-import type {
-	CodewikiRuntimeBudgetUsage,
-	CodewikiRuntimePlan,
-	CodewikiRuntimeResult,
-	WorkflowEfficiencyEvidence,
+import {
+	finishCodewikiDaemonRun,
+	heartbeatCodewikiDaemonRun,
+	normalizeCodewikiDaemonJobStore,
+	startCodewikiDaemonRun,
+	type CodewikiDaemonBlockReason,
+	type CodewikiDaemonJobRecord,
+	type CodewikiDaemonJobStore,
+	type CodewikiDaemonRunRecord,
+	type CodewikiDaemonRunOutcome,
+	type CodewikiDaemonWorkerRef,
+	type CodewikiRuntimeBudgetUsage,
+	type CodewikiRuntimePlan,
+	type CodewikiRuntimeResult,
+	type FinishCodewikiDaemonRunInput,
+	type WorkflowEfficiencyEvidence,
 } from "./types.ts";
 
 const RUNTIME_CLAIM_TTL_MINUTES = 120;
+const DAEMON_DEFAULT_LEASE_TTL_MS = 5 * 60 * 1000;
+const DAEMON_DEFAULT_STALE_AFTER_MS = 15 * 60 * 1000;
 const MIN_WORK_STEP_WRITES = 2;
 
 interface RuntimeState {
@@ -511,6 +524,258 @@ async function runImplementationKickoff(
 		scopes: claimScopeLabels(taskArtifactScopes(task)),
 		context_boundary: contextBoundary,
 	});
+}
+
+export type CodewikiDaemonDispatcherTickStatus =
+	| "idle"
+	| "claimed"
+	| "completed"
+	| "blocked"
+	| "failed"
+	| "stale"
+	| "cancelled";
+
+export interface CodewikiDaemonDispatcherAttemptContext {
+	job: CodewikiDaemonJobRecord;
+	run: CodewikiDaemonRunRecord;
+	store: CodewikiDaemonJobStore;
+}
+
+export interface CodewikiDaemonDispatcherTickInput {
+	store: unknown;
+	now: string;
+	worker?: CodewikiDaemonWorkerRef;
+	leaseTtlMs?: number;
+	staleAfterMs?: number;
+	heartbeatNote?: string;
+	runId?:
+		| string
+		| ((job: CodewikiDaemonJobRecord, attempt: number) => string);
+	executeAttempt?: (
+		attempt: CodewikiDaemonDispatcherAttemptContext,
+	) =>
+		| FinishCodewikiDaemonRunInput
+		| undefined
+		| Promise<FinishCodewikiDaemonRunInput | undefined>;
+}
+
+export interface CodewikiDaemonDispatcherTickResult {
+	status: CodewikiDaemonDispatcherTickStatus;
+	summary: string;
+	store: CodewikiDaemonJobStore;
+	job_id?: string;
+	run_id?: string;
+	outcome?: CodewikiDaemonRunOutcome;
+	events: string[];
+}
+
+function parseIsoMs(value: string | undefined): number | null {
+	const ms = Date.parse(String(value || ""));
+	return Number.isFinite(ms) ? ms : null;
+}
+
+function addMsIso(value: string, deltaMs: number): string {
+	const base = parseIsoMs(value) ?? Date.now();
+	return new Date(base + Math.max(1, Math.floor(deltaMs))).toISOString();
+}
+
+function daemonJobsInOrder(
+	store: CodewikiDaemonJobStore,
+): CodewikiDaemonJobRecord[] {
+	return Object.values(store.jobs).sort((a, b) => {
+		const created = a.created_at.localeCompare(b.created_at);
+		return created === 0 ? a.id.localeCompare(b.id) : created;
+	});
+}
+
+function latestRunningRun(
+	job: CodewikiDaemonJobRecord,
+): CodewikiDaemonRunRecord | undefined {
+	return [...job.runs].reverse().find((run) => run.status === "running");
+}
+
+function isRunStale(
+	run: CodewikiDaemonRunRecord,
+	now: string,
+	staleAfterMs: number,
+): boolean {
+	const nowMs = parseIsoMs(now);
+	if (nowMs === null) return false;
+	const leaseMs = parseIsoMs(run.lease_expires_at);
+	if (leaseMs !== null && leaseMs <= nowMs) return true;
+	const heartbeatMs = parseIsoMs(
+		run.last_heartbeat_at || run.updated_at || run.started_at,
+	);
+	return heartbeatMs !== null && nowMs - heartbeatMs > staleAfterMs;
+}
+
+function isRunnableDaemonJob(job: CodewikiDaemonJobRecord): boolean {
+	if (job.status === "queued") return true;
+	if (job.status !== "blocked") return false;
+	if (job.runs.length >= job.max_attempts) return false;
+	return job.block_reason?.retryable !== false;
+}
+
+function daemonRunId(
+	job: CodewikiDaemonJobRecord,
+	attempt: number,
+	runId?: CodewikiDaemonDispatcherTickInput["runId"],
+): string {
+	if (typeof runId === "function") return runId(job, attempt).trim();
+	if (typeof runId === "string" && runId.trim()) return runId.trim();
+	return `${job.id}-RUN-${String(attempt).padStart(3, "0")}`;
+}
+
+function withDaemonJob(
+	store: CodewikiDaemonJobStore,
+	job: CodewikiDaemonJobRecord,
+): CodewikiDaemonJobStore {
+	return {
+		...store,
+		updated_at: job.updated_at,
+		jobs: {
+			...store.jobs,
+			[job.id]: job,
+		},
+	};
+}
+
+function retryLimitReason(
+	job: CodewikiDaemonJobRecord,
+): CodewikiDaemonBlockReason {
+	const refs = job.block_reason?.refs ?? [];
+	return {
+		kind: "retry_limit",
+		summary: `daemon job ${job.id} reached max_attempts=${job.max_attempts}`,
+		refs,
+		retryable: false,
+	};
+}
+
+function applyDaemonRetryCircuitBreaker(
+	job: CodewikiDaemonJobRecord,
+): CodewikiDaemonJobRecord {
+	if (job.status !== "blocked") return job;
+	if (job.block_reason?.retryable === false) return job;
+	if (job.runs.length < job.max_attempts) return job;
+	const blockReason = retryLimitReason(job);
+	const runs = job.runs.map((run, index) =>
+		index === job.runs.length - 1 ? { ...run, block_reason: blockReason } : run,
+	);
+	return {
+		...job,
+		block_reason: blockReason,
+		runs,
+	};
+}
+
+function dispatcherStatusForOutcome(
+	outcome: CodewikiDaemonRunOutcome,
+): CodewikiDaemonDispatcherTickStatus {
+	if (outcome === "pass") return "completed";
+	if (outcome === "block") return "blocked";
+	if (outcome === "cancelled") return "cancelled";
+	if (outcome === "stale") return "stale";
+	return "failed";
+}
+
+function markStaleDaemonRun(
+	job: CodewikiDaemonJobRecord,
+	run: CodewikiDaemonRunRecord,
+	now: string,
+): CodewikiDaemonJobRecord {
+	return applyDaemonRetryCircuitBreaker(
+		finishCodewikiDaemonRun(job, run.id, {
+			ended_at: now,
+			outcome: "stale",
+			summary: `daemon run ${run.id} heartbeat stale`,
+			block_reason: {
+				kind: "platform_limited",
+				summary: `daemon run ${run.id} heartbeat stale`,
+				refs: [run.id, ...run.build_refs, ...run.validation_refs],
+				retryable: true,
+			},
+		}),
+	);
+}
+
+export async function runCodewikiDaemonDispatcherTick(
+	input: CodewikiDaemonDispatcherTickInput,
+): Promise<CodewikiDaemonDispatcherTickResult> {
+	let store = normalizeCodewikiDaemonJobStore(input.store, input.now);
+	const events: string[] = [];
+	const leaseTtlMs = input.leaseTtlMs ?? DAEMON_DEFAULT_LEASE_TTL_MS;
+	const staleAfterMs = input.staleAfterMs ?? DAEMON_DEFAULT_STALE_AFTER_MS;
+	for (const job of daemonJobsInOrder(store)) {
+		const run = latestRunningRun(job);
+		if (!run || !isRunStale(run, input.now, staleAfterMs)) continue;
+		const staleJob = markStaleDaemonRun(job, run, input.now);
+		store = withDaemonJob(store, staleJob);
+		events.push(`daemon run stale: ${run.id}`);
+		return {
+			status: "stale",
+			summary: `Marked stale daemon run ${run.id} for ${job.id}.`,
+			store,
+			job_id: job.id,
+			run_id: run.id,
+			outcome: "stale",
+			events,
+		};
+	}
+	const job = daemonJobsInOrder(store).find(isRunnableDaemonJob);
+	if (!job) {
+		return {
+			status: "idle",
+			summary: "No runnable daemon jobs.",
+			store,
+			events,
+		};
+	}
+	const attempt = job.runs.length + 1;
+	const runId = daemonRunId(job, attempt, input.runId);
+	let runningJob = startCodewikiDaemonRun(job, {
+		run_id: runId,
+		started_at: input.now,
+		worker: input.worker,
+		lease_expires_at: addMsIso(input.now, leaseTtlMs),
+	});
+	runningJob = heartbeatCodewikiDaemonRun(runningJob, runId, {
+		at: input.now,
+		note: input.heartbeatNote || "daemon dispatcher claimed job",
+		worker: input.worker,
+	});
+	store = withDaemonJob(store, runningJob);
+	events.push(`daemon job claimed: ${job.id}`);
+	const run = latestRunningRun(runningJob);
+	if (!run) throw new Error(`daemon run not found after claim: ${runId}`);
+	const finish = await input.executeAttempt?.({
+		job: runningJob,
+		run,
+		store,
+	});
+	if (!finish) {
+		return {
+			status: "claimed",
+			summary: `Claimed daemon job ${job.id} for one attempt.`,
+			store,
+			job_id: job.id,
+			run_id: runId,
+			events,
+		};
+	}
+	let finishedJob = finishCodewikiDaemonRun(runningJob, runId, finish);
+	finishedJob = applyDaemonRetryCircuitBreaker(finishedJob);
+	store = withDaemonJob(store, finishedJob);
+	events.push(`daemon run finished: ${runId}:${finish.outcome}`);
+	return {
+		status: dispatcherStatusForOutcome(finish.outcome),
+		summary: `Finished daemon run ${runId} for ${job.id} with ${finish.outcome}.`,
+		store,
+		job_id: job.id,
+		run_id: runId,
+		outcome: finish.outcome,
+		events,
+	};
 }
 
 export async function runCodewikiRuntimeStep(

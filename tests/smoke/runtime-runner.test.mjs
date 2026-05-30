@@ -3,7 +3,14 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { runCodewikiRuntimeStep } from "../../src/runtime/runner.ts";
+import {
+	runCodewikiDaemonDispatcherTick,
+	runCodewikiRuntimeStep,
+} from "../../src/runtime/runner.ts";
+import {
+	CODEWIKI_DAEMON_JOB_STORE_VERSION,
+	createCodewikiDaemonJob,
+} from "../../src/runtime/types.ts";
 import {
 	mutateArtifactStatuses,
 	readChangeClaimsFile,
@@ -278,4 +285,116 @@ async function readQueue(project) {
 		2,
 		"gateway preflight path should also release its claim",
 	);
+}
+
+function daemonStore(job) {
+	return {
+		version: CODEWIKI_DAEMON_JOB_STORE_VERSION,
+		updated_at: job.created_at,
+		jobs: { [job.id]: job },
+	};
+}
+
+function daemonJob(overrides = {}) {
+	return createCodewikiDaemonJob({
+		id: overrides.id || "JOB-065",
+		task_id: overrides.task_id || "TASK-065",
+		loop: overrides.loop || "implementation",
+		created_at: overrides.created_at || "2026-05-30T00:00:00.000Z",
+		max_attempts: overrides.max_attempts ?? 2,
+		source_refs: [".codewiki/roadmap/tasks/TASK-065/task.json"],
+	});
+}
+
+{
+	const result = await runCodewikiDaemonDispatcherTick({
+		store: daemonStore(daemonJob()),
+		now: "2026-05-30T00:01:00.000Z",
+		worker: { session_id: "daemon-session", claim_id: "CLAIM-065" },
+		leaseTtlMs: 60_000,
+		executeAttempt: () => ({
+			ended_at: "2026-05-30T00:02:00.000Z",
+			outcome: "pass",
+			summary: "dispatcher skeleton pass",
+			build_refs: [".codewiki/builds/implementation/task-065.json"],
+			validation_refs: [".codewiki/validation/task-065.json"],
+		}),
+	});
+
+	assert.equal(result.status, "completed");
+	assert.equal(result.job_id, "JOB-065");
+	assert.equal(result.run_id, "JOB-065-RUN-001");
+	const job = result.store.jobs["JOB-065"];
+	assert.equal(job.status, "completed");
+	assert.equal(job.runs[0].status, "completed");
+	assert.equal(job.runs[0].heartbeat_count, 1);
+	assert.equal(job.runs[0].lease_expires_at, "2026-05-30T00:02:00.000Z");
+	assert.equal(job.runs[0].handoff?.summary, "dispatcher skeleton pass");
+}
+
+{
+	let result = await runCodewikiDaemonDispatcherTick({
+		store: daemonStore(daemonJob({ id: "JOB-RETRY", max_attempts: 2 })),
+		now: "2026-05-30T01:00:00.000Z",
+		executeAttempt: () => ({
+			ended_at: "2026-05-30T01:01:00.000Z",
+			outcome: "fail",
+			error: "first attempt failed",
+		}),
+	});
+	assert.equal(result.status, "failed");
+	assert.equal(result.store.jobs["JOB-RETRY"].status, "blocked");
+	assert.equal(result.store.jobs["JOB-RETRY"].block_reason?.retryable, true);
+
+	result = await runCodewikiDaemonDispatcherTick({
+		store: result.store,
+		now: "2026-05-30T01:02:00.000Z",
+		executeAttempt: () => ({
+			ended_at: "2026-05-30T01:03:00.000Z",
+			outcome: "fail",
+			error: "second attempt failed",
+		}),
+	});
+	assert.equal(result.status, "failed");
+	assert.equal(result.run_id, "JOB-RETRY-RUN-002");
+	assert.equal(result.store.jobs["JOB-RETRY"].block_reason?.kind, "retry_limit");
+	assert.equal(result.store.jobs["JOB-RETRY"].block_reason?.retryable, false);
+
+	const idle = await runCodewikiDaemonDispatcherTick({
+		store: result.store,
+		now: "2026-05-30T01:04:00.000Z",
+	});
+	assert.equal(idle.status, "idle", "retry-limit jobs should not rerun");
+}
+
+{
+	let result = await runCodewikiDaemonDispatcherTick({
+		store: daemonStore(daemonJob({ id: "JOB-STALE", max_attempts: 2 })),
+		now: "2026-05-30T02:00:00.000Z",
+		leaseTtlMs: 1_000,
+	});
+	assert.equal(result.status, "claimed");
+	assert.equal(result.store.jobs["JOB-STALE"].status, "running");
+
+	result = await runCodewikiDaemonDispatcherTick({
+		store: result.store,
+		now: "2026-05-30T02:01:00.000Z",
+		staleAfterMs: 1_000,
+	});
+	assert.equal(result.status, "stale");
+	assert.equal(result.store.jobs["JOB-STALE"].status, "blocked");
+	assert.equal(result.store.jobs["JOB-STALE"].runs[0].status, "stale");
+	assert.equal(result.store.jobs["JOB-STALE"].block_reason?.retryable, true);
+
+	result = await runCodewikiDaemonDispatcherTick({
+		store: result.store,
+		now: "2026-05-30T02:02:00.000Z",
+		executeAttempt: () => ({
+			ended_at: "2026-05-30T02:03:00.000Z",
+			outcome: "pass",
+			summary: "recovered stale run",
+		}),
+	});
+	assert.equal(result.status, "completed");
+	assert.equal(result.run_id, "JOB-STALE-RUN-002");
 }
