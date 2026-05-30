@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-30T23:43:23Z",
+  "updated": "2026-05-30T23:57:09Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -536,7 +536,7 @@
     "TASK-059": {
       "id": "TASK-059",
       "title": "Standardize internal agent tools to wiki namespace",
-      "status": "todo",
+      "status": "in_progress",
       "priority": "high",
       "kind": "migration",
       "summary": "Rename live internal agent tools from codewiki_* to wiki_* (wiki_state, wiki_resume_context, wiki_roadmap, wiki_gateway, wiki_audit, etc.) with no compatibility aliases.",
@@ -592,7 +592,7 @@
         "closure": "Close when live registration/docs/tests use wiki_* and validation passes."
       },
       "created": "2026-05-29",
-      "updated": "2026-05-29"
+      "updated": "2026-05-30T23:57:09Z"
     },
     "TASK-064": {
       "id": "TASK-064",

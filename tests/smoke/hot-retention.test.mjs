@@ -83,9 +83,9 @@ try {
 	await writeFile(join(root, buildPath), JSON.stringify({ kind: "implementation_build", task_id: "TASK-999" }, null, 2));
 	await writeFile(join(root, validationPath), JSON.stringify({ verdict: "pass", source: buildPath }, null, 2));
 	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-TEST.json"), "{}\n");
-	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-COMPLETED.json"), JSON.stringify({ kind: "codewiki_session_handoff", status: "completed" }, null, 2));
-	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-QUEUED.json"), JSON.stringify({ kind: "codewiki_session_handoff", status: "queued" }, null, 2));
-	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-STARTED.json"), JSON.stringify({ kind: "codewiki_session_handoff", status: "started" }, null, 2));
+	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-COMPLETED.json"), JSON.stringify({ kind: "wiki_session_handoff", status: "completed" }, null, 2));
+	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-QUEUED.json"), JSON.stringify({ kind: "wiki_session_handoff", status: "queued" }, null, 2));
+	await writeFile(join(root, ".codewiki/runtime/session-handoffs/HANDOFF-STARTED.json"), JSON.stringify({ kind: "wiki_session_handoff", status: "started" }, null, 2));
 	await writeFile(join(root, ".codewiki/index_graph.json"), JSON.stringify({ views: { gc: graph.views.gc } }, null, 2));
 
 	const dryRun = await runCodewikiGc(project, { action: "dry-run", refresh: false });

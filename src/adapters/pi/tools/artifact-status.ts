@@ -22,7 +22,7 @@ export async function executeCodewikiArtifactStatus(
 
 export function registerCodewikiArtifactStatusTool(pi: ExtensionAPI): void {
 	pi.registerTool({
-		name: "codewiki_artifact_status",
+		name: "wiki_artifact_status",
 		label: "Codewiki Artifact Status",
 		description:
 			"Inspect or update runtime artifact status for parallel CodeWiki work through the session queue.",
@@ -35,7 +35,7 @@ export function registerCodewikiArtifactStatusTool(pi: ExtensionAPI): void {
 		],
 		parameters: codewikiArtifactStatusToolInputSchema,
 		async execute(_toolCallId: string, params: CodewikiArtifactStatusToolInput, _signal: unknown, _onUpdate: unknown, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_artifact_status");
+			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_artifact_status");
 			const result = await executeCodewikiArtifactStatus(pi, project, ctx, params);
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {

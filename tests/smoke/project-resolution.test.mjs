@@ -23,7 +23,7 @@ try {
 	assert.equal(maybe?.root, root, "maybeLoadProject should climb from nested repo paths");
 
 	process.env.PI_CODEWIKI_STATUS_PREFS_PATH = resolve(root, ".pi", "prefs.json");
-	const resolved = await resolveToolProject("/", nested, "codewiki_state");
+	const resolved = await resolveToolProject("/", nested, "wiki_state");
 	assert.equal(resolved.root, root, "resolveToolProject should accept repoPath inside a repo");
 } finally {
 	rmSync(root, { recursive: true, force: true });

@@ -19,12 +19,12 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 
 ## Core rules
 
-- Start with `codewiki_state` and read only the knowledge/code paths needed to ground the proposal.
+- Start with `wiki_state` and read only the knowledge/code paths needed to ground the proposal.
 - Do not create roadmap tasks or edit source code in decision mode.
-- Use `codewiki_diff_table` for semantic change proposals when the decision affects CodeWiki state or package behavior.
+- Use `wiki_diff_table` for semantic change proposals when the decision affects CodeWiki state or package behavior.
 - Require explicit user action for each row: approve, edit, reject, or defer.
 - Apply only approved rows to product/system KB.
-- Compile `codewiki_build kind="decision"` after approved rows and KB edits are complete.
+- Compile `wiki_build kind="decision"` after approved rows and KB edits are complete.
 - The `decision_build` must include approved rows, changed KB refs, row-to-KB mappings, propagation evidence, assumptions, open questions, non-goals, risks, and downstream planning questions.
 - Do not compact or reset while important intent only exists in chat. Decision-loop compaction is safe only after intent is externalized into pending/approved rows, KB/build/session evidence, or explicit blocking questions.
 - If no semantic delta exists, answer normally and do not create a diff table or build.
@@ -53,7 +53,7 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
 ## Workflow
 
 1. **Load context**
-   - Run `codewiki_state`.
+   - Run `wiki_state`.
    - Read relevant product/system KB, roadmap/build refs, validations, or source files only when needed.
    - Surface drift between product and system truth instead of silently choosing one.
 
@@ -63,21 +63,21 @@ When system docs change, include relevant `diagram_refs` or explain why no diagr
    - Prefer 3-7 high-signal rows.
 
 3. **Create decision surface**
-   - Call `codewiki_diff_table action="propose"` before asking user approval.
+   - Call `wiki_diff_table action="propose"` before asking user approval.
    - Present compact row summary and ask for approve/edit/reject/defer.
 
 4. **Apply approved rows**
-   - Record row approvals with `codewiki_diff_table action="accept"`.
+   - Record row approvals with `wiki_diff_table action="accept"`.
    - Edit only product/system KB clauses covered by approved rows.
    - Record row-to-KB and diagram mappings.
 
 5. **Compile decision build**
-   - Call `codewiki_build kind="decision"`.
+   - Call `wiki_build kind="decision"`.
    - Include `decision_mode="accepted"`, `diff_table`, `approved_diff_rows`, `knowledge_changes`, `row_to_kb_mappings`, `propagation`, `diagram_refs`, `downstream_planning_questions`, requirements, assumptions, open questions, non-goals, and risks.
 
 6. **Validate or route**
    - Run audits when policy/risk requires.
-   - Use `codewiki_validation profile="decision"` for fail/block/policy-required reports.
+   - Use `wiki_gateway profile="decision"` for fail/block/policy-required reports.
    - Route executable work to planning from the accepted `decision_build`.
 
 ## Stop conditions

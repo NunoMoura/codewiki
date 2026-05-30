@@ -11,7 +11,7 @@ import {
 	readyWaitersForSession,
 } from "../../session/claims.ts";
 
-const WAKE_ENTRY_TYPE = "codewiki_artifact_wait_wake";
+const WAKE_ENTRY_TYPE = "wiki_artifact_wait_wake";
 
 function sessionIdFor(ctx: ExtensionContext): string | null {
 	return String(ctx.sessionManager?.getSessionId?.() || "").trim() || null;
@@ -45,7 +45,7 @@ function wakeMessage(wakes: ChangeClaimWakeRecord[], project: WikiProject): stri
 		scopes ? `Scopes: ${scopes}` : "",
 		sourceRefs ? `Source refs: ${sourceRefs}` : "",
 		actions ? `Next safe action: ${actions}` : "",
-		"Resume through codewiki_resume_context, then run codewiki_artifact_status action=list or mark ready scopes before writing. Do not rely on inter-agent chat.",
+		"Resume through wiki_resume_context, then run wiki_artifact_status action=list or mark ready scopes before writing. Do not rely on inter-agent chat.",
 	].filter(Boolean).join("\n");
 }
 

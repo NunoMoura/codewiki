@@ -19,7 +19,7 @@ export async function executeCodewikiAuditTool(
 
 export function registerCodewikiAuditTool(pi: ExtensionAPI): void {
 	pi.registerTool({
-		name: "codewiki_audit",
+		name: "wiki_audit",
 		label: "Codewiki Audit",
 		description:
 			"Run source-owned CodeWiki audit profiles and return machine-readable evidence.",
@@ -41,7 +41,7 @@ export function registerCodewikiAuditTool(pi: ExtensionAPI): void {
 			const project = await resolveToolProject(
 				ctx.cwd,
 				params.repoPath,
-				"codewiki_audit",
+				"wiki_audit",
 			);
 			const result = await executeCodewikiAuditTool(project, params);
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));

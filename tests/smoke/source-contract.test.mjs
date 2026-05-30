@@ -83,13 +83,15 @@ try {
 	}
 
 	{
-		const { root, project } = await writeFixtureProject({ toolName: "codewiki_state" });
+		const { root, project } = await writeFixtureProject({
+			toolName: ["codewiki", "state"].join("_"),
+		});
 		try {
 			const audit = await auditSourceContract(project, { include_fingerprints: false });
 			assert.equal(audit.status, "fail", "stale internal tool namespace should fail against wiki_* expectation");
 			assert.ok(
 				audit.issues.some((issue) => issue.kind === "tool-namespace-stale"),
-				"stale codewiki_* tool should produce actionable namespace issue",
+				"stale old-prefix tool should produce actionable namespace issue",
 			);
 		} finally {
 			await rm(root, { recursive: true, force: true });
@@ -104,7 +106,7 @@ try {
 		});
 		assert.equal(report.status, "pass", JSON.stringify(report.issues, null, 2));
 		const result = report.profile_results[0];
-		assert.ok(result.details.snapshot.tools.includes("codewiki_state"), "repo snapshot should include current live tool names");
+		assert.ok(result.details.snapshot.tools.includes("wiki_state"), "repo snapshot should include current live tool names");
 		assert.ok(result.details.snapshot.commands.includes("wiki-status"), "repo snapshot should include command names");
 	}
 

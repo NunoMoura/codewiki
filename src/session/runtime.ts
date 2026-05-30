@@ -112,7 +112,7 @@ export async function recordSessionTaskAction(
 	const taskId = opts.taskId?.trim() || active?.taskId;
 	if (!taskId) {
 		throw new Error(
-			`codewiki_session ${opts.action} requires taskId or an active focused task.`,
+			`wiki_session ${opts.action} requires taskId or an active focused task.`,
 		);
 	}
 	const summary = opts.summary?.trim() ||

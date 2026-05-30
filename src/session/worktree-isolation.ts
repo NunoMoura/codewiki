@@ -153,7 +153,7 @@ export function createRoleWorktreePlan(
 		commands: {
 			prepare: [`git worktree add -B ${branch} <worktree_path> ${baseRef}`],
 			heartbeat: [
-				"codewiki_artifact_status action=heartbeat recordId=<claim_id>",
+				"wiki_artifact_status action=heartbeat recordId=<claim_id>",
 			],
 			verify: [
 				"git -C <worktree_path> rev-parse HEAD",
@@ -455,8 +455,8 @@ export function computeParallelSchedulerPlan(
 				scopes,
 				ttl_minutes: 120,
 				heartbeat:
-					"codewiki_artifact_status action=heartbeat recordId=<claim_id>",
-				release: "codewiki_artifact_status action=release recordId=<claim_id>",
+					"wiki_artifact_status action=heartbeat recordId=<claim_id>",
+				release: "wiki_artifact_status action=release recordId=<claim_id>",
 			},
 		});
 	}
@@ -569,8 +569,8 @@ export function createPublisherQueuePlan(input: {
 			scopes,
 			ttl_minutes: 120,
 			heartbeat:
-				"codewiki_artifact_status action=heartbeat recordId=<claim_id>",
-			release: "codewiki_artifact_status action=release recordId=<claim_id>",
+				"wiki_artifact_status action=heartbeat recordId=<claim_id>",
+			release: "wiki_artifact_status action=release recordId=<claim_id>",
 		},
 		required_steps: [
 			"consume immutable builder refs and fresh validation refs",

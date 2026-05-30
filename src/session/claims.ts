@@ -819,9 +819,9 @@ export async function mutateChangeClaims(
 			return;
 		}
 		const scopes = normalizeScopes(input.scopes);
-		if (scopes.length === 0) throw new Error(`codewiki_artifact_status ${action} requires at least one valid scope.`);
+		if (scopes.length === 0) throw new Error(`wiki_artifact_status ${action} requires at least one valid scope.`);
 		const summary = String(input.summary || "").trim();
-		if (!summary) throw new Error(`codewiki_artifact_status ${action} requires summary.`);
+		if (!summary) throw new Error(`wiki_artifact_status ${action} requires summary.`);
 		if (action === "wait") {
 			const waiter = createWaiter(project, file, input, session, scopes, summary, now);
 			file.waiters = [...(file.waiters || []), waiter];
@@ -854,7 +854,7 @@ export async function mutateChangeClaims(
 		const nextClaims = [...activeChangeClaims(file, now), candidate];
 		const conflicts = detectClaimConflicts(nextClaims).filter((conflict) => conflict.claim_ids.includes(candidate.id));
 		if (conflicts.some((conflict) => conflict.kind === "conflict") && !input.force) {
-			throw new Error(`codewiki_artifact_status conflict: ${conflicts.map((conflict) => conflict.reason).join("; ")}`);
+			throw new Error(`wiki_artifact_status conflict: ${conflicts.map((conflict) => conflict.reason).join("; ")}`);
 		}
 		file.claims.push(candidate);
 		file.next_sequence += 1;
@@ -900,7 +900,7 @@ function sourceRefsForWaiter(waiter: ChangeClaimWaiterRecord): string[] {
 function nextActionIntentForWake(waiter: ChangeClaimWaiterRecord, reason: ChangeClaimWakeReason): string {
 	const task = waiter.task_id ? ` for ${waiter.task_id}` : "";
 	const base = waiter.next_safe_action || "Re-read CodeWiki state and re-mark scopes before writing.";
-	return `Artifact wait ${waiter.id} is ready${task} after ${reason}; run codewiki_resume_context${task ? ` ${waiter.task_id}` : ""}, then ${base}`;
+	return `Artifact wait ${waiter.id} is ready${task} after ${reason}; run wiki_resume_context${task ? ` ${waiter.task_id}` : ""}, then ${base}`;
 }
 
 function wakeExists(file: ChangeClaimsFile, waiterId: string): boolean {

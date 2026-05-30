@@ -198,7 +198,7 @@ try {
 			sprint_id: "SPRINT-001",
 		},
 	]);
-	assert.equal(candidates.toolContract, "codewiki_roadmap");
+	assert.equal(candidates.toolContract, "wiki_roadmap");
 	assert.equal(candidates.candidates[0].buildEligible, false);
 	assert.equal(candidates.candidates[1].buildEligible, true);
 	assert.match(candidates.fallbackInstruction, /APPROVE TASK-CANDIDATE/);

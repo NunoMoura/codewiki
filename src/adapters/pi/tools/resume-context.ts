@@ -6,10 +6,10 @@ import { codewikiResumeContextToolInputSchema } from "../schemas.ts";
 import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
 
-/** Register the codewiki_resume_context tool. */
+/** Register the wiki_resume_context tool. */
 export function registerCodewikiResumeContextTool(pi: any) {
 	pi.registerTool({
-		name: "codewiki_resume_context",
+		name: "wiki_resume_context",
 		label: "Codewiki Resume Context",
 		description:
 			"Build a high-signal CodeWiki resume context packet for a fresh or current session from graph, roadmap, task context, and evidence refs.",
@@ -22,7 +22,7 @@ export function registerCodewikiResumeContextTool(pi: any) {
 		],
 		parameters: codewikiResumeContextToolInputSchema,
 		async execute(_toolCallId: string, params: CodewikiResumeContextToolInput, _signal: any, _onUpdate: any, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_resume_context");
+			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_resume_context");
 			const result = await executeCodewikiResumeContextTool(project, params, {
 				activeLink: currentTaskLink(ctx),
 				sessionId: String(ctx.sessionManager?.getSessionId?.() || "resume-context-tool"),

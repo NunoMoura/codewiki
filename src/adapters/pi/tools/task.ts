@@ -4,7 +4,7 @@ import type { CodewikiRoadmapToolInput } from "../../../roadmap/types.ts";
 import { executeCodewikiRoadmapTool } from "../../../api/tools.ts";
 import { piTaskPorts } from "./ports.ts";
 
-/** Implementation of the codewiki_roadmap tool. */
+/** Implementation of the wiki_roadmap tool. */
 export async function executeCodewikiRoadmap(
 	_pi: ExtensionAPI,
 	project: WikiProject,

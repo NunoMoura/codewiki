@@ -205,7 +205,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 				);
 				if (!opened) {
 					ctx.ui.notify(
-						"Custom UI unavailable. Use codewiki_state output or configure Pi UI mode.",
+						"Custom UI unavailable. Use wiki_state output or configure Pi UI mode.",
 						"warning",
 					);
 				}
@@ -219,7 +219,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	registerCodewikiAuditTool(pi);
 
 	registerProjectTool(pi, {
-		name: "codewiki_gc",
+		name: "wiki_gc",
 		label: "Codewiki GC",
 		description:
 			"Dry-run or purge eligible CodeWiki artifacts after archive commit proof and restore-ledger emission.",
@@ -237,7 +237,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_build",
+		name: "wiki_build",
 		label: "Codewiki Build",
 		description:
 			"Create transient compiler build artifacts (decision_build, planning_build, implementation_build) with cycle and lifecycle metadata.",
@@ -256,7 +256,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_validation",
+		name: "wiki_gateway",
 		label: "Codewiki Validation",
 		description:
 			"Preflight or write a validation report (pass, fail, or block) for a compiler handoff or task close.",
@@ -288,7 +288,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_roadmap",
+		name: "wiki_roadmap",
 		label: "Codewiki Roadmap",
 		description:
 			"Create, update, close, cancel roadmap tasks, or update sprint metadata through one canonical roadmap mutation tool",
@@ -317,7 +317,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_diff_table",
+		name: "wiki_diff_table",
 		label: "Codewiki Diff Table",
 		description:
 			"Create or update pending decision diff tables before accepted decision builds are compiled.",
@@ -330,7 +330,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_session",
+		name: "wiki_session",
 		label: "Codewiki Session",
 		description:
 			"Manage runtime session focus and notes for codewiki without mutating canonical roadmap truth",
@@ -346,7 +346,7 @@ export function registerPiAdapter(pi: ExtensionAPI): void {
 	});
 
 	registerProjectTool(pi, {
-		name: "codewiki_agency",
+		name: "wiki_agency",
 		label: "Codewiki Agency",
 		description:
 			"Plan one bounded CodeWiki agency run in observe, maintain, or work mode",

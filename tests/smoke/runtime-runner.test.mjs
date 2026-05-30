@@ -357,7 +357,10 @@ function daemonJob(overrides = {}) {
 	});
 	assert.equal(result.status, "failed");
 	assert.equal(result.run_id, "JOB-RETRY-RUN-002");
-	assert.equal(result.store.jobs["JOB-RETRY"].block_reason?.kind, "retry_limit");
+	assert.equal(
+		result.store.jobs["JOB-RETRY"].block_reason?.kind,
+		"retry_limit",
+	);
 	assert.equal(result.store.jobs["JOB-RETRY"].block_reason?.retryable, false);
 
 	const idle = await runCodewikiDaemonDispatcherTick({

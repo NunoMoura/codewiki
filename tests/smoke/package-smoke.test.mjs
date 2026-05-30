@@ -87,6 +87,14 @@ function ensureIncludes(actual, expected, label) {
 	}
 }
 
+function legacyToolName(suffix) {
+	return ["codewiki", suffix].join("_");
+}
+
+function legacyToolPrefix() {
+	return ["codewiki", ""].join("_");
+}
+
 async function main() {
 	const piRoot = findPiRoot();
 	extendNodePath(piRoot);
@@ -418,19 +426,19 @@ async function main() {
 		ensureIncludes(
 			extensionToolNames,
 			[
-				"codewiki_setup",
-				"codewiki_bootstrap",
-				"codewiki_state",
-				"codewiki_resume_context",
-				"codewiki_artifact_status",
-				"codewiki_audit",
-				"codewiki_build",
-				"codewiki_validation",
-				"codewiki_gc",
-				"codewiki_roadmap",
-				"codewiki_diff_table",
-				"codewiki_session",
-				"codewiki_agency",
+				"wiki_setup",
+				"wiki_bootstrap",
+				"wiki_state",
+				"wiki_resume_context",
+				"wiki_artifact_status",
+				"wiki_audit",
+				"wiki_build",
+				"wiki_gateway",
+				"wiki_gc",
+				"wiki_roadmap",
+				"wiki_diff_table",
+				"wiki_session",
+				"wiki_agency",
 			],
 			"extension tools",
 		);
@@ -442,8 +450,33 @@ async function main() {
 			resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"),
 			"utf8",
 		);
+		for (const removedTool of [
+			"setup",
+			"bootstrap",
+			"state",
+			"resume_context",
+			"artifact_status",
+			"audit",
+			"build",
+			"validation",
+			"gc",
+			"roadmap",
+			"diff_table",
+			"session",
+			"agency",
+		].map(legacyToolName)) {
+			assert.ok(
+				!extension.tools.has(removedTool),
+				`Old internal tool alias should not be registered: ${removedTool}`,
+			);
+		}
+		assert.deepEqual(
+			extensionToolNames.filter((name) => name.startsWith(legacyToolPrefix())),
+			[],
+			"No old codewiki-prefixed internal tools should be registered",
+		);
 		for (const toolName of extensionToolNames.filter((name) =>
-			name.startsWith("codewiki_"),
+			name.startsWith("wiki_"),
 		)) {
 			assert.match(
 				skillToolCatalog,
@@ -849,13 +882,13 @@ async function main() {
 			"Pi task tool should not delegate through old roadmap/task shims",
 		);
 		for (const removedTool of [
-			"codewiki_rebuild",
-			"codewiki_status",
-			"codewiki_roadmap_append",
-			"codewiki_roadmap_update",
-			"codewiki_roadmap_session_link",
-			"codewiki_roadmap_loop_update",
-			"codewiki_session_handoff",
+			legacyToolName("rebuild"),
+			legacyToolName("status"),
+			"wiki_roadmap_append",
+			"wiki_roadmap_update",
+			"wiki_roadmap_session_link",
+			"wiki_roadmap_loop_update",
+			"wiki_session_handoff",
 		]) {
 			assert.ok(
 				!extension.tools.has(removedTool),
@@ -938,12 +971,12 @@ async function main() {
 			"Expected package extension to load for bootstrap smoke test",
 		);
 
-		const setupTool = extension.tools.get("codewiki_setup");
+		const setupTool = extension.tools.get("wiki_setup");
 		assert.ok(
 			setupTool && typeof setupTool.definition?.execute === "function",
 			"Setup tool missing execute function",
 		);
-		const bootstrapTool = extension.tools.get("codewiki_bootstrap");
+		const bootstrapTool = extension.tools.get("wiki_bootstrap");
 		assert.ok(
 			bootstrapTool && typeof bootstrapTool.definition?.execute === "function",
 			"Bootstrap tool missing execute function",
@@ -1023,7 +1056,7 @@ async function main() {
 			...toolCtx,
 			cwd: outsideDir,
 		};
-		const stateTool = extension.tools.get("codewiki_state");
+		const stateTool = extension.tools.get("wiki_state");
 		assert.ok(
 			stateTool && typeof stateTool.definition?.execute === "function",
 			"State tool missing execute function",
@@ -1064,14 +1097,14 @@ async function main() {
 			/open \d+; next/i,
 			"State tool should return compact summary text",
 		);
-		const resumeContextTool = extension.tools.get("codewiki_resume_context");
+		const resumeContextTool = extension.tools.get("wiki_resume_context");
 		assert.ok(
 			resumeContextTool &&
 				typeof resumeContextTool.definition?.execute === "function",
 			"Resume context tool missing execute function",
 		);
-		const preResumeBuildTool = extension.tools.get("codewiki_build");
-		const preResumeValidationTool = extension.tools.get("codewiki_validation");
+		const preResumeBuildTool = extension.tools.get("wiki_build");
+		const preResumeValidationTool = extension.tools.get("wiki_gateway");
 		assert.ok(
 			preResumeBuildTool && preResumeValidationTool,
 			"Build/validation tools missing for resume proof setup",
@@ -1202,7 +1235,7 @@ async function main() {
 			"TASK-001",
 			"Resume context tool should target requested task",
 		);
-		const agencyTool = extension.tools.get("codewiki_agency");
+		const agencyTool = extension.tools.get("wiki_agency");
 		assert.ok(
 			agencyTool && typeof agencyTool.definition?.execute === "function",
 			"Agency tool missing execute function",
@@ -1240,7 +1273,7 @@ async function main() {
 			"Agency should expose native fallback context steps",
 		);
 
-		const diffTableTool = extension.tools.get("codewiki_diff_table");
+		const diffTableTool = extension.tools.get("wiki_diff_table");
 		assert.ok(
 			diffTableTool && typeof diffTableTool.definition?.execute === "function",
 			"Diff table tool missing execute function",
@@ -1270,7 +1303,7 @@ async function main() {
 		);
 		assert.equal(diffResult.details.table.rows[0].id, "DTR-001");
 
-		const buildTool = extension.tools.get("codewiki_build");
+		const buildTool = extension.tools.get("wiki_build");
 		assert.ok(
 			buildTool && typeof buildTool.definition?.execute === "function",
 			"Build tool missing execute function",
@@ -1511,7 +1544,7 @@ async function main() {
 		);
 
 		// Validation report smoke
-		const validationTool = extension.tools.get("codewiki_validation");
+		const validationTool = extension.tools.get("wiki_gateway");
 		assert.ok(
 			validationTool &&
 				typeof validationTool.definition?.execute === "function",
@@ -1613,7 +1646,7 @@ async function main() {
 		assert.equal(failVal.verdict, "fail");
 		assert.equal(failVal.issues.length, 1);
 
-		const taskTool = extension.tools.get("codewiki_roadmap");
+		const taskTool = extension.tools.get("wiki_roadmap");
 		assert.ok(
 			taskTool && typeof taskTool.definition?.execute === "function",
 			"Task tool missing execute function",
@@ -1940,14 +1973,14 @@ async function main() {
 			"State tool should point to task-local context shard",
 		);
 
-		const artifactStatusTool = extension.tools.get("codewiki_artifact_status");
+		const artifactStatusTool = extension.tools.get("wiki_artifact_status");
 		assert.ok(
 			artifactStatusTool &&
 				typeof artifactStatusTool.definition?.execute === "function",
 			"Artifact status tool missing execute function",
 		);
 		assert.equal(
-			extension.tools.has("codewiki_claim"),
+			extension.tools.has(legacyToolName("claim")),
 			false,
 			"Deprecated claim alias should not be registered",
 		);
@@ -2018,7 +2051,7 @@ async function main() {
 					undefined,
 					otherSessionCtx,
 				),
-			/codewiki_artifact_status conflict/i,
+			/wiki_artifact_status conflict/i,
 			"Write/write overlap should block by default",
 		);
 		const claimStateResult = await stateTool.definition.execute(
@@ -2149,7 +2182,7 @@ async function main() {
 			"Expired claims should not be active",
 		);
 
-		const sessionTool = extension.tools.get("codewiki_session");
+		const sessionTool = extension.tools.get("wiki_session");
 		assert.ok(
 			sessionTool && typeof sessionTool.definition?.execute === "function",
 			"Session tool missing execute function",

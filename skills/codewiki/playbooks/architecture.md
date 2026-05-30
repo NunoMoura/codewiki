@@ -23,7 +23,7 @@ Use this workflow during outer planning, not as an automatic refactor pass.
 ## Workflow
 
 1. **Read CodeWiki state**
-   - Start with `codewiki_state` and the smallest architecture/system view available.
+   - Start with `wiki_state` and the smallest architecture/system view available.
    - Expand relevant `.codewiki/kb/system/**` component or flow specs only after the view points there.
    - Use repo tools or an available bounded context tool to inspect code ownership seams; avoid loading broad source trees into parent RAM.
    - Use an architecture-review subagent for large cross-cutting reviews. Send `SubagentBrief` with `role: "architecture_reviewer"`; require `SubagentResult` findings and proposals only.

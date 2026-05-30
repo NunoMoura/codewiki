@@ -1907,7 +1907,7 @@ function renderFileStructureReview(fileStructure) {
     + structureLane('Approved migration deltas', fileStructure.approved_migration_deltas, structureEntryRow, 'No approved migration deltas.')
     + structureLane('Actionable drift', fileStructure.actionable_entries, structureEntryRow, 'No actionable file-structure drift.')
     + '</div>'
-    + sourceDetails('File-structure source refs', ['generated: .codewiki/index_graph.json views.file_structure', 'audit: codewiki_audit profile=file-structure', ...(fileStructure.source_refs || [])])
+    + sourceDetails('File-structure source refs', ['generated: .codewiki/index_graph.json views.file_structure', 'audit: wiki_audit profile=file-structure', ...(fileStructure.source_refs || [])])
     + '<p class="muted">Counts: intended ' + fileStructure.path_rule_counts.intended + ' · current ' + fileStructure.path_rule_counts.current + ' · target ' + fileStructure.path_rule_counts.target + ' · approved ' + approvedCount + ' · actionable ' + actionableCount + '</p>'
     + '</section>';
 }

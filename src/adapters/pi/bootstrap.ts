@@ -47,7 +47,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 	});
 
 	pi.registerTool({
-		name: "codewiki_setup",
+		name: "wiki_setup",
 		label: "Codewiki Setup",
 		description:
 			"Configure codewiki for the current project without overwriting existing starter files",
@@ -67,7 +67,7 @@ export function registerBootstrapFeatures(pi: ExtensionAPI): void {
 	} as any);
 
 	pi.registerTool({
-		name: "codewiki_bootstrap",
+		name: "wiki_bootstrap",
 		label: "Codewiki Bootstrap",
 		description:
 			"Scaffold a starter repo-local codebase wiki into the current project",

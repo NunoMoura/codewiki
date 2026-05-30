@@ -43,7 +43,7 @@ export async function createCodewikiTasks(
 }
 
 // ---------------------------------------------------------------------------
-// Update task (patch-style from codewiki_roadmap tool)
+// Update task (patch-style from wiki_roadmap tool)
 // ---------------------------------------------------------------------------
 
 export async function patchCodewikiTask(

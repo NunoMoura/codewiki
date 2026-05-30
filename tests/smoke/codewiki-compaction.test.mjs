@@ -178,11 +178,11 @@ const adapterSource = readFileSync(
 	"utf8",
 );
 const buildRegistration = adapterSource
-	.split('name: "codewiki_build"')[1]
-	.split('name: "codewiki_validation"')[0];
+	.split('name: "wiki_build"')[1]
+	.split('name: "wiki_gateway"')[0];
 const validationRegistration = adapterSource
-	.split('name: "codewiki_validation"')[1]
-	.split('name: "codewiki_roadmap"')[0];
+	.split('name: "wiki_gateway"')[1]
+	.split('name: "wiki_roadmap"')[0];
 assert.match(
 	compactionSource,
 	/pi\.on\("agent_end"/,

@@ -157,7 +157,7 @@ try {
 			title: "Verify roadmap source root",
 			priority: "medium",
 			kind: "testing",
-			summary: "Prove codewiki_roadmap create still mutates queue JSON.",
+			summary: "Prove wiki_roadmap create still mutates queue JSON.",
 			spec_paths: ["package.json"],
 			code_paths: ["tests/tasks/TASK-029/roadmap-source-root.test.mjs"],
 			labels: ["guard-new-task"],

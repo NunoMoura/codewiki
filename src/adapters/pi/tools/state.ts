@@ -7,10 +7,10 @@ import { currentTaskLink } from "../session.ts";
 import { refreshStatusDock } from "../ui/manager.ts";
 import { piStatePorts } from "./ports.ts";
 
-/** Register the codewiki_state tool. */
+/** Register the wiki_state tool. */
 export function registerCodewikiStateTool(pi: any) {
 	pi.registerTool({
-		name: "codewiki_state",
+		name: "wiki_state",
 		label: "Codewiki State",
 		description:
 			"Read graph-first codewiki state, optionally rebuild derived files, and return a structured repo/task/session snapshot",
@@ -22,7 +22,7 @@ export function registerCodewikiStateTool(pi: any) {
 		],
 		parameters: codewikiStateToolInputSchema,
 		async execute(_toolCallId: string, params: CodewikiStateToolInput, _signal: any, _onUpdate: any, ctx: ExtensionContext) {
-			const project = await resolveToolProject(ctx.cwd, params.repoPath, "codewiki_state");
+			const project = await resolveToolProject(ctx.cwd, params.repoPath, "wiki_state");
 			const result = await executeCodewikiStateTool(project, params, piStatePorts(ctx));
 			await refreshStatusDock(project, ctx, currentTaskLink(ctx));
 			return {

@@ -2,8 +2,8 @@ import "../setup-env.mjs";
 /**
  * tests/smoke/builds.mjs
  *
- * Standalone smoke tests for codewiki_build (decision, planning, implementation)
- * and codewiki_validation. Bootstraps a fresh temp project, runs the tools, asserts.
+ * Standalone smoke tests for wiki_build (decision, planning, implementation)
+ * and wiki_gateway. Bootstraps a fresh temp project, runs the tools, asserts.
  */
 import {
 	mkdirSync,
@@ -74,7 +74,7 @@ async function run() {
 		};
 
 		// Bootstrap a wiki project
-		const bootstrapTool = extension.tools.get("codewiki_bootstrap");
+		const bootstrapTool = extension.tools.get("wiki_bootstrap");
 		assert.ok(bootstrapTool, "Bootstrap tool missing");
 		const bootstrapResult = await bootstrapTool.definition.execute(
 			"build-test-bootstrap",
@@ -85,8 +85,8 @@ async function run() {
 		);
 		assert.ok(bootstrapResult?.content, "Bootstrap failed");
 
-		// codewiki_roadmap: progressive refinement/reuse
-		const taskTool = extension.tools.get("codewiki_roadmap");
+		// wiki_roadmap: progressive refinement/reuse
+		const taskTool = extension.tools.get("wiki_roadmap");
 		assert.ok(taskTool, "Task tool missing");
 		const firstTask = await taskTool.definition.execute(
 			"task-create-initial",
@@ -196,10 +196,10 @@ async function run() {
 		assert.equal(unrelatedTask.details.created.length, 1);
 		assert.equal(unrelatedTask.details.reused.length, 0);
 
-		// codewiki_build: decision
-		const buildTool = extension.tools.get("codewiki_build");
+		// wiki_build: decision
+		const buildTool = extension.tools.get("wiki_build");
 		assert.ok(buildTool, "Build tool missing");
-		const valTool = extension.tools.get("codewiki_validation");
+		const valTool = extension.tools.get("wiki_gateway");
 		assert.ok(valTool, "Validation tool missing");
 
 		await assert.rejects(
@@ -303,7 +303,7 @@ async function run() {
 			"component-map:application",
 		]);
 
-		// codewiki_build: planning
+		// wiki_build: planning
 		const planResult = await buildTool.definition.execute(
 			"build-plan",
 			{
@@ -407,7 +407,7 @@ async function run() {
 			ctx,
 		);
 
-		// codewiki_build: implementation
+		// wiki_build: implementation
 		await assert.rejects(
 			() =>
 				buildTool.definition.execute(
@@ -519,7 +519,7 @@ async function run() {
 			),
 		);
 
-		// codewiki_validation: task-close pass requires fresh isolation evidence
+		// wiki_gateway: task-close pass requires fresh isolation evidence
 		const implementationAuditRefs = ["audit:alignment", "audit:changed"];
 		const taskCloseAuditRefs = [
 			"audit:alignment",
@@ -721,7 +721,7 @@ async function run() {
 		);
 		assert.equal(dirtyPublicationBlock.details.data.verdict, "block");
 
-		// codewiki_validation: fail
+		// wiki_gateway: fail
 		const failResult = await valTool.definition.execute(
 			"val-fail",
 			{
@@ -740,7 +740,7 @@ async function run() {
 			/\.codewiki\/validation\/.*decision-fail.*\.json$/,
 		);
 
-		// codewiki_validation: block
+		// wiki_gateway: block
 		const blockResult = await valTool.definition.execute(
 			"val-block",
 			{
@@ -894,7 +894,7 @@ async function run() {
 		);
 
 		// Graph reconciliation coverage
-		const stateTool = extension.tools.get("codewiki_state");
+		const stateTool = extension.tools.get("wiki_state");
 		assert.ok(stateTool, "State tool missing");
 		const stateResult = await stateTool.definition.execute(
 			"state-graph",

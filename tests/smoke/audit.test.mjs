@@ -77,8 +77,8 @@ async function main() {
 			"CodeWiki extension should load from package settings",
 		);
 
-		const auditTool = extension.tools.get("codewiki_audit");
-		assert.ok(auditTool, "codewiki_audit tool should be registered");
+		const auditTool = extension.tools.get("wiki_audit");
+		assert.ok(auditTool, "wiki_audit tool should be registered");
 		const ctx = {
 			cwd: repoRoot,
 			sessionManager: {

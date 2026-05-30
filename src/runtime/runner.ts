@@ -487,7 +487,7 @@ async function runImplementationKickoff(
 		? Math.ceil(resume.prompt.length / 4)
 		: 0;
 	state.efficiency.manual_commands_avoided += 1;
-	state.events.push("codewiki_resume_context built for runtime-selected task");
+	state.events.push("wiki_resume_context built for runtime-selected task");
 	if (!resume.prompt.trim() || !resume.task) {
 		return result(state, {
 			executed: true,
@@ -548,9 +548,7 @@ export interface CodewikiDaemonDispatcherTickInput {
 	leaseTtlMs?: number;
 	staleAfterMs?: number;
 	heartbeatNote?: string;
-	runId?:
-		| string
-		| ((job: CodewikiDaemonJobRecord, attempt: number) => string);
+	runId?: string | ((job: CodewikiDaemonJobRecord, attempt: number) => string);
 	executeAttempt?: (
 		attempt: CodewikiDaemonDispatcherAttemptContext,
 	) =>

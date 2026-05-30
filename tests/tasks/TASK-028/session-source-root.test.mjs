@@ -153,12 +153,12 @@ assert.equal(
 assert.equal(
 	typeof sessionTool.executeCodewikiSessionTool,
 	"function",
-	"codewiki_session execution should be owned by src/session/tool.ts",
+	"wiki_session execution should be owned by src/session/tool.ts",
 );
 assert.equal(
 	typeof artifactStatusTool.executeCodewikiArtifactStatusTool,
 	"function",
-	"codewiki_artifact_status execution should be owned by src/session/artifact-status-tool.ts",
+	"wiki_artifact_status execution should be owned by src/session/artifact-status-tool.ts",
 );
 
 const claimsSource = readFileSync(
@@ -353,7 +353,7 @@ try {
 				},
 				{ sessionId: "other-session", agentName: "Other" },
 			),
-		/codewiki_artifact_status conflict/i,
+		/wiki_artifact_status conflict/i,
 	);
 	const waiter = await artifactStatusTool.executeCodewikiArtifactStatusTool(
 		project,
@@ -489,12 +489,12 @@ const toolCatalogSource = readFileSync(
 assert.match(
 	sessionAdapterSource,
 	/api\/tools\.ts/,
-	"Pi session tool should route codewiki_session through src/api/tools.ts",
+	"Pi session tool should route wiki_session through src/api/tools.ts",
 );
 assert.match(
 	artifactAdapterSource,
 	/api\/tools\.ts/,
-	"Pi artifact-status tool should route codewiki_artifact_status through src/api/tools.ts",
+	"Pi artifact-status tool should route wiki_artifact_status through src/api/tools.ts",
 );
 const apiFacadeSource = readFileSync(
 	resolve(repoRoot, "src", "api", "tools.ts"),
@@ -503,12 +503,12 @@ const apiFacadeSource = readFileSync(
 assert.match(
 	apiFacadeSource,
 	/session\/tool\.ts/,
-	"API facade should expose codewiki_session from src/session/tool.ts",
+	"API facade should expose wiki_session from src/session/tool.ts",
 );
 assert.match(
 	apiFacadeSource,
 	/session\/artifact-status-tool\.ts/,
-	"API facade should expose codewiki_artifact_status from src/session/artifact-status-tool.ts",
+	"API facade should expose wiki_artifact_status from src/session/artifact-status-tool.ts",
 );
 assert.match(
 	schemaSource,
@@ -528,12 +528,12 @@ assert.match(
 assert.match(
 	toolCatalogSource,
 	/src\/session\/tool\.ts/,
-	"Skill-facing tool catalog should point codewiki_session at src/session/tool.ts",
+	"Skill-facing tool catalog should point wiki_session at src/session/tool.ts",
 );
 assert.match(
 	toolCatalogSource,
 	/src\/session\/artifact-status-tool\.ts/,
-	"Skill-facing tool catalog should point codewiki_artifact_status at src/session/artifact-status-tool.ts",
+	"Skill-facing tool catalog should point wiki_artifact_status at src/session/artifact-status-tool.ts",
 );
 
 function walkCodeFiles(roots) {

@@ -65,7 +65,7 @@ export function registerStatusCommand(pi: ExtensionAPI): void {
 				if (!opened) {
 					await maybeReadStatusState(project.statusStatePath);
 					ctx.ui.notify(
-						"Custom UI unavailable. Use codewiki_state output or configure Pi UI mode.",
+						"Custom UI unavailable. Use wiki_state output or configure Pi UI mode.",
 						"warning",
 					);
 				}

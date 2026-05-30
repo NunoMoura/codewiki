@@ -18,22 +18,22 @@ For exact tool arguments and output fields, read `references/tools.md` when need
 ## Core rules
 
 - Start from a validated `decision_build` or an explicit validation/audit route to planning.
-- Start with `codewiki_state`, then read the decision build, changed knowledge refs, active tasks, and active sprint context directly.
+- Start with `wiki_state`, then read the decision build, changed knowledge refs, active tasks, and active sprint context directly.
 - Decision owns semantic intent and knowledge. Planning owns roadmap alignment. Implementation owns code/tests.
-- Use `codewiki_roadmap` for roadmap creation/refinement. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
+- Use `wiki_roadmap` for roadmap creation/refinement. Never hand-edit `.codewiki/roadmap/queue.json` or generated task views.
 - Inspect active tasks and sprints before creating work. Refine an existing active task when paths, labels, or intent overlap.
 - Create only self-contained executable tasks with direct outcomes, acceptance criteria, non-goals, verification, candidate files, independent validation evidence, and post-commit GC review when the work closes tasks/sprints or publishes artifacts.
 - Reject coordination-only tasks, sprint/umbrella/container tasks, and tasks whose acceptance mainly says other tasks must close.
-- Compile `codewiki_build kind="planning"` after roadmap alignment and before implementation handoff. Do not treat the planning build itself as a post-gateway compaction boundary until planning validation passes.
+- Compile `wiki_build kind="planning"` after roadmap alignment and before implementation handoff. Do not treat the planning build itself as a post-gateway compaction boundary until planning validation passes.
 - Every accepted decision row and downstream planning question must have deterministic propagation evidence in the planning build: `decision_row_resolutions` / `downstream_question_resolutions` as `knowledge-only`, `roadmap-task`, `sprint`, or `deferred` with owner/trigger/rationale.
 - Planning-loop compaction is safe only after accepted rows/questions are durably mapped into task, sprint, knowledge-only, deferred, or blocking-question evidence.
-- Use `codewiki_roadmap action="sprint"` for accepted related executable cohorts; never create umbrella tasks or hand-edit sprint metadata.
+- Use `wiki_roadmap action="sprint"` for accepted related executable cohorts; never create umbrella tasks or hand-edit sprint metadata.
 - Validate planning-to-roadmap alignment before routing to implementation.
 
 ## Workflow
 
 1. **Load handoff context**
-   - Run `codewiki_state` for repo health, reconciliation, active work, and artifact status.
+   - Run `wiki_state` for repo health, reconciliation, active work, and artifact status.
    - Read the validated `decision_build`, changed KB paths, and any validation report that routed work here.
    - Restate requirements, knowledge refs, non-goals, blockers, assumptions, and open questions.
    - If no validated decision/source route exists, return to decision mode or validation as appropriate.
@@ -44,22 +44,22 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - Surface conflicts between requested work and task-boundary rules.
 
 3. **Shape roadmap work**
-   - For each executable unit, define outcome, acceptance criteria, non-goals, verification, candidate code/test paths, blockers, requirement refs, and any `codewiki_gc action="dry-run"`/defer evidence expected after close/publication commits.
+   - For each executable unit, define outcome, acceptance criteria, non-goals, verification, candidate code/test paths, blockers, requirement refs, and any `wiki_gc action="dry-run"`/defer evidence expected after close/publication commits.
    - Prefer refining existing active tasks when the new intent overlaps.
    - Create new tasks only when the work is independent and conflict-free.
-   - If the work is a cohort, use sprint metadata through `codewiki_roadmap action="sprint"` and planning-build context instead of a task that only groups other tasks.
+   - If the work is a cohort, use sprint metadata through `wiki_roadmap action="sprint"` and planning-build context instead of a task that only groups other tasks.
 
 4. **Coordinate writes**
-   - Use `codewiki_artifact_status` for narrow roadmap/build scopes when parallel sessions may overlap.
+   - Use `wiki_artifact_status` for narrow roadmap/build scopes when parallel sessions may overlap.
    - Release artifact status when planning writes complete.
 
 5. **Mutate roadmap truth**
-   - Call `codewiki_roadmap action="create"` for new tasks or `action="update"` for refinements.
+   - Call `wiki_roadmap action="create"` for new tasks or `action="update"` for refinements.
    - Include `spec_paths`, `code_paths`, labels, `change_type`, and a complete `goal` with outcome/acceptance/non-goals/verification.
    - Add evidence when a task is refined, blocked, or intentionally not created.
 
 6. **Compile planning build**
-   - Call `codewiki_build kind="planning"` after task creation/refinement.
+   - Call `wiki_build kind="planning"` after task creation/refinement.
    - Include `source_decision_build`, `task_ids`, `task_changes`, `decision_row_resolutions`, `downstream_question_resolutions`, `tdd_plan`, `candidate_test_files`, `candidate_code_paths`, requirements, evidence mapping, assumptions, open questions, non-goals, and risks.
    - Resolve each accepted row/question as one of:
      - `knowledge-only` with knowledge/source refs;
@@ -70,8 +70,8 @@ For exact tool arguments and output fields, read `references/tools.md` when need
    - The build is the implementation handoff. It should be compact enough for a fresh implementation session to execute without reading prior chat.
 
 7. **Validate planning**
-   - Run `codewiki_audit` for task/alignment evidence when policy or risk requires it.
-   - Use `codewiki_validation profile="decision"` or a planning-specific policy profile if available when validation is required, failed, blocked, or policy-required.
+   - Run `wiki_audit` for task/alignment evidence when policy or risk requires it.
+   - Use `wiki_gateway profile="decision"` or a planning-specific policy profile if available when validation is required, failed, blocked, or policy-required.
    - Validation checks decision-to-roadmap alignment, task atomicity, boundary quality, and planning build completeness.
 
 8. **Route to implementation**

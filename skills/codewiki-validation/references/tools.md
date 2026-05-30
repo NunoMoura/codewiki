@@ -4,7 +4,7 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
 
 ## Required sequence
 
-1. `codewiki_state`
+1. `wiki_state`
    - First read for repo health, graph/build/task routing, stale generated state, and artifact status.
    - Use `refresh=true` when validating submitted refs, task close, graph/drift audit, or publication gate.
    - Use `taskId` when validating implementation or task-close.
@@ -14,7 +14,7 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
    - Do not rely on builder chat context.
    - Treat `.codewiki/index_graph.json` and generated task views as routing/read models, not canonical proof.
 
-3. `codewiki_audit`
+3. `wiki_audit`
    - Run required audit profiles or cite existing audit refs before a pass verdict when policy requires them.
    - Common profile sets:
      - decision/planning: `alignment`, `generated-parity`, plus scoped/changed checks when relevant;
@@ -23,7 +23,7 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
      - graph/drift: `graph-audit`, `drift-audit`, `horizontal-alignment`, `source-contract`, `generated-parity` or configured equivalents;
      - publication/release: package/security/publication policy profiles when available.
 
-4. `codewiki_validation`
+4. `wiki_gateway`
    - Use `preflight_only=true` to return gateway preflight without writing a report. Preflight checks source readability, accepted upstream builds, required audits, task ids, content proof strategy, stale refs, close/publication blockers, and risk approval policy.
    - Record verdict when policy requires a report, verdict is `fail`/`block`, task-close/publication needs proof, or submitted refs expected an explicit report.
    - Required fields: `profile`, `task_id` if any, `source`, `verdict`, `rationale`, `checks`, `issues`, `audit_refs`/`audit_reports`, `failed_criteria`, `blocking_questions`, optional `failure_class`, optional `recommended_next_loop`, optional `stop_reason`, and `isolation` when required.
@@ -34,13 +34,13 @@ Use these tools to validate submitted CodeWiki artifacts. Validation mode may wr
 
 ## Fresh validator context
 
-When the current session is not an acceptable validator context, stop and restart validation from the source/build refs, task id, audit expectations, changed paths, checks, and expected `codewiki_validation` output. Do not use builder chat memory as proof.
+When the current session is not an acceptable validator context, stop and restart validation from the source/build refs, task id, audit expectations, changed paths, checks, and expected `wiki_gateway` output. Do not use builder chat memory as proof.
 
 ## Forbidden tools/actions in validation mode
 
-- Do not call `codewiki_build`; compilers produce builds.
-- Do not call `codewiki_diff_table`; decision compilers capture semantic proposals.
-- Do not call `codewiki_roadmap action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
+- Do not call `wiki_build`; compilers produce builds.
+- Do not call `wiki_diff_table`; decision compilers capture semantic proposals.
+- Do not call `wiki_roadmap action="create"`, `update`, `close`, or `cancel`; parent/compiler/closer handles task mutation after validation.
 - Do not hand-edit `.codewiki/kb/**`, `.codewiki/roadmap/**`, `.codewiki/builds/**`, source code, tests, or generated views.
 - Do not mark work pass without required audits and proof.
 

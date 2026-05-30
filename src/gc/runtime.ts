@@ -140,7 +140,7 @@ async function writeRestoreLedger(
 		restore_command: restoreCommand(archive?.commit_sha || "<archive-sha>", candidate.path),
 	}));
 	const ledger = {
-		kind: "codewiki_gc_ledger",
+		kind: "wiki_gc_ledger",
 		version: 1,
 		created_at: created,
 		archive,
@@ -251,7 +251,7 @@ function collectRuntimeCandidates(project: WikiProject, scopes: string[]): Codew
 function isPurgeableRuntimeHandoff(absPath: string): boolean {
 	try {
 		const data = JSON.parse(readFileSync(absPath, "utf8"));
-		if (data?.kind !== "codewiki_session_handoff") return true;
+		if (data?.kind !== "wiki_session_handoff") return true;
 		const status = String(data?.status || "").trim().toLowerCase();
 		return ["completed", "cancelled", "external", "failed"].includes(status);
 	} catch {

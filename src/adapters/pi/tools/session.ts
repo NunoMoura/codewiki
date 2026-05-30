@@ -4,7 +4,7 @@ import type { CodewikiSessionToolInput } from "../../../session/types.ts";
 import { executeCodewikiSessionTool } from "../../../api/tools.ts";
 import { piSessionToolPorts } from "./ports.ts";
 
-/** Implementation of the codewiki_session tool. */
+/** Implementation of the wiki_session tool. */
 export async function executeCodewikiSession(
 	pi: ExtensionAPI,
 	project: WikiProject,

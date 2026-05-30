@@ -127,10 +127,10 @@ function resumePacket(candidate: RoadmapDispatchCandidate): WorktreeDispatchResu
 		follow_up_intent: intent,
 		prompt: [
 			`Implement roadmap task ${candidate.task.id} for CodeWiki.`,
-			`Use codewiki_resume_context for ${candidate.task.id} and read source refs directly.`,
+			`Use wiki_resume_context for ${candidate.task.id} and read source refs directly.`,
 			"Do not share parent chat context; coordinate through artifact status and validation gates.",
 		].join("\n"),
-		command: `codewiki_resume_context taskId=${candidate.task.id}`,
+		command: `wiki_resume_context taskId=${candidate.task.id}`,
 		chat_context_shared: false,
 	};
 }

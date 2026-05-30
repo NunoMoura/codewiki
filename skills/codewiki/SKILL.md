@@ -31,17 +31,17 @@ For loop-specific work, load the focused skill and only the package-local assets
 - `../codewiki-implementation/SKILL.md` — execute one atomic task, emit `implementation_build`, and request fresh validation.
 - `../codewiki-validation/SKILL.md` — validate builds, task close, graph/drift, and publication/readiness gates without mutating truth.
 - `bootstrap/onboarding.md` and `bootstrap/starter-taxonomy.md` — repo-local wiki onboarding prompts and path-class starter guidance.
-- `references/tool-catalog.md` — skill-facing map from `codewiki_*` tools to `src/application/tools/**` contracts, including safe sprint metadata usage.
+- `references/tool-catalog.md` — skill-facing map from `wiki_*` tools to API/concept contracts, including safe sprint metadata usage.
 - `playbooks/architecture.md`, `playbooks/research.md`, and `playbooks/view-audit.md` — focused review/playbook modes.
 
-When package-local assets need repo specs, use `codewiki_state` to locate the installed repo's `.codewiki/kb/**` sources instead of relying on package-relative `.codewiki` links.
+When package-local assets need repo specs, use `wiki_state` to locate the installed repo's `.codewiki/kb/**` sources instead of relying on package-relative `.codewiki` links.
 
 ## First read and bootstrap
 
-1. Run `codewiki_state` when `.codewiki/config.json` exists or may exist. Treat it as the routing map, not final truth.
-2. If the repo has no CodeWiki config, use `/wiki-bootstrap` or internal `codewiki_setup`/`codewiki_bootstrap`.
+1. Run `wiki_state` when `.codewiki/config.json` exists or may exist. Treat it as the routing map, not final truth.
+2. If the repo has no CodeWiki config, use `/wiki-bootstrap` or internal `wiki_setup`/`wiki_bootstrap`.
 3. If commands are missing after install, ask the user to run `/reload`.
-4. Use `/wiki-ui` for the rich local Control Room; use `Alt+W` and `codewiki_state` for compact status.
+4. Use `/wiki-ui` for the rich local Control Room; use `Alt+W` and `wiki_state` for compact status.
 5. Use `bootstrap/onboarding.md` after bootstrap to infer project shape, ask only high-value questions, and propose next status/resume action.
 
 ## Package surface
@@ -57,21 +57,21 @@ Public commands:
 
 Internal agent tools:
 
-- `codewiki_setup`
-- `codewiki_bootstrap`
-- `codewiki_state`
-- `codewiki_resume_context`
-- `codewiki_artifact_status`
-- `codewiki_audit`
-- `codewiki_build`
-- `codewiki_validation`
-- `codewiki_roadmap` (tasks and sprint metadata)
-- `codewiki_gc` (post-commit garbage collection with archive proof and restore ledger)
-- `codewiki_diff_table`
-- `codewiki_session`
-- `codewiki_agency`
+- `wiki_setup`
+- `wiki_bootstrap`
+- `wiki_state`
+- `wiki_resume_context`
+- `wiki_artifact_status`
+- `wiki_audit`
+- `wiki_build`
+- `wiki_gateway`
+- `wiki_roadmap` (tasks and sprint metadata)
+- `wiki_gc` (post-commit garbage collection with archive proof and restore ledger)
+- `wiki_diff_table`
+- `wiki_session`
+- `wiki_agency`
 
-Daily default flow: `codewiki_state` for routing, `codewiki_resume_context` for high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `codewiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `codewiki_audit`/`codewiki_validation` for gates, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `codewiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
+Daily default flow: `wiki_state` for routing, `wiki_resume_context` for high-signal continuation from CodeWiki source refs, CodeWiki-owned compaction for same-session soft context refresh, `wiki_artifact_status` for overlap coordination, loop-specific tools for compiler work, `wiki_audit`/`wiki_gateway` for gates, `/wiki-resume --new` when policy needs a hard replacement session, fresh validator contexts for validation gates, and `wiki_gc` after close/publication commits when hot `.codewiki` state has eligible trash. Do not use VCC recall, generic Pi compaction, or chat-history summaries as normal CodeWiki memory.
 
 ## Core invariants
 
@@ -81,7 +81,7 @@ Daily default flow: `codewiki_state` for routing, `codewiki_resume_context` for 
 - `.codewiki/session/**` and `.codewiki/runtime/**` are operational coordination state, not durable product truth.
 - `.codewiki/builds/**` contains transient compiler handoff artifacts. Compile durable changes into knowledge, roadmap, code, tests, validation, or publication proof.
 - `.codewiki/validation/**` contains fail/block/policy-required/current validation reports.
-- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then run `codewiki_gc` with archive commit/tree proof and commit the ledger/deletions separately.
+- Tracked `.codewiki` garbage collection is post-commit: first commit the close/publication/archive state that can revive the work, then run `wiki_gc` with archive commit/tree proof and commit the ledger/deletions separately.
 - Tests live in code/test directories, not in `.codewiki/kb/**` or roadmap task folders.
 - Git remains the full history mechanism; do not duplicate raw event history inside CodeWiki.
 - In this repository, `.codewiki/**` is dogfood state and `src/**`, `skills/**`, `scripts/**`, `tests/**`, `README.md`, and `package.json` are product/package source.
@@ -115,14 +115,14 @@ Routing rules:
 - Roadmap task shaping and sprint-aware cohort decisions go through planning and `planning_build`.
 - Code/test/docs execution happens in implementation and emits `implementation_build` before validation.
 - Independent checks happen in validation from exact refs, audits, and required proof.
-- Post-close/post-publication maintenance runs `codewiki_gc action="dry-run"` after immutable commit proof exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
+- Post-close/post-publication maintenance runs `wiki_gc action="dry-run"` after immutable commit proof exists, then purges or records defer/block evidence; never pre-commit purge tracked build/validation/roadmap artifacts.
 
 ## Coordination and memory
 
 - Keep current user intent, focused task, loaded graph/build refs, and small decisions in chat context only.
 - Persist durable intent in knowledge, roadmap tasks/sprints, builds, validation reports, and source code/tests.
-- Use `codewiki_session` for runtime focus; it is not roadmap truth.
-- Use `codewiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
+- Use `wiki_session` for runtime focus; it is not roadmap truth.
+- Use `wiki_artifact_status` before non-trivial semantic writes when another session may touch overlapping paths, task state, build refs, or validation refs.
 - Agents may refresh context through CodeWiki-owned compaction or start a new session when their context window is noisy, stale, or token-heavy; restart from CodeWiki refs.
 - Do not use session-handoff shims for same-agent context hygiene. Reserve handoff language for true transfer between distinct sessions, agents, or roles; use CodeWiki refs plus artifact status/wait-wake coordination for parallel work.
 

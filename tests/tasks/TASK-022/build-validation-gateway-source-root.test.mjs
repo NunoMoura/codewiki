@@ -72,10 +72,10 @@ for (const file of walkTextFiles(["src", "scripts", "tests"])) {
 }
 
 const adapterSource = readFileSync(resolve(repoRoot, "src/adapters/pi/index.ts"), "utf8");
-assert.match(adapterSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter must call codewiki_build/codewiki_validation through src/api/tools.ts");
+assert.match(adapterSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter must call wiki_build/wiki_gateway through src/api/tools.ts");
 const apiFacadeSource = readFileSync(resolve(repoRoot, "src/api/tools.ts"), "utf8");
-assert.match(apiFacadeSource, /build\/tool\.ts/, "API facade must expose codewiki_build from src/build/tool.ts");
-assert.match(apiFacadeSource, /gateway\/tool\.ts/, "API facade must expose codewiki_validation from src/gateway/tool.ts");
+assert.match(apiFacadeSource, /build\/tool\.ts/, "API facade must expose wiki_build from src/build/tool.ts");
+assert.match(apiFacadeSource, /gateway\/tool\.ts/, "API facade must expose wiki_gateway from src/gateway/tool.ts");
 assert.equal(apiFacadeSource.includes("validation/tool.ts"), false, "API facade must not import the validation compatibility shim");
 
 const gatewayScript = readFileSync(resolve(repoRoot, "scripts/codewiki-gateway.mjs"), "utf8");

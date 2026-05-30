@@ -9,26 +9,26 @@ updated: "2026-05-19"
 
 # Decision compiler tools
 
-## `codewiki_state`
+## `wiki_state`
 
 Start with graph-backed context:
 
 ```text
-codewiki_state refresh=true include=["summary","roadmap","session"]
+wiki_state refresh=true include=["summary","roadmap","session"]
 ```
 
 Read exact KB/build/task refs before semantic edits.
 
-## `codewiki_diff_table`
+## `wiki_diff_table`
 
 Use before canonical edits when semantic rows need approval:
 
 ```text
-codewiki_diff_table action="propose" rows=[...]
-codewiki_diff_table action="accept" table_id="..." row_id="ROW-001"
-codewiki_diff_table action="reject" table_id="..." row_id="ROW-002"
-codewiki_diff_table action="defer" table_id="..." row_id="ROW-003"
-codewiki_diff_table action="alternative" table_id="..." row_id="ROW-004" alternative="..."
+wiki_diff_table action="propose" rows=[...]
+wiki_diff_table action="accept" table_id="..." row_id="ROW-001"
+wiki_diff_table action="reject" table_id="..." row_id="ROW-002"
+wiki_diff_table action="defer" table_id="..." row_id="ROW-003"
+wiki_diff_table action="alternative" table_id="..." row_id="ROW-004" alternative="..."
 ```
 
 Rows must include current state, desired state, rationale, affected layers, risk, and requested user action.
@@ -40,12 +40,12 @@ Edit only approved product/system truth:
 - product-first decisions update `.codewiki/kb/product/**` first, then record system impact or no-system-impact evidence;
 - system-first decisions update `.codewiki/kb/system/**` and diagram refs first, then record product impact or no-product-impact evidence.
 
-## `codewiki_build kind="decision"`
+## `wiki_build kind="decision"`
 
 Compile after approved rows and KB edits:
 
 ```text
-codewiki_build kind="decision" \
+wiki_build kind="decision" \
   decision_mode="accepted" \
   diff_table=[...] \
   approved_diff_rows=["ROW-001"] \
@@ -65,12 +65,12 @@ Accepted decision builds require:
 
 Proposal decision builds may record draft rows, but must not record approved rows or canonical KB changes.
 
-## `codewiki_audit` and `codewiki_validation`
+## `wiki_audit` and `wiki_gateway`
 
 Use audits for deterministic evidence when policy/risk requires. Persist fail/block or policy-required reports:
 
 ```text
-codewiki_validation profile="decision" verdict="pass|fail|block" source=".codewiki/builds/decision/...json"
+wiki_gateway profile="decision" verdict="pass|fail|block" source=".codewiki/builds/decision/...json"
 ```
 
 Validation checks approved-row coverage, KB mappings, product/system propagation, diagram refs, stale references, and risk approval.

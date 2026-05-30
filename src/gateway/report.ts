@@ -745,7 +745,7 @@ function buildValidationContextBoundary(input: {
 		recommended: passed,
 		trigger: passed ? "post-gateway-pass" : "gateway-not-passed",
 		mode: passed ? "codewiki-context-refresh" : "none",
-		resume_tool: "codewiki_resume_context",
+		resume_tool: "wiki_resume_context",
 		seeded_by: [
 			"passed_build_ref",
 			"validation_report_ref",

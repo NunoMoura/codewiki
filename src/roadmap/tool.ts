@@ -82,7 +82,7 @@ export async function executeCodewikiRoadmapTool(
 ) {
 	const refresh = input.refresh ?? true;
 	if (input.action === "sprint") {
-		if (!input.sprint) throw new Error("codewiki_roadmap sprint requires sprint input.");
+		if (!input.sprint) throw new Error("wiki_roadmap sprint requires sprint input.");
 		const result = await upsertRoadmapSprint(project, input.sprint, { refresh });
 		return {
 			action: "sprint" as const,
@@ -100,7 +100,7 @@ export async function executeCodewikiRoadmapTool(
 	}
 	if (input.action === "clear-archive") {
 		if (!input.summary?.trim()) {
-			throw new Error("codewiki_roadmap clear-archive requires summary confirmation.");
+			throw new Error("wiki_roadmap clear-archive requires summary confirmation.");
 		}
 		const archivePath = roadmapArchivePath(project);
 		await withLockedPaths([archivePath], async () => {
@@ -125,7 +125,7 @@ export async function executeCodewikiRoadmapTool(
 	}
 	if (input.action === "checkpoint") {
 		if (!input.summary?.trim()) {
-			throw new Error("codewiki_roadmap checkpoint requires summary as version or label.");
+			throw new Error("wiki_roadmap checkpoint requires summary as version or label.");
 		}
 		let gitSha = "unknown";
 		try {
@@ -174,7 +174,7 @@ export async function executeCodewikiRoadmapTool(
 		};
 	}
 	if (input.action === "create") {
-		if (!input.tasks?.length) throw new Error("codewiki_roadmap create requires tasks.");
+		if (!input.tasks?.length) throw new Error("wiki_roadmap create requires tasks.");
 		const result = await createCodewikiTasks(project, input.tasks, ports);
 		const details = {
 			action: "create" as const,
@@ -190,13 +190,13 @@ export async function executeCodewikiRoadmapTool(
 		return details;
 	}
 	if (!input.taskId?.trim()) {
-		throw new Error(`codewiki_roadmap ${input.action} requires taskId.`);
+		throw new Error(`wiki_roadmap ${input.action} requires taskId.`);
 	}
 	if (input.action === "cancel" && !input.summary?.trim()) {
-		throw new Error("codewiki_roadmap cancel requires summary.");
+		throw new Error("wiki_roadmap cancel requires summary.");
 	}
 	if (input.action === "update" && !hasCodewikiTaskPatchChanges(input.patch) && !input.evidence) {
-		throw new Error("codewiki_roadmap update requires patch or evidence.");
+		throw new Error("wiki_roadmap update requires patch or evidence.");
 	}
 	if (input.action === "update" && input.evidence?.result && ["pass", "fail", "block"].includes(input.evidence.result) && input.patch?.status !== undefined) {
 		throw new Error("Use evidence.result pass/fail/block without patch.status; lifecycle evidence owns the status transition.");

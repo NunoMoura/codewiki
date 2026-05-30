@@ -81,7 +81,7 @@ await withProject(async (proj) => {
 			summary: "Conflicting claim.",
 			scopes: [{ layer: "code", path: "src/session/claims.ts" }],
 		}, { sessionId: "other", agentName: "Other" }),
-		/codewiki_artifact_status conflict/,
+		/wiki_artifact_status conflict/,
 	);
 
 	const heartbeat = await mutateChangeClaims(proj, {
@@ -103,7 +103,7 @@ await withProject(async (proj) => {
 	assert.equal(queue.wake_notifications[0].waiter_id, "WAIT-001");
 	assert.equal(queue.wake_notifications[0].reason, "release");
 	assert.ok(queue.wake_notifications[0].source_refs.includes(".codewiki/roadmap/tasks/TASK-101/task.json"));
-	assert.match(queue.wake_notifications[0].next_action_intent, /codewiki_resume_context/);
+	assert.match(queue.wake_notifications[0].next_action_intent, /wiki_resume_context/);
 
 	const sentMessages = [];
 	const appendedEntries = [];
@@ -122,7 +122,7 @@ await withProject(async (proj) => {
 	assert.equal(notified.length, 1);
 	assert.equal(appendedEntries[0].data.wake_id, "WAKE-001");
 	assert.deepEqual(appendedEntries[0].data.source_refs, queue.wake_notifications[0].source_refs);
-	assert.match(sentMessages[0].content, /Resume through codewiki_resume_context/);
+	assert.match(sentMessages[0].content, /Resume through wiki_resume_context/);
 	assert.equal((await readQueue(proj)).wake_notifications[0].status, "delivered");
 });
 

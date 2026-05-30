@@ -559,7 +559,7 @@ try {
 		change_class: "mechanical",
 		test_design_evidence: ["Generated refresh reviewed by graph parity audit."],
 		code_files: [".codewiki/index_graph.json"],
-		checks_run: ["codewiki_state refresh=true"],
+		checks_run: ["wiki_state refresh=true"],
 		acceptance_mapping: [
 			{
 				criterion: "Graph refreshed",
@@ -570,7 +570,7 @@ try {
 			user_intent: "Refresh generated graph.",
 			implemented_changes: ["Regenerated graph output."],
 			acceptance_evidence: ["Generated graph refresh completed."],
-			checks: ["codewiki_state refresh=true"],
+			checks: ["wiki_state refresh=true"],
 		},
 	});
 	const mechanicalPreflight = buildGatewayPreflight(project, {

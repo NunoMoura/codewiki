@@ -107,7 +107,7 @@ assert.deepEqual(
 		"claims",
 		"archive",
 	],
-	"codewiki_state sections should remain stable",
+	"wiki_state sections should remain stable",
 );
 assert.deepEqual(
 	stateTypes.STATUS_DOCK_MODE_VALUES,
@@ -214,7 +214,7 @@ try {
 		goal: {
 			outcome: "State ownership lives under src/state/**.",
 			acceptance: [
-				"codewiki_state and codewiki_resume_context behavior is preserved.",
+				"wiki_state and wiki_resume_context behavior is preserved.",
 			],
 			non_goals: ["Do not create src/resume/**."],
 			verification: [
@@ -511,17 +511,17 @@ try {
 	assert.match(
 		stateResult.summary,
 		/Codewiki State: task-030-fixture/,
-		"codewiki_state summary should remain stable",
+		"wiki_state summary should remain stable",
 	);
 	assert.equal(
 		stateResult.result.summary.open_task_count,
 		1,
-		"codewiki_state result should preserve open task count",
+		"wiki_state result should preserve open task count",
 	);
 	assert.equal(
 		stateResult.result.task.id,
 		task.id,
-		"codewiki_state task detail should preserve generated task shape",
+		"wiki_state task detail should preserve generated task shape",
 	);
 	assert.equal(
 		stateResult.result.task.context_packet.context_path,

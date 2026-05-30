@@ -4,7 +4,7 @@ import type { WikiProject } from "../../../project/types.ts";
 import { executeCodewikiAgencyTool } from "../../../api/tools.ts";
 import { piAgencyPorts } from "./ports.ts";
 
-/** Execute the codewiki_agency tool. */
+/** Execute the wiki_agency tool. */
 export async function executeCodewikiAgency(
 	project: WikiProject,
 	ctx: ExtensionContext,

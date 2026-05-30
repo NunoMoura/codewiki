@@ -188,7 +188,7 @@ try {
 		task_id: "TASK-123",
 		change_class: "generated",
 		code_files: [".codewiki/index_graph.json"],
-		checks_run: ["codewiki_state refresh=true"],
+		checks_run: ["wiki_state refresh=true"],
 		acceptance_mapping: [
 			{ criterion: "Graph refreshed", evidence: "Generated artifact updated" },
 		],
@@ -196,7 +196,7 @@ try {
 			user_intent: "Refresh generated graph.",
 			implemented_changes: ["Regenerated graph output."],
 			acceptance_evidence: ["Graph refresh completed"],
-			checks: ["codewiki_state refresh=true"],
+			checks: ["wiki_state refresh=true"],
 		},
 	});
 	const legacyGeneratedData = JSON.parse(

@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29",
+  "generated_at": "2026-05-30T23:57:09Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-059/context.json",
   "task": {
     "id": "TASK-059",
     "title": "Standardize internal agent tools to wiki namespace",
-    "status": "todo",
+    "status": "in_progress",
     "priority": "high",
     "kind": "migration",
     "change_type": "system",

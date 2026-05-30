@@ -39,7 +39,7 @@ assert.deepEqual(gcTypes.GC_ACTION_VALUES, ["dry-run", "purge"], "GC action valu
 assert.deepEqual(gcTypes.GC_INCLUDE_VALUES, ["tracked", "runtime"], "GC include values must stay stable");
 assert.deepEqual(gcTypes.GC_ARTIFACT_TEMPERATURE_VALUES, ["hot", "warm", "cold", "purgeable"], "GC temperature values must stay stable");
 assert.equal(typeof gcRuntime.runCodewikiGc, "function", "GC dry-run/purge use case should be owned by src/gc/runtime.ts");
-assert.equal(typeof gcTool.executeCodewikiGcTool, "function", "codewiki_gc tool execution should be owned by src/gc/tool.ts");
+assert.equal(typeof gcTool.executeCodewikiGcTool, "function", "wiki_gc tool execution should be owned by src/gc/tool.ts");
 
 const runtimeSource = readFileSync(resolve(repoRoot, "src", "gc", "runtime.ts"), "utf8");
 assert.match(runtimeSource, /function collectTrackedCandidates/, "Tracked GC candidate detection should live in src/gc/runtime.ts");
@@ -59,7 +59,7 @@ try {
 	mkdirSync(resolve(runtimeRoot, ".codewiki/runtime/session-handoffs"), { recursive: true });
 	writeFileSync(resolve(runtimeRoot, buildPath), JSON.stringify({ kind: "implementation_build", task_id: "TASK-999" }, null, 2));
 	writeFileSync(resolve(runtimeRoot, validationPath), JSON.stringify({ verdict: "pass", source: buildPath }, null, 2));
-	writeFileSync(resolve(runtimeRoot, handoffPath), JSON.stringify({ kind: "codewiki_session_handoff", status: "completed" }, null, 2));
+	writeFileSync(resolve(runtimeRoot, handoffPath), JSON.stringify({ kind: "wiki_session_handoff", status: "completed" }, null, 2));
 	writeFileSync(resolve(runtimeRoot, ".codewiki/index_graph.json"), JSON.stringify({
 		views: {
 			gc: {
@@ -111,13 +111,13 @@ const hotRetentionSource = readFileSync(resolve(repoRoot, "tests", "smoke", "hot
 const packageSmokeSource = readFileSync(resolve(repoRoot, "tests", "smoke", "package-smoke.test.mjs"), "utf8");
 const toolCatalogSource = readFileSync(resolve(repoRoot, "skills", "codewiki", "references", "tool-catalog.md"), "utf8");
 
-assert.match(piIndexSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter should route codewiki_gc through src/api/tools.ts");
+assert.match(piIndexSource, /from "\.\.\/\.\.\/api\/tools\.ts"/, "Pi adapter should route wiki_gc through src/api/tools.ts");
 const apiFacadeSource = readFileSync(resolve(repoRoot, "src", "api", "tools.ts"), "utf8");
-assert.match(apiFacadeSource, /from "\.\.\/gc\/tool\.ts"/, "API facade should expose codewiki_gc from src/gc/tool.ts");
+assert.match(apiFacadeSource, /from "\.\.\/gc\/tool\.ts"/, "API facade should expose wiki_gc from src/gc/tool.ts");
 assert.match(schemaSource, /from "\.\.\/\.\.\/gc\/types\.ts"/, "Pi schemas should read GC values from src/gc/types.ts");
 assert.match(hotRetentionSource, /src\/gc\/runtime\.ts/, "GC smoke should exercise src/gc/runtime.ts");
 assert.match(packageSmokeSource, /GC registration should delegate through the API facade/, "Package smoke should guard GC API facade delegation");
-assert.match(toolCatalogSource, /src\/gc\/tool\.ts/, "Skill-facing tool catalog should point codewiki_gc at src/gc/tool.ts");
+assert.match(toolCatalogSource, /src\/gc\/tool\.ts/, "Skill-facing tool catalog should point wiki_gc at src/gc/tool.ts");
 
 function walkCodeFiles(roots) {
 	return roots.flatMap((root) => {

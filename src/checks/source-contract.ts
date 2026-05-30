@@ -31,7 +31,8 @@ const PROFILE = "source-contract";
 const TOOL_TOKEN_RE = /`((?:codewiki|wiki)_[a-z0-9_]+)`/g;
 const COMMAND_TOKEN_RE = /`\/(audit|wiki-[a-z0-9-]+)(?:\s|`|\[|$)/g;
 const PATH_TOKEN_RE = /`((?:src\/[^`]+\.ts|scripts\/[^`]+\.mjs|tests\/[^`]+\.mjs))`/g;
-const CODEWIKI_PREFIX_RE = /^codewiki_(.+)$/;
+const STALE_TOOL_PREFIX = ["codewiki", ""].join("_");
+const CODEWIKI_PREFIX_RE = new RegExp(`^${STALE_TOOL_PREFIX}(.+)$`);
 const WIKI_PREFIX_RE = /^wiki_(.+)$/;
 
 function normalizeRel(path: string): string {
@@ -164,7 +165,7 @@ function staleToolNamespaceIssues(
 	for (const expected of expectedTools) {
 		const suffix = expected.match(WIKI_PREFIX_RE)?.[1];
 		if (!suffix) continue;
-		const stale = `codewiki_${suffix}`;
+		const stale = `${STALE_TOOL_PREFIX}${suffix}`;
 		if (actual.has(stale)) {
 			issues.push(
 				createIssue(

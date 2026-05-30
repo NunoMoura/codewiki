@@ -62,7 +62,7 @@ async function main() {
 	try {
 		write(
 			resolve(passRoot, "src", "util.ts"),
-			"export const name = 'codewiki_roadmap';\n",
+			"export const name = 'wiki_roadmap';\n",
 		);
 		write(
 			resolve(passRoot, "src", "index.ts"),
@@ -81,7 +81,7 @@ code_paths:
   - src/index.ts
 horizontal_claims:
   - id: roadmap.tool.name
-    value: codewiki_roadmap
+    value: wiki_roadmap
     refs:
       - src/index.ts
 ---

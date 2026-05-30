@@ -172,7 +172,7 @@ export async function appendTaskEvidenceEvent(
 }
 
 /**
- * Summarize the result of a codewiki_roadmap tool action.
+ * Summarize the result of a wiki_roadmap tool action.
  */
 export function summarizeCodewikiTaskAction(result: {
 	action: string;
@@ -1060,8 +1060,8 @@ export async function upsertRoadmapSprint(
 ): Promise<{ sprint: RoadmapSprintRecord; changed: boolean; created: boolean }> {
 	const title = input.title.trim();
 	const outcome = input.outcome.trim();
-	if (!title) throw new Error("codewiki_roadmap sprint requires sprint.title.");
-	if (!outcome) throw new Error("codewiki_roadmap sprint requires sprint.outcome.");
+	if (!title) throw new Error("wiki_roadmap sprint requires sprint.title.");
+	if (!outcome) throw new Error("wiki_roadmap sprint requires sprint.outcome.");
 	const roadmapPath = resolve(project.root, project.roadmapPath);
 	let sprint!: RoadmapSprintRecord;
 	let changed = false;
