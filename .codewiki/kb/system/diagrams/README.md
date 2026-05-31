@@ -6,7 +6,7 @@ summary: Agent-editable raw data contract for project diagrams rendered by CodeW
 owners:
   - architecture
   - design
-updated: "2026-05-26"
+updated: "2026-05-31"
 ---
 
 # System Diagram Raw Data
@@ -15,7 +15,7 @@ This folder stores canonical raw data for system diagrams. The raw data should b
 
 ## Format rule
 
-Use YAML as the default canonical format.
+Use YAML as the default canonical format. YAML files in this folder are the source of truth for diagram contracts. Mermaid files are compatibility/export artifacts only, and generated HTML, SVG, PNG, Cytoscape JSON, or future ASCII render output is never source truth unless a later accepted decision explicitly promotes that format.
 
 Each diagram should include:
 
@@ -48,6 +48,7 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 
 | File | Kind | Purpose | Preferred rendering |
 | --- | --- | --- | --- |
+| `architecture.yaml` | `architecture_map` | Show the high-level system architecture previously represented by `../architecture.mmd` with stable IDs and renderer hints. | Layered graph, future TUI ASCII, or Mermaid flowchart export. |
 | `context-map.yaml` | `context_map` | Show users, access surfaces, external systems, and the project boundary. | Graph/SVG or Mermaid flowchart. |
 | `component-map.yaml` | `component_map` | Show major runtime components, adapters, data stores, and dependency direction. | Cytoscape/custom SVG or Mermaid flowchart. |
 | `key-flow.yaml` | `sequence_flow` | Show the most important user/agent workflow end to end. | Mermaid sequence diagram or custom sequence renderer. |
@@ -62,7 +63,8 @@ Nodes can set `requires_doc: true` when at least one system doc must declare tha
 - File-structure diagrams should show ownership and drift categories without duplicating full component docs.
 - Diagram files should not duplicate full component docs.
 - Generated state/graph output remains `.codewiki/index_graph.json`; diagram files are intended system knowledge.
-- `../architecture.mmd` remains a compatibility component diagram during migration, but new diagram work should target this folder.
+- Generated HTML, SVG, PNG, Cytoscape JSON, Mermaid output, or future TUI ASCII render output must be treated as render artifacts, not source truth.
+- `architecture.yaml` is the canonical architecture diagram. `../architecture.mmd` is retained only as a Mermaid compatibility/export artifact and must not be edited as canonical truth.
 
 ## Related docs
 

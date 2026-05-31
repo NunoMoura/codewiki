@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "kind": "validation_report",
+  "created": "2026-05-31T09:18:07Z",
+  "profile": "implementation",
+  "task_id": "TASK-066",
+  "verdict": "block",
+  "rationale": "Fresh validation from source refs confirms TASK-066 satisfies the planning build and task acceptance. The architecture diagram is now canonical YAML under .codewiki/kb/system/diagrams/architecture.yaml with schema_version, id, title, kind, purpose, source_docs, renderer/future TUI ASCII hints, groups, stable local node ids, and edges. README explicitly states YAML is canonical and Mermaid/HTML/SVG/generated ASCII are not source truth. architecture.mmd is marked compatibility_export_only with canonical_source pointing to architecture.yaml. Diagram refs smoke test passes; stale-reference/generated-parity/task audits pass; architecture.yaml has 14 nodes and 31 edges matching architecture.mmd. Policy blocks implementation validation until code_files are recorded.",
+  "checks": [
+    "approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json",
+    "node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass",
+    "architecture.yaml YAML parse and manual count: 14 nodes, 31 edges matching architecture.mmd",
+    "wiki_audit profiles=task,alignment,stale-reference,generated-parity,changed task_id=TASK-066: warning; task/stale-reference/generated-parity pass",
+    "wiki_gateway implementation preflight: ready"
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "summary": "Graph health reports four existing warnings unrelated to TASK-066 acceptance."
+    },
+    {
+      "severity": "warning",
+      "summary": "Generated CodeWiki state/task-view files are changed after roadmap/build refresh; generated-parity passes and publication should include or refresh/revert them according to policy."
+    },
+    {
+      "severity": "high",
+      "summary": "Implementation build is not commit-ready: code_files."
+    }
+  ],
+  "source": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+  "policy_profile": "implementation",
+  "routing": {},
+  "required_audits": [
+    "alignment",
+    "changed",
+    "task",
+    "stale-reference",
+    "generated-parity"
+  ],
+  "audit_refs": [
+    "profile:task",
+    "profile:alignment",
+    "profile:stale-reference",
+    "profile:generated-parity",
+    "profile:changed"
+  ],
+  "audit_reports": [],
+  "content_proof_refs": [
+    "sha256:b9691b68e38594658329320dbffbcc47328bcae889f37782dbca504ce3529763"
+  ],
+  "context_boundary": {
+    "recommended": false,
+    "trigger": "gateway-not-passed",
+    "mode": "none",
+    "resume_tool": "wiki_resume_context",
+    "seeded_by": [
+      "passed_build_ref",
+      "validation_report_ref",
+      "CodeWiki source refs"
+    ],
+    "task_id": "TASK-066",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-block-task-066-2026-05-31-impleme.json",
+    "source_refs": [
+      ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+      ".codewiki/validation/2026-05-31-implementation-block-task-066-2026-05-31-impleme.json",
+      "tests/smoke/diagram-refs.test.mjs",
+      ".codewiki/kb/system/diagrams/architecture.yaml",
+      ".codewiki/kb/system/diagrams/README.md",
+      ".codewiki/kb/system/architecture.mmd"
+    ],
+    "hard_session_boundary_recommended": true,
+    "reason": "No post-gateway boundary is recommended until the gateway passes."
+  },
+  "checkpoint_commit": {
+    "recommended": false,
+    "scope": "post-gateway-local-checkpoint",
+    "local_only": true,
+    "remote_publication": false,
+    "separate_close_publication_commit": true,
+    "task_id": "TASK-066",
+    "source_build": ".codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+    "validation_report": ".codewiki/validation/2026-05-31-implementation-block-task-066-2026-05-31-impleme.json",
+    "commit_title": "checkpoint(codewiki): TASK-066 implementation validation pass",
+    "trailers": [
+      "CodeWiki-Task: TASK-066",
+      "CodeWiki-Build: .codewiki/builds/implementation/2026-05-31-implemented-task-066-architecture-diagram-yaml-m.json",
+      "CodeWiki-Validation: .codewiki/validation/2026-05-31-implementation-block-task-066-2026-05-31-impleme.json",
+      "CodeWiki-Checks: approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json; node --experimental-strip-types ./tests/smoke/diagram-refs.test.mjs: pass; architecture.yaml YAML parse and manual count: 14 nodes, 31 edges matching architecture.mmd; wiki_audit profiles=task,alignment,stale-reference,generated-parity,changed task_id=TASK-066: warning; task/stale-reference/generated-parity pass; wiki_gateway implementation preflight: ready"
+    ],
+    "note": "Checkpoint commit recommendation applies only to passing implementation validation reports with a source implementation build."
+  },
+  "reload_guidance": {
+    "required": false,
+    "command": "/reload",
+    "paths": [],
+    "reasons": [],
+    "message": "No Pi reload needed for changed paths."
+  },
+  "failed_criteria": [
+    "commit_readiness"
+  ],
+  "blocking_questions": [
+    "Update the implementation build with commit-ready title, body, trailers, checks, validation placeholder, closure brief, and file evidence before validation can pass."
+  ],
+  "isolation_requirement": {
+    "required": true,
+    "mode": "fresh-context-checked-content",
+    "reason": "Implementation validation requires independent validator context and checked content proof.",
+    "evidence": [
+      "fresh_context=true",
+      "clean state recorded",
+      "validated_sha/head_sha/published_sha/tree_sha or working_tree_digest"
+    ],
+    "handoff": "implementation validation",
+    "profiles": [
+      "implementation"
+    ]
+  },
+  "audit_requirement": {
+    "required": true,
+    "profiles": [
+      "alignment",
+      "changed",
+      "task",
+      "stale-reference",
+      "generated-parity"
+    ],
+    "evidence": [
+      "audit:alignment or profile:alignment",
+      "audit:changed or profile:changed",
+      "audit:task or profile:task",
+      "audit:stale-reference or profile:stale-reference",
+      "audit:generated-parity or profile:generated-parity"
+    ],
+    "reason": "Gateway profiles require deterministic audit evidence for their build or boundary context.",
+    "gaps": []
+  },
+  "preflight": {
+    "version": 1,
+    "status": "ready",
+    "profile": "implementation",
+    "task_id": "TASK-066",
+    "checks": [
+      "source refs readable",
+      "accepted upstream builds with gateway pass",
+      "decision row KB/defer mapping coverage",
+      "open semantic questions",
+      "decision-row propagation coverage",
+      "required audit evidence",
+      "task id consistency",
+      "content proof strategy",
+      "close/publication blockers",
+      "risk-tier approval policy",
+      "production policy profile"
+    ],
+    "missing": {
+      "upstream_builds": [],
+      "decision_mappings": [],
+      "ambiguity": [],
+      "decision_propagation": [],
+      "audit_evidence": [],
+      "task_ids": [],
+      "content_proof": [],
+      "stale_refs": [],
+      "close_publication_blockers": [],
+      "user_approval": [],
+      "production_policy": []
+    },
+    "issues": [],
+    "routing": {},
+    "risk": {
+      "tier": "security-migration-publication",
+      "reason": "Security, migration, publication, or release work requires explicit user approval before promotion.",
+      "approval_required": true,
+      "approval_evidence": [
+        "approval:user accepted TASK-066 architecture diagram migration in planning build .codewiki/builds/planning/2026-05-31-planned-sprint-017-for-architecture-first-system.json and planning validation .codewiki/validation/2026-05-31-planning-pass-2026-05-31-planned-sprint-017-fo.json"
+      ],
+      "approval_missing": [],
+      "fresh_context": {
+        "required": true,
+        "recommended": true,
+        "supplied": true,
+        "gaps": [],
+        "reason": "Implementation validation requires independent validator context and checked content proof."
+      },
+      "fast_path": {
+        "candidate": false,
+        "eligible": false,
+        "reason": "High-risk work must cite approval evidence before lower-layer promotion."
+      }
+    }
+  },
+  "commit_readiness_requirement": {
+    "required": true,
+    "evidence": [
+      "task_id",
+      "source_planning_build",
+      "accepted_planning_build_ref",
+      "acceptance_mapping",
+      "code_files",
+      "test_files or test_design_evidence",
+      "checks_run",
+      "closure_brief",
+      "publication.commit title/body",
+      "CodeWiki roadmap/build/checks/validation/recover trailers"
+    ],
+    "gaps": [
+      "code_files"
+    ]
+  },
+  "semantic_traceability_requirement": {
+    "required": true,
+    "evidence": [
+      "source implementation build",
+      "change_type",
+      "accepted upstream compiler build refs"
+    ],
+    "gaps": [],
+    "warnings": []
+  },
+  "isolation": {
+    "working_tree_digest": "sha256:b9691b68e38594658329320dbffbcc47328bcae889f37782dbca504ce3529763",
+    "clean": false,
+    "fresh_context": true,
+    "notes": "Validation started from implementation build, TASK-066 context, planning build, planning validation, diagram source files, and fresh audit/check output. Digest computed from git status --porcelain=v1 --untracked-files=all plus per-file SHA-256 content hashes for 8 changed entries.",
+    "role": "validator"
+  }
+}

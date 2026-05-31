@@ -1,0 +1,178 @@
+schema_version: 1
+id: spec.system.diagrams.architecture
+title: CodeWiki System Architecture
+kind: architecture_map
+purpose: Show the high-level CodeWiki user surfaces, application workflow components, durable truth stores, generated graph, executable proof, and publication support with the same node/edge contract previously stored in ../architecture.mmd.
+source_docs:
+  - .codewiki/kb/system/overview.md
+  - .codewiki/kb/system/control-room-ui.md
+  - .codewiki/kb/system/extension.md
+  - .codewiki/kb/system/adapters.md
+  - .codewiki/kb/system/api.md
+  - .codewiki/kb/system/agency.md
+  - .codewiki/kb/system/compilers.md
+  - .codewiki/kb/system/validation-gateway.md
+  - .codewiki/kb/system/knowledge.md
+  - .codewiki/kb/system/builds.md
+  - .codewiki/kb/system/roadmap.md
+  - .codewiki/kb/system/graph.md
+  - .codewiki/kb/system/architecture.mmd
+renderer:
+  preferred: layered_graph
+  fallback: mermaid_flowchart
+  layout: top_down
+  stable_ids: true
+  future_tui_ascii:
+    enabled: true
+    rank_direction: top_down
+    node_width: medium
+    edge_labels: optional
+    group_lanes: true
+groups:
+  - id: surfaces
+    label: User surfaces
+  - id: integration
+    label: Host integration
+  - id: application
+    label: Application workflows
+  - id: truth_state
+    label: Truth and generated state
+  - id: proof_publication
+    label: Proof and publication
+nodes:
+  - id: user
+    label: User / agent intent
+    group: surfaces
+    kind: actor
+  - id: control_room
+    label: CodeWiki UI
+    group: surfaces
+    kind: ui
+    source: .codewiki/kb/system/control-room-ui.md
+  - id: extension
+    label: Extension
+    group: integration
+    kind: adapter
+    source: .codewiki/kb/system/extension.md
+  - id: adapters
+    label: Adapters
+    group: integration
+    kind: adapter
+    source: .codewiki/kb/system/adapters.md
+  - id: api
+    label: CodeWiki API
+    group: application
+    kind: application
+    source: .codewiki/kb/system/api.md
+  - id: agency
+    label: Agency controller
+    group: application
+    kind: workflow
+    source: .codewiki/kb/system/agency.md
+  - id: compilers
+    label: Compilers
+    group: application
+    kind: workflow
+    source: .codewiki/kb/system/compilers.md
+  - id: gateway
+    label: Validation gateway
+    group: application
+    kind: workflow
+    source: .codewiki/kb/system/validation-gateway.md
+  - id: knowledge
+    label: Knowledge
+    group: truth_state
+    kind: durable_truth
+    source: .codewiki/kb/system/knowledge.md
+  - id: builds
+    label: Builds
+    group: truth_state
+    kind: handoff_truth
+    source: .codewiki/kb/system/builds.md
+  - id: roadmap
+    label: Roadmap
+    group: truth_state
+    kind: durable_truth
+    source: .codewiki/kb/system/roadmap.md
+  - id: graph
+    label: Generated state graph
+    group: truth_state
+    kind: generated_state
+    source: .codewiki/kb/system/graph.md
+  - id: code_tests
+    label: Code + tests
+    group: proof_publication
+    kind: executable_truth
+  - id: publication
+    label: Publication support
+    group: proof_publication
+    kind: publication
+    summary: Commit, PR, issue, release, and push support.
+edges:
+  - from: user
+    to: control_room
+  - from: user
+    to: extension
+  - from: extension
+    to: control_room
+  - from: extension
+    to: adapters
+  - from: control_room
+    to: api
+  - from: adapters
+    to: api
+  - from: api
+    to: agency
+  - from: api
+    to: compilers
+  - from: api
+    to: knowledge
+  - from: api
+    to: builds
+  - from: api
+    to: roadmap
+  - from: api
+    to: graph
+  - from: api
+    to: gateway
+  - from: agency
+    to: graph
+  - from: agency
+    to: roadmap
+  - from: agency
+    to: compilers
+  - from: agency
+    to: gateway
+  - from: compilers
+    to: builds
+  - from: compilers
+    to: knowledge
+  - from: compilers
+    to: roadmap
+  - from: compilers
+    to: code_tests
+  - from: compilers
+    to: gateway
+  - from: gateway
+    to: builds
+  - from: gateway
+    to: graph
+  - from: gateway
+    to: publication
+  - from: knowledge
+    to: graph
+  - from: builds
+    to: graph
+  - from: roadmap
+    to: graph
+  - from: code_tests
+    to: graph
+  - from: builds
+    to: publication
+  - from: code_tests
+    to: publication
+compatibility_exports:
+  - path: .codewiki/kb/system/architecture.mmd
+    format: mermaid_flowchart
+    status: compatibility_export_only
+    note: YAML in this file is canonical; Mermaid is retained only for compatibility during migration.
