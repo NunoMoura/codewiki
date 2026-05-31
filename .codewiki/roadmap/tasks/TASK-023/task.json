@@ -4,7 +4,7 @@
   "status": "cancelled",
   "priority": "high",
   "kind": "migration",
-  "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
+  "summary": "Restore TASK-023 cancelled state after approved metadata path repair; task remains a superseded aggregate.",
   "spec_paths": [
     ".codewiki/kb/system/file-structure.md",
     ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -51,7 +51,7 @@
     "src/roadmap/status.ts",
     "src/roadmap/task-id.ts",
     "src/roadmap/task-boundary.ts",
-    "src/roadmap/runtime.ts",
+    "src/roadmap/store.ts",
     "src/roadmap/task.ts",
     "src/roadmap/tool.ts",
     "src/state/types.ts",
@@ -208,5 +208,5 @@
     "closure": ""
   },
   "created": "2026-05-26",
-  "updated": "2026-05-27T22:19:13Z"
+  "updated": "2026-05-31T01:04:01Z"
 }

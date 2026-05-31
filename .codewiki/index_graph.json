@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T00:57:36.063Z",
+  "generated_at": "2026-05-31T01:10:03.390Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -7370,14 +7370,6 @@
       "lens_family": "execution"
     },
     {
-      "id": "code:src/roadmap/runtime.ts",
-      "kind": "code_path",
-      "path": "src/roadmap/runtime.ts",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
       "id": "code:src/state/types.ts",
       "kind": "code_path",
       "path": "src/state/types.ts",
@@ -7591,14 +7583,6 @@
       "id": "code:tests/smoke/audit-drift.test.mjs",
       "kind": "code_path",
       "path": "tests/smoke/audit-drift.test.mjs",
-      "layer": "code",
-      "alignment_state": "aligned",
-      "lens_family": "execution"
-    },
-    {
-      "id": "code:tests/smoke/validation-preflight.test.mjs",
-      "kind": "code_path",
-      "path": "tests/smoke/validation-preflight.test.mjs",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -8519,6 +8503,14 @@
       "id": "code:src/adapters/pi/session.ts",
       "kind": "code_path",
       "path": "src/adapters/pi/session.ts",
+      "layer": "code",
+      "alignment_state": "aligned",
+      "lens_family": "execution"
+    },
+    {
+      "id": "code:src/roadmap/runtime.ts",
+      "kind": "code_path",
+      "path": "src/roadmap/runtime.ts",
       "layer": "code",
       "alignment_state": "aligned",
       "lens_family": "execution"
@@ -10687,6 +10679,88 @@
       "id": "closure:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json",
       "kind": "closure_brief",
       "path": ".codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    },
+    {
+      "id": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "kind": "decision_build",
+      "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "title": "DT-2026-05-31-24 approved by user",
+      "status": "accepted",
+      "layer": "build",
+      "lifecycle_state": "accepted",
+      "alignment_state": "aligned",
+      "compacted": false,
+      "default_hidden": true,
+      "superseded_by": [],
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+          "DT-2026-05-31-24 approved by user",
+          "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+          "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+          "TASK-023",
+          "TASK-036"
+        ],
+        "audit_evidence_refs": [
+          "profile:alignment",
+          "profile:stale-reference"
+        ],
+        "content_proof_refs": [],
+        "validation_attestation_refs": [
+          ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json"
+        ]
+      },
+      "lens_family": "decision",
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "kind": "canonical_source_ref",
+      "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:DT-2026-05-31-24 approved by user",
+      "kind": "canonical_source_ref",
+      "path": "DT-2026-05-31-24 approved by user",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+      "kind": "canonical_source_ref",
+      "path": "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+      "kind": "canonical_source_ref",
+      "path": "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-023",
+      "kind": "canonical_source_ref",
+      "path": "TASK-023",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "source:TASK-036",
+      "kind": "canonical_source_ref",
+      "path": "TASK-036",
+      "layer": "source",
+      "default_hidden": true,
+      "lens_family": "proof"
     },
     {
       "id": "build:.codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
@@ -24914,14 +24988,6 @@
       "id": "source:TASK-025 implementation",
       "kind": "canonical_source_ref",
       "path": "TASK-025 implementation",
-      "layer": "source",
-      "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "source:TASK-023",
-      "kind": "canonical_source_ref",
-      "path": "TASK-023",
       "layer": "source",
       "default_hidden": true,
       "lens_family": "proof"
@@ -49256,6 +49322,56 @@
       "lens_family": "proof"
     },
     {
+      "id": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "kind": "validation_report",
+      "path": ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "verdict": "pass",
+      "isolation_status": "isolated",
+      "isolation": {
+        "working_tree_digest": "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
+        "clean": false,
+        "fresh_context": true,
+        "notes": "Fresh validation from source refs after approved rows, final roadmap metadata repair content, decision build validation ref update, and generated graph refresh. Report preserved under unique roadmap-missing-code-path filename to avoid collision with prior accepted reconciliation report.",
+        "role": "validator"
+      },
+      "evidence_summary": {
+        "canonical_source_refs": [
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json"
+        ],
+        "audit_evidence_refs": [
+          "alignment",
+          "stale-reference",
+          "generated-parity",
+          "changed",
+          "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed"
+        ],
+        "content_proof_refs": [
+          "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95"
+        ]
+      },
+      "lens_family": "proof",
+      "default_hidden": true,
+      "default_collapsed": true,
+      "default_collapse_reason": "badge_in_default_lens"
+    },
+    {
+      "id": "audit:wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed",
+      "kind": "audit_evidence",
+      "path": "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed",
+      "layer": "audit",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
+      "id": "content_proof:working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
+      "kind": "content_proof",
+      "path": "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
+      "proof_kind": "content_proof",
+      "layer": "content_proof",
+      "default_hidden": true,
+      "lens_family": "proof"
+    },
+    {
       "id": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
       "kind": "validation_report",
       "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
@@ -49405,16 +49521,6 @@
       "proof_kind": "git_sha",
       "layer": "content_proof",
       "default_hidden": true,
-      "lens_family": "proof"
-    },
-    {
-      "id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "kind": "lint_issue",
-      "path": ".codewiki/roadmap/queue.json",
-      "layer": "validation",
-      "severity": "warning",
-      "issue_kind": "roadmap-missing-code-path",
-      "message": "TASK-023 references missing code path: src/roadmap/runtime.ts",
       "lens_family": "proof"
     }
   ],
@@ -58173,13 +58279,6 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/file-structure.md",
-      "to": "code:src/roadmap/runtime.ts",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-023"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/file-structure.md",
       "to": "code:src/state/types.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
@@ -58542,7 +58641,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -58932,7 +59031,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/builds/decision/2026-05-22-file-structure-concept-root-drift-map.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -59322,7 +59421,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/validation/2026-05-22-decision-pass.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -59733,7 +59832,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/validation/2026-05-26-task-close-pass-task-022.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -60144,7 +60243,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/change-lifecycle.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -60534,7 +60633,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/worktree-isolation.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -60938,7 +61037,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/roadmap.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -61349,7 +61448,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/graph.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -61753,7 +61852,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/api.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -62150,7 +62249,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -62561,7 +62660,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/validation/2026-05-27-decision-pass.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -62965,7 +63064,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/agency.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -63369,7 +63468,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/product/stories/automation.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-023"
     },
@@ -63717,7 +63816,7 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-023",
-      "to": "code:src/roadmap/runtime.ts"
+      "to": "code:src/roadmap/store.ts"
     },
     {
       "kind": "task_code_path",
@@ -64140,7 +64239,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.pi-lens/reviews/booboo-2026-05-28T00-32-49.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -64238,7 +64337,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.pi-lens/reviews/booboo-2026-05-28T00-32-49.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -64523,7 +64622,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:package.json",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -64621,7 +64720,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:package.json",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -64906,7 +65005,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:README.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -65004,7 +65103,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:README.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -65261,7 +65360,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/graph.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -65518,7 +65617,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/roadmap.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -65782,7 +65881,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -65880,7 +65979,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/control-room-ui.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -66061,13 +66160,6 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/file-structure.md",
       "to": "code:tests/smoke/audit-drift.test.mjs",
-      "link_source": "roadmap_task",
-      "source_ref": "TASK-036"
-    },
-    {
-      "kind": "doc_code_path",
-      "from": "doc:.codewiki/kb/system/file-structure.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -66303,7 +66395,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/worktree-isolation.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -66595,7 +66687,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -66693,7 +66785,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/control-room-ui-details.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -66985,7 +67077,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:src/roadmap/runtime.ts",
+      "to": "code:src/roadmap/store.ts",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -67083,7 +67175,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/validation-gateway.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -67340,7 +67432,7 @@
     {
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/change-lifecycle.md",
-      "to": "code:tests/smoke/validation-preflight.test.mjs",
+      "to": "code:tests/smoke/gateway-preflight.test.mjs",
       "link_source": "roadmap_task",
       "source_ref": "TASK-036"
     },
@@ -67549,7 +67641,7 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-036",
-      "to": "code:src/roadmap/runtime.ts"
+      "to": "code:src/roadmap/store.ts"
     },
     {
       "kind": "task_code_path",
@@ -67619,7 +67711,7 @@
     {
       "kind": "task_code_path",
       "from": "task:TASK-036",
-      "to": "code:tests/smoke/validation-preflight.test.mjs"
+      "to": "code:tests/smoke/gateway-preflight.test.mjs"
     },
     {
       "kind": "task_code_path",
@@ -73347,6 +73439,27 @@
     },
     {
       "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/file-structure.md",
+      "to": "code:src/roadmap/runtime.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/diagrams/file-structure-map.yaml",
+      "to": "code:src/roadmap/runtime.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/roadmap.md",
+      "to": "code:src/roadmap/runtime.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/roadmap.md",
       "to": "code:src/adapters/pi/tools/ports.ts",
       "link_source": "build_evidence",
@@ -73433,6 +73546,13 @@
       "kind": "doc_code_path",
       "from": "doc:.codewiki/kb/system/roadmap.md",
       "to": "code:src/domain/state/types.ts",
+      "link_source": "build_evidence",
+      "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
+    },
+    {
+      "kind": "doc_code_path",
+      "from": "doc:.codewiki/kb/system/api.md",
+      "to": "code:src/roadmap/runtime.ts",
       "link_source": "build_evidence",
       "source_ref": ".codewiki/builds/implementation/2026-05-27-task-029-roadmap-source-root.json"
     },
@@ -78564,6 +78684,99 @@
       "kind": "build_produces_closure",
       "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
       "to": "closure:.codewiki/builds/decision/2026-05-29-checks-policy-gateway-wiki-namespace.json"
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:DT-2026-05-31-24 approved by user",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:TASK-023",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_references_canonical_source",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "source:TASK-036",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "audit:profile:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_audit_evidence",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "audit:profile:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled."
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled."
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-023"
+    },
+    {
+      "kind": "build_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-036"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled."
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled."
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-023"
+    },
+    {
+      "kind": "build_produces_task",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "task:TASK-036"
+    },
+    {
+      "kind": "build_produces_validation",
+      "from": "build:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "to": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json"
     },
     {
       "kind": "build_references_canonical_source",
@@ -124111,6 +124324,48 @@
     },
     {
       "kind": "validation_attests_source",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "source:.codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "audit:alignment",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "audit:stale-reference",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "audit:generated-parity",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "audit:changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_audit_evidence",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "audit:wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_content_proof",
+      "from": "validation:.codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+      "to": "content_proof:working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
+      "default_hidden": true
+    },
+    {
+      "kind": "validation_attests_source",
       "from": "validation:.codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
       "to": "source:.codewiki/builds/implementation/2026-05-31-implemented-task-064-pi-code-foundation-runtime-.json",
       "default_hidden": true
@@ -124232,11 +124487,6 @@
       "kind": "validation_task",
       "from": "validation:.codewiki/validation/2026-05-31-task-close-pass-task-064-2026-05-31-implemented-.json",
       "to": "task:TASK-064"
-    },
-    {
-      "kind": "lint_issue_path",
-      "from": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-      "to": "doc:.codewiki/roadmap/queue.json"
     }
   ],
   "views": {
@@ -124250,13 +124500,13 @@
             "id": "decision",
             "label": "Decision",
             "summary": "Approved intent, requirement rows, risk state, and semantic direction.",
-            "state": "drift",
+            "state": "aligned",
             "item_count": 0,
             "badges": [
               {
                 "id": "decision_builds",
                 "label": "decision builds",
-                "count": 18
+                "count": 19
               },
               {
                 "id": "semantic_gaps",
@@ -124366,12 +124616,12 @@
             "label": "Execution",
             "summary": "Code, tests, checks, implementation builds, and dirty working-set evidence.",
             "state": "aligned",
-            "item_count": 442,
+            "item_count": 441,
             "badges": [
               {
                 "id": "code_paths",
                 "label": "code paths",
-                "count": 386
+                "count": 385
               },
               {
                 "id": "test_files",
@@ -124408,12 +124658,12 @@
             "label": "Proof",
             "summary": "Validation, audit evidence, commits, publication, archive, and content proof.",
             "state": "aligned",
-            "item_count": 2,
+            "item_count": 1,
             "badges": [
               {
                 "id": "validation_reports",
                 "label": "validation reports",
-                "count": 182
+                "count": 183
               },
               {
                 "id": "fail_or_block_validation",
@@ -124423,12 +124673,12 @@
               {
                 "id": "audit_refs",
                 "label": "audit refs",
-                "count": 599
+                "count": 600
               },
               {
                 "id": "content_proofs",
                 "label": "content proofs",
-                "count": 1474
+                "count": 1475
               },
               {
                 "id": "traceability_gaps",
@@ -124437,34 +124687,33 @@
               }
             ],
             "hot_refs": [
-              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml",
-              "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
+              "file_structure:.codewiki/kb/system/diagrams/file-structure-map.yaml"
             ],
             "collapsed": true
           }
         ],
         "badges": {
           "builds": {
-            "total": 134,
-            "decision": 18,
+            "total": 135,
+            "decision": 19,
             "planning": 31,
             "implementation": 85,
             "hot": 0,
-            "collapsed": 134
+            "collapsed": 135
           },
           "validations": {
-            "total": 182,
-            "pass": 155,
+            "total": 183,
+            "pass": 156,
             "fail_or_block": 27,
             "hot": 7,
-            "collapsed": 182
+            "collapsed": 183
           }
         },
         "next_action": {
-          "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work."
+          "item_id": null,
+          "source_id": null,
+          "loop": "observe",
+          "reason": "No reconciliation item currently requires a compiler loop."
         },
         "expands_to": {
           "trace": "views.lenses.trace",
@@ -124499,6 +124748,7 @@
           ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
           ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
           ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+          ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
           ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
           ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
           ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -124729,6 +124979,7 @@
           "DT-2026-05-24-9",
           "DT-2026-05-24-9; user approved MC-001..MC-004 in chat on 2026-05-24.",
           "DT-2026-05-31-23 approved by user",
+          "DT-2026-05-31-24 approved by user",
           "Decision build .codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
           "Documentation build .codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json",
           "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
@@ -124801,6 +125052,7 @@
           "TASK-022",
           "TASK-022 implementation compiler after planning validation .codewiki/validation/2026-05-25-planning-pass-task-022.json",
           "TASK-023",
+          "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
           "TASK-024",
           "TASK-024 implementation compiler from planning build .codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
           "TASK-025",
@@ -124821,6 +125073,8 @@
           "TASK-034 created from dogfood warning UX report",
           "TASK-035",
           "TASK-035 created from release-prep graph health warnings",
+          "TASK-036",
+          "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
           "TASK-037",
           "TASK-038",
           "TASK-039",
@@ -125583,6 +125837,25 @@
               ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
               "DT-2026-05-31-23 approved by user",
               "No roadmap task created; roadmap remains open 0."
+            ]
+          },
+          {
+            "path": ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+            "kind": "decision_build",
+            "status": "accepted",
+            "task_ids": [
+              "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+              "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+              "TASK-023",
+              "TASK-036"
+            ],
+            "source_refs": [
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
+              "DT-2026-05-31-24 approved by user",
+              "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+              "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+              "TASK-023",
+              "TASK-036"
             ]
           },
           {
@@ -133701,6 +133974,25 @@
             "isolation_status": "isolated"
           },
           {
+            "path": ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+            "verdict": "pass",
+            "profile": "decision",
+            "source_refs": [
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json"
+            ],
+            "audit_evidence_refs": [
+              "alignment",
+              "stale-reference",
+              "generated-parity",
+              "changed",
+              "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed"
+            ],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95"
+            ],
+            "isolation_status": "isolated"
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
             "verdict": "pass",
             "profile": "implementation",
@@ -136625,6 +136917,19 @@
             "publisher_result_refs": []
           },
           {
+            "path": ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+            "verdict": "pass",
+            "status": "isolated",
+            "role": "validator",
+            "clean": false,
+            "fresh_context": true,
+            "related_claim_ids": [],
+            "content_proof_refs": [
+              "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95"
+            ],
+            "publisher_result_refs": []
+          },
+          {
             "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
             "task_id": "TASK-064",
             "verdict": "pass",
@@ -137242,6 +137547,7 @@
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
           "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
           "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
+          "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed",
           "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
           "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
@@ -138729,53 +139035,14 @@
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
           "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+          "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
           "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
           "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
           "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
           "working_tree_digest:sha256:3ff83ce91cc4374d64b99c7d2134d1ea619387f891c361e7dce6ebd05b9c4117",
           "working_tree_digest:sha256:459625a7c9f937bc1e319d538d6cd87780d14759143d83f2448bc3810aaec5a6"
         ],
-        "reconciliation_items": [
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          },
-          {
-            "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-            "state": "drift",
-            "direction": "gateway",
-            "from_layer": "knowledge",
-            "to_layer": "roadmap",
-            "next_loop": "decision",
-            "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-            "doc_paths": [
-              ".codewiki/roadmap/queue.json"
-            ]
-          }
-        ],
+        "reconciliation_items": [],
         "traceability_gaps": [],
         "semantic_change_gaps": [],
         "file_structure_drift": {
@@ -139978,7 +140245,6 @@
         "tests/smoke/role-worktree-isolation.test.mjs",
         "tests/smoke/runtime-job-state.test.mjs",
         "tests/smoke/runtime-runner.test.mjs",
-        "tests/smoke/validation-preflight.test.mjs",
         "tests/tasks",
         "tests/tasks/TASK-015/agency-source-root.test.mjs",
         "tests/tasks/TASK-021/audit-source-root.test.mjs",
@@ -142897,6 +143163,19 @@
           "publisher_result_refs": []
         },
         {
+          "path": ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+          "verdict": "pass",
+          "status": "isolated",
+          "role": "validator",
+          "clean": false,
+          "fresh_context": true,
+          "related_claim_ids": [],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95"
+          ],
+          "publisher_result_refs": []
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
           "task_id": "TASK-064",
           "verdict": "pass",
@@ -142963,6 +143242,7 @@
         ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
         ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
         ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+        ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
         ".codewiki/builds/documentation/2026-05-19-role-worktree-isolation-docs.json",
         ".codewiki/builds/feedback/2026-05-19-parallel-role-worktree-factory-publisher-queue.json",
         ".codewiki/builds/implementation/2026-05-19-add-codewiki-resume-context-as-normal-continuati.json",
@@ -143193,6 +143473,7 @@
         "DT-2026-05-24-9",
         "DT-2026-05-24-9; user approved MC-001..MC-004 in chat on 2026-05-24.",
         "DT-2026-05-31-23 approved by user",
+        "DT-2026-05-31-24 approved by user",
         "Decision build .codewiki/builds/decision/2026-05-27-context-reset-agency-levels-doc-code-links.json",
         "Documentation build .codewiki/builds/documentation/2026-05-19-document-accepted-automatic-session-boundary-and.json",
         "Documentation build for accepted HND-006..HND-009 decision-loop and agent-owned new_session model.",
@@ -143265,6 +143546,7 @@
         "TASK-022",
         "TASK-022 implementation compiler after planning validation .codewiki/validation/2026-05-25-planning-pass-task-022.json",
         "TASK-023",
+        "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
         "TASK-024",
         "TASK-024 implementation compiler from planning build .codewiki/builds/planning/2026-05-26-post-task-022-remaining-concept-root-migration-p.json",
         "TASK-025",
@@ -143285,6 +143567,8 @@
         "TASK-034 created from dogfood warning UX report",
         "TASK-035",
         "TASK-035 created from release-prep graph health warnings",
+        "TASK-036",
+        "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
         "TASK-037",
         "TASK-038",
         "TASK-039",
@@ -144283,6 +144567,7 @@
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-028.json",
         "validation:.codewiki/validation/2026-05-27-task-close-pass-task-029.json",
         "wiki_audit alignment,changed,task,generated-parity task_id=TASK-064: changed pass with 0 changed files; task pass; generated-parity pass; alignment warning only graph-health 9 warnings.",
+        "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed",
         "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only unrelated 7 graph warnings; changed warning only generated index file changed",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass before roadmap evidence refresh, then generated-file warnings after refresh; alignment graph-health warning persists.",
         "wiki_audit task/alignment/generated-parity/changed for TASK-064: task pass; generated-parity pass; changed pass; alignment graph-health warning persists.",
@@ -145770,6 +146055,7 @@
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:cf30becb16548e0dff24a0c3fab43f08d09cb6b0cd7d4ffcce623ebb18f7e644",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:fc1db4dc3ecaee38edae3f6dd32a415ae072d17ac84036676a2e919255e018d7",
         "tests/tasks/TASK-076/restructure.test.mjs@sha256:ffeba73ff78d61135c38fa6310d5c6c49673d77bf1eb84b8d0c565efa44a7f24",
+        "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95",
         "working_tree_digest:sha256:27bf3c178ef58c269fd65fa480b829143324b030acd9d9af976f0343e074efa0",
         "working_tree_digest:sha256:3974b30ed79b70c721f3e09892e6903b8c1d65f9856ed835dc35905a570639ca",
         "working_tree_digest:sha256:3a5973be8b159570c49c1988a966344d6423e3d4b01045bcbb17b884324f9c06",
@@ -150174,6 +150460,25 @@
           "isolation_status": "isolated"
         },
         {
+          "path": ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json",
+          "verdict": "pass",
+          "profile": "decision",
+          "source_refs": [
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json"
+          ],
+          "audit_evidence_refs": [
+            "alignment",
+            "stale-reference",
+            "generated-parity",
+            "changed",
+            "wiki_audit alignment/stale-reference/generated-parity/changed: stale-reference pass; generated-parity pass; alignment warning only 4 large-doc warnings; changed warning only generated index/task views changed"
+          ],
+          "content_proof_refs": [
+            "working_tree_digest:sha256:03eee626e1d81a44e851a220b84d1c7ecf73bb450f1a38730a059005baad0c95"
+          ],
+          "isolation_status": "isolated"
+        },
+        {
           "path": ".codewiki/validation/2026-05-31-implementation-pass-task-064-2026-05-31-implemen.json",
           "verdict": "pass",
           "profile": "implementation",
@@ -152982,7 +153287,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -153074,7 +153379,7 @@
             "src/adapters/pi/tools",
             "tests/smoke/control-room.test.mjs",
             "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/session/claims.ts",
             "src/session/tool.ts",
             "src/session/artifact-status-tool.ts",
@@ -153088,39 +153393,30 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
           ]
         }
       }
     },
     "workflow_cursor": {
-      "active_loop": "decision",
-      "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-      "input_refs": [
-        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/queue.json"
-      ],
-      "expected_output": "decision_build",
-      "exit_gate": "validation pass or explicit user decision",
+      "active_loop": "observe",
+      "reason": "No reconciliation item currently requires a compiler loop.",
+      "input_refs": [],
+      "expected_output": "observation",
+      "exit_gate": "no drift",
       "scope": {
         "kind": "roadmap"
       },
       "isolation": {
         "required": false,
-        "mode": "agent-owned-new-session",
-        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-        "evidence": [
-          "source build/task refs read",
-          "new_session or context_refresh when useful"
-        ],
-        "handoff": "decision_loop context boundary"
+        "mode": "none",
+        "reason": "No compiler or gateway handoff is active.",
+        "evidence": [],
+        "handoff": "observe"
       },
       "context_boundary": "none",
-      "handoff_refs": [
-        "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-        ".codewiki/roadmap/queue.json"
-      ]
+      "handoff_refs": []
     },
     "gc": {
       "policy": {
@@ -153167,6 +153463,7 @@
             ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
             ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
             ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
             ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
             ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -153328,6 +153625,7 @@
             ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
             ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
             ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+            ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
             ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
             ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
             ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
@@ -154570,76 +154868,27 @@
       "version": 1,
       "controller": "reconciliation_gateway",
       "model": "graph-backed-state-machine",
-      "items": [
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        },
-        {
-          "id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "source_id": "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          "state": "drift",
-          "direction": "gateway",
-          "from_layer": "knowledge",
-          "to_layer": "roadmap",
-          "next_loop": "decision",
-          "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-          "doc_paths": [
-            ".codewiki/roadmap/queue.json"
-          ]
-        }
-      ],
-      "counts_by_loop": {
-        "decision": 3
-      },
+      "items": [],
+      "counts_by_loop": {},
       "next_action": {
-        "loop": "decision",
-        "command": "Run decision compiler",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
+        "loop": "observe",
+        "command": "Observe — graph aligned",
+        "reason": "No reconciliation item currently requires a compiler loop.",
         "isolation_required": false,
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "decision_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ]
+        "handoff_refs": []
       },
       "layer_states": {
         "intent": "aligned",
-        "knowledge": "drift",
-        "roadmap": "drift",
+        "knowledge": "aligned",
+        "roadmap": "aligned",
         "code": "aligned",
         "validation": "aligned"
       }
@@ -154647,10 +154896,9 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-31T00:57:35.918Z",
+      "generated_at": "2026-05-31T01:10:03.251Z",
       "counts": {
-        "large-doc": 4,
-        "roadmap-missing-code-path": 3
+        "large-doc": 4
       },
       "issues": [
         {
@@ -154676,35 +154924,17 @@
           "kind": "large-doc",
           "path": ".codewiki/kb/system/validation-gateway.md",
           "message": "Live doc has 1875 words; consider split or cut."
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-023 references missing code path: src/roadmap/runtime.ts"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-036 references missing code path: src/roadmap/runtime.ts"
-        },
-        {
-          "severity": "warning",
-          "kind": "roadmap-missing-code-path",
-          "path": ".codewiki/roadmap/queue.json",
-          "message": "TASK-036 references missing code path: tests/smoke/validation-preflight.test.mjs"
         }
       ]
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-31T00:57:36Z",
+      "generated_at": "2026-05-31T01:10:03Z",
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 7,
-        "total_issues": 7
+        "warnings": 4,
+        "total_issues": 4
       },
       "source": {
         "task_context_root": ".codewiki/roadmap/tasks"
@@ -155462,7 +155692,7 @@
           "priority": "high",
           "kind": "migration",
           "change_type": "system",
-          "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
+          "summary": "Restore TASK-023 cancelled state after approved metadata path repair; task remains a superseded aggregate.",
           "labels": [
             "concept-root-migration",
             "project-root",
@@ -155628,7 +155858,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -155658,7 +155888,7 @@
             "src/agency/planning.ts",
             "src/adapters/pi/commands/config.ts"
           ],
-          "updated": "2026-05-27T22:19:13Z",
+          "updated": "2026-05-31T01:04:01Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -155676,7 +155906,7 @@
           "priority": "high",
           "kind": "tooling",
           "change_type": "code",
-          "summary": "Cancel accidental non-atomic aggregate created during roadmap planning; replace with atomic sprint tasks.",
+          "summary": "Restore TASK-036 cancelled state after approved metadata path repair; task remains an accidental non-atomic aggregate replaced by atomic sprint tasks.",
           "labels": [
             "booboo",
             "static-analysis",
@@ -155877,7 +156107,7 @@
             "src/adapters/pi/tools",
             "tests/smoke/control-room.test.mjs",
             "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/session/claims.ts",
             "src/session/tool.ts",
             "src/session/artifact-status-tool.ts",
@@ -155891,10 +156121,10 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
           ],
-          "updated": "2026-05-28T00:53:56Z",
+          "updated": "2026-05-31T01:04:07Z",
           "boundary": {
             "executable": true,
             "container": false,
@@ -155909,7 +156139,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-31T00:57:36Z",
+      "generated_at": "2026-05-31T01:10:03Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -155918,8 +156148,8 @@
       "health": {
         "color": "yellow",
         "errors": 0,
-        "warnings": 7,
-        "total_issues": 7
+        "warnings": 4,
+        "total_issues": 4
       },
       "summary": {
         "total_specs": 21,
@@ -155980,38 +156210,28 @@
         "active_sprint_ids": []
       },
       "next_step": {
-        "kind": "reconciliation:decision",
-        "command": "Run decision compiler",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "item_id": "reconcile:lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json"
+        "kind": "observe",
+        "command": "Observe — roadmap clear",
+        "reason": "No open deterministic drift requires action right now."
       },
       "workflow_cursor": {
-        "active_loop": "decision",
-        "reason": "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
-        "input_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ],
-        "expected_output": "decision_build",
-        "exit_gate": "validation pass or explicit user decision",
+        "active_loop": "observe",
+        "reason": "No reconciliation item currently requires a compiler loop.",
+        "input_refs": [],
+        "expected_output": "observation",
+        "exit_gate": "no drift",
         "scope": {
           "kind": "roadmap"
         },
         "isolation": {
           "required": false,
-          "mode": "agent-owned-new-session",
-          "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
-          "evidence": [
-            "source build/task refs read",
-            "new_session or context_refresh when useful"
-          ],
-          "handoff": "decision_loop context boundary"
+          "mode": "none",
+          "reason": "No compiler or gateway handoff is active.",
+          "evidence": [],
+          "handoff": "observe"
         },
         "context_boundary": "none",
-        "handoff_refs": [
-          "lint:roadmap-missing-code-path:.codewiki/roadmap/queue.json",
-          ".codewiki/roadmap/queue.json"
-        ]
+        "handoff_refs": []
       },
       "gc": {
         "policy": {
@@ -156058,6 +156278,7 @@
               ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
               ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
               ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
               ".codewiki/builds/planning/2026-05-19-plan-task-005-as-next-priority-for-automatic-ses.json",
               ".codewiki/builds/planning/2026-05-19-task-006-context-reset-handoff-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
@@ -156219,6 +156440,7 @@
               ".codewiki/builds/decision/2026-05-29-task-049-context-boundary-lifecycle-policy.json",
               ".codewiki/builds/decision/2026-05-30-daemon-runtime-architecture.json",
               ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-build-v2-missing-pro.json",
+              ".codewiki/builds/decision/2026-05-31-accepted-reconciliation-for-roadmap-missing-code.json",
               ".codewiki/builds/planning/2026-05-19-task-006-decision-new-session-policy-plan.json",
               ".codewiki/builds/planning/2026-05-19-task-006-role-worktree-factory-publisher-queue-p.json",
               ".codewiki/builds/planning/2026-05-20-task-007-context-refresh-regression-plan.json",
@@ -156339,7 +156561,7 @@
         ]
       },
       "direction": [
-        "Lint warning (roadmap-missing-code-path) has no open roadmap coverage; reconcile knowledge or create scoped work.",
+        "No open deterministic drift requires action right now.",
         "Parallel sessions: 0 active, 0 collision task(s), 0 artifact(s) in-use, 0 artifact conflict(s), 0 waiting, 0 ready.",
         "Agency policy: level=roadmap, approval=roadmap, reset_auto_pickup=on.",
         "Agency lanes: 3 work-first (high=1, medium=1, low=1).",
@@ -156509,7 +156731,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -157017,7 +157239,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -157228,7 +157450,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/state/types.ts",
             "src/state/reader.ts",
@@ -157266,6 +157488,7 @@
             "src/adapters/pi/tools/claim.ts (deleted)",
             "src/application/tools/claim.ts (deleted)",
             "src/application/tools/catalog.ts (deleted)",
+            "src/roadmap/runtime.ts",
             "src/adapters/pi/commands/resume.ts",
             "src/adapters/pi/tools/ports.ts",
             "src/adapters/pi/tools/task.ts",
@@ -157509,7 +157732,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -157572,7 +157795,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/build/types.ts",
             "src/build/lifecycle.ts",
@@ -157768,7 +157991,7 @@
             "src/adapters/pi/tools",
             "tests/smoke/control-room.test.mjs",
             "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/session/claims.ts",
             "src/session/tool.ts",
             "src/session/artifact-status-tool.ts",
@@ -157782,7 +158005,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/knowledge/doc-parser.ts",
             "src/project/templates.ts"
@@ -157861,7 +158084,7 @@
             "src/adapters/pi/tools",
             "tests/smoke/control-room.test.mjs",
             "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/session/claims.ts",
             "src/session/tool.ts",
             "src/session/artifact-status-tool.ts",
@@ -157875,7 +158098,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/knowledge/doc-parser.ts",
             "src/project/templates.ts"
@@ -158197,7 +158420,6 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
             "src/state/types.ts",
             "src/state/artifacts.ts",
             "src/state/rebuild.ts",
@@ -158244,7 +158466,6 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/domain/audit/types.ts",
             "src/application/tools/audit.ts",
@@ -158361,6 +158582,7 @@
             ".codewiki/kb/system/diagrams/README.md",
             ".codewiki/kb/system/knowledge.md",
             "src/adapters/pi/session.ts",
+            "src/roadmap/runtime.ts",
             "tests/setup-env.mjs",
             "src/application/ports.ts (deleted)",
             "src/domain/shared/types.ts (deleted)",
@@ -158468,7 +158690,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -158531,7 +158753,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/domain/audit/types.ts",
             "src/application/tools/audit.ts",
@@ -158828,7 +159050,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -158891,8 +159113,9 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+            "src/roadmap/runtime.ts",
             "src/adapters/pi/tools/ports.ts",
             "src/adapters/pi/tools/task.ts",
             "src/application/graph.ts",
@@ -159069,7 +159292,7 @@
             "src/adapters/pi/tools",
             "tests/smoke/control-room.test.mjs",
             "src/state/rebuild.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/session/claims.ts",
             "src/session/tool.ts",
             "src/session/artifact-status-tool.ts",
@@ -159083,7 +159306,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/domain/audit/types.ts",
             "src/application/tools/audit.ts",
@@ -159189,7 +159412,7 @@
             "src/roadmap/status.ts",
             "src/roadmap/task-id.ts",
             "src/roadmap/task-boundary.ts",
-            "src/roadmap/runtime.ts",
+            "src/roadmap/store.ts",
             "src/roadmap/task.ts",
             "src/roadmap/tool.ts",
             "src/state/types.ts",
@@ -159248,7 +159471,7 @@
             "src/validation/preflight.ts",
             "tests/smoke/audit.test.mjs",
             "tests/smoke/audit-drift.test.mjs",
-            "tests/smoke/validation-preflight.test.mjs",
+            "tests/smoke/gateway-preflight.test.mjs",
             "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
             "src/build/types.ts",
             "src/build/lifecycle.ts",
@@ -159300,7 +159523,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-31T00:57:36Z",
+        "generated_at": "2026-05-31T01:10:03Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -159355,10 +159578,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T00:57:36Z",
+            "checked_at": "2026-05-31T01:10:03Z",
             "revision": {
               "git": {
-                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
+                "head": "2ce43b16deb662a0ba31ef13ed26917b2a94c009",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -159406,7 +159629,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "d62bfe58b5d11f1ad07cfe19654750036f073eb4",
+                  ".codewiki/roadmap/queue.json": "e2dad628d826e503b4b129e41f2d24c3fcbe1068",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -159585,13 +159808,13 @@
               },
               "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "dbfe85f5989ae61f4b389f9a899eff2bbf6b3094737b4bd36494abe7b8697ef8",
-              "digest": "66f6a89bd081a1cbc008380e6105c235bc208e6694c9b212a7badaf04f97c966"
+              "code_digest": "a570c85b8fa6dbf536849b981554c2dd4c0d68bc0d69fa5e77619056174d4ad8",
+              "digest": "18c30bd05b793fa0db6cbbefde1a959654c8161c9bfd6b6a1a69f0f937f60ee7"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:57:36Z",
+              "checked_at": "2026-05-31T01:10:03Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -159678,7 +159901,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -159810,6 +160033,7 @@
               "src/adapters/pi/tools/claim.ts (deleted)",
               "src/application/tools/claim.ts (deleted)",
               "src/application/tools/catalog.ts (deleted)",
+              "src/roadmap/runtime.ts",
               "src/adapters/pi/tools/task.ts",
               "src/application/state.ts",
               "src/domain/state/types.ts",
@@ -159856,7 +160080,7 @@
               "tests/smoke/efficiency-ui.test.mjs",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/policy/**",
               "src/validation/**",
@@ -159910,7 +160134,6 @@
               "tests/smoke/alignment-drift-fixtures.test.mjs",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
-              "tests/smoke/gateway-preflight.test.mjs",
               "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
@@ -159928,7 +160151,6 @@
               ".codewiki/kb/",
               ".codewiki/session/queue.json",
               "skills/codewiki*/**",
-              "src/roadmap/store.ts",
               "tests/smoke/**",
               "tsconfig.json",
               "src/domain/build/types.ts",
@@ -160022,10 +160244,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-31T00:57:36Z",
+            "checked_at": "2026-05-31T01:10:03Z",
             "revision": {
               "git": {
-                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
+                "head": "2ce43b16deb662a0ba31ef13ed26917b2a94c009",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -160057,7 +160279,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "d62bfe58b5d11f1ad07cfe19654750036f073eb4",
+                  ".codewiki/roadmap/queue.json": "e2dad628d826e503b4b129e41f2d24c3fcbe1068",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -160229,13 +160451,13 @@
               },
               "spec_digest": "0630e2106e8d34d48732b10a4f5520a16f11dad0c98d0392f4346ad4dc55e00b",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "487a3d183ca85707cd7bdc224996b3bfd06a62df59e9213b106e5f6f49dfc45b",
-              "digest": "5fcf70a81547e80df0f6bd7728a4862ddedc7f1155cde3c3c596de169b75b93d"
+              "code_digest": "e9ee3e80bacb6cd44b068c913cf949c01f5257f84798f483799a0ff5c46970b3",
+              "digest": "699f80c0031726fe6c459dcb0997cf18000da3d38e923d74ef80ee57202b11f5"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:57:36Z",
+              "checked_at": "2026-05-31T01:10:03Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -160306,7 +160528,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -160416,6 +160638,7 @@
               "src/adapters/pi/tools/claim.ts (deleted)",
               "src/application/tools/claim.ts (deleted)",
               "src/application/tools/catalog.ts (deleted)",
+              "src/roadmap/runtime.ts",
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools/task.ts",
               "src/application/state.ts",
@@ -160468,7 +160691,7 @@
               "tests/smoke/efficiency-ui.test.mjs",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/policy/**",
               "src/validation/**",
@@ -160531,7 +160754,6 @@
               "tests/smoke/alignment-drift-fixtures.test.mjs",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
-              "tests/smoke/gateway-preflight.test.mjs",
               "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
@@ -160549,7 +160771,6 @@
               ".codewiki/kb/",
               ".codewiki/session/queue.json",
               "skills/codewiki*/**",
-              "src/roadmap/store.ts",
               "tests/smoke/**",
               "tsconfig.json",
               "src/domain/build/types.ts",
@@ -160643,10 +160864,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T00:57:36Z",
+            "checked_at": "2026-05-31T01:10:03Z",
             "revision": {
               "git": {
-                "head": "9a615c193fc02bf01ad529101a8ddf34bef3da54",
+                "head": "2ce43b16deb662a0ba31ef13ed26917b2a94c009",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -160694,7 +160915,7 @@
                   ".codewiki/kb/system/system-truth-and-compilers.md": "38a48772e241015b05660ecd51f2fe5a0cfd1535",
                   ".codewiki/kb/system/validation-gateway.md": "2e23b9b809ef8c46baff794f0b91713667a8e222",
                   ".codewiki/kb/system/worktree-isolation.md": "d988d08b9fd76a560e138a3a2f4dde4f1f16ba9c",
-                  ".codewiki/roadmap/queue.json": "d62bfe58b5d11f1ad07cfe19654750036f073eb4",
+                  ".codewiki/roadmap/queue.json": "e2dad628d826e503b4b129e41f2d24c3fcbe1068",
                   ".codewiki/runtime/diff-tables.json": "",
                   ".codewiki/session/queue.json": "",
                   ".pi-lens": "",
@@ -160873,13 +161094,13 @@
               },
               "spec_digest": "6cb53b80effeb479c9925fefa535ba58e8c02a024fd16fa0deae245a3f18da2c",
               "task_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "code_digest": "dbfe85f5989ae61f4b389f9a899eff2bbf6b3094737b4bd36494abe7b8697ef8",
-              "digest": "66f6a89bd081a1cbc008380e6105c235bc208e6694c9b212a7badaf04f97c966"
+              "code_digest": "a570c85b8fa6dbf536849b981554c2dd4c0d68bc0d69fa5e77619056174d4ad8",
+              "digest": "18c30bd05b793fa0db6cbbefde1a959654c8161c9bfd6b6a1a69f0f937f60ee7"
             },
             "freshness": {
               "status": "stale",
               "basis": "revision",
-              "checked_at": "2026-05-31T00:57:36Z",
+              "checked_at": "2026-05-31T01:10:03Z",
               "reason": "revision changed: code",
               "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
             },
@@ -160966,7 +161187,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -161098,6 +161319,7 @@
               "src/adapters/pi/tools/claim.ts (deleted)",
               "src/application/tools/claim.ts (deleted)",
               "src/application/tools/catalog.ts (deleted)",
+              "src/roadmap/runtime.ts",
               "src/adapters/pi/tools/task.ts",
               "src/application/state.ts",
               "src/domain/state/types.ts",
@@ -161144,7 +161366,7 @@
               "tests/smoke/efficiency-ui.test.mjs",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/policy/**",
               "src/validation/**",
@@ -161198,7 +161420,6 @@
               "tests/smoke/alignment-drift-fixtures.test.mjs",
               "tests/tasks/TASK-021/audit-source-root.test.mjs",
               "tests/tasks/TASK-022/**",
-              "tests/smoke/gateway-preflight.test.mjs",
               "tests/smoke/policy-gate.test.mjs",
               "tests/tasks/TASK-026/change-diff-table-source-root.test.mjs",
               "tests/smoke/builds.test.mjs",
@@ -161216,7 +161437,6 @@
               ".codewiki/kb/",
               ".codewiki/session/queue.json",
               "skills/codewiki*/**",
-              "src/roadmap/store.ts",
               "tests/smoke/**",
               "tsconfig.json",
               "src/domain/build/types.ts",
@@ -161311,7 +161531,7 @@
         "agency": "Re-run status or resume implementation before trusting prior drift analysis."
       },
       "parallel": {
-        "generated_at": "2026-05-31T00:57:36Z",
+        "generated_at": "2026-05-31T01:10:03Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
@@ -161466,7 +161686,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -161974,7 +162194,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -162185,7 +162405,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/state/types.ts",
               "src/state/reader.ts",
@@ -162223,6 +162443,7 @@
               "src/adapters/pi/tools/claim.ts (deleted)",
               "src/application/tools/claim.ts (deleted)",
               "src/application/tools/catalog.ts (deleted)",
+              "src/roadmap/runtime.ts",
               "src/adapters/pi/commands/resume.ts",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
@@ -162466,7 +162687,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -162529,7 +162750,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/build/types.ts",
               "src/build/lifecycle.ts",
@@ -162725,7 +162946,7 @@
               "src/adapters/pi/tools",
               "tests/smoke/control-room.test.mjs",
               "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/session/claims.ts",
               "src/session/tool.ts",
               "src/session/artifact-status-tool.ts",
@@ -162739,7 +162960,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/knowledge/doc-parser.ts",
               "src/project/templates.ts"
@@ -162818,7 +163039,7 @@
               "src/adapters/pi/tools",
               "tests/smoke/control-room.test.mjs",
               "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/session/claims.ts",
               "src/session/tool.ts",
               "src/session/artifact-status-tool.ts",
@@ -162832,7 +163053,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/knowledge/doc-parser.ts",
               "src/project/templates.ts"
@@ -163154,7 +163375,6 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
               "src/state/types.ts",
               "src/state/artifacts.ts",
               "src/state/rebuild.ts",
@@ -163201,7 +163421,6 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "src/application/tools/audit.ts",
@@ -163318,6 +163537,7 @@
               ".codewiki/kb/system/diagrams/README.md",
               ".codewiki/kb/system/knowledge.md",
               "src/adapters/pi/session.ts",
+              "src/roadmap/runtime.ts",
               "tests/setup-env.mjs",
               "src/application/ports.ts (deleted)",
               "src/domain/shared/types.ts (deleted)",
@@ -163425,7 +163645,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -163488,7 +163708,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "src/application/tools/audit.ts",
@@ -163785,7 +164005,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -163848,8 +164068,9 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+              "src/roadmap/runtime.ts",
               "src/adapters/pi/tools/ports.ts",
               "src/adapters/pi/tools/task.ts",
               "src/application/graph.ts",
@@ -164026,7 +164247,7 @@
               "src/adapters/pi/tools",
               "tests/smoke/control-room.test.mjs",
               "src/state/rebuild.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/session/claims.ts",
               "src/session/tool.ts",
               "src/session/artifact-status-tool.ts",
@@ -164040,7 +164261,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/domain/audit/types.ts",
               "src/application/tools/audit.ts",
@@ -164146,7 +164367,7 @@
               "src/roadmap/status.ts",
               "src/roadmap/task-id.ts",
               "src/roadmap/task-boundary.ts",
-              "src/roadmap/runtime.ts",
+              "src/roadmap/store.ts",
               "src/roadmap/task.ts",
               "src/roadmap/tool.ts",
               "src/state/types.ts",
@@ -164205,7 +164426,7 @@
               "src/validation/preflight.ts",
               "tests/smoke/audit.test.mjs",
               "tests/smoke/audit-drift.test.mjs",
-              "tests/smoke/validation-preflight.test.mjs",
+              "tests/smoke/gateway-preflight.test.mjs",
               "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
               "src/build/types.ts",
               "src/build/lifecycle.ts",
@@ -164332,7 +164553,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -164905,7 +165126,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -165116,7 +165337,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/state/types.ts",
                   "src/state/reader.ts",
@@ -165154,6 +165375,7 @@
                   "src/adapters/pi/tools/claim.ts (deleted)",
                   "src/application/tools/claim.ts (deleted)",
                   "src/application/tools/catalog.ts (deleted)",
+                  "src/roadmap/runtime.ts",
                   "src/adapters/pi/commands/resume.ts",
                   "src/adapters/pi/tools/ports.ts",
                   "src/adapters/pi/tools/task.ts",
@@ -165397,7 +165619,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -165460,7 +165682,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/build/types.ts",
                   "src/build/lifecycle.ts",
@@ -165656,7 +165878,7 @@
                   "src/adapters/pi/tools",
                   "tests/smoke/control-room.test.mjs",
                   "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/session/claims.ts",
                   "src/session/tool.ts",
                   "src/session/artifact-status-tool.ts",
@@ -165670,7 +165892,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/knowledge/doc-parser.ts",
                   "src/project/templates.ts"
@@ -165749,7 +165971,7 @@
                   "src/adapters/pi/tools",
                   "tests/smoke/control-room.test.mjs",
                   "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/session/claims.ts",
                   "src/session/tool.ts",
                   "src/session/artifact-status-tool.ts",
@@ -165763,7 +165985,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/knowledge/doc-parser.ts",
                   "src/project/templates.ts"
@@ -166085,7 +166307,6 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
                   "src/state/types.ts",
                   "src/state/artifacts.ts",
                   "src/state/rebuild.ts",
@@ -166132,7 +166353,6 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/domain/audit/types.ts",
                   "src/application/tools/audit.ts",
@@ -166249,6 +166469,7 @@
                   ".codewiki/kb/system/diagrams/README.md",
                   ".codewiki/kb/system/knowledge.md",
                   "src/adapters/pi/session.ts",
+                  "src/roadmap/runtime.ts",
                   "tests/setup-env.mjs",
                   "src/application/ports.ts (deleted)",
                   "src/domain/shared/types.ts (deleted)",
@@ -166356,7 +166577,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -166419,7 +166640,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/domain/audit/types.ts",
                   "src/application/tools/audit.ts",
@@ -166716,7 +166937,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -166779,8 +167000,9 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
+                  "src/roadmap/runtime.ts",
                   "src/adapters/pi/tools/ports.ts",
                   "src/adapters/pi/tools/task.ts",
                   "src/application/graph.ts",
@@ -166957,7 +167179,7 @@
                   "src/adapters/pi/tools",
                   "tests/smoke/control-room.test.mjs",
                   "src/state/rebuild.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/session/claims.ts",
                   "src/session/tool.ts",
                   "src/session/artifact-status-tool.ts",
@@ -166971,7 +167193,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/domain/audit/types.ts",
                   "src/application/tools/audit.ts",
@@ -167077,7 +167299,7 @@
                   "src/roadmap/status.ts",
                   "src/roadmap/task-id.ts",
                   "src/roadmap/task-boundary.ts",
-                  "src/roadmap/runtime.ts",
+                  "src/roadmap/store.ts",
                   "src/roadmap/task.ts",
                   "src/roadmap/tool.ts",
                   "src/state/types.ts",
@@ -167136,7 +167358,7 @@
                   "src/validation/preflight.ts",
                   "tests/smoke/audit.test.mjs",
                   "tests/smoke/audit-drift.test.mjs",
-                  "tests/smoke/validation-preflight.test.mjs",
+                  "tests/smoke/gateway-preflight.test.mjs",
                   "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs",
                   "src/build/types.ts",
                   "src/build/lifecycle.ts",

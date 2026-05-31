@@ -1,0 +1,537 @@
+{
+  "version": 1,
+  "schema_version": 2,
+  "kind": "decision_build",
+  "created": "2026-05-31T01:05:20Z",
+  "source": "DT-2026-05-31-24 approved by user",
+  "status": "accepted",
+  "lifecycle": {
+    "state": "accepted",
+    "ttl_days": 30,
+    "archive_after": "2026-06-30T01:05:20.000Z",
+    "purge_after": "2026-07-30T01:05:20.000Z"
+  },
+  "cycle": {
+    "loop": "decision",
+    "sequence": 1,
+    "supersedes": [],
+    "status": "accepted"
+  },
+  "policy": {
+    "profile": "decision",
+    "exit_criteria": [],
+    "required_audits": [
+      "alignment",
+      "stale-reference"
+    ],
+    "audit_refs": [],
+    "audit_reports": [],
+    "isolation": {
+      "loop_start": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "Compiler loops start from CodeWiki source refs; agents may refresh context when chat is noisy, stale, or token-heavy.",
+        "evidence": [
+          "source build/task refs read",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_loop context boundary",
+        "profiles": []
+      },
+      "validation": {
+        "required": false,
+        "mode": "fresh-context-preferred",
+        "reason": "Fresh validation is preferred; policy may require it for high-risk semantic gates.",
+        "evidence": [
+          "fresh_context=true when high-risk or policy-required"
+        ],
+        "handoff": "decision_build -> validation gateway",
+        "profiles": []
+      },
+      "next_loop": {
+        "required": false,
+        "mode": "agent-owned-new-session",
+        "reason": "The next compiler loop should start from CodeWiki source refs; the agent may refresh context when useful.",
+        "evidence": [
+          "source build ref",
+          "new_session or context_refresh when useful"
+        ],
+        "handoff": "decision_build -> planning_loop",
+        "profiles": []
+      }
+    }
+  },
+  "requirements": [
+    {
+      "id": "RECON-ROADMAP-PATH-001",
+      "text": "Clear roadmap-missing-code-path warnings for cancelled TASK-023/TASK-036 by replacing stale code_paths with current existing paths.",
+      "source_refs": [
+        "RECON-ROADMAP-PATH-001",
+        "RECON-ROADMAP-PATH-002",
+        "RECON-ROADMAP-PATH-003"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-002",
+      "text": "Preserve cancelled task statuses and avoid coordination-only roadmap work.",
+      "source_refs": [
+        "RECON-ROADMAP-PATH-004"
+      ],
+      "state": "accepted"
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-003",
+      "text": "Validate narrowly that target path warnings are cleared while preserving unrelated graph-health warnings.",
+      "source_refs": [
+        "RECON-ROADMAP-PATH-005"
+      ],
+      "state": "accepted"
+    }
+  ],
+  "evidence_mapping": [
+    {
+      "criterion": "Target path warnings cleared.",
+      "evidence": "After wiki_state refresh, roadmap-missing-code-path count is 0 in .codewiki/index_graph.json.",
+      "requirement_ids": [
+        "RECON-ROADMAP-PATH-001"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json"
+      ]
+    },
+    {
+      "criterion": "Cancelled statuses preserved and no task created.",
+      "evidence": "wiki_state reports roadmap open 0; queue records TASK-023 and TASK-036 status cancelled after repair.",
+      "requirement_ids": [
+        "RECON-ROADMAP-PATH-002"
+      ],
+      "source_refs": [
+        ".codewiki/roadmap/queue.json",
+        "wiki_state"
+      ]
+    },
+    {
+      "criterion": "Unrelated warnings preserved.",
+      "evidence": "Remaining 4 graph warnings are large-doc warnings only.",
+      "requirement_ids": [
+        "RECON-ROADMAP-PATH-003"
+      ],
+      "source_refs": [
+        ".codewiki/index_graph.json"
+      ]
+    }
+  ],
+  "audit_refs": [],
+  "audit_reports": [],
+  "agent_assessment": "",
+  "summary": "Accepted reconciliation for roadmap-missing-code-path graph warnings by updating cancelled TASK-023/TASK-036 code_paths to current replacement paths.",
+  "decision_mode": "accepted",
+  "diff_table": [
+    {
+      "id": "RECON-ROADMAP-PATH-001",
+      "current_state": "Graph lint reports roadmap-missing-code-path for cancelled roadmap records because their code_paths still name files later renamed or moved.",
+      "current_project_state": "Affected warnings: TASK-023 -> src/roadmap/runtime.ts missing; TASK-036 -> src/roadmap/runtime.ts missing and tests/smoke/validation-preflight.test.mjs missing. Current repo has src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs. Git history shows the renames in dfecc0f and da9e44e.",
+      "desired_state": "Cancelled historical tasks keep useful breadcrumb metadata, but all code_paths that graph treats as live path refs point to existing current paths or are removed with explicit rationale.",
+      "agreed_change": "Classify this as roadmap metadata drift caused by later renames, not missing implementation. Repair only roadmap task code_paths for TASK-023 and TASK-036 using current replacement paths.",
+      "expected_final_state": "wiki_state/wiki_audit no longer report roadmap-missing-code-path for TASK-023 or TASK-036. Any remaining graph-health warnings are unrelated and not hidden by this repair.",
+      "validated_final_state": "roadmap-missing-code-path count is 0 after wiki_state refresh; remaining graph warnings are large-doc only.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json",
+        "git show dfecc0f -- src/roadmap/runtime.ts src/roadmap/store.ts",
+        "git show da9e44e -- tests/smoke/validation-preflight.test.mjs tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "rationale": "The missing paths are not absent work; they have direct replacement paths in current source. Roadmap path metadata should remain graph-resolvable even for cancelled aggregate tasks kept in queue history.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Remove the missing paths from cancelled tasks instead of replacing them.",
+        "Change graph lint to skip cancelled tasks.",
+        "Leave warnings as historical noise until GC/archive policy removes the records."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-002",
+      "current_state": "TASK-023 is cancelled and summarized as a superseded aggregate replaced by atomic source-root tasks, but its code_paths still include src/roadmap/runtime.ts.",
+      "current_project_state": "src/roadmap/runtime.ts no longer exists; src/roadmap/store.ts exists and was produced by rename commit dfecc0f. TASK-023 already includes broad roadmap-root metadata and is not active executable work.",
+      "desired_state": "TASK-023 cancelled aggregate metadata references the current roadmap store owner path instead of a missing old filename.",
+      "agreed_change": "Use wiki_roadmap update to replace TASK-023 code_paths entry src/roadmap/runtime.ts with src/roadmap/store.ts and append evidence that this is metadata drift repair for a cancelled historical task.",
+      "expected_final_state": "TASK-023 remains cancelled; no outcome/acceptance/status change; graph path lint no longer flags TASK-023 for src/roadmap/runtime.ts.",
+      "validated_final_state": "TASK-023 code_paths references src/roadmap/store.ts and status is cancelled after repair.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json TASK-023",
+        "src/roadmap/store.ts"
+      ],
+      "rationale": "This preserves the historical roadmap-root breadcrumb while aligning it to the current file name. Removing the path would lose useful context; reopening the task would be wrong because it is cancelled/superseded.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Delete the code_paths entry from TASK-023.",
+        "Reopen TASK-023 to implement missing file; rejected because it is cancelled/superseded.",
+        "Suppress cancelled-task path lint."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-003",
+      "current_state": "TASK-036 is cancelled as an accidental non-atomic aggregate, but its code_paths still include src/roadmap/runtime.ts and tests/smoke/validation-preflight.test.mjs.",
+      "current_project_state": "src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs exist as current replacements. TASK-036 remains cancelled; atomic sprint tasks handled implementation work.",
+      "desired_state": "TASK-036 cancelled aggregate metadata points to current replacement paths for roadmap store and gateway preflight smoke coverage.",
+      "agreed_change": "Use wiki_roadmap update to replace TASK-036 code_paths entries: src/roadmap/runtime.ts -> src/roadmap/store.ts, and tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs. Append evidence that this is metadata drift repair only.",
+      "expected_final_state": "TASK-036 remains cancelled; no behavior, source code, or active roadmap work changes; graph path lint no longer flags TASK-036 for those two missing paths.",
+      "validated_final_state": "TASK-036 code_paths references src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs; status is cancelled after repair.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json TASK-036",
+        "src/roadmap/store.ts",
+        "tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "rationale": "The task was cancelled for boundary reasons, not because referenced files must stay frozen. Current path refs keep graph navigation useful and avoid stale warnings.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Delete the stale entries from TASK-036.",
+        "Update all historical prose mentions in goal/delta text too; not required because graph warning targets code_paths.",
+        "Suppress cancelled-task path lint."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-004",
+      "current_state": "Roadmap is open 0, so creating a new implementation task for three metadata path replacements would be coordination-only unless validation reveals real source work.",
+      "current_project_state": "No source code is missing: replacement files exist. The repair can be done through canonical roadmap metadata mutation plus graph/audit validation.",
+      "desired_state": "Roadmap remains open 0 after repair; no new task is created solely to update cancelled-task code_paths.",
+      "agreed_change": "After approval, mutate canonical roadmap metadata through wiki_roadmap, refresh generated views, run audits, compile decision evidence, and validate directly. Route to planning only if audit still finds executable follow-up.",
+      "expected_final_state": "Roadmap remains open 0; next graph action moves to remaining unrelated warnings, likely large-doc if path warnings clear.",
+      "validated_final_state": "Roadmap open 0 after TASK-023/TASK-036 cancelled statuses were restored; wiki_state reports no urgent wiki drift signal except large-doc warnings.",
+      "status": "approved",
+      "proof_refs": [
+        "wiki_state Roadmap open 0",
+        "skills/codewiki/SKILL.md task-boundary rules"
+      ],
+      "rationale": "Task-boundary policy rejects coordination-only tasks. The durable user-approved decision plus roadmap mutation evidence is sufficient for this bounded metadata repair.",
+      "affected_layers": [
+        "roadmap",
+        "validation",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Create a scoped task for cancelled-task path metadata repair.",
+        "Route through planning before mutation.",
+        "Defer until GC/archive policy removes cancelled records."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-005",
+      "current_state": "A path repair could overclaim graph health if remaining large-doc warnings persist or if only generated graph output changes are validated.",
+      "current_project_state": "Current graph health has 4 warnings after repair: all large-doc. The target of this decision was only the 3 roadmap-missing-code-path warnings.",
+      "desired_state": "Validation proves the three target path warnings are cleared and explicitly preserves unrelated warnings.",
+      "agreed_change": "Validate with wiki_state, wiki_audit alignment/changed/generated-parity, and a graph lint count check for roadmap-missing-code-path. Commit with clean worktree and exact SHA/tree proof. Do not claim total graph health green unless all warnings disappear.",
+      "expected_final_state": "Validation report says pass only if roadmap-missing-code-path count is zero for TASK-023/TASK-036 and roadmap/generated parity remain valid; unrelated large-doc warnings remain separate next action if still present.",
+      "validated_final_state": "roadmap-missing-code-path count is 0; remaining 4 warnings are large-doc warnings in system KB docs.",
+      "status": "approved",
+      "proof_refs": [
+        "wiki_audit alignment,changed,generated-parity",
+        "graph lint count check",
+        "git commit/tree proof"
+      ],
+      "rationale": "Narrow validation prevents hiding unrelated graph-health debt and keeps reconciliation traceable.",
+      "affected_layers": [
+        "validation",
+        "graph",
+        "git"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Require full graph-health green before accepting this repair.",
+        "Treat remaining large-doc warnings as failure of this repair.",
+        "Skip commit proof because only dogfood roadmap metadata changed."
+      ]
+    }
+  ],
+  "approved_diff_rows": [
+    "RECON-ROADMAP-PATH-001",
+    "RECON-ROADMAP-PATH-002",
+    "RECON-ROADMAP-PATH-003",
+    "RECON-ROADMAP-PATH-004",
+    "RECON-ROADMAP-PATH-005"
+  ],
+  "approved_rows": [
+    {
+      "id": "RECON-ROADMAP-PATH-001",
+      "current_state": "Graph lint reports roadmap-missing-code-path for cancelled roadmap records because their code_paths still name files later renamed or moved.",
+      "current_project_state": "Affected warnings: TASK-023 -> src/roadmap/runtime.ts missing; TASK-036 -> src/roadmap/runtime.ts missing and tests/smoke/validation-preflight.test.mjs missing. Current repo has src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs. Git history shows the renames in dfecc0f and da9e44e.",
+      "desired_state": "Cancelled historical tasks keep useful breadcrumb metadata, but all code_paths that graph treats as live path refs point to existing current paths or are removed with explicit rationale.",
+      "agreed_change": "Classify this as roadmap metadata drift caused by later renames, not missing implementation. Repair only roadmap task code_paths for TASK-023 and TASK-036 using current replacement paths.",
+      "expected_final_state": "wiki_state/wiki_audit no longer report roadmap-missing-code-path for TASK-023 or TASK-036. Any remaining graph-health warnings are unrelated and not hidden by this repair.",
+      "validated_final_state": "roadmap-missing-code-path count is 0 after wiki_state refresh; remaining graph warnings are large-doc only.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json",
+        "git show dfecc0f -- src/roadmap/runtime.ts src/roadmap/store.ts",
+        "git show da9e44e -- tests/smoke/validation-preflight.test.mjs tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "rationale": "The missing paths are not absent work; they have direct replacement paths in current source. Roadmap path metadata should remain graph-resolvable even for cancelled aggregate tasks kept in queue history.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Remove the missing paths from cancelled tasks instead of replacing them.",
+        "Change graph lint to skip cancelled tasks.",
+        "Leave warnings as historical noise until GC/archive policy removes the records."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-002",
+      "current_state": "TASK-023 is cancelled and summarized as a superseded aggregate replaced by atomic source-root tasks, but its code_paths still include src/roadmap/runtime.ts.",
+      "current_project_state": "src/roadmap/runtime.ts no longer exists; src/roadmap/store.ts exists and was produced by rename commit dfecc0f. TASK-023 already includes broad roadmap-root metadata and is not active executable work.",
+      "desired_state": "TASK-023 cancelled aggregate metadata references the current roadmap store owner path instead of a missing old filename.",
+      "agreed_change": "Use wiki_roadmap update to replace TASK-023 code_paths entry src/roadmap/runtime.ts with src/roadmap/store.ts and append evidence that this is metadata drift repair for a cancelled historical task.",
+      "expected_final_state": "TASK-023 remains cancelled; no outcome/acceptance/status change; graph path lint no longer flags TASK-023 for src/roadmap/runtime.ts.",
+      "validated_final_state": "TASK-023 code_paths references src/roadmap/store.ts and status is cancelled after repair.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json TASK-023",
+        "src/roadmap/store.ts"
+      ],
+      "rationale": "This preserves the historical roadmap-root breadcrumb while aligning it to the current file name. Removing the path would lose useful context; reopening the task would be wrong because it is cancelled/superseded.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Delete the code_paths entry from TASK-023.",
+        "Reopen TASK-023 to implement missing file; rejected because it is cancelled/superseded.",
+        "Suppress cancelled-task path lint."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-003",
+      "current_state": "TASK-036 is cancelled as an accidental non-atomic aggregate, but its code_paths still include src/roadmap/runtime.ts and tests/smoke/validation-preflight.test.mjs.",
+      "current_project_state": "src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs exist as current replacements. TASK-036 remains cancelled; atomic sprint tasks handled implementation work.",
+      "desired_state": "TASK-036 cancelled aggregate metadata points to current replacement paths for roadmap store and gateway preflight smoke coverage.",
+      "agreed_change": "Use wiki_roadmap update to replace TASK-036 code_paths entries: src/roadmap/runtime.ts -> src/roadmap/store.ts, and tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs. Append evidence that this is metadata drift repair only.",
+      "expected_final_state": "TASK-036 remains cancelled; no behavior, source code, or active roadmap work changes; graph path lint no longer flags TASK-036 for those two missing paths.",
+      "validated_final_state": "TASK-036 code_paths references src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs; status is cancelled after repair.",
+      "status": "approved",
+      "proof_refs": [
+        ".codewiki/roadmap/queue.json TASK-036",
+        "src/roadmap/store.ts",
+        "tests/smoke/gateway-preflight.test.mjs"
+      ],
+      "rationale": "The task was cancelled for boundary reasons, not because referenced files must stay frozen. Current path refs keep graph navigation useful and avoid stale warnings.",
+      "affected_layers": [
+        "roadmap",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Delete the stale entries from TASK-036.",
+        "Update all historical prose mentions in goal/delta text too; not required because graph warning targets code_paths.",
+        "Suppress cancelled-task path lint."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-004",
+      "current_state": "Roadmap is open 0, so creating a new implementation task for three metadata path replacements would be coordination-only unless validation reveals real source work.",
+      "current_project_state": "No source code is missing: replacement files exist. The repair can be done through canonical roadmap metadata mutation plus graph/audit validation.",
+      "desired_state": "Roadmap remains open 0 after repair; no new task is created solely to update cancelled-task code_paths.",
+      "agreed_change": "After approval, mutate canonical roadmap metadata through wiki_roadmap, refresh generated views, run audits, compile decision evidence, and validate directly. Route to planning only if audit still finds executable follow-up.",
+      "expected_final_state": "Roadmap remains open 0; next graph action moves to remaining unrelated warnings, likely large-doc if path warnings clear.",
+      "validated_final_state": "Roadmap open 0 after TASK-023/TASK-036 cancelled statuses were restored; wiki_state reports no urgent wiki drift signal except large-doc warnings.",
+      "status": "approved",
+      "proof_refs": [
+        "wiki_state Roadmap open 0",
+        "skills/codewiki/SKILL.md task-boundary rules"
+      ],
+      "rationale": "Task-boundary policy rejects coordination-only tasks. The durable user-approved decision plus roadmap mutation evidence is sufficient for this bounded metadata repair.",
+      "affected_layers": [
+        "roadmap",
+        "validation",
+        "graph"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Create a scoped task for cancelled-task path metadata repair.",
+        "Route through planning before mutation.",
+        "Defer until GC/archive policy removes cancelled records."
+      ]
+    },
+    {
+      "id": "RECON-ROADMAP-PATH-005",
+      "current_state": "A path repair could overclaim graph health if remaining large-doc warnings persist or if only generated graph output changes are validated.",
+      "current_project_state": "Current graph health has 4 warnings after repair: all large-doc. The target of this decision was only the 3 roadmap-missing-code-path warnings.",
+      "desired_state": "Validation proves the three target path warnings are cleared and explicitly preserves unrelated warnings.",
+      "agreed_change": "Validate with wiki_state, wiki_audit alignment/changed/generated-parity, and a graph lint count check for roadmap-missing-code-path. Commit with clean worktree and exact SHA/tree proof. Do not claim total graph health green unless all warnings disappear.",
+      "expected_final_state": "Validation report says pass only if roadmap-missing-code-path count is zero for TASK-023/TASK-036 and roadmap/generated parity remain valid; unrelated large-doc warnings remain separate next action if still present.",
+      "validated_final_state": "roadmap-missing-code-path count is 0; remaining 4 warnings are large-doc warnings in system KB docs.",
+      "status": "approved",
+      "proof_refs": [
+        "wiki_audit alignment,changed,generated-parity",
+        "graph lint count check",
+        "git commit/tree proof"
+      ],
+      "rationale": "Narrow validation prevents hiding unrelated graph-health debt and keeps reconciliation traceable.",
+      "affected_layers": [
+        "validation",
+        "graph",
+        "git"
+      ],
+      "risk": "low",
+      "user_action": "approved",
+      "alternatives": [
+        "Require full graph-health green before accepting this repair.",
+        "Treat remaining large-doc warnings as failure of this repair.",
+        "Skip commit proof because only dogfood roadmap metadata changed."
+      ]
+    }
+  ],
+  "accepted_decisions": [
+    {
+      "id": "D1",
+      "summary": "Cancelled historical tasks keep useful breadcrumb metadata, but all code_paths that graph treats as live path refs point to existing current paths or are removed with explicit rationale."
+    },
+    {
+      "id": "D2",
+      "summary": "TASK-023 cancelled aggregate metadata references the current roadmap store owner path instead of a missing old filename."
+    },
+    {
+      "id": "D3",
+      "summary": "TASK-036 cancelled aggregate metadata points to current replacement paths for roadmap store and gateway preflight smoke coverage."
+    },
+    {
+      "id": "D4",
+      "summary": "Roadmap remains open 0 after repair; no new task is created solely to update cancelled-task code_paths."
+    },
+    {
+      "id": "D5",
+      "summary": "Validation proves the three target path warnings are cleared and explicitly preserves unrelated warnings."
+    }
+  ],
+  "knowledge_changes": [],
+  "roadmap_changes": [
+    "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+    "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled."
+  ],
+  "row_to_kb_mappings": [
+    {
+      "row_id": "RECON-ROADMAP-PATH-001",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No KB edit: approved row classified warning as roadmap metadata drift; repair applied through wiki_roadmap to cancelled task code_paths.",
+      "deferred": true,
+      "deferred_reason": "No canonical KB/diagram change needed; durable effect is roadmap metadata repair plus graph/validation evidence."
+    },
+    {
+      "row_id": "RECON-ROADMAP-PATH-002",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No KB edit: approved row repaired TASK-023 code_paths to current src/roadmap/store.ts.",
+      "deferred": true,
+      "deferred_reason": "No canonical KB/diagram change needed; durable effect is roadmap metadata repair."
+    },
+    {
+      "row_id": "RECON-ROADMAP-PATH-003",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No KB edit: approved row repaired TASK-036 code_paths to current src/roadmap/store.ts and tests/smoke/gateway-preflight.test.mjs.",
+      "deferred": true,
+      "deferred_reason": "No canonical KB/diagram change needed; durable effect is roadmap metadata repair."
+    },
+    {
+      "row_id": "RECON-ROADMAP-PATH-004",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No KB edit: approved row kept roadmap open 0 and skipped coordination-only task creation.",
+      "deferred": true,
+      "deferred_reason": "No canonical KB/diagram change needed; durable effect is roadmap status preservation and validation evidence."
+    },
+    {
+      "row_id": "RECON-ROADMAP-PATH-005",
+      "knowledge_refs": [],
+      "diagram_refs": [],
+      "evidence": "No KB edit: approved row defined narrow validation criteria for target warning clearance without overclaiming full graph health.",
+      "deferred": true,
+      "deferred_reason": "No canonical KB/diagram change needed; durable effect is validation criteria and report."
+    }
+  ],
+  "propagation": {
+    "direction": "system-first",
+    "product_impact": [],
+    "system_impact": [
+      "TASK-023/TASK-036 cancelled roadmap code_paths now point to current existing files.",
+      "Graph next action no longer reports roadmap-missing-code-path after refresh.",
+      "Roadmap remains open 0; no coordination-only task created."
+    ],
+    "no_product_impact": "Historical CodeWiki roadmap metadata repair only; no user-facing command, runtime behavior, package API, or product story changes.",
+    "downstream_planning_questions": []
+  },
+  "diagram_refs": [],
+  "downstream_planning_questions": [],
+  "assumptions": [
+    "Rename commits dfecc0f and da9e44e are valid evidence that stale code_paths have current replacements."
+  ],
+  "open_questions": [],
+  "non_goals": [
+    "Do not change source code, package runtime behavior, Pi adapter behavior, graph lint policy, or product behavior.",
+    "Do not claim large-doc warnings are fixed.",
+    "Do not create a coordination-only roadmap task.",
+    "Do not reopen cancelled aggregate tasks."
+  ],
+  "risks": [],
+  "change_type": "system",
+  "traceability": {
+    "change_type": "system",
+    "semantic": true,
+    "requires_accepted_build": false,
+    "upstream_loop": null,
+    "upstream_build_refs": [],
+    "accepted_build_refs": []
+  },
+  "consumes": {
+    "decision": [],
+    "planning": [],
+    "implementation": [],
+    "roadmap": [],
+    "validation": [],
+    "source": []
+  },
+  "produces": {
+    "knowledge": [],
+    "roadmap": [
+      "TASK-023 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; status restored to cancelled.",
+      "TASK-036 code_paths: src/roadmap/runtime.ts -> src/roadmap/store.ts; tests/smoke/validation-preflight.test.mjs -> tests/smoke/gateway-preflight.test.mjs; status restored to cancelled.",
+      "TASK-023",
+      "TASK-036"
+    ],
+    "code": [],
+    "tests": [],
+    "validation": [
+      ".codewiki/validation/2026-05-31-decision-pass-roadmap-missing-code-path-reconciliation.json"
+    ],
+    "publication": [],
+    "closure": []
+  }
+}

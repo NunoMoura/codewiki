@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-28T00:53:56Z",
+  "generated_at": "2026-05-31T01:04:07Z",
   "context_path": ".codewiki/roadmap/tasks/TASK-036/context.json",
   "task": {
     "id": "TASK-036",
@@ -9,7 +9,7 @@
     "priority": "high",
     "kind": "tooling",
     "change_type": "code",
-    "summary": "Cancel accidental non-atomic aggregate created during roadmap planning; replace with atomic sprint tasks.",
+    "summary": "Restore TASK-036 cancelled state after approved metadata path repair; task remains an accidental non-atomic aggregate replaced by atomic sprint tasks.",
     "labels": [
       "booboo",
       "static-analysis",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-05-31T00:28:01Z",
+  "updated": "2026-05-31T01:04:07Z",
   "order": [
     "TASK-012",
     "TASK-023",
@@ -91,7 +91,7 @@
       "status": "cancelled",
       "priority": "high",
       "kind": "migration",
-      "summary": "Keep TASK-023 cancelled; it is a superseded aggregate replaced by atomic source-root tasks.",
+      "summary": "Restore TASK-023 cancelled state after approved metadata path repair; task remains a superseded aggregate.",
       "spec_paths": [
         ".codewiki/kb/system/file-structure.md",
         ".codewiki/kb/system/diagrams/file-structure-map.yaml",
@@ -138,7 +138,7 @@
         "src/roadmap/status.ts",
         "src/roadmap/task-id.ts",
         "src/roadmap/task-boundary.ts",
-        "src/roadmap/runtime.ts",
+        "src/roadmap/store.ts",
         "src/roadmap/task.ts",
         "src/roadmap/tool.ts",
         "src/state/types.ts",
@@ -295,7 +295,7 @@
         "closure": ""
       },
       "created": "2026-05-26",
-      "updated": "2026-05-27T22:19:13Z"
+      "updated": "2026-05-31T01:04:01Z"
     },
     "TASK-036": {
       "id": "TASK-036",
@@ -303,7 +303,7 @@
       "status": "cancelled",
       "priority": "high",
       "kind": "tooling",
-      "summary": "Cancel accidental non-atomic aggregate created during roadmap planning; replace with atomic sprint tasks.",
+      "summary": "Restore TASK-036 cancelled state after approved metadata path repair; task remains an accidental non-atomic aggregate replaced by atomic sprint tasks.",
       "spec_paths": [
         ".pi-lens/reviews/booboo-2026-05-28T00-32-49.md",
         "package.json",
@@ -357,7 +357,7 @@
         "src/adapters/pi/tools",
         "tests/smoke/control-room.test.mjs",
         "src/state/rebuild.ts",
-        "src/roadmap/runtime.ts",
+        "src/roadmap/store.ts",
         "src/session/claims.ts",
         "src/session/tool.ts",
         "src/session/artifact-status-tool.ts",
@@ -371,7 +371,7 @@
         "src/validation/preflight.ts",
         "tests/smoke/audit.test.mjs",
         "tests/smoke/audit-drift.test.mjs",
-        "tests/smoke/validation-preflight.test.mjs",
+        "tests/smoke/gateway-preflight.test.mjs",
         "tests/tasks/TASK-022/build-validation-gateway-source-root.test.mjs"
       ],
       "research_ids": [],
@@ -529,7 +529,7 @@
         "closure": "Task closes when calibrated review output and tests prove known entrypoints are no longer false positives or are explicitly documented ignores.\nRefinement: Task closes when those findings are gone or explicitly justified by tests and comments.\nRefinement: Task closes with package smoke/pack evidence and documented decisions for any intentionally unresolved readiness warnings.\nRefinement: Task closes when duplicate functions are gone and parity tests pass.\nRefinement: Task closes when duplicate-code review output is reduced and tests confirm behavior compatibility.\nRefinement: Task closes when typecheck/tests pass and review evidence shows reduced any usage in targeted files.\nRefinement: Task closes when tests pass and targeted any usage drops.\nRefinement: Task closes when graph tests and feature tests pass and complexity drops in the graph owner file.\nRefinement: Task closes when state tests pass and complexity/type metrics improve.\nRefinement: Task closes when tests pass and complexity drops for roadmap/session owner files.\nRefinement: Task closes when UI tests pass and complexity/nesting metrics improve.\nRefinement: Task closes when audit/validation tests pass and complexity metrics improve."
       },
       "created": "2026-05-28",
-      "updated": "2026-05-28T00:53:56Z"
+      "updated": "2026-05-31T01:04:07Z"
     }
   },
   "sprints": {
