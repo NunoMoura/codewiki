@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-31T09:05:57.304Z",
+  "generated_at": "2026-05-31T09:06:15.048Z",
   "nodes": [
     {
       "id": "diagram:.codewiki/kb/system/diagrams/component-map.yaml",
@@ -162634,7 +162634,7 @@
   },
   "lenses": {
     "lint": {
-      "generated_at": "2026-05-31T09:05:57.134Z",
+      "generated_at": "2026-05-31T09:06:14.834Z",
       "counts": {
         "large-doc": 4
       },
@@ -162667,7 +162667,7 @@
     },
     "roadmap": {
       "version": 2,
-      "generated_at": "2026-05-31T09:05:57Z",
+      "generated_at": "2026-05-31T09:06:15Z",
       "health": {
         "color": "yellow",
         "errors": 0,
@@ -164188,7 +164188,7 @@
     },
     "status": {
       "version": 1,
-      "generated_at": "2026-05-31T09:05:57Z",
+      "generated_at": "2026-05-31T09:06:15Z",
       "project": {
         "name": "codewiki",
         "docs_root": ".codewiki/kb",
@@ -167724,7 +167724,7 @@
         }
       ],
       "agency": {
-        "generated_at": "2026-05-31T09:05:57Z",
+        "generated_at": "2026-05-31T09:06:15Z",
         "summary": {
           "lane_count": 3,
           "freshness_basis": "work-first",
@@ -167779,10 +167779,10 @@
               "task_close:architecture",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T09:05:57Z",
+            "checked_at": "2026-05-31T09:06:15Z",
             "revision": {
               "git": {
-                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "head": "55fc2ec43daffc6bd391b6fa3fc5d8578ef04ca1",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -168016,14 +168016,14 @@
               "spec_digest": "ee24978fbd75a30bbe87e7faf1e46492084c8aec6cc499a2003dd0e16d840c35",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
               "code_digest": "44ea2bf9c07e6cda197adee5a591b9d76df1366d0d5fb5c31a6e0cb7d1e1a915",
-              "digest": "4937670cf0fb3f03b075fa613fa0b002b6ce232ac7e6a81aa27b466bbe03b711"
+              "digest": "7c99cca55720055008e8206cc4cf57acadf665f78daa36341c2c70770a577bfa"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:57Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-31T09:06:15Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -168469,10 +168469,10 @@
               "rebuild_complete",
               "pre_close_check"
             ],
-            "checked_at": "2026-05-31T09:05:57Z",
+            "checked_at": "2026-05-31T09:06:15Z",
             "revision": {
               "git": {
-                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "head": "55fc2ec43daffc6bd391b6fa3fc5d8578ef04ca1",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -168683,14 +168683,14 @@
               "spec_digest": "06d51f510d800b0818facc9013b57d82eb4662ebe8ea0d64edd9f63ceb57308b",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
               "code_digest": "1c80e1abf870056e6abf9c103b7ef07ce91cfc370f0fb339a8133e2923f0c81f",
-              "digest": "6652b376e55d05a510f889ccbffdb69f2e0fb245df1a43365b33554aff40d789"
+              "digest": "48174379e0c6dcda8ad38c465fbf2c1220fe0b3b281106d0e8aacc724d67e915"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:57Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-31T09:06:15Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/system/api.md",
@@ -169113,10 +169113,10 @@
               "code_change:ux_surface",
               "manual_review"
             ],
-            "checked_at": "2026-05-31T09:05:57Z",
+            "checked_at": "2026-05-31T09:06:15Z",
             "revision": {
               "git": {
-                "head": "d58b684ff540204a6faeb0f3ed2b77afcd83c0b6",
+                "head": "55fc2ec43daffc6bd391b6fa3fc5d8578ef04ca1",
                 "dirty": false,
                 "dirty_paths": [],
                 "paths": {
@@ -169350,14 +169350,14 @@
               "spec_digest": "ee24978fbd75a30bbe87e7faf1e46492084c8aec6cc499a2003dd0e16d840c35",
               "task_digest": "698591d548dfb6e8c50e3b0bb0a20c32f9f1affb92b9d75b75c5376c8517673c",
               "code_digest": "44ea2bf9c07e6cda197adee5a591b9d76df1366d0d5fb5c31a6e0cb7d1e1a915",
-              "digest": "4937670cf0fb3f03b075fa613fa0b002b6ce232ac7e6a81aa27b466bbe03b711"
+              "digest": "7c99cca55720055008e8206cc4cf57acadf665f78daa36341c2c70770a577bfa"
             },
             "freshness": {
-              "status": "stale",
+              "status": "fresh",
               "basis": "revision",
-              "checked_at": "2026-05-31T09:05:57Z",
-              "reason": "revision changed: code",
-              "stale_state_guidance": "Re-run status or resume implementation before trusting prior drift analysis."
+              "checked_at": "2026-05-31T09:06:15Z",
+              "reason": "revision anchors unchanged since previous agency",
+              "stale_state_guidance": "Prior drift analysis remains correlated with current spec, task, and mapped code revisions."
             },
             "spec_paths": [
               ".codewiki/kb/product/overview.md",
@@ -169804,7 +169804,7 @@
         "agency": "Roadmap task should stay grounded in current agency cues."
       },
       "parallel": {
-        "generated_at": "2026-05-31T09:05:57Z",
+        "generated_at": "2026-05-31T09:06:15Z",
         "active_session_count": 0,
         "collision_task_ids": [],
         "sessions": [],
